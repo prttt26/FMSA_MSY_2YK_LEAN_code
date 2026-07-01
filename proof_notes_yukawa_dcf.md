@@ -23,7 +23,7 @@ with the limiting case `z → 0` giving `αℓ − ℓ²/2`.
 **Verification method:** `MeasureTheory.integral_comp_mul_right` + integration by parts
 (`MeasureTheory.integral_mul_deriv` or direct antiderivative differentiation via `deriv_eq`).
 
-**Status:** ✓ DONE — `I1_formula` proved in `LeanCode/FMSAPoly/I1I2Integrals.lean` (complete).
+**Status:** ✓ DONE — `I1_formula` proved in `LeanCode/YukawaDCF/I1I2Integrals.lean` (complete).
 
 ---
 
@@ -37,7 +37,7 @@ For `z ≠ 0` and `ℓ ≥ 0`:
 ```
 with the `z → 0` limit `α²ℓ − αℓ² + ℓ³/3`.
 
-**Status:** ✓ DONE — `I2_formula` proved in `LeanCode/FMSAPoly/I1I2Integrals.lean` (complete).
+**Status:** ✓ DONE — `I2_formula` proved in `LeanCode/YukawaDCF/I1I2Integrals.lean` (complete).
 
 ---
 
@@ -48,7 +48,7 @@ with the `z → 0` limit `α²ℓ − αℓ² + ℓ³/3`.
 **Why it matters:** Guarantees that Terms II and III in [chsY] Eq. 41 contribute nothing when
 `r = R_aj` exactly (no jump discontinuity from the step function).
 
-**Status:** ✓ DONE — `I1_at_zero` and `I2_at_zero` in `LeanCode/FMSAPoly/I1I2Integrals.lean` (complete):
+**Status:** ✓ DONE — `I1_at_zero` and `I2_at_zero` in `LeanCode/YukawaDCF/I1I2Integrals.lean` (complete):
   both are `integral_same` (one-liner; the interval `(0:ℝ)..(0:ℝ)` is empty, so the
   `intervalIntegral` evaluates to 0 for any integrand, with no hypothesis on `α` or `z`).
 
@@ -66,7 +66,7 @@ where `A(z)` is the single-component propagator evaluated at the Yukawa pole.
 
 **In Lean:** Expand the four-term sum in [chsY] Eq. 24 for N=1 (n=m=0) and simplify.
 
-**Status:** ✓ DONE — proved in `LeanCode/FMSAPoly/BijReduction.lean` (complete):
+**Status:** ✓ DONE — proved in `LeanCode/YukawaDCF/BijReduction.lean` (complete):
   - `b_general`: abstract N-species pole-residue double sum definition
     `b_ij(s) = Σ_{m n} K_{mn} · (1+A_{im}) · (1+A_{nj}) / (s+z)`
   - `b_n1_collapse`: for N=1, `Fin.sum_univ_one` collapses both sums to a single term:
@@ -89,7 +89,7 @@ Q-function evaluated at the Yukawa pole `s = z` ([chsY] Eq. 52).
 **Why it matters:** This identity encodes the continuity of `c^(1)(r)` at the contact `r = d`.
 It is the single-component analogue of the multi-species matching condition at `r = R_ij`.
 
-**Status:** ✓ complete — `LeanCode/FMSAPoly/SingleCompIdentity.lean`
+**Status:** ✓ complete — `LeanCode/YukawaDCF/SingleCompIdentity.lean`
   (`g_add_a_mul_exp_eq_one`, `g_add_a_mul_exp_eq_one_baxter`; complete)
 
   **Proof:** One `have` + four rewrites.
@@ -119,7 +119,7 @@ the known-exact single-component result.  A Lean proof guarantees no algebraic e
 **Difficulty:** High — requires substituting N=1 into all four terms of [chsY] Eq. 41 and simplifying
 the Q-matrix determinant, I₁/I₂ integrals, and IV term.
 
-**Status:** ✓ DONE — all results proved in `LeanCode/FMSAPoly/SingleCompReduction.lean` (complete):
+**Status:** ✓ DONE — all results proved in `LeanCode/YukawaDCF/SingleCompReduction.lean` (complete):
   - `correction_sq_eq`: S²eᶻ + M²e⁻ᶻ + 2SM = (S+Me⁻ᶻ)²eᶻ  (key cancellation identity)
   - `f42_zero_at_origin`: Eq. 42 gives r·c(0)=0  (physical origin check)
   - `sq_of_g_add_a_exp_eq_one`: g+ae⁻ᶻ=1 (Task 4.2) → g²eᶻ+a²e⁻ᶻ+2ga=eᶻ
@@ -165,7 +165,7 @@ Left-distributes `D⁻¹`, substitutes `D = P + c•E`, then applies `IsUnit.mul
 
 **Lean:**
 ```lean
--- LeanCode/FMSAPoly/MatrixIdentity.lean
+-- LeanCode/YukawaDCF/MatrixIdentity.lean
 theorem g_mat_add_a_mat_exp_eq_one {n : ℕ}
     (P E D : Matrix (Fin n) (Fin n) ℝ) (c : ℝ)
     (hD_def : D = P + c • E)
@@ -177,7 +177,7 @@ theorem g_mat_add_a_mat_exp_eq_one {n : ℕ}
 
 **Depends on:** Nothing new — pure matrix algebra (Mathlib `Matrix` API).
 
-**Status:** ✓ DONE — `g_mat_add_a_mat_exp_eq_one` in `LeanCode/FMSAPoly/MatrixIdentity.lean` (complete):
+**Status:** ✓ DONE — `g_mat_add_a_mat_exp_eq_one` in `LeanCode/YukawaDCF/MatrixIdentity.lean` (complete):
   `rw [← Algebra.smul_mul_assoc, ← add_mul, ← hD_def]` + `Matrix.mul_nonsing_inv D hD`.
   Note: hypothesis is `IsUnit D.det` (not `D.det ≠ 0`); Mathlib's `Matrix.mul_nonsing_inv`
   requires `IsUnit`. Also includes `g_mat_n1_eq_scalar` (N=1 scalar limit sanity check):
@@ -212,7 +212,7 @@ theorem g_mat_n1_eq_g_scalar (S L η z : ℝ) (hD : D ≠ 0) :
 
 **Depends on:** M.1, Task 4.2 (`g_add_a_mul_exp_eq_one`), `Matrix.inv_fin_one`.
 
-**Status:** ✓ DONE — `LeanCode/FMSAPoly/MatrixN1.lean`
+**Status:** ✓ DONE — `LeanCode/YukawaDCF/MatrixN1.lean`
 
 Key results proved (all in `namespace FMSA.MatrixN1`):
 - `fin1_const_mul` (proved): 1×1 matrix multiplication is scalar multiplication
@@ -246,7 +246,7 @@ case is at least as hard. For a future Lean proof, the most tractable routes are
 **Depends on:** Task 2.2 (for the N=1 base case); `Matrix.nonsing_inv_apply_not_isUnit`
 to connect `det ≠ 0` to `IsUnit` (which M.1 requires).
 
-**Status:** ✓ DONE (axiomatic) — `LeanCode/FMSAPoly/MatrixQ0.lean`
+**Status:** ✓ DONE (axiomatic) — `LeanCode/YukawaDCF/MatrixQ0.lean`
 
 Key results in `namespace FMSA.MatrixQ0`:
 - `q0_entry`: concrete scalar (i,j) entry formula (B.2 form)
@@ -333,7 +333,7 @@ matrix identity into a verified statement about actual FMSA_GA_matrix_mix matric
 
 **Depends on:** B.1, Task 2.1 (`phi1_formula`, `phi2_formula`), M.1.
 
-**Status:** ✓ DONE — `LeanCode/FMSAPoly/QhatDecomposition.lean` (complete):
+**Status:** ✓ DONE — `LeanCode/YukawaDCF/QhatDecomposition.lean` (complete):
   - `b2_qhat_entry_decomp`: scalar (i,j) entry identity `Q̂₀ = P̂ + Ê·exp(−z·σ_min)`.
     Three-step proof: (1) `hexp` via `← exp_add` + `linear_combination -z * hR`;
     (2) `h` (algebraic factor of exp(−zσ)) via `field_simp [pow_ne_zero]; ring`;
@@ -368,7 +368,7 @@ theorem coeff_identity (g a c : ℝ) (h : g + a * c = 1) :
 
 **Depends on:** Task 4.2 (`g_add_a_mul_exp_eq_one`).
 
-**Status:** ✓ DONE — `LeanCode/FMSAPoly/SingleCompIdentity.lean` (complete):
+**Status:** ✓ DONE — `LeanCode/YukawaDCF/SingleCompIdentity.lean` (complete):
   - `coeff_identity`: abstract form for any `g a c : ℝ` with `h : g + a * c = 1`;
     proof: `have hg : g = 1 - a * c := by linarith; rw [hg]; ring`.
   - `coeff_identity_baxter`: Baxter-specific corollary with `c = exp(−z)`, `g = S/D`,
@@ -408,7 +408,7 @@ give the complete Lean proof that FMSA_GA_matrix_mix is structurally superior at
 **Depends on:** Tasks 1.3 (`I1_at_zero`, `I2_at_zero`), Task 4.2 (`g_add_a_mul_exp_eq_one`),
 B.3 (`coeff_identity`).
 
-**Status:** ✓ DONE — `LeanCode/FMSAPoly/B4OriginBC.lean` (complete, namespace `FMSA.PathB`):
+**Status:** ✓ DONE — `LeanCode/YukawaDCF/B4OriginBC.lean` (complete, namespace `FMSA.PathB`):
   - `b4_I1_vanish_at_zero`, `b4_I2_vanish_at_zero`: Terms II and III are 0 at r=0
     (via `FMSA.DCF.I1_at_zero`, `I2_at_zero` — Task 1.3; one-line delegates).
   - `b4_polynomial_constant`: `K*(1-g^2)*exp(z) - K*a^2*exp(-z) = 2*K*g*a` given
@@ -457,7 +457,7 @@ NOT reduce to Eq. 42 for N=1 (the (1+A)² ≠ 1−g² discrepancy, Task 4.3).
 
 **Depends on:** M.2 (`g_mat_n1_eq_g_scalar`), Task 4.2 (`g_add_a_mul_exp_eq_one`), B.3.
 
-**Status:** ✓ DONE — `LeanCode/FMSAPoly/SingleCompReduction.lean` (complete):
+**Status:** ✓ DONE — `LeanCode/YukawaDCF/SingleCompReduction.lean` (complete):
   - `c1_n1_ga_matrix_mix_eq_fmsa_pure`: `(1-g²) - a²c² = 2acg` given `h : g + a*c = 1`;
     one-liner via `coeff_identity` (B.3). File gains `import MatrixIdentity`.
   - `c1_n1_from_mat_identity`: instantiation from `g_mat_n1_eq_scalar` (M.1 N=1);
@@ -488,7 +488,7 @@ the value at r = R_ij, and by [chsY] Eq. 34 this equals K_ij / R_ij.
 **Lean value:** Low — the discontinuous case (HSY) is physically correct and expected;
 the soft-core matching is a first-order identity that holds trivially if Tasks 1.3 and 4.4 pass.
 
-**Status:** ✓ DONE — `LeanCode/FreeEnergy/ContactMatching.lean` (complete):
+**Status:** ✓ DONE — `LeanCode/YukawaDCF/ContactMatching.lean` (complete):
   - `terms_II_III_vanish_at_contact`: I₁(0,α,z)=0 ∧ I₂(0,α,z)=0 via `I1_at_zero`/`I2_at_zero`
   - `inner_core_eij_at_contact`: `eij A z R R = Σ_k A_k` via `eij_at_contact`
   - `outer_core_at_contact`: `K·exp(−z·0)/R = K/R` via `sub_self` + `Real.exp_zero`

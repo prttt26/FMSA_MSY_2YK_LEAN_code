@@ -6,9 +6,9 @@ Authors: FMSA project
 
 -- Naming and notation conventions: see CONVENTIONS.md
 
-import LeanCode.FMSAPoly.SingleCompReduction
-import LeanCode.FMSAPoly.SingleCompIdentity
-import LeanCode.FMSAPoly.I1I2Integrals
+import LeanCode.YukawaDCF.SingleCompReduction
+import LeanCode.YukawaDCF.SingleCompIdentity
+import LeanCode.YukawaDCF.I1I2Integrals
 
 /-!
 # Task B.4 — FMSA_GA_matrix_mix origin BC is automatic: `lim_{r→0} r·c^(1)(r) = 0`

@@ -27,7 +27,7 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 | Axiom | File | Task | Physical meaning / proof path |
 |-------|------|------|-------------------------------|
 | `Q0_ne_zero_at_yukawa` | `HardSphere/BaxterFactor.lean:326` | 2.2 | Q₀(z) ≠ 0 for z > 0, η ∈ (0,1); needs analytic bound |
-| `Q0_mat_isUnit_det` | `FMSAPoly/MatrixQ0.lean:129` | M.3 | Multi-component Q̂₀ invertible; multi-component analog of 2.2 |
+| `Q0_mat_isUnit_det` | `YukawaDCF/MatrixQ0.lean:129` | M.3 | Multi-component Q̂₀ invertible; multi-component analog of 2.2 |
 | `oz_fixed_pt_unique` | `HardSphere/PYOZ_GHS.lean:145` | OZ.2a | OZ fixed point unique in `BoundedContinuousFunction`; needs Banach contraction estimate |
 | `radial_laplace_conv` | `HardSphere/RadialLaplace.lean` | OZ.2b (math) | F̃[f⊛₃Dg]=F̃[f]·F̃[g]; pure Fubini + change of variables; outside Mathlib scope |
 | `oz_laplace_oz_eq` | `HardSphere/PYOZ_GHS.lean` | OZ.2b (physics) | oz_h satisfies Laplace-domain OZ eq; needs PY closure for r<σ + integrability for Fubini |
@@ -46,9 +46,9 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
-| 1.1 | I₁ antiderivative | ✓ DONE | `FMSAPoly/I1I2Integrals.lean` |
-| 1.2 | I₂ antiderivative | ✓ DONE | `FMSAPoly/I1I2Integrals.lean` |
-| 1.3 | I₁/I₂ vanish at ℓ=0 | ✓ DONE | `FMSAPoly/I1I2Integrals.lean` |
+| 1.1 | I₁ antiderivative | ✓ DONE | `YukawaDCF/I1I2Integrals.lean` |
+| 1.2 | I₂ antiderivative | ✓ DONE | `YukawaDCF/I1I2Integrals.lean` |
+| 1.3 | I₁/I₂ vanish at ℓ=0 | ✓ DONE | `YukawaDCF/I1I2Integrals.lean` |
 
 ### Group 2 — Hard-Sphere Baxter Factor *(hard_sphere)*
 
@@ -61,8 +61,8 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
-| 3.1 | B₁+D₁ = T_U identity | ✓ DONE | `WienerHopf/Splitting.lean` |
-| 3.2 | Support of T_S on (−∞, R_ij] | ✓ DONE | `WienerHopf/Splitting.lean` |
+| 3.1 | B₁+D₁ = T_U identity | ✓ DONE | `HardSphere/Splitting.lean` |
+| 3.2 | Support of T_S on (−∞, R_ij] | ✓ DONE | `HardSphere/Splitting.lean` |
 
 ### Group chsY — FMSA_chsY Formula Failure *(failures)*
 
@@ -74,32 +74,32 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
-| 4.1 | b_ij N=1 collapse formula | ✓ DONE | `FMSAPoly/BijReduction.lean` |
-| 4.2 | g + a·exp(−z) = 1 | ✓ DONE | `FMSAPoly/SingleCompIdentity.lean` |
-| 4.4 | Full N=1 reduction Eq.41→42 | ✓ DONE | `FMSAPoly/SingleCompReduction.lean` |
+| 4.1 | b_ij N=1 collapse formula | ✓ DONE | `YukawaDCF/BijReduction.lean` |
+| 4.2 | g + a·exp(−z) = 1 | ✓ DONE | `YukawaDCF/SingleCompIdentity.lean` |
+| 4.4 | Full N=1 reduction Eq.41→42 | ✓ DONE | `YukawaDCF/SingleCompReduction.lean` |
 
 ### Group M — Multi-Component Baxter Identity *(yukawa_dcf)*
 
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
-| M.1 | Abstract matrix identity Ĝ+Â·c=I | ✓ DONE | `FMSAPoly/MatrixIdentity.lean` |
-| M.2 | N=1 limit: Ĝ₀₀=g, Â₀₀=a | ✓ DONE | `FMSAPoly/MatrixN1.lean` |
-| M.3 | det(Q̂₀) ≠ 0 multi-component | ✓ DONE (axiom) | `FMSAPoly/MatrixQ0.lean` |
+| M.1 | Abstract matrix identity Ĝ+Â·c=I | ✓ DONE | `YukawaDCF/MatrixIdentity.lean` |
+| M.2 | N=1 limit: Ĝ₀₀=g, Â₀₀=a | ✓ DONE | `YukawaDCF/MatrixN1.lean` |
+| M.3 | det(Q̂₀) ≠ 0 multi-component | ✓ DONE (axiom) | `YukawaDCF/MatrixQ0.lean` |
 
 ### Group B — FMSA_GA_matrix_mix Algebraic Foundation *(yukawa_dcf)*
 
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
 | B.1 | Shifted-exponent integral | ✓ DONE | `HardSphere/BaxterFactor.lean` |
-| B.2 | Concrete Q̂₀=P̂+Ê·exp(−z·σ_min) | ✓ DONE | `FMSAPoly/QhatDecomposition.lean` |
-| B.3 | Coefficient algebra (1−g²)−a²c²=2acg | ✓ DONE | `FMSAPoly/SingleCompIdentity.lean` |
-| B.4 | Origin BC automatic for FMSA_GA_matrix_mix | ✓ DONE | `FMSAPoly/B4OriginBC.lean` |
+| B.2 | Concrete Q̂₀=P̂+Ê·exp(−z·σ_min) | ✓ DONE | `YukawaDCF/QhatDecomposition.lean` |
+| B.3 | Coefficient algebra (1−g²)−a²c²=2acg | ✓ DONE | `YukawaDCF/SingleCompIdentity.lean` |
+| B.4 | Origin BC automatic for FMSA_GA_matrix_mix | ✓ DONE | `YukawaDCF/B4OriginBC.lean` |
 
 ### Group C — FMSA_GA_matrix_mix Consistency *(yukawa_dcf)*
 
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
-| C.1 | N=1: corrected formula = FMSA_pure | ✓ DONE | `FMSAPoly/SingleCompReduction.lean` |
+| C.1 | N=1: corrected formula = FMSA_pure | ✓ DONE | `YukawaDCF/SingleCompReduction.lean` |
 
 ### Group P — FMSA_poly Failure Analysis *(failures)*
 
@@ -141,7 +141,7 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
-| 5.1 | Inner/outer matching at r=R_ij (2YK only) | ✓ DONE | `FreeEnergy/ContactMatching.lean` |
+| 5.1 | Inner/outer matching at r=R_ij (2YK only) | ✓ DONE | `YukawaDCF/ContactMatching.lean` |
 
 ### Group D — Pure-Limit Equivalence
 

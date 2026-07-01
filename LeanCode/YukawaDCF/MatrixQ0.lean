@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.FMSAPoly.QhatDecomposition
+import LeanCode.YukawaDCF.QhatDecomposition
 
 /-!
 # Task M.3 — det(Q̂₀) ≠ 0 for valid multi-component parameters

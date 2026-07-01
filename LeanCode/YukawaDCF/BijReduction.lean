@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.FMSAPoly.SingleCompReduction
+import LeanCode.YukawaDCF.SingleCompReduction
 
 /-!
 # Task 4.1 — Single-component b_ij formula: N=1 case of [chsY] Eq. 24

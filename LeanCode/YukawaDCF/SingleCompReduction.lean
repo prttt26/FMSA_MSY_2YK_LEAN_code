@@ -7,8 +7,8 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.FMSAPoly.SingleCompIdentity
-import LeanCode.FMSAPoly.MatrixIdentity
+import LeanCode.YukawaDCF.SingleCompIdentity
+import LeanCode.YukawaDCF.MatrixIdentity
 
 /-!
 # Single-component reduction: [chsY] Eq. 42 origin check and factoring  (Task 4.4)

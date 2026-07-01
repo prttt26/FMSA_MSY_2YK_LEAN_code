@@ -68,7 +68,7 @@ together reconstruct the full Yukawa kernel.
 
 **Lean:** Uses `linear_combination k^2 * Complex.I_sq` (ring alone cannot evaluate `i²=-1`).
 
-**Status:** ✓ complete — `LeanCode/WienerHopf/Splitting.lean`
+**Status:** ✓ complete — `LeanCode/HardSphere/Splitting.lean`
 
 ---
 
@@ -80,7 +80,7 @@ Fourier transform of a function supported on `(−∞, R_ij]`.
 **Why it matters:** This is the key support statement that makes the Wiener–Hopf split
 well-defined.  A Lean proof would confirm the sign of the phase exponent matters.
 
-**Status:** ✓ DONE — proved in `LeanCode/WienerHopf/Splitting.lean` (complete):
+**Status:** ✓ DONE — proved in `LeanCode/HardSphere/Splitting.lean` (complete):
   - `innerCoreFun`: `Set.indicator (Set.Icc 0 R) (fun r => r * c r)` — inner-core function
     supported on `[0, R]` by indicator construction
   - `innerCore_support_subset_Iic`: `Function.support (innerCoreFun c R) ⊆ Set.Iic R`

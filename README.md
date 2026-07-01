@@ -50,11 +50,10 @@ fail (exp(14) ≈ 10⁶), motivating the G/A matrix approach proved here.
 
 ```
 LeanCode/
-  HardSphere/      — PY DCF, Baxter factor, OZ equation, Wiener-Hopf
-  FMSAPoly/        — I₁/I₂ integrals, G/A matrix, single-component reduction
-  WienerHopf/      — Splitting identities
-  FreeEnergy/      — Sum rule, energy integrals, convergence
-  Integrals/       — Supporting integral lemmas
+  HardSphere/      — PY DCF, Baxter factor, OZ equation, Wiener–Hopf splitting (HS only)
+  YukawaDCF/       — I₁/I₂ integrals, G/A matrix, single-component reduction, contact matching (Yukawa DCF derivation)
+  FMSAPoly/        — Formula failure analysis: (1+A)²≠1−g² disproof, poly approx impossibility (Groups chsY, P)
+  FreeEnergy/      — Sum rule, energy integrals, convergence (Yukawa free energy)
 proof_notes_hard_sphere.md    — Proof records for Groups 2, 3, OZ
 proof_notes_yukawa_dcf.md     — Proof records for Groups 1, 4, M, B, C, 5
 proof_notes_failures.md       — Proof records for Groups chsY, P (formula failure analysis)

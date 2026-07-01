@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.FMSAPoly.SingleCompIdentity
+import LeanCode.YukawaDCF.SingleCompIdentity
 import LeanCode.HardSphere.BaxterFactor
 
 /-!

@@ -6,7 +6,7 @@ Authors: FMSA project
 
 -- Naming and notation conventions: see CONVENTIONS.md
 
-import LeanCode.FMSAPoly.I1I2Integrals
+import LeanCode.YukawaDCF.I1I2Integrals
 import LeanCode.FMSAPoly.EijStructure
 
 /-!
