@@ -69,7 +69,3 @@ todo_lean.md                  — Task status index (open sorries, axioms, compl
 
 See `lean-toolchain` for the exact Lean version and `lakefile.toml` for the Mathlib pin.
 
-## References
-
-- `pdf/FMSA_chsY.pdf` — Analytical multi-species MSA solution (Blum et al.)
-- `pdf/lecture_notes_OZ_Yukawa_poly.pdf` — OZ equation, Yukawa DCF, polynomial inner-core approach
