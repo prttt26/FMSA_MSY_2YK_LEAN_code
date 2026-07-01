@@ -42,7 +42,7 @@ factorization.
 potential. Standard model for colloidal suspensions and electrolyte solutions.
 
 **2YK (two Yukawa tails):** two competing Yukawa terms — a short-range repulsive tail
-(z₁ ≈ 14) and a longer-range attractive tail (z₂ ≈ 2.96) — without a hard core.
+(z₁ ≈ 14) and a longer-range attractive tail (z₂ ≈ 2.96) — without a hard core. Best method for approximating LJ potential.
 Models soft-repulsion fluids; the large z₁ makes inner-core polynomial approximations
 fail (exp(14) ≈ 10⁶), motivating the G/A matrix approach proved here.
 
