@@ -217,70 +217,68 @@ Same 3-line algebra as `oz_laplace_identity`; `div_eq_iff` + `linarith`.
 
 ### Task OZ.5 — Baxter real-space convolution identity
 
-**Statement ([chsY] Eq. 31–33; Baxter 1970; Wertheim 1963):**
+**Statement (Wertheim 1963; Baxter 1970; [chsY] Eq. 46):**
 
 For `r ∈ (0, σ)`, the PY hard-sphere DCF satisfies the real-space Wiener-Hopf identity:
 ```
-ρ · c_HS(η, σ, r) = q̃₀(r) − ∫_r^σ q̃₀(r') · q̃₀(r' − r) dr'
+2π·ρ·r·c_HS(r) = ∫_r^σ q0_poly(r'−r)·q0_poly'(r') dr' − q0_poly'(r)
 ```
-where `q̃₀(r) = ρQ'·(r−σ) + ρQ''·(r−σ)²/2` is the polynomial piece of the Baxter Q-factor
-with PY coefficients `Q' = πσ(2+η)/(1−η)²`, `Q'' = 2π(1+2η)/(1−η)²`.
+where:
+- `q0_poly(r) = α·(r−σ) + β·(r−σ)²/2` with `α = ρ·q_prime_py`, `β = ρ·q_doubleprime_py`
+- `q0_poly'(r) = α + β·(r−σ)` is the derivative of q0_poly w.r.t. r
+- `q0_poly = 2πρ·Q` where Q is the Wertheim Q-function for diameter σ
 
-**Physical meaning:** Real-space form of the Wiener-Hopf factorization
-`1 − ρ·Ĉ_HS(s) = Q̂₀(s) · Q̂₀(−s)`.  Degree-4 and degree-5 polynomial terms cancel
-with the specific PY values of Q', Q'', leaving exactly the cubic `ρ·c_HS(r)`.
+**Physical origin (Wertheim 1963):** The Wiener-Hopf factorization `1−ρĈ(s) = Q̂(s)Q̂(−s)` gives
+the real-space identity `−r·c(r) = Q'(r) − 2πρ ∫_0^{σ-r} Q(t)·Q'(t+r) dt`. With Q = q0_poly/(2πρ)
+and Q' = q0_poly'/(2πρ), multiplying by −2πρ and changing variables t → r'−r gives the Lean form.
+
+**Numerical verification at η=0.4, σ=1, r=0.5, ρ=2.4/π:**
+
+| Quantity | Value |
+|---|---|
+| 2πρ·r·c_HS(0.5) (LHS) | 2π·(2.4/π)·0.5·(−295/24) = −29.5 |
+| q0_poly'(0.5) = α+β(r−σ) | 4 |
+| ∫_r^σ q0_poly(r'−r)·q0_poly'(r') dr' | −25.5 (exact via antiderivative) |
+| RHS = −25.5 − 4 | −29.5 ✓ |
 
 **In Lean:** `baxter_factorization_inner` in `LeanCode/HardSphere/BaxterRealSpace.lean`:
 ```lean
 theorem baxter_factorization_inner {eta sigma rho : ℝ}
-    (hsigma : 0 < sigma) (heta0 : 0 ≤ eta) (heta : eta < 1)
+    (hsigma : 0 < sigma) (_heta0 : 0 <= eta) (heta : eta < 1)
     (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) :
     ∀ r ∈ Set.Ioo 0 sigma,
-    rho * c_HS eta sigma r =
-    q0_poly eta sigma rho r −
-      ∫ r' in r..sigma, q0_poly eta sigma rho r' * q0_poly eta sigma rho (r' − r)
+    2 * Real.pi * rho * r * c_HS eta sigma r =
+    (∫ r' in r..sigma, q0_poly eta sigma rho (r' - r) *
+      (rho * q_prime_py eta sigma + rho * q_doubleprime_py eta * (r' - sigma))) -
+    (rho * q_prime_py eta sigma + rho * q_doubleprime_py eta * (r - sigma))
 ```
 
 **Proof approach (polynomial FTC + ring):**
+1. Rewrite integral via `integral_congr`: substitute `q0_poly_inner` + `← hα_def`, `← hβ_def`.
+2. Compute `∫_r^σ q0_poly(r'−r)·q0_poly'(r') dr'` via FTC on the 7-term degree-4 antiderivative:
+   ```
+   F(x) = α²/2·(x−σ−r)² + αβ/3·(x−σ)³ − αβr/2·(x−σ)² + αβ/6·(x−σ−r)³
+         + β²/8·(x−σ)⁴ − β²r/3·(x−σ)³ + β²r²/4·(x−σ)²
+   ```
+3. Apply `HasDerivAt` chain (7 terms) + `integral_eq_sub_of_hasDerivAt`; F(σ) evaluates cleanly.
+4. Substitute η = π·ρ·σ³/6; clear denominators with `field_simp [hsigma.ne', h1e]`; close by `ring`.
 
-1. For `r ∈ (0, σ)`, use `c_HS_inner` and `q0_poly_inner` to reduce both sides to
-   explicit polynomials in `r`, `σ`, `η`, `ρ`.
-2. For the integrand: on `r' ∈ [r, σ]`, both `q0_poly(r')` and `q0_poly(r'−r)` are
-   quadratics in `r'` (since `r' ≤ σ` and `r'−r ≤ σ−r ≤ σ`).  Their product is
-   degree-4 in `r'`.
-3. Compute `∫_r^σ [degree-4 in r'] dr'` via `HasDerivAt` of a degree-5 antiderivative
-   + `integral_eq_sub_of_hasDerivAt` (same pattern as `phi4_formula` in `PYOZ.lean`).
-4. Evaluate at `r' = σ` (first factor vanishes since `phi1_real σ σ = 0`) and `r' = r`.
-5. Substitute `Q'`, `Q''` values and `heta_def`; close by `field_simp [hsigma.ne'] ; ring`.
-
-**Key cancellation:** After substituting the PY values, the degree-4 and degree-5 terms in r
-cancel identically (this is the content of the Wertheim PY solution).  The residual is the
-cubic `ρ·c_HS(r) = ρ·(−α₀ − α₁(r/σ) − α₃(r/σ)³)`.
+**Key Lean 4 patterns:**
+- `HasDerivAt.congr_of_eventuallyEq` takes ONE explicit arg → `refine (hchain.congr_of_eventuallyEq ?_).congr_deriv ?_`
+- `Filter.Eventually.of_forall` (not the deprecated `Filter.eventually_of_forall`)
+- After `rw [q0_poly_inner ..., ← hα_def, ← hβ_def]`, the `integral_congr` goal closes automatically (no `ring` needed)
 
 **Prerequisites:**
-- `q0_poly_inner`, `q0_poly_outer` (already proved)
-- `phi1_real`, `phi2_real` (defined; Laplace transforms proved)
-- `c_HS_inner` (proved, `PYDCF.lean`)
-- `py_a0`, `py_a1`, `py_a3`, `q_prime_py`, `q_doubleprime_py` (defined)
+- `q0_poly_inner`, `c_HS_inner` (proved)
+- `q_prime_py`, `q_doubleprime_py` (defined)
 - `eta = pi*rho*sigma^3/6` (`heta_def`)
 
-**Difficulty:** Medium — all polynomial algebra; no transcendental functions.
-Antiderivative of the degree-4 product is the main work (~80–120 lines with FTC setup).
+**Note on `hParseval` (Task F.4):** This is the **hard-sphere** Baxter identity.  Task F.4's
+`hParseval` is a **Yukawa** Baxter identity: `∫_0^d b_ij(r)dr = K(1+A)²/z` where `b_ij(r)` is
+the chsY inner-core function from [chsY] Eq. 41.  That requires a separate task using `I1`/`I2`
+integrals and the MSA closure for `A`.
 
-**Note on `hParseval` (Task F.4):** `baxter_factorization_inner` is the **hard-sphere** Baxter
-identity.  Task F.4's `hParseval` is a **Yukawa** Baxter identity: `∫_0^d b_ij(r)dr = K(1+A)²/z`
-where `b_ij(r)` is the chsY inner-core function from [chsY] Eq. 41.  That requires a separate
-task using `I1`/`I2` integrals and the MSA closure for `A`.
-
-**Status:** ✓ DONE — `baxter_factorization_inner` proved in `BaxterRealSpace.lean` via FTC on a
-degree-5 antiderivative of the convolution integrand, then `field_simp + rw [heta_def] + ring`.
-
-Key tactics used:
-- `intervalIntegral.integral_congr` + `dsimp only []` (beta-reduce before `rw [q0_poly_inner]`)
-- `HasDerivAt.pow` + `.const_mul` for each term of the degree-5 antiderivative (8 terms)
-- `HasDerivAt.congr_of_eventuallyEq` + `Pi.add_apply`/`Pi.sub_apply` (convert Pi-arithmetic form of chained `.sub`/`.add` to explicit lambda form required by the goal)
-- `integral_eq_sub_of_hasDerivAt` (FTC); F(σ) = 0 automatically (all `(σ−σ)^n = 0`)
-- `field_simp [hsigma.ne', h1e]` + `rw [heta_def]` + `ring` (polynomial identity closure)
+**Status:** ✓ PROVED — `LeanCode/HardSphere/BaxterRealSpace.lean`, no sorry.
 
 ---
 

@@ -110,14 +110,16 @@ and substituting the closed form ∫_sigma^R u·r^2 dr from Task F.2b (`lj_integ
     (∫_sigma^R g(r)·((sigma/r)1^2-(sigma/r)^6)·r^2 dr)
       - gR · R^3·(-(sigma/R)1^2/9 + (sigma/R)^6/3 - 2(sigma/R)^3/9)
       = ∫_sigma^R (g(r) - gR)·((sigma/r)1^2-(sigma/r)^6)·r^2 dr -/
-theorem f5_lj_contact_error {sigma R gR : ℝ} (hsigma : 0 < sigma) (hR : 0 < R) (hsigmaR : sigma <= R)
+theorem f5_lj_contact_error {sigma R gR : ℝ} (hsigma : 0 < sigma) (hR : 0 < R)
+    (hsigmaR : sigma <= R)
     (g : ℝ → ℝ)
     (hg : IntervalIntegrable (fun r => g r * ((sigma / r) ^ 12 - (sigma / r) ^ 6) * r ^ 2)
           volume sigma R) :
     (∫ r in sigma..R, g r * ((sigma / r) ^ 12 - (sigma / r) ^ 6) * r ^ 2) -
       gR * (R ^ 3 * (-(sigma / R) ^ 12 / 9 + (sigma / R) ^ 6 / 3 - 2 * (sigma / R) ^ 3 / 9)) =
     ∫ r in sigma..R, (g r - gR) * ((sigma / r) ^ 12 - (sigma / r) ^ 6) * r ^ 2 := by
-  have hu : IntervalIntegrable (fun r => ((sigma / r) ^ 12 - (sigma / r) ^ 6) * r ^ 2) volume sigma R :=
+  have hu : IntervalIntegrable
+      (fun r => ((sigma / r) ^ 12 - (sigma / r) ^ 6) * r ^ 2) volume sigma R :=
     lj_u_integrable hsigma hsigmaR
   -- Bridge: ∫(sigma/r)1^2-(sigma/r)^6)·r^2 = R^3·(...) via lj_integral (which uses power-law form)
   have hint : ∫ r in sigma..R, ((sigma / r) ^ 12 - (sigma / r) ^ 6) * r ^ 2 =
@@ -227,8 +229,8 @@ theorem eij_contact_variation_bound {n : ℕ} (A z : Fin n → ℝ) (sigma R r :
 
 /-- **F.5 improvement — concrete Lipschitz error bound via FMSA_GA_matrix_mix eij:**
 
-When g(r) = eij(r) (the FMSA_GA_matrix_mix inner-core exponential function), the contact-value
-approximation error satisfies:
+When g(r) = eij(r) (the FMSA_GA_matrix_mix inner-core exponential function),
+the contact-value approximation error satisfies:
 
     |∫_sigma^R (eij(r) - eij(R)) · u(r) · r^2 dr|
       ≤  (Σ_k A_k · (1 - exp(-z_k · (R-sigma)))) · ∫_sigma^R |u(r) · r^2| dr

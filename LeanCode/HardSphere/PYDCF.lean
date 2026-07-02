@@ -47,7 +47,8 @@ noncomputable def py_a0 (eta : ℝ) : ℝ := (1 + 2 * eta) ^ 2 / (1 - eta) ^ 4
 /-- `alpha1(eta) = -6eta(1 + eta/2)^2 / (1 - eta)^4` — linear term coefficient. -/
 noncomputable def py_a1 (eta : ℝ) : ℝ := -6 * eta * (1 + eta / 2) ^ 2 / (1 - eta) ^ 4
 
-/-- `alpha3(eta) = eta(1 + 2eta)^2 / (2(1 - eta)^4)` — cubic term coefficient (no r^2 term by symmetry). -/
+/-- `alpha3(eta) = eta(1 + 2eta)^2 / (2(1 - eta)^4)`
+— cubic term coefficient (no r^2 term by symmetry). -/
 noncomputable def py_a3 (eta : ℝ) : ℝ := eta * (1 + 2 * eta) ^ 2 / (2 * (1 - eta) ^ 4)
 
 /-! ### Denominator lemmas -/
@@ -79,7 +80,8 @@ lemma py_two_denom_pos {eta : ℝ} (heta : eta < 1) : 0 < 2 * (1 - eta) ^ 4 := b
 
 /-- **Task OZ.1 — Percus-Yevick hard-sphere DCF:**
 
-    c_HS(r) = -(alpha0 + alpha1·(r/sigma) + alpha3·(r/sigma)^3)    for r < sigma   (inner: polynomial)
+    c_HS(r) = -(alpha0 + alpha1·(r/sigma) + alpha3·(r/sigma)^3)
+        for r < sigma   (inner: polynomial)
     c_HS(r) = 0                                    for r ≥ sigma   (outer: identically 0)
 
 The absence of an r^2 term reflects the absence of a quadratic PY coefficient. -/
@@ -102,12 +104,14 @@ noncomputable def c_HS (eta sigma r : ℝ) : ℝ :=
 
 /-- c_HS written using the alpha3 = (eta/2)·alpha0 identity. -/
 theorem c_HS_inner_a3_eq {eta sigma r : ℝ} (heta : eta < 1) (hr : r < sigma) :
-    c_HS eta sigma r = -(py_a0 eta + py_a1 eta * (r / sigma) + eta / 2 * py_a0 eta * (r / sigma) ^ 3) := by
+    c_HS eta sigma r =
+    -(py_a0 eta + py_a1 eta * (r / sigma) + eta / 2 * py_a0 eta * (r / sigma) ^ 3) := by
   rw [c_HS_inner hr, py_a3_eq heta]
 
 /-! ### Measurability -/
 
-/-- `c_HS eta sigma` is measurable as a piecewise function (polynomial on `Iio sigma`, zero elsewhere). -/
+/-- `c_HS eta sigma` is measurable as a piecewise function
+(polynomial on `Iio sigma`, zero elsewhere). -/
 theorem c_HS_measurable (eta sigma : ℝ) : Measurable (c_HS eta sigma) := by
   unfold c_HS
   apply Measurable.ite (measurableSet_Iio (a := sigma)) _ measurable_const
@@ -125,12 +129,14 @@ theorem c_HS_aemeasurable (eta sigma : ℝ) (mu : MeasureTheory.Measure ℝ) :
 
 /-- `c_HS eta sigma` is integrable on `[0, sigma]`.
 
-**Proof:** c_HS equals the continuous polynomial `g(r) = -(alpha0 + alpha1·(r/sigma) + alpha3·(r/sigma)^3)`
+**Proof:** c_HS equals the continuous polynomial
+`g(r) = -(alpha0 + alpha1·(r/sigma) + alpha3·(r/sigma)^3)`
 on `[0, sigma)`, and equals 0 at r = sigma (a null set).  So c_HS =ᵃᵉ g on [0, sigma];
 since g is continuous, hence integrable on the compact set [0, sigma], so is c_HS. -/
 theorem c_HS_integrableOn {eta sigma : ℝ} (_hsigma : 0 < sigma) :
     IntegrableOn (c_HS eta sigma) (Set.Icc 0 sigma) := by
-  -- On Ico 0 sigma (which equals Icc up to the null set {sigma}), c_HS equals the polynomial g exactly.
+  -- On Ico 0 sigma (which equals Icc up to the null set {sigma}),
+  -- c_HS equals the polynomial g exactly.
   rw [integrableOn_Icc_iff_integrableOn_Ico]
   set g := fun r => -(py_a0 eta + py_a1 eta * (r / sigma) + py_a3 eta * (r / sigma) ^ 3)
   have hg : IntegrableOn g (Set.Ico 0 sigma) :=

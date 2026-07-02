@@ -79,7 +79,8 @@ while continuity gives `E r + P r → E 0 + P 0`.  Since `𝓝[≠] 0` is NeBot,
 `tendsto_nhds_unique` forces `E 0 + P 0 = 0`. -/
 theorem origin_necessity (E P : ℝ → ℝ)
     (hcE : ContinuousAt E 0) (hcP : ContinuousAt P 0)
-    {L : ℝ} (hL : Filter.Tendsto (fun r => (E r + P r) / r) (nhdsWithin 0 (Set.compl {0})) (nhds L)) :
+    {L : ℝ}
+    (hL : Filter.Tendsto (fun r => (E r + P r) / r) (nhdsWithin 0 (Set.compl {0})) (nhds L)) :
     E 0 + P 0 = 0 := by
   -- id(r) = r → 0 along 𝓝[≠] 0
   have hr : Filter.Tendsto (fun r : ℝ => r) (nhdsWithin 0 (Set.compl {0})) (nhds 0) :=
@@ -95,13 +96,15 @@ theorem origin_necessity (E P : ℝ → ℝ)
       simpa [zero_mul] using hmul
     -- step 2: for r ≠ 0, r * ((E r + P r) / r) = E r + P r
     refine hprod.congr' (eventually_nhdsWithin_of_forall fun r hne => ?_)
-    simp only [Set.mem_compl_iff, Set.mem_singleton_iff] at hne
+    change r ≠ 0 at hne
     field_simp [hne]
   -- By continuity, E r + P r → E 0 + P 0 along 𝓝[≠] 0
-  have hcont : Filter.Tendsto (fun r => E r + P r) (nhdsWithin 0 (Set.compl {0})) (nhds (E 0 + P 0)) :=
+  have hcont : Filter.Tendsto (fun r => E r + P r)
+      (nhdsWithin 0 (Set.compl {0})) (nhds (E 0 + P 0)) :=
     (hcE.add hcP).tendsto.mono_left nhdsWithin_le_nhds
   -- 𝓝[≠] 0 is NeBot: ℝ has no isolated points
-  haveI : Filter.NeBot (nhdsWithin (0 : ℝ) (Set.compl {0})) := inferInstance
+  haveI : Filter.NeBot (nhdsWithin (0 : ℝ) (Set.compl {0})) :=
+    (inferInstance : Filter.NeBot (nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ)))
   exact (tendsto_nhds_unique h0 hcont).symm
 
 end FMSA.OriginConstraint

@@ -7,6 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
+
 /-!
 # Hard-Sphere Baxter Factor Auxiliary Integrals (φ1 and φ2)
 
@@ -20,6 +21,7 @@ Proved by FTC with antiderivatives:
     F2(r) = -(r^2/(2s) + r/s^2 + 1/s^3) · exp(-sr)         F2' = (r^2/2) · exp(-sr)
 -/
 set_option linter.unusedSimpArgs false
+set_option linter.unusedTactic false
 
 open MeasureTheory intervalIntegral Real Set
 
@@ -191,7 +193,8 @@ theorem Q0_imaginary_axis_ne_zero (eta sigma : ℝ) (heta : eta ∈ Set.Ioo 0 1)
       let s : ℂ := Complex.I * q
       (1 : ℂ) - 12 * eta *
         (s * ((1 - s * sigma - Complex.exp (-s * sigma)) / s ^ 2) +
-         s ^ 2 * ((1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-s * sigma)) / s ^ 3)) / sigma ≠ 0 := by
+         s ^ 2 * ((1 - s * sigma + (s * sigma) ^ 2 / 2 -
+           Complex.exp (-s * sigma)) / s ^ 3)) / sigma ≠ 0 := by
   intro q
   dsimp only
   by_cases hq : q = 0
@@ -199,8 +202,9 @@ theorem Q0_imaginary_axis_ne_zero (eta sigma : ℝ) (heta : eta ∈ Set.Ioo 0 1)
   · have hs : (Complex.I * (q : ℂ)) ≠ 0 := by
       intro h
       have := congr_arg Complex.im h
-      simp [Complex.mul_im, Complex.I_im, Complex.I_re,
-            Complex.ofReal_im, Complex.ofReal_re] at this
+      simp only [Complex.mul_im, Complex.I_im, Complex.I_re,
+            Complex.ofReal_im, Complex.ofReal_re, mul_one, zero_mul, sub_zero,
+            zero_add, one_mul, Complex.zero_im] at this
       exact hq this
     set u : ℝ := q * sigma with hu_def
     have hu : u ≠ 0 := mul_ne_zero hq hsigma.ne'

@@ -16,7 +16,8 @@ import Mathlib
 The FMSA_poly contact-LJ approximation computes inner-core free energy by integrating
 the LJ potential over [sigma_ij, R_ij] analytically.  The key integral identity is:
 
-    ∫_sigma^R (sigma1^2/r1^0 - sigma^6/r^4) dr  =  R^3 · (-(sigma/R)1^2/9 + (sigma/R)^6/3 - 2(sigma/R)^3/9)
+    ∫_sigma^R (sigma1^2/r1^0 - sigma^6/r^4) dr
+      =  R^3 · (-(sigma/R)1^2/9 + (sigma/R)^6/3 - 2(sigma/R)^3/9)
 
 The original LJ integrand `[(sigma/r)1^2 - (sigma/r)^6] · r^2` equals `sigma1^2/r1^0 - sigma^6/r^4`,
 so these are the same integral (`lj_integrand_eq`).
@@ -76,7 +77,8 @@ lemma lj_integrable {sigma R : ℝ} (hsigma : 0 < sigma) (hsigmaR : sigma <= R) 
 
 /-- **Task F.5 — LJ inner-core integral (power-law form):**
 
-    `∫_sigma^R (sigma1^2/r1^0 - sigma^6/r^4) dr  =  R^3 · (-(sigma/R)1^2/9 + (sigma/R)^6/3 - 2(sigma/R)^3/9)`
+    `∫_sigma^R (sigma1^2/r1^0 - sigma^6/r^4) dr`
+    `= R^3 · (-(sigma/R)1^2/9 + (sigma/R)^6/3 - 2(sigma/R)^3/9)`
 
 Proved by FTC using antiderivative `F(r) = (-sigma1^2/9)·(r^9)⁻¹ + (sigma^6/3)·(r^3)⁻¹`. -/
 theorem lj_integral {sigma R : ℝ} (hsigma : 0 < sigma) (hR : 0 < R) (hsigmaR : sigma <= R) :
@@ -93,7 +95,8 @@ theorem lj_integral {sigma R : ℝ} (hsigma : 0 < sigma) (hR : 0 < R) (hsigmaR :
 
 /-! ### Integrand equivalence and LJ_term corollary -/
 
-/-- The original LJ integrand `((sigma/r)1^2 - (sigma/r)^6)·r^2` equals `sigma1^2/r1^0 - sigma^6/r^4`
+/-- The original LJ integrand `((sigma/r)1^2 - (sigma/r)^6)·r^2`
+equals `sigma1^2/r1^0 - sigma^6/r^4`
 for `r ≠ 0` (by `field_simp` + `ring`). -/
 lemma lj_integrand_eq {sigma r : ℝ} (hr : r ≠ 0) :
     ((sigma/r)^12 - (sigma/r)^6) * r^2 = sigma^12 / r^10 - sigma^6 / r^4 := by

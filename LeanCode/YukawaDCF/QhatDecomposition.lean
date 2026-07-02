@@ -47,7 +47,8 @@ namespace FMSA.PathB
 Q̂0_{ij} = P̂_{ij} + Ê_{ij} · exp(-z · sigma_min)
 ```
 Parameters: `z` (Yukawa pole, `≠ 0`), `sigma` (diameter sigmai), `lam = (sigmaj-sigmai)/2`,
-`R = (sigmai+sigmaj)/2` (contact), `sigma_min`, `rho = √(rhoirhoj)`, `Q'`, `Q''`, `delta` (Kronecker deltaij).
+`R = (sigmai+sigmaj)/2` (contact), `sigma_min`, `rho = √(rhoirhoj)`,
+`Q'`, `Q''`, `delta` (Kronecker deltaij).
 Hypothesis `hR : lam + sigma = R` encodes the contact-distance identity Rij = λij + sigmai. -/
 theorem b2_qhat_entry_decomp
     (z sigma lam R sigma_min rho Q' Q'' delta : ℝ) (hz : z ≠ 0) (hR : lam + sigma = R) :

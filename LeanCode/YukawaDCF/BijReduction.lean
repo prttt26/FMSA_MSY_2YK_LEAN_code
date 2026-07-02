@@ -71,7 +71,8 @@ theorem b_n1_collapse (K A : Fin 1 → Fin 1 → ℝ) (z s : ℝ) :
 
 /-! ## 3. Connection to A = Q̂⁻¹ - 1 -/
 
-/-- **A-matrix entry for N=1:** From the definition `A_ij = (Q̂⁻¹)_{ij} · exp(λ_{ij}·z) - delta_{ij}`,
+/-- **A-matrix entry for N=1:** From the definition
+`A_ij = (Q̂⁻¹)_{ij} · exp(λ_{ij}·z) - delta_{ij}`,
 for i = j = 0 with λ_00 = 0 (equal-species pair), `A_00 = Q̂⁻¹ - 1`.
 The immediate consequence is `1 + A_00 = Q̂⁻¹`. -/
 theorem a_n1_one_plus_eq_Qinv (Q : ℝ) :
@@ -83,7 +84,7 @@ theorem a_n1_one_plus_eq_Qinv (Q : ℝ) :
 theorem a_n1_one_plus_sq (Q : ℝ) :
     let A00 := Q⁻¹ - 1
     (1 + A00) ^ 2 = Q⁻¹ ^ 2 := by
-  simp; ring
+  ring
 
 /-! ## 4. Concrete Baxter form -/
 
@@ -103,7 +104,7 @@ theorem b_n1_baxter_formula (K S L eta z s : ℝ)
     (hD : S + 12 * eta * L * Real.exp (-z) ≠ 0) :
     let D   := S + 12 * eta * L * Real.exp (-z)
     let A00 := (1 - eta) ^ 2 * z ^ 3 / D - 1
-    b_general (fun _ _ => K) (fun _ _ => A00) z s 0 0 =
+    b_general (N := 1) (fun _ _ => K) (fun _ _ => A00) z s 0 0 =
     K * ((1 - eta) ^ 4 * z ^ 6 / (S + 12 * eta * L * Real.exp (-z)) ^ 2) / (s + z) := by
   simp only []
   -- Step 1: collapse the N=1 double sum

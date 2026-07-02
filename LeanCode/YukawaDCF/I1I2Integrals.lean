@@ -87,9 +87,11 @@ theorem I1_formula {alpha z ell : ℝ} (hz : z ≠ 0) :
 
 /-! ## Task 1.2 — I2 ([chsY] Eq. 39) -/
 
-/-- Antiderivative of `(alpha - v)^2 · exp(z·v)` is `((alpha-v)^2/z + 2(alpha-v)/z^2 + 2/z^3) · exp(z·v)`. -/
+/-- Antiderivative of `(alpha - v)^2 · exp(z·v)` is
+`((alpha-v)^2/z + 2(alpha-v)/z^2 + 2/z^3) · exp(z·v)`. -/
 private lemma I2_hasDerivAt {alpha z : ℝ} (hz : z ≠ 0) (v : ℝ) :
-    HasDerivAt (fun v => ((alpha - v) ^ 2 / z + 2 * (alpha - v) / z ^ 2 + 2 / z ^ 3) * Real.exp (z * v))
+    HasDerivAt (fun v =>
+        ((alpha - v) ^ 2 / z + 2 * (alpha - v) / z ^ 2 + 2 / z ^ 3) * Real.exp (z * v))
                ((alpha - v) ^ 2 * Real.exp (z * v)) v := by
   -- d/dv (alpha - v) = -1
   have h_sub : HasDerivAt (fun v => alpha - v) (-1 : ℝ) v := by
@@ -121,7 +123,8 @@ private lemma I2_hasDerivAt {alpha z : ℝ} (hz : z ≠ 0) (v : ℝ) :
 
 /-- **[chsY] Eq. 39 — Task 1.2:**
 `∫0^ell (alpha - v)^2 · exp(z·v) dv`
-`  = (alpha-ell)^2·exp(zell)/z + 2(alpha-ell)·exp(zell)/z^2 + 2·exp(zell)/z^3 - alpha^2/z - 2alpha/z^2 - 2/z^3` -/
+`  = (alpha-ell)^2·exp(zell)/z + 2(alpha-ell)·exp(zell)/z^2 + 2·exp(zell)/z^3`
+`  - alpha^2/z - 2alpha/z^2 - 2/z^3` -/
 theorem I2_formula {alpha z ell : ℝ} (hz : z ≠ 0) :
     ∫ v in (0 : ℝ)..ell, (alpha - v) ^ 2 * Real.exp (z * v) =
     (alpha - ell) ^ 2 * Real.exp (z * ell) / z + 2 * (alpha - ell) * Real.exp (z * ell) / z ^ 2

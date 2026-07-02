@@ -41,6 +41,8 @@ limit is determined by which terms of Eq. 41 survive at `r → R_ij⁻`:
    Proof: combines (1) and (2) above.
 -/
 
+set_option linter.unusedVariables false
+
 open MeasureTheory intervalIntegral Real Set
 
 namespace FMSA.Contact

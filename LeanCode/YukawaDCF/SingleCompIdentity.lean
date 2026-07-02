@@ -60,8 +60,12 @@ theorem g_add_a_mul_exp_eq_one {S L D eta z : ℝ}
 /-- **[chsY] Eq. 44 (explicit Baxter Q-function form):**
 With S(z), L(z) from [chsY] Eq. 52 and D(z) := S(z) + 12eta·L(z)·exp(-z),
 if D(z) ≠ 0 then g(z) + a(z)·exp(-z) = 1. -/
-theorem g_add_a_mul_exp_eq_one_baxter (eta z : ℝ) (hD : (1 - eta) ^ 2 * z ^ 3 + 6 * eta * (1 - eta) * z ^ 2 + 18 * eta ^ 2 * z - 12 * eta * (1 + 2 * eta) + 12 * eta * ((1 + eta / 2) * z + (1 + 2 * eta)) * Real.exp (-z) ≠ 0) :
-    let S := (1 - eta) ^ 2 * z ^ 3 + 6 * eta * (1 - eta) * z ^ 2 + 18 * eta ^ 2 * z - 12 * eta * (1 + 2 * eta)
+theorem g_add_a_mul_exp_eq_one_baxter (eta z : ℝ)
+    (hD : (1 - eta) ^ 2 * z ^ 3 + 6 * eta * (1 - eta) * z ^ 2 +
+          18 * eta ^ 2 * z - 12 * eta * (1 + 2 * eta) +
+          12 * eta * ((1 + eta / 2) * z + (1 + 2 * eta)) * Real.exp (-z) ≠ 0) :
+    let S := (1 - eta) ^ 2 * z ^ 3 + 6 * eta * (1 - eta) * z ^ 2 +
+             18 * eta ^ 2 * z - 12 * eta * (1 + 2 * eta)
     let L := (1 + eta / 2) * z + (1 + 2 * eta)
     let D := S + 12 * eta * L * Real.exp (-z)
     S / D + 12 * eta * L / D * Real.exp (-z) = 1 := by

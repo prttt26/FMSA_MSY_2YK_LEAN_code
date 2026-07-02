@@ -251,13 +251,12 @@ theorem g0_HS_laplace_spec {eta sigma rho s : ℝ} (hsigma : 0 < sigma) (hs : 0 
   have heq : ∀ r : ℝ, g0_HS eta sigma rho r - 1 = oz_h eta sigma rho r := fun r => by
     by_cases hr : r < sigma
     · simp only [g0_HS_core hr, oz_h_core hsigma hr]; ring
-    · push_neg at hr
+    · simp only [not_lt] at hr
       unfold g0_HS; rw [if_neg (not_lt.mpr hr), g0_HS_outer_eq_oz_h hsigma]; ring
   have hint_eq :
       (∫ r in Set.Ioi (0 : ℝ), r * (g0_HS eta sigma rho r - 1) * Real.exp (-s * r)) =
-      (∫ r in Set.Ioi (0 : ℝ), r * oz_h eta sigma rho r * Real.exp (-s * r)) :=
-    MeasureTheory.integral_congr_ae
-      (Filter.eventually_of_forall fun r => by rw [heq r])
+      (∫ r in Set.Ioi (0 : ℝ), r * oz_h eta sigma rho r * Real.exp (-s * r)) := by
+    simp_rw [heq]
   rw [hint_eq]
   exact oz_laplace_identity hne (oz_laplace_oz_eq hsigma hs hne)
 

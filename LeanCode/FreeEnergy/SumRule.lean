@@ -10,7 +10,7 @@ import Mathlib
 import LeanCode.FreeEnergy.OuterIntegral
 import LeanCode.FreeEnergy.InnerIntegral
 import LeanCode.FreeEnergy.LJIntegral
-import LeanCode.FMSAPoly.BijReduction
+import LeanCode.YukawaDCF.BijReduction
 
 /-!
 # Task F.4 — Compressibility Sum Rule
@@ -27,7 +27,8 @@ At first order in the Yukawa perturbation (FMSA), the perturbative correction is
 
 **The sum rule assertion:** This equals the direct MSA result
     `Ĉ^(1)(0) = -β A^(1)_t / V · (1/rho)`
-where `β A^(1)/V = -(rho^2/2) · Ĉ^(1)(0)` is the first-order energy density from perturbation theory.
+where `β A^(1)/V = -(rho^2/2) · Ĉ^(1)(0)`
+is the first-order energy density from perturbation theory.
 
 **Proof strategy:** The identity follows from the Parseval / residue theorem connecting the
 real-space FMSA formulas to the Laplace-domain MSA closure:
@@ -98,7 +99,8 @@ noncomputable def cHat_inner_growing (A z d : ℝ) : ℝ :=
 
 /-- `cHat_inner_growing` matches the integral of the growing exponential.
 
-**Proof:** Apply `inner_core_single_term_integral` with `-z` (which gives `exp((-z)(r-d)) = exp(-z(r-d))`),
+**Proof:** Apply `inner_core_single_term_integral` with `-z`
+(which gives `exp((-z)(r-d)) = exp(-z(r-d))`),
 then simplify via `neg_neg`, `neg_sq`, and `div_neg`. -/
 theorem cHat_inner_growing_eq_integral {A z d : ℝ} (hz : z ≠ 0) :
     cHat_inner_growing A z d =
@@ -149,7 +151,8 @@ it requires the FMSA structural equations relating the real-space and Laplace-sp
 theorem f4_real_space_equals_laplace_domain
     (K A_val z d : ℝ) (hz : 0 < z)
     (hMSA : FMSA.Task4_1.b_general (fun _ _ => K) (fun _ _ => A_val) z 0 (0 : Fin 1) 0 =
-            cHat_outer K z d / (4 * Real.pi) + cHat_inner_growing (K * (1 + A_val) ^ 2) z d / (4 * Real.pi))
+            cHat_outer K z d / (4 * Real.pi) +
+            cHat_inner_growing (K * (1 + A_val) ^ 2) z d / (4 * Real.pi))
     :
     cHat_outer K z d + cHat_inner_growing (K * (1 + A_val) ^ 2) z d =
     4 * Real.pi * FMSA.Task4_1.b_general (fun _ _ => K) (fun _ _ => A_val) z 0 (0 : Fin 1) 0 := by
@@ -175,7 +178,8 @@ the Laplace-domain MSA result `4π · b_00(0)` from `b_n1_collapse` (Task 4.1).
 NOT `cHat_inner_single` (which computes the FMSA_GA_matrix_mix DECAYING term `exp(+z·(r-d))`).
 
 **What is proved (no sorry):**
-- `chsy_total_cHat_form`: outer + growing-inner = `4π K [(1-(1+A)^2)(d/z+1/z^2) + (1+A)^2exp(zd)/z^2]`
+- `chsy_total_cHat_form`: outer + growing-inner =
+  `4π K [(1-(1+A)^2)(d/z+1/z^2) + (1+A)^2exp(zd)/z^2]`
 - `b_n1_zero_wavevector`: `b_00(0) = K·(1+A)^2/z`
 
 **What is still open (sorry):**
@@ -229,10 +233,12 @@ example : cHat_outer 1 1 1 = 4 * Real.pi * (1 + 1) := by
 
 /-! ### Task F.6 — FMSA_GA_matrix_mix vs LJ free energy comparison -/
 
-/-- **Task F.6 (part C) — Algebraic difference between FMSA_GA_matrix_mix and LJ inner-core free energies:**
+/-- **Task F.6 (part C) — Algebraic difference between
+FMSA_GA_matrix_mix and LJ inner-core free energies:**
 
 FMSA_GA_matrix_mix exact inner-core:
-    `4π · K · (1+A)^2 · (R/z - 1/z^2 + exp(-zR)/z^2)`   [from F.2a, `inner_core_single_term_integral`]
+    `4π · K · (1+A)^2 · (R/z - 1/z^2 + exp(-zR)/z^2)`
+    [from F.2a, `inner_core_single_term_integral`]
 
 LJ contact-value approximation:
     `4π · g0(R) · R^3 · (-s1^2/9 + s^6/3 - 2s^3/9)`     [from F.2b, `lj_integral`]
@@ -278,9 +284,11 @@ theorem ga_matrix_mix_vs_lj_energy_integral_form
     - 4 * Real.pi * g0 * ∫ r in (sigma : ℝ)..R, (sigma ^ 12 / r ^ 10 - sigma ^ 6 / r ^ 4) =
     4 * Real.pi * (K * (1 + A_val) ^ 2 * inner_I1 + g0 * lj_int) := by
   simp only []
-  -- Step 1: FMSA_GA_matrix_mix inner energy — inner_core_single_term_integral with A := K*(1+A_val)^2
+  -- Step 1: FMSA_GA_matrix_mix inner energy —
+  --   inner_core_single_term_integral with A := K*(1+A_val)^2
   rw [inner_core_single_term_integral hz]
-  -- Step 2: LJ inner energy — lj_integral gives ∫_sigma^R (sigma1^2/r1^0-sigma^6/r^4) as closed form
+  -- Step 2: LJ inner energy —
+  --   lj_integral gives ∫_sigma^R (sigma1^2/r1^0-sigma^6/r^4) as closed form
   rw [lj_integral hsigma hsigmaR]
   -- Step 3: algebra (sign: lj_int = -lj_integral, so -g0*(lj_integral) = g0*lj_int)
   ring

@@ -144,7 +144,8 @@ theorem eij_single_R_continuous {n : ℕ} (A z : Fin n → ℝ) (R : ℝ) :
   exact continuous_const.mul
     (Real.continuous_exp.comp (continuous_const.mul (continuous_const.sub continuous_id)))
 
-/-- **Task F.3a — FMSA_GA_matrix_mix inner-core free energy integrand `eij(r) · r` is in L1 on `[0, R]`.**
+/-- **Task F.3a — FMSA_GA_matrix_mix inner-core free energy integrand
+`eij(r) · r` is in L1 on `[0, R]`.**
 
 The integrand is a product of two continuous functions on a compact interval, hence
 `IntervalIntegrable`.  This covers the exact E_ij inner-core term from [chsY] Eq. 41

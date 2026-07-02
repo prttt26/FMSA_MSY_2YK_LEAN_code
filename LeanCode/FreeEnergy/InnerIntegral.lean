@@ -48,9 +48,8 @@ private lemma hasDerivAt_r_exp_mul_antideriv {z : ℝ} (hz : z ≠ 0) (r : ℝ) 
       simpa using (hasDerivAt_id r).const_mul z
     exact h.exp
   -- A(r) = r/z - 1/z^2, A'(r) = 1/z
-  have hA : HasDerivAt (fun r => r / z - 1 / z ^ 2) (1 / z) r := by
-    have h := (hasDerivAt_id r).div_const z |>.sub (hasDerivAt_const r (1 / z ^ 2))
-    simpa using h
+  have hA : HasDerivAt (fun r => r / z - 1 / z ^ 2) (1 / z) r :=
+    ((hasDerivAt_id r).div_const z).sub_const (1 / z ^ 2)
   -- Product rule: F' = A'·E + A·E' = r·exp(zr)
   exact (hA.mul hE).congr_deriv (by field_simp [hz]; ring)
 
