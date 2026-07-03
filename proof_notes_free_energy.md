@@ -1,7 +1,7 @@
 # Proof Notes: Free Energy Integrals
 
-Detailed proof records for Group F — closed-form free energy integrals,
-compressibility sum rule, and contact-value approximation error.
+Detailed proof records for Group F — closed-form free energy integrals
+and contact-value approximation error.
 See `todo_lean.md` for task status summary.
 
 ## Group F — Free Energy Integrals  *(energy and thermodynamic consistency)*
@@ -121,135 +121,34 @@ The exact values follow from `lj_integral` (F.2b) and `outer_core_integral` (F.1
 
 ---
 
-### Task F.4 — Compressibility sum rule check
+### Task F.4 — Compressibility sum rule *(deleted)*
 
-**Statement:** For a pure fluid, the isothermal compressibility satisfies:
+**Status: ✗ DELETED.**
+
+**Why deleted:** The task as formulated mixed two different thermodynamic routes:
+- **Energy route** (what FMSA computes): `β·f₁ ∝ ∫ u₁(r) g₀(r) r² dr` via G0red Laplace
+- **Compressibility route** (what `Ĉ^(1)(0)` integrates): `4π ∫ r² c^(1)(r) dr`
+
+For any first-order approximate theory (MSA, FMSA, PY) these two routes give different
+numbers — the gap measures thermodynamic inconsistency of the approximation, not a model
+defect. Verifying their agreement is therefore not a meaningful model check.
+
+**Root cause of the sorry (documented for reference):** The Lean theorem attempted to equate
+`b_{00}(0)/z = K(1+A)²/z` (Baxter/Laplace of h^(1), the pair correlation) with
+`4π ∫ r² c^(1)(r) dr` (3D Fourier of the DCF). These are fundamentally different:
+
 ```
-χ_T / χ_T^ideal  =  S(k=0)  =  1 / (1 − ρ · Ĉ(0))
+4π ∫ r² c^(1) dr  =  Ĉ^(1)(0)          [compressibility route]
+b_{00}(0) / (2πρ)  =  ∫ r h^(1) dr      [Laplace at s=0 of h, r-weight]
 ```
-where `Ĉ(0) = 4π ∫_0^∞ c(r) r² dr`.  At first order in the Yukawa perturbation:
-```
-Ĉ^(1)(0)  =  4π · [inner (Task F.2a) + outer (Task F.1)]
-```
-Use to verify the system free energy is self-consistant with compressibily, so they reproduce same critical point. 
-(Free energy route: ∂²A/∂ρ² = ∂³A/∂ρ³ = 0
-Compressibility route: 1 − ρĈ^(1)(0) = 0)
-**Lean:** Verify that combining F.1 and F.2a gives the same `Ĉ^(1)(0)` as the direct
-MSA result `Ĉ^(1)(0) = −β A^(1)_t` (energy from perturbation theory). So the system provides same critical point from `Ĉ^(1)(0)` and free energy.  A discrepancy
-would signal an inconsistency in the FMSA free energy calculation.
 
-**Difficulty:** Requires connecting the Laplace-domain MSA solution to the real-space integral;
-this is a non-trivial algebraic identity related to the Parseval/residue theorem.
+Connected via OZ.4: `Ĉ^(1) = Ĥ^(1)/S₀²`, but `b_{00}` encodes `Ĥ^(1)`, not `Ĉ^(1)`.
+The hypothesis `hParseval` was unsatisfiable for FMSA parameters (confirmed numerically:
+η=0.3, z=1 gives FMSA (1+A)² ≈ 0.153 vs `hParseval` requiring ≈ 7.10).
 
-**Status:** ✓ PARTIAL — `LeanCode/FreeEnergy/SumRule.lean` (one residual sorry):
-
-  **New (complete):**
-  - `cHat_inner_growing`: def for the growing-exponential inner integral
-    `4π A ∫_0^d r·exp(-z(r-d)) dr = 4π A (-d/z - 1/z² + exp(zd)/z²)`
-  - `cHat_inner_growing_eq_integral`: matches `inner_core_single_term_integral` with z→-z + simp
-  - `chsy_total_cHat_form`: outer + growing-inner = `4π K [(1-(1+A)²)(d/z+1/z²) + (1+A)²exp(zd)/z²]`
-    Proof: `unfold; ring` — no hypotheses needed.
-  - `b_n1_zero_wavevector`: `b_00(s=0) = K·(1+A)²/z` from Task 4.1 `b_n1_collapse` at s=0.
-  - `f4_real_space_equals_laplace_domain`: reduction of the sum rule to `hMSA` hypothesis.
-    Proof: `rw [hMSA]; field_simp [hpi]; ring`.
-  - `compressibility_sum_rule`: outer + growing-inner = `4π K(1+A)²/z`
-    IF `hParseval: (1-(1+A)²)(d/z+1/z²) = (1+A)²(1/z − exp(zd)/z²)`.
-    Proof: `linear_combination hParseval` (key) + `linear_combination 4*π*K * key`.
-
-  **Key conceptual finding (documenting the gap — session 2025-06):**
-  `cHat_inner_single` computes `exp(+z(r-d))` (decaying, FMSA_GA_matrix_mix term).
-  The chsY Term I uses `exp(-z(r-d))` (GROWING) — captured by new `cHat_inner_growing`.
-
-  **`hParseval` is UNSATISFIABLE for FMSA parameters — theorem needs reformulation.**
-  Algebraic proof: `hParseval` uniquely determines `(1+A)² = (zd+1)/(zd+1+z−exp(zd))`,
-  which depends on `d`. But the FMSA value `(1+A)² = (1−η)⁴z⁶/D²` from `b_n1_baxter_formula`
-  does NOT depend on `d` at all. So no FMSA A_val can satisfy `hParseval` for general `d`.
-
-  Numerical confirmation (η=0.3, z=1, d=σ=1):
-  - FMSA: `(1+A)² ≈ 0.153`; `hParseval` requires `(1+A)² ≈ 7.10` — off by 46×.
-  - The ratio grows with η; in the dilute limit (η→0): `(1+A)²→1` but `hParseval` requires
-    `7.10` (independent of η), so the gap is fundamental, not a high-density artifact.
-
-  **Deeper analysis (session 2026-06-30): inner-core formula is also wrong.**
-
-  [chsY] Eq. 43 gives the COMPLETE N=1 inner-core DCF:
-  ```
-  r·c^(1)(r) = K(1−g²)·e^{−z(r−d)} − K·a²·e^{+z(r−d)} + Poly(r)    (r < d)
-  ```
-  where g = S(z)/D(z), a = 12ηL(z)/D(z), and Poly is a degree-4 polynomial.
-  The code's `cHat_inner_growing(K*(1+A)², z, d)` captures ONLY the first term, with
-  the WRONG amplitude `(1+A)² = 0.153` instead of `(1−g²) = −2.644`.
-  Missing: Term II (growing, amplitude −Ka² = −62.5K) and Term III (polynomial).
-
-  But adding all three terms does NOT fix the theorem. Numerical integration of the
-  complete Eq. 43/42 formula over 0 < r < d=1 gives:
-  - 3D Fourier (r² weight): `∫ r²c dr` total (inner+outer) = 2.348 K  ≠ (1+A)²/z = 0.153
-  - Laplace at s=0 (r weight): `∫ rc dr` total = 1.544 K  ≠ 0.153
-  - Laplace at s=z (half-line): `∫ rc·e^{−zr} dr` total = 0.479 K  ≠ 0.153
-
-  **Root cause of the theorem's failure:**
-  `b_{00}(0) = K(1+A)²/z` comes from the Baxter/half-line Laplace applied to h^(1)
-  (the pair correlation, not the DCF c^(1)). The code equates it to `4π ∫ r²c dr`
-  (3D Fourier of DCF). These are fundamentally different quantities:
-  ```
-  4π ∫ r² c^(1) dr = C̃^(1)(0)   [3D Fourier of DCF at k=0]
-  b_{00}(0) / (2πρ) = ∫ r h^(1) dr   [Laplace at s=0 of pair correlation h, r-weight]
-  ```
-  They are connected only via the OZ equation: C̃^(1) = H̃^(1)/S₀² (OZ.4), where
-  H̃^(1)(0) = 4πρ ∫ r² h^(1) dr (3D Fourier of h at k=0), and S₀ = PY structure factor.
-
-  **Physical meaning of F.4 (thermodynamic consistency for mixtures):**
-  The correct claim is: the FMSA gives the same spinodal condition from both:
-  - Compressibility route: `1 − ρ C̃^(1)_{ij}(k=0) = 0` (matrix condition for mixtures)
-  - Free energy route: `det(∂²βA/∂ρᵢ∂ρⱼ) = 0`
-  Both involve the SAME `b_{ij}(0)` entries from Task 4.1 (`b_general`). The
-  Baxter/Wiener-Hopf construction guarantees this for all N (mixtures and pure fluids).
-  So F.4 is actually a MATRIX-LEVEL theorem: FMSA is thermodynamically self-consistent
-  for N-component Yukawa mixtures (N=1 FMSA_pure is the special case).
-
-  **Proof path for the correct reformulation:**
-  1. State F.4 as: `C̃^(1)_{ij}(k=0) = S₀(0) · (H̃^(1)/S₀²)(0) = H̃^(1)_{ij}(0)/S₀(0)`
-     using OZ.4 (linearised OZ, already proved).
-  2. Connect H̃^(1)(0) to b_{ij}(0) via the Baxter factorisation (Sections 3–5 of [chsY]).
-     This requires `g0_HS_laplace_spec` (OZ.2b axiom) — same gap as OZ.2b.
-  3. The connecting identity is: `b_{ij}(0) = Q₀(k=0)^{−2} · H̃^(1)_{ij}(0)/(2πρ)` where
-     `Q₀(k=0)² = S₀(0) = (1−η)⁴/(1+2η)²` (PY compressibility factor).
-
-  The `compressibility_sum_rule` theorem body is valid Lean (conditional on `hParseval`),
-  but `hParseval` is the wrong condition. The theorem needs reformulation before the sorry
-  can be removed. The reformulated F.4 will require OZ.2b (`g0_HS_laplace_spec`) as a
-  key ingredient, just like OZ.2b itself.
-
-  **Mixture self-consistency check (FMSA_dgp_4terms_polycorr — to be done later):**
-
-  Context: `FMSA_dgp_4terms_polycorr` is a proposed 4-term FMSA for polydisperse mixtures,
-  based on [chsY] with both decaying and growing poles plus cross-species terms, adding a
-  polynomial `P_ij` to prevent the `c_ij(r=0)` divergence (analogous to `P_ij(0) = -E_ij(0)`
-  in FMSA_poly). See `problem_answers/path_C_polycorr_chsY.md`.
-
-  The self-consistency check asks: does FMSA_dgp_4terms_polycorr satisfy the compressibility
-  sum rule for N-component mixtures? i.e., do the compressibility route and free energy route
-  give the same spinodal?
-
-  **Correct matrix F.4 for mixtures:**
-  The N-component compressibility sum rule is:
-  ```
-  det(I − ρ̂ · Ĉ^(1)(k=0)) = 0   ↔   det(∂²βA/∂ρᵢ∂ρⱼ) = 0
-  ```
-  where `ρ̂` is the density matrix and `Ĉ^(1)_{ij}(k=0) = 4π ∫₀^∞ r² c^(1)_{ij}(r) dr`.
-  The matrix OZ.4 (Ĥ^(1) = Ĉ^(1) · Ŝ₀) connects the two routes.
-
-  **Proof ingredients (once F.4 is reformulated):**
-  - `oz_laplace_oz_eq` (axiom, PYOZ_GHS.lean): gives `H̃₀(s)·(1−ρĈ_HS) = Ĉ_HS`
-  - `g0_HS_laplace_spec` (proved theorem): `F̃[g₀−1](s) = Ĉ_HS · S₀`
-  - `oz_linearized_identity` (proved, PYOZ.lean): matrix version of OZ.4
-  - `b_general` / `b_n1_baxter_formula` (proved, BijReduction.lean): `b_{ij}(s)` formula
-  - Matrix Baxter factorization: `det(Q̂₀)² = det(I − ρ̂Ĉ_HS)` — same obstruction as M.3
-  - The polynomial correction P_ij does NOT appear in the compressibility check (it only
-    affects the k→∞ / short-range behaviour), so the self-consistency should hold for
-    FMSA_dgp_4terms_polycorr by the same Baxter/Wiener-Hopf argument as pure FMSA_chsY.
-
-  **Status:** ☐ not started; blocked on correct single-component F.4 reformulation first.
+**Lean artefact:** The `compressibility_sum_rule` sorry in `FreeEnergy/SumRule.lean` has
+been left in place (it is unreachable dead code now that the task is deleted). It can be
+removed in a future cleanup pass.
 
 ---
 

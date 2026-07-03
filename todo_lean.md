@@ -20,7 +20,7 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 
 | Sorry | File | Task | What remains |
 |-------|------|------|--------------|
-| `compressibility_sum_rule` (under `hParseval`) | `FreeEnergy/SumRule.lean` | F.4 | `hParseval` is UNSATISFIABLE for FMSA parameters: `(1+A)²` from `b_n1_baxter_formula` depends on `(η,z)` but NOT `d`, while `hParseval` forces `(1+A)² = (zd+1)/(zd+1+z−exp(zd))` which depends on `d`. Numerically: η=0.3, z=1, d=1 gives FMSA 0.153 vs required 7.10. The theorem conflates 3D Fourier (r² weight) with 1D Laplace (no r² weight). Needs reformulation. |
+| *(none)* | — | — | — |
 
 ### Axioms — `axiom` declarations assumed without proof
 
@@ -133,18 +133,39 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 | F.2b | LJ inner-core integral identity | ✓ DONE | `FreeEnergy/LJIntegral.lean` |
 | F.3a | Free energy convergence (FMSA_GA_matrix_mix route) | ✓ DONE | `FreeEnergy/Convergence.lean` |
 | F.3b | Free energy convergence (LJ/FMSA_poly route) | ✓ DONE | `FreeEnergy/Convergence.lean` |
-| F.4 | Compressibility sum rule | ☐ sorry (mis-stated) | `FreeEnergy/SumRule.lean` |
+| F.4 | Compressibility sum rule | ✗ deleted | — |
 | F.5 | Contact-value approximation error | ✓ DONE | `FreeEnergy/ContactError.lean` |
 | F.6 | FMSA_GA_matrix_mix exact vs LJ free energy comparison | ✓ DONE | `FreeEnergy/SumRule.lean` |
+
+**F.4 deletion note:** The compressibility sum rule `∂(βP)/∂ρ = 1−ρĉ(0)` mixes the energy-route
+free energy (what FMSA computes: `∫ u g₀ r² dr`) with the compressibility-route DCF (`ĉ(0)` from
+integrating c(r)). For any first-order approximate theory these two routes give different numbers —
+the gap measures route inconsistency, not model quality. Verifying route inconsistency numerically
+is not a useful model check. Deleted.
 
 ### Group 5 — Matching at Contact *(yukawa_dcf)*
 
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
-| 5.1 | Inner/outer matching at r=R_ij (2YK only) | ✓ DONE | `YukawaDCF/ContactMatching.lean` |
+| 5.1 | Inner/outer matching at r=R_ij (2YK only) | ✓ structural (I1/I2=0) / **⊥ physical claim disproved** | `YukawaDCF/ContactMatching.lean` |
+
+**5.1 disproof note:** The Lean proof establishes only that `I1(0) = I2(0) = 0` (integral over an
+empty interval — trivially true) and `eij(R,R) = ΣA_k`. It explicitly states in a comment that
+full DCF continuity additionally requires the MSA closure condition `K = A_k` at each Yukawa
+pole, which is NOT proved and does NOT hold.
+
+Numerical evidence from `FMSA_pure` (verify_pure.py V.1): the first-order c₁ gap at r = d_bh is
+~1.1–1.7 across liquid-range state points, far from the ~1e-6 numerical-precision level.  The
+total-c gap is smaller (~0.02–0.7) only because the FMT c₀ accidentally partially compensates.
+Since the pure-fluid limit is the simplest case, the same discontinuity must appear in mixtures.
+The intended physical matching property (DCF continuity at contact for the 2YK FMSA) is false.
 
 ### Group D — Pure-Limit Equivalence
 
 ~~Tasks D.1–D.4 deleted.~~ Written for the old scalar Path B approach; no longer valid after
 FMSA_GA_matrix_mix redesign (full G/A matrix, mediated terms). Pure-limit N=1 reduction is covered
 by **C.1** (✓ DONE). See [proof_notes_yukawa_dcf.md](proof_notes_yukawa_dcf.md) if a new Group D is needed.
+
+---
+
+*Numerical verification tasks (Groups V and W) are in `../todo/todo_numerical.md`.*
