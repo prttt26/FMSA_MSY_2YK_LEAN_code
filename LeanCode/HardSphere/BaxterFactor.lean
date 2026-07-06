@@ -307,29 +307,163 @@ theorem Q0_imaginary_axis_ne_zero (eta sigma : ℝ) (heta : eta ∈ Set.Ioo 0 1)
     linarith
 
 /-!
-**Task 2.2 — real-axis non-vanishing (axiomatic).**
+**Task 2.2 — real-axis non-vanishing (proved).**
 
-The imaginary-axis result (`Q0_imaginary_axis_ne_zero`) is proved above.
-On the real positive axis `s = z` (the Yukawa pole), the Q-function CAN vanish
-at a transcendental z0(eta) (numerics: z0 ≈ 3 for eta = 0.3), so a universal
-`∀ z > 0, D(z) ≠ 0` is **false**.
+The imaginary-axis result (`Q0_imaginary_axis_ne_zero`) is proved above. The stale
+"Domain note" that used to sit here claimed `D(z)` has a zero at some transcendental
+`z0(eta) ≈ 3` for `eta = 0.3`; numerically this is **false** for the concrete `D` below
+(`D` is strictly increasing from `D(0) = 0`, hence strictly positive for all `z > 0`).
+That note described a *different* function (the general `det Q̂(s)` before it was pinned
+down to this concrete single-component form) and does not apply here.
 
-The axiom below encodes the physical assumption that the Yukawa parameter z is
-chosen away from such zeros; this is implicit in any FMSA computation. -/
+**Proof strategy.** Write `D = bigD0`. A direct computation shows:
+  - `bigD0 eta 0 = 0` and `bigD1 eta 0 = 0`, where `bigD1 = d(bigD0)/dz`;
+  - `bigD2 := d(bigD1)/dz` is a sum of three manifestly nonnegative terms for `z ≥ 0`,
+    `eta ∈ (0,1)`, strictly positive for `z > 0`:
+    `bigD2 eta z = 6(1-eta)²z + 12eta(1-eta)(1 - exp(-z)) + 12eta(1+eta/2)·z·exp(-z)`.
+  - Hence `bigD1` is strictly increasing on `[0,∞)` (from `bigD2 > 0` on `(0,∞)`), so
+    `bigD1 eta z > bigD1 eta 0 = 0` for `z > 0`;
+  - Hence `bigD0` is strictly increasing on `[0,∞)` (from `bigD1 > 0` on `(0,∞)`), so
+    `bigD0 eta z > bigD0 eta 0 = 0` for `z > 0`. -/
 
-/-- **Task 2.2 — Axiom (D ≠ 0 at real Yukawa pole):**
+/-- `bigD0 eta z` is the single-component Baxter denominator
+`D(z) = S(z) + 12eta·L(z)·exp(-z)` from [chsY] Eq. 52. -/
+private noncomputable def bigD0 (eta z : ℝ) : ℝ :=
+  (1 - eta) ^ 2 * z ^ 3 + 6 * eta * (1 - eta) * z ^ 2 + 18 * eta ^ 2 * z -
+  12 * eta * (1 + 2 * eta) +
+  12 * eta * ((1 + eta / 2) * z + (1 + 2 * eta)) * Real.exp (-z)
 
-The single-component Baxter denominator
-`D(z) = S(z) + 12eta·L(z)·exp(-z)`
-(`S`, `L` from [chsY] Eq. 52) is non-zero for the Yukawa inverse range `z > 0`
-and packing fraction `eta ∈ (0,1)`.
+/-- `bigD1 eta z = d(bigD0 eta)/dz` (see `hasDerivAt_bigD0`). -/
+private noncomputable def bigD1 (eta z : ℝ) : ℝ :=
+  3 * (1 - eta) ^ 2 * z ^ 2 + 12 * eta * (1 - eta) * z + 18 * eta ^ 2 -
+  18 * eta ^ 2 * Real.exp (-z) - 12 * eta * (1 + eta / 2) * z * Real.exp (-z)
 
-**Proved:** `Q0_imaginary_axis_ne_zero` (imaginary axis, s = iq).
-**Axiomatic:** real-axis case; follows from choosing z away from the transcendental
-zero z0(eta) of D, which is implicit in all physical FMSA use. -/
-axiom Q0_ne_zero_at_yukawa {eta z : ℝ} (heta : eta ∈ Set.Ioo 0 1) (hz : 0 < z) :
+/-- `bigD2 eta z = d(bigD1 eta)/dz` (see `hasDerivAt_bigD1`). -/
+private noncomputable def bigD2 (eta z : ℝ) : ℝ :=
+  6 * (1 - eta) ^ 2 * z + 12 * eta * (1 - eta) * (1 - Real.exp (-z)) +
+  12 * eta * (1 + eta / 2) * z * Real.exp (-z)
+
+private lemma hasDerivAt_bigD0 (eta z : ℝ) : HasDerivAt (bigD0 eta) (bigD1 eta z) z := by
+  have hz3 : HasDerivAt (fun x : ℝ => x ^ 3) (3 * z ^ 2) z := by
+    simpa using hasDerivAt_pow 3 z
+  have hz2 : HasDerivAt (fun x : ℝ => x ^ 2) (2 * z) z := by
+    simpa using hasDerivAt_pow 2 z
+  have hz1 : HasDerivAt (fun x : ℝ => x) (1 : ℝ) z := hasDerivAt_id z
+  have hexp : HasDerivAt (fun x : ℝ => Real.exp (-x)) (-Real.exp (-z)) z := by
+    have h : HasDerivAt (fun x : ℝ => -x) (-1 : ℝ) z := (hasDerivAt_id z).neg
+    simpa using h.exp
+  have hpoly : HasDerivAt
+      (fun x : ℝ => (1 - eta) ^ 2 * x ^ 3 + 6 * eta * (1 - eta) * x ^ 2 +
+                    18 * eta ^ 2 * x - 12 * eta * (1 + 2 * eta))
+      (3 * (1 - eta) ^ 2 * z ^ 2 + 12 * eta * (1 - eta) * z + 18 * eta ^ 2) z := by
+    have h1 : HasDerivAt (fun x : ℝ => (1 - eta) ^ 2 * x ^ 3) ((1 - eta) ^ 2 * (3 * z ^ 2)) z :=
+      hz3.const_mul _
+    have h2 : HasDerivAt (fun x : ℝ => 6 * eta * (1 - eta) * x ^ 2)
+        (6 * eta * (1 - eta) * (2 * z)) z := hz2.const_mul _
+    have h3 : HasDerivAt (fun x : ℝ => 18 * eta ^ 2 * x) (18 * eta ^ 2 * 1) z :=
+      hz1.const_mul _
+    have h4 : HasDerivAt (fun _ : ℝ => (12 * eta * (1 + 2 * eta) : ℝ)) 0 z :=
+      hasDerivAt_const _ _
+    exact (((h1.add h2).add h3).sub h4).congr_deriv (by ring)
+  have hQ : HasDerivAt (fun x : ℝ => 12 * eta * ((1 + eta / 2) * x + (1 + 2 * eta)))
+      (12 * eta * (1 + eta / 2)) z := by
+    have h : HasDerivAt (fun x : ℝ => (1 + eta / 2) * x + (1 + 2 * eta))
+        (1 + eta / 2) z :=
+      ((hz1.const_mul (1 + eta / 2)).add_const (1 + 2 * eta)).congr_deriv (by ring)
+    exact (h.const_mul (12 * eta)).congr_deriv (by ring)
+  have hQexp : HasDerivAt
+      (fun x : ℝ => 12 * eta * ((1 + eta / 2) * x + (1 + 2 * eta)) * Real.exp (-x))
+      (12 * eta * (1 + eta / 2) * Real.exp (-z) +
+       12 * eta * ((1 + eta / 2) * z + (1 + 2 * eta)) * (-Real.exp (-z))) z :=
+    hQ.mul hexp
+  exact (hpoly.add hQexp).congr_deriv (by unfold bigD1; ring)
+
+private lemma hasDerivAt_bigD1 (eta z : ℝ) : HasDerivAt (bigD1 eta) (bigD2 eta z) z := by
+  have hz2 : HasDerivAt (fun x : ℝ => x ^ 2) (2 * z) z := by
+    simpa using hasDerivAt_pow 2 z
+  have hz1 : HasDerivAt (fun x : ℝ => x) (1 : ℝ) z := hasDerivAt_id z
+  have hexp : HasDerivAt (fun x : ℝ => Real.exp (-x)) (-Real.exp (-z)) z := by
+    have h : HasDerivAt (fun x : ℝ => -x) (-1 : ℝ) z := (hasDerivAt_id z).neg
+    simpa using h.exp
+  have hpoly : HasDerivAt
+      (fun x : ℝ => 3 * (1 - eta) ^ 2 * x ^ 2 + 12 * eta * (1 - eta) * x + 18 * eta ^ 2)
+      (6 * (1 - eta) ^ 2 * z + 12 * eta * (1 - eta)) z := by
+    have h1 : HasDerivAt (fun x : ℝ => 3 * (1 - eta) ^ 2 * x ^ 2)
+        (3 * (1 - eta) ^ 2 * (2 * z)) z := hz2.const_mul _
+    have h2 : HasDerivAt (fun x : ℝ => 12 * eta * (1 - eta) * x)
+        (12 * eta * (1 - eta) * 1) z := hz1.const_mul _
+    have h3 : HasDerivAt (fun _ : ℝ => (18 * eta ^ 2 : ℝ)) 0 z := hasDerivAt_const _ _
+    exact ((h1.add h2).add h3).congr_deriv (by ring)
+  have hexpconst : HasDerivAt (fun x : ℝ => 18 * eta ^ 2 * Real.exp (-x))
+      (18 * eta ^ 2 * (-Real.exp (-z))) z := hexp.const_mul _
+  have hexplin : HasDerivAt (fun x : ℝ => 12 * eta * (1 + eta / 2) * x * Real.exp (-x))
+      (12 * eta * (1 + eta / 2) * Real.exp (-z) +
+       12 * eta * (1 + eta / 2) * z * (-Real.exp (-z))) z := by
+    exact ((hz1.const_mul (12 * eta * (1 + eta / 2))).mul hexp).congr_deriv (by ring)
+  exact ((hpoly.sub hexpconst).sub hexplin).congr_deriv (by unfold bigD2; ring)
+
+private lemma bigD2_pos {eta z : ℝ} (heta0 : 0 < eta) (heta1 : eta < 1) (hz : 0 < z) :
+    0 < bigD2 eta z := by
+  have hexple : Real.exp (-z) ≤ 1 := by
+    have h : Real.exp (-z) ≤ Real.exp 0 := Real.exp_le_exp.mpr (by linarith)
+    simpa using h
+  have ht1 : 0 ≤ 6 * (1 - eta) ^ 2 * z := by positivity
+  have ht2 : 0 ≤ 12 * eta * (1 - eta) * (1 - Real.exp (-z)) :=
+    mul_nonneg (by nlinarith) (by linarith)
+  have ht3 : 0 < 12 * eta * (1 + eta / 2) * z * Real.exp (-z) :=
+    mul_pos (mul_pos (by nlinarith) hz) (Real.exp_pos _)
+  unfold bigD2
+  linarith
+
+private lemma bigD1_zero (eta : ℝ) : bigD1 eta 0 = 0 := by
+  unfold bigD1
+  simp
+
+private lemma bigD0_zero (eta : ℝ) : bigD0 eta 0 = 0 := by
+  unfold bigD0
+  simp
+
+private lemma bigD1_pos {eta z : ℝ} (heta0 : 0 < eta) (heta1 : eta < 1) (hz : 0 < z) :
+    0 < bigD1 eta z := by
+  have hcont : ContinuousOn (bigD1 eta) (Set.Ici 0) :=
+    fun x _ => (hasDerivAt_bigD1 eta x).continuousAt.continuousWithinAt
+  have hderiv : ∀ x ∈ interior (Set.Ici (0 : ℝ)),
+      HasDerivWithinAt (bigD1 eta) (bigD2 eta x) (interior (Set.Ici (0 : ℝ))) x :=
+    fun x _ => (hasDerivAt_bigD1 eta x).hasDerivWithinAt
+  have hpos : ∀ x ∈ interior (Set.Ici (0 : ℝ)), 0 < bigD2 eta x := by
+    intro x hx
+    rw [interior_Ici] at hx
+    exact bigD2_pos heta0 heta1 hx
+  have hmono : StrictMonoOn (bigD1 eta) (Set.Ici 0) :=
+    strictMonoOn_of_hasDerivWithinAt_pos (convex_Ici 0) hcont hderiv hpos
+  have h := hmono (Set.self_mem_Ici (a := (0 : ℝ))) hz.le hz
+  rwa [bigD1_zero] at h
+
+/-- **Task 2.2 (real-axis, proved):** the single-component Baxter denominator
+`D(z) = S(z) + 12eta·L(z)·exp(-z)` (`S`, `L` from [chsY] Eq. 52) is strictly positive,
+hence non-zero, for the Yukawa inverse range `z > 0` and packing fraction `eta ∈ (0,1)`.
+
+Proved via two applications of `strictMonoOn_of_hasDerivWithinAt_pos`: `bigD2 > 0` on
+`(0,∞)` gives `bigD1` strictly increasing from `bigD1 eta 0 = 0`, hence `bigD1 > 0` on
+`(0,∞)`; that in turn gives `bigD0` strictly increasing from `bigD0 eta 0 = 0`, hence
+`bigD0 > 0` on `(0,∞)`. -/
+theorem Q0_ne_zero_at_yukawa {eta z : ℝ} (heta : eta ∈ Set.Ioo 0 1) (hz : 0 < z) :
     (1 - eta) ^ 2 * z ^ 3 + 6 * eta * (1 - eta) * z ^ 2 + 18 * eta ^ 2 * z -
     12 * eta * (1 + 2 * eta) +
-    12 * eta * ((1 + eta / 2) * z + (1 + 2 * eta)) * Real.exp (-z) ≠ 0
+    12 * eta * ((1 + eta / 2) * z + (1 + 2 * eta)) * Real.exp (-z) ≠ 0 := by
+  have hcont : ContinuousOn (bigD0 eta) (Set.Ici 0) :=
+    fun x _ => (hasDerivAt_bigD0 eta x).continuousAt.continuousWithinAt
+  have hderiv : ∀ x ∈ interior (Set.Ici (0 : ℝ)),
+      HasDerivWithinAt (bigD0 eta) (bigD1 eta x) (interior (Set.Ici (0 : ℝ))) x :=
+    fun x _ => (hasDerivAt_bigD0 eta x).hasDerivWithinAt
+  have hpos : ∀ x ∈ interior (Set.Ici (0 : ℝ)), 0 < bigD1 eta x := by
+    intro x hx
+    rw [interior_Ici] at hx
+    exact bigD1_pos heta.1 heta.2 hx
+  have hmono : StrictMonoOn (bigD0 eta) (Set.Ici 0) :=
+    strictMonoOn_of_hasDerivWithinAt_pos (convex_Ici 0) hcont hderiv hpos
+  have h := hmono (Set.self_mem_Ici (a := (0 : ℝ))) hz.le hz
+  rw [bigD0_zero] at h
+  simpa [bigD0] using h.ne'
 
 end FMSA.HardSphere

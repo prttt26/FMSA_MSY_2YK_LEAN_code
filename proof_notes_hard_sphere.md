@@ -48,10 +48,22 @@ is only well-defined when `det ≠ 0`.
 **Difficulty:** Requires showing a real-analytic function has no positive real zeros given
 positivity constraints on ρ, σ.  Likely needs interval arithmetic or monotonicity argument.
 
-**Status:** ☐ axiomatic — `Q0_ne_zero_at_yukawa` added as axiom in `LeanCode/HardSphere/BaxterFactor.lean`
-  for the physically needed case (η ∈ (0,1), z > 0 real Yukawa pole).  The imaginary-axis version
-  `Q0_imaginary_axis_ne_zero` IS proved .  Real-axis positivity proof needs interval
-  arithmetic or monotonicity argument (future work).
+**Status:** ✓ DONE — `Q0_ne_zero_at_yukawa` is now a **proved theorem** (was an axiom) in
+  `LeanCode/HardSphere/BaxterFactor.lean`, for the physically needed case (η ∈ (0,1), z > 0
+  real Yukawa pole). The imaginary-axis version `Q0_imaginary_axis_ne_zero` was already proved.
+
+  **The stale "z0(eta) ≈ 3" counterexample note was wrong** for this concrete `D(z)` — numerics
+  across a fine grid (η ∈ (0.001, 0.999), z ∈ (0, 2000)) show `D` is strictly increasing from
+  `D(0) = 0`, hence strictly positive for all `z > 0`. That note described a different,
+  not-yet-pinned-down function from before `D` was reduced to this concrete single-component form.
+
+  **Proof (monotonicity via two nested derivative arguments, no axiom needed):**
+  - `bigD2(z) := d²D/dz² = 6(1−η)²z + 12η(1−η)(1−exp(−z)) + 12η(1+η/2)·z·exp(−z)` is a sum of
+    three manifestly nonnegative terms for `z ≥ 0, η ∈ (0,1)`, strictly positive for `z > 0`.
+  - `strictMonoOn_of_hasDerivWithinAt_pos` on `bigD1 := dD/dz` (whose derivative is `bigD2`, `>0`
+    on `(0,∞)`), combined with `bigD1(0) = 0`, gives `bigD1(z) > 0` for `z > 0`.
+  - Same lemma again on `D` itself (derivative `bigD1`, `>0` on `(0,∞)`), combined with `D(0) = 0`,
+    gives `D(z) > 0` for `z > 0`, hence `D(z) ≠ 0`.
 
 ---
 

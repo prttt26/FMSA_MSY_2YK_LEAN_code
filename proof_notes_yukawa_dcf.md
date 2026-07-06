@@ -439,7 +439,7 @@ Determination of the Polynomial" and "Explicit Derivative Formulas for the Mixtu
 Coefficients" (lines 1319–1435).  Together they replace the code placeholder `[p0, p1, 0, 0]`
 with the algebraically exact five-coefficient expression for all pairs.
 
-**Lean file for B.5–B.9:** `LeanCode/YukawaDCF/B5MixturePoly.lean` (to be created).
+**Lean file for B.5–B.9:** `LeanCode/YukawaDCF/B5MixturePoly.lean` (created, `namespace FMSA.MixturePoly`).
 
 ---
 
@@ -480,7 +480,22 @@ beyond order 4 vanish.
 
 **Depends on:** B.1, B.2, M.3; [LN] eqs. 1396–1407.
 
-**Status:** ☐ not started.
+**Status:** ✓ DONE — `B5MixturePoly.lean` (section `DegreeBound`), no `sorry`.
+
+**Proof structure (as implemented):**
+
+The main theorem `b5_degree_bound` is proved via `b5_q0_entry_hasLimit`, which shows that each `q0_entry` coefficient has a finite limit as z → 0⁺ by composing:
+- `b5_p2_limit (σ)`: `(1 − z·σ + (z·σ)²/2 − exp(−z·σ)) / z³ → σ³/6` as z → 0⁺.  
+  Proved by writing `p2 = σ³/6 + r(z)` and squeezing `r(z) → 0` via `Real.exp_bound n=4`.
+- `b5_p1_limit (σ)`: `(1 − z·σ − exp(−z·σ)) / z² → −σ²/2` as z → 0⁺.  
+  Proved from the algebraic identity `p1 = −σ²/2 + z·p2` (`field_simp; ring`) and `b5_p2_limit`.
+
+**Key Lean APIs used:**
+- `Real.exp_bound`: `|exp x − Σ_{m<n} xᵐ/m!| ≤ |x|ⁿ · (n.succ / (n! · n))` with `n=4`, `x = -(z·σ)`.
+- `tendsto_of_tendsto_of_tendsts_of_le_of_le'`: squeeze theorem for filter limits.
+- `Filter.Eventually.filter_mono nhdsWithin_le_nhds`: transfer `∀ᶠ z in nhds 0, P z` to `nhdsWithin 0 (Ioi 0)`.
+- `div_le_iff₀` (not `div_le_iff`): for `b/c ≤ a` with `0 < c`.
+- `neg_abs_le`, `le_abs_self`: lower/upper sandwich from absolute value bound.
 
 ---
 
@@ -516,7 +531,13 @@ r=0 must have P(0) = −E_{ij}(0), and its higher coefficients are unconstrained
 
 **Depends on:** B.4 (`b4_polynomial_constant`), P.2 (`origin_constraint`); [LN] eq. 1325.
 
-**Status:** ☐ not started.
+**Status:** ✓ DONE — `B5MixturePoly.lean` (section `OriginUniqueness`).
+
+Both directions proved:
+- `b6_origin_unique_constraint` (forward): if `[E₀+A+Br+...]/r → L` as r→0⁺, then `A = −E₀`.
+  Proof: multiply both sides by `r → 0` via `Tendsto.mul`; `field_simp [ne_of_gt hr]` (from `eventually_nhdsWithin_of_forall`) cancels `r`; `fun_prop` gives continuity of the polynomial; `tendsto_nhds_unique` with `haveI : (nhdsWithin 0 (Set.Ioi 0)).NeBot := nhdsWithin_Ioi_self_neBot`; `linarith` closes.
+- `b6_origin_converse` (backward): if `A = −E₀`, the quotient converges to `B`.
+  Proof: `field_simp [ne_of_gt hr]` + `ring` rewrites to `B + Cr + ...`; `fun_prop` + `continuousAt.continuousWithinAt` + `simpa`.
 
 ---
 
@@ -542,7 +563,9 @@ additional axiom that does NOT follow from the OZ/MSA construction.
 
 **Depends on:** Task 5.1 (`contactMatching_full_continuity_false`); [LN] eqs. 1333–1339.
 
-**Status:** ☐ not started.
+**Status:** ◑ in progress — `B5MixturePoly.lean` (section `NoContactBC`).
+
+Theorem `b7_no_contact_bc` is **stated with sorry**.  The statement: the conjunction `∀ v v', ∃! poly ∈ ℝ⁴, P(R)=v ∧ P'(R)=v'` is false (two equations in four unknowns; infinitely many solutions).  The algebraic witness construction (two explicit distinct solutions with the same P(R) and P'(R)) is left as sorry.
 
 ---
 
@@ -594,7 +617,9 @@ is insufficient.
 
 **Depends on:** B.5; [LN] eqs. 1353–1371.
 
-**Status:** ☐ not started.
+**Status:** ◑ in progress — `B5MixturePoly.lean` (section `LaurentExtraction`).
+
+Theorem `b8_poly_coeff_from_laurent` is **stated with sorry**; the statement uses `iteratedDeriv n R 0 / Nat.factorial n` as the Taylor coefficients.  Proof requires `AnalyticAt.hasSum` + formal-power-series coefficient identities not yet assembled.
 
 ---
 
@@ -651,7 +676,54 @@ denominator, not a general fact.
 
 **Depends on:** B.8, B.5; [LN] lines 1460–1574.
 
-**Status:** ☐ not started.
+**Status:** ◑ in progress — `B5MixturePoly.lean` (section `DijNonzero`).
+
+Two theorems **stated with sorry**:
+- `b9_no_odd_symmetry`: no involution τ of (0,R) forces all symmetric polynomials to have zero cubic coefficient; the proof explanation (τ r = R−r maps X³ → (R−X)³, imposing a *relation* on coefficients not a vanishing) is in the sorry comment.
+- `b9_d_ij_nonzero_example`: existential witness with σ₁ ≠ σ₂; placeholder statement using `∃ D, D ≠ 0 ∧ D = 0` (self-contradictory, intentionally marks it as needing a real norm_num witness from the Taylor recursion).
+
+---
+
+### Task B.10 — Exact degree: natDegree P_{ij} = 4
+
+**Statement:** The polynomial P_{ij}(r) extracted from R_{ij}(s) via B.8 has `Polynomial.natDegree = 4`, i.e., the degree is exactly 4, not merely ≤ 4.
+
+**Proof structure:**
+
+The theorem combines an upper and lower bound:
+
+```lean
+theorem b10_degree_exact
+    (R : ℝ → ℝ) (hR : AnalyticAt ℝ R 0) (hE4 : R 0 ≠ 0) :
+    let P := Polynomial.C (R 0 / 24) * Polynomial.X ^ 4
+           + Polynomial.C (iteratedDeriv 1 R 0 / 6)   * Polynomial.X ^ 3
+           + Polynomial.C (iteratedDeriv 2 R 0 / 4)   * Polynomial.X ^ 2
+           + Polynomial.C (iteratedDeriv 3 R 0 / 6)   * Polynomial.X
+           + Polynomial.C (iteratedDeriv 4 R 0 / 24)
+    P.natDegree = 4 :=
+  le_antisymm (b10_degree_le hR) (b10_degree_ge hE4)
+```
+
+**Upper bound sub-lemma** (`natDegree ≤ 4`):
+
+Immediate from the polynomial construction — every monomial has degree ≤ 4. Closed by `Polynomial.natDegree_add` + `Polynomial.natDegree_C_mul_X_pow`. No analyticity needed for this direction; the bound is baked into the definition of P.
+
+**Lower bound sub-lemma** (`natDegree ≥ 4`):
+
+Equivalent to `leadingCoeff P ≠ 0`, i.e., `R 0 / 24 ≠ 0`, which follows directly from `hE4 : R 0 ≠ 0` and `(24 : ℝ) ≠ 0`. Closed by `Polynomial.natDegree_eq_of_leadingCoeff_ne_zero` + `div_ne_zero hE4 (by norm_num)`.
+
+**Is a separate lower-bound task necessary?**
+
+The lower bound in the abstract theorem requires `hE4 : R 0 ≠ 0` as a hypothesis — it is not proved, merely assumed. Whether this hypothesis holds for the *actual* R_{ij}(s) from the FMSA construction is a separate question:
+
+- For a concrete binary mixture (σ₁=1, σ₂=2, explicit ρ, lam, Q', Q''), one could unfold `q0_entry` fully and verify `R 0 ≠ 0` by `native_decide` or `norm_num`. This is feasible but requires all Taylor recursion unfolded.
+- For generic parameters: follows from M.3 (det Q̂₀(0) ≠ 0) + the structure of W_{ij}(0)/ΔQ(0); needs symbolic argument analogous to B.9.
+
+**Verdict:** A separate lower-bound task is not necessary for the FMSA degree theory. The upper bound (`deg ≤ 4`) is the physically essential claim. The exact degree task B.10 is mathematically cleaner but the `hE4` hypothesis can remain as an explicit assumption rather than a derived fact, unless a concrete computational witness is desired.
+
+**Depends on:** B.8 (for the full theorem; upper bound alone is trivial), M.3 (for the generic lower-bound instantiation).
+
+**Status:** ☐ not started — statement above; no Lean file entry yet. Add to `B5MixturePoly.lean` section `DegreeExact` after B.8 is proved.
 
 ---
 

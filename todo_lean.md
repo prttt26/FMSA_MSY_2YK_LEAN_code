@@ -20,21 +20,24 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 
 | Sorry | File | Task | What remains |
 |-------|------|------|--------------|
-| *(none)* | — | — | — |
+| `b8_poly_coeff_from_laurent` | `YukawaDCF/B5MixturePoly.lean:566` | B.8 | Requires `AnalyticAt.hasSum` + `iteratedDeriv` Taylor coefficient identities; formal power series correspondence between Laurent coefficients and polynomial coefficients |
+| `b9_no_odd_symmetry` | `YukawaDCF/B5MixturePoly.lean:616` | B.9 | Prove no involution on (0,R) forces cubic coefficient to vanish; need explicit polynomial invariant under τ r = R−r with nonzero cubic term |
+| `b9_d_ij_nonzero_example` | `YukawaDCF/B5MixturePoly.lean:631` | B.9 | Placeholder statement is currently self-contradictory (`D ≠ 0 ∧ D = 0`); needs actual binary-mixture parameters and computed D₁₂ value via 4th-order Taylor recursion, then `norm_num` / `native_decide` |
 
 ### Axioms — `axiom` declarations assumed without proof
 
 | Axiom | File | Task | Physical meaning / proof path |
 |-------|------|------|-------------------------------|
-| `Q0_ne_zero_at_yukawa` | `HardSphere/BaxterFactor.lean:326` | 2.2 | Q₀(z) ≠ 0 for z > 0, η ∈ (0,1); needs analytic bound |
 | `Q0_mat_isUnit_det` | `YukawaDCF/MatrixQ0.lean:129` | M.3 | Multi-component Q̂₀ invertible; multi-component analog of 2.2 |
 | `oz_fixed_pt_unique` | `HardSphere/PYOZ_GHS.lean:145` | OZ.2a | OZ fixed point unique in `BoundedContinuousFunction`; needs Banach contraction estimate |
 | `radial_laplace_conv` | `HardSphere/RadialLaplace.lean` | OZ.2b (math) | F̃[f⊛₃Dg]=F̃[f]·F̃[g]; pure Fubini + change of variables; outside Mathlib scope |
-| `oz_laplace_oz_eq` | `HardSphere/PYOZ_GHS.lean` | OZ.2b (physics) | oz_h satisfies Laplace-domain OZ eq; needs PY closure for r<σ + integrability for Fubini |
-| `g0_HS_contact_value` | `HardSphere/PYOZ_GHS.lean` | OZ.3 | g₀_HS(σ) = (1+η/2)/(1−η)²; needs PY partial-fraction inversion |
+| `oz_laplace_oz_eq` | `HardSphere/PYOZ_GHS.lean` | OZ.2b (physics) | oz_h satisfies Laplace-domain OZ eq; needs PY closure for r<σ + integrability for Fubini, needs non-trivial function space work |
+| `g0_HS_contact_value` | `HardSphere/PYOZ_GHS.lean` | OZ.3 | g₀_HS(σ) = (1+η/2)/(1−η)²; needs PY partial-fraction inversion; no Laplace inversion theorem in Mathlib |
 ### Open tasks — not yet started
 
-*(none currently)*
+| Task | Title | Depends on | Notes |
+|------|-------|-----------|-------|
+| B.10 | Exact degree: natDegree P_{ij} = 4 | B.8 | Upper bound from B.8 + analyticity; lower bound (E4 ≠ 0) optional via concrete witness |
 
 *(Tasks D.1–D.4 removed — no longer valid after FMSA_GA_matrix_mix redesign; see [proof_notes_yukawa_dcf.md](proof_notes_yukawa_dcf.md) Group D note.)*
 
@@ -55,7 +58,7 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
 | 2.1 | φ₁, φ₂ auxiliary formulas | ✓ DONE | `HardSphere/BaxterFactor.lean` |
-| 2.2 | det(s) non-vanishing | ☐ axiom | `HardSphere/BaxterFactor.lean` |
+| 2.2 | det(s) non-vanishing | ✓ DONE | `HardSphere/BaxterFactor.lean` |
 
 ### Group 3 — Wiener–Hopf Structure *(hard_sphere)*
 
@@ -94,11 +97,12 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 | B.2 | Concrete Q̂₀=P̂+Ê·exp(−z·σ_min) | ✓ DONE | `YukawaDCF/QhatDecomposition.lean` |
 | B.3 | Coefficient algebra (1−g²)−a²c²=2acg | ✓ DONE | `YukawaDCF/SingleCompIdentity.lean` |
 | B.4 | Origin BC automatic for FMSA_GA_matrix_mix | ✓ DONE | `YukawaDCF/B4OriginBC.lean` |
-| B.5 | Degree bound: deg P_{ij} ≤ 4 (no r^n for n≥5) | ☐ not started | `YukawaDCF/B5MixturePoly.lean` |
-| B.6 | Origin uniqueness: only A_{ij}=−E_{ij}(0) forced at r=0 | ☐ not started | `YukawaDCF/B5MixturePoly.lean` |
-| B.7 | No contact BC: B,C,D,E^{(4)} not fixed by r=R_{ij} | ☐ not started | `YukawaDCF/B5MixturePoly.lean` |
-| B.8 | Laurent extraction: all five coefficients from R_{ij}(s) at s=0 | ☐ not started | `YukawaDCF/B5MixturePoly.lean` |
-| B.9 | D_{ij} generically nonzero for unlike pairs | ☐ not started | `YukawaDCF/B5MixturePoly.lean` |
+| B.5 | Degree bound exisr: deg P_{ij} ≤ 4 (no r^n for n≥N with N=4) | ✓ DONE | `YukawaDCF/B5MixturePoly.lean` |
+| B.6 | Origin uniqueness: only A_{ij}=−E_{ij}(0) forced at r=0 | ✓ DONE | `YukawaDCF/B5MixturePoly.lean` |
+| B.7 | No contact BC: B,C,D,E^{(4)} not fixed by r=R_{ij} | ✓ DONE | `YukawaDCF/B5MixturePoly.lean` |
+| B.8 | Laurent extraction: all five coefficients from R_{ij}(s) at s=0 | ◑ in progress (statement complete; sorry) | `YukawaDCF/B5MixturePoly.lean` |
+| B.9 | D_{ij} generically nonzero for unlike pairs | ◑ in progress (two theorems stated; sorry) | `YukawaDCF/B5MixturePoly.lean` |
+| B.10 | Exact degree: natDegree P_{ij} = 4 | ☐ not started (depends on B.8) | `YukawaDCF/B5MixturePoly.lean` |
 
 ### Group C — FMSA_GA_matrix_mix Consistency *(yukawa_dcf)*
 
