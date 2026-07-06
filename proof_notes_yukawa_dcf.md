@@ -260,7 +260,7 @@ Key results in `namespace FMSA.MatrixQ0`:
 
 ---
 
-## Group B — FMSA_GA_matrix_mix Algebraic Foundation  *(FMSA_GA_matrix_mix specific)*
+## Group B — FMSA_GA_matrix_mix Algebraic Foundation and Polynomial Determination  *(FMSA_GA_matrix_mix specific)*
 
 These tasks formalise the algebraic structure underlying `FMSA_GA_matrix_mix` ([chsY] FMSA_GA_matrix_mix corrected
 inner-core formula).  They connect the abstract matrix identity M.1 (`Ĝ + Â·c = I`) to the
@@ -419,6 +419,239 @@ B.3 (`coeff_identity`).
     with `p0 = -(2*K*g*a)` Baxter-forced; same `linear_combination` proof.
   - `b4_ga_matrix_mix_origin_baxter`: Baxter instantiation with `S/D`, `M/D`; uses
     `simp only [] + apply + field_simp [hD]`.
+
+---
+
+**Context for B.5–B.9:**
+
+Task B.4 determined the constant term A_{ij} = p₀ for **like pairs only**, using the
+`g + a·exp(−z) = 1` identity specific to the N=1 Baxter scalar.  For a general
+N-component mixture, the full polynomial
+
+```
+P_{ij}(r) = A_{ij} + B_{ij}·r + C_{ij}·r² + D_{ij}·r³ + E_{ij}^{(4)}·r⁴
+```
+
+has five coefficients, none of which is zero in general for unlike pairs.  Tasks B.5–B.9
+formalise the complete determination of all five via the s=0 Laurent expansion of the
+exact inside-core transform — the route described in [LN] §§ "Origin Regularity and
+Determination of the Polynomial" and "Explicit Derivative Formulas for the Mixture
+Coefficients" (lines 1319–1435).  Together they replace the code placeholder `[p0, p1, 0, 0]`
+with the algebraically exact five-coefficient expression for all pairs.
+
+**Lean file for B.5–B.9:** `LeanCode/YukawaDCF/B5MixturePoly.lean` (to be created).
+
+---
+
+### Task B.5 — Degree bound: P_{ij} has degree ≤ 4
+
+**Statement:**  For an N-component mixture with hard-sphere diameters σ₁ ≤ … ≤ σ_N,
+the polynomial P_{ij}(r) arising from the s=0 residue of the inside-core Laplace
+transform has degree at most 4:
+
+```
+[r^n] P_{ij}(r) = 0    for all n ≥ 5.
+```
+
+**Proof strategy:**
+
+Define the regularised remainder
+```
+R_{ij}(s) := s⁵ · [exp(s·R_{ij}) · S_{ij}(s) − Y_{ij}(s)]
+```
+where S_{ij}(s) is the one-sided Laplace transform of 2π√(ρᵢρⱼ)·r·c_{ij}^{(1)}(r)
+on (0, R_{ij}), and Y_{ij}(s) is the Yukawa-pole part ([LN] eq. 1387).
+
+R_{ij}(s) is analytic at s=0 by order-counting in Q̂₀(s):
+
+1. Each entry q_{ab}(s) of Q̂₀(s) is a linear combination of φ₁(σₐ, s) and φ₂(σₐ, s)
+   — entire functions of s ([LN] eqs. 1506–1511) — so q_{ab}(s) = Σ_{k≥0} q^{[k]}_{ab}·sᵏ.
+2. For N=2: ΔQ(s) = q₁₁q₂₂ − q₁₂q₂₁ is analytic and ΔQ(0) ≠ 0 (M.3), so Q̂₀⁻¹ is
+   analytic at s=0.
+3. The Yukawa-pole numerators W_{ij}(s)/ΔQ(s) ([LN] eq. 1536) are analytic at s=0 and
+   have Taylor expansions truncated at O(s⁴): W_{ij}(s) is quadratic in the q^{[k]}
+   coefficients, each of which contributes at most s⁴.
+4. Expanding e^{sR}·S_{ij}(s) about s=0 and subtracting Y_{ij}(s) leaves a Laurent
+   series whose s⁵ multiple is analytic — terms beyond s⁴ cancel via the ΔQ structure.
+
+In Lean: formalise R_{ij}(s) and show `AnalyticAt ℝ R_{ij} 0` by composing the
+analyticity of each factor; invoke `AnalyticAt.taylorCoeff` to conclude all coefficients
+beyond order 4 vanish.
+
+**Depends on:** B.1, B.2, M.3; [LN] eqs. 1396–1407.
+
+**Status:** ☐ not started.
+
+---
+
+### Task B.6 — Origin uniqueness: only A_{ij} = −E_{ij}(0) is forced at r=0
+
+**Statement:**  The condition that c_{ij}^{(1)}(r) is finite at r = 0 imposes
+exactly one constraint on P_{ij}:
+
+```
+A_{ij} = P_{ij}(0) = −E_{ij}(0).
+```
+
+No constraint on B_{ij}, C_{ij}, D_{ij}, E_{ij}^{(4)} follows from origin regularity.
+
+**Proof strategy:**
+
+The inside-core formula ([LN] eq. 1307) is:
+```
+c_{ij}^{(1)}(r) = [E_{ij}(r) + P_{ij}(r)] / (2π√(ρᵢρⱼ) · r).
+```
+Finiteness at r = 0 requires the numerator to vanish at r = 0:
+```
+E_{ij}(0) + P_{ij}(0) = 0   ⟺   A_{ij} = −E_{ij}(0).
+```
+This is a single scalar equation.  The coefficients B, C, D, E^{(4)} multiply r, r², r³, r⁴
+and contribute zero at r = 0 regardless of their values.
+
+In Lean: introduce `c_inner_num r := E_ij r + P_ij r`; prove
+`Tendsto (fun r => c_inner_num r / r) (nhdsWithin 0 (Set.Ioi 0)) (nhds L)` iff
+`c_inner_num 0 = 0`; use `HasDerivAt.tendsto_nhds` + L'Hôpital.
+Theorem `b6_origin_unique_constraint`: any P satisfying the finite-limit condition at
+r=0 must have P(0) = −E_{ij}(0), and its higher coefficients are unconstrained.
+
+**Depends on:** B.4 (`b4_polynomial_constant`), P.2 (`origin_constraint`); [LN] eq. 1325.
+
+**Status:** ☐ not started.
+
+---
+
+### Task B.7 — No contact BC: B, C, D, E^{(4)} are not fixed by r = R_{ij}
+
+**Statement:**  The coefficients B_{ij}, C_{ij}, D_{ij}, E_{ij}^{(4)} are NOT
+determined by any continuity or matching condition at r = R_{ij}.
+
+**Proof strategy:**
+
+Direct corollary of Task 5.1 (contact continuity physically disproved).
+From 5.1 and FMSA_pure numerical evidence (V.1: c₁ gap ~ 1.1–1.7 at contact):
+
+1. `c_{ij}^{(1)}(r)` is in general discontinuous at r = R_{ij}.
+2. The exact DCF ([LN] eq. 1479: `C̃₁(k) = (I − C̃₀)·H̃₁·(I − C̃₀)`) makes no continuity
+   assumption at contact.
+3. Imposing P_{ij}(R_{ij}) = v or P'_{ij}(R_{ij}) = v' to fix B, C, D, E^{(4)} is
+   unjustified by the FMSA construction.
+
+In Lean: cite `ContactMatching.lean` (Task 5.1); state `b7_no_contact_bc` as: for any P
+satisfying B.6, any specific value assignment of P(R_{ij}) or P'(R_{ij}) is an
+additional axiom that does NOT follow from the OZ/MSA construction.
+
+**Depends on:** Task 5.1 (`contactMatching_full_continuity_false`); [LN] eqs. 1333–1339.
+
+**Status:** ☐ not started.
+
+---
+
+### Task B.8 — Laurent extraction: all five coefficients from R_{ij}(s) at s=0
+
+**Statement:**  All five polynomial coefficients are given by ([LN] eqs. 1421–1427):
+
+```
+A_{ij}       = R_{ij}^{(4)}(0) / 4!
+B_{ij}       = R_{ij}^{(3)}(0) / 3!
+C_{ij}       = R_{ij}''(0)     / (2! · 2!)
+D_{ij}       = R_{ij}'(0)      / 3!
+E_{ij}^{(4)} = R_{ij}(0)       / 4!
+```
+
+where R_{ij}(s) is the regularised remainder from B.5.
+
+**Proof strategy:**
+
+By B.5, R_{ij}(s) is analytic at s=0 with Taylor expansion
+```
+R_{ij}(s) = a^{(-5)} + a^{(-4)}·s + a^{(-3)}·s² + a^{(-2)}·s³ + a^{(-1)}·s⁴ + O(s⁵).
+```
+Inverse Laplace of the Laurent series gives ([LN] eq. 1355):
+```
+P_{ij}(r) = a^{(-1)} + a^{(-2)}·r + a^{(-3)}/2!·r² + a^{(-4)}/3!·r³ + a^{(-5)}/4!·r⁴.
+```
+Matching: A = a^{(-1)} = R^{(4)}(0)/4!, B = R^{(3)}(0)/3!, C = R''(0)/(2!·2!), etc.
+The derivation is the standard identity: n-th Taylor coefficient of analytic f at 0 equals
+f^{(n)}(0)/n!.
+
+In Lean:
+```lean
+theorem b8_poly_coeff_from_laurent
+    (R : ℝ → ℝ) (hR : AnalyticAt ℝ R 0) :
+    poly_coeff A = iteratedDeriv 4 R 0 / Nat.factorial 4 ∧
+    poly_coeff B = iteratedDeriv 3 R 0 / Nat.factorial 3 ∧
+    poly_coeff C = iteratedDeriv 2 R 0 / (Nat.factorial 2 * Nat.factorial 2) ∧
+    poly_coeff D = iteratedDeriv 1 R 0 / Nat.factorial 3 ∧
+    poly_coeff E4 = R 0 / Nat.factorial 4 := by
+  -- AnalyticAt.taylorCoeff + coefficient matching
+  sorry
+```
+
+**Implementation consequence (Python):**  `_solve_polycorr` must compute the 4th-order
+Taylor series of each q_{ab}(s) element, assemble R_{ij}(s) analytically, and return a
+5-element array `[A, B, C, D, E^{(4)}]` for unlike pairs.  The current `[p0, p1, 0, 0]`
+is insufficient.
+
+**Depends on:** B.5; [LN] eqs. 1353–1371.
+
+**Status:** ☐ not started.
+
+---
+
+### Task B.9 — D_{ij} is generically nonzero for unlike pairs
+
+**Statement:**  For a generic binary mixture (i ≠ j), D_{ij} = R'_{ij}(0)/6 ≠ 0.
+No algebraic identity forces D_{ij} to vanish.
+
+**Proof strategy:**
+
+Two complementary arguments:
+
+**(a) No parity symmetry** ([LN] lines 1460–1465):
+
+P_{ij}(r) is defined on the bounded interval (0, R_{ij}).  The only natural involution
+is r ↦ R_{ij} − r, but P(r) ≠ P(R_{ij} − r) in general — this map does not fix the
+polynomial.  There is therefore no symmetry that would force the odd-degree coefficients
+B_{ij} or D_{ij} to vanish.
+
+In Lean:
+```lean
+theorem b9_no_odd_symmetry (R : ℝ) (hR : 0 < R) :
+    ¬ ∃ τ : ℝ → ℝ,
+        (∀ r ∈ Set.Ioo 0 R, τ r ∈ Set.Ioo 0 R) ∧
+        (∀ r, τ (τ r) = r) ∧
+        (∀ p : Polynomial ℝ, p.eval ∘ τ = p.eval → p.coeff 3 = 0) := by
+  -- τ r = R − r is the only candidate; it does not fix polynomials in general
+  sorry
+```
+
+**(b) Explicit unlike-pair structure:**
+
+For unlike pairs (σᵢ ≠ σⱼ), R_{ij}(s) involves the off-diagonal entries q_{ij}(s) and
+q_{ji}(s) of Q̂₀.  These feed into R'_{ij}(0) through the ΔQ determinant recursion
+([LN] eqs. 1519–1531) and are generically nonzero because they depend on different
+hard-sphere radii.
+
+For the like-pair / N=1 case, R'(0) = 0 by a cancellation specific to the
+single-component Baxter polynomial: the `−24η·Ar·r` term has companions `+12η·Br·r²`
+and `−12η²·Ar·r⁴` with no r³ generated (Ar ∼ z⁴ + z⁵ produces no cubic).  For unlike
+pairs the off-diagonal q_{12}·q_{21} cross-terms in ΔQ break this cancellation:
+mixed powers of (z₁, z₂, σ₁, σ₂) generically yield a nonzero s¹ coefficient in
+R_{ij}(s), so D_{ij} ≠ 0.
+
+In Lean: existential witness — choose concrete (η, σ₁, σ₂, K₁₂, z₁₂) and verify
+D_{12} ≠ 0 by `norm_num` / `native_decide` after unfolding the Taylor recursion.
+
+**Why it matters:**
+
+This is the formal justification for extending `_solve_polycorr` to 5 coefficients for
+unlike pairs.  Setting D_{ij} = 0 (the current code) is provably wrong for generic
+unlike pairs.  The N=1 special case (D = 0) is a property of the scalar Baxter
+denominator, not a general fact.
+
+**Depends on:** B.8, B.5; [LN] lines 1460–1574.
+
+**Status:** ☐ not started.
 
 ---
 

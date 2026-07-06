@@ -86,7 +86,7 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 | M.2 | N=1 limit: Ĝ₀₀=g, Â₀₀=a | ✓ DONE | `YukawaDCF/MatrixN1.lean` |
 | M.3 | det(Q̂₀) ≠ 0 multi-component | ✓ DONE (axiom) | `YukawaDCF/MatrixQ0.lean` |
 
-### Group B — FMSA_GA_matrix_mix Algebraic Foundation *(yukawa_dcf)*
+### Group B — FMSA_GA_matrix_mix Algebraic Foundation and Polynomial Determination *(yukawa_dcf)*
 
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
@@ -94,6 +94,11 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 | B.2 | Concrete Q̂₀=P̂+Ê·exp(−z·σ_min) | ✓ DONE | `YukawaDCF/QhatDecomposition.lean` |
 | B.3 | Coefficient algebra (1−g²)−a²c²=2acg | ✓ DONE | `YukawaDCF/SingleCompIdentity.lean` |
 | B.4 | Origin BC automatic for FMSA_GA_matrix_mix | ✓ DONE | `YukawaDCF/B4OriginBC.lean` |
+| B.5 | Degree bound: deg P_{ij} ≤ 4 (no r^n for n≥5) | ☐ not started | `YukawaDCF/B5MixturePoly.lean` |
+| B.6 | Origin uniqueness: only A_{ij}=−E_{ij}(0) forced at r=0 | ☐ not started | `YukawaDCF/B5MixturePoly.lean` |
+| B.7 | No contact BC: B,C,D,E^{(4)} not fixed by r=R_{ij} | ☐ not started | `YukawaDCF/B5MixturePoly.lean` |
+| B.8 | Laurent extraction: all five coefficients from R_{ij}(s) at s=0 | ☐ not started | `YukawaDCF/B5MixturePoly.lean` |
+| B.9 | D_{ij} generically nonzero for unlike pairs | ☐ not started | `YukawaDCF/B5MixturePoly.lean` |
 
 ### Group C — FMSA_GA_matrix_mix Consistency *(yukawa_dcf)*
 
