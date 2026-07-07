@@ -12,6 +12,14 @@ import LeanCode.HardSphere.PYOZ
 /-!
 # Radial Laplace convolution theorem — foundation for OZ.2b
 
+## ⚠ 2026 update: `radial_laplace_conv` is mathematically false, not just unproved
+
+The clean-product claim below (`ℒ_r[c ⊛₃D h](s) = ℒ_r[c](s) · ℒ_r[h](s)`) does **not** hold —
+confirmed by exact symbolic re-derivation and independent numerical checks. See the axiom's
+own doc comment for the corrected identity and why even a fixed statement wouldn't rescue
+`oz_laplace_oz_eq`/`g0_HS_laplace_spec` below. The rest of this module docstring describes the
+*originally intended* (but incorrect) strategy; kept for context, not as a claim of validity.
+
 ## Summary
 
 The 3D Ornstein–Zernike equation for radially symmetric functions is a convolution:
@@ -86,13 +94,46 @@ noncomputable def radial_laplace (f : ℝ → ℝ) (s : ℝ) : ℝ :=
 
 /-! ### Axiom 1: radial Laplace convolution theorem -/
 
-/-- **Axiom (radial Laplace convolution theorem).**
+/-- **Axiom (radial Laplace convolution theorem) — ⚠ MATHEMATICALLY FALSE AS STATED.**
+
+**2026 update:** this axiom's claimed clean-product factorization is **false**, not merely
+unproved — verified both by exact symbolic re-derivation and by independent numerical checks
+(ratio of the two sides varies from ~12 to ~37 across different `(f,g,s)` test triples,
+including when `g` has compact support like `c_HS`; this rules out a missing-normalization-
+constant explanation, and confirms the mismatch is structural, not a scaling bug).
+
+Doing the swap of integration order correctly (over the triangle-inequality region
+`{(r,t,s'): |r-t|≤s'≤r+t}`, symmetric in `r,t,s'`, integrating over `r` first) gives the
+TRUE identity instead:
+```
+ℒ_r[f ⊛₃D g](s) = (2π/s) · [A(s) − ℒ_r[f](s) · ℒ_r[g](s)]
+```
+where `A(s) = ∫∫ t·f(t)·s'·g(s')·e^{-s|t-s'|} dt ds'` — a genuinely different (bilateral
+Green's-function-kernel) object that does **not** vanish or factor further in general
+(confirmed to match the true LHS to 6 decimal places numerically). The `∫_{|s-t|}^{s+t}
+e^{-sr} dr` step below correctly integrates to `(1/s)[e^{-s|s-t|} - e^{-s(s+t)}]`, not to a
+clean product — the *first* term of that difference is exactly the missing `A(s)` piece the
+original proof sketch silently dropped.
+
+**Consequence:** even a corrected, TRUE `radial_laplace_conv` (the `A(s)`-including form
+above) would **not** rescue `oz_laplace_oz_eq`, since that theorem needs precisely the clean
+product form to combine with `oz_laplace_identity`. The real OZ multiplicative structure
+lives in Fourier space (`ĥ(k)=ĉ(k)+ρĉ(k)ĥ(k)`, real `k`) or Baxter's Wiener–Hopf
+factorization (`1-ρĉ(k)=A(k)·Ā(k)`, requiring half-plane analyticity) — neither reduces to a
+one-sided real Laplace transform of `r·f(r)` the way this file assumes. Fixing this requires
+rearchitecting the OZ.2/OZ.2b/OZ.3 chain around one of those correct transforms, not patching
+this axiom's statement; not attempted here (out of scope, needs its own scoping pass).
+`g0_HS_laplace_spec` (`PYOZ_GHS.lean`) is proved *conditional on* this axiom and therefore
+currently rests on a false foundation despite building successfully.
+
+---
 
 The `r`-weighted Laplace transform of the 3D radial convolution factors as a product:
 
     `ℒ_r[f ⊛₃D g](s) = ℒ_r[f](s) · ℒ_r[g](s)`
 
-**Mathematical proof (outline):** Expanding and applying Fubini's theorem:
+**Mathematical proof (outline) — ⚠ this argument is WRONG, see update above.** Expanding and
+applying Fubini's theorem:
 ```
 ∫_0^∞ r · (f ⊛₃D g)(r) · e^{-sr} dr
 = 2π ∫_0^∞ ∫_0^∞ t·f(t) · ∫_{|r-t|}^{r+t} s·g(s) ds · e^{-sr} dt dr

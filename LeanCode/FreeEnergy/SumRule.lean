@@ -50,6 +50,8 @@ Formalisation requires algebraic manipulation of the Baxter factorisation identi
 **Status:** sorry — highest physical value in Group F.
 -/
 
+set_option linter.unusedVariables false
+
 open MeasureTheory Real Set
 
 namespace FMSA.FreeEnergy
@@ -159,7 +161,6 @@ theorem f4_real_space_equals_laplace_domain
   have hpi : (4 : ℝ) * Real.pi ≠ 0 := mul_ne_zero (by norm_num) Real.pi_ne_zero
   rw [hMSA]
   field_simp [hpi]
-  ring
 
 /-! ### Compressibility sum rule -/
 
@@ -280,8 +281,8 @@ theorem ga_matrix_mix_vs_lj_energy_integral_form
     let s         := sigma / R
     let inner_I1  := R / z - 1 / z ^ 2 + Real.exp (-z * R) / z ^ 2
     let lj_int    := R ^ 3 * (s ^ 12 / 9 - s ^ 6 / 3 + 2 * s ^ 3 / 9)
-    4 * Real.pi * ∫ r in (0 : ℝ)..R, K * (1 + A_val) ^ 2 * (r * Real.exp (z * (r - R)))
-    - 4 * Real.pi * g0 * ∫ r in (sigma : ℝ)..R, (sigma ^ 12 / r ^ 10 - sigma ^ 6 / r ^ 4) =
+    4 * Real.pi * (∫ r in (0 : ℝ)..R, K * (1 + A_val) ^ 2 * (r * Real.exp (z * (r - R))))
+    - 4 * Real.pi * g0 * (∫ r in (sigma : ℝ)..R, (sigma ^ 12 / r ^ 10 - sigma ^ 6 / r ^ 4)) =
     4 * Real.pi * (K * (1 + A_val) ^ 2 * inner_I1 + g0 * lj_int) := by
   simp only []
   -- Step 1: FMSA_GA_matrix_mix inner energy —
@@ -289,7 +290,7 @@ theorem ga_matrix_mix_vs_lj_energy_integral_form
   rw [inner_core_single_term_integral hz]
   -- Step 2: LJ inner energy —
   --   lj_integral gives ∫_sigma^R (sigma1^2/r1^0-sigma^6/r^4) as closed form
-  rw [lj_integral hsigma hsigmaR]
+  rw [lj_integral hsigma hR hsigmaR]
   -- Step 3: algebra (sign: lj_int = -lj_integral, so -g0*(lj_integral) = g0*lj_int)
   ring
 

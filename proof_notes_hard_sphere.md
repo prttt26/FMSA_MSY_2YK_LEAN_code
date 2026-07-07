@@ -158,7 +158,9 @@ problem `h = T[h]` with the radially-reduced 1D OZ operator `T`.
 - `g0_HS_core`: `g0_HS(r) = 0` for `r < σ` — **proved** (`if_pos hr`)
 - `g0_HS_outer_is_oz_fp`: `g₀_HS_outer − 1 = oz_h` is a fixed point — **proved** (from `oz_h_is_fp`)
 - `g0_HS_outer_eq_oz_h`: `g₀_HS_outer = 1 + oz_h` — **proved** (`rfl`)
-- `g0_HS_laplace_spec`: Laplace OZ characterization — **axiom** (needs radial conv. theorem OZ.2b)
+- `g0_HS_laplace_spec`: Laplace OZ characterization — **proved theorem** (stale note below
+  corrected: this used to be listed as an axiom; it now rests on the two OZ.2b axioms
+  `oz_laplace_oz_eq` + `radial_laplace_conv` instead, see 2026 update below)
 - `g0_HS_contact_value`: PY contact value `(1+η/2)/(1−η)²` — **axiom** (Wertheim 1963)
 
 **Net improvement (restructure):**
@@ -173,9 +175,88 @@ with `‖K‖_{op} ≤ 4π|ρ|·∫₀^σ t²|c_HS(t)| dt` < 1 for small ρ; (2)
 
 **Prerequisites:** Task OZ.1 (`c_HS_integrableOn`); Task OZ.3 for `g0_HS_laplace_spec`
 
-**Status:** ✓ DONE (`g0_HS_outer` as def; `g0_HS_core`, `g0_HS_outer_is_oz_fp`,
-  `g0_HS_outer_eq_oz_h` all proved; `oz_fixed_pt_unique` axiom; `g0_HS_laplace_spec`,
-  `g0_HS_contact_value` axioms remaining)
+**Status:** ◑ mixed (`g0_HS_outer` as def; `g0_HS_core`, `g0_HS_outer_is_oz_fp`,
+  `g0_HS_outer_eq_oz_h` all genuinely proved; `oz_fixed_pt_unique` still a separate open axiom;
+  `g0_HS_laplace_spec` builds as a theorem but rests on `oz_laplace_oz_eq` + the now-**disproven**
+  `radial_laplace_conv` — see the 2026-later update below — so its conclusion is not actually
+  established despite compiling; `g0_HS_contact_value` axiom remaining)
+
+**2026 update — Gap A of `oz_laplace_oz_eq` closed** in
+`LeanCode/HardSphere/OZExteriorBridge.lean` (no `sorry`, no new axiom). The original axiom:
+```lean
+axiom oz_laplace_oz_eq {eta sigma rho s : ℝ} (hsigma : 0 < sigma) (hs : 0 < s)
+    (hne : 1 - rho * C_HS_laplace eta sigma s ≠ 0) :
+    (∫ r in Set.Ioi (0 : ℝ), r * oz_h eta sigma rho r * Real.exp (-s * r)) *
+    (1 - rho * C_HS_laplace eta sigma s) = C_HS_laplace eta sigma s
+```
+(`PYOZ_GHS.lean:233-236`) bundled two independent gaps. **Gap A (r ≥ σ half + Laplace
+factorization)** is now fully proved:
+- `oz_forcing_add_linear_op_eq_radial3d_conv`: for any continuous `h` with `h = -1` on the
+  core, `oz_forcing(r) + oz_linear_op(r)[h] = ρ · radial3d_conv c_HS h (r)` for all `r ≥ σ`
+  (conditional on 2 routine `IntervalIntegrable` side-conditions, taken as explicit hypotheses
+  in the same spirit as `radial_laplace_conv`'s own integrability hypotheses). Proved by
+  splitting the convolution's inner integral at `σ`, using `h = -1` on the core (extended to
+  the boundary point `σ` itself via `Set.EqOn.closure` + continuity, not just `hcore`'s open
+  hypothesis) and `Set.uIcc`/`intervalIntegral` bookkeeping.
+- `oz_h_satisfies_conv_ext`: specializes the above to `h := oz_h`, using the *public*
+  `g0_HS_outer_is_oz_fp` + `g0_HS_outer_eq_oz_h` (to reconstruct `OzFixedPt` for `oz_h` without
+  touching the *private* `oz_h_is_fp`), `oz_fixed_pt_exterior`, and `oz_h_core`. Result:
+  **`oz_h(r) = c_HS(r) + ρ·radial3d_conv c_HS oz_h (r)` unconditionally for all `r ≥ σ`** — a
+  genuinely new, real result, not just a plausibility argument.
+- `oz_laplace_oz_eq_of_core_closure`: assembles the above with **Gap B (PY core closure,
+  r < σ)** — still genuinely hard, not derivable from anything proved (`oz_operator_core` only
+  *defines* `h=-1` on the core by fiat) — taken as an explicit hypothesis `hcore`, plus routine
+  integrability hypotheses for invoking `radial_laplace_conv` (itself still a separate,
+  unproved axiom — a pure Fubini identity, no physics). The conclusion is the *exact* original
+  axiom's statement, now a proved theorem.
+
+**Net result (at the time of the update above):** the axiom's content was split into three
+clearly separated pieces instead of one opaque bundle: (a) machine-checked algebra
+(`oz_forcing_add_linear_op_eq_radial3d_conv`, `oz_h_satisfies_conv_ext` — done), (b)
+`radial_laplace_conv` (separate pure-math Fubini axiom, *believed* unproved-but-true at the
+time), (c) `hcore` (Gap B, the one remaining genuinely hard physics hypothesis). This is the
+same honest-remaining-gap pattern used for Task M.4 (`Q0DetRankTwo.lean`,
+`proof_notes_yukawa_dcf.md`) — **but see the correction below: piece (b) turned out to be
+false, not just unproved.**
+
+**2026 (later) update — `radial_laplace_conv` is mathematically FALSE, not just unproved.**
+While scoping an attempt to fully prove `radial_laplace_conv` via Mathlib's real Fubini
+theorem (`MeasureTheory.integral_integral_swap`), a hand re-derivation of the claimed identity
+did not close, which was then confirmed by two independent methods:
+
+1. **Numerical check** of the axiom's literal claim `ℒ_r[f⊛₃Dg](s) = ℒ_r[f](s)·ℒ_r[g](s)`
+   across several `(f,g,s)` triples (including `g` with compact support on `(0,σ)`, matching
+   the actual `c_HS` use case): the `LHS/RHS` ratio ranges from ~12 to ~37, varying with the
+   choice of `f,g` and not just `s` — ruling out a missing normalization constant as the
+   explanation.
+2. **Exact symbolic re-derivation:** correctly swapping the order of integration over the
+   triangle-inequality region `{(r,t,s'): |r-t|≤s'≤r+t}` (symmetric in `r,t,s'`; integrate
+   over `r` first) gives
+   ```
+   ℒ_r[f ⊛₃D g](s) = (2π/s) · [A(s) − ℒ_r[f](s)·ℒ_r[g](s)]
+   ```
+   where `A(s) = ∫∫ t·f(t)·s'·g(s')·e^{-s|t-s'|} dt ds'` — a bilateral Green's-function-kernel
+   term that does not vanish or factor further. This corrected formula was checked to match
+   the true LHS to 6 decimal places numerically. The original proof sketch's step
+   `∫_{|s-t|}^{s+t} e^{-sr} dr` does integrate correctly to `(1/s)[e^{-s|s-t|}-e^{-s(s+t)}]`,
+   but the sketch then silently dropped the first (`e^{-s|s-t|}`) term — that dropped term
+   *is* the missing `A(s)` piece.
+
+**Why this can't be patched by correcting the axiom's statement:** even the true `A(s)`-
+including identity would not rescue `oz_laplace_oz_eq`, which specifically needs the clean
+product form to combine algebraically with `oz_laplace_identity` (`PYOZ.lean`) into
+`H̃(s)(1-ρC̃(s))=C̃(s)`. The genuinely correct OZ multiplicative structure lives in Fourier
+space (`ĥ(k)=ĉ(k)+ρĉ(k)ĥ(k)`, real `k`, the standard textbook 3D OZ relation) or in Baxter's
+Wiener–Hopf factorization (`1-ρĉ(k)=A(k)·Ā(k)`, needing half-plane analyticity) — neither
+reduces to a one-sided real Laplace transform of `r·f(r)`. So the fix is a rearchitecture of
+this transform choice, not a proof-effort problem; not attempted (needs its own scoping pass).
+
+**Practical effect on the pieces above:** (a) `oz_forcing_add_linear_op_eq_radial3d_conv` and
+`oz_h_satisfies_conv_ext` are real-space results independent of the Laplace transform and
+remain genuinely valid/useful. (b) `radial_laplace_conv` is now known false — downgraded from
+"unproved axiom" to "disproven axiom" in `todo_lean.md`. (c) `oz_laplace_oz_eq_of_core_closure`
+and `g0_HS_laplace_spec`, which both invoke `radial_laplace_conv` to reach the Laplace-domain
+conclusion, compile but do not actually establish their stated results.
 
 ---
 

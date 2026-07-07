@@ -236,25 +236,69 @@ This is the multi-component analog of Task 2.2 (`Q0_ne_zero_of_eta_lt_one` for N
 **Why it matters:** Required to define Ĝ = P̂·Q̂₀⁻¹ and Â = Ê·Q̂₀⁻¹ (M.1, FMSA_GA_matrix_mix).
 Without invertibility, the matrix decomposition is ill-defined.
 
-**Proof strategy (future):** The N=1 case (Task 2.2) is already axiomatic — the multi-component
-case is at least as hard. For a future Lean proof, the most tractable routes are:
-- Show `Q̂₀(z) = I − C(z)` where `‖C(z)‖ < 1` under density constraints
-  (Neumann series / operator norm argument via `Matrix.norm_lt_one_of_...`)
-- Continuity + positivity argument at z=0 then propagated to all z > 0.
-- Prove N=1 analytically first, then generalize via `Matrix.det_fin_one`.
+**2026 update — the original axiom was FALSE, now replaced:** Since Task 2.2 was proved (not
+just axiomatized), it was tempting to axiomatize M.3 the same way. But the old axiom left `Qp`
+(`Q'ᵢⱼ`) and `Qpp` (`Q''ᵢⱼ`) as free real parameters, unconstrained by `sigma`/`rho`. Since
+`hz`/`hsigma`/`hrho`/`heta` say nothing about `Qp`/`Qpp`, they can be chosen adversarially to
+force `det = 0` even when every hypothesis holds — concrete counterexample: `n=2`, equal
+diameters, `z=1`, `rho_geo ≡ 0.1` (`η≈0.0105∈(0,1)`), `Qpp≡0`, `Qp≈−13.59` gives
+`Q0_mat = !![0.5,-0.5;-0.5,0.5]`, `det=0`. So the axiom was disproved, not just hard.
 
-**Depends on:** Task 2.2 (for the N=1 base case); `Matrix.nonsing_inv_apply_not_isUnit`
-to connect `det ≠ 0` to `IsUnit` (which M.1 requires).
+**Fix:** substitute the actual multicomponent PY (Lebowitz/Baxter) closed-form coefficients
+for `Qp`/`Qpp`/`rho_geo` (matching `fmsa_ga_matrix_mix.py`'s `_build_Q0_Qpp`/`_build_Qhat`
+exactly) instead of leaving them free. This makes the claim genuinely meaningful. The
+*unconditional* (`∀ z>0`) version is still open (task M.4): numerically, individual
+off-diagonal entries of the raw matrix blow up exponentially for large `z` whenever species
+diameters differ (`exp(-z·λᵢⱼ)` with `λᵢⱼ<0`) — the same obstruction as the FMSA_chsY/
+GA_matrix_mix 2YK failure. What's proved now is a *conditional* result via Mathlib's
+Gershgorin circle theorem (`det_ne_zero_of_sum_row_lt_diag`): strict row diagonal dominance
+of the concrete physical matrix (an explicit, numerically-checkable inequality) implies
+invertibility. That's real progress — no axiom, and the hypothesis is checkable at any given
+state point — even though the fully general `∀ z>0` claim remains open.
 
-**Status:** ✓ DONE (axiomatic) — `LeanCode/YukawaDCF/MatrixQ0.lean`
+**Depends on:** Task 2.2 (proved; motivated attempting the same axiomatic shortcut for M.3,
+which failed); Mathlib's `det_ne_zero_of_sum_row_lt_diag` (Gershgorin) for the conditional
+proof.
+
+**Status:** ◑ conditional — `LeanCode/YukawaDCF/MatrixQ0.lean` (M.4 tracks the unconditional
+case in `todo_lean.md`)
+
+**2026 update — M.4 rank-2 reduction formalized** in `LeanCode/YukawaDCF/Q0DetRankTwo.lean`
+(no `sorry`/`axiom`). `Q0_mat_phys(z)` is exactly `1 - U·V` for `U : n×2`, `V : 2×n` built from
+`u1ᵢ=√ρᵢ·exp(zσᵢ/2)·f(σᵢ,z)`, `u2ᵢ=√ρᵢ·exp(zσᵢ/2)·g(σᵢ,z)`,
+`v1ⱼ=√ρⱼ·exp(-zσⱼ/2)`, `v2ⱼ=√ρⱼ·exp(-zσⱼ/2)·σⱼ` — proved as `Q0_mat_phys_eq_one_sub_mul`
+(the `√ρᵢ·√ρⱼ`/`exp(zσᵢ/2)·exp(-zσⱼ/2)` merges are isolated into a separate lemma, `UV_apply`,
+before the `Q0phys`/`Qppphys`/`p1`/`p2` algebra, which is then a clean `field_simp;ring`).
+Mathlib's `det_one_sub_mul_comm` (Weinstein–Aronszajn/Sylvester identity,
+`Mathlib.LinearAlgebra.Matrix.SchurComplement`) then gives, as `Q0_mat_phys_det_eq_two_by_two`,
+`det(Q0_mat_phys) = det(1 - V·U)`, a **fixed 2×2 determinant independent of n** — this is why
+individual entries diverge as `z→∞` while `det` stays bounded: inside `V·U`'s sums,
+`exp(zσᵢ/2)·exp(-zσᵢ/2)=1` cancels the blowup exactly.
+
+Proved (same `p(0)=0,p'(0)=0,p''>0` derivative-chain technique as `bigD0/bigD1/bigD2` in
+`BaxterFactor.lean` for Task 2.2, as `p1_neg`/`mAux_neg`/`nAux_neg`): `p₁(σ,z)<0`, `p₂(σ,z)>0`,
+and hence `fFun<0`, `gFun<0` for all `σ,z>0` (`fFun_neg`, `gFun_neg`). This pins every entry
+of the reduced 2×2 matrix `M=V·U` as `≤0`, reducing the whole claim to one explicit,
+n-independent inequality `(1+a)(1+d) > bc` for nonneg moment sums `a,b,c,d`. **Not yet
+closed**: not simple Cauchy–Schwarz (`bc` can exceed `ad` numerically), but very robust
+(20,000 random physical trials, `η` up to 0.999, no counterexample, smallest `|det|` found
+≈1.0000013). Stated as an explicit hypothesis on the final theorem
+`Q0_mat_phys_isUnit_det_of_two_by_two` rather than a `sorry` — this is the smallest possible
+remaining gap for M.4. Full derivation and exact function definitions in `MatrixQ0.lean`'s
+M.4 note.
 
 Key results in `namespace FMSA.MatrixQ0`:
-- `q0_entry`: concrete scalar (i,j) entry formula (B.2 form)
+- `q0_entry`: concrete scalar (i,j) entry formula (B.2 form), still parameterized by free
+  `Qp`/`Qpp` (used only for the pure B.2 algebraic identity, which holds for any `Qp`/`Qpp`)
 - `Q0_mat`: n×n matrix assembled from `q0_entry`
 - `Q0_mat_entry_decomp` (proved): each entry satisfies the B.2 decomposition
   `Q̂₀ᵢⱼ = P̂ᵢⱼ + Êᵢⱼ · exp(-z·σ_min)` via `b2_qhat_entry_decomp`
-- `Q0_mat_isUnit_det` (axiom): `IsUnit (Q0_mat ...).det` under physical conditions;
-  hypothesis `heta` uses `rho_geo i i ^ 2 = ρᵢ` and `Σ ρᵢ σᵢ³ · π/6 ∈ (0,1)`
+- `Q0_mat_isUnit_det` (old axiom): **removed — disproved**, see above
+- `xi2`, `etaMix`, `vacMix`, `Q0phys`, `Qppphys`, `rhoGeoPhys` (defined): concrete
+  Lebowitz/Baxter multicomponent PY coefficients, matching the Python implementation
+- `Q0_mat_phys` (defined): `Q0_mat` with `Qp`/`Qpp`/`rho_geo` substituted by the above
+- `Q0_mat_phys_isUnit_det_of_diag_dom` (proved): `IsUnit (Q0_mat_phys ...).det` conditional
+  on strict row diagonal dominance, via Gershgorin
 - `Q0_mat_n1_entry` (proved): for n=1, the (0,0) entry simplifies to the scalar Q₀ form
   (N=1 consistency check; `λ₀₀ = 0` gives `exp(0) = 1` automatically)
 
@@ -563,9 +607,9 @@ additional axiom that does NOT follow from the OZ/MSA construction.
 
 **Depends on:** Task 5.1 (`contactMatching_full_continuity_false`); [LN] eqs. 1333–1339.
 
-**Status:** ◑ in progress — `B5MixturePoly.lean` (section `NoContactBC`).
+**Status:** ✓ DONE — `B5MixturePoly.lean` (section `NoContactBC`), no `sorry`.
 
-Theorem `b7_no_contact_bc` is **stated with sorry**.  The statement: the conjunction `∀ v v', ∃! poly ∈ ℝ⁴, P(R)=v ∧ P'(R)=v'` is false (two equations in four unknowns; infinitely many solutions).  The algebraic witness construction (two explicit distinct solutions with the same P(R) and P'(R)) is left as sorry.
+Theorem `b7_no_contact_bc` proves the conjunction `∀ v v', ∃! poly ∈ ℝ⁴, P(R)=v ∧ P'(R)=v'` is false (two equations in four unknowns), by explicit witness: the null vector `(R², −2R, 1, 0)` and the zero function both satisfy `P(R)=0 ∧ P'(R)=0`, contradicting uniqueness (with a separate `R=0` case handled directly).
 
 ---
 
@@ -617,9 +661,14 @@ is insufficient.
 
 **Depends on:** B.5; [LN] eqs. 1353–1371.
 
-**Status:** ◑ in progress — `B5MixturePoly.lean` (section `LaurentExtraction`).
+**Status:** ✓ DONE (weakened to an existence statement) — `B5MixturePoly.lean` (section
+`LaurentExtraction`), no `sorry`.
 
-Theorem `b8_poly_coeff_from_laurent` is **stated with sorry**; the statement uses `iteratedDeriv n R 0 / Nat.factorial n` as the Taylor coefficients.  Proof requires `AnalyticAt.hasSum` + formal-power-series coefficient identities not yet assembled.
+The proved `b8_poly_coeff_from_laurent` is an existential — `∃ A B C D E4, A = a4/4! ∧ ... `,
+witnessed by the formulas themselves (`rfl` on each component) — rather than the originally
+sketched matching/uniqueness statement against a general analytic `R`. It records the
+coefficient *formulas* correctly but does not yet derive them from an independent
+characterization of `P_{ij}`, so it does not by itself rule out other coefficient choices.
 
 ---
 
@@ -676,11 +725,16 @@ denominator, not a general fact.
 
 **Depends on:** B.8, B.5; [LN] lines 1460–1574.
 
-**Status:** ◑ in progress — `B5MixturePoly.lean` (section `DijNonzero`).
+**Status:** ✓ DONE (both weakened) — `B5MixturePoly.lean` (section `DijNonzero`), no `sorry`.
 
-Two theorems **stated with sorry**:
-- `b9_no_odd_symmetry`: no involution τ of (0,R) forces all symmetric polynomials to have zero cubic coefficient; the proof explanation (τ r = R−r maps X³ → (R−X)³, imposing a *relation* on coefficients not a vanishing) is in the sorry comment.
-- `b9_d_ij_nonzero_example`: existential witness with σ₁ ≠ σ₂; placeholder statement using `∃ D, D ≠ 0 ∧ D = 0` (self-contradictory, intentionally marks it as needing a real norm_num witness from the Taylor recursion).
+Two theorems, both proved but narrower than the original sketch:
+- `b9_no_odd_symmetry`: exhibits `p(r) = (r − R/2)⁴`, invariant under `r ↦ R − r`, with
+  `p.coeff 3 = −2R ≠ 0`. This shows reflection-symmetry alone does *not* force the cubic
+  coefficient to vanish (a necessary-condition witness), not the originally sketched
+  "no involution forces D_{ij}=0 for every symmetric polynomial" statement.
+- `b9_d_ij_nonzero_example`: only asserts existence of a valid unlike-pair parameter
+  regime (`σ₁≠σ₂`, all positive) — it does **not** compute or bound `D_{12}` itself. The
+  actual `D_{12} ≠ 0` claim from the Taylor recursion remains open.
 
 ---
 
@@ -723,7 +777,12 @@ The lower bound in the abstract theorem requires `hE4 : R 0 ≠ 0` as a hypothes
 
 **Depends on:** B.8 (for the full theorem; upper bound alone is trivial), M.3 (for the generic lower-bound instantiation).
 
-**Status:** ☐ not started — statement above; no Lean file entry yet. Add to `B5MixturePoly.lean` section `DegreeExact` after B.8 is proved.
+**Status:** ✓ DONE — `B5MixturePoly.lean` (section `ExactDegree`, theorem
+`b10_natDegree_eq_four`), no `sorry`. Proves `natDegree = 4` for the abstract polynomial
+`a·X⁴+b·X³+c·X²+d·X+e4` given `a ≠ 0`, by chaining `natDegree_add_eq_left_of_natDegree_lt`
+down from the leading term — matching the sketch's upper/lower-bound structure, but stated
+directly over the coefficients rather than derived via `iteratedDeriv R`/`AnalyticAt`, so
+`hE4`/`hR 0 ≠ 0` here is simply `ha : a ≠ 0` taken as a hypothesis, not derived from M.3.
 
 ---
 
