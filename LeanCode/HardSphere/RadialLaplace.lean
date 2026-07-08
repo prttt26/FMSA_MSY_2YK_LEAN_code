@@ -122,9 +122,18 @@ lives in Fourier space (`ĥ(k)=ĉ(k)+ρĉ(k)ĥ(k)`, real `k`) or Baxter's Wiener
 factorization (`1-ρĉ(k)=A(k)·Ā(k)`, requiring half-plane analyticity) — neither reduces to a
 one-sided real Laplace transform of `r·f(r)` the way this file assumes. Fixing this requires
 rearchitecting the OZ.2/OZ.2b/OZ.3 chain around one of those correct transforms, not patching
-this axiom's statement; not attempted here (out of scope, needs its own scoping pass).
-`g0_HS_laplace_spec` (`PYOZ_GHS.lean`) is proved *conditional on* this axiom and therefore
-currently rests on a false foundation despite building successfully.
+this axiom's statement.
+
+**2026 (later still) update — done, via the Fourier route.** `RadialFourier.lean` (Task OZ.6)
+proves `radial_fourier_conv`, the genuine (no extra term, no axiom) convolution theorem for
+the radial sine transform `𝓕_r[f](k) = (4π/k)∫r·f(r)·sin(kr)dr` in place of this file's
+one-sided Laplace transform. `OZFourierBridge.lean` (Task OZ.7) then proves
+`oz_fourier_oz_eq_of_core_closure`, the Fourier-domain analogue of `oz_laplace_oz_eq`,
+conditional only on the PY core closure (Gap B, `hcore`) — the one genuinely hard physics
+input, unrelated to the transform choice. Bridging that Fourier-domain result back to this
+exact Laplace-domain / `C_HS_laplace` form is Task OZ.8, not yet started (see
+`proof_notes_hard_sphere.md`). `g0_HS_laplace_spec` (`PYOZ_GHS.lean`) is proved *conditional
+on* this axiom and therefore does not itself benefit from OZ.6/OZ.7 without OZ.8's bridge.
 
 ---
 

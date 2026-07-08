@@ -249,14 +249,17 @@ product form to combine algebraically with `oz_laplace_identity` (`PYOZ.lean`) i
 space (`ĥ(k)=ĉ(k)+ρĉ(k)ĥ(k)`, real `k`, the standard textbook 3D OZ relation) or in Baxter's
 Wiener–Hopf factorization (`1-ρĉ(k)=A(k)·Ā(k)`, needing half-plane analyticity) — neither
 reduces to a one-sided real Laplace transform of `r·f(r)`. So the fix is a rearchitecture of
-this transform choice, not a proof-effort problem; not attempted (needs its own scoping pass).
+this transform choice, not a proof-effort problem. **Done** via the Fourier route — see
+Task OZ.6/OZ.7 below.
 
 **Practical effect on the pieces above:** (a) `oz_forcing_add_linear_op_eq_radial3d_conv` and
 `oz_h_satisfies_conv_ext` are real-space results independent of the Laplace transform and
 remain genuinely valid/useful. (b) `radial_laplace_conv` is now known false — downgraded from
-"unproved axiom" to "disproven axiom" in `todo_lean.md`. (c) `oz_laplace_oz_eq_of_core_closure`
-and `g0_HS_laplace_spec`, which both invoke `radial_laplace_conv` to reach the Laplace-domain
-conclusion, compile but do not actually establish their stated results.
+"unproved axiom" to "disproven axiom" (see Task OZ.6 below for its replacement). (c)
+`oz_laplace_oz_eq_of_core_closure` and `g0_HS_laplace_spec`, which both invoke
+`radial_laplace_conv` to reach the Laplace-domain conclusion, compile but do not actually
+establish their stated results — superseded by Task OZ.7's Fourier-domain analogue, itself
+conditional only on Task OZ.9 (the PY core closure, `hcore` — same Gap B as here).
 
 ---
 
@@ -282,6 +285,40 @@ form of `Ĥ₀(s)` and state the real-space `g₀_HS(r)`.
 - `oz_laplace_identity`: H₀ = Ĉ·S₀ (pure algebra, complete)
 - `g0_HS`, `g0_HS_outer`, `g0_HS_core`: moved to `PYOZ_GHS.lean`; `g0_HS_outer` now concrete def `1 + oz_h` 
 - `g0_HS_contact_value`: moved to `PYOZ_GHS.lean` — exact PY contact value `(1+η/2)/(1−η)²` (axiom)
+
+**2026 update — target formula confirmed algebraically, but the proof is *not* independent
+of Gap B.** `[LN]` (`pdf/lecture_notes_OZ_Yukawa.tex`) states the contact value directly
+(Eq. `g0_contact`):
+```
+g0_ij(R_ij) = (1/(R_ij·Δ)) · (R_ij + π·R_i·R_j·ξ_2/(4Δ))
+```
+Comparing to `Q'_ij` (defined two sections earlier in `[LN]`, and **already formalized** as
+`q_prime_py` in `BaxterRealSpace.lean` for Task OZ.5), this is exactly `Q'_ij/(2π·R_ij)`.
+**Now a proved theorem**, `g0_contact_formula_eq_q_prime` (`BaxterRealSpace.lean`, no sorry):
+```lean
+theorem g0_contact_formula_eq_q_prime (eta sigma : ℝ) (hsigma : 0 < sigma) (heta : eta < 1) :
+    q_prime_py eta sigma / (2 * Real.pi * sigma) = (1 + eta / 2) / (1 - eta) ^ 2
+```
+— the axiom's target formula, via pure algebra (`field_simp`). **This match is real and
+worth keeping on record**, but does **not** mean the axiom is easier to prove:
+checked directly against `oz_linear_op`'s definition (`PYOZ_GHS.lean`) — evaluating the OZ
+fixed-point equation at `r=σ` needs `∫_{s=σ}^{σ+t} s·oz_h(s) ds` for `t` ranging over `(0,σ)`,
+i.e. `oz_h` over the *whole interval* `[σ,2σ)`, not just the point `oz_h(σ)`. So the boundary
+evaluation is exactly as entangled with `oz_h`'s unknown exterior profile as Gap B's
+full-interval closure is. The alternative (Laplace-asymptotic, `s→∞` in `Ĥ₀(s)=Ĉ_HS(s)S0(s)`,
+the technique `[LN]` uses for its *first-order* contact value) doesn't shortcut this either —
+it needs that Laplace relation to hold for the *actual* `oz_h`, which is exactly what the
+blocked `oz_laplace_oz_eq`/Gap A+B chain (or OZ.7+OZ.8's bridge) already tries to establish.
+`oz_h` is defined abstractly via `Classical.choose` of an axiomatized fixed point
+(`oz_fixed_pt_unique`), so any concrete closed-form claim about it — at the boundary or any
+interior point — needs the same abstract-to-concrete bridge. **Not yet attempted in Lean.**
+
+**Relation to Gap B (Task OZ.9):** shares the same underlying physics — see the dedicated
+Task OZ.9 section below for the full account, including: Gap B's direct numerical
+verification and its resulting axiom `oz_core_closure` (Route A, now done); Baxter's second
+relation (`r·h(r) = -Q'(r)/(2π) + ρ∫₀^σ Q(t)(r-t)h(|r-t|)dt`, also numerically verified) as
+the alternative Route B that would additionally unlock `g0_HS_contact_value`, not yet taken
+(needs an unverified `Q`-elimination bridge first).
 
 ---
 
@@ -372,6 +409,203 @@ the chsY inner-core function from [chsY] Eq. 41.  That requires a separate task 
 integrals and the MSA closure for `A`.
 
 **Status:** ✓ PROVED — `LeanCode/HardSphere/BaxterRealSpace.lean`, no sorry.
+
+---
+
+### Task OZ.6 — Radial sine/Fourier transform convolution theorem
+
+**Statement:** the correct replacement for the disproven `radial_laplace_conv` (see the
+2026-later update in Task OZ.2's write-up above). Define the radial sine transform
+```
+𝓕_r[f](k) = (4π/k) · ∫_0^∞ r·f(r)·sin(kr) dr
+```
+(the radial reduction of the genuine 3D Fourier transform). Then, unlike the one-sided real
+Laplace transform, this *does* turn `radial3d_conv` into a clean product:
+```
+𝓕_r[f ⊛₃D g](k) = 𝓕_r[f](k) · 𝓕_r[g](k)
+```
+with **no extra term** — confirmed both symbolically and numerically (machine precision)
+before writing any Lean.
+
+**Why this succeeds where the Laplace attempt failed:** doing the same triangle-region
+integration-order swap (over `{(r,t,s): |r-t|≤s≤r+t}`, integrate `r` first for fixed `(t,s)`),
+the inner step is
+```
+∫_{|t-s|}^{t+s} sin(kr) dr = (2/k)·sin(kt)·sin(ks)
+```
+via the antiderivative `-cos(kr)/k` plus the product-to-sum identity
+`cos(a-b) - cos(a+b) = 2 sin a sin b`. This is an *exact* factorization into a product of
+`sin(kt)` and `sin(ks)` — the analogous Laplace-case step gives `e^{-s|t-s'|}` and
+`e^{-s(t+s')}`, and only the second half of that difference matches the desired product; the
+first half (`e^{-s|t-s'|}`) is exactly the extra, non-factoring term `A(s)` that made
+`radial_laplace_conv` false. The sine kernel has no such leftover because `cos(a-b)-cos(a+b)`
+resolves completely into the product `2 sin a sin b`.
+
+**In Lean:** `LeanCode/HardSphere/RadialFourier.lean` (new file). Key pieces, all proved
+(no `sorry`, no axiom):
+- `radial_fourier` — the transform, defined exactly as above.
+- `sin_triangle_integral` — the trig identity, via `intervalIntegral.integral_comp_mul_left`
+  + `integral_sin` (`cos a - cos b` antiderivative) + `Real.cos_sub`/`Real.cos_add` unfolded
+  by hand (no direct `Real.cos_sub_cos` lemma in this Mathlib snapshot; the 6-line derivation
+  mirrors `Complex.cos_sub_cos`'s proof).
+- `triangle_mem_iff` — the triangle-inequality region is symmetric under solving for any one
+  of its three variables (`s ∈ Icc|r-t|(r+t) ↔ r ∈ Icc|t-s|(t+s)`), pure `abs_le`+`linarith`.
+- `setIntegral_Icc_eq_setIntegral_Ioi_indicator` — bridges a bounded `Icc a b` set-integral
+  (a≥0) to an indicator integral over `Set.Ioi 0`, needed since `radial3d_conv`'s inner
+  integral is over `Icc`, but the Fubini swap needs everything on the same `(0,∞)`-restricted
+  product measure; the `a=0` boundary case is handled via `MeasureTheory.ae_eq_set` (removing
+  the single point `{0}` doesn't change a Lebesgue integral).
+- `radial_fourier_conv` — the main theorem. Proof: (1) cancel `radial3d_conv`'s own `1/r`
+  against the outer `r` weight; (2) convert the moving-bound `s`-integral to an indicator
+  integral and fold the `t*f(t)` constant in via `integral_const_mul`, then apply
+  `MeasureTheory.integral_integral` (nested → joint over `(t,s)`, per-`r`); (3) push `sin(kr)`
+  into the `(t,s)`-integral and apply `MeasureTheory.integral_integral_swap` to swap `r`
+  against the `(t,s)` pair as a whole; (4) evaluate the inner `r`-integral pointwise for each
+  `(t,s) ∈ Ioi 0 ×ˢ Ioi 0` via `triangle_mem_iff` + `sin_triangle_integral` (converting between
+  indicator/Icc/interval-integral forms along the way); (5) factor the resulting product
+  integral via `MeasureTheory.integral_prod_mul` (unconditional — no integrability hypothesis
+  needed, since it returns `0` on both sides when not integrable) and close with `ring`.
+
+**Hypotheses:** `htsInt` (per-`r` joint integrability of `(t,s) ↦ t·f(t)·indicator(...)`) and
+`hjoint` (the full triple joint integrability, needed for the `r ↔ (t,s)` swap) are taken as
+explicit hypotheses, in the same spirit as `OZExteriorBridge.lean`'s own integrability
+side-conditions — deriving them from plain marginal L¹ facts about `f,g` is a further,
+orthogonal piece of work (the crude bound `|sin|≤1` alone is too lossy for `r`-integrability
+over all of `(0,∞)` without support/decay information). No separate hypothesis on `f` or `g`
+alone (e.g. an `hf`/`hg` pair analogous to `radial_laplace_conv`'s) is needed — checked by
+building the theorem with such hypotheses first and finding they were unused by the actual
+proof, then removing them.
+
+**Status:** ✓ DONE — `LeanCode/HardSphere/RadialFourier.lean`, no sorry, no axiom.
+
+---
+
+### Task OZ.7 — Fourier-domain exterior OZ equation for `oz_h`
+
+**Statement:** the mathematically correct counterpart of `oz_laplace_oz_eq_of_core_closure`
+(`OZExteriorBridge.lean`), replacing its false `radial_laplace_conv` step with the proved
+`radial_fourier_conv` (Task OZ.6):
+```
+radial_fourier (oz_h eta sigma rho) k · (1 - rho · radial_fourier (c_HS eta sigma) k)
+  = radial_fourier (c_HS eta sigma) k
+```
+conditional only on Gap B (`hcore`, the PY core closure for `r<σ` — genuinely hard physics,
+identical hypothesis to `oz_laplace_oz_eq_of_core_closure`'s, unrelated to the transform
+choice) plus routine integrability side-conditions.
+
+**In Lean:** `LeanCode/HardSphere/OZFourierBridge.lean` (new file), `theorem
+oz_fourier_oz_eq_of_core_closure`. Proof structure directly mirrors
+`oz_laplace_oz_eq_of_core_closure`:
+1. `hpointwise` — combine Gap A (`oz_h_satisfies_conv_ext`, `OZExteriorBridge.lean`, reused
+   verbatim/unchanged since it's a real-space result independent of the transform choice) with
+   Gap B (`hcore`) to get the full pointwise 3D-OZ convolution equation for every `r > 0`.
+2. `hsum`/`hfourier` — apply `radial_fourier` to both sides. Unlike the Laplace case,
+   `radial_fourier` carries an explicit `4π/k` prefactor, so the linearity step first proves
+   the identity at the level of the bare (unprefactored) integrals via
+   `MeasureTheory.integral_add`, then multiplies through by `4π/k` via `ring` — a small but
+   real deviation from the Laplace proof's structure, caught by a failed `rw` when first
+   copying the Laplace pattern directly.
+3. `radial_fourier_conv` factors the convolution transform (in place of the disproven
+   `radial_laplace_conv`).
+4. `linear_combination` closes the final rearrangement to the `H·(1-ρC)=C` form.
+
+**Integrability hypotheses** (`hintB1`, `hintConv`) needed the explicit `sin(kr)` weight
+(`Integrable (fun r => r * c_HS eta sigma r * Real.sin (k*r)) ...`), not just the bare
+`r * c_HS eta sigma r` — an analogous correction to the `radial_fourier_conv` hf/hg situation,
+but here the weighted form genuinely *is* needed (for `MeasureTheory.integral_add`'s
+literal hypotheses), unlike OZ.6 where the unweighted marginal hypotheses turned out unused.
+`hintB2` (for `oz_h`) was dropped entirely — not needed since `radial_fourier_conv`'s own
+signature (after removing its unused `hf`/`hg`) has no marginal-integrability parameter to
+supply it to.
+
+**Not done here (Task OZ.8):** no closed-form sine-transform formula for `c_HS` is derived,
+and no bridge back to `C_HS_laplace`/`S0`/`g0_HS_contact_value` is attempted — the conclusion
+is stated directly in terms of `radial_fourier (c_HS eta sigma) k`, not a named closed form.
+Bridging via analytic continuation `s ↔ -ik` (valid since `c_HS` has compact support, so its
+Laplace transform is entire) is plausible future work, flagged but not started.
+
+**Status:** ✓ DONE — `LeanCode/HardSphere/OZFourierBridge.lean`, no sorry, no axiom, conditional
+only on Gap B (same physics hypothesis as OZ.2b's `oz_laplace_oz_eq_of_core_closure`).
+
+---
+
+### Task OZ.9 — PY core closure (Gap B)
+
+**Statement:** for `0 < r < σ`, the OZ convolution equation itself holds (not just the known
+value `oz_h(r)=-1`):
+```
+oz_h(r) = c_HS(r) + ρ · radial3d_conv c_HS oz_h (r)
+```
+This is the "genuinely hard, unscaffolded physics input" (Wertheim 1963 / Baxter 1970's PY
+closure) left after Gap A closed — previously an explicit hypothesis `hcore` on
+`oz_laplace_oz_eq_of_core_closure`/`oz_fourier_oz_eq_of_core_closure`.
+
+**Two possible routes, both scoped this session:**
+- **Route A (direct axiom) — taken.** State the closure equation itself as a named axiom,
+  justified by direct numerical verification.
+- **Route B (via Baxter's second relation) — scoped, not taken.** See below; would also
+  unlock `g0_HS_contact_value`, but needs an unverified bridge step.
+
+**Route A — numerical verification.** Solved the exact OZ+PY system from scratch,
+independent of any Baxter `Q`-function machinery: the already-proved closed-form `c_HS(r)`
+(`PYDCF.lean`) was numerically Fourier-transformed (`Ĉ(k)`, direct quadrature), `Ĥ(k) =
+Ĉ(k)/(1-ρĈ(k))` formed by pure OZ algebra, then numerically inverse-transformed to get
+ground-truth `h(r)` (sanity-checked: recovers `h(r)≈-1` inside the core; near-contact value
+converges to the *known* analytic contact formula `(1+η/2)/(1-η)²-1` as truncation is
+refined, at η=0.3 — an independent cross-check of `g0_HS_contact_value`'s target formula too).
+Plugging this ground-truth `h(r)` directly into Gap B's closure equation:
+```
+c_HS(r) + ρ·radial3d_conv(c_HS,oz_h)(r) ≈ -1.01 to -1.02     (target: -1)
+```
+at `r=0.2, 0.5, 0.8` (η=0.3) — matching to within the numerical setup's known truncation
+error, with **no** need to route through Baxter's `Q`-function at all. Verification script
+not committed (scratchpad only); rerunnable from this description.
+
+**In Lean:** `LeanCode/HardSphere/PYOZ_GHS.lean`:
+```lean
+axiom oz_core_closure {eta sigma rho : ℝ} (hsigma : 0 < sigma)
+    (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_lt : eta < 1) :
+    ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
+      oz_h eta sigma rho r =
+        c_HS eta sigma r + rho * radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho) r
+```
+`heta_def`/`heta_lt` restrict to the physical PY regime the numerical check assumed (not
+claimed for arbitrary unrelated `eta,sigma,rho` triples) — matches the honesty standard
+`g0_HS_contact_value`'s axiom already uses. Proving this from Mathlib-available real analysis
+(rather than assuming it) needs Baxter's Wiener–Hopf factorization — out of current scope.
+
+`LeanCode/HardSphere/OZFourierBridge.lean`: `oz_fourier_oz_eq_of_PY_core` — direct
+specialization of `oz_fourier_oz_eq_of_core_closure` (OZ.7) supplying `oz_core_closure` in
+place of the externally-threaded `hcore`. The most complete, trustworthy result in the whole
+`radial_laplace_conv`/`oz_laplace_oz_eq` lineage: Gap A (proved), the convolution theorem
+(proved, no false-claim risk), and Gap B (`oz_core_closure`, numerically verified) are all
+now accounted for by name — only routine integrability hypotheses remain open.
+**Deliberately not built:** an analogous Laplace-domain wrapper around
+`oz_laplace_oz_eq_of_core_closure` (`OZExteriorBridge.lean`) — that theorem internally invokes
+the disproven `radial_laplace_conv`, so supplying `oz_core_closure` for its `hcore` argument
+would not make its conclusion any more trustworthy; not worth building.
+
+**Route B (not taken this pass) — Baxter's second relation.** Also numerically verified this
+session (independently, before discovering Route A's more direct check):
+```
+r·h(r) = -Q'(r)/(2π) + ρ·∫₀^σ Q(t)·(r-t)·h(|r-t|) dt      for r > 0
+```
+where `Q(t) = q_prime_py·(t-σ) + q_doubleprime_py·(t-σ)²/2` for `0≤t≤σ` (0 outside) — the
+same `Q` underlying `q0_poly`/OZ.5 (`q0_poly(t) = ρ·Q(t)`; this relation uses `Q` itself).
+Verified at three `η` (0.1, 0.3, 0.45) against the same ground-truth `h(r)` solver, matching
+to within ~0.3–5% (residual consistent with Fourier-inversion truncation). The *first*
+reconstruction attempted (from general memory of Baxter 1970, not a primary source) was
+structurally right but off by a factor of `2π`, caught by the same red-flag pattern that
+disproved `radial_laplace_conv` — except here the LHS/RHS ratio was *constant* (~1/2π) across
+every `r` tested rather than varying, indicating a normalization bug rather than a false
+relation. This route would additionally unlock `g0_HS_contact_value` (specializing at `r=σ`)
+and reproduce OZ.9a as a corollary rather than a direct axiom — more powerful and closer to
+the classical derivation, but needs an extra **unverified** step: eliminating `Q` to connect
+this relation back to the `c_HS`/`radial3d_conv` form Gap A/B are stated in. Not attempted;
+flagged as a follow-on (`todo_lean.md` Task OZ.9-RouteB).
+
+**Status:** ✓ DONE (Route A) — `oz_core_closure` axiom (`PYOZ_GHS.lean`) + corollary
+`oz_fourier_oz_eq_of_PY_core` (`OZFourierBridge.lean`), no sorry. Route B scoped, not started.
 
 ---
 

@@ -26,14 +26,20 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 | Axiom | File | Task | Physical meaning / proof path |
 |-------|------|------|-------------------------------|
 | `oz_fixed_pt_unique` | `HardSphere/PYOZ_GHS.lean:145` | OZ.2a | OZ fixed point unique in `BoundedContinuousFunction`; needs Banach contraction estimate |
-| `radial_laplace_conv` | `HardSphere/RadialLaplace.lean:111` | OZ.2b (math) | ⚠ **DISPROVEN** (2026): the claimed `ℒ_r[f⊛₃Dg]=ℒ_r[f]·ℒ_r[g]` is mathematically false, confirmed symbolically and numerically — not merely unproved. True identity has an extra non-factoring term; see doc comment in the file and [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md). A corrected statement would not rescue `oz_laplace_oz_eq` either — the real fix needs the Fourier-space OZ relation or Baxter's Wiener–Hopf factorization, not this transform. |
-| `oz_laplace_oz_eq` | `HardSphere/PYOZ_GHS.lean:233` | OZ.2b (physics) | Gap A "closed" in `HardSphere/OZExteriorBridge.lean` only in the sense of reducing to `radial_laplace_conv` as a black box — but that axiom is now known **false** (see above), so Gap A is not actually closed. Gap B (PY core closure, r<σ, `hcore` hypothesis) remains separately open regardless. |
-| `g0_HS_contact_value` | `HardSphere/PYOZ_GHS.lean` | OZ.3 | g₀_HS(σ) = (1+η/2)/(1−η)²; needs PY partial-fraction inversion; no Laplace inversion theorem in Mathlib |
+| `oz_core_closure` & `g0_HS_contact_value` | `HardSphere/PYOZ_GHS.lean` | OZ.9a / OZ.3 | PY core closure (Gap B) and the PY contact value — two independent claims, both from Baxter/Wertheim theory, both numerically verified (2026) but not proved from Mathlib real-analysis alone (needs Baxter's Wiener–Hopf factorization). Kept as separate axioms (not merged) since they're logically independent; see [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) Task OZ.9 for full detail on both, including Route A (taken, closed OZ.9) vs Route B (would retire both via one relation, not attempted). |
+
+*(`radial_laplace_conv` and `oz_laplace_oz_eq` are still `axiom` declarations but are superseded dead ends
+ — see OZ.2/OZ.6/OZ.7 for the history.)*
+
 ### Open tasks — not yet started
 
 | Task | Title | Depends on | Notes |
 |------|-------|-----------|-------|
 | M.4 | Unconditional `det(Q0_mat_phys) ≠ 0` for all `z > 0` | M.3 | Rank-2 reduction formalized (see `YukawaDCF/Q0DetRankTwo.lean`, details in [proof_notes_yukawa_dcf.md](proof_notes_yukawa_dcf.md)). Remaining: one scalar inequality `(1-M₀₀)(1-M₁₁) ≠ M₀₁·M₁₀` (`M := Vmat*Umat`), taken as an explicit hypothesis on `Q0_mat_phys_isUnit_det_of_two_by_two` — not closed unconditionally, robust numerically. |
+| OZ.8 | Closed-form sine-transform formula for `c_HS` (analogous to `C_HS_laplace_formula`) + bridge back to `C_HS_laplace`/`S0`/`g0_HS_contact_value` via analytic continuation `s ↔ -ik` | OZ.6, OZ.7 | Not started, needs its own scoping pass. `c_HS` has compact support on `(0,σ)`, so its Laplace transform `C_HS_laplace` is entire — restricting it to the imaginary axis should give `radial_fourier (c_HS eta sigma) k` directly, avoiding a from-scratch sine-transform derivation. Plausible, probably comparable effort to the existing `phi4_formula`-style calculus, but distinct work from OZ.6/OZ.7. |
+| OZ.9-RouteB | Baxter's `h`-via-`Q` relation → `g0_HS_contact_value` (and re-derive OZ.9 as a corollary instead of a direct axiom) | OZ.9 | Baxter's second relation is numerically verified (`r·h(r) = -Q'(r)/(2π) + ρ∫₀^σ Q(t)(r-t)h(\|r-t\|)dt`, three `η` values) but the Q-elimination bridge connecting it back to `c_HS`/`radial3d_conv` form has **not** been verified as straightforward — needs its own numerical check before any Lean work. Not started; larger, less scoped than OZ.9's direct-axiom route (Route A, already taken). See [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) Task OZ.9. |
+| FW.1 | FMT species symmetry: `betaf_hs(N, ρ/N each, d)` = `betaf_hs(1, ρ, d)` when all dᵢ=d | — | Algebraic identity: when all diameters equal, FMT n-functionals n₀=Σρᵢ, n₁=(d/2)Σρᵢ, n₂=πd²Σρᵢ, n₃=(π/6)d³Σρᵢ depend only on total density → White-Bear formula collapses to single-component form. Supports W-C.3 and W-C.4 (numerical verification in `todo_numerical.md`). Likely `simp`/`ring` with the FMT functional unfolded. No Mathlib obstruction. |
+| FW.2 | MCSL mixture contact value: g⁰_ij(R_ij) = BMCSL formula for all N | `g0_HS_contact_value` (open axiom) | Mixture generalisation of `g0_HS_contact_value` (`HardSphere/PYOZ_GHS.lean`). Formula: `1/vac + 3ζ₂·dᵢdⱼ/(dᵢ+dⱼ)/vac² + 2ζ₂²·(dᵢdⱼ/(dᵢ+dⱼ))²/vac³`. Needed for W-C.2 (virial-FMT consistency). Same obstruction as `g0_HS_contact_value`. |
 
 *(Tasks D.1–D.4 removed — no longer valid after FMSA_GA_matrix_mix redesign; see [proof_notes_yukawa_dcf.md](proof_notes_yukawa_dcf.md) Group D note.)*
 
@@ -124,11 +130,16 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
 | OZ.1 | PY closed-form DCF for hard spheres | ✓ DONE | `HardSphere/PYDCF.lean` |
-| OZ.2 | g₀_HS via OZ fixed point | ◑ mixed: definitions/`g0_HS_core`/fixed-point structure genuinely proved; `g0_HS_laplace_spec` rests on **disproven** `radial_laplace_conv` (see axiom table) — not actually established despite compiling; `oz_fixed_pt_unique` still a separate open axiom | `HardSphere/PYOZ_GHS.lean` |
-| OZ.2b | Gap A (r≥σ half of `oz_laplace_oz_eq`) | ◑ mixed: `oz_forcing_add_linear_op_eq_radial3d_conv`/`oz_h_satisfies_conv_ext` are genuinely proved real-space results (unaffected); the final Laplace-domain assembly `oz_laplace_oz_eq_of_core_closure` invokes the now-**disproven** `radial_laplace_conv`, so its conclusion is not actually established | `HardSphere/OZExteriorBridge.lean` |
-| OZ.3 | g₀_HS via OZ Laplace inversion | ◑ conditional on `g0_HS_laplace_spec` (see OZ.2 note above) + `g0_HS_contact_value` axiom | `HardSphere/PYOZ.lean` |
+| OZ.2 | g₀_HS via OZ fixed point | ◑ superseded, see [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) | `HardSphere/PYOZ_GHS.lean` |
+| OZ.2b | Gap A (r≥σ half of `oz_laplace_oz_eq`) | ◑ superseded by OZ.7, see [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) | `HardSphere/OZExteriorBridge.lean` |
+| OZ.3 | g₀_HS via OZ Laplace inversion | ◑ conditional on OZ.2 + `g0_HS_contact_value` axiom | `HardSphere/PYOZ.lean` |
 | OZ.4 | Linearised OZ: Ĥ¹=Ĉ¹·S₀ | ✓ DONE | `HardSphere/PYOZ.lean` |
 | OZ.5 | Baxter real-space convolution identity | ✓ DONE | `HardSphere/BaxterRealSpace.lean` |
+| OZ.6 | Radial sine/Fourier transform convolution theorem — correct replacement for the disproven `radial_laplace_conv` | ✓ DONE, no axiom | `HardSphere/RadialFourier.lean` |
+| OZ.7 | Fourier-domain exterior OZ equation (Gap A ∪ Gap B, correct-transform counterpart of `oz_laplace_oz_eq_of_core_closure`) | ✓ DONE, conditional only on OZ.9 (`hcore`) | `HardSphere/OZFourierBridge.lean` |
+| OZ.8 | Closed-form sine-transform formula for `c_HS` + bridge back to `C_HS_laplace`/`S0`/`g0_HS_contact_value` via analytic continuation `s↔-ik` | ☐ not started, needs its own scoping pass | — |
+| OZ.9a | PY core closure (Gap B) for `r < σ` — promoted to a named, numerically-verified axiom | ✓ DONE (axiom `oz_core_closure`, Route A; not proved from Mathlib real-analysis — needs Baxter Wiener–Hopf, out of scope) | `HardSphere/PYOZ_GHS.lean` |
+| OZ.9b | `oz_fourier_oz_eq_of_PY_core`: OZ.7 specialized to consume `oz_core_closure` instead of an externally-supplied `hcore` — most complete/trustworthy result in the whole OZ chain (Gap A + convolution theorem + Gap B all proved/axiomatized by name, only routine integrability hypotheses remain) | ✓ DONE | `HardSphere/OZFourierBridge.lean` |
 
 ### Group F — Free Energy Integrals *(free_energy)*
 

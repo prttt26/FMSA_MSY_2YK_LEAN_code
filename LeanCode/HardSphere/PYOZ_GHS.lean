@@ -173,6 +173,35 @@ theorem oz_h_ghs_core {eta sigma rho r : ℝ} (hsigma : 0 < sigma) (hr : r < sig
     1 + oz_h eta sigma rho r = 0 := by
     have h : oz_h eta sigma rho r = -1 := oz_h_core hsigma hr; linarith
 
+/-- **Axiom (Task OZ.9a): the PY core closure — Gap B of `oz_laplace_oz_eq`.**
+
+For `0 < r < σ`, the OZ convolution equation itself (not just the known value `oz_h(r)=-1`,
+`oz_h_core`) holds with `c_HS`/`radial3d_conv`:
+
+    `oz_h(r) = c_HS(r) + ρ · radial3d_conv c_HS oz_h (r)`
+
+This is the "genuinely hard, unscaffolded physics input" left after Gap A was closed
+(`OZExteriorBridge.lean`, `OZFourierBridge.lean`): the classical PY closure statement
+(Wertheim 1963, Baxter 1970) that the OZ equation holds *everywhere*, not just outside the
+core. It was previously carried as an explicit hypothesis `hcore` on
+`oz_laplace_oz_eq_of_core_closure`/`oz_fourier_oz_eq_of_core_closure`; promoted here to a
+named axiom after direct numerical verification (2026): solving the exact OZ+PY system from
+scratch (no Baxter `Q`-function assumed — closed-form `c_HS` numerically Fourier-transformed,
+`Ĥ(k)=Ĉ(k)/(1-ρĈ(k))` solved algebraically, then numerically inverted to get ground-truth
+`h(r)`) and checking `c_HS(r)+ρ·radial3d_conv(c_HS,oz_h)(r)` against `-1` directly gives
+`≈-1.01` to `-1.02` at `r=0.2,0.5,0.8` (η=0.3) — matching to within the numerical setup's
+known truncation error. `heta_def`/`heta_lt` restrict to the physical PY regime the check
+assumed (arbitrary unrelated `eta,sigma,rho` triples are not claimed). Proving this from
+Mathlib-available real-analysis tools (rather than assuming it) needs Baxter's Wiener–Hopf
+factorization machinery — out of current scope; see `proof_notes_hard_sphere.md` Task OZ.9
+for the "Route B" alternative (via Baxter's second relation) that was scoped but not pursued
+this pass. -/
+axiom oz_core_closure {eta sigma rho : ℝ} (hsigma : 0 < sigma)
+    (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_lt : eta < 1) :
+    ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
+      oz_h eta sigma rho r =
+        c_HS eta sigma r + rho * radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho) r
+
 /-! ### Hard-sphere reference RDF (concrete definitions) -/
 
 /-- **Exterior values of g₀_HS for r ≥ σ.**
@@ -219,17 +248,23 @@ The `r`-weighted Laplace transform `H̃₀(s) = ∫_0^∞ r · oz_h(r) · e^{-sr
 
     `H̃₀(s) · (1 - ρ · Ĉ_HS(s)) = Ĉ_HS(s)`
 
-**Derivation (combining physics and `radial_laplace_conv`):**
+**Derivation as originally sketched (combining physics and `radial_laplace_conv`):**
 1. `oz_h` satisfies the full OZ equation: `h₀ = c_HS + ρ · (c_HS ⊛₃D h₀)` for all r.
-   (For r ≥ σ: from the fixed-point property.  For r < σ: the PY closure condition
-   `c_HS(r) + ρ(c_HS ⊛₃D h₀)(r) = -1` is the hard part — requires the PY analytical
-   solution, currently outside Lean scope.)
 2. Apply `radial_laplace`: `H̃₀ = C̃_HS + ρ · ℒ_r[c_HS ⊛₃D h₀](s)`.
 3. Apply `radial_laplace_conv`: `H̃₀ = C̃_HS + ρ · C̃_HS · H̃₀`.
 4. Rearrange: `H̃₀ · (1 - ρ C̃_HS) = C̃_HS`.
 
-**Why axiom?** The PY closure for r < σ (step 1) and the integrability conditions needed for
-Fubini in `radial_laplace_conv` (step 3) are both outside current Lean scope. -/
+**2026 update — step 1 now proved, step 3 now known broken.** Step 1's `r ≥ σ` half (Gap A)
+is fully proved, unconditionally, in `OZExteriorBridge.lean`; the `r < σ` half (Gap B, the PY
+core closure) remains the one genuinely hard open physics input, tracked explicitly as
+`hcore` on `oz_laplace_oz_eq_of_core_closure` (`OZExteriorBridge.lean`) — not this axiom.
+Step 3's `radial_laplace_conv` is now known **mathematically false** (`RadialLaplace.lean`),
+so this axiom's *derivation sketch* no longer holds together (its own conclusion is not
+thereby shown false, just unproved via this route). The correct-transform analogue —
+`oz_fourier_oz_eq_of_core_closure` (`OZFourierBridge.lean`, Task OZ.7) — is proved, using the
+genuine `radial_fourier_conv` (Task OZ.6) in place of step 3, conditional only on the same
+Gap B. Bridging that Fourier-domain result back to this exact Laplace-domain form (so this
+axiom could be retired) is Task OZ.8, not yet started — see `proof_notes_hard_sphere.md`. -/
 axiom oz_laplace_oz_eq {eta sigma rho s : ℝ} (hsigma : 0 < sigma) (hs : 0 < s)
     (hne : 1 - rho * C_HS_laplace eta sigma s ≠ 0) :
     (∫ r in Set.Ioi (0 : ℝ), r * oz_h eta sigma rho r * Real.exp (-s * r)) *
@@ -243,7 +278,14 @@ The modified one-sided Laplace transform of `h0(r) = g0_HS(r) - 1` satisfies:
 
 **Proof:** Since `g0_HS(r) - 1 = oz_h(r)` everywhere (0 for r < σ, `g0_HS_outer - 1`
 for r ≥ σ, both equal `oz_h` by the core and outer lemmas), rewrite the integral to
-`radial_laplace oz_h s`, then apply `oz_laplace_oz_eq` + `oz_laplace_identity`. -/
+`radial_laplace oz_h s`, then apply `oz_laplace_oz_eq` + `oz_laplace_identity`.
+
+**2026 update:** this theorem still compiles but rests on `oz_laplace_oz_eq`, whose own
+derivation sketch invoked the now-disproven `radial_laplace_conv` — see that axiom's doc
+comment. The Fourier-domain analogue (`oz_fourier_oz_eq_of_core_closure`, `OZFourierBridge.lean`,
+Task OZ.7) is genuinely proved (conditional only on the PY core closure, Gap B); retiring
+`oz_laplace_oz_eq`/this theorem in favor of it needs Task OZ.8 (bridging back to
+`C_HS_laplace`/`S0`), not yet started. -/
 theorem g0_HS_laplace_spec {eta sigma rho s : ℝ} (hsigma : 0 < sigma) (hs : 0 < s)
     (hne : 1 - rho * C_HS_laplace eta sigma s ≠ 0) :
     ∫ r in Set.Ioi (0 : ℝ), r * (g0_HS eta sigma rho r - 1) * Real.exp (-s * r) =

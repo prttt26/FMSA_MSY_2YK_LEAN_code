@@ -6,6 +6,8 @@ import LeanCode.HardSphere.PYOZ
 import LeanCode.HardSphere.PYOZ_GHS
 import LeanCode.HardSphere.RadialLaplace
 import LeanCode.HardSphere.OZExteriorBridge
+import LeanCode.HardSphere.RadialFourier
+import LeanCode.HardSphere.OZFourierBridge
 import LeanCode.HardSphere.BaxterRealSpace
 import LeanCode.YukawaDCF.I1I2Integrals
 import LeanCode.YukawaDCF.SingleCompIdentity

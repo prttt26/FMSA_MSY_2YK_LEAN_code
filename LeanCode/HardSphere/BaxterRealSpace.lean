@@ -329,4 +329,21 @@ theorem baxter_factorization_inner {eta sigma rho : ℝ}
   field_simp [hsigma.ne', h1e]
   ring
 
+/-! ### Contact-value algebraic corollary -/
+
+/-- **Algebraic match: the PY contact-value target formula equals `Q'/(2πσ)`.**
+
+`[LN]`'s hard-sphere contact-value formula (Eq. `g0_contact`),
+`g0(R) = (1/(RΔ))·(R + πR²ξ2/(4Δ))`, specializes for a single component (`R_i=R_j=σ`,
+`ξ2=ρσ²`, `Δ=1-η`) to exactly `Q'/(2πσ)` where `Q' = q_prime_py`. This lemma is the
+mechanical half of `g0_HS_contact_value`'s target formula: it confirms the algebra, but does
+**not** establish that `g0_HS(σ)` (the actual value of the abstractly-defined `oz_h` at
+contact) equals this — that bridge needs Baxter's second relation (`h`-via-`Q`), not yet
+formalized (see `todo_lean.md` Task OZ.9 / this file's module docstring). -/
+theorem g0_contact_formula_eq_q_prime (eta sigma : ℝ) (hsigma : 0 < sigma) (heta : eta < 1) :
+    q_prime_py eta sigma / (2 * Real.pi * sigma) = (1 + eta / 2) / (1 - eta) ^ 2 := by
+  unfold q_prime_py
+  have h1e : (1 : ℝ) - eta ≠ 0 := by linarith
+  field_simp
+
 end FMSA.HardSphere
