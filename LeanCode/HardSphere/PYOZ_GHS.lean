@@ -31,7 +31,7 @@ The derivation integrates the 3D OZ convolution over angles at fixed |r| > sigma
 the contribution of the core region (h = -1 for s < sigma) into the forcing term, and the
 exterior contribution (h(s) for s > sigma) into the linear part.
 
-## Uniqueness (OZ.2a — axiom)
+## Uniqueness (OZ.10 — axiom)
 
 For h bounded by ‖h‖_∞, the sup-norm bound on the linear operator is:
 
@@ -42,9 +42,19 @@ So `oz_linear_op` is contracting in sup-norm when `|rho| < (4π·∫0^sigma t^2|
 For all physical `eta < 1`, the Fredholm alternative (outside current Mathlib) gives
 existence and uniqueness for all non-resonant rho.
 
-The statement is narrowed to `BoundedContinuousFunction ℝ ℝ`; the ∃! h : ℝ → ℝ version
-is dropped because it may be false (non-measurable fixed points cannot be ruled out from
-the operator definition alone).
+**2026 correction:** this used to be stated with the fixed point bundled into
+`BoundedContinuousFunction ℝ ℝ`, i.e. continuous on *all* of ℝ including at `r = σ`. That
+was wrong: `g0_HS_contact_value` correctly encodes the standard PY fact that hard-sphere
+`g(r)` has a jump discontinuity at contact (`g0_HS(σ) = (1+η/2)/(1-η)² ≠ 0`, while
+`g0_HS(r) = 0` for all `r < σ`), so no continuous-at-σ fixed point can exist — the old
+statement and `g0_HS_contact_value` were directly contradictory (verified by deriving
+`False` from the two). The regularity requirement is now `ContinuousOn h (Set.Ici sigma)`
+only (continuity on the exterior `[σ,∞)`, where the integral-equation content lives); the
+core branch `r < σ` is already pinned to the constant `-1` by `oz_operator`'s own
+definition and needs no separate continuity assumption. The `∃! h : ℝ → ℝ` version (with
+these two regularity conjuncts attached explicitly, rather than a bundled
+`BoundedContinuousFunction` type) is kept — dropping regularity entirely would still admit
+non-measurable pathological fixed points that the operator definition alone cannot exclude.
 
 ## Results
 
@@ -53,7 +63,7 @@ the operator definition alone).
 | `oz_operator_core` | proved | `if_pos hr` from definition |
 | `oz_fixed_pt_core` | proved | from `oz_operator_core` |
 | `oz_fixed_pt_exterior` | proved | from `OzFixedPt` unfolding |
-| `oz_fixed_pt_unique` | **axiom** | BCF-scoped; broad ℝ→ℝ version dropped (may be false) |
+| `oz_fixed_pt_unique` | **axiom** | scoped to `ContinuousOn (Ici sigma)` + bounded (2026 fix) |
 | `oz_h_core` | proved | from `oz_fixed_pt_core` |
 | `oz_h_ghs_core` | proved | arithmetic from `oz_h_core` |
 | `g0_HS_outer` | defined | concrete: `fun r => 1 + oz_h eta sigma rho r` |
@@ -133,19 +143,84 @@ lemma oz_fixed_pt_exterior {eta sigma rho : ℝ} {h : ℝ → ℝ} (hfp : OzFixe
 
 /-! ### Uniqueness among bounded continuous fixed points (axiom) -/
 
-/-- **Axiom (OZ.2a): the OZ operator has at most one bounded continuous fixed point.**
+/-- **Axiom (OZ.10): the OZ operator has at most one bounded fixed point that is continuous
+on the exterior `[σ,∞)`.**
+
+**2026 correction (read this first):** this axiom used to bundle the fixed point into
+`BoundedContinuousFunction ℝ ℝ` — i.e. claim continuity on *all* of ℝ, including at `r = σ`.
+That was actually **wrong**, not just imprecise: `g0_HS_contact_value` correctly states the
+standard PY fact that hard-sphere `g(r)` has a jump discontinuity at contact
+(`g0_HS(σ) = (1+η/2)/(1-η)² ≠ 0` for physical `η`, while `g0_HS(r) = 0` for every `r < σ`,
+`g0_HS_core`), so continuity of `oz_h` at `σ` would force `g0_HS(σ) = 0` by the left limit —
+directly contradicting `g0_HS_contact_value`. This was verified concretely: the two axioms
+combined with `oz_h_core`/`g0_HS_outer_eq_oz_h`/the old `oz_h_continuous` type-check into a
+complete proof of `False`. The fix: regularity is now `ContinuousOn h (Set.Ici sigma)` (the
+exterior only — where the genuine integral-equation content lives) instead of global
+continuity. The core branch `r < σ` needs no separate continuity hypothesis: `oz_operator`
+pins it to the constant `-1` by definition (`oz_operator_core`), which is trivially
+continuous on its own domain, jump at `σ` and all.
 
 The linear operator `oz_linear_op` has sup-norm bound
 `‖K‖_{op} ≤ 4π|rho|·∫0^sigma t^2|c_HS(t)| dt`, making `T` a contraction on
-`BoundedContinuousFunction ℝ ℝ` for small enough `|rho|`; Banach's fixed-point theorem
-then gives existence and uniqueness there.  For all physical `eta < 1`, the Fredholm
-alternative extends this to all non-resonant densities.
+`BoundedContinuousFunction {x : ℝ // sigma ≤ x} ℝ` (exterior functions only — no gluing
+needed inside the contraction argument itself, since `oz_linear_op` only ever reads exterior
+values) for small enough `|rho|`; Banach's fixed-point theorem then gives existence and
+uniqueness there, which packages into the `∃! h : ℝ → ℝ` shape below by gluing with the
+forced core value `-1`. For all physical `eta < 1`, the Fredholm alternative extends this to
+all non-resonant densities.
 
-**Scope:** uniqueness is stated within `BoundedContinuousFunction ℝ ℝ`.  The broader
-`∃! h : ℝ → ℝ` statement is dropped: non-measurable fixed points cannot be excluded
-from the operator definition alone, so that stronger claim may be false. -/
+**2026 update — split by density regime, one piece now proved:**
+
+- **Small `eta` (dilute, `eta < eta* ≈ 0.088`): proved**, as `oz_fixed_pt_unique_dilute` in
+  `HardSphere/OzFixedPtDilute.lean` (a *separate* file, not this one — that file imports this
+  one for `oz_forcing`/`oz_linear_op`/`OzFixedPt`, so the theorem can't live here too without
+  an import cycle). Genuine theorem, no axiom, no `sorry`; its hypotheses restrict this axiom's
+  `∃! h : ℝ → ℝ` statement by `heta_def : eta = π·ρ·σ³/6`, `heta_pos : 0 < eta`,
+  `heta1 : eta < 1` (a necessary addition — `hsmall` alone doesn't force `eta < 1`, since the
+  bracket below goes negative for `eta` past ≈2, and `c_HS_neg`/`c_HS_abs_integral` both need
+  it; physically free since `eta` is a packing fraction), and
+  `hsmall : 24·eta·(py_a0 eta/3+py_a1 eta/4+py_a3 eta/6) < 1`. Since `eta = π·ρ·σ³/6`, "small
+  `|ρ|`" (fixed `σ`) is exactly "small `eta`"; with `c_HS` closed-form in `eta`, the
+  contraction bound reduces to a concrete, σ-independent polynomial threshold in `eta` alone
+  (numerically verified, then proved), via Mathlib's `ContractingWith`/Banach fixed-point
+  theorem (`Mathlib/Topology/MetricSpace/Contracting.lean`) applied to
+  `BoundedContinuousFunction {x : ℝ // sigma ≤ x} ℝ` (`CompleteSpace`+`Nonempty` instances and
+  `dist f g = ⨆x,|f x-g x|` all already match the sup-norm argument sketched above). See
+  `proof_notes_hard_sphere.md` (Task OZ.10-dilute) for the full six-piece proof writeup.
+
+- **Middle/high density (the physically central `eta≈0.3–0.5` range, up to `eta<1`): still
+  axiomatic here, and genuinely harder, not just "unproved but similar."** The
+  Banach-contraction argument fundamentally caps out at small `|ρ|`; beyond the threshold,
+  `oz_linear_op` is no longer a contraction (its operator norm exceeds 1), so
+  existence+uniqueness needs different machinery — the **Fredholm alternative** for the
+  (presumably) compact linear operator `oz_linear_op`: `(I-K)` is either bijective for all
+  data, or has a nontrivial kernel at "resonant" `ρ`. This needs (a) a *compactness* proof for
+  `oz_linear_op` — strictly stronger than the boundedness used for the dilute case, likely
+  needing an Arzelà–Ascoli-style equicontinuity+decay argument — and (b) Fredholm theory for
+  compact operators on a Banach space, applied to rule out resonance at the relevant `ρ`.
+  (b) is likely thin or absent in Mathlib for this integral-operator setting — not confirmed,
+  would need its own research pass before any Lean attempt.
+
+  **A plausible bridge worth flagging, not established:** `detQ(s)`'s zeros are noted
+  elsewhere in this codebase (`BaxterRealSpace.lean`'s "Physical Note" on `detQ`) as "spinodal
+  instabilities," i.e. resonance points. For the single-component case, `detQ`-vanishing
+  plausibly corresponds to `1 - ρ·C_HS_laplace eta sigma s = 0` for some `s` — exactly the
+  non-vanishing hypothesis (`hne`/`_hne`) already threaded through this codebase's
+  `oz_laplace_oz_eq`-family theorems (`PYOZ_GHS.lean`, `OZExteriorBridge.lean`). If that
+  correspondence holds, "non-resonant `ρ`" here might reduce to the *same* condition already
+  assumed elsewhere rather than needing independent spectral theory — but this is a conjecture
+  from the physical note, not derived or checked, and proving the correspondence itself
+  (relating a real-space compact-operator spectral condition to a Laplace-domain algebraic
+  one) would be its own nontrivial task, comparable in depth to the Baxter Wiener–Hopf work
+  needed elsewhere in this file family.
+
+**Scope:** stated as a plain `∃! h : ℝ → ℝ`, but with `ContinuousOn h (Set.Ici sigma)` and
+boundedness attached as explicit conjuncts (rather than bundled into a
+`BoundedContinuousFunction` type) — dropping regularity entirely would still admit
+non-measurable pathological fixed points that the operator definition alone cannot exclude. -/
 axiom oz_fixed_pt_unique (eta sigma rho : ℝ) (hsigma : 0 < sigma) :
-    ∃! h : BoundedContinuousFunction ℝ ℝ, OzFixedPt eta sigma rho ↑h
+    ∃! h : ℝ → ℝ, OzFixedPt eta sigma rho h ∧ ContinuousOn h (Set.Ici sigma) ∧
+      ∃ C, ∀ r, |h r| ≤ C
 
 /-! ### Canonical total correlation function -/
 
@@ -155,13 +230,13 @@ Defined as the unique fixed point of `oz_operator` (for `sigma > 0`); extended
 by the constant `-1` function for `sigma ≤ 0` (all physical values have `sigma > 0`). -/
 noncomputable def oz_h (eta sigma rho : ℝ) : ℝ → ℝ :=
     if hsigma : 0 < sigma then
-      ↑(Classical.choose (oz_fixed_pt_unique eta sigma rho hsigma).exists)
+      Classical.choose (oz_fixed_pt_unique eta sigma rho hsigma).exists
     else fun _ => -1
 
 private lemma oz_h_is_fp {eta sigma rho : ℝ} (hsigma : 0 < sigma) :
     OzFixedPt eta sigma rho (oz_h eta sigma rho) := by
     simp only [oz_h, dif_pos hsigma]
-    exact Classical.choose_spec (oz_fixed_pt_unique eta sigma rho hsigma).exists
+    exact (Classical.choose_spec (oz_fixed_pt_unique eta sigma rho hsigma).exists).1
 
 /-- The canonical total correlation function equals `-1` inside the hard core. -/
 theorem oz_h_core {eta sigma rho r : ℝ} (hsigma : 0 < sigma) (hr : r < sigma) :

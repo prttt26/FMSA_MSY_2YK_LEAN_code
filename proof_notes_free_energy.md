@@ -239,7 +239,7 @@ or conversely prove ε is large (approximation fails for large z or dense packin
 
 **Remaining open:** Full numeric bound for g = g₀_HS + g^(1) still requires the
 closed-form `g₀_HS(r)` at general r > σ. `g₀_HS` is now defined concretely as `1 + oz_h`
-in `PYOZ_GHS.lean` , but bounding `oz_h(r)` explicitly requires OZ.2a (`oz_fixed_pt_unique`)
+in `PYOZ_GHS.lean` , but bounding `oz_h(r)` explicitly requires OZ.10 (`oz_fixed_pt_unique`)
 and OZ.2b (radial Laplace convolution). The contact value `g₀_HS(σ) = (1+η/2)/(1−η)²` is an axiom.
 The FMSA_GA_matrix_mix contribution `g^(1)` now has an explicit bound.
 
@@ -325,6 +325,121 @@ Task 4.1 (`b_n1_baxter_formula`), Task 4.3 (counterexample `(1+A)² ≠ 1−g²`
   - `ga_matrix_mix_vs_lj_energy_integral_form` (part D): substitutes `inner_core_single_term_integral` (F.2a)
     and `lj_integral` (F.2b) then `ring`. Import added: `LeanCode.FreeEnergy.LJIntegral`.
   Note: "Imports out of date" build-cache warning expected on first load after new import.
+
+---
+
+## Group FW — White-Bear FMT / BMCSL Mixture Thermodynamics
+
+New file, `LeanCode/HardSphere/WhiteBearFMT.lean` — neither the Rosenfeld/White-Bear FMT
+weighted-density machinery nor the BMCSL mixture contact-value formula existed in this
+codebase's Lean side before this task; both are Python-only (`fmsa_free_energy.py:57`,
+`FMSA_MC_cleaned_2cpp.py:1305-1332`).
+
+**Correcting the record:** an earlier pass at this task claimed FW.2 (BMCSL) faced "the same
+obstruction as `g0_HS_contact_value`" (Baxter Wiener–Hopf factorization). That was wrong —
+checking the Python source directly, `g0_bmcsl` reduces at N=1 to the **Carnahan-Starling**
+contact value `(1-η/2)/(1-η)³`, not the **PY** value `(1+η/2)/(1-η)²` that
+`g0_HS_contact_value` (`PYOZ_GHS.lean`) axiomatizes — a different formula, not derived from
+Baxter/PY theory at all. In this codebase BMCSL is *used as the definition* of the mixture
+reference contact value (mirroring the closure role `c_HS` plays for the single-component
+DCF), not a claim about an independently-computed "true" multi-species PY solution — no such
+solution is formalized, or even computed, anywhere in this codebase.
+
+### Task FW.1 — FMT species symmetry
+
+**Statement:** `betaf_hs` (the Rosenfeld/White-Bear excess free energy density) depends on the
+density vector `rho` only through the four weighted-density moments
+`wbN0 = Σρᵢ`, `wbN1 = Σρᵢ(dᵢ/2)`, `wbN2 = 4π·Σρᵢ(dᵢ/2)²`, `wbN3 = (4π/3)·Σρᵢ(dᵢ/2)³`. When all
+diameters equal `D`, these moments depend on `rho` only through its total `Σᵢρᵢ` — so
+`betaf_hs` collapses to its single-component value, regardless of how the total density is
+split across species. More general than the todo's literal "`ρ/N` each" phrasing, which is
+just a special case.
+
+**Lean:** `betaf_hs_species_symmetry (rho : Fin N → ℝ) (D : ℝ) : betaf_hs rho (fun _ => D) =
+betaf_hs (fun _ : Fin 1 => ∑ i, rho i) (fun _ : Fin 1 => D)`. Proof: `wbN0..wbN3` are each
+`(∑ᵢρᵢ)·c` for a `rho`-independent constant `c` (`Finset.sum_mul`), and the `Fin 1` sum on the
+RHS is trivially the same value; `betaf_hs`, being a function of `wbN0..wbN3` alone, is then
+literally the same expression on both sides.
+
+**Status:** ✓ DONE, no axiom, no sorry.
+
+### Task FW.2 — BMCSL/White-Bear thermodynamic consistency
+
+**Statement:** The real open mathematical content behind `g0_bmcsl` is the thermodynamic
+consistency identity that `verify_wc.py`'s `wc2()` (W-C.2) checks numerically: the BMCSL
+virial pressure (built from pairwise contact values) equals the pressure obtained by
+differentiating `betaf_hs` along a fixed-composition density-scaling ray (the standard
+Rosenfeld/scaled-particle pressure construction). Verified exactly, symbolically (not just
+numerically), via `sympy` for N=2 and N=3 species with fully symbolic `ρᵢ,dᵢ` before
+formalizing: `P_fmt - P_virial` simplifies to the literal integer `0`.
+
+**Key intermediate result (verified before formalizing):** differentiating `betaf_hs` along
+the ray `t ↦ (t·n0,...,t·n3)` and forming `n0 + Φ'(1) - Φ(1)` collapses the `log` terms
+entirely, giving the closed, **log-free** BMCSL equation of state:
+```
+P_fmt(n0,n1,n2,n3) = n0/vac + n1·n2/vac² + n2³·(3-n3)/(36π·vac³)      [vac := 1-n3]
+```
+— exactly the textbook BMCSL pressure equation of state (this is literally how BMCSL was
+historically derived: requiring the virial-route ansatz to match this scaled-particle EOS).
+
+**Lean, three pieces + assembly, all in `WhiteBearFMT.lean`:**
+
+1. **`g0_bmcsl`** — direct port of `get_g0ij_contact` (`FMSA_MC_cleaned_2cpp.py:1328-1332`):
+   `1/vac + 3·ζ₂·f/vac² + 2·ζ₂²·f²/vac³`, `ζ₂ := (π/6)·Σρₖdₖ²`, `f := dᵢdⱼ/(dᵢ+dⱼ)`.
+
+2. **`wbPhi_ray_pressure_eq`** — the derivative computation. Key simplification: since
+   `wbN0..wbN3` are *linear* in `rho` at fixed `d`, the Euler-type pressure relation only
+   needs a **single-variable** `HasDerivAt` chain (not genuine multivariable calculus) —
+   `wbPhi (t*n0) (t*n1) (t*n2) (t*n3)` differentiated in `t` alone via `HasDerivAt.mul/div/pow/log`
+   composition. Two recurring Lean mechanics issues, both resolved:
+   - `HasDerivAt.mul`/`.pow` produce **Pi-algebra form** (`f*g`, `f^n`) rather than pointwise
+     (`fun t => f t * g t`) — bridged via `HasDerivAt.congr_of_eventuallyEq
+     (Filter.Eventually.of_forall fun _ => rfl)` (the two forms are `rfl`-equal pointwise, so
+     this always discharges). `.div`/`.mul_const`/`.const_mul`/`.const_sub` give pointwise form
+     directly (no bridging needed).
+   - Don't hand-ascribe "clean" intermediate derivative values in `have` types — `HasDerivAt.mul`'s
+     formula evaluates the *original, unsimplified* function at the point (e.g. `1 * n2`, not
+     `n2`), so a hand-simplified target causes spurious type mismatches. Leave intermediate
+     `have`s unascribed and only clean up once, at the final `field_simp`/`ring` step.
+   - Final assembly bridges the accumulated Pi-form combinator chain to the clean pointwise
+     target via one `funext` + `ring` step (`heq`), then `heq ▸ hABCD` (term-mode transport) —
+     more robust here than fighting `congr_of_eventuallyEq`'s higher-order unification a second
+     time for the outer sum.
+
+3. **`g0_bmcsl_virial_sum_eq`** — the double-sum reduction (the genuinely novel piece).
+   `R_ij = Rᵢ+Rⱼ` (`Rᵢ := dᵢ/2`), so expanding `(Rᵢ+Rⱼ)³`, `(Rᵢ+Rⱼ)³·f`, `(Rᵢ+Rⱼ)³·f²` into
+   monomials and reducing each `∑ᵢ∑ⱼρᵢρⱼRᵢᵃRⱼᵇ = (∑ᵢρᵢRᵢᵃ)·(∑ⱼρⱼRⱼᵇ)` (`wb_moment_pair`, via
+   `Finset.sum_mul_sum`) collapses the double sum to a rational function of `wbN0..wbN3` alone,
+   general-`N`, with all cross-species detail cancelling. `wb_expand4`/`wb_expand3`/`wb_expand2`
+   are 4/3/2-term generalizations of `wb_moment_pair` (avoid padding a shorter polynomial to
+   4 terms with explicit `0 * _` coefficients — `rw [← wb_expand4 ...]` fails to pattern-match
+   against a hand-written unpadded target; a dedicated same-arity helper avoids the mismatch
+   entirely). The intermediate `Finset.mul_sum`/`Finset.sum_div` direction matters a lot:
+   pulling a constant *out* of a nested sum needs `← Finset.mul_sum`/`← Finset.sum_div`, applied
+   in that order (division-then-multiplication) since `simp_rw` applies lemmas sequentially, not
+   as a combined set — using the forward direction, or the wrong order, silently produces a
+   differently-associated (but not obviously wrong-looking) expression that only fails much
+   later, at the final `ring` call. **Requires `hd : ∀ i, 0 < d i`** (physical: diameters
+   positive) to cancel `(dᵢ+dⱼ)` out of `f` without a zero-denominator case split
+   (`(add_pos (hd i) (hd j)).ne'`, not `positivity` — `positivity` can't discharge `d i + d j
+   ≠ 0` from a `∀`-quantified positivity hypothesis on its own).
+   **Numeric bug found and fixed during formalization:** the theorem's LHS was initially stated
+   as the *raw* double sum (no prefactor), but the target closed form corresponds to `(2π/3)`
+   times the raw sum (the actual virial-pressure formula) — caught by re-deriving the identity
+   in `sympy` mirroring the Lean encoding exactly (including the `hP2`/`hP3` `wbN2/(4π)`,
+   `3wbN3/(4π)` conventions) and finding a residual nonzero diff with a systematic extra
+   `Real.pi` power, tracing to the missing prefactor.
+
+4. **`bmcsl_virial_eq_fmt_pressure`** — assembles 2 and 3. Since piece 2's closed form is
+   `n0/(1-n3) + ...` (the `+n0` already absorbed) while piece 3's is `n0·n3/(1-n3) + ...` (the
+   `deriv - Φ` piece alone, *not* absorbed), the two are genuinely different expressions
+   differing by `n0` — not directly `Eq.trans`-chainable. Assembled via `rw` (matching each
+   theorem's LHS pattern in turn) then `field_simp; ring` for the final `n0 + n0n3/(1-n3) =
+   n0/(1-n3)` algebra.
+
+**Status:** ✓ DONE, no axiom, no sorry — `betaf_hs_species_symmetry`, `g0_bmcsl`,
+`wbPhi_ray_pressure_eq`, `g0_bmcsl_virial_sum_eq`, `bmcsl_virial_eq_fmt_pressure`, all in
+`LeanCode/HardSphere/WhiteBearFMT.lean`. Full project `lake build` green.
 
 ---
 

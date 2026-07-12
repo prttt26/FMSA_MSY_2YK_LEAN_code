@@ -26,10 +26,13 @@ This file reruns the *exact same* Gap A ∪ Gap B assembly, substituting the cor
 reusing `oz_h_satisfies_conv_ext` and `hcore` verbatim) is transform-independent and carries
 over unchanged; only the "apply the transform" step differs.
 
-**What this does *not* do (Task OZ.8, not started):** derive a closed-form sine-transform
-formula for `c_HS` (analogous to `C_HS_laplace_formula`) or bridge back to the existing
-`C_HS_laplace`/`S0` machinery via analytic continuation. The conclusion below is stated
-directly in terms of `radial_fourier (c_HS eta sigma) k`, not a named closed form.
+**Task OZ.8 (done, `HardSphere/RadialFourierCHS.lean`):** the conclusion below is stated
+directly in terms of `radial_fourier (c_HS eta sigma) k`, not a named closed form — that file
+supplies the closed form (`radial_fourier_c_HS_formula`) and the `s ↔ -ik` correspondence to
+`C_HS_laplace_formula`/`S0` (`radial_fourier_c_HS_eq_C_HS_laplace_expr`), via direct algebraic
+computation on the two closed forms rather than analytic-continuation machinery. Deriving
+`g0_HS_contact_value` from this is separate, much larger future work (needs Fourier inversion
+of the closed-form-in-`k` OZ solution) — not attempted.
 -/
 
 open MeasureTheory Set Real

@@ -9,6 +9,9 @@ import LeanCode.HardSphere.OZExteriorBridge
 import LeanCode.HardSphere.RadialFourier
 import LeanCode.HardSphere.OZFourierBridge
 import LeanCode.HardSphere.BaxterRealSpace
+import LeanCode.HardSphere.WhiteBearFMT
+import LeanCode.HardSphere.OzFixedPtDilute
+import LeanCode.HardSphere.RadialFourierCHS
 import LeanCode.YukawaDCF.I1I2Integrals
 import LeanCode.YukawaDCF.SingleCompIdentity
 import LeanCode.YukawaDCF.MatrixIdentity

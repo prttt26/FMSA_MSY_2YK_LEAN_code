@@ -149,8 +149,9 @@ problem `h = T[h]` with the radially-reduced 1D OZ operator `T`.
 - `oz_operator_core`: `T[h](r) = −1` for `r < σ` — **proved** (from `if_pos`)
 - `oz_fixed_pt_core`: fixed point has `h(r) = −1` for `r < σ` — **proved**
 - `oz_fixed_pt_exterior`: fixed point satisfies OZ equation for `r ≥ σ` — **proved**
-- `oz_fixed_pt_unique`: `∃! h : BCF, T[↑h] = ↑h` — **axiom** (BCF-scoped; broad ℝ→ℝ version dropped — may be false)
-- `oz_h`: canonical total correlation function via `Classical.choose` on BCF — definition
+- `oz_fixed_pt_unique`: `∃! h:ℝ→ℝ, T[h]=h ∧ ContinuousOn h (Ici sigma) ∧ bounded` — **axiom**
+  (2026: was BCF-scoped/globally-continuous, fixed — see "2026 (latest) update" below)
+- `oz_h`: canonical total correlation function via `Classical.choose` — definition
 - `oz_h_core`: `oz_h(r) = −1` for `r < σ` — **proved**
 - `oz_h_ghs_core`: `1 + oz_h(r) = 0` for `r < σ` — **proved**
 - `g0_HS_outer`: `fun r => 1 + oz_h eta sigma rho r` — **concrete definition** 
@@ -169,9 +170,8 @@ problem `h = T[h]` with the radially-reduced 1D OZ operator `T`.
 - `g0_HS_outer_eq_oz_h`: **proved theorem** (`rfl`)
 - Definitions/theorems for `g0_HS*` moved from `PYOZ.lean` to `PYOZ_GHS.lean`
 
-**Remaining work (OZ.2a):** Prove `oz_fixed_pt_unique` (BCF version) via Banach fixed-point theorem.
-Requires: (1) show `oz_linear_op` is bounded on `BoundedContinuousFunction ℝ ℝ`
-with `‖K‖_{op} ≤ 4π|ρ|·∫₀^σ t²|c_HS(t)| dt` < 1 for small ρ; (2) apply `ContractingWith.efixedPoint`.
+**Uniqueness** of this fixed point is Task OZ.10 (general axiom) — the dilute-density case is
+now solved as Task OZ.10-dilute; see both below.
 
 **Prerequisites:** Task OZ.1 (`c_HS_integrableOn`); Task OZ.3 for `g0_HS_laplace_spec`
 
@@ -260,6 +260,196 @@ remain genuinely valid/useful. (b) `radial_laplace_conv` is now known false — 
 `radial_laplace_conv` to reach the Laplace-domain conclusion, compile but do not actually
 establish their stated results — superseded by Task OZ.7's Fourier-domain analogue, itself
 conditional only on Task OZ.9 (the PY core closure, `hcore` — same Gap B as here).
+
+**2026 (latest) update — `oz_fixed_pt_unique` contradicted `g0_HS_contact_value`; fixed.**
+While scoping a Banach-contraction proof of `oz_fixed_pt_unique` for small `eta` (dilute
+regime — see Task OZ.10 groundwork below), an attempt to show `oz_operator` is a well-defined
+continuous self-map on `BoundedContinuousFunction ℝ ℝ` (the axiom's then-codomain) surfaced a
+real problem: `oz_linear_op h(σ)` genuinely depends on `h`'s exterior values near `σ` (linear,
+non-degenerate — compare `h≡0` vs `h≡1`), so `oz_operator h` cannot be continuous at `r=σ` for
+*arbitrary* `h`. Chasing this further exposed a **real, independently-existing contradiction**:
+
+- `oz_fixed_pt_unique` claimed the fixed point lies in `BoundedContinuousFunction ℝ ℝ` —
+  continuous on *all* of ℝ, including `r=σ`.
+- `g0_HS_contact_value` claims `g0_HS(σ) = (1+η/2)/(1−η)² ≠ 0` (standard Wertheim PY contact
+  value).
+- Since `g0_HS(r)=0` for all `r<σ` (`g0_HS_core`, proved), global continuity of `oz_h` at `σ`
+  forces `g0_HS(σ)=0` by the left limit — contradicting `g0_HS_contact_value` for every
+  physical `η∈(0,1)`.
+
+Verified concretely, not just argued: a scratch `example ... : False := by ...` combining only
+`oz_h_continuous` (the old theorem), `oz_h_core`, `g0_HS_outer_eq_oz_h`, `g0_HS_core`, and
+`g0_HS_contact_value` type-checked with `lake env lean`, zero errors, no `sorry`.
+
+**Physically this makes sense**: PY hard-sphere `g(r)` genuinely has a jump discontinuity at
+contact (`g=0` just inside `σ`, `g=(1+η/2)/(1−η)²` just outside — standard textbook fact).
+`oz_fixed_pt_unique`'s restriction to *globally* continuous functions was simply the wrong
+codomain; only the exterior `[σ,∞)` needs continuity (that's where the integral-equation
+content lives — the core branch `r<σ` is pinned to the constant `-1` by `oz_operator`'s own
+definition, automatically continuous there regardless of any jump at the seam).
+
+**The fix** (`PYOZ_GHS.lean`, `OZExteriorBridge.lean`): changed the regularity requirement
+from global continuity to `ContinuousOn h (Set.Ici sigma)`:
+```lean
+axiom oz_fixed_pt_unique (eta sigma rho : ℝ) (hsigma : 0 < sigma) :
+    ∃! h : ℝ → ℝ, OzFixedPt eta sigma rho h ∧ ContinuousOn h (Set.Ici sigma) ∧
+      ∃ C, ∀ r, |h r| ≤ C
+```
+(a plain `∃! h:ℝ→ℝ` with explicit regularity conjuncts, rather than bundling into a
+`BoundedContinuousFunction` type — avoids inventing a subtype-domain bundle at the axiom
+level; dropping regularity entirely would still admit non-measurable pathological fixed
+points the operator definition alone can't exclude). `oz_h`'s definition and `oz_h_is_fp`
+updated to unwrap the 3-way `∧` (`.1`/`.2.1`/`.2.2`) instead of a `BoundedContinuousFunction`
+coercion. `oz_h_continuous : Continuous (oz_h ...)` is **retired** (was mathematically false
+under the corrected axiom — `oz_h` genuinely jumps at `σ`) and replaced by
+`oz_h_continuousOn_ext : ContinuousOn (oz_h eta sigma rho) (Set.Ici sigma)`.
+
+This forced a real proof rewrite in `inner_integral_bridge` (`OZExteriorBridge.lean`, part of
+Gap A), which used to derive `h(σ)=-1` via `Set.EqOn.closure` + global continuity (extending
+`h=-1` from the open core `(0,σ)` to its closure) — this both no longer type-checks with only
+`ContinuousOn h (Ici sigma)`, and mathematically *shouldn't* work anymore (`h(σ)` genuinely
+isn't `-1`). Fixed by dropping the `h(σ)=-1` step entirely and using **open-interval (`uIoo`)
+a.e.-congruence** instead, tolerating the single boundary point `s=σ` differing from the core
+value: `IntervalIntegrable.congr_uIoo` and `intervalIntegral.integral_congr_uIoo`
+(`Mathlib/MeasureTheory/Integral/IntervalIntegral/Basic.lean`), matched only on the open
+interval where `hcore` directly applies. Same "modify a measure-zero point, use an
+a.e./open-interval congruence lemma" family of technique as `radial_fourier_conv`'s indicator
+handling (Task OZ.6) and `c_HS_abs_integral`'s `Ioo_ae_eq_Ioc` fix (below) — just the
+`uIoo`-flavored variant. Verified: full project `lake build` green, no new `sorry`; the
+original scratch contradiction file now fails to compile (`oz_h_continuous` no longer exists)
+confirming the fix actually closes the hole, not just relabels it.
+
+**Uniqueness of `oz_fixed_pt_unique` is Task OZ.10** (dilute case solved as Task OZ.10-dilute) —
+see both below.
+
+---
+
+### Task OZ.10 — Uniqueness of the OZ fixed point (`oz_fixed_pt_unique`)
+
+**Statement:** the axiom `oz_fixed_pt_unique` (`PYOZ_GHS.lean`, shown in full above, in Task
+OZ.2's "2026 (latest) update"): `∃! h : ℝ → ℝ, OzFixedPt eta sigma rho h ∧
+ContinuousOn h (Set.Ici sigma) ∧ ∃ C, ∀ r, |h r| ≤ C`. Prove this via Banach's fixed-point
+theorem applied to `BoundedContinuousFunction {x:ℝ//sigma≤x} ℝ` (exterior-only — see Task OZ.2's
+contradiction-and-fix story for why only exterior continuity is required); requires (1) showing
+`oz_linear_op` is a bounded operator there, with `‖K‖_{op} ≤ 4π|ρ|·∫₀^σ t²|c_HS(t)| dt`, and
+(2) `‖K‖_{op} < 1` for the contraction to apply — this second condition is where the two density
+regimes below diverge.
+
+**Groundwork (`PYDCF.lean`), used by both regimes:**
+- `py_bracket_pos`/`c_HS_neg`: the inner-core bracket
+  `alpha0+alpha1·x+alpha3·x^3 > 0` for `x∈[0,1]`, `eta∈(0,1)` (hence `c_HS eta sigma t < 0` on
+  `(0,σ)`) — proved via a purely algebraic minimum-at-the-boundary argument: the identity
+  `f(1)-f(x) = (1-x)·(alpha1+alpha3·(1+x+x²))` (`ring`), `f(1)=(1+η/2)/(1-η)²>0`
+  (`py_f1_pos`), and `alpha1+3·alpha3 = 9η(η²-1)/(2(1-η)^4) < 0` (`py_a1_add_three_a3_neg`,
+  using `alpha3≥0` and `1+x+x²≤3` on `[0,1]`) combine to give `f(x)≥f(1)>0`. Symbolically
+  verified via `sympy` before formalizing.
+- `c_HS_abs_integral`: closed form
+  `∫₀^σ t²|c_HS(t)|dt = σ³·(alpha0/3+alpha1/4+alpha3/6)` — substitutes the sign fact to drop
+  the absolute value (valid a.e., via `Ioo_ae_eq_Ioc` for the single point `t=σ`), then
+  integrates the resulting cubic term-by-term via `integral_pow`. This turns the `‖K‖_{op}<1`
+  contraction hypothesis into the clean polynomial inequality
+  `24·eta·(py_a0 eta/3+py_a1 eta/4+py_a3 eta/6) < 1`, numerically `eta* ≈ 0.08806`.
+
+**Small `eta` (dilute, `eta < eta* ≈ 0.088`): proved.** See Task OZ.10-dilute below for the full
+six-piece Banach-contraction proof of `oz_fixed_pt_unique_dilute`.
+
+**Middle/high density (`eta≈0.3–0.5` up to `eta<1`): still genuinely open, axiomatic in
+`oz_fixed_pt_unique`.** Banach contraction fundamentally caps out where `K<1` fails (past
+`eta*≈0.088`); beyond that, existence+uniqueness needs the **Fredholm alternative** for the
+(presumably) compact linear operator `oz_linear_op`: `(I-K)` either bijective for all data, or
+has a nontrivial kernel at "resonant" `ρ`. This needs (a) a *compactness* proof for
+`oz_linear_op` — strictly stronger than the boundedness proved for the dilute case, likely an
+Arzelà–Ascoli equicontinuity+decay argument — and (b) Fredholm theory for compact operators on a
+Banach space. (b) is likely thin or absent in Mathlib for this integral-operator setting — not
+confirmed, would need its own research pass. Building the dilute-case contraction machinery
+(Task OZ.10-dilute's Pieces 2–3 especially) didn't surface anything that changes this
+assessment — `fun_prop`'s parametric-integral continuity lemmas are useful for continuity but
+say nothing about compactness or spectral theory. A plausible but unverified bridge: `detQ(s)`'s
+zeros (`BaxterRealSpace.lean`'s "Physical Note") may correspond to
+`1-ρ·C_HS_laplace eta sigma s=0`, i.e. the same non-vanishing hypothesis already threaded
+through `oz_laplace_oz_eq`-family theorems — if so, "non-resonant `ρ`" here might reduce to a
+condition already assumed elsewhere, but proving that correspondence is its own nontrivial task.
+
+**Status:** ◑ mixed — dilute case (Task OZ.10-dilute) ✓ DONE, no axiom, no sorry; middle/high
+density still axiomatic, needs Fredholm alternative (likely absent from Mathlib).
+
+---
+
+### Task OZ.10-dilute — Banach proof of `oz_fixed_pt_unique_dilute` (dilute regime)
+
+**`oz_fixed_pt_unique_dilute` DONE, no axiom, no sorry**
+(`HardSphere/OzFixedPtDilute.lean`, new file — kept separate from `PYOZ_GHS.lean` since it
+*imports* `PYOZ_GHS.lean`, so the theorem cannot live there without an import cycle). Full
+statement:
+```lean
+theorem oz_fixed_pt_unique_dilute (eta sigma rho : ℝ) (hsigma : 0 < sigma)
+    (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_pos : 0 < eta) (heta1 : eta < 1)
+    (hsmall : 24 * eta * (py_a0 eta / 3 + py_a1 eta / 4 + py_a3 eta / 6) < 1) :
+    ∃! h : ℝ → ℝ, OzFixedPt eta sigma rho h ∧ ContinuousOn h (Set.Ici sigma) ∧
+      ∃ C, ∀ r, |h r| ≤ C
+```
+One deliberate deviation from the original plan sketch: adds `heta1 : eta < 1`. `hsmall` alone
+does *not* force it — e.g. `eta = 5` satisfies `24·eta·bracket < 1` too, since the bracket
+(`py_a0/3+py_a1/4+py_a3/6`) goes negative for `eta` past ≈2 (checked numerically). `eta < 1` is
+needed for `c_HS_neg`/`c_HS_abs_integral` (both used throughout) and is physically free (`eta`
+is a packing fraction).
+
+Six pieces, all in `HardSphere/OzFixedPtDilute.lean` unless noted:
+1. **Exterior domain.** `ExtDom sigma := {x:ℝ//sigma≤x}`; `extendClamp` (clamps `r` to `σ`
+   before evaluating — globally continuous, used inside the contraction argument) vs
+   `extendCore` (`-1` below `σ`, the semantically correct extension, used only for the final
+   glued `h*`). Both agree wherever `oz_linear_op` ever reads them (`extendClamp_eq_extendCore`)
+   since its integration domain `[max(r-t,σ),r+t] ⊆ [σ,∞)` always — this is what avoids the
+   core/exterior gluing trap that caused the "2026 (latest) update" contradiction above.
+2. **`T_ext` continuity.** `oz_forcing_continuousOn`/`oz_linear_op_continuousOn` on
+   `[σ,∞)`. The novel piece: `oz_linear_op`'s inner integral has *two* moving bounds
+   (`max(r-t,σ)` and `r+t`); split via `integral_interval_sub_left` anchored at `σ` into two
+   one-moving-bound integrals, each handled by
+   `intervalIntegral.continuous_parametric_intervalIntegral_of_continuous`
+   (`@[fun_prop]`-tagged). `c_HS`'s own jump at `t=σ` removed by swapping in the explicit
+   polynomial (`c_HS_inner`) via `uIoo`/a.e. congruence (single point, same technique as the
+   "2026 (latest)" fix above). Factored into a standalone `oz_inner_shell_continuous` (joint
+   continuity in `(r,t)`) since Piece 3/4 need it too, sliced at fixed `r`.
+3. **Boundedness.** `oz_forcing_bound`/`oz_linear_op_bound`: uniform-in-`r≥σ` bounds
+   `2π|ρ|σ³·bracket` / `4π|ρ|·N·σ³·bracket` (for `h` bounded by `N`). Key estimate,
+   `oz_inner_shell_bound`: `|∫ s in max(r-t,σ)..(r+t), s·h(s)| ≤ N·2rt` — *tight* (not a cruder
+   `N·(r+t)·2t`), via the exact antiderivative `∫s ds=(b²-a²)/2` and `max(r-t,σ)²≥(r-t)²`
+   (from `r-t≥0`, itself from `t≤σ≤r`). This tightness is what makes `oz_linear_op_bound`'s
+   constant `4π|ρ|Nσ³bracket` match `hsmall`'s `24η·bracket` *exactly* after the `eta`
+   substitution — no slack anywhere in the chain. `oz_forcing_bound` similarly reuses the
+   `t²|c_HS(t)|` integrand (via a parallel tight estimate on `σ²-(r-t)²≤2σt`), letting both
+   bounds reuse `c_HS_abs_integral` directly. New PYDCF.lean lemma `c_HS_abs_t2_integrableOn`
+   (`t²|c_HS(t)|` interval-integrable on `[0,σ]`, via `Integrable.mul_bdd`) backs the
+   `norm_integral_le_of_norm_le` calls in both bounds.
+4. **Contraction estimate.** `T_ext_contracting`: `dist (T_ext h1)(T_ext h2) ≤ K·dist h1 h2`,
+   `K:=4π|ρ|σ³·bracket`. `oz_forcing` cancels in the difference (`h`-independent); the
+   remainder reduces to `oz_linear_op_bound` applied to `extendClamp h1 - extendClamp h2`, via
+   a genuine linearity lemma `oz_linear_op_sub` (needs integrability of both summands
+   individually, from `oz_linear_op_integrand_intervalIntegrable`, itself via
+   `Integrable.mul_bdd` with a crude-but-sufficient constant bound — the *tight* `2rt` bound is
+   only invoked for the final numeric estimate, not for integrability).
+5. **Banach assembly.** `T_ext` packaged via `BoundedContinuousFunction.ofNormedAddCommGroup`
+   (continuity + boundedness from pieces 2–3); `T_ext_K` (`K` as a plain real);
+   `T_ext_contractingWith` bundles `K<1` (via `Real.toNNReal`/`Real.toNNReal_lt_iff_lt_coe`) +
+   `LipschitzWith.of_dist_le_mul` into `ContractingWith`; `h_ext_star :=
+   (T_ext_contractingWith ...).fixedPoint` (needs `[Nonempty][CompleteSpace]` on
+   `ExtDom sigma →ᵇ ℝ`, both automatic instances).
+6. **Translation.** `oz_linear_op_congr_on_ext`: `oz_linear_op` only reads its function
+   argument on `[σ,∞)`, so it agrees for *any* two functions agreeing there — the general form
+   of the Piece-1 fact, reused both for `h* := extendCore h_ext_star` satisfying `OzFixedPt`
+   (`h_star_isFixedPt`) and, in the uniqueness direction, for showing an arbitrary candidate
+   `h'`'s exterior restriction is *also* a `T_ext`-fixed-point (bundled into
+   `ExtDom sigma →ᵇ ℝ` via the same `ofNormedAddCommGroup` constructor, using `h'`'s own
+   `ContinuousOn`/bounded hypotheses), hence equals `h_ext_star` by
+   `ContractingWith.fixedPoint_unique`; combined with `h'(r)=-1=h*(r)` for `r<σ` (forced by
+   `oz_fixed_pt_core`/`extendCore_eq_of_lt`), `funext` + case split on `r<σ` closes uniqueness.
+   The `eta<1`-free algebra step (`hrho_pos`, `T_ext_K eta sigma rho = 24·eta·bracket` exactly,
+   via `heta_def`⟹`π·rho·σ³=6·eta`⟹`4π·rho·σ³=24·eta`) is where `hsmall` becomes `K<1`.
+
+**Depends on:** Task OZ.10's groundwork (`c_HS_neg`, `c_HS_abs_integral`).
+
+**Status:** ✓ DONE — genuine theorem, no axiom, no `sorry`. Middle/high density remains open;
+see Task OZ.10 above.
 
 ---
 
@@ -518,14 +708,91 @@ literal hypotheses), unlike OZ.6 where the unweighted marginal hypotheses turned
 signature (after removing its unused `hf`/`hg`) has no marginal-integrability parameter to
 supply it to.
 
-**Not done here (Task OZ.8):** no closed-form sine-transform formula for `c_HS` is derived,
-and no bridge back to `C_HS_laplace`/`S0`/`g0_HS_contact_value` is attempted — the conclusion
-is stated directly in terms of `radial_fourier (c_HS eta sigma) k`, not a named closed form.
-Bridging via analytic continuation `s ↔ -ik` (valid since `c_HS` has compact support, so its
-Laplace transform is entire) is plausible future work, flagged but not started.
-
 **Status:** ✓ DONE — `LeanCode/HardSphere/OZFourierBridge.lean`, no sorry, no axiom, conditional
 only on Gap B (same physics hypothesis as OZ.2b's `oz_laplace_oz_eq_of_core_closure`).
+
+---
+
+### Task OZ.8 — closed-form sine-transform of `c_HS` + bridge to `C_HS_laplace`/`S0`
+
+**Statement.** Two things `OZFourierBridge.lean` left as abstract: (A) a closed-form for
+`radial_fourier (c_HS eta sigma) k` (analogous to `C_HS_laplace_formula`), and (B) an explicit
+correspondence between that closed form and `C_HS_laplace_formula` under `s ↦ -ik`, making the
+Fourier-domain non-resonance condition (`1 - rho·radial_fourier (c_HS eta sigma) k`, implicit
+in `oz_fourier_oz_eq_of_PY_core`) concretely comparable to the existing Laplace-domain
+`S0`/`hne` condition (`1 - rho·C_HS_laplace eta sigma s ≠ 0`).
+
+**Scoping decision (user-confirmed):** OZ.8 as originally titled bundled a third thing — using
+this to derive `g0_HS_contact_value` — which is **not attempted**. That needs inverting the
+closed-form-in-`k` Fourier-domain OZ solution back to real space (residue calculus / the
+classical PY closed-form solution), a multi-session undertaking on the scale of the Baxter
+Wiener–Hopf work (Task OZ.9) already flagged elsewhere as out of scope. Tracked separately as
+`OZ.8-partB` in `todo_lean.md`.
+
+**In Lean:** `LeanCode/HardSphere/RadialFourierCHS.lean` (new file, no sorry, no axiom).
+
+**Part A — `radial_fourier_c_HS_formula`.** Same technique as `C_HS_laplace_formula`
+(`phi1/phi2/phi4_formula`'s `HasDerivAt`+FTC pattern), just for `sin` instead of `exp(-s·)`:
+1. `radial_fourier_c_HS_eq_intervalIntegral` — reduces `radial_fourier`'s `Set.Ioi 0` integral
+   to a finite `intervalIntegral` on `[0,sigma]`, via the same indicator-rewrite technique as
+   `RadialFourier.lean`'s `setIntegral_Icc_eq_setIntegral_Ioi_indicator`, used in reverse
+   (`c_HS` vanishes identically past `sigma`, not just a.e.).
+2. `psi1_formula`/`psi2_formula`/`psi4_formula` — closed forms for `∫0^sigma r^n·sin(k·r) dr`,
+   `n=1,2,4` (the powers appearing in `r·c_HS(r)`'s expansion). No Mathlib lemma exists for
+   `∫x^n·sin(ax)dx` (checked), so each needed an explicit antiderivative verified via
+   `HasDerivAt` — antiderivatives sourced from `sympy` before formalizing (residual check, not
+   guessed). `psi4_formula`'s antiderivative (5 terms) was the most tedious single piece,
+   mechanically identical to `phi4_formula`'s.
+   - Recurring Lean 4 pitfall hit repeatedly here: `HasDerivAt.add`/`.sub`'s conclusion is
+     stated as raw function subtraction/addition (`f - g`, via `Pi.instSub`), not the
+     eta-expanded `fun x => f x - g x` — `exact`/`simpa` fail on the resulting (defeq but not
+     syntactically matching) type. Fixed via `HasDerivAt.fun_add`/`.fun_sub` (the
+     `@[to_fun]`-generated companions that DO state the eta-expanded conclusion directly),
+     plus, for lingering associativity (`a*(b/c)` vs `a*b/c`) or `id x` vs `x` mismatches,
+     `simp only [← mul_div_assoc, id_eq] at h` before the final `exact h`.
+3. `radial_fourier_c_HS_formula` assembles (1)+(2), swapping `c_HS` for its explicit polynomial
+   via `uIoo` congruence (tolerating the single differing point `r=sigma`, same technique as
+   `C_HS_laplace_eq_cHS`).
+
+**Part B — `radial_fourier_c_HS_eq_C_HS_laplace_expr`.** Deliberately *not* built via
+Mathlib's analytic-continuation/identity-theorem machinery
+(`Mathlib.Analysis.Analytic.Uniqueness`/`IsolatedZeros` — confirmed present, has the right
+shape, but unneeded): since both closed forms already exist explicitly (Part A;
+`C_HS_laplace_formula`), the bridge is a finite symbolic verification, not a general theorem.
+`C_HS_laplace_expr (eta sigma : ℝ) (s : ℂ) : ℂ` is `C_HS_laplace_formula`'s RHS as a plain
+algebraic expression (not an integral) with `s`/`Real.exp` promoted to `ℂ`/`Complex.exp`;
+`C_HS_laplace_expr_ofReal` confirms it's a faithful complex lift (agrees after casting, for
+real `s`) via `push_cast; ring`. The main theorem substitutes `s := -Complex.I*k`:
+- `Complex.exp_ofReal_mul_I` converts the exponential term to `Real.cos+Real.sin·I` directly
+  (no separate `Complex.ofReal_cos`/`_sin` bridging needed).
+- `s^2,s^3,s^4,s^5` at `s=-Ik` reduce to clean real-or-purely-imaginary casts
+  (`((-(k^2):ℝ):ℂ)`, `((k^3:ℝ):ℂ)*I`, `((k^4:ℝ):ℂ)`, `((-(k^5):ℝ):ℂ)*I`) via `linear_combination`
+  against `Complex.I_sq`/`Complex.I_pow_four` — `push_cast; linear_combination c * Complex.I_sq`
+  (or `I_pow_four`), verified in an isolated scratch file first (cheap, catches sign errors
+  before touching the main proof).
+- Taking `.im` of a sum of `N/(real-or-real·I)` terms: `Complex.div_ofReal_im`
+  (`@[simp]`, already in Mathlib) handles the real-denominator term directly;
+  the real·I-denominator terms need a small proved-from-scratch helper,
+  `im_div_ofReal_mul_I (z)(r) : (z/((r:ℂ)*I)).im = -z.re/r`, via
+  `z/((r:ℂ)*I) = z/(r:ℂ)/I = -(z/(r:ℂ)*I)` (`div_mul_eq_div_div`, `Complex.div_I`) then
+  `Complex.div_ofReal_re`. (First attempt used the fully generic `Complex.inv_re`/`inv_im`
+  formula via `normSq` on the *unreduced* `s^2,s^3,s^5` — technically correct but produced an
+  enormous, untractable expression since it couldn't see that the denominators were secretly
+  real/imaginary; substituting the clean forms *first* was the fix.)
+- Final `.re`/`.im` decomposition of the resulting (still sizeable) expression via a `simp only`
+  with the standard `Complex` arithmetic lemma set (`add_im/re`, `mul_im/re`, `sub_im/re`,
+  `neg_im/re`, `ofReal_im/re`, `I_im/re`, `one_im/re`, `re_ofNat`/`im_ofNat`,
+  `← Complex.ofReal_pow` to push casts through powers like `(sigma:ℂ)^3`) — an *unrestricted*
+  `simp` was tried first and failed: it round-tripped `↑(Real.cos x)` back into `Complex.cos ↑x`
+  via a competing `norm_cast`-tagged lemma, producing an unreducible mess. `simp only` with an
+  explicit, curated list avoided this.
+- Closed by `field_simp; ring` on the now-fully-real goal, confirming exact equality (ratio 1,
+  no missing sign/factor — matching an independent `sympy` numeric check of the same
+  correspondence done before writing any Lean).
+
+**Status:** ✓ DONE (Parts A+B) — `LeanCode/HardSphere/RadialFourierCHS.lean`, no sorry, no
+axiom. Part C (bridge to `g0_HS_contact_value`) not attempted — see `OZ.8-partB`,
+`todo_lean.md`.
 
 ---
 

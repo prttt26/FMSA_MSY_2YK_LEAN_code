@@ -6,7 +6,7 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 - [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) — Groups 2, 3, OZ (pure HS foundations)
 - [proof_notes_yukawa_dcf.md](proof_notes_yukawa_dcf.md) — Groups 1, 4, M, B, C, 5 (Yukawa DCF derivation)
 - [proof_notes_failures.md](proof_notes_failures.md) — Groups chsY, P (formula failure analysis)
-- [proof_notes_free_energy.md](proof_notes_free_energy.md) — Group F (free energy integrals)
+- [proof_notes_free_energy.md](proof_notes_free_energy.md) — Groups F, FW (free energy integrals; White-Bear FMT/BMCSL)
 
 **Source markers:**
 - **[chsY]** — `pdf/FMSA_chsY.pdf` (analytical multi-species MSA solution)
@@ -25,21 +25,27 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 
 | Axiom | File | Task | Physical meaning / proof path |
 |-------|------|------|-------------------------------|
-| `oz_fixed_pt_unique` | `HardSphere/PYOZ_GHS.lean:145` | OZ.2a | OZ fixed point unique in `BoundedContinuousFunction`; needs Banach contraction estimate |
-| `oz_core_closure` & `g0_HS_contact_value` | `HardSphere/PYOZ_GHS.lean` | OZ.9a / OZ.3 | PY core closure (Gap B) and the PY contact value — two independent claims, both from Baxter/Wertheim theory, both numerically verified (2026) but not proved from Mathlib real-analysis alone (needs Baxter's Wiener–Hopf factorization). Kept as separate axioms (not merged) since they're logically independent; see [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) Task OZ.9 for full detail on both, including Route A (taken, closed OZ.9) vs Route B (would retire both via one relation, not attempted). |
+| `oz_fixed_pt_unique` | `HardSphere/PYOZ_GHS.lean` | OZ.10 | OZ fixed point uniqueness. Dilute case (`eta<1`, `24·eta·bracket<1`) now a real theorem, `oz_fixed_pt_unique_dilute` (`HardSphere/OzFixedPtDilute.lean`, no axiom); this axiom now covers only mid/high density (needs Fredholm alternative). See [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) Task OZ.10. |
+| `oz_core_closure` & `g0_HS_contact_value` | `HardSphere/PYOZ_GHS.lean` | OZ.9a / OZ.3 | PY core closure and PY contact value (Baxter/Wertheim). See Numerically verified section below. |
 
 *(`radial_laplace_conv` and `oz_laplace_oz_eq` are still `axiom` declarations but are superseded dead ends
  — see OZ.2/OZ.6/OZ.7 for the history.)*
+
+### Numerically verified — not proved in Lean
+
+| Claim | File | Task | What's verified / what's missing |
+|-------|------|------|-----------------------------------|
+| PY core closure & PY contact value | `HardSphere/PYOZ_GHS.lean` (axioms `oz_core_closure`, `g0_HS_contact_value`) | OZ.9a / OZ.3 | Baxter/Wertheim results; numerically verified across state points, needs Baxter's Wiener–Hopf factorization for a Lean proof. See [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) Task OZ.9. |
+| `(1-M₀₀)(1-M₁₁) ≠ M₀₁·M₁₀` (`M := Vmat·Umat`) | `YukawaDCF/MatrixQ0.lean`, explicit hypothesis on `Q0_mat_phys_isUnit_det_of_two_by_two` | M.4 | Rank-2 reduction (M.4) leaves this one scalar inequality; robust numerically across tested parameters, not proved unconditionally. Blocks M.3's unconditional `det(Q̂₀)≠0`. See [proof_notes_yukawa_dcf.md](proof_notes_yukawa_dcf.md) Task M.4. |
+| `D_ij ≠ 0` for unlike pairs | `YukawaDCF/B5MixturePoly.lean` (theorem `b9_d_ij_nonzero_example`) | B.9 | Confirmed numerically: `verify_oz_solver.py` Check 4 gives `D_01 = -3295.03` for the canonical binary HSY state point (σ=[1.0,1.2], ρ*=0.5, T*=1.5) — clearly nonzero. The Lean theorem only proves existence of valid unlike-pair parameters, not `D≠0` for them; the actual inequality is unproved. See [proof_notes_yukawa_dcf.md](proof_notes_yukawa_dcf.md) Task B.9. |
 
 ### Open tasks — not yet started
 
 | Task | Title | Depends on | Notes |
 |------|-------|-----------|-------|
-| M.4 | Unconditional `det(Q0_mat_phys) ≠ 0` for all `z > 0` | M.3 | Rank-2 reduction formalized (see `YukawaDCF/Q0DetRankTwo.lean`, details in [proof_notes_yukawa_dcf.md](proof_notes_yukawa_dcf.md)). Remaining: one scalar inequality `(1-M₀₀)(1-M₁₁) ≠ M₀₁·M₁₀` (`M := Vmat*Umat`), taken as an explicit hypothesis on `Q0_mat_phys_isUnit_det_of_two_by_two` — not closed unconditionally, robust numerically. |
-| OZ.8 | Closed-form sine-transform formula for `c_HS` (analogous to `C_HS_laplace_formula`) + bridge back to `C_HS_laplace`/`S0`/`g0_HS_contact_value` via analytic continuation `s ↔ -ik` | OZ.6, OZ.7 | Not started, needs its own scoping pass. `c_HS` has compact support on `(0,σ)`, so its Laplace transform `C_HS_laplace` is entire — restricting it to the imaginary axis should give `radial_fourier (c_HS eta sigma) k` directly, avoiding a from-scratch sine-transform derivation. Plausible, probably comparable effort to the existing `phi4_formula`-style calculus, but distinct work from OZ.6/OZ.7. |
-| OZ.9-RouteB | Baxter's `h`-via-`Q` relation → `g0_HS_contact_value` (and re-derive OZ.9 as a corollary instead of a direct axiom) | OZ.9 | Baxter's second relation is numerically verified (`r·h(r) = -Q'(r)/(2π) + ρ∫₀^σ Q(t)(r-t)h(\|r-t\|)dt`, three `η` values) but the Q-elimination bridge connecting it back to `c_HS`/`radial3d_conv` form has **not** been verified as straightforward — needs its own numerical check before any Lean work. Not started; larger, less scoped than OZ.9's direct-axiom route (Route A, already taken). See [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) Task OZ.9. |
-| FW.1 | FMT species symmetry: `betaf_hs(N, ρ/N each, d)` = `betaf_hs(1, ρ, d)` when all dᵢ=d | — | Algebraic identity: when all diameters equal, FMT n-functionals n₀=Σρᵢ, n₁=(d/2)Σρᵢ, n₂=πd²Σρᵢ, n₃=(π/6)d³Σρᵢ depend only on total density → White-Bear formula collapses to single-component form. Supports W-C.3 and W-C.4 (numerical verification in `todo_numerical.md`). Likely `simp`/`ring` with the FMT functional unfolded. No Mathlib obstruction. |
-| FW.2 | MCSL mixture contact value: g⁰_ij(R_ij) = BMCSL formula for all N | `g0_HS_contact_value` (open axiom) | Mixture generalisation of `g0_HS_contact_value` (`HardSphere/PYOZ_GHS.lean`). Formula: `1/vac + 3ζ₂·dᵢdⱼ/(dᵢ+dⱼ)/vac² + 2ζ₂²·(dᵢdⱼ/(dᵢ+dⱼ))²/vac³`. Needed for W-C.2 (virial-FMT consistency). Same obstruction as `g0_HS_contact_value`. |
+| B.11 | Inner DCF decomposition: `mediated_ij(r)=0` for r<σ_min; P_ij is single polynomial on (0,R_ij) | B.5, 1.3 | Three sub-tasks with sorry in `YukawaDCF/B11InnerDecomp.lean`. Single polynomial confirmed for σ-ratio ≤ 3 (factor-of-3 threshold: alpha_0=(σ_j−3σ_b)/2; our binary ratio=2 < 3 → mediated=0 everywhere). σ-ratio > 3 Term IV (double convolution) breakpoint structure pending further research (B.11.4). |
+| OZ.9-RouteB | Derive `g0_HS_contact_value` from Baxter's `h`-via-`Q` relation (alternative to OZ.9's direct axiom) | OZ.9 | Not started; Q-elimination bridge back to `c_HS` unverified. See [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) Task OZ.9. |
+| OZ.8-partB | Derive `g0_HS_contact_value` from OZ.8's Fourier-domain closed form | OZ.8 | Not started; needs Fourier inversion of the closed-form-in-`k` OZ solution (residue calculus), comparable in scale to the Baxter Wiener–Hopf work. See [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) Task OZ.8. |
 
 *(Tasks D.1–D.4 removed — no longer valid after FMSA_GA_matrix_mix redesign; see [proof_notes_yukawa_dcf.md](proof_notes_yukawa_dcf.md) Group D note.)*
 
@@ -90,6 +96,7 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 | M.1 | Abstract matrix identity Ĝ+Â·c=I | ✓ DONE | `YukawaDCF/MatrixIdentity.lean` |
 | M.2 | N=1 limit: Ĝ₀₀=g, Â₀₀=a | ✓ DONE | `YukawaDCF/MatrixN1.lean` |
 | M.3 | det(Q̂₀) ≠ 0 multi-component | ◑ conditional (old axiom disproved; see M.4) | `YukawaDCF/MatrixQ0.lean`, `YukawaDCF/Q0DetRankTwo.lean` |
+| M.4 | Unconditional `det(Q0_mat_phys) ≠ 0` for all `z > 0` | ◑ conditional — rank-2 reduction done; one scalar inequality left as explicit hypothesis, robust numerically but not proved unconditionally; see Numerically verified section | `YukawaDCF/MatrixQ0.lean` |
 
 ### Group B — FMSA_GA_matrix_mix Algebraic Foundation and Polynomial Determination *(yukawa_dcf)*
 
@@ -103,8 +110,9 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 | B.6 | Origin uniqueness: only A_{ij}=−E_{ij}(0) forced at r=0 | ✓ DONE | `YukawaDCF/B5MixturePoly.lean` |
 | B.7 | No contact BC: B,C,D,E^{(4)} not fixed by r=R_{ij} | ✓ DONE | `YukawaDCF/B5MixturePoly.lean` |
 | B.8 | Laurent extraction: all five coefficients from R_{ij}(s) at s=0 | ✓ DONE | `YukawaDCF/B5MixturePoly.lean` |
-| B.9 | D_{ij} generically nonzero for unlike pairs | ✓ DONE | `YukawaDCF/B5MixturePoly.lean` |
+| B.9 | D_{ij} generically nonzero for unlike pairs | ◑ weakened — numerically confirmed, not proved; see Numerically verified section | `YukawaDCF/B5MixturePoly.lean` |
 | B.10 | Exact degree: natDegree P_{ij} = 4 | ✓ DONE | `YukawaDCF/B5MixturePoly.lean` |
+| B.11 | Inner DCF decomposition: domain of P_ij, mediated vanishing for r < σ_min | ☐ sorry | `YukawaDCF/B11InnerDecomp.lean` |
 
 ### Group C — FMSA_GA_matrix_mix Consistency *(yukawa_dcf)*
 
@@ -137,9 +145,13 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 | OZ.5 | Baxter real-space convolution identity | ✓ DONE | `HardSphere/BaxterRealSpace.lean` |
 | OZ.6 | Radial sine/Fourier transform convolution theorem — correct replacement for the disproven `radial_laplace_conv` | ✓ DONE, no axiom | `HardSphere/RadialFourier.lean` |
 | OZ.7 | Fourier-domain exterior OZ equation (Gap A ∪ Gap B, correct-transform counterpart of `oz_laplace_oz_eq_of_core_closure`) | ✓ DONE, conditional only on OZ.9 (`hcore`) | `HardSphere/OZFourierBridge.lean` |
-| OZ.8 | Closed-form sine-transform formula for `c_HS` + bridge back to `C_HS_laplace`/`S0`/`g0_HS_contact_value` via analytic continuation `s↔-ik` | ☐ not started, needs its own scoping pass | — |
+| OZ.8 | Closed-form sine-transform formula for `c_HS` + bridge to `C_HS_laplace`/`S0` via `s↔-ik` | ✓ DONE (Parts A+B), no axiom/sorry. Bridge to `g0_HS_contact_value` not attempted — see OZ.8-partB | `HardSphere/RadialFourierCHS.lean` |
 | OZ.9a | PY core closure (Gap B) for `r < σ` — promoted to a named, numerically-verified axiom | ✓ DONE (axiom `oz_core_closure`, Route A; not proved from Mathlib real-analysis — needs Baxter Wiener–Hopf, out of scope) | `HardSphere/PYOZ_GHS.lean` |
 | OZ.9b | `oz_fourier_oz_eq_of_PY_core`: OZ.7 specialized to consume `oz_core_closure` instead of an externally-supplied `hcore` — most complete/trustworthy result in the whole OZ chain (Gap A + convolution theorem + Gap B all proved/axiomatized by name, only routine integrability hypotheses remain) | ✓ DONE | `HardSphere/OZFourierBridge.lean` |
+| OZ.9-RouteB | Derive `g0_HS_contact_value` from Baxter's `h`-via-`Q` relation (alternative to OZ.9's direct axiom) | ☐ not started — Q-elimination bridge back to `c_HS` unverified | — |
+| OZ.8-partB | Derive `g0_HS_contact_value` from OZ.8's Fourier-domain closed form | ☐ not started — needs Fourier inversion of the closed-form-in-`k` OZ solution (residue calculus), comparable in scale to the Baxter Wiener–Hopf work | — |
+| OZ.10 | Uniqueness of the OZ fixed point (`oz_fixed_pt_unique`) | ◑ axiom — dilute case proved (OZ.10-dilute); middle/high density still needs Fredholm alternative, likely absent from Mathlib | `HardSphere/PYOZ_GHS.lean` |
+| OZ.10-dilute | Dilute-regime (`eta<1`, `24·eta·bracket<1`, i.e. `eta≲0.088`) Banach existence/uniqueness for `oz_fixed_pt_unique`, exterior-only | ✓ DONE — `oz_fixed_pt_unique_dilute`, genuine theorem, no axiom/sorry. Middle/high density (`eta≈0.3–0.5`) still needs Fredholm alternative, not attempted — see [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) Task OZ.10-dilute. | `HardSphere/OzFixedPtDilute.lean` (+ `c_HS_abs_t2_integrableOn` in `HardSphere/PYDCF.lean`) |
 
 ### Group F — Free Energy Integrals *(free_energy)*
 
@@ -159,6 +171,24 @@ free energy (what FMSA computes: `∫ u g₀ r² dr`) with the compressibility-r
 integrating c(r)). For any first-order approximate theory these two routes give different numbers —
 the gap measures route inconsistency, not model quality. Verifying route inconsistency numerically
 is not a useful model check. Deleted.
+
+### Group FW — White-Bear FMT / BMCSL Mixture Thermodynamics *(hard_sphere)*
+
+| Task | Title | Status | Lean file |
+|------|-------|--------|-----------|
+| FW.1 | FMT species symmetry: `betaf_hs` depends on `rho` only through `∑ᵢρᵢ` when all diameters equal | ✓ DONE, no axiom (`betaf_hs_species_symmetry`) | `HardSphere/WhiteBearFMT.lean` |
+| FW.2 | BMCSL/White-Bear thermodynamic consistency: virial pressure (from `g0_bmcsl`) = FMT scaled pressure (from `betaf_hs`) | ✓ DONE, no axiom (`bmcsl_virial_eq_fmt_pressure`) | `HardSphere/WhiteBearFMT.lean` |
+
+**2026 note — corrected framing, then proved.** An earlier round of this file claimed FW.2
+faced "the same obstruction as `g0_HS_contact_value`" (Baxter Wiener–Hopf). That was wrong —
+`g0_bmcsl` reduces at N=1 to the Carnahan-Starling value `(1-η/2)/(1-η)³`, not the PY value
+`(1+η/2)/(1-η)²` that `g0_HS_contact_value` axiomatizes, and is *used as a definition* in this
+codebase (no independently-computed multi-species PY/Baxter solution exists to compare it
+against). The real open content was the thermodynamic consistency identity numerically checked
+by `verify_wc.py`'s `wc2()` — proved exactly (not axiomatized) via `bmcsl_virial_eq_fmt_pressure`,
+assembled from a `HasDerivAt` chain along the density-scaling ray (`wbPhi_ray_pressure_eq`) and
+a `Finset` double-sum moment reduction (`g0_bmcsl_virial_sum_eq`). See
+[proof_notes_free_energy.md](proof_notes_free_energy.md) for the full derivation.
 
 ### Group 5 — Matching at Contact *(yukawa_dcf)*
 
