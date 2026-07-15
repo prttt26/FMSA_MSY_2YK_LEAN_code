@@ -31,7 +31,7 @@ the OZ equation yields this polynomial form by exact algebraic inversion.
 **Role in Group OZ:**
 - OZ.1 (this file): define c_HS, prove coefficient identities and measurability
 - OZ.2: real-space g0_HS via OZ fixed point (Banach); `g0_HS_core` proved
-- OZ.3: compute Ĉ_HS(s) = ∫0^sigma r·c_HS(r)·e^{-sr} dr; `oz_laplace_identity`; `g0_HS_laplace_spec`
+- OZ.3: compute Ĉ_HS(s) = ∫0^sigma r·c_HS(r)·e^{-sr} dr; `oz_laplace_identity` (kept); contact value now a theorem in `JumpAsymptotic.lean` (`g0_HS_laplace_spec` deleted 2026-07-15, Laplace dead-end)
 - OZ.4: prove general identity Ĥ^(1)(s) = Ĉ^(1)(s)·S0(s) using S0 from OZ.3
 -/
 

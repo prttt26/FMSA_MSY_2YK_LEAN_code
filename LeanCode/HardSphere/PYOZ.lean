@@ -42,9 +42,10 @@ provide the foundation for Task OZ.4.
 
 ## Note on g0_HS
 
-`g0_HS_outer`, `g0_HS`, `g0_HS_core`, `g0_HS_laplace_spec`, and `g0_HS_contact_value` are
-defined in `PYOZ_GHS.lean` (which imports this file), where `g0_HS_outer` is given the
-concrete definition `fun r => 1 + oz_h eta sigma rho r` using the OZ fixed point.
+`g0_HS_outer`, `g0_HS`, and `g0_HS_core` are defined in `PYOZ_GHS.lean` (which imports this
+file), where `g0_HS_outer` is given the concrete definition `fun r => 1 + oz_h eta sigma rho r`
+using the OZ fixed point. (`g0_HS_laplace_spec` was deleted 2026-07-15 as a Laplace dead-end;
+the contact value `g0_HS_contact_value` is now a theorem in `JumpAsymptotic.lean`.)
 -/
 
 open MeasureTheory intervalIntegral Real Set

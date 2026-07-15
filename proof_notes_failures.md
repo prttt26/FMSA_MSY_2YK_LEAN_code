@@ -3,6 +3,8 @@
 Detailed proof records for method failures:
 - **Group chsY** — why the naive [chsY] Eq. 41 formula fails (wrong (1+A)² coefficient)
 - **Group P** — why polynomial approximation structurally fails for repulsive Yukawa tails
+- **Group GA** — why FMSA_GA_matrix_mix's *own* inner formula is ill-conditioned for unlike pairs
+  at large σ-ratio (Tasks GA.1, GA.2; positive counterparts C.2, C.5 stay in `proof_notes_yukawa_dcf.md` Group C)
 
 See `todo_lean.md` for task status summary.
 
@@ -352,6 +354,114 @@ The proof is by definition: plug `r = 0` and `r = R` into `Q_ij` and use `Real.e
   - `exp_basis_satisfies_contact`: `rw [qij_at_contact, eij_at_contact]` + `linarith`
   - `exp_basis_satisfies_origin`: `rw [qij_at_origin]` + `linarith`
   Also defines `qij` (`noncomputable def`) and helper lemmas `qij_at_contact`, `qij_at_origin`.
+
+---
+
+## Group GA — FMSA_GA_matrix_mix Inner-Core Conditioning Failure  *(FMSA_GA_matrix_mix specific)*
+
+FMSA_GA_matrix_mix is itself the **fix** for the two failures above — it replaces Group chsY's
+wrong `(1+A)²` coefficient with the matrix entries `(1−Ĝ²_{ij})` / `Â²_{ij}`, and Group P's
+polynomial basis with a two-exponential basis (Tasks P.B1/P.B2). This group documents the regime
+where FMSA_GA_matrix_mix's *own* inner formula breaks down: **unlike pairs at large σ-ratio**,
+where the two-exponential base `K·exp(z·R_{ij})` diverges and no bounded additive correction can
+rescue it.
+
+The full story has four parts; the two **failure** results are formalized here (GA.1, GA.2), and the
+two **positive** counterparts stay in `proof_notes_yukawa_dcf.md` Group C (C.2, C.5):
+
+- **C.2** *(Group C — positive)* — for N=1 like pairs an **exp-cancellation** keeps the two-exp
+  formula bounded. This is *why* the single-component limit is well-conditioned; it is the
+  reference point the failures below deviate from.
+- **GA.1** *(here — failure)* — for N=2 unlike pairs the exp-cancellation is absent: the base
+  `K·exp(z·R_{ij})` grows without bound with σ-ratio, and the additive HS-pole residue sum
+  (Route C, `fmsa_hs_pole_residue.py`) contributes only O(K/z²), so it **cannot cancel** the
+  divergence for any finite pole set. Extends Group P's degree-agnostic failure (P.3/P.C1) from
+  polynomials to bounded-coefficient exponential sums.
+- **GA.2** *(here — failure, structural root cause)* — the off-diagonal `G_{01}(z) → 0`
+  exponentially for large σ-ratio, so `(1−G²) ≈ 1` and the large factor `exp(z·R_{01})` has no
+  algebraic cancellation. This is *why* GA.1's base diverges for unlike pairs but not for the N=1
+  like pair of C.2.
+- **C.5** *(Group C — positive)* — `K·G·exp` is the leading-order Yukawa-pole residue (the exact
+  residue is the doubly-propagated `Q̂₀⁻¹·K·Q̂₀⁻ᵀ`; `K·G·exp` = `K·G²` at N=1 — see the C.5 CORRECTION),
+  so the Route C inner formula is correct at leading order; the residual 2YK error is entirely in the
+  outer-region `K₀₁` values, not the inner formula. (Interprets the numerically observed
+  ĉ₁₂ ≈ 0 as *expected*, not a bug.) The concrete derivation now lives in **Group Y1** (Y1.1/Y1.5/Y1.6
+  done; Y1.3 = remaining WH split).
+
+**Task IDs.** GA.1 and GA.2 are the group-local task IDs, renumbered 2026-07-15 from their
+original `C.3`/`C.4` when they were split out of Group C into this failure group. Any in-progress
+proof effort keyed to the old `C.3`/`C.4` names should update to `GA.1`/`GA.2`. C.1/C.2/C.5 remain
+in Group C.
+
+*Source: `fmsa_hs_pole_residue.py` Route C analysis + `_build_pure_refs` bug fix (2026-07-15).*
+
+---
+
+### Task GA.1 (formerly C.3) — Unlike-pair two-exp base grows without bound; additive HS-pole sum cannot cancel it
+
+**Statement (part A — existential):**
+```lean
+theorem unlike_pair_twoexp_unbounded (K : ℝ) (hK : 0 < K) (M : ℝ) :
+    ∃ z R : ℝ, 0 < z ∧ 0 < R ∧ K * Real.exp (z * R) ≥ M := by
+  use 1, max 0 (Real.log (M / K)) + 1
+  constructor; · norm_num
+  constructor; · linarith [Real.log_pos (div_pos (lt_of_lt_of_le ... hK) hK)]
+  · calc K * Real.exp (1 * _) ≥ K * Real.exp (Real.log (M / K) + 1) := ...
+          _ ≥ M := ...
+```
+(Choose z = 1, R = log(M/K) + 1; then K·exp(z·R) = K·exp(log(M/K)+1) ≥ M.)
+
+**Statement (part B — additive correction insufficient):**
+```lean
+theorem hs_pole_additive_insufficient
+    (K z R : ℝ) (hK : K > 0) (hz : z > 0) (hR : R > 0) (hzR : z * R > 1)
+    (n : ℕ) (B : Fin n → ℝ) (hB : ∀ k, |B k| ≤ K / z ^ 2)
+    (additive : ℝ) (hadditive : additive = ∑ k, B k) :
+    K * Real.exp (z * R) + additive ≥ K * (Real.exp (z * R) - n / z ^ 2) := by
+  ...
+-- Corollary: for z*R >> 1, K·exp(z·R) dominates n·K/z² (finitely many poles)
+```
+
+**Why it matters:** Closes the Route C failure story. Groups P.3/P.C1 proved no POLYNOMIAL
+can approximate `exp(+z(R-r))` under normalisation; Task GA.1 extends this to HS-pole residue
+sums: since `|B_k| ≤ |K| · |adj Q̂₀(s_k)|_{ij} / (|z²-s_k²| · |det' Q̂₀(s_k)|) = O(K/z²)` and
+there are finitely many poles, the total correction `|Σ_k B_k| ≤ n·|K|/z²` ≪ K·exp(z·R)
+when z·R ≫ log(n). This proves the HS-pole additive approach fails for any finite number of poles.
+
+**Depends on:** P.3 (done), P.C1 (done). New content: the O(K/z²) bound on residues.
+
+**Status:** ✓ DONE (2026-07-15), axiom-clean — `LeanCode/FMSAPoly/PolyApproxFails.lean`.
+Part A `unlike_pair_twoexp_unbounded` (witness `z=1`, `R = max 0 (log(M/K)) + 1`; `Real.exp_log` +
+`Real.exp_le_exp` + case split on `M ≤ 0`). Part B `hs_pole_additive_insufficient` (`|∑ B k| ≤
+∑|B k| ≤ n·(K/z²)` via `Finset.abs_sum_le_sum_abs`, then `linarith`); the `|B k| ≤ K/z²` residue
+bound stays the explicit hypothesis `hB` (numerically verified), as planned.
+
+---
+
+### Task GA.2 (optional, formerly C.4) — Off-diagonal G-matrix element decays exponentially for large σ-ratio
+
+**Physical content:** For N=2, G_{01}(z) = [adj Q̂₀(z)]_{01} / det Q̂₀(z). The numerator
+`[adj Q̂₀]_{01} = -Q̂₀_{10}(z)` (2×2 cofactor) involves an off-diagonal entry of Q̂₀, which
+from B.2's decomposition `Q̂₀ = P̂ + Ê·exp(-z·σ_min)` contributes terms proportional to
+`exp(-z·λ_{01}) = exp(-z·(σ₁-σ₀)/2)`. So `G_{01} = O(exp(-z·(σ₁-σ₀)/2)) → 0` as σ₁-σ₀ → ∞.
+
+**Lean statement (scaling limit):**
+```lean
+theorem g_mat_offdiag_decay (σ₀ σ₁ : ℝ) (hσ : σ₀ < σ₁) :
+    Filter.Tendsto (fun z => G_mat_01 z σ₀ σ₁)
+                   Filter.atTop (nhds 0) := ...
+```
+
+**Effort:** High — requires analysing the explicit N=2 Q̂₀ matrix formula from B.2,
+expanding the cofactor, and applying exponential-decay dominated-convergence. Depends on
+B.2 (done), M.3/M.4. Priority: lower than C.2/C.5.
+
+**Status:** ◑ decay mechanism DONE (2026-07-15), axiom-clean —
+`LeanCode/YukawaDCF/OffDiagDecay.lean`.  `g_mat_offdiag_decay`: given the numerator's exp-decay
+bound `|num z| ≤ C·exp(−z·λ)` (`λ = (σ₁−σ₀)/2 > 0`) and `den z → L ≠ 0`, the ratio `num/den → 0`
+(squeeze via helper `exp_neg_mul_atTop`, then `Tendsto.div`).  **Deferred (high effort):** discharge
+the two hypotheses from the explicit N=2 `Q0_mat` — prove `|Q̂₀_{01}(z)| ≤ C·exp(−z·(σ₁−σ₀)/2)`
+(B.2) and `det Q̂₀(z) → L ≠ 0` (M.4).
 
 ---
 

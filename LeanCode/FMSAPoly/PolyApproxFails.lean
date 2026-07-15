@@ -108,4 +108,62 @@ theorem poly_approx_fails_two_endpoints (z R : ℝ) (hR : 0 < R) (hz : 0 < z) (p
     rw [abs_of_nonpos (by linarith)]
     linarith
 
+/-!
+## Group GA — FMSA_GA_matrix_mix unlike-pair conditioning failure
+
+These extend the Group-P "no polynomial fixes it" story (`poly_approx_fails`) to the
+FMSA_GA_matrix_mix two-exponential base: for unlike pairs at large σ-ratio the growing base
+`K·exp(z·R)` has no exp-cancellation (unlike the N=1 like pair, Task C.2), and a bounded additive
+HS-pole residue sum cannot rescue it.
+-/
+
+/-- **Task GA.1 (part A) — the two-exponential base is unbounded.**  For any amplitude `K > 0`
+and any target `M`, there is a state point `(z, R)` with `K·exp(z·R) ≥ M`.  Witness `z = 1`,
+`R = max 0 (log (M/K)) + 1`.  This is the exponential analog of `poly_approx_fails`: the growing
+factor `exp(z·R)` outruns every bound as `z·R → ∞`. -/
+theorem unlike_pair_twoexp_unbounded (K : ℝ) (hK : 0 < K) (M : ℝ) :
+    ∃ z R : ℝ, 0 < z ∧ 0 < R ∧ M ≤ K * Real.exp (z * R) := by
+  refine ⟨1, max 0 (Real.log (M / K)) + 1, one_pos, ?_, ?_⟩
+  · have := le_max_left (0:ℝ) (Real.log (M / K)); linarith
+  · rw [one_mul]
+    by_cases hM : M ≤ 0
+    · have hpos : 0 < K * Real.exp (max 0 (Real.log (M / K)) + 1) :=
+        mul_pos hK (Real.exp_pos _)
+      linarith
+    · have hMpos : 0 < M := lt_of_not_ge (fun h => hM h)
+      have hMK : 0 < M / K := div_pos hMpos hK
+      have h2 : M / K ≤ Real.exp (max 0 (Real.log (M / K)) + 1) := by
+        rw [Real.exp_add]
+        calc M / K = Real.exp (Real.log (M / K)) := (Real.exp_log hMK).symm
+          _ ≤ Real.exp (max 0 (Real.log (M / K))) :=
+              Real.exp_le_exp.mpr (le_max_right _ _)
+          _ = Real.exp (max 0 (Real.log (M / K))) * 1 := (mul_one _).symm
+          _ ≤ Real.exp (max 0 (Real.log (M / K))) * Real.exp 1 := by
+              apply mul_le_mul_of_nonneg_left _ (Real.exp_nonneg _)
+              rw [← Real.exp_zero]; exact Real.exp_le_exp.mpr (by norm_num)
+      calc M = K * (M / K) := by field_simp
+        _ ≤ K * Real.exp (max 0 (Real.log (M / K)) + 1) :=
+            mul_le_mul_of_nonneg_left h2 hK.le
+
+/-- **Task GA.1 (part B) — a bounded additive HS-pole sum cannot cancel the base.**  If every
+residue coefficient obeys `|B k| ≤ K/z²` (the `O(K/z²)` bound on Baxter adjugate residues, taken as
+hypothesis — numerically verified), then the corrected base can drop by at most `n·K/z²`:
+```
+K·(exp(z·R) − n/z²) ≤ K·exp(z·R) + ∑ₖ B k.
+```
+Since `n·K/z²` is fixed while `K·exp(z·R) → ∞` (part A), no finite HS-pole set rescues the divergence. -/
+theorem hs_pole_additive_insufficient
+    {K z R : ℝ} (_hK : 0 < K) (_hz : 0 < z) {n : ℕ} (B : Fin n → ℝ)
+    (hB : ∀ k, |B k| ≤ K / z ^ 2) :
+    K * (Real.exp (z * R) - (n : ℝ) / z ^ 2) ≤ K * Real.exp (z * R) + ∑ k, B k := by
+  have hlb : - ((n : ℝ) * (K / z ^ 2)) ≤ ∑ k, B k := by
+    have hab : |∑ k, B k| ≤ (n : ℝ) * (K / z ^ 2) := by
+      calc |∑ k, B k| ≤ ∑ k, |B k| := Finset.abs_sum_le_sum_abs _ _
+        _ ≤ ∑ _k : Fin n, (K / z ^ 2) := Finset.sum_le_sum (fun k _ => hB k)
+        _ = (n : ℝ) * (K / z ^ 2) := by
+            rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+    linarith [neg_abs_le (∑ k, B k), hab]
+  have hrw : K * (Real.exp (z * R) - (n:ℝ)/z^2) = K * Real.exp (z*R) - (n:ℝ)*(K/z^2) := by ring
+  rw [hrw]; linarith [hlb]
+
 end FMSA.PolyApproxFails

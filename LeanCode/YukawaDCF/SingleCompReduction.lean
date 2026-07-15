@@ -186,4 +186,59 @@ theorem c1_n1_from_mat_identity (S M D c : ℝ)
   c1_n1_ga_matrix_mix_eq_fmsa_pure (S / D) (M / D) c
     (by linear_combination FMSA.MatrixIdentity.g_mat_n1_eq_scalar S M D c hD_def hD)
 
+/-- **Task C.2 — the N=1 like-pair two-exp formula is bounded (the "exp-cancellation").**
+
+For the single-component Baxter data `g = S/D`, `a = 12ηL/D`, with the defining relation
+`D = S + 12ηL·exp(−z·d)` (Task 4.2 / [chsY] Eq. 44), the growing-exponential factor of the
+inner-core coefficient is uniformly controlled:
+```
+|(1 − (S/D)²) · exp(z(d−r))| ≤ 2 · (12η|L|/D²) · |D + S|.
+```
+
+**Why:** the *growing* `exp(z(d−r))` is killed by the *decaying* `exp(−z·d)` hidden in
+`D − S = 12ηL·exp(−z·d)`:
+```
+(1 − (S/D)²)·exp(z(d−r)) = (D−S)(D+S)/D²·exp(z(d−r))
+                         = 12ηL·(D+S)/D²·exp(−z·d)·exp(z(d−r)) = 12ηL·(D+S)/D²·exp(−z·r),
+```
+and `exp(−z·r) ≤ 1` for `z, r ≥ 0`.  This is the mathematical reason the single-component limit is
+**well-conditioned**; for N=2 unlike pairs the analogous cancellation is absent (`G_{01} ≈ 0`,
+Group GA), so the base `exp(z·R_{ij})` grows without bound.  The proved constant is actually half
+the stated bound (`12η|L||D+S|/D²`); the factor 2 leaves slack.
+
+**Depends on:** the Task 4.2 relation `D − S = 12ηL·exp(−z·d)` (here as `hD_def`). -/
+theorem c1_n1_twoexp_bounded {S L D eta z d r : ℝ}
+    (hD_def : D = S + 12 * eta * L * Real.exp (-z * d))
+    (hD : D ≠ 0) (heta : 0 < eta) (hz : 0 ≤ z) (hr : 0 ≤ r) :
+    |(1 - (S / D) ^ 2) * Real.exp (z * (d - r))| ≤
+      2 * (12 * eta * |L| / D ^ 2) * |D + S| := by
+  have hD2pos : (0:ℝ) < D ^ 2 := by positivity
+  have hDS : D - S = 12 * eta * L * Real.exp (-z * d) := by rw [hD_def]; ring
+  have hexp : Real.exp (-z * d) * Real.exp (z * (d - r)) = Real.exp (-z * r) := by
+    rw [← Real.exp_add]; congr 1; ring
+  have hkey : (1 - (S / D) ^ 2) * Real.exp (z * (d - r))
+      = 12 * eta * L * (D + S) / D ^ 2 * Real.exp (-z * r) := by
+    have hsq : 1 - (S / D) ^ 2 = (D - S) * (D + S) / D ^ 2 := by field_simp; ring
+    rw [hsq, hDS, ← hexp]; ring
+  rw [hkey, abs_mul, abs_of_pos (Real.exp_pos _)]
+  have hle1 : Real.exp (-z * r) ≤ 1 := by
+    rw [← Real.exp_zero]; exact Real.exp_le_exp.mpr (by nlinarith [mul_nonneg hz hr])
+  have habs : |12 * eta * L * (D + S) / D ^ 2| = 12 * eta * |L| * |D + S| / D ^ 2 := by
+    rw [abs_div, abs_of_pos hD2pos]
+    congr 1
+    rw [show 12 * eta * L * (D + S) = 12 * eta * (L * (D + S)) by ring,
+        abs_mul, abs_of_pos (by linarith : (0:ℝ) < 12 * eta), abs_mul]
+    ring
+  rw [habs]
+  have hnn : (0:ℝ) ≤ 12 * eta * |L| * |D + S| / D ^ 2 := by
+    apply div_nonneg _ (sq_nonneg D)
+    exact mul_nonneg (mul_nonneg (by linarith) (abs_nonneg L)) (abs_nonneg (D + S))
+  calc 12 * eta * |L| * |D + S| / D ^ 2 * Real.exp (-z * r)
+      ≤ 12 * eta * |L| * |D + S| / D ^ 2 * 1 := mul_le_mul_of_nonneg_left hle1 hnn
+    _ = 12 * eta * |L| * |D + S| / D ^ 2 := mul_one _
+    _ ≤ 2 * (12 * eta * |L| / D ^ 2) * |D + S| := by
+        have hrw : 2 * (12 * eta * |L| / D ^ 2) * |D + S|
+            = 2 * (12 * eta * |L| * |D + S| / D ^ 2) := by ring
+        rw [hrw]; linarith
+
 end FMSA.SingleComp

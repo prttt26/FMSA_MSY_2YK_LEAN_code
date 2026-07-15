@@ -134,6 +134,20 @@ where `α₀, α₁, α₃` are explicit rational functions of η (the standard 
 
 ### Task OZ.2 — Real-space definition of g₀_HS via OZ fixed point
 
+> **2026-07-15 — the whole Laplace-domain line in this task was DELETED.** The axioms
+> `radial_laplace_conv` (`RadialLaplace.lean`) and `oz_laplace_oz_eq` (`PYOZ_GHS.lean`), and the
+> theorems that only consumed them — `oz_laplace_oz_eq_of_core_closure` (`OZExteriorBridge.lean`)
+> and `g0_HS_laplace_spec` (`PYOZ_GHS.lean`) — were removed. `radial_laplace_conv` was
+> mathematically false (radial 3D convolution does not factor under the real Laplace transform);
+> `oz_laplace_oz_eq`'s real-`s` product form is therefore not reliably provable and is most likely
+> false as stated. None had live callers, so no true result was lost, and the axiom count dropped
+> 5 → 3. The correct, live OZ-domain equation is the *sine*-transform OZ.6/OZ.7/OZ.9b
+> (`RadialFourier.lean` / `OZFourierBridge.lean`). **What survives in this task:** the entire
+> fixed-point framework (`oz_h`, `oz_fixed_pt_unique`, `oz_operator`, …) and the
+> transform-independent Gap-A lemma `oz_h_satisfies_conv_ext` (`OZExteriorBridge.lean`), which OZ.7
+> reuses verbatim. Everything below that mentions `oz_laplace_oz_eq` / `radial_laplace_conv` /
+> `g0_HS_laplace_spec` is retained only as historical background about the now-deleted line.
+
 **Statement:** The hard-sphere RDF `g₀_HS(r)` is the unique solution of the
 Ornstein-Zernike integral equation with the PY hard-sphere boundary conditions:
 1. `g₀_HS(r) = 0` for `r < σ` (hard-core exclusion)
@@ -353,25 +367,40 @@ regimes below diverge.
 **Small `eta` (dilute, `eta < eta* ≈ 0.088`): proved.** See Task OZ.10-dilute below for the full
 six-piece Banach-contraction proof of `oz_fixed_pt_unique_dilute`.
 
-**Middle/high density (`eta≈0.3–0.5` up to `eta<1`): still genuinely open, axiomatic in
-`oz_fixed_pt_unique`.** Banach contraction fundamentally caps out where `K<1` fails (past
-`eta*≈0.088`); beyond that, existence+uniqueness needs the **Fredholm alternative** for the
-(presumably) compact linear operator `oz_linear_op`: `(I-K)` either bijective for all data, or
-has a nontrivial kernel at "resonant" `ρ`. This needs (a) a *compactness* proof for
-`oz_linear_op` — strictly stronger than the boundedness proved for the dilute case, likely an
-Arzelà–Ascoli equicontinuity+decay argument — and (b) Fredholm theory for compact operators on a
-Banach space. (b) is likely thin or absent in Mathlib for this integral-operator setting — not
-confirmed, would need its own research pass. Building the dilute-case contraction machinery
-(Task OZ.10-dilute's Pieces 2–3 especially) didn't surface anything that changes this
-assessment — `fun_prop`'s parametric-integral continuity lemmas are useful for continuity but
-say nothing about compactness or spectral theory. A plausible but unverified bridge: `detQ(s)`'s
-zeros (`BaxterRealSpace.lean`'s "Physical Note") may correspond to
-`1-ρ·C_HS_laplace eta sigma s=0`, i.e. the same non-vanishing hypothesis already threaded
-through `oz_laplace_oz_eq`-family theorems — if so, "non-resonant `ρ`" here might reduce to a
-condition already assumed elsewhere, but proving that correspondence is its own nontrivial task.
+**Middle/high density (`eta≈0.3–0.5` up to `eta<1`): TRUE, but same-core as the BAXTER line — not
+the compact-operator Fredholm alternative (corrected 2026-07-15).** An earlier version of this note
+said this case "needs the Fredholm alternative, likely absent from Mathlib." Both halves were wrong:
 
-**Status:** ◑ mixed — dilute case (Task OZ.10-dilute) ✓ DONE, no axiom, no sorry; middle/high
-density still axiomatic, needs Fredholm alternative (likely absent from Mathlib).
+- **Mathlib *has* the compact-operator Fredholm alternative**
+  (`Mathlib/Analysis/Normed/Operator/Compact/FredholmAlternative.lean`,
+  `hasEigenvalue_or_mem_resolventSet`), but it **does not apply**, because `oz_linear_op` (`K`) is
+  **not compact**: `c_HS` is compactly supported on `[0,σ]`, so `K`'s kernel has finite width `2σ`
+  — `K` is a half-line **band / Wiener–Hopf operator**, tending to *multiplication by the constant
+  `−24η·bracket`* as `r→∞` (`K[1](r) = (2π·ρ/r)∫₀^σ t·c_HS·2rt dt = 4π·ρ·∫₀^σ t²·c_HS dt =
+  −24η·bracket`). A nonzero multiplication operator is not compact. That constant is exactly the
+  dilute Banach constant `T_ext_K` — `K`'s **spectral radius** — so `24η·bracket<1` (η≲0.088) is the
+  natural Banach/Neumann boundary, not a loose estimate. (Building OZ.10-dilute's Pieces 2–3 is
+  consistent with this: those lemmas are continuity/boundedness, never compactness.)
+
+- **The statement is TRUE unconditionally for hard spheres** (no phase transition): PY
+  `1−ρ·ĉ(k)>0` for all `k`, all `eta∈(0,1)` (compressibility `(1−η)⁴/(1+2η)²>0`), so no spinodal /
+  no resonance. `(I−K)` is invertible not because `‖K‖<1` (false past η≈0.088) but because
+  `1 ∉ spectrum(K) = symbol range {ρ·ĉ(k)} ⊂ (−∞,1)` (real symbol, winding 0), for every
+  `eta∈(0,1)`. (This supersedes the earlier speculative "`detQ`-zeros = spinodal" bridge.)
+
+- **Proving it needs no general Wiener–Hopf / Toeplitz operator theory:** the symbol factorization
+  `1−ρ·Ĉ = (1−ρ·Q̂(k))(1−ρ·Q̂(−k))` is *already* the **Baxter factorization** (Task BAXTER.3,
+  `baxter_wiener_hopf_factorization`; `BaxterRealSpace.lean` gives the real-space form). What is
+  missing is the explicit inverse/solution from it — `(I−K)=(I−K₊)(I−K₋)`, each one-sided factor
+  Volterra (spectral radius 0) hence invertible ⇒ `(I−K)` invertible ⇒ existence+uniqueness — which
+  is exactly Tasks BAXTER.12–13's `h_explicit`. So OZ.10 mid/high is **same-core as, and gated by,
+  the BAXTER Wiener–Hopf line**; the missing piece is a concrete construction, not Mathlib-absent
+  machinery.
+
+**Status:** ◑ mixed — dilute case (Task OZ.10-dilute) ✓ DONE, no axiom, no sorry; mid/high density
+TRUE but still axiomatic here, gated by the BAXTER line (Baxter factorization BAXTER.3 → BAXTER.12–13
+explicit inverse), not by any missing Mathlib theory. K's non-compactness rules out the compact
+Fredholm route.
 
 ---
 
@@ -483,7 +512,8 @@ of Gap B.** `[LN]` (`pdf/lecture_notes_OZ_Yukawa.tex`) states the contact value 
 g0_ij(R_ij) = (1/(R_ij·Δ)) · (R_ij + π·R_i·R_j·ξ_2/(4Δ))
 ```
 Comparing to `Q'_ij` (defined two sections earlier in `[LN]`, and **already formalized** as
-`q_prime_py` in `BaxterRealSpace.lean` for Task OZ.5), this is exactly `Q'_ij/(2π·R_ij)`.
+`q_prime_py` in `BaxterRealSpace.lean` for Task `BAXTER.1`, `proof_notes_baxter.md`), this is
+exactly `Q'_ij/(2π·R_ij)`.
 **Now a proved theorem**, `g0_contact_formula_eq_q_prime` (`BaxterRealSpace.lean`, no sorry):
 ```lean
 theorem g0_contact_formula_eq_q_prime (eta sigma : ℝ) (hsigma : 0 < sigma) (heta : eta < 1) :
@@ -535,70 +565,11 @@ Same 3-line algebra as `oz_laplace_identity`; `div_eq_iff` + `linarith`.
 
 ---
 
-### Task OZ.5 — Baxter real-space convolution identity
-
-**Statement (Wertheim 1963; Baxter 1970; [chsY] Eq. 46):**
-
-For `r ∈ (0, σ)`, the PY hard-sphere DCF satisfies the real-space Wiener-Hopf identity:
-```
-2π·ρ·r·c_HS(r) = ∫_r^σ q0_poly(r'−r)·q0_poly'(r') dr' − q0_poly'(r)
-```
-where:
-- `q0_poly(r) = α·(r−σ) + β·(r−σ)²/2` with `α = ρ·q_prime_py`, `β = ρ·q_doubleprime_py`
-- `q0_poly'(r) = α + β·(r−σ)` is the derivative of q0_poly w.r.t. r
-- `q0_poly = 2πρ·Q` where Q is the Wertheim Q-function for diameter σ
-
-**Physical origin (Wertheim 1963):** The Wiener-Hopf factorization `1−ρĈ(s) = Q̂(s)Q̂(−s)` gives
-the real-space identity `−r·c(r) = Q'(r) − 2πρ ∫_0^{σ-r} Q(t)·Q'(t+r) dt`. With Q = q0_poly/(2πρ)
-and Q' = q0_poly'/(2πρ), multiplying by −2πρ and changing variables t → r'−r gives the Lean form.
-
-**Numerical verification at η=0.4, σ=1, r=0.5, ρ=2.4/π:**
-
-| Quantity | Value |
-|---|---|
-| 2πρ·r·c_HS(0.5) (LHS) | 2π·(2.4/π)·0.5·(−295/24) = −29.5 |
-| q0_poly'(0.5) = α+β(r−σ) | 4 |
-| ∫_r^σ q0_poly(r'−r)·q0_poly'(r') dr' | −25.5 (exact via antiderivative) |
-| RHS = −25.5 − 4 | −29.5 ✓ |
-
-**In Lean:** `baxter_factorization_inner` in `LeanCode/HardSphere/BaxterRealSpace.lean`:
-```lean
-theorem baxter_factorization_inner {eta sigma rho : ℝ}
-    (hsigma : 0 < sigma) (_heta0 : 0 <= eta) (heta : eta < 1)
-    (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) :
-    ∀ r ∈ Set.Ioo 0 sigma,
-    2 * Real.pi * rho * r * c_HS eta sigma r =
-    (∫ r' in r..sigma, q0_poly eta sigma rho (r' - r) *
-      (rho * q_prime_py eta sigma + rho * q_doubleprime_py eta * (r' - sigma))) -
-    (rho * q_prime_py eta sigma + rho * q_doubleprime_py eta * (r - sigma))
-```
-
-**Proof approach (polynomial FTC + ring):**
-1. Rewrite integral via `integral_congr`: substitute `q0_poly_inner` + `← hα_def`, `← hβ_def`.
-2. Compute `∫_r^σ q0_poly(r'−r)·q0_poly'(r') dr'` via FTC on the 7-term degree-4 antiderivative:
-   ```
-   F(x) = α²/2·(x−σ−r)² + αβ/3·(x−σ)³ − αβr/2·(x−σ)² + αβ/6·(x−σ−r)³
-         + β²/8·(x−σ)⁴ − β²r/3·(x−σ)³ + β²r²/4·(x−σ)²
-   ```
-3. Apply `HasDerivAt` chain (7 terms) + `integral_eq_sub_of_hasDerivAt`; F(σ) evaluates cleanly.
-4. Substitute η = π·ρ·σ³/6; clear denominators with `field_simp [hsigma.ne', h1e]`; close by `ring`.
-
-**Key Lean 4 patterns:**
-- `HasDerivAt.congr_of_eventuallyEq` takes ONE explicit arg → `refine (hchain.congr_of_eventuallyEq ?_).congr_deriv ?_`
-- `Filter.Eventually.of_forall` (not the deprecated `Filter.eventually_of_forall`)
-- After `rw [q0_poly_inner ..., ← hα_def, ← hβ_def]`, the `integral_congr` goal closes automatically (no `ring` needed)
-
-**Prerequisites:**
-- `q0_poly_inner`, `c_HS_inner` (proved)
-- `q_prime_py`, `q_doubleprime_py` (defined)
-- `eta = pi*rho*sigma^3/6` (`heta_def`)
-
-**Note on `hParseval` (Task F.4):** This is the **hard-sphere** Baxter identity.  Task F.4's
-`hParseval` is a **Yukawa** Baxter identity: `∫_0^d b_ij(r)dr = K(1+A)²/z` where `b_ij(r)` is
-the chsY inner-core function from [chsY] Eq. 41.  That requires a separate task using `I1`/`I2`
-integrals and the MSA closure for `A`.
-
-**Status:** ✓ PROVED — `LeanCode/HardSphere/BaxterRealSpace.lean`, no sorry.
+**Task OZ.5 (Baxter real-space convolution identity) has moved to `proof_notes_baxter.md`
+Task `BAXTER.1`** — it's part of Group BAXTER's Baxter-Q-factor family, not the general OZ/PY
+solution framework. `q0_poly`, `q_prime_py`, `q_doubleprime_py` (defined in
+`LeanCode/HardSphere/BaxterRealSpace.lean`) and `baxter_factorization_inner` are the concrete
+Lean artifacts; see `proof_notes_baxter.md` for the full writeup.
 
 ---
 
@@ -726,8 +697,8 @@ in `oz_fourier_oz_eq_of_PY_core`) concretely comparable to the existing Laplace-
 this to derive `g0_HS_contact_value` — which is **not attempted**. That needs inverting the
 closed-form-in-`k` Fourier-domain OZ solution back to real space (residue calculus / the
 classical PY closed-form solution), a multi-session undertaking on the scale of the Baxter
-Wiener–Hopf work (Task OZ.9) already flagged elsewhere as out of scope. Tracked separately as
-`OZ.8-partB` in `todo_lean.md`.
+Wiener–Hopf work (Task `BAXTER.3`) already flagged elsewhere as out of scope. Tracked separately
+as Task `BAXTER.4` (`proof_notes_baxter.md`, Group BAXTER).
 
 **In Lean:** `LeanCode/HardSphere/RadialFourierCHS.lean` (new file, no sorry, no axiom).
 
@@ -791,8 +762,9 @@ real `s`) via `push_cast; ring`. The main theorem substitutes `s := -Complex.I*k
   correspondence done before writing any Lean).
 
 **Status:** ✓ DONE (Parts A+B) — `LeanCode/HardSphere/RadialFourierCHS.lean`, no sorry, no
-axiom. Part C (bridge to `g0_HS_contact_value`) not attempted — see `OZ.8-partB`,
-`todo_lean.md`.
+axiom. Part C (bridge to `g0_HS_contact_value`) as originally scoped (full residue inversion) —
+see Task `BAXTER.4`, `proof_notes_baxter.md`; a narrower alternative route succeeded instead, see
+Task `BAXTER.8`.
 
 ---
 
@@ -807,11 +779,16 @@ This is the "genuinely hard, unscaffolded physics input" (Wertheim 1963 / Baxter
 closure) left after Gap A closed — previously an explicit hypothesis `hcore` on
 `oz_laplace_oz_eq_of_core_closure`/`oz_fourier_oz_eq_of_core_closure`.
 
-**Two possible routes, both scoped this session:**
+**Two possible routes:**
 - **Route A (direct axiom) — taken.** State the closure equation itself as a named axiom,
   justified by direct numerical verification.
-- **Route B (via Baxter's second relation) — scoped, not taken.** See below; would also
-  unlock `g0_HS_contact_value`, but needs an unverified bridge step.
+- **Route B (via Baxter's second relation) — not taken.** Would also unlock
+  `g0_HS_contact_value`, but needs a from-primary-source re-derivation first — see
+  `proof_notes_baxter.md` Task `BAXTER.2` (full `h(r)`, all `r`) and the narrower Task
+  `BAXTER.5` (contact value only, since achieved via `BAXTER.6`–`8`), both built on Task
+  `BAXTER.3`'s Wiener–Hopf factorization. Task `BAXTER.4` (full residue-calculus inversion of
+  OZ.8's Fourier closed form) turned out **not** to be an independent route — it shares
+  `BAXTER.2`/`5`'s same underlying analyticity question.
 
 **Route A — numerical verification.** Solved the exact OZ+PY system from scratch,
 independent of any Baxter `Q`-function machinery: the already-proved closed-form `c_HS(r)`
@@ -852,27 +829,60 @@ now accounted for by name — only routine integrability hypotheses remain open.
 the disproven `radial_laplace_conv`, so supplying `oz_core_closure` for its `hcore` argument
 would not make its conclusion any more trustworthy; not worth building.
 
-**Route B (not taken this pass) — Baxter's second relation.** Also numerically verified this
-session (independently, before discovering Route A's more direct check):
-```
-r·h(r) = -Q'(r)/(2π) + ρ·∫₀^σ Q(t)·(r-t)·h(|r-t|) dt      for r > 0
-```
-where `Q(t) = q_prime_py·(t-σ) + q_doubleprime_py·(t-σ)²/2` for `0≤t≤σ` (0 outside) — the
-same `Q` underlying `q0_poly`/OZ.5 (`q0_poly(t) = ρ·Q(t)`; this relation uses `Q` itself).
-Verified at three `η` (0.1, 0.3, 0.45) against the same ground-truth `h(r)` solver, matching
-to within ~0.3–5% (residual consistent with Fourier-inversion truncation). The *first*
-reconstruction attempted (from general memory of Baxter 1970, not a primary source) was
-structurally right but off by a factor of `2π`, caught by the same red-flag pattern that
-disproved `radial_laplace_conv` — except here the LHS/RHS ratio was *constant* (~1/2π) across
-every `r` tested rather than varying, indicating a normalization bug rather than a false
-relation. This route would additionally unlock `g0_HS_contact_value` (specializing at `r=σ`)
-and reproduce OZ.9a as a corollary rather than a direct axiom — more powerful and closer to
-the classical derivation, but needs an extra **unverified** step: eliminating `Q` to connect
-this relation back to the `c_HS`/`radial3d_conv` form Gap A/B are stated in. Not attempted;
-flagged as a follow-on (`todo_lean.md` Task OZ.9-RouteB).
-
 **Status:** ✓ DONE (Route A) — `oz_core_closure` axiom (`PYOZ_GHS.lean`) + corollary
-`oz_fourier_oz_eq_of_PY_core` (`OZFourierBridge.lean`), no sorry. Route B scoped, not started.
+`oz_fourier_oz_eq_of_PY_core` (`OZFourierBridge.lean`), no sorry. Route B / the Wiener–Hopf
+factorization / the OZ.8 residue-calculus route turned out to be one underlying problem, not
+three independent ones — `BAXTER.3` (the factorization) is DONE; `BAXTER.2`, `4`, `5` all build
+on it. `BAXTER.5`-`8` (the jump-asymptotic sub-chain) succeeded and closed `g0_HS_contact_value`
+(conditionally); `BAXTER.2`'s own full `h(r)` construction (needed to retire *this* axiom) is
+still open — see `proof_notes_baxter.md`.
 
 ---
 
+**Tasks OZ.11–OZ.17 (and their `OZ.13` sibling) have moved to `proof_notes_baxter.md`,
+renumbered `BAXTER.2`–`BAXTER.8` (plus `BAXTER.4` for the old `OZ.13`)** — Baxter's
+Wiener–Hopf factorization, the jump-asymptotic route to `g0_HS_contact_value`, and the
+staged plan (`BAXTER.9`–`13`) for the full residue-series construction needed to retire
+`oz_core_closure` itself. See `proof_notes_baxter.md`, Group BAXTER, for the full writeups.
+
+---
+
+### Task OZ.18 — Hard-sphere `λ_ij` kink in `c_HS` *(formerly B.19)*
+
+*Moved here 2026-07-15 from the Yukawa breakpoint family (old **B.19**): this is an FMT
+hard-sphere property, outside the Yukawa mediated chain. See
+[proof_notes_breakpoints.md](proof_notes_breakpoints.md) (Group IB) for the mediated
+breakpoints `r*`/`r**`.*
+
+**Statement:** `c_HS,ij(r)` has a C⁰ slope kink at `λ_ij = |d_i − d_j|/2 = |R_i − R_j|` for unlike
+pairs `i ≠ j`. `get_HS_FMT` clamps `r → |λ_ij|` for `r < |λ_ij|`, so `c_HS` is **constant** below
+`λ_ij` and the White-Bear rational form above; the one-sided slopes differ (`0` vs `≠ 0`) ⇒
+genuine C⁰ kink. This is the FMT realization of the Lebowitz two-piece PY structure.
+
+**Proof (2026-07-15).** The kink is a property of the *clamp itself*, independent of the White-Bear
+form, so it is isolated abstractly first:
+`clampedBelow F λ r := if r < λ then F λ else F r` (mirrors the `if r < |λ_ij|: r = |λ_ij|` guard).
+- `clampedBelow_continuousAt` — continuous at `λ` if `F` is (via `clampedBelow F λ = F ∘ (max · λ)`). **C⁰.**
+- `clampedBelow_hasDerivWithinAt_Iic`/`_Ici` — the one-sided derivatives at `λ` are exactly `0`
+  (constant on `Iic λ` by `EqOn` + `HasDerivWithinAt.congr`) and `F'(λ)` (`clampedBelow = F` on `Ici λ`).
+- `clampedBelow_not_differentiableAt` — if `F'(λ) ≠ 0`, a two-sided derivative `L` would give
+  `L = 0` on `Iic` and `L = F'(λ)` on `Ici` (`HasDerivWithinAt.derivWithin` + `uniqueDiffOn_Iic/Ici`),
+  contradiction. **Genuine kink.**
+
+Then `F` is instantiated with the faithful White-Bear core `cHS_core` (mirrors `get_HS_FMT`'s
+`return -(χ₃·(π/6r)·V + χ₂·(π/r)·S + χ₁·Rterm/r + (χ₂₂−χ₁/4π)·Rprime + χ₀)`, with `χ₀…χ₃, χ₂₂` as
+parameters). `cHS_core_eq_num` rewrites it as `−(polynomial)/r − χ₀` for `r ≠ 0`, giving
+`cHS_core_differentiableAt` at any `r ≠ 0` (so at the cutoff of an unlike pair). `cHS_FMT :=
+clampedBelow cHS_core |Rᵢ−Rⱼ|`; final theorems `cHS_FMT_continuousAt` (C⁰),
+`cHS_FMT_hasDerivWithinAt_Iic`/`_Ici` (slopes `0` and `F'(λ)`), `cHS_FMT_not_differentiableAt`
+(kink).
+
+**Out of scope (numerical, faithful):** `F'(λ) ≠ 0` is *state-point-dependent* (the χ's are
+functions of `η`/densities), so it is an explicit hypothesis `hslope`, not derived from `σ > 0` —
+exactly as the strict-positivity half of Group IB stays numerical (`verify_stepwise_breakpoints.py`).
+
+**Lean:** `HardSphere/CHSKink.lean` — identifiers task-ID-free (`clampedBelow`, `cHS_core`,
+`cHS_FMT`, `cHS_FMT_continuousAt`, `cHS_FMT_not_differentiableAt`, …).
+**Depends on:** none beyond `get_HS_FMT`'s two-piece definition; only Mathlib.
+**Status:** ✓ DONE (2026-07-15), axiom-clean. Continuity + both one-sided slopes unconditional;
+genuine-kink conclusion conditional on the numerical `F'(λ) ≠ 0`.

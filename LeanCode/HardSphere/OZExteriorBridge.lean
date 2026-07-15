@@ -15,10 +15,17 @@ import LeanCode.HardSphere.RadialLaplace
 
 ## Summary
 
-`oz_laplace_oz_eq` (`PYOZ_GHS.lean`) bundles two independent gaps: the `r ≥ σ` half (shown
-here to be provable with **no new hard input** — only `oz_h_core`, already proved, plus an
-interval-splitting argument), and the `r < σ` PY core closure (genuinely hard, left as an
-explicit hypothesis on `oz_laplace_oz_eq_of_core_closure` below).
+The `r ≥ σ` (exterior) half of the pointwise 3D-OZ equation for `oz_h` is proved here with **no
+new hard input** — only `oz_h_core` (already proved) plus an interval-splitting argument. It is
+**transform-independent**: the resulting `oz_h_satisfies_conv_ext` is reused verbatim by the live
+Fourier-domain assembly `oz_fourier_oz_eq_of_core_closure` (`OZFourierBridge.lean`, Task OZ.7).
+The `r < σ` PY core closure (Gap B) is genuinely hard and is left as an explicit `hcore`
+hypothesis there.
+
+The former Laplace-domain assembly that also lived in this file
+(`oz_laplace_oz_eq_of_core_closure`) was **deleted** (2026-07-15) — it consumed the false axiom
+`radial_laplace_conv`; see the retired-note at the end of this file and
+`proof_notes_hard_sphere.md`.
 
 ## Key identity
 
@@ -227,77 +234,16 @@ theorem oz_h_satisfies_conv_ext {eta sigma rho : ℝ} (hsigma : 0 < sigma)
   exact oz_forcing_add_linear_op_eq_radial3d_conv hsigma (oz_h_continuousOn_ext hsigma)
     (fun s hs => oz_h_core hsigma hs) hr hint1 hint2
 
-/-! ### Final assembly: `oz_laplace_oz_eq`, conditional only on Gap B -/
+/-! ### Retired: the Laplace-domain assembly `oz_laplace_oz_eq_of_core_closure`
 
-private lemma intervalIntegral_eq_integral_Ioo {a b : ℝ} (hab : a ≤ b) (f : ℝ → ℝ) :
-    ∫ x in a..b, f x = ∫ x in Set.Ioo a b, f x := by
-  rw [intervalIntegral_eq_integral_Icc hab, MeasureTheory.integral_Icc_eq_integral_Ioo]
-
-/-- `radial_laplace c_HS s` agrees with the already-defined `C_HS_laplace` (they are the same
-transform, just via `radial3d_conv`'s `Set.Ioi` convention vs `C_HS_laplace`'s `intervalIntegral`
-convention). -/
-private lemma radial_laplace_cHS_eq {eta sigma s : ℝ} (hsigma : 0 < sigma) :
-    radial_laplace (c_HS eta sigma) s = C_HS_laplace eta sigma s := by
-  unfold radial_laplace
-  rw [C_HS_laplace_eq_cHS hsigma, ← Ioo_union_Ici_eq_Ioi hsigma,
-    MeasureTheory.integral_union_eq_left_of_forall isClosed_Ici.measurableSet
-      (fun r hr => by simp [c_HS_outer hr]),
-    ← intervalIntegral_eq_integral_Ioo hsigma.le]
-
-/-- **Task OZ.2b (conditional on Gap B only):** the Laplace-domain hard-sphere OZ equation,
-proved (not axiomatized) given the PY core closure `hcore` for `r < σ` (Gap B — the one
-genuinely hard, unscaffolded physics input) plus the routine (Gap A / `radial_laplace_conv`)
-integrability side-conditions. This replaces `oz_laplace_oz_eq`'s single opaque axiom with a
-theorem whose *only* non-mechanical hypothesis is `hcore`. -/
-theorem oz_laplace_oz_eq_of_core_closure {eta sigma rho s : ℝ}
-    (hsigma : 0 < sigma) (hs : 0 < s)
-    (hcore : ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
-      oz_h eta sigma rho r =
-        c_HS eta sigma r + rho * radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho) r)
-    (hintA1 : ∀ r, sigma ≤ r → IntervalIntegrable
-      (fun t => t * c_HS eta sigma t * (sigma ^ 2 - (r - t) ^ 2) *
-        if r < sigma + t then (1 : ℝ) else 0) MeasureTheory.volume 0 sigma)
-    (hintA2 : ∀ r, sigma ≤ r → IntervalIntegrable
-      (fun t => t * c_HS eta sigma t *
-        ∫ s' in (max (r - t) sigma)..(r + t), s' * oz_h eta sigma rho s')
-      MeasureTheory.volume 0 sigma)
-    (hintB1 : Integrable (fun r => r * c_HS eta sigma r * Real.exp (-s * r))
-      (MeasureTheory.volume.restrict (Set.Ioi 0)))
-    (hintB2 : Integrable (fun r => r * oz_h eta sigma rho r * Real.exp (-s * r))
-      (MeasureTheory.volume.restrict (Set.Ioi 0)))
-    (hintConv : Integrable
-      (fun r => r * radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho) r * Real.exp (-s * r))
-      (MeasureTheory.volume.restrict (Set.Ioi 0)))
-    (_hne : 1 - rho * C_HS_laplace eta sigma s ≠ 0) :
-    (∫ r in Set.Ioi (0 : ℝ), r * oz_h eta sigma rho r * Real.exp (-s * r)) *
-    (1 - rho * C_HS_laplace eta sigma s) = C_HS_laplace eta sigma s := by
-  -- Step 1: the pointwise 3D-OZ equation, for every `r > 0` (Gap A ∪ Gap B).
-  have hpointwise : ∀ r ∈ Set.Ioi (0 : ℝ), oz_h eta sigma rho r =
-      c_HS eta sigma r + rho * radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho) r := by
-    intro r hrpos
-    by_cases hr : r < sigma
-    · exact hcore r ⟨hrpos, hr⟩
-    · exact oz_h_satisfies_conv_ext hsigma (not_lt.mp hr) (hintA1 r (not_lt.mp hr))
-        (hintA2 r (not_lt.mp hr))
-  -- Step 2: apply `radial_laplace` to both sides.
-  have hlaplace : radial_laplace (oz_h eta sigma rho) s =
-      radial_laplace (c_HS eta sigma) s +
-        rho * radial_laplace (radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho)) s := by
-    unfold radial_laplace
-    rw [← MeasureTheory.integral_const_mul, ← MeasureTheory.integral_add hintB1 (hintConv.const_mul rho)]
-    apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
-    intro r hr
-    change r * oz_h eta sigma rho r * Real.exp (-s * r) =
-      r * c_HS eta sigma r * Real.exp (-s * r) +
-        rho * (r * radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho) r * Real.exp (-s * r))
-    rw [hpointwise r hr]
-    ring
-  -- Step 3: `radial_laplace_conv` factors the convolution transform.
-  rw [radial_laplace_conv hs hintB1 hintB2] at hlaplace
-  rw [radial_laplace_cHS_eq hsigma] at hlaplace
-  -- Step 4: rearrange to the `H·(1-ρC) = C` form.
-  change radial_laplace (oz_h eta sigma rho) s * (1 - rho * C_HS_laplace eta sigma s) =
-    C_HS_laplace eta sigma s
-  linear_combination hlaplace
+An OZ.2b theorem `oz_laplace_oz_eq_of_core_closure` used to close this file, assembling the
+pointwise 3D-OZ equation (Gap A `oz_h_satisfies_conv_ext` above + Gap B `hcore`) into the
+Laplace-domain form `H̃₀·(1-ρĈ) = Ĉ`. Its Step 3 consumed the axiom `radial_laplace_conv`, later
+found **mathematically false** (the radial 3D convolution does *not* factor under the real Laplace
+transform). The theorem was therefore an invalid derivation and was **deleted** (2026-07-15),
+together with `radial_laplace_conv` (`RadialLaplace.lean`) and the axiom `oz_laplace_oz_eq`
+(`PYOZ_GHS.lean`). The correct, live OZ-domain equation is the *sine*-transform
+`oz_fourier_oz_eq_of_core_closure` (`OZFourierBridge.lean`, Task OZ.7), which reuses the
+transform-independent `oz_h_satisfies_conv_ext` above verbatim. See `proof_notes_hard_sphere.md`. -/
 
 end FMSA.HardSphere

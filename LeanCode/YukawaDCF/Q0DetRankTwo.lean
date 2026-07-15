@@ -263,6 +263,217 @@ theorem gFun_neg {n : ℕ} {rho sigma : Fin n → ℝ} {i : Fin n} {z : ℝ}
     mul_nonpos_of_nonneg_of_nonpos hcoeff hn
   linarith
 
+/-! ### Monotonicity route for the det inequality (Tasks M.5–M.8)
+
+These four lemmas characterise the `(1+a)(1+d) > bc` gap: `bc ≥ ad` holds *always* (Task M.8),
+so it is not Cauchy–Schwarz-closable — positivity must use the `1+a+d` slack. See
+`numerical_notes/{theory,results}/q0_det_positivity.md`. -/
+
+/-- **Task M.5.** `nAux u = mAux u / 2` (a ring identity), giving
+`g/f = πξ₂/(2·vac) + z·pAux(zσ)/mAux(zσ)` (used in `gFun_ratio_eq`). -/
+theorem nAux_eq_mAux_div_two (u : ℝ) : nAux u = mAux u / 2 := by
+  unfold nAux mAux; ring
+
+/-- **Task M.6.** `1 + u²/2 < cosh u` for `u > 0` (Mathlib has only `1 ≤ cosh` and an upper bound).
+Proved by the same two-level `HasDerivAt` chain as `mAuxNeg`: on `h = cosh u − 1 − u²/2`,
+`h(0)=0`, `h'=sinh−id` with `h'(0)=0`, and `h''=cosh−1 > 0`. -/
+private noncomputable def coshGap (u : ℝ) : ℝ := Real.cosh u - 1 - u ^ 2 / 2
+private noncomputable def coshGap1 (u : ℝ) : ℝ := Real.sinh u - u
+private noncomputable def coshGap2 (u : ℝ) : ℝ := Real.cosh u - 1
+
+private lemma hasDerivAt_coshGap (u : ℝ) : HasDerivAt coshGap (coshGap1 u) u := by
+  have hcosh := Real.hasDerivAt_cosh u
+  have hsq : HasDerivAt (fun x : ℝ => x ^ 2 / 2) u u := by
+    have h := (hasDerivAt_pow 2 u).div_const 2
+    simpa using h
+  have h := (hcosh.sub_const 1).sub hsq
+  exact h.congr_deriv (by unfold coshGap1; ring)
+
+private lemma hasDerivAt_coshGap1 (u : ℝ) : HasDerivAt coshGap1 (coshGap2 u) u := by
+  have hsinh := Real.hasDerivAt_sinh u
+  have h := hsinh.sub (hasDerivAt_id u)
+  exact h.congr_deriv (by unfold coshGap2; simp)
+
+private lemma coshGap2_pos {u : ℝ} (hu : 0 < u) : 0 < coshGap2 u := by
+  have h : 1 < Real.cosh u := Real.one_lt_cosh.mpr hu.ne'
+  unfold coshGap2; linarith
+
+private lemma coshGap1_zero : coshGap1 0 = 0 := by unfold coshGap1; simp
+private lemma coshGap_zero : coshGap 0 = 0 := by unfold coshGap; simp
+
+private lemma coshGap1_pos {u : ℝ} (hu : 0 < u) : 0 < coshGap1 u := by
+  have hcont : ContinuousOn coshGap1 (Set.Ici 0) :=
+    fun x _ => (hasDerivAt_coshGap1 x).continuousAt.continuousWithinAt
+  have hderiv : ∀ x ∈ interior (Set.Ici (0 : ℝ)),
+      HasDerivWithinAt coshGap1 (coshGap2 x) (interior (Set.Ici (0 : ℝ))) x :=
+    fun x _ => (hasDerivAt_coshGap1 x).hasDerivWithinAt
+  have hpos : ∀ x ∈ interior (Set.Ici (0 : ℝ)), 0 < coshGap2 x := by
+    intro x hx; rw [interior_Ici] at hx; exact coshGap2_pos hx
+  have hmono : StrictMonoOn coshGap1 (Set.Ici 0) :=
+    strictMonoOn_of_hasDerivWithinAt_pos (convex_Ici 0) hcont hderiv hpos
+  have h := hmono (Set.self_mem_Ici (a := (0 : ℝ))) hu.le hu
+  rwa [coshGap1_zero] at h
+
+private lemma coshGap_pos {u : ℝ} (hu : 0 < u) : 0 < coshGap u := by
+  have hcont : ContinuousOn coshGap (Set.Ici 0) :=
+    fun x _ => (hasDerivAt_coshGap x).continuousAt.continuousWithinAt
+  have hderiv : ∀ x ∈ interior (Set.Ici (0 : ℝ)),
+      HasDerivWithinAt coshGap (coshGap1 x) (interior (Set.Ici (0 : ℝ))) x :=
+    fun x _ => (hasDerivAt_coshGap x).hasDerivWithinAt
+  have hpos : ∀ x ∈ interior (Set.Ici (0 : ℝ)), 0 < coshGap1 x := by
+    intro x hx; rw [interior_Ici] at hx; exact coshGap1_pos hx
+  have hmono : StrictMonoOn coshGap (Set.Ici 0) :=
+    strictMonoOn_of_hasDerivWithinAt_pos (convex_Ici 0) hcont hderiv hpos
+  have h := hmono (Set.self_mem_Ici (a := (0 : ℝ))) hu.le hu
+  rwa [coshGap_zero] at h
+
+theorem one_add_half_sq_lt_cosh {u : ℝ} (hu : 0 < u) : 1 + u ^ 2 / 2 < Real.cosh u := by
+  have h := coshGap_pos hu
+  unfold coshGap at h
+  linarith
+
+/-- Bare-`u` numerator `pAux(u) = 1 − u − e^{−u}` (= `z²·p1(σ,z)` at `u = zσ`). -/
+noncomputable def pAux (u : ℝ) : ℝ := 1 - u - Real.exp (-u)
+
+/-- The ratio `pAux(u)/mAux(u)` (= `g/f` up to the additive mixture constant, via M.5). -/
+noncomputable def ratioPM (u : ℝ) : ℝ := pAux u / mAux u
+
+private lemma hasDerivAt_pAux (u : ℝ) : HasDerivAt pAux (-1 + Real.exp (-u)) u := by
+  have h := ((hasDerivAt_const u (1 : ℝ)).sub (hasDerivAt_id u)).sub (hasDerivAt_exp_neg u)
+  exact h.congr_deriv (by ring)
+
+private lemma hasDerivAt_mAux (u : ℝ) :
+    HasDerivAt mAux (-1 + Real.exp (-u) * (u + 1)) u := by
+  have h2 : HasDerivAt (fun x : ℝ => x + 2) (1 : ℝ) u := (hasDerivAt_id u).add_const 2
+  have hprod : HasDerivAt (fun x : ℝ => Real.exp (-x) * (x + 2))
+      (-Real.exp (-u) * (u + 2) + Real.exp (-u) * 1) u := (hasDerivAt_exp_neg u).mul h2
+  have h := ((hasDerivAt_const u (2 : ℝ)).sub (hasDerivAt_id u)).sub hprod
+  exact h.congr_deriv (by ring)
+
+/-- The Wronskian `W = pAux'·mAux − pAux·mAux'` is negative on `(0,∞)`:
+`eᵘ·W = u² − 2·cosh u + 2 < 0` by Task M.6. -/
+private lemma wronskian_neg {u : ℝ} (hu : 0 < u) :
+    (-1 + Real.exp (-u)) * mAux u - pAux u * (-1 + Real.exp (-u) * (u + 1)) < 0 := by
+  set W := (-1 + Real.exp (-u)) * mAux u - pAux u * (-1 + Real.exp (-u) * (u + 1)) with hWdef
+  have he : Real.exp u * Real.exp (-u) = 1 := by rw [← Real.exp_add]; simp
+  have hkey : Real.exp u * W = u ^ 2 - 2 * Real.cosh u + 2 := by
+    rw [hWdef]; unfold mAux pAux; rw [Real.cosh_eq]
+    linear_combination (2 - Real.exp (-u) + u ^ 2) * he
+  have hlt : Real.exp u * W < 0 := by
+    rw [hkey]; nlinarith [one_add_half_sq_lt_cosh hu]
+  nlinarith [hlt, Real.exp_pos u]
+
+/-- **Task M.7.** `pAux/mAux` is strictly decreasing on `(0,∞)`; its derivative sign is that of the
+Wronskian `W`, and `eᵘ·W = u² − 2cosh u + 2 < 0` (Task M.6). -/
+theorem ratioPM_strictAntiOn : StrictAntiOn ratioPM (Set.Ioi (0 : ℝ)) := by
+  have hderiv : ∀ x ∈ interior (Set.Ioi (0 : ℝ)),
+      HasDerivWithinAt ratioPM
+        (((-1 + Real.exp (-x)) * mAux x - pAux x * (-1 + Real.exp (-x) * (x + 1)))
+          / mAux x ^ 2) (interior (Set.Ioi (0 : ℝ))) x := by
+    intro x hx
+    rw [interior_Ioi] at hx
+    exact ((hasDerivAt_pAux x).div (hasDerivAt_mAux x) (mAux_neg hx).ne).hasDerivWithinAt
+  have hneg : ∀ x ∈ interior (Set.Ioi (0 : ℝ)),
+      ((-1 + Real.exp (-x)) * mAux x - pAux x * (-1 + Real.exp (-x) * (x + 1)))
+        / mAux x ^ 2 < 0 := by
+    intro x hx
+    rw [interior_Ioi] at hx
+    have hne : mAux x ≠ 0 := (mAux_neg hx).ne
+    have hden : 0 < mAux x ^ 2 := by positivity
+    exact div_neg_of_neg_of_pos (wronskian_neg hx) hden
+  have hcont : ContinuousOn ratioPM (Set.Ioi (0 : ℝ)) := by
+    intro x hx
+    exact (((hasDerivAt_pAux x).div (hasDerivAt_mAux x)
+      (mAux_neg hx).ne).continuousAt).continuousWithinAt
+  exact strictAntiOn_of_hasDerivWithinAt_neg (convex_Ioi 0) hcont hderiv hneg
+
+/-- `gFun = fFun · (πξ₂/(2vac) + z·ratioPM(zσ))` — the `g/f` factorisation (uses M.5). -/
+private lemma gFun_ratio_eq {n : ℕ} {z : ℝ} {rho sigma : Fin n → ℝ} (i : Fin n)
+    (hz : 0 < z) (hvac : 0 < vacMix rho sigma) (hsig : 0 < sigma i) :
+    gFun rho sigma i z =
+      fFun rho sigma i z *
+        (Real.pi * xi2 rho sigma / (2 * vacMix rho sigma) + z * ratioPM (z * sigma i)) := by
+  have hu : 0 < z * sigma i := mul_pos hz hsig
+  have hmne : mAux (z * sigma i) ≠ 0 := (mAux_neg hu).ne
+  have hmid : mAux (z * sigma i) = z ^ 3 * (p1 (sigma i) z * sigma i + 2 * p2 (sigma i) z) := by
+    rw [f_identity hz.ne']; field_simp
+  have hpid : pAux (z * sigma i) = z ^ 2 * p1 (sigma i) z := by
+    unfold pAux p1; field_simp
+  have hden : p1 (sigma i) z * sigma i + 2 * p2 (sigma i) z ≠ 0 := by
+    intro h; rw [h, mul_zero] at hmid; exact hmne hmid
+  rw [ratioPM, hpid, hmid]
+  unfold gFun fFun
+  field_simp
+  ring
+
+/-- For a `StrictAntiOn` `F` on `(0,∞)` and `a,b>0`, `(a−b)(F a − F b) ≤ 0`. -/
+private lemma antiOn_mul_diff_nonpos {F : ℝ → ℝ} (hF : StrictAntiOn F (Set.Ioi 0))
+    {a b : ℝ} (ha : 0 < a) (hb : 0 < b) : (a - b) * (F a - F b) ≤ 0 := by
+  rcases lt_trichotomy a b with h | h | h
+  · have hFb : F b < F a := hF (Set.mem_Ioi.mpr ha) (Set.mem_Ioi.mpr hb) h
+    nlinarith
+  · simp [h]
+  · have hFa : F a < F b := hF (Set.mem_Ioi.mpr hb) (Set.mem_Ioi.mpr ha) h
+    nlinarith
+
+/-- The cross term `(σₖ−σⱼ)·(fⱼgₖ − fₖgⱼ) ≤ 0` (uses M.5+M.7 via `gFun_ratio_eq`). -/
+private lemma cross_nonpos {n : ℕ} {z : ℝ} {rho sigma : Fin n → ℝ}
+    (hz : 0 < z) (hvac : 0 < vacMix rho sigma)
+    (hsigma : ∀ i, 0 < sigma i) (j k : Fin n) :
+    (sigma k - sigma j) *
+      (fFun rho sigma j z * gFun rho sigma k z - fFun rho sigma k z * gFun rho sigma j z) ≤ 0 := by
+  have hfj := fFun_neg hvac (hsigma j) hz
+  have hfk := fFun_neg hvac (hsigma k) hz
+  have hgj := gFun_ratio_eq j hz hvac (hsigma j)
+  have hgk := gFun_ratio_eq k hz hvac (hsigma k)
+  have hcross : fFun rho sigma j z * gFun rho sigma k z
+        - fFun rho sigma k z * gFun rho sigma j z
+      = fFun rho sigma j z * fFun rho sigma k z * z
+          * (ratioPM (z * sigma k) - ratioPM (z * sigma j)) := by
+    rw [hgj, hgk]; ring
+  rw [hcross]
+  have hff : 0 < fFun rho sigma j z * fFun rho sigma k z := mul_pos_of_neg_of_neg hfj hfk
+  have hr : (z * sigma k - z * sigma j) * (ratioPM (z * sigma k) - ratioPM (z * sigma j)) ≤ 0 :=
+    antiOn_mul_diff_nonpos ratioPM_strictAntiOn (mul_pos hz (hsigma k)) (mul_pos hz (hsigma j))
+  nlinarith [hr, hff, hz, mul_pos hz (hsigma k), mul_pos hz (hsigma j)]
+
+/-- **Task M.8.** `bc ≥ ad` universally: `(∑ⱼρⱼfⱼ)(∑ₖρₖσₖgₖ) ≤ (∑ⱼρⱼgⱼ)(∑ₖρₖσₖfₖ)`.
+By Cauchy–Binet `ad − bc = ½ ∑ⱼₖ ρⱼρₖ(σₖ−σⱼ)(fⱼgₖ−fₖgⱼ)`, each summand `≤ 0` (`cross_nonpos`).
+Turns M.4's informal "not Cauchy–Schwarz (bc can exceed ad)" into `bc ≥ ad` always. -/
+theorem moment_ad_le_bc {n : ℕ} {z : ℝ} {rho sigma : Fin n → ℝ}
+    (hz : 0 < z) (hvac : 0 < vacMix rho sigma)
+    (hrho : ∀ i, 0 ≤ rho i) (hsigma : ∀ i, 0 < sigma i) :
+    (∑ j, rho j * fFun rho sigma j z) * (∑ k, rho k * sigma k * gFun rho sigma k z)
+      ≤ (∑ j, rho j * gFun rho sigma j z) * (∑ k, rho k * sigma k * fFun rho sigma k z) := by
+  set f := fun i => fFun rho sigma i z with hf
+  set g := fun i => gFun rho sigma i z with hg
+  have hS : (∑ j, rho j * f j) * (∑ k, rho k * sigma k * g k)
+        - (∑ j, rho j * g j) * (∑ k, rho k * sigma k * f k)
+      = ∑ j, ∑ k, rho j * rho k * sigma k * (f j * g k - f k * g j) := by
+    rw [Finset.sum_mul_sum, Finset.sum_mul_sum, ← Finset.sum_sub_distrib]
+    refine Finset.sum_congr rfl (fun j _ => ?_)
+    rw [← Finset.sum_sub_distrib]
+    refine Finset.sum_congr rfl (fun k _ => ?_)
+    ring
+  have hP : (2 : ℝ) * (∑ j, ∑ k, rho j * rho k * sigma k * (f j * g k - f k * g j))
+      = ∑ j, ∑ k, rho j * rho k * (sigma k - sigma j) * (f j * g k - f k * g j) := by
+    rw [two_mul]
+    nth_rewrite 2 [Finset.sum_comm]
+    rw [← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl (fun j _ => ?_)
+    rw [← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl (fun k _ => ?_)
+    ring
+  have hPnonpos :
+      (∑ j, ∑ k, rho j * rho k * (sigma k - sigma j) * (f j * g k - f k * g j)) ≤ 0 := by
+    refine Finset.sum_nonpos (fun j _ => Finset.sum_nonpos (fun k _ => ?_))
+    have hterm : rho j * rho k * (sigma k - sigma j) * (f j * g k - f k * g j)
+        = (rho j * rho k) * ((sigma k - sigma j) * (f j * g k - f k * g j)) := by ring
+    rw [hterm]
+    exact mul_nonpos_of_nonneg_of_nonpos (mul_nonneg (hrho j) (hrho k))
+      (cross_nonpos hz hvac hsigma j k)
+  nlinarith [hS, hP, hPnonpos]
+
 /-! ### Rank-2 factorization -/
 
 /-- `Umat`'s two columns are `u1_i = √ρᵢ·exp(zσᵢ/2)·fFun(...)` (`k=0`) and

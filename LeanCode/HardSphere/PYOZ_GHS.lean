@@ -71,9 +71,9 @@ non-measurable pathological fixed points that the operator definition alone cann
 | `g0_HS_core` | proved | `if_pos hr` from piecewise definition |
 | `g0_HS_outer_is_oz_fp` | proved | `g0_HS_outer r − 1 = oz_h r`; follows from `oz_h_is_fp` |
 | `g0_HS_outer_eq_oz_h` | proved | `rfl` from concrete definition |
-| `oz_laplace_oz_eq` | **axiom** | Laplace-domain OZ eq for oz_h (PY closure + integrability) |
-| `g0_HS_laplace_spec` | **proved** | from `oz_laplace_oz_eq` + `oz_laplace_identity` + `heq` |
-| `g0_HS_contact_value` | **axiom** | PY contact value (Wertheim 1963) |
+| `oz_laplace_oz_eq` | **deleted 2026-07-15** | Laplace dead-end (used the false `radial_laplace_conv`); correct form is the sine-transform OZ.7 |
+| `g0_HS_laplace_spec` | **deleted 2026-07-15** | only consumed `oz_laplace_oz_eq`; no live callers |
+| `g0_HS_contact_value` | **theorem** (moved to `JumpAsymptotic.lean`) | PY contact value; now derived via BAXTER.8 + the `oz_h_exterior_regularity` axiom |
 
 ## Net improvement over pre-OZ.2 state
 
@@ -84,8 +84,8 @@ non-measurable pathological fixed points that the operator definition alone cann
 | `g0_HS_core` | **axiom** | **proved theorem** |
 | `g0_HS_outer_is_oz_fp` | axiom | **proved theorem** |
 | `g0_HS_outer_eq_oz_h` | axiom | **proved theorem** (`rfl`) |
-| `g0_HS_laplace_spec` | axiom (was in PYOZ.lean) | **proved theorem** (from `oz_laplace_oz_eq`) |
-| `g0_HS_contact_value` | axiom (was in PYOZ.lean) | axiom (moved here) |
+| `g0_HS_laplace_spec` | axiom (was in PYOZ.lean) | **deleted 2026-07-15** (Laplace dead-end) |
+| `g0_HS_contact_value` | axiom (was in PYOZ.lean) | **theorem** in `JumpAsymptotic.lean` (BAXTER.8) |
 -/
 
 open MeasureTheory Set Real intervalIntegral
@@ -166,8 +166,9 @@ The linear operator `oz_linear_op` has sup-norm bound
 needed inside the contraction argument itself, since `oz_linear_op` only ever reads exterior
 values) for small enough `|rho|`; Banach's fixed-point theorem then gives existence and
 uniqueness there, which packages into the `∃! h : ℝ → ℝ` shape below by gluing with the
-forced core value `-1`. For all physical `eta < 1`, the Fredholm alternative extends this to
-all non-resonant densities.
+forced core value `-1`. For all physical `eta < 1` uniqueness still holds — hard spheres have no
+spinodal — but proving it beyond the dilute regime needs Wiener–Hopf machinery, **not** the
+compact-operator Fredholm alternative (`K` is not compact); see the mid/high-density bullet below.
 
 **2026 update — split by density regime, one piece now proved:**
 
@@ -188,31 +189,40 @@ all non-resonant densities.
   `dist f g = ⨆x,|f x-g x|` all already match the sup-norm argument sketched above). See
   `proof_notes_hard_sphere.md` (Task OZ.10-dilute) for the full six-piece proof writeup.
 
-- **Middle/high density (the physically central `eta≈0.3–0.5` range, up to `eta<1`): still
-  axiomatic here, and genuinely harder, not just "unproved but similar."** The
-  Banach-contraction argument fundamentally caps out at small `|ρ|`; beyond the threshold,
-  `oz_linear_op` is no longer a contraction (its operator norm exceeds 1), so
-  existence+uniqueness needs different machinery — the **Fredholm alternative** for the
-  (presumably) compact linear operator `oz_linear_op`: `(I-K)` is either bijective for all
-  data, or has a nontrivial kernel at "resonant" `ρ`. This needs (a) a *compactness* proof for
-  `oz_linear_op` — strictly stronger than the boundedness used for the dilute case, likely
-  needing an Arzelà–Ascoli-style equicontinuity+decay argument — and (b) Fredholm theory for
-  compact operators on a Banach space, applied to rule out resonance at the relevant `ρ`.
-  (b) is likely thin or absent in Mathlib for this integral-operator setting — not confirmed,
-  would need its own research pass before any Lean attempt.
+- **Middle/high density (`eta≈0.3–0.5`, up to `eta<1`): TRUE, and proving it in Lean is
+  same-core as the BAXTER line — not the compact-operator Fredholm alternative.**
 
-  **A plausible bridge worth flagging, not established:** `detQ(s)`'s zeros are noted
-  elsewhere in this codebase (`BaxterRealSpace.lean`'s "Physical Note" on `detQ`) as "spinodal
-  instabilities," i.e. resonance points. For the single-component case, `detQ`-vanishing
-  plausibly corresponds to `1 - ρ·C_HS_laplace eta sigma s = 0` for some `s` — exactly the
-  non-vanishing hypothesis (`hne`/`_hne`) already threaded through this codebase's
-  `oz_laplace_oz_eq`-family theorems (`PYOZ_GHS.lean`, `OZExteriorBridge.lean`). If that
-  correspondence holds, "non-resonant `ρ`" here might reduce to the *same* condition already
-  assumed elsewhere rather than needing independent spectral theory — but this is a conjecture
-  from the physical note, not derived or checked, and proving the correspondence itself
-  (relating a real-space compact-operator spectral condition to a Laplace-domain algebraic
-  one) would be its own nontrivial task, comparable in depth to the Baxter Wiener–Hopf work
-  needed elsewhere in this file family.
+  *Why the naive "just use Fredholm" route fails.* Mathlib **does** have the compact-operator
+  Fredholm alternative (`Mathlib/Analysis/Normed/Operator/Compact/FredholmAlternative.lean`,
+  `hasEigenvalue_or_mem_resolventSet`) — an earlier version of this comment wrongly called it
+  "thin or absent." But it **does not apply**: `oz_linear_op` (`K`) is **not compact**. `c_HS` is
+  compactly supported on `[0,σ]`, so `K`'s kernel has finite width `2σ` — `K` is a half-line
+  **band / Wiener–Hopf operator**, with large-`r` asymptotics `K[1](r) = (2π·ρ/r)·∫₀^σ
+  t·c_HS(t)·2rt dt = 4π·ρ·∫₀^σ t²·c_HS(t) dt = −24η·bracket` (a constant): `K` tends to
+  *multiplication by the constant `−24η·bracket`* as `r→∞`, and a nonzero multiplication operator
+  is not compact. That constant is exactly the dilute Banach constant `T_ext_K`
+  (`OzFixedPtDilute.lean`) — it is `K`'s **spectral radius** — so `24η·bracket < 1` (η ≲ 0.088) is
+  the natural Banach/Neumann boundary (spectral radius < 1), not a loose estimate.
+
+  *Why the statement is nonetheless TRUE for every `eta < 1`.* Hard spheres have **no phase
+  transition**: PY `1 − ρ·ĉ(k) > 0` for all `k` and all `eta ∈ (0,1)` (compressibility
+  `(1−η)⁴/(1+2η)² > 0`), so there is no spinodal / no resonance. `(I−K)` is invertible not because
+  `‖K‖ < 1` (false past η≈0.088) but because `1 ∉ spectrum(K) = symbol range {ρ·ĉ(k)} ⊂ (−∞,1)`
+  (the symbol is real, winding number 0). So existence+uniqueness holds unconditionally on
+  `eta ∈ (0,1)`.
+
+  *What the Lean proof actually needs — and does NOT need.* It does **not** need general
+  Wiener–Hopf / Toeplitz operator theory: the symbol factorization
+  `1 − ρ·Ĉ = (1 − ρ·Q̂(k))·(1 − ρ·Q̂(−k))` is already done concretely as the **Baxter
+  factorization** (Task BAXTER.3, `baxter_wiener_hopf_factorization`; `BaxterRealSpace.lean` gives
+  the real-space form). What remains is the explicit inverse/solution from that factorization —
+  `(I−K) = (I−K₊)(I−K₋)`, each one-sided factor Volterra (spectral radius 0) hence invertible, so
+  `(I−K)` is invertible ⇒ existence+uniqueness — which is exactly the `h_explicit` construction of
+  Tasks BAXTER.12–13. So this axiom is **same-core as, and gated by, the BAXTER Wiener–Hopf line**;
+  it is not an independent target, and the missing piece is a concrete construction, not
+  Mathlib-absent machinery. (This supersedes the earlier speculative "`detQ`-zeros = spinodal"
+  bridge: the clean statement is simply that hard spheres have no spinodal, the symbol never
+  vanishes, and the Baxter factorization already supplies what is needed to invert `(I−K)`.)
 
 **Scope:** stated as a plain `∃! h : ℝ → ℝ`, but with `ContinuousOn h (Set.Ici sigma)` and
 boundedness attached as explicit conjuncts (rather than bundled into a
@@ -269,8 +279,8 @@ known truncation error. `heta_def`/`heta_lt` restrict to the physical PY regime 
 assumed (arbitrary unrelated `eta,sigma,rho` triples are not claimed). Proving this from
 Mathlib-available real-analysis tools (rather than assuming it) needs Baxter's Wiener–Hopf
 factorization machinery — out of current scope; see `proof_notes_hard_sphere.md` Task OZ.9
-for the "Route B" alternative (via Baxter's second relation) that was scoped but not pursued
-this pass. -/
+for the "Route B" alternative (via Baxter's second relation), staged and tracked as Group
+BAXTER's Task `BAXTER.2` (`proof_notes_baxter.md`) — scoped, not yet pursued to completion. -/
 axiom oz_core_closure {eta sigma rho : ℝ} (hsigma : 0 < sigma)
     (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_lt : eta < 1) :
     ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
@@ -315,78 +325,32 @@ theorem g0_HS_outer_is_oz_fp {eta sigma rho : ℝ} (hsigma : 0 < sigma) :
 theorem g0_HS_outer_eq_oz_h {eta sigma rho : ℝ} (_hsigma : 0 < sigma) (r : ℝ) :
     g0_HS_outer eta sigma rho r = 1 + oz_h eta sigma rho r := rfl
 
-/-! ### Laplace-space OZ characterization and contact value -/
+/-! ### Retired: Laplace-domain OZ characterization (`oz_laplace_oz_eq`, `g0_HS_laplace_spec`)
 
-/-- **Axiom (OZ.2b, step 1): the Laplace-domain hard-sphere OZ equation.**
+An axiom `oz_laplace_oz_eq` (`H̃₀·(1-ρĈ) = Ĉ`, the Laplace-domain OZ equation) and a theorem
+`g0_HS_laplace_spec` (`∫ r·(g0_HS-1)·e^{-sr} = Ĉ·S₀`, proved from it via `oz_laplace_identity`)
+used to live here. Both were **deleted** (2026-07-15). The only route to `oz_laplace_oz_eq` on the
+real Laplace axis is a convolution factorization — exactly the axiom `radial_laplace_conv`, now
+known **mathematically false** (the radial 3D convolution does not factor under the real Laplace
+transform). So the Laplace-domain product form is not reliably provable and is most likely false
+as stated in `s`; the correct, proved, live OZ-domain equation is the *sine*-transform
+`oz_fourier_oz_eq_of_core_closure` / `oz_fourier_oz_eq_of_PY_core` (`OZFourierBridge.lean`, Tasks
+OZ.7/OZ.9b). Neither deleted result had any live caller. The generic algebra identity
+`oz_laplace_identity` (`PYOZ.lean`) that `g0_HS_laplace_spec` used is itself correct and is kept.
+See `proof_notes_hard_sphere.md`. -/
 
-The `r`-weighted Laplace transform `H̃₀(s) = ∫_0^∞ r · oz_h(r) · e^{-sr} dr` satisfies:
+/-! ### Exact PY contact value — now a theorem (Task OZ.3), see `JumpAsymptotic.lean`
 
-    `H̃₀(s) · (1 - ρ · Ĉ_HS(s)) = Ĉ_HS(s)`
-
-**Derivation as originally sketched (combining physics and `radial_laplace_conv`):**
-1. `oz_h` satisfies the full OZ equation: `h₀ = c_HS + ρ · (c_HS ⊛₃D h₀)` for all r.
-2. Apply `radial_laplace`: `H̃₀ = C̃_HS + ρ · ℒ_r[c_HS ⊛₃D h₀](s)`.
-3. Apply `radial_laplace_conv`: `H̃₀ = C̃_HS + ρ · C̃_HS · H̃₀`.
-4. Rearrange: `H̃₀ · (1 - ρ C̃_HS) = C̃_HS`.
-
-**2026 update — step 1 now proved, step 3 now known broken.** Step 1's `r ≥ σ` half (Gap A)
-is fully proved, unconditionally, in `OZExteriorBridge.lean`; the `r < σ` half (Gap B, the PY
-core closure) remains the one genuinely hard open physics input, tracked explicitly as
-`hcore` on `oz_laplace_oz_eq_of_core_closure` (`OZExteriorBridge.lean`) — not this axiom.
-Step 3's `radial_laplace_conv` is now known **mathematically false** (`RadialLaplace.lean`),
-so this axiom's *derivation sketch* no longer holds together (its own conclusion is not
-thereby shown false, just unproved via this route). The correct-transform analogue —
-`oz_fourier_oz_eq_of_core_closure` (`OZFourierBridge.lean`, Task OZ.7) — is proved, using the
-genuine `radial_fourier_conv` (Task OZ.6) in place of step 3, conditional only on the same
-Gap B. Bridging that Fourier-domain result back to this exact Laplace-domain form (so this
-axiom could be retired) is Task OZ.8, not yet started — see `proof_notes_hard_sphere.md`. -/
-axiom oz_laplace_oz_eq {eta sigma rho s : ℝ} (hsigma : 0 < sigma) (hs : 0 < s)
-    (hne : 1 - rho * C_HS_laplace eta sigma s ≠ 0) :
-    (∫ r in Set.Ioi (0 : ℝ), r * oz_h eta sigma rho r * Real.exp (-s * r)) *
-    (1 - rho * C_HS_laplace eta sigma s) = C_HS_laplace eta sigma s
-
-/-- **Task OZ.2b — Laplace-space characterization of g0_HS (proved theorem):**
-
-The modified one-sided Laplace transform of `h0(r) = g0_HS(r) - 1` satisfies:
-
-    ∫_{0}^{∞} r · (g0_HS(r) - 1) · e^{-sr} dr  =  Ĉ_HS(s) · S0(s)
-
-**Proof:** Since `g0_HS(r) - 1 = oz_h(r)` everywhere (0 for r < σ, `g0_HS_outer - 1`
-for r ≥ σ, both equal `oz_h` by the core and outer lemmas), rewrite the integral to
-`radial_laplace oz_h s`, then apply `oz_laplace_oz_eq` + `oz_laplace_identity`.
-
-**2026 update:** this theorem still compiles but rests on `oz_laplace_oz_eq`, whose own
-derivation sketch invoked the now-disproven `radial_laplace_conv` — see that axiom's doc
-comment. The Fourier-domain analogue (`oz_fourier_oz_eq_of_core_closure`, `OZFourierBridge.lean`,
-Task OZ.7) is genuinely proved (conditional only on the PY core closure, Gap B); retiring
-`oz_laplace_oz_eq`/this theorem in favor of it needs Task OZ.8 (bridging back to
-`C_HS_laplace`/`S0`), not yet started. -/
-theorem g0_HS_laplace_spec {eta sigma rho s : ℝ} (hsigma : 0 < sigma) (hs : 0 < s)
-    (hne : 1 - rho * C_HS_laplace eta sigma s ≠ 0) :
-    ∫ r in Set.Ioi (0 : ℝ), r * (g0_HS eta sigma rho r - 1) * Real.exp (-s * r) =
-    C_HS_laplace eta sigma s * S0 eta sigma rho s := by
-  have heq : ∀ r : ℝ, g0_HS eta sigma rho r - 1 = oz_h eta sigma rho r := fun r => by
-    by_cases hr : r < sigma
-    · simp only [g0_HS_core hr, oz_h_core hsigma hr]; ring
-    · simp only [not_lt] at hr
-      unfold g0_HS; rw [if_neg (not_lt.mpr hr), g0_HS_outer_eq_oz_h hsigma]; ring
-  have hint_eq :
-      (∫ r in Set.Ioi (0 : ℝ), r * (g0_HS eta sigma rho r - 1) * Real.exp (-s * r)) =
-      (∫ r in Set.Ioi (0 : ℝ), r * oz_h eta sigma rho r * Real.exp (-s * r)) := by
-    simp_rw [heq]
-  rw [hint_eq]
-  exact oz_laplace_identity hne (oz_laplace_oz_eq hsigma hs hne)
-
-/-- **Exact PY contact value (axiom):**
-
-From the Percus–Yevick solution (Wertheim 1963), for a monodisperse hard-sphere fluid:
-
-    g0_HS(sigma) = (1 + eta/2) / (1 - eta)^2
-
-Requires the full PY solution and partial-fraction inversion of `Ĥ_HS(s)` at `r = sigma`,
-which is outside current Lean/Mathlib scope. -/
-axiom g0_HS_contact_value {eta sigma rho : ℝ} (hsigma : 0 < sigma)
-    (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_lt : eta < 1) :
-    g0_HS eta sigma rho sigma = (1 + eta / 2) / (1 - eta) ^ 2
+`g0_HS_contact_value : g0_HS eta sigma rho sigma = (1 + eta/2) / (1 - eta)^2` used to be a bare
+physical axiom here (the Percus–Yevick / Wertheim 1963 monodisperse hard-sphere contact value).
+It is **no longer axiomatized**: Task BAXTER.8 (`g0_HS_contact_value_of_oz_h_regularity`,
+`JumpAsymptotic.lean`) derives exactly this value from the jump-asymptotic lemma (BAXTER.6) + the
+closed-form `Ĥ(k)` asymptotic (BAXTER.7) + the algebraic OZ identity (OZ.9b), conditional only on
+`oz_h`'s exterior analytic regularity/decay/integrability. Those conditions are packaged as the
+single named axiom `oz_h_exterior_regularity` (`JumpAsymptotic.lean`), from which the unconditional
+theorem `g0_HS_contact_value` is proved. Net effect: the specific physical *number* is no longer
+assumed — it follows from Fourier analysis; the only remaining assumption is that the OZ exterior
+solution is as analytically well-behaved as physically expected. This file no longer declares the
+name (it now lives, still in namespace `FMSA.HardSphere`, in `JumpAsymptotic.lean`). -/
 
 end FMSA.HardSphere

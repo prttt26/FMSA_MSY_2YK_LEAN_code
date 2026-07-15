@@ -55,6 +55,8 @@ LeanCode/
   FMSAPoly/        — Formula failure analysis: (1+A)²≠1−g² disproof, poly approx impossibility (Groups chsY, P)
   FreeEnergy/      — Sum rule, energy integrals, convergence (Yukawa free energy)
 proof_notes_hard_sphere.md    — Proof records for Groups 2, 3, OZ
+proof_notes_baxter.md         — Proof records for Group BAXTER (Baxter Q-factor,
+                                 Wiener–Hopf route to the PY closed form; depends on Group OZ)
 proof_notes_yukawa_dcf.md     — Proof records for Groups 1, 4, M, B, C, 5
 proof_notes_failures.md       — Proof records for Groups chsY, P (formula failure analysis)
 proof_notes_free_energy.md    — Proof records for Group F

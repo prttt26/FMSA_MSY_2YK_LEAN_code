@@ -11,7 +11,7 @@ import LeanCode.HardSphere.BaxterFactor
 import LeanCode.HardSphere.PYDCF
 
 /-!
-# Real-space Baxter Q0 Factor and Convolution Identity
+# Task BAXTER.1 — Real-space Baxter Q0 Factor and Convolution Identity *(formerly Task OZ.5)*
 
 **Sources:** [chsY] Eq. 31–33; [LN] Eq. 10–11; Baxter (1970); Wertheim (1963)
 

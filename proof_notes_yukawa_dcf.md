@@ -136,202 +136,9 @@ the Q-matrix determinant, I₁/I₂ integrals, and IV term.
 
 ## Group M — Multi-Component Baxter Identity
 
-Derives the matrix analog of the N=1 identity `g + a·e^{-z} = 1` (Task 4.2).
-The mathematical derivation is in `problem_answers/multicomp_g_a_derivation.md`.
-
-### Task M.1 — Abstract matrix identity: Ĝ + Â·c = I
-
-**Statement:** For `n×n` real matrices `P`, `E`, `D` with `D = P + c • E` (c a scalar)
-and `D` invertible:
-```
-P * D⁻¹ + c • (E * D⁻¹) = 1
-```
-This is the matrix analog of `g + a·e^{-z} = 1` (Task 4.2), where:
-- `P` = polynomial-part matrix (analog of `S`)
-- `E` = exponential-coefficient matrix (analog of `12η·L`)
-- `c = exp(−z·σ_min)` = the exponential factor from the smallest diameter
-- `D = Q̂₀` = full Baxter Q-matrix (analog of `D = S + 12ηL·e^{-z}`)
-- `Ĝ = P·D⁻¹`, `Â = E·D⁻¹` = multi-component analogs of scalar g, a
-
-**Why it matters:** Guarantees that the corrected inner-core formula
-`c_ij(r) = K(1−Ĝ²_{ij})·e^{-z(r-R)} − K·Â²_{ij}·e^{+z(r-R)} + Poly`
-uses the correct coefficients (Ĝ + Â·c = I mirrors g + a·e^{-z} = 1 for N=1).
-
-**Proof sketch:**
-```
-P·D⁻¹ + c•(E·D⁻¹) = (P + c•E)·D⁻¹ = D·D⁻¹ = I
-```
-Left-distributes `D⁻¹`, substitutes `D = P + c•E`, then applies `IsUnit.mul_val_inv`.
-
-**Lean:**
-```lean
--- LeanCode/YukawaDCF/MatrixIdentity.lean
-theorem g_mat_add_a_mat_exp_eq_one {n : ℕ}
-    (P E D : Matrix (Fin n) (Fin n) ℝ) (c : ℝ)
-    (hD_def : D = P + c • E)
-    (hD : IsUnit D) :
-    P * D⁻¹ + c • (E * D⁻¹) = 1 := by
-  rw [← add_mul, smul_mul, ← hD_def]
-  exact hD.mul_val_inv
-```
-
-**Depends on:** Nothing new — pure matrix algebra (Mathlib `Matrix` API).
-
-**Status:** ✓ DONE — `g_mat_add_a_mat_exp_eq_one` in `LeanCode/YukawaDCF/MatrixIdentity.lean` (complete):
-  `rw [← Algebra.smul_mul_assoc, ← add_mul, ← hD_def]` + `Matrix.mul_nonsing_inv D hD`.
-  Note: hypothesis is `IsUnit D.det` (not `D.det ≠ 0`); Mathlib's `Matrix.mul_nonsing_inv`
-  requires `IsUnit`. Also includes `g_mat_n1_eq_scalar` (N=1 scalar limit sanity check):
-  `rw [← mul_div_assoc, ← add_div, hnum, div_self hD]` — same structure as Task 4.2.
-
----
-
-### Task M.2 — N=1 limit: Ĝ₀₀ = g(z) and Â₀₀ = a(z)
-
-**Statement:** For n=1, the matrix definitions `Ĝ = P̂·D̂⁻¹` and `Â = Ê·D̂⁻¹` reduce to
-the scalar single-component propagators:
-```
-Ĝ_{00} = P̂_{00} / D̂_{00} = S(z) / D(z) = g(z)
-Â_{00} = Ê_{00} / D̂_{00} = 12η·L(z) / D(z) = a(z)
-```
-where `S`, `L`, `D`, `g`, `a` are as in `SingleCompIdentity.lean` (Task 4.2).
-
-**Why it matters:** Confirms that the multi-component FMSA_GA_matrix_mix formula reduces exactly to
-FMSA_pure for N=1. The corrected inner-core `K(1−Ĝ²)·e^{-z(r-R)} − K·Â²·e^{+z(r-R)}`
-then matches [chsY] Eq. 43 term-by-term.
-
-**Proof strategy:** For n=1, `P̂`, `Ê`, `D̂` are 1×1 matrices = scalars. Matrix multiplication
-`P̂ · D̂⁻¹` becomes scalar division `P̂_{00} / D̂_{00}`. Lean:
-```lean
-theorem g_mat_n1_eq_g_scalar (S L η z : ℝ) (hD : D ≠ 0) :
-    let D := S + 12 * η * L * Real.exp (-z)
-    (fun _ _ => S : Matrix (Fin 1) (Fin 1) ℝ) *
-    (fun _ _ => D : Matrix (Fin 1) (Fin 1) ℝ)⁻¹ = fun _ _ => S / D := by
-  ext i j; fin_cases i; fin_cases j
-  simp [Matrix.inv_fin_one, div_eq_mul_inv]
-```
-
-**Depends on:** M.1, Task 4.2 (`g_add_a_mul_exp_eq_one`), `Matrix.inv_fin_one`.
-
-**Status:** ✓ DONE — `LeanCode/YukawaDCF/MatrixN1.lean`
-
-Key results proved (all in `namespace FMSA.MatrixN1`):
-- `fin1_const_mul` (proved): 1×1 matrix multiplication is scalar multiplication
-- `fin1_const_inv` (proved via left-inverse uniqueness): 1×1 matrix inverse is scalar inverse;  needed — D=0 case uses `nonsing_inv_apply_not_isUnit`; D≠0 case uses `mul_assoc` + `Matrix.mul_nonsing_inv` uniqueness argument
-- `mat_fin1_mul_inv` (proved): `(fun _ _ => S) * (fun _ _ => D)⁻¹ = fun _ _ => S/D` unconditionally
-- `g00_eq_g_scalar`, `a00_eq_a_scalar` (proved): entry-wise reduction
-- `m2_identity` (proved): chains into `FMSA.SingleComp.g_add_a_mul_exp_eq_one`
-- `m2_identity_baxter` (proved): concrete form using `Q0_ne_zero_at_yukawa` axiom from Task 2.2
-
----
-
-### Task M.3 — det(Q̂₀) ≠ 0 for valid multi-component parameters
-
-**Statement:** For a physically valid n-component mixture (total packing fraction η < 1,
-all ρᵢ ≥ 0, all σᵢ > 0), the Baxter Q-matrix `Q̂₀(z)` is invertible for all z > 0:
-```
-det(Q̂₀(z)) ≠ 0
-```
-This is the multi-component analog of Task 2.2 (`Q0_ne_zero_of_eta_lt_one` for N=1).
-
-**Why it matters:** Required to define Ĝ = P̂·Q̂₀⁻¹ and Â = Ê·Q̂₀⁻¹ (M.1, FMSA_GA_matrix_mix).
-Without invertibility, the matrix decomposition is ill-defined.
-
-**2026 update — the original axiom was FALSE, now replaced:** Since Task 2.2 was proved (not
-just axiomatized), it was tempting to axiomatize M.3 the same way. But the old axiom left `Qp`
-(`Q'ᵢⱼ`) and `Qpp` (`Q''ᵢⱼ`) as free real parameters, unconstrained by `sigma`/`rho`. Since
-`hz`/`hsigma`/`hrho`/`heta` say nothing about `Qp`/`Qpp`, they can be chosen adversarially to
-force `det = 0` even when every hypothesis holds — concrete counterexample: `n=2`, equal
-diameters, `z=1`, `rho_geo ≡ 0.1` (`η≈0.0105∈(0,1)`), `Qpp≡0`, `Qp≈−13.59` gives
-`Q0_mat = !![0.5,-0.5;-0.5,0.5]`, `det=0`. So the axiom was disproved, not just hard.
-
-**Fix:** substitute the actual multicomponent PY (Lebowitz/Baxter) closed-form coefficients
-for `Qp`/`Qpp`/`rho_geo` (matching `fmsa_ga_matrix_mix.py`'s `_build_Q0_Qpp`/`_build_Qhat`
-exactly) instead of leaving them free. This makes the claim genuinely meaningful. The
-*unconditional* (`∀ z>0`) version is Task M.4 (see below): numerically, individual
-off-diagonal entries of the raw matrix blow up exponentially for large `z` whenever species
-diameters differ (`exp(-z·λᵢⱼ)` with `λᵢⱼ<0`) — the same obstruction as the FMSA_chsY/
-GA_matrix_mix 2YK failure. What's proved here (Task M.3) is a *conditional* result via
-Mathlib's Gershgorin circle theorem (`det_ne_zero_of_sum_row_lt_diag`): strict row diagonal
-dominance of the concrete physical matrix (an explicit, numerically-checkable inequality)
-implies invertibility. That's real progress — no axiom, and the hypothesis is checkable at any
-given state point — even though the fully general `∀ z>0` claim remains open (Task M.4).
-
-**Depends on:** Task 2.2 (proved; motivated attempting the same axiomatic shortcut for M.3,
-which failed); Mathlib's `det_ne_zero_of_sum_row_lt_diag` (Gershgorin) for the conditional
-proof.
-
-**Status:** ◑ conditional — `LeanCode/YukawaDCF/MatrixQ0.lean`. Unconditional case: Task M.4.
-
-Key results in `namespace FMSA.MatrixQ0`:
-- `q0_entry`: concrete scalar (i,j) entry formula (B.2 form), still parameterized by free
-  `Qp`/`Qpp` (used only for the pure B.2 algebraic identity, which holds for any `Qp`/`Qpp`)
-- `Q0_mat`: n×n matrix assembled from `q0_entry`
-- `Q0_mat_entry_decomp` (proved): each entry satisfies the B.2 decomposition
-  `Q̂₀ᵢⱼ = P̂ᵢⱼ + Êᵢⱼ · exp(-z·σ_min)` via `b2_qhat_entry_decomp`
-- `Q0_mat_isUnit_det` (old axiom): **removed — disproved**, see above
-- `xi2`, `etaMix`, `vacMix`, `Q0phys`, `Qppphys`, `rhoGeoPhys` (defined): concrete
-  Lebowitz/Baxter multicomponent PY coefficients, matching the Python implementation
-- `Q0_mat_phys` (defined): `Q0_mat` with `Qp`/`Qpp`/`rho_geo` substituted by the above
-- `Q0_mat_phys_isUnit_det_of_diag_dom` (proved): `IsUnit (Q0_mat_phys ...).det` conditional
-  on strict row diagonal dominance, via Gershgorin
-- `Q0_mat_n1_entry` (proved): for n=1, the (0,0) entry simplifies to the scalar Q₀ form
-  (N=1 consistency check; `λ₀₀ = 0` gives `exp(0) = 1` automatically)
-
----
-
-### Task M.4 — Unconditional invertibility of `Q0_mat_phys` for all `z > 0`
-
-**Statement:** For a physically valid n-component mixture (same hypotheses as Task M.3:
-`z≠0`, `vacMix≠0`, all `ρᵢ≥0`), `Q0_mat_phys(z)` is invertible **unconditionally** — no
-diagonal-dominance side hypothesis needed, unlike M.3's conditional result. Individual
-off-diagonal entries of `Q0_mat_phys` blow up exponentially as `z→∞` whenever species
-diameters differ, so M.3's Gershgorin approach cannot reach this; M.4 instead exploits that the
-determinant itself stays bounded even though entries don't.
-
-**Rank-2 reduction** (`LeanCode/YukawaDCF/Q0DetRankTwo.lean`, no `sorry`/`axiom`):
-`Q0_mat_phys(z)` is exactly `1 - U·V` for `U : n×2`, `V : 2×n` built from
-`u1ᵢ=√ρᵢ·exp(zσᵢ/2)·f(σᵢ,z)`, `u2ᵢ=√ρᵢ·exp(zσᵢ/2)·g(σᵢ,z)`,
-`v1ⱼ=√ρⱼ·exp(-zσⱼ/2)`, `v2ⱼ=√ρⱼ·exp(-zσⱼ/2)·σⱼ` — proved as `Q0_mat_phys_eq_one_sub_mul`
-(the `√ρᵢ·√ρⱼ`/`exp(zσᵢ/2)·exp(-zσⱼ/2)` merges are isolated into a separate lemma, `UV_apply`,
-before the `Q0phys`/`Qppphys`/`p1`/`p2` algebra, which is then a clean `field_simp;ring`).
-Mathlib's `det_one_sub_mul_comm` (Weinstein–Aronszajn/Sylvester identity,
-`Mathlib.LinearAlgebra.Matrix.SchurComplement`) then gives, as `Q0_mat_phys_det_eq_two_by_two`,
-`det(Q0_mat_phys) = det(1 - V·U)`, a **fixed 2×2 determinant independent of n** — this is why
-individual entries diverge as `z→∞` while `det` stays bounded: inside `V·U`'s sums,
-`exp(zσᵢ/2)·exp(-zσᵢ/2)=1` cancels the blowup exactly (`VU_apply_00`).
-
-**Sign facts:** proved (same `p(0)=0,p'(0)=0,p''>0` derivative-chain technique as
-`bigD0/bigD1/bigD2` in `BaxterFactor.lean` for Task 2.2, as `p1_neg`/`mAux_neg`/`nAux_neg`):
-`p₁(σ,z)<0`, `p₂(σ,z)>0`, and hence `fFun<0`, `gFun<0` for all `σ,z>0` (`fFun_neg`, `gFun_neg`).
-This pins every entry of the reduced 2×2 matrix `M=V·U` as `≤0`.
-
-**The one remaining gap:** the sign facts reduce the whole claim to one explicit, n-independent
-scalar inequality `(1+a)(1+d) > bc` for nonneg moment sums `a,b,c,d` (the negated 2×2 entries).
-**Not yet closed**: not simple Cauchy–Schwarz (`bc` can exceed `ad` numerically), but very
-robust (20,000 random physical trials, `η` up to 0.999, no counterexample, smallest `|det|`
-found ≈1.0000013). Stated as an explicit hypothesis on the final theorem
-`Q0_mat_phys_isUnit_det_of_two_by_two` rather than a `sorry` — this is the smallest possible
-remaining gap for M.4: a single scalar inequality between four finite species-sums, not an
-n×n claim. Full derivation and exact function definitions in `Q0DetRankTwo.lean`.
-
-Key results in `LeanCode/YukawaDCF/Q0DetRankTwo.lean` (`namespace FMSA.MatrixQ0`):
-- `p1_neg`, `mAux_neg`, `nAux_neg` (proved): one-variable sign facts underlying `fFun`/`gFun`
-- `fFun_neg`, `gFun_neg` (proved): `fFun,gFun < 0` for all physical `σ,z>0`
-- `Umat`, `Vmat` (defined): the rank-2 factors
-- `Q0_mat_phys_eq_one_sub_mul` (proved): `Q0_mat_phys = 1 - U·V`, entrywise algebra
-- `Q0_mat_phys_det_eq_two_by_two` (proved): reduces to `det(1 - V·U)` via `det_one_sub_mul_comm`
-- `VU_apply_00` (proved): `(V·U) 0 0 = Σⱼ ρⱼ·fFun(...)` — the exact-cancellation identity
-- `Q0_mat_phys_isUnit_det_of_two_by_two` (proved, conditional on `hdet`): the final theorem —
-  `IsUnit (Q0_mat_phys z sigma rho).det` given the one scalar inequality `hdet` above
-
-**Depends on:** Task M.3 (motivates the unconditional question); Task 2.2's
-`p(0)=0,p'(0)=0,p''>0` derivative-chain technique, reused for `p1_neg`/`mAux_neg`/`nAux_neg`.
-
-**Status:** ◑ conditional — `LeanCode/YukawaDCF/Q0DetRankTwo.lean`, no axiom/sorry, but the
-final theorem carries the one open scalar inequality as an explicit hypothesis rather than a
-proved fact. See `todo_lean.md`'s "Numerically verified — not proved in Lean" section.
-
----
+**Moved 2026-07-15** to [proof_notes_matrix_q0.md](proof_notes_matrix_q0.md) (Group M outgrew this
+file). That file holds Tasks M.1–M.8 (matrix identity, N=1 limit, det≠0 Gershgorin, rank-2 det
+reduction, and the M.5–M.8 det-positivity monotonicity lemmas).
 
 ## Group B — FMSA_GA_matrix_mix Algebraic Foundation and Polynomial Determination  *(FMSA_GA_matrix_mix specific)*
 
@@ -339,6 +146,12 @@ These tasks formalise the algebraic structure underlying `FMSA_GA_matrix_mix` ([
 inner-core formula).  They connect the abstract matrix identity M.1 (`Ĝ + Â·c = I`) to the
 concrete Baxter Q-matrix decomposition used in `_decompose_Q0`, and verify that the corrected
 coefficients `(1−Ĝ²)` and `Â²` are algebraically consistent with FMSA_pure for N=1.
+
+> **Scope note (2026-07-15):** Group B here covers **B.1–B.10** (Q̂₀ decomposition + `P_ij`
+> polynomial determination). The inner-core *mediated breakpoint* tasks that were formerly
+> B.11–B.18 split off into **Group IB** — see
+> [proof_notes_breakpoints.md](proof_notes_breakpoints.md). The former B.19 (hard-sphere `λ_ij`
+> kink) moved to **Group OZ as OZ.18** — see [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md).
 
 ---
 
@@ -815,70 +628,6 @@ directly over the coefficients rather than derived via `iteratedDeriv R`/`Analyt
 
 ---
 
-### Task B.11 — Inner DCF decomposition: domain of `P_ij`, mediated vanishing for `r < σ_min`
-
-**Motivation — new task, discovered from the numerical (Python) session, not from [chsY]/[LN]
-directly.** B.5–B.10 establish `P_ij`'s degree and coefficients via the B.8 Laplace-moment
-inversion, but leave open what `P_ij`'s actual *domain* is once cross-species "mediated"
-contributions are accounted for. This surfaced as a real formalization gap during the Group Z
-numerical work (`todo_numerical.md`, full OZ+MSA/PY/HNC solves for the complete `_polycorr`):
-specifically the `_update_polycorr` fix (Task Z.6, `todo_numerical.md` ~line 357) that subtracts
-`c_HS` (`get_HS_FMT`) and `mediated` (`_compute_mediated`) from the OZ-converged inner DCF
-*before* running the B.8 moment fit, so that the residue being fit is pure polynomial. That fix
-only makes sense if `mediated` really is analytically separable and (in the regime tested)
-identically zero in the inner region — a claim `fmsa_ga_matrix_mix.py`'s code encodes
-implicitly (via breakpoint conditionals) but had never been stated or checked as a theorem.
-
-**Statement:** for an unlike pair (i≠j) in an N-component mixture, the first-order inner DCF
-decomposes as
-```
-c^(1)_ij(r) = [Term_I(r) + P_ij(r)] / (2π·√(ρᵢ·ρⱼ)·r) + c^HS_ij(r) + mediated_ij(r)
-```
-where `Term_I` is the pure-exponential unlike-pair formula, `P_ij(r) = p₀+p₁r+p₂r²+p₃r³+p₄r⁴`
-(degree ≤ 4, B.5/B.8), `c^HS_ij` is the White-Bear FMT hard-sphere DCF, and `mediated_ij` is
-Terms II+III+IV from `_compute_mediated` (`fmsa_ga_matrix_mix.py`).
-
-**Factor-of-3 breakpoint threshold** (derived directly from `_compute_mediated`'s code): for
-Term III at its inner activation boundary `r = R[i,b] = (σᵢ+σᵦ)/2`, the offset variable is
-`alpha_0 = lambda_ij[j,b] - sigma[b] = (σⱼ+σᵦ)/2 - σᵦ = (σⱼ-3σᵦ)/2` — active (nonzero
-contribution) iff `σⱼ > 3σᵦ`. (Term II is the mirror-image condition, `σᵢ > 3σₐ`.)
-
-**Two regimes:**
-- **σ-ratio ≤ 3 (confirmed, includes the working binary σ=[1,2] case, ratio=2):** `alpha_0 ≤ 0`
-  for every intermediate species, so all of Terms II/III/IV vanish identically throughout the
-  inner region `(0, R_ij)` for *every* pair, any `N`. The only piecewise source left is the
-  `c_HS` kink at `|λᵢⱼ|=(σⱼ-σᵢ)/2` (unlike pairs only), so after subtracting `c_HS`, `P_ij` is a
-  **single polynomial** on all of `(0, R_ij)`.
-- **σ-ratio > 3 (open, needs its own research pass):** Term IV (the double convolution,
-  `c_exp`/`u_lo_bj`/`u_hi_bj` in code) has activation conditions not yet fully characterized;
-  additional interior breakpoints are possible. For `N≥3` with σ-ratio > 3 (e.g. σ=[1,2,4]),
-  `P_ij` may be piecewise with `O(N)` breakpoints per pair — the single-polynomial theorems
-  below apply only to the σ-ratio ≤ 3 regime. This is tracked as sub-task B.11.4.
-
-**In Lean** (`LeanCode/YukawaDCF/B11InnerDecomp.lean`, abstract setting: species diameters
-`σ : Fin N → ℝ`, an abstract `mediated : ℝ → Fin N → Fin N → ℝ` satisfying the vanishing
-property derived above as a hypothesis, rather than concretely tied to
-`fmsa_ga_matrix_mix.py`'s actual `_compute_mediated` — a deliberate scoping choice to keep the
-structural claim separate from the Python implementation's bookkeeping):
-- `b11_mediated_vanishes_below_σmin` (B.11.1, `sorry`): given `mediated`'s activation-boundary
-  hypothesis (`hmed`), `mediated r i j = 0` for all `r < σ_min(i,j)`.
-- `b11_residue_is_polynomial` (B.11.2, `sorry`): given the decomposition holds with
-  `mediated ≡ 0` (the σ-ratio ≤ 3 case), the residue
-  `(c1_inner - c_hs - mediated)/prefac - term_I` is a polynomial of `natDegree ≤ 4` on all of
-  `(0, R_ij)`.
-- `b11_inner_dcf_decomp` (B.11.3, `sorry`): the full structural theorem combining both — for an
-  unlike pair, the OZ+MSA inner DCF decomposes into `(Term_I/prefac) + P_ij` (single
-  polynomial, `natDegree ≤ 4`) plus `c_HS` plus `mediated`, with `mediated=0` below `σ_min`.
-- B.11.4 (σ-ratio > 3 breakpoint characterization): not started, no theorem statement attempted
-  yet — needs its own research pass into Term IV's activation structure.
-
-**Depends on:** B.5 (degree bound), 1.3 (vanishing-integral technique, reused for the
-mediated-vanishing argument).
-
-**Status:** ☐ sorry (B.11.1–B.11.3, `B11InnerDecomp.lean`, 3 theorems); B.11.4 not started.
-
----
-
 ## Group C — FMSA_GA_matrix_mix Consistency Checks  *(reduction and verification)*
 
 These tasks verify that the multi-component FMSA_GA_matrix_mix formula is consistent with known results:
@@ -919,6 +668,178 @@ NOT reduce to Eq. 42 for N=1 (the (1+A)² ≠ 1−g² discrepancy, Task 4.3).
     one-liner via `coeff_identity` (B.3). File gains `import MatrixIdentity`.
   - `c1_n1_from_mat_identity`: instantiation from `g_mat_n1_eq_scalar` (M.1 N=1);
     `linear_combination` handles `c*(M/D)` vs `(M/D)*c` commutativity mismatch.
+
+---
+
+### Tasks C.2 & C.5 — HS-pole residue conditioning, positive results (added 2026-07-15)
+
+*Source: `fmsa_hs_pole_residue.py` Route C analysis + `_build_pure_refs` bug fix.*
+
+The key finding: for N=1 like pairs, the two-exp formula has an **exp-cancellation** that keeps it
+bounded (C.2); and `K·G·exp` is the exact leading Yukawa-pole residue (C.5), so the Route C inner
+formula is correct at leading order. The two **failure** counterparts — for N=2 unlike pairs the
+cancellation is absent and the base `K·exp(z·R)` diverges (GA.1), with structural root cause
+`G_{01}→0` (GA.2) — moved to `proof_notes_failures.md` **Group GA** (records only; renumbered
+there to the group-local `GA.1`/`GA.2`, formerly `C.3`/`C.4`).
+
+---
+
+### Task C.2 — N=1 like-pair two-exp formula bounded on (0, R)
+
+**Statement:**
+```lean
+theorem c1_n1_twoexp_bounded
+    {z d r : ℝ} (hz : 0 < z) (hd : 0 < d) (hr₀ : 0 < r) (hrd : r < d)
+    {eta : ℝ} (heta : 0 < eta) (heta1 : eta < 1)
+    {D : ℝ} (hD : D ≠ 0) (hSleD : |S z d eta| ≤ |D|) :
+    |(1 - (S z d eta / D) ^ 2) * Real.exp (z * (d - r))| ≤
+        2 * (12 * eta * |L z d| / D ^ 2) * |D + S z d eta| := ...
+```
+where `S z d eta`, `L z d` are the Baxter auxiliary functions (Group 2).
+
+**Key identity chain (the "exp-cancellation"):**
+
+Step 1 — substitute `G = S/D`:
+```
+(1 - G²) · exp(z(d-r)) = (1 - S²/D²) · exp(z(d-r))
+                        = (D-S)(D+S)/D² · exp(z(d-r))
+```
+
+Step 2 — `D - S = 12η·L(z)·exp(-z·d)` (definition of D at the Yukawa pole; see PY Baxter factor):
+```
+= 12η·L·exp(-z·d)·(D+S)/D² · exp(z(d-r))
+= 12η·L·(D+S)/D² · exp(z·d·(-1+1-r/d))
+= 12η·L·(D+S)/D² · exp(-z·r)
+```
+
+Step 3 — `exp(-z·r) ≤ 1` for r > 0, z > 0:
+```
+|(1-G²)·exp(z(d-r))| ≤ 12η·|L|·|D+S|/D²
+```
+This is O(1) for physical parameters (η < 1, D ≠ 0, S and L bounded rational functions).
+
+**Proof strategy:**
+```lean
+calc |(1 - G²) * Real.exp (z * (d - r))|
+    = |D - S| * |D + S| / D² * Real.exp (z * (d - r))   := by ring_nf
+    _ = 12 * eta * |L z d| * Real.exp (-z * d) * |D + S| / D² * Real.exp (z * d - z * r)   := by rw [hDS]
+    _ = 12 * eta * |L z d| * |D + S| / D² * Real.exp (-z * r)   := by ring_nf
+    _ ≤ 12 * eta * |L z d| * |D + S| / D²   := by apply mul_le_of_le_one_right; exact Real.exp_le_one (neg_nonpos.mpr (mul_nonneg hz.le hr₀.le))
+```
+
+**Why it matters:** This is the mathematical reason N=1 is well-conditioned while N=2 unlike
+pairs diverge. The cancellation `exp(-z·d)·exp(z·d) = 1` comes from `D - S = 12η·L·exp(-z·d)`,
+which encodes the PY core-closure boundary condition at r = d. For unlike pairs (i ≠ j), the
+analogous quantity `G_{ij} ≈ 0` (no algebraic structure forces `(1-G²)` small), so
+`(1-G²)·exp(z·R_{ij}) ≈ exp(z·R_{ij})` grows without bound.
+
+**Depends on:** C.1, Task 4.2 (`g + a·exp(-z·d) = 1` → `|G| < 1`), B.3 (`1-g² = 2acg`), M.2.
+`hDS : D - S = 12 * eta * L * Real.exp (-z * d)` follows directly from `hD_def` (Task 4.2), so no
+extra hypothesis is needed.
+
+**Status:** ✓ DONE (2026-07-15), axiom-clean — `c1_n1_twoexp_bounded` in
+`LeanCode/YukawaDCF/SingleCompReduction.lean`.  Abstract in `S, L, D, eta, z, d, r`: `calc` chain
+`(1−(S/D)²) = (D−S)(D+S)/D²`, `D−S = 12ηL·exp(−zd)` (from `hD_def`), exp-cancellation
+`exp(−zd)·exp(z(d−r)) = exp(−zr)`, then `abs` + `Real.exp_le_one`.  Proved bound is actually
+`12η|L||D+S|/D²` (half the stated factor-2 form).
+
+---
+
+### Task C.5 — K·G·exp is the exact leading Yukawa-pole residue (added 2026-07-15)
+
+**Statement:** In multicomponent Yukawa MSA (Blum 1975), the leading residue of `c^(1)_{ij}(r)`
+at the Yukawa pole `s = z_t` (from the Baxter–Wertheim Laplace inversion) is exactly, for an
+unlike pair `i ≠ j` and `r < R_{ij}`:
+```
+c^(1)_{ij}(r)  ∋  K_t · [Q̂₀(z_t)⁻¹]_{ij} · exp(−z_t·(r − R_{ij}))
+```
+where `[Q̂₀(z_t)⁻¹]_{ij} = G_{ij}(z_t)` is the (i,j) entry of the inverse Q̂₀ matrix (the GA-matrix G).
+
+**Proof sketch:**
+1. Blum 1975 Laplace-space OZ: `ĉ^(1)_{ij}(s)` has poles at `s = z_t` (Yukawa) and at `s = s_k`
+   (zeros of `det Q̂₀`, the HS poles).
+2. Near `s = z_t` for an unlike pair (i ≠ j): the numerator → `K_t·[adj Q̂₀(z_t)]_{ij}`, so the
+   residue `= K_t·[adj Q̂₀(z_t)]_{ij} / det Q̂₀(z_t)` simplifies to `K_t·G_{ij}(z_t)`. (Full
+   partial-fraction derivation from Blum's formula needed.)
+3. Inverse Laplace of the residue at `s = z_t` → `K_t·G_{ij}·exp(−z_t·r)`.
+4. N=1 consistency: for `i = j = 0`, `G₀₀ = (1−g²)·…` reduces to the FMSA_pure formula (C.1).
+
+**Why it matters:** Validates `get_c1_inner` in `fmsa_hs_pole_residue.py` at leading order and
+explains the numerically observed `ĉ₁₂ ≈ 0` for Route C at σ-ratio = 2 as **expected, not a bug**:
+`G₀₁ ≈ 0` (GA.2) kills the inner `K·G·exp` contribution by construction, so the remaining 2YK error
+(`ĉ₁₂ = +0.15` vs GCMC `−22.07`) is entirely in the **outer-region** `K₀₁` values (same root cause
+as `ĉ₂₂ = +8174` for like pair (2,2)) — fixing it needs better `K₀₁` (poly-term / GCMC fit / OZ
+self-consistency), not a different inner formula. If C.5 were *disproved*, an additional inner-core
+term beyond `K·G·exp` would be required.
+
+**Depends on:** B.2 (Q̂₀ structure), M.3/M.4 (G/A matrices); requires Blum 1975's explicit
+Laplace-space formula for multicomponent Yukawa MSA (or an independent derivation).
+**Effort:** medium-high.
+
+**Status:** ◑ conditional core DONE (2026-07-15), axiom-clean —
+`LeanCode/YukawaDCF/YukawaPoleResidue.lean`:
+- `g_entry_eq_adj_div_det` — the matrix-algebra identity `[Q̂₀⁻¹]_{ij} = adj(Q̂₀)_{ij}/det Q̂₀`
+  (`Matrix.inv_def`), i.e. the `= K_t·G_{ij}(z_t)` simplification.
+- `c5_residue_eq_K_mul_Ginv` — the residue assembly: given the Blum simple-pole shape near `z_t`
+  (`N/D`, simple zero, `N(z_t)/D'(z_t) = K_t·[Q̂₀(z_t)⁻¹]_{ij}` as the explicit hypothesis `hblum`),
+  the residue-defining limit `(s−z_t)·(N/D) → K_t·(adj/det)`.  Reuses
+  `FMSA.HardSphere.residue_of_simple_pole` (`BaxterResidue.lean`).
+
+**Deferred → concrete C.5 (source located, 2026-07-15).** The Laplace-space form needed to discharge
+`hblum` is in the **[LN] lecture notes** (`pdf/lecture_notes_OZ_Yukawa_poly.pdf`, Tang & Lu 1995),
+explicitly and in `s = −ik`:
+- **Eq. (10)** — the complex Baxter matrix `{Q̂₀(s)}_{ij} = δ_{ij} − (ρ_iρ_j)^{1/2}·e^{−sλ_{ij}}·
+  [φ₁(R_i)Q'_{ij} + φ₂(R_i)Q''_j]` (extends the codebase's real `Q0_mat` to complex `s`);
+- **Eq. (14)** — `{[Q̂₀(s)]⁻¹}_{ij} = δ_{ij} + 2π(ρ_iρ_j)^{1/2}·W_{ij}(s)/(Δ·det(s))·e^{−sλ_{ij}}`,
+  the GA-matrix `G` with the `adj/det(s)` structure (⇒ `g_entry_eq_adj_div_det`), and `det(s)` Eq. (16);
+- **§6.4.1** (spectral amplitude `b_{ij}(s)`) + **§8.1** (Laplace-space RDF) — the Yukawa-pole form of
+  `ĥ^(1)/ĉ^(1)_{ij}(s)` whose residue at `s = z_t` gives `K_t·G_{ij}(z_t)`, discharging `hblum`.
+
+**Concrete single-tail residue — DONE (2026-07-15), and a correction.** Reading the [LN] §6.4
+derivation to the end (Eq. 73) shows the spectral amplitude `b_{ij}(s)` — the residue-carrying
+object in `Ĥ₁ = [Q̂₀ᵀ]⁻¹B₁[Q̂₀]⁻¹` (Eq. 68) — is, for a **single tail** (common `z`),
+```
+b_{ij}(s) = [(I+A)·K·(I+A)ᵀ]_{ij}/(s+z) = [Q̂₀(z)⁻¹·K·Q̂₀(z)⁻ᵀ]_{ij}/(s+z)   (since I+A = Q̂₀⁻¹, Eq. 70).
+```
+So the exact Yukawa-pole residue is the **doubly-propagated** `[Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij}` — `K` sandwiched
+by **two** inverse-Baxter factors — **not** the linear `K·G_{ij}` of the numerical shorthand. Proved
+axiom-clean in `LeanCode/YukawaDCF/SpectralAmplitude.lean`:
+- `spectralAmp_residue` — `Res_{s=−z} b_{ij}(s) = [Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij}` (elementary rational-function
+  residue: `(s+z)·[N/(s+z)] → N`);
+- `spectralAmp_residue_n1` — at `N=1` the residue is `K·G²`, making the "`K·G` vs exact" gap explicit.
+
+⇒ **Correction (→ `to_python.md`):** Route-C's `get_c1_inner` `K·G·exp` is a *leading-order
+approximation* of the exact `Q̂₀⁻¹·K·Q̂₀⁻ᵀ`, not the exact leading residue.
+
+**Promoted to Group Y1 (2026-07-15).** The full concrete-C.5 derivation — the *derivation* of `b_{ij}`
+from the first-order OZ equation via the Wiener–Hopf split (§6.1–§6.4) — was a Group-BAXTER-scale body
+of work, so it was promoted to its own **Group Y1** (records: [proof_notes_yukawa_wh.md]). Status of
+the pieces that were "still deferred" here:
+- **Complex `Q̂₀(s:ℂ)` (Eq. 10)** — ✓ DONE as **Y1.1** (`q0_entry_c`, `Q0_mat_c`,
+  `inv_apply_eq_adj_div_det`, `Q0Complex.lean`), so `A_{ij}(z)=[Q̂₀(z)⁻¹]_{ij}−δ` is now a *derived*
+  matrix, not a parameter.
+- **Spectral amplitude `b_{ij}(s)` (Eq. 73)** — ✓ single-tail exact residue + multi-tail collapse
+  DONE as **Y1.5** (`spectralAmp_residue`/`_n1`, `bMulti`, `bMulti_single_residue`); general
+  distinct-`z_{αβ}` still open.
+- **Assembly `Ĥ₁=[Q̂₀ᵀ]⁻¹B₁[Q̂₀]⁻¹` (Eq. 68)** — ✓ DONE as **Y1.6** (`Hhat1`, `Hhat1_spec`,
+  `Hhat1_residue`, `YukawaWienerHopf.lean`).
+- **The Wiener–Hopf derivation of `b_{ij}`** — staged as **Y1.3**, and **re-routed off the Hilbert
+  transform** ([LN] §6.3's literal P.V./Sokhotski–Plemelj presentation; Mathlib lacks that machinery)
+  to the codebase's algebraic-split + support + residue method. **Y1.3a** (the WH support lemmas,
+  `WHSupports.lean`) is ✓ DONE; the remaining crux is **Y1.3b** (FT injectivity / support-orthogonality).
+
+So the old "C.5 (concrete)" tracking label is retired → **see Group Y1** for live status.
+
+---
+
+### Tasks GA.1, GA.2 (formerly C.3, C.4) — moved to Group GA (failure analysis)
+
+The unlike-pair **divergence** results — GA.1 (`K·exp(z·R)` unbounded; additive HS-pole sum cannot
+cancel it) and GA.2 (off-diagonal `G_{01}→0` as the structural root cause) — are failure analyses of
+FMSA_GA_matrix_mix's own inner formula, so their full records now live in `proof_notes_failures.md`
+**Group GA — FMSA_GA_matrix_mix Inner-Core Conditioning Failure**. They are renumbered to the
+group-local `GA.1`/`GA.2` (formerly `C.3`/`C.4`); the record location moved too. The positive
+counterparts C.2 (above) and C.5 (above) stay here in Group C.
 
 ---
 

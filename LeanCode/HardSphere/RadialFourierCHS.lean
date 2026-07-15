@@ -26,7 +26,8 @@ analytic-continuation/identity-theorem machinery.
 That needs inverting the closed-form-in-`k` Fourier-domain OZ solution back to real space
 (residue calculus / the classical PY closed-form solution) — a multi-session undertaking
 comparable to the Baxter Wiener–Hopf work already flagged elsewhere as out of scope. See
-`proof_notes_hard_sphere.md` Task OZ.8 for the full scoping discussion.
+`proof_notes_hard_sphere.md` Task OZ.8 for the full scoping discussion (Part C was eventually
+supplied by a different route — see "Piece C" below, Task `BAXTER.7`, `proof_notes_baxter.md`).
 -/
 
 open MeasureTheory Set Real intervalIntegral
@@ -315,5 +316,292 @@ theorem radial_fourier_c_HS_eq_C_HS_laplace_expr (eta sigma k : ℝ)
     Complex.im_ofNat]
   field_simp
   ring
+
+/-! ### Piece C (Task BAXTER.7, formerly Task OZ.16) — large-`k` asymptotic of `Ĉ(k)` and `Ĥ(k)`
+
+`radial_fourier_c_HS_formula` (Piece A) gives an *exact* closed form for
+`Ĉ(k) := radial_fourier (c_HS eta sigma) k`. Expanding it out isolates the leading `cos(kσ)/k²`
+term exactly, leaving a genuinely bounded (not just asserted) remainder of order `1/k³` — pure
+finite algebra, cross-checked with `sympy` before this write-up. Combined with `Ĉ(k) → 0`, the
+same bound propagates to `Ĥ(k) := Ĉ(k)/(1-ρĈ(k))`, supplying Task BAXTER.7
+(`proof_notes_baxter.md`). -/
+
+/-- **`Ĉ(k)`'s leading `cos(kσ)/k²` coefficient.** Already known in closed form via `py_f1_eq`
+(`PYDCF.lean`) to equal `(1+η/2)/(1-η)²`. -/
+noncomputable def cHS_leading_coeff (eta : ℝ) : ℝ := py_a0 eta + py_a1 eta + py_a3 eta
+
+/-- **Exact remainder identity (Task BAXTER.7, step 1).** `Ĉ(k)` minus its `cos(kσ)/k²` leading
+term is exactly `(4π/k³)` times a finite trig-and-inverse-power expression — pure algebra on
+`radial_fourier_c_HS_formula`, cross-checked with `sympy` before this write-up. -/
+theorem radial_fourier_c_HS_remainder_eq (eta sigma k : ℝ) (hsigma : 0 < sigma) (hk : k ≠ 0) :
+    radial_fourier (c_HS eta sigma) k -
+      4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2 =
+    (4 * Real.pi / k ^ 3) *
+      ((-(py_a0 eta) - 2 * py_a1 eta - 4 * py_a3 eta) * Real.sin (k * sigma) +
+        (-(2 * py_a1 eta + 12 * py_a3 eta) / sigma) * (Real.cos (k * sigma) / k) +
+        (2 * py_a1 eta / sigma) / k +
+        (24 * py_a3 eta / sigma ^ 2) * (Real.sin (k * sigma) / k ^ 2) +
+        (24 * py_a3 eta / sigma ^ 3) * (Real.cos (k * sigma) / k ^ 3) -
+        (24 * py_a3 eta / sigma ^ 3) / k ^ 3) := by
+  unfold cHS_leading_coeff
+  rw [radial_fourier_c_HS_formula eta sigma k hsigma hk]
+  field_simp
+  ring
+
+/-- Uniform bound on a term `c * (t / k ^ n)` with `|t| ≤ 1`, for `k ≥ 1`. -/
+private lemma abs_coeff_mul_div_pow_le (c t k : ℝ) (n : ℕ) (hk : 1 ≤ k) (ht : |t| ≤ 1) :
+    |c * (t / k ^ n)| ≤ |c| := by
+  have hkn : (1 : ℝ) ≤ k ^ n := one_le_pow₀ hk
+  have hkn0 : (0 : ℝ) < k ^ n := lt_of_lt_of_le one_pos hkn
+  rw [abs_mul, abs_div, abs_of_pos hkn0]
+  have h1 : |t| / k ^ n ≤ 1 := (div_le_one hkn0).2 (ht.trans hkn)
+  calc |c| * (|t| / k ^ n) ≤ |c| * 1 := mul_le_mul_of_nonneg_left h1 (abs_nonneg c)
+    _ = |c| := mul_one _
+
+/-- **Bound constant for Task BAXTER.7's `O(1/k³)` remainder** — literally the sum of the absolute
+values of the six coefficients appearing in `radial_fourier_c_HS_remainder_eq`'s bracket. -/
+noncomputable def cHS_remainder_bound (eta sigma : ℝ) : ℝ :=
+  |(-(py_a0 eta) - 2 * py_a1 eta - 4 * py_a3 eta)| +
+  |(-(2 * py_a1 eta + 12 * py_a3 eta) / sigma)| +
+  |2 * py_a1 eta / sigma| +
+  |24 * py_a3 eta / sigma ^ 2| +
+  |24 * py_a3 eta / sigma ^ 3| +
+  |24 * py_a3 eta / sigma ^ 3|
+
+theorem cHS_remainder_bound_nonneg (eta sigma : ℝ) : 0 ≤ cHS_remainder_bound eta sigma := by
+  unfold cHS_remainder_bound; positivity
+
+/-- **Task BAXTER.7, step 2:** the remainder bracket in `radial_fourier_c_HS_remainder_eq` is
+bounded, uniformly in `k ≥ 1`, by the explicit constant `cHS_remainder_bound`. -/
+theorem cHS_remainder_bracket_bound (eta sigma k : ℝ) (hk : 1 ≤ k) :
+    |(-(py_a0 eta) - 2 * py_a1 eta - 4 * py_a3 eta) * Real.sin (k * sigma) +
+        (-(2 * py_a1 eta + 12 * py_a3 eta) / sigma) * (Real.cos (k * sigma) / k) +
+        (2 * py_a1 eta / sigma) / k +
+        (24 * py_a3 eta / sigma ^ 2) * (Real.sin (k * sigma) / k ^ 2) +
+        (24 * py_a3 eta / sigma ^ 3) * (Real.cos (k * sigma) / k ^ 3) -
+        (24 * py_a3 eta / sigma ^ 3) / k ^ 3| ≤ cHS_remainder_bound eta sigma := by
+  have hk0 : (0 : ℝ) < k := lt_of_lt_of_le one_pos hk
+  have hs : |Real.sin (k * sigma)| ≤ 1 := Real.abs_sin_le_one _
+  have hc : |Real.cos (k * sigma)| ≤ 1 := Real.abs_cos_le_one _
+  have hT1 : |(-(py_a0 eta) - 2 * py_a1 eta - 4 * py_a3 eta) * Real.sin (k * sigma)| ≤
+      |(-(py_a0 eta) - 2 * py_a1 eta - 4 * py_a3 eta)| := by
+    rw [abs_mul]; exact mul_le_of_le_one_right (abs_nonneg _) hs
+  have hT2 : |(-(2 * py_a1 eta + 12 * py_a3 eta) / sigma) * (Real.cos (k * sigma) / k)| ≤
+      |(-(2 * py_a1 eta + 12 * py_a3 eta) / sigma)| := by
+    have h := abs_coeff_mul_div_pow_le (-(2 * py_a1 eta + 12 * py_a3 eta) / sigma)
+      (Real.cos (k * sigma)) k 1 hk hc
+    rwa [pow_one] at h
+  have hT3 : |(2 * py_a1 eta / sigma) / k| ≤ |2 * py_a1 eta / sigma| := by
+    rw [abs_div, abs_of_pos hk0]
+    exact div_le_self (abs_nonneg _) hk
+  have hT4 : |(24 * py_a3 eta / sigma ^ 2) * (Real.sin (k * sigma) / k ^ 2)| ≤
+      |24 * py_a3 eta / sigma ^ 2| :=
+    abs_coeff_mul_div_pow_le (24 * py_a3 eta / sigma ^ 2) (Real.sin (k * sigma)) k 2 hk hs
+  have hT5 : |(24 * py_a3 eta / sigma ^ 3) * (Real.cos (k * sigma) / k ^ 3)| ≤
+      |24 * py_a3 eta / sigma ^ 3| :=
+    abs_coeff_mul_div_pow_le (24 * py_a3 eta / sigma ^ 3) (Real.cos (k * sigma)) k 3 hk hc
+  have hT6 : |(24 * py_a3 eta / sigma ^ 3) / k ^ 3| ≤ |24 * py_a3 eta / sigma ^ 3| := by
+    have hk3 : (0 : ℝ) < k ^ 3 := by positivity
+    rw [abs_div, abs_of_pos hk3]
+    exact div_le_self (abs_nonneg _) (one_le_pow₀ hk)
+  have e1 := abs_le.mp hT1
+  have e2 := abs_le.mp hT2
+  have e3 := abs_le.mp hT3
+  have e4 := abs_le.mp hT4
+  have e5 := abs_le.mp hT5
+  have e6 := abs_le.mp hT6
+  rw [abs_le]
+  unfold cHS_remainder_bound
+  constructor <;> linarith [e1.1, e1.2, e2.1, e2.2, e3.1, e3.2, e4.1, e4.2, e5.1, e5.2, e6.1, e6.2]
+
+/-- **Task BAXTER.7, step 3 (assembly):** `Ĉ(k)` deviates from its `cos(kσ)/k²` leading term by
+at most `(4π·cHS_remainder_bound)/k³`, for all `k ≥ 1`. -/
+theorem radial_fourier_c_HS_remainder_le (eta sigma k : ℝ) (hsigma : 0 < sigma) (hk : 1 ≤ k) :
+    |radial_fourier (c_HS eta sigma) k -
+        4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2| ≤
+      4 * Real.pi * cHS_remainder_bound eta sigma / k ^ 3 := by
+  have hk0 : (0 : ℝ) < k := lt_of_lt_of_le one_pos hk
+  rw [radial_fourier_c_HS_remainder_eq eta sigma k hsigma hk0.ne']
+  rw [abs_mul, abs_of_pos (by positivity : (0:ℝ) < 4 * Real.pi / k ^ 3)]
+  have hbound := cHS_remainder_bracket_bound eta sigma k hk
+  have hpos : (0:ℝ) ≤ 4 * Real.pi / k ^ 3 := by positivity
+  calc 4 * Real.pi / k ^ 3 * _ ≤ 4 * Real.pi / k ^ 3 * cHS_remainder_bound eta sigma :=
+        mul_le_mul_of_nonneg_left hbound hpos
+    _ = 4 * Real.pi * cHS_remainder_bound eta sigma / k ^ 3 := by ring
+
+/-- **`Ĉ(k) = O(1/k²)`, with an explicit constant.** -/
+noncomputable def cHS_bound (eta sigma : ℝ) : ℝ :=
+  4 * Real.pi * sigma * |cHS_leading_coeff eta| + 4 * Real.pi * cHS_remainder_bound eta sigma
+
+theorem cHS_bound_nonneg (eta sigma : ℝ) (hsigma : 0 < sigma) : 0 ≤ cHS_bound eta sigma := by
+  unfold cHS_bound
+  have h1 : (0:ℝ) ≤ 4 * Real.pi * sigma * |cHS_leading_coeff eta| := by positivity
+  have h2 : (0:ℝ) ≤ 4 * Real.pi * cHS_remainder_bound eta sigma :=
+    mul_nonneg (by positivity) (cHS_remainder_bound_nonneg eta sigma)
+  linarith
+
+theorem radial_fourier_c_HS_le (eta sigma k : ℝ) (hsigma : 0 < sigma) (hk : 1 ≤ k) :
+    |radial_fourier (c_HS eta sigma) k| ≤ cHS_bound eta sigma / k ^ 2 := by
+  have hk0 : (0 : ℝ) < k := lt_of_lt_of_le one_pos hk
+  have hrem := radial_fourier_c_HS_remainder_le eta sigma k hsigma hk
+  have hk2pos : (0:ℝ) < k ^ 2 := by positivity
+  have hlead : |4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2| ≤
+      4 * Real.pi * sigma * |cHS_leading_coeff eta| / k ^ 2 := by
+    rw [show (4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2 : ℝ) =
+        (4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma)) / k ^ 2 from
+      by ring,
+      abs_div, abs_of_pos hk2pos, div_le_div_iff_of_pos_right hk2pos]
+    have hXeq : |4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma)| =
+        4 * Real.pi * sigma * |cHS_leading_coeff eta| * |Real.cos (k * sigma)| := by
+      rw [abs_mul, abs_mul, abs_of_pos (by positivity : (0:ℝ) < 4 * Real.pi * sigma)]
+    rw [hXeq]
+    calc 4 * Real.pi * sigma * |cHS_leading_coeff eta| * |Real.cos (k * sigma)| ≤
+        4 * Real.pi * sigma * |cHS_leading_coeff eta| * 1 :=
+          mul_le_mul_of_nonneg_left (Real.abs_cos_le_one _) (by positivity)
+      _ = 4 * Real.pi * sigma * |cHS_leading_coeff eta| := mul_one _
+  have htri : |radial_fourier (c_HS eta sigma) k| ≤
+      |4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2| +
+      |radial_fourier (c_HS eta sigma) k -
+        4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2| := by
+    have h := abs_add_le
+      (4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2)
+      (radial_fourier (c_HS eta sigma) k -
+        4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2)
+    have heq2 : 4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2 +
+        (radial_fourier (c_HS eta sigma) k -
+          4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2) =
+        radial_fourier (c_HS eta sigma) k := by ring
+    rwa [heq2] at h
+  have hk23 : k ^ 2 ≤ k ^ 3 := pow_le_pow_right₀ hk (by norm_num : 2 ≤ 3)
+  have hb_nonneg : (0:ℝ) ≤ 4 * Real.pi * cHS_remainder_bound eta sigma :=
+    mul_nonneg (by positivity) (cHS_remainder_bound_nonneg eta sigma)
+  have hk3le : 4 * Real.pi * cHS_remainder_bound eta sigma / k ^ 3 ≤
+      4 * Real.pi * cHS_remainder_bound eta sigma / k ^ 2 :=
+    div_le_div_of_nonneg_left hb_nonneg (by positivity) hk23
+  unfold cHS_bound
+  rw [add_div]
+  linarith [htri, hlead, hrem, hk3le]
+
+/-- **`Ĥ(k) = Ĉ(k)/(1-ρĈ(k))`** — the closed-form Fourier-domain OZ solution (Task BAXTER.7's
+main object), matching `oz_fourier_oz_eq_of_PY_core`'s `H·(1-ρC)=C` identity when the
+denominator is nonzero. -/
+noncomputable def Hhat_closed (eta sigma rho k : ℝ) : ℝ :=
+  radial_fourier (c_HS eta sigma) k / (1 - rho * radial_fourier (c_HS eta sigma) k)
+
+/-- **Task BAXTER.7 (main theorem).** For `k` past an explicit threshold (depending on
+`eta,sigma,rho`), `Ĥ(k)` deviates from its `cos(kσ)/k²` leading term — coefficient
+`4πσ(α0+α1+α3) = 4πσ(1+η/2)/(1-η)²` via `py_f1_eq` — by at most an explicit `O(1/k³)` bound. -/
+theorem Hhat_closed_asymptotic (eta sigma rho k : ℝ) (hsigma : 0 < sigma)
+    (hk : 1 + 2 * |rho| * cHS_bound eta sigma ≤ k) :
+    |Hhat_closed eta sigma rho k -
+        4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2| ≤
+      (2 * |rho| * cHS_bound eta sigma ^ 2 + 4 * Real.pi * cHS_remainder_bound eta sigma) /
+        k ^ 3 := by
+  set K := cHS_bound eta sigma with hKdef
+  have hKnn : 0 ≤ K := cHS_bound_nonneg eta sigma hsigma
+  have hk1 : (1 : ℝ) ≤ k := by nlinarith [mul_nonneg (abs_nonneg rho) hKnn]
+  have hk0 : (0 : ℝ) < k := lt_of_lt_of_le one_pos hk1
+  have hCbound : |radial_fourier (c_HS eta sigma) k| ≤ K / k ^ 2 :=
+    radial_fourier_c_HS_le eta sigma k hsigma hk1
+  have hkk : k ≤ k ^ 2 := by
+    have h := pow_le_pow_right₀ hk1 (by norm_num : 1 ≤ 2)
+    rwa [pow_one] at h
+  have hk2ge : 2 * |rho| * K ≤ k ^ 2 := by linarith [hk, hkk]
+  have hk2pos : (0 : ℝ) < k ^ 2 := by positivity
+  have h2 : |rho| * (K / k ^ 2) ≤ 1 / 2 := by
+    rw [mul_div_assoc', div_le_iff₀ hk2pos]
+    linarith [hk2ge]
+  have hrhoC : |rho * radial_fourier (c_HS eta sigma) k| ≤ 1 / 2 := by
+    rw [abs_mul]
+    calc |rho| * |radial_fourier (c_HS eta sigma) k| ≤ |rho| * (K / k ^ 2) :=
+          mul_le_mul_of_nonneg_left hCbound (abs_nonneg rho)
+      _ ≤ 1 / 2 := h2
+  have hdenom_ge : (1 : ℝ) / 2 ≤ |1 - rho * radial_fourier (c_HS eta sigma) k| := by
+    have h := abs_sub_abs_le_abs_sub (1 : ℝ) (rho * radial_fourier (c_HS eta sigma) k)
+    rw [abs_one] at h
+    linarith [hrhoC, h]
+  have hdenom_pos : (0 : ℝ) < |1 - rho * radial_fourier (c_HS eta sigma) k| := by linarith
+  have hne : (1 - rho * radial_fourier (c_HS eta sigma) k) ≠ 0 := abs_pos.mp hdenom_pos
+  have hne' : (1 - radial_fourier (c_HS eta sigma) k * rho) ≠ 0 := by
+    rw [mul_comm]; exact hne
+  have hHC : Hhat_closed eta sigma rho k - radial_fourier (c_HS eta sigma) k =
+      rho * (radial_fourier (c_HS eta sigma) k) ^ 2 /
+        (1 - rho * radial_fourier (c_HS eta sigma) k) := by
+    unfold Hhat_closed
+    field_simp
+    ring
+  have hCsq : (radial_fourier (c_HS eta sigma) k) ^ 2 ≤ (K / k ^ 2) ^ 2 := by
+    rw [← sq_abs (radial_fourier (c_HS eta sigma) k)]
+    exact pow_le_pow_left₀ (abs_nonneg _) hCbound 2
+  have hstep1 : |Hhat_closed eta sigma rho k - radial_fourier (c_HS eta sigma) k| ≤
+      2 * |rho| * K ^ 2 / k ^ 4 := by
+    rw [hHC, abs_div, abs_mul, abs_of_nonneg (sq_nonneg (radial_fourier (c_HS eta sigma) k))]
+    have hnum_nonneg : (0:ℝ) ≤ |rho| * (radial_fourier (c_HS eta sigma) k) ^ 2 := by positivity
+    have hstepA : |rho| * (radial_fourier (c_HS eta sigma) k) ^ 2 /
+        |1 - rho * radial_fourier (c_HS eta sigma) k| ≤
+        2 * (|rho| * (radial_fourier (c_HS eta sigma) k) ^ 2) := by
+      have h := div_le_div_of_nonneg_left hnum_nonneg (by norm_num : (0:ℝ) < 1/2) hdenom_ge
+      calc |rho| * (radial_fourier (c_HS eta sigma) k) ^ 2 /
+          |1 - rho * radial_fourier (c_HS eta sigma) k|
+          ≤ |rho| * (radial_fourier (c_HS eta sigma) k) ^ 2 / (1/2) := h
+        _ = 2 * (|rho| * (radial_fourier (c_HS eta sigma) k) ^ 2) := by ring
+    have hstepB : 2 * (|rho| * (radial_fourier (c_HS eta sigma) k) ^ 2) ≤
+        2 * |rho| * K ^ 2 / k ^ 4 := by
+      have h2sq : |rho| * (radial_fourier (c_HS eta sigma) k) ^ 2 ≤ |rho| * (K / k ^ 2) ^ 2 :=
+        mul_le_mul_of_nonneg_left hCsq (abs_nonneg rho)
+      have heq : 2 * (|rho| * (K / k ^ 2) ^ 2) = 2 * |rho| * K ^ 2 / k ^ 4 := by
+        rw [div_pow]; ring
+      linarith [h2sq, heq]
+    exact hstepA.trans hstepB
+  have hk34 : k ^ 3 ≤ k ^ 4 := pow_le_pow_right₀ hk1 (by norm_num : 3 ≤ 4)
+  have hk34le : 2 * |rho| * K ^ 2 / k ^ 4 ≤ 2 * |rho| * K ^ 2 / k ^ 3 :=
+    div_le_div_of_nonneg_left (by positivity) (by positivity) hk34
+  have hrem := radial_fourier_c_HS_remainder_le eta sigma k hsigma hk1
+  have hfinal : |Hhat_closed eta sigma rho k -
+        4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2| ≤
+      |Hhat_closed eta sigma rho k - radial_fourier (c_HS eta sigma) k| +
+      |radial_fourier (c_HS eta sigma) k -
+        4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2| := by
+    have h := abs_add_le (Hhat_closed eta sigma rho k - radial_fourier (c_HS eta sigma) k)
+      (radial_fourier (c_HS eta sigma) k -
+        4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2)
+    have heq2 : (Hhat_closed eta sigma rho k - radial_fourier (c_HS eta sigma) k) +
+        (radial_fourier (c_HS eta sigma) k -
+          4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2) =
+        Hhat_closed eta sigma rho k -
+          4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2 := by ring
+    rwa [heq2] at h
+  rw [add_div]
+  linarith [hfinal, hstep1, hk34le, hrem]
+
+/-- **`1-ρĈ(k) ≠ 0` for `k` past the same explicit threshold used in `Hhat_closed_asymptotic`.**
+Extracted as its own reusable fact (Task BAXTER.8 needs it directly, to turn
+`oz_fourier_oz_eq_of_PY_core`'s `H·(1-ρC)=C` identity into `H=C/(1-ρC)=Hhat_closed`). -/
+theorem one_sub_rho_mul_radial_fourier_c_HS_ne_zero (eta sigma rho k : ℝ) (hsigma : 0 < sigma)
+    (hk : 1 + 2 * |rho| * cHS_bound eta sigma ≤ k) :
+    (1 : ℝ) - rho * radial_fourier (c_HS eta sigma) k ≠ 0 := by
+  have hKnn : 0 ≤ cHS_bound eta sigma := cHS_bound_nonneg eta sigma hsigma
+  have hk1 : (1:ℝ) ≤ k := by nlinarith [mul_nonneg (abs_nonneg rho) hKnn]
+  have hCbound : |radial_fourier (c_HS eta sigma) k| ≤ cHS_bound eta sigma / k ^ 2 :=
+    radial_fourier_c_HS_le eta sigma k hsigma hk1
+  have hkk : k ≤ k ^ 2 := by
+    have h := pow_le_pow_right₀ hk1 (by norm_num : 1 ≤ 2)
+    rwa [pow_one] at h
+  have hk2ge : 2 * |rho| * cHS_bound eta sigma ≤ k ^ 2 := by linarith [hk, hkk]
+  have hk2pos : (0 : ℝ) < k ^ 2 := by positivity
+  have h2 : |rho| * (cHS_bound eta sigma / k ^ 2) ≤ 1 / 2 := by
+    rw [mul_div_assoc', div_le_iff₀ hk2pos]
+    linarith [hk2ge]
+  have hrhoC : |rho * radial_fourier (c_HS eta sigma) k| ≤ 1 / 2 := by
+    rw [abs_mul]
+    calc |rho| * |radial_fourier (c_HS eta sigma) k| ≤ |rho| * (cHS_bound eta sigma / k ^ 2) :=
+          mul_le_mul_of_nonneg_left hCbound (abs_nonneg rho)
+      _ ≤ 1 / 2 := h2
+  have hdenom_ge : (1 : ℝ) / 2 ≤ |1 - rho * radial_fourier (c_HS eta sigma) k| := by
+    have h := abs_sub_abs_le_abs_sub (1 : ℝ) (rho * radial_fourier (c_HS eta sigma) k)
+    rw [abs_one] at h
+    linarith [hrhoC, h]
+  have hdenom_pos : (0 : ℝ) < |1 - rho * radial_fourier (c_HS eta sigma) k| := by linarith
+  exact abs_pos.mp hdenom_pos
 
 end FMSA.HardSphere
