@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import LeanCode.YukawaDCF.SingleCompReduction
-import LeanCode.YukawaDCF.SingleCompIdentity
+import LeanCode.HardSphere.SingleCompIdentity
 import LeanCode.YukawaDCF.I1I2Integrals
 
 /-!
@@ -34,7 +34,7 @@ r·c^(1)(r)|_{r=0} = Term_I(0) + Term_II(0) + Term_III(0) + p_0
 | p_0 | `-2*K*g*a` | Baxter-forced: equals `K*a^2*exp(-z) - K*(1-g^2)*exp(z)` |
 
 The polynomial constant `p_0 = -2*K*g*a` is algebraically determined by the Baxter Q-matrix
-factorization.  It follows from `g + a*exp(-z) = 1` (Task 4.2) via
+factorization.  It follows from `g + a*exp(-z) = 1` (Task M.9) via
 `sq_of_g_add_a_exp_eq_one` (Task 4.4): `g^2*exp(z) + a^2*exp(-z) + 2*g*a = exp(z)`.
 
 ## Contrast with FMSA_poly (Task P.2)
@@ -87,7 +87,7 @@ lemma b4_I2_vanish_at_zero (alpha z : ℝ) :
 /-- **Task B.4 — Polynomial constant identity:**
 
 The non-polynomial part of [chsY] Eq. 42 at r = 0 equals `2*K*g*a`, where
-`g = S/D`, `a = 12*eta*L/D`, and `g + a*exp(-z) = 1` (Task 4.2).
+`g = S/D`, `a = 12*eta*L/D`, and `g + a*exp(-z) = 1` (Task M.9).
 
 Equivalently, the Baxter-forced polynomial constant is `p_0 = -2*K*g*a`:
 this is what makes the full formula vanish at r = 0.
@@ -115,7 +115,7 @@ theorem b4_origin_bc_abstract (term_i p0 : ℝ)
 /-- **Task B.4 — FMSA_GA_matrix_mix origin BC is automatic (N=1 / single-component):**
 
 For the single-component FMSA_GA_matrix_mix formula ([chsY] Eq. 42) with Baxter scalars
-`g`, `a` satisfying `g + a * exp(-z) = 1` (Task 4.2), and polynomial constant
+`g`, `a` satisfying `g + a * exp(-z) = 1` (Task M.9), and polynomial constant
 `p_0 = -2 * K * g * a` (Baxter-forced), the full formula at r = 0 vanishes:
 
 ```

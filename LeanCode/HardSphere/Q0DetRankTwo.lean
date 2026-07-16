@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.MatrixQ0
+import LeanCode.HardSphere.MatrixQ0
 
 /-!
 # Task M.4 — Rank-2 reduction of `det(Q0_mat_phys)`
@@ -588,5 +588,36 @@ theorem Q0_mat_phys_isUnit_det_of_two_by_two {n : ℕ} {z : ℝ} {sigma rho : Fi
     IsUnit (Q0_mat_phys z sigma rho).det := by
   rw [isUnit_iff_ne_zero, Q0_mat_phys_det_eq_two_by_two hz hvac hrho, Matrix.det_fin_two]
   simpa [Matrix.sub_apply, Matrix.one_apply] using hdet
+
+/-- **Task M.4 — the one open scalar inequality, taken as a NAMED, numerically-verified axiom.**
+For a physical mixture (`0<z`, `η<1` ⇔ `0<vacMix`, `0≤ρᵢ`, `0<σᵢ`) the reduced 2×2 determinant
+`det = (1+a)(1+d) − bc` is strictly positive.
+
+Numerically bulletproof: 20 000 random physical trials give `det ≥ 1` always (min ≈ 1.0000020,
+approached only as `z→∞`); `det(z)` is monotone decreasing in `z` with `det(∞)=1`. The companion
+fact `bc ≥ ad` is *proved* (`moment_ad_le_bc`), so this is **not** Cauchy–Schwarz-closable; the
+residual `O(ρ²) bc−ad ≤ O(ρ)(1+a+d)` bound under `η<1` is the genuinely open piece. Kept as a
+**named** axiom (auditable via `#print axioms`, unlike a `sorry`) so downstream results can build on
+it; **retire when proved** — replace this `axiom` with a `theorem`. Full analysis:
+`numerical_notes/{theory,results}/q0_det_positivity.md`, `verify_q0_det_positivity.py`. -/
+axiom Q0_moment_det_pos {n : ℕ} {z : ℝ} {sigma rho : Fin n → ℝ}
+    (hz : 0 < z) (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i)
+    (hsigma : ∀ i, 0 < sigma i) :
+    0 < (1 - (Vmat z sigma rho * Umat z sigma rho) 0 0) *
+          (1 - (Vmat z sigma rho * Umat z sigma rho) 1 1) -
+        (Vmat z sigma rho * Umat z sigma rho) 0 1 *
+          (Vmat z sigma rho * Umat z sigma rho) 1 0
+
+/-- **Task M.4 (unconditional) — and Task M.3 (unconditional).** `Q0_mat_phys` is invertible for
+every physical mixture, from `Q0_moment_det_pos`. This is the unconditional `det(Q̂₀) ≠ 0` that M.3
+sought (no diagonal-dominance side hypothesis — see `MatrixQ0.lean`'s conditional
+`Q0_mat_phys_isUnit_det_of_diag_dom`) *and* the unconditional M.4. Depends on the `Q0_moment_det_pos`
+axiom; retiring that axiom makes this theorem axiom-clean. -/
+theorem Q0_mat_phys_isUnit_det {n : ℕ} {z : ℝ} {sigma rho : Fin n → ℝ}
+    (hz : 0 < z) (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i)
+    (hsigma : ∀ i, 0 < sigma i) :
+    IsUnit (Q0_mat_phys z sigma rho).det :=
+  Q0_mat_phys_isUnit_det_of_two_by_two hz.ne' hvac.ne' hrho
+    (Q0_moment_det_pos hz hvac hrho hsigma).ne'
 
 end FMSA.MatrixQ0

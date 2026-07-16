@@ -4,7 +4,7 @@ Detailed proof records for method failures:
 - **Group chsY** — why the naive [chsY] Eq. 41 formula fails (wrong (1+A)² coefficient)
 - **Group P** — why polynomial approximation structurally fails for repulsive Yukawa tails
 - **Group GA** — why FMSA_GA_matrix_mix's *own* inner formula is ill-conditioned for unlike pairs
-  at large σ-ratio (Tasks GA.1, GA.2; positive counterparts C.2, C.5 stay in `proof_notes_yukawa_dcf.md` Group C)
+  at large σ-ratio (Tasks GA.1–GA.4; positive counterparts C.2, C.5 stay in `proof_notes_yukawa_dcf.md` Group C)
 
 See `todo_lean.md` for task status summary.
 
@@ -366,8 +366,9 @@ where FMSA_GA_matrix_mix's *own* inner formula breaks down: **unlike pairs at la
 where the two-exponential base `K·exp(z·R_{ij})` diverges and no bounded additive correction can
 rescue it.
 
-The full story has four parts; the two **failure** results are formalized here (GA.1, GA.2), and the
-two **positive** counterparts stay in `proof_notes_yukawa_dcf.md` Group C (C.2, C.5):
+The core story has four parts; the two **failure** results are formalized here (GA.1, GA.2; further
+extended by GA.3/GA.4 below), and the two **positive** counterparts stay in `proof_notes_yukawa_dcf.md`
+Group C (C.2, C.5):
 
 - **C.2** *(Group C — positive)* — for N=1 like pairs an **exp-cancellation** keeps the two-exp
   formula bounded. This is *why* the single-component limit is well-conditioned; it is the
@@ -388,10 +389,12 @@ two **positive** counterparts stay in `proof_notes_yukawa_dcf.md` Group C (C.2, 
   ĉ₁₂ ≈ 0 as *expected*, not a bug.) The concrete derivation now lives in **Group Y1** (Y1.1/Y1.5/Y1.6
   done; Y1.3 = remaining WH split).
 
-**Task IDs.** GA.1 and GA.2 are the group-local task IDs, renumbered 2026-07-15 from their
-original `C.3`/`C.4` when they were split out of Group C into this failure group. Any in-progress
-proof effort keyed to the old `C.3`/`C.4` names should update to `GA.1`/`GA.2`. C.1/C.2/C.5 remain
-in Group C.
+**Task IDs.** GA.1–GA.4 are the group-local task IDs. GA.1/GA.2 were renumbered 2026-07-15 from their
+original `C.3`/`C.4` when they were split out of Group C into this failure group (any in-progress
+proof effort keyed to the old `C.3`/`C.4` names should update to `GA.1`/`GA.2`). **GA.3** (perturbation
+*ratio* unbounded) and **GA.4** (perturbation *series* radius of convergence → 0, formerly `Y2.16`,
+moved here 2026-07-15 in the Group-Y2 split) extend the failure argument from the termwise base bound
+to the ratio and to the resummed series. C.1/C.2/C.5 remain in Group C.
 
 *Source: `fmsa_hs_pole_residue.py` Route C analysis + `_build_pure_refs` bug fix (2026-07-15).*
 
@@ -442,7 +445,7 @@ bound stays the explicit hypothesis `hB` (numerically verified), as planned.
 
 **Physical content:** For N=2, G_{01}(z) = [adj Q̂₀(z)]_{01} / det Q̂₀(z). The numerator
 `[adj Q̂₀]_{01} = -Q̂₀_{10}(z)` (2×2 cofactor) involves an off-diagonal entry of Q̂₀, which
-from B.2's decomposition `Q̂₀ = P̂ + Ê·exp(-z·σ_min)` contributes terms proportional to
+from M.10's decomposition `Q̂₀ = P̂ + Ê·exp(-z·σ_min)` contributes terms proportional to
 `exp(-z·λ_{01}) = exp(-z·(σ₁-σ₀)/2)`. So `G_{01} = O(exp(-z·(σ₁-σ₀)/2)) → 0` as σ₁-σ₀ → ∞.
 
 **Lean statement (scaling limit):**
@@ -452,17 +455,124 @@ theorem g_mat_offdiag_decay (σ₀ σ₁ : ℝ) (hσ : σ₀ < σ₁) :
                    Filter.atTop (nhds 0) := ...
 ```
 
-**Effort:** High — requires analysing the explicit N=2 Q̂₀ matrix formula from B.2,
-expanding the cofactor, and applying exponential-decay dominated-convergence. Depends on
-B.2 (done), M.3/M.4. Priority: lower than C.2/C.5.
+**Effort:** was High — the explicit N=2 `Q̂₀` cofactor + a large-`z` limit argument. Depends on
+M.10 (done), M.3/M.4. Done via a `Tendsto` layer over the M.4 rank-2 apparatus.
 
-**Status:** ◑ decay mechanism DONE (2026-07-15), axiom-clean —
-`LeanCode/YukawaDCF/OffDiagDecay.lean`.  `g_mat_offdiag_decay`: given the numerator's exp-decay
-bound `|num z| ≤ C·exp(−z·λ)` (`λ = (σ₁−σ₀)/2 > 0`) and `den z → L ≠ 0`, the ratio `num/den → 0`
-(squeeze via helper `exp_neg_mul_atTop`, then `Tendsto.div`).  **Deferred (high effort):** discharge
-the two hypotheses from the explicit N=2 `Q0_mat` — prove `|Q̂₀_{01}(z)| ≤ C·exp(−z·(σ₁−σ₀)/2)`
-(B.2) and `det Q̂₀(z) → L ≠ 0` (M.4).
+**Status:** ✓ DONE (2026-07-15), fully axiom-clean. Two files:
+
+*Mechanism* (`LeanCode/YukawaDCF/OffDiagDecay.lean`): `g_mat_offdiag_decay'` (Tendsto form:
+`num→0` + `den→L≠0` ⟹ `num/den→0`, via `Tendsto.div`+`zero_div`) and `g_mat_offdiag_decay`
+(the exp-bound form, now a corollary via `squeeze_zero_norm`).
+
+*Concrete N=2 discharge* (`LeanCode/HardSphere/Q0DetLimit.lean`, all axiom-clean):
+- **atomic** `p1_tendsto_zero` / `p2_tendsto_zero`: `p1(σ,z),p2(σ,z)→0` as `z→∞` (term-split
+  `p1 = 1/z² − σ/z − e^{−zσ}/z²` etc., each `→0`); propagated to `fFun_tendsto_zero`,
+  `gFun_tendsto_zero`.
+- `Q0_mat_phys_offdiag01_tendsto_zero`: `Q0_mat_phys(z) 0 1 → 0` for `σ₀<σ₁`, via
+  `Q0_mat_phys = 1−U·V` + generalized `UV_apply`; entry(0,1) `= −√(ρ₀ρ₁)·exp(−λz)·(fFun 0+gFun 0·σ₁)`
+  with `exp(−λz)→0` and bracket `→0`.
+- `Q0_mat_phys_det_tendsto_one`: `det Q0_mat_phys(z) → 1` via the rank-2 2×2 form
+  (`Q0_mat_phys_det_eq_two_by_two`+`det_fin_two`); the four `Vmat·Umat` entries are `∑ⱼρⱼ(…)→0`
+  (`VU_apply`/`VU_entry_tendsto_zero`), so `det → (1−0)(1−0)−0·0 = 1`. **This gives the nonzero
+  limit `L=1` WITHOUT the `Q0_moment_det_pos` axiom.**
+
+Final: `g_mat_offdiag_decay_concrete` (`OffDiagDecay.lean`): `Q0_mat_phys 0 1 / det → 0`.
+**Design note:** the sketch's literal global bound `|Q̂₀_{01}(z)| ≤ C·exp(−z·(σ₁−σ₀)/2)` was
+*replaced* by the cleaner, sufficient `Tendsto num → 0` — no clean constant `C` exists on all of
+`(0,∞)` since the bracket is `O(1/z)` (blows up as `z→0⁺`). `#print axioms` on all three key
+theorems: `[propext, Classical.choice, Quot.sound]`.
+
+---
+
+### Task GA.3 — FMSA unlike-pair perturbation ratio unbounded; FMSA outside its own convergence domain
+
+**What to prove.** The ratio of the FMSA first-order inner amplitude to the zeroth-order (hard-sphere)
+reference grows without bound as `z·R_{01} → ∞`:
+
+```
+‖c^(1)_{01}(r)‖_∞  /  ‖c_HS_{01}‖_∞  ≥  C · K · exp(z · R_{01})  →  ∞
+```
+
+In plain terms: the "small correction" that FMSA adds is NOT small — it is exponentially large relative
+to the reference. For 2YK parameters (`z₂ ≈ 9.3`, `R_{01} ≈ 1.43`, `|K₂| ≈ 2.32`), the ratio is
+`≳ 2.32 · exp(13.3) ≈ 3.5 × 10⁶`.
+
+**Mathematical content.** This is a direct corollary of GA.1 (`unlike_pair_twoexp_unbounded`:
+`K · exp(z · R_{01}) → ∞`) combined with the observation that `c_HS` is bounded above by a constant
+independent of `z`. Specifically: `c_HS,01` is a piecewise polynomial in `r` whose coefficients
+depend only on the packing fractions and diameters (not on `z`), so `‖c_HS_{01}‖_∞ ≤ M_HS(η, σ)`
+for a fixed bound. Therefore `c^(1)_{01}(r) ≥ K · exp(z · R_{01}) / C_r` at points `r ≈ 0` (from
+the growing exponential branch), while `c_HS` is bounded — ratio → ∞.
+
+**Why this is not just GA.1.** GA.1 proves the absolute amplitude `K·exp(z·R)→∞`; GA.3 phrases this
+as a *relative* statement (first-order / zeroth-order ratio), which is the standard definition of
+"not a small perturbation." GA.3 is the Lean-level bridge connecting the numerical observation
+(OZ+MSA ≠ FMSA for 2YK) to the formal perturbation-theory criterion.
+
+**Lean plan.** Add `perturbation_ratio_unbounded` to `FMSAPoly/PolyApproxFails.lean`:
+1. Quote `unlike_pair_twoexp_unbounded` (GA.1) for the numerator lower bound.
+2. Quote a `c_HS_bounded_above` lemma (the HS FMT DCF is bounded by a `z`-independent constant;
+   if not already in Lean, follows from the polynomial structure of `c_HS` + compact domain).
+3. Combine: `liminf (ratio) ≥ liminf (K·exp(z·R) / M_HS) = +∞`.
+
+**Effort.** Low — almost immediate from GA.1 + a bounded-c_HS lemma.
+
+**Status.** ✓ DONE (2026-07-15), axiom-clean — `perturbation_ratio_unbounded` in
+`FMSAPoly/PolyApproxFails.lean`. Direct corollary of `unlike_pair_twoexp_unbounded` (GA.1) applied at
+target `M·M_HS`: for any `K>0`, fixed `z`-independent HS bound `M_HS>0`, and target `M`, there is a
+state point `(z,R)` with `M ≤ K·exp(z·R)/M_HS`. `M_HS` (the `z`-independent sup bound on `‖c_HS,01‖`)
+is threaded as an explicit hypothesis rather than derived — matching `hs_pole_additive_insufficient`'s
+`hB`. `#print axioms` = `[propext, Classical.choice, Quot.sound]`.
 
 ---
 
 
+### Task GA.4 — *(post-MML.3 Corollary)* Convergence radius of the unlike-pair MSA perturbation series → 0 as z·R → ∞
+
+**Physical motivation.** GA.3 shows FMSA's first-order term is large (not a small perturbation). GA.4
+is the companion series-level statement: even summing all orders, the perturbation series in the Yukawa
+coupling `ε` has zero radius of convergence in the limit `z·R → ∞`. Together GA.3 + GA.4 give the
+complete picture: FMSA is invalid both termwise and as a resummed series at 2YK parameters.
+
+**Mathematical content.** Parameterise `Q̂₀(s, ε)` where `ε` scales the Yukawa interaction (`K_t → ε·K_t`).
+The exact inner-DCF poles `s_k(ε)` are roots of `det(Q̂₀(s,ε)) = 0`. At `ε = 0`, `det = (φ₁φ₂)` with
+roots at `s = z_t` (the Yukawa pole); for `ε > 0`, the roots shift. By holomorphy of `det` in `ε`, the
+radius of convergence of `s_k(ε)` as a power series in `ε` is the distance to the nearest singularity
+of `s_k(ε)`. The key claim:
+
+```
+R_conv(s_k) ≤ C · exp(−z · R_{01})
+```
+
+Mechanism: the Mittag-Leffler poles at `Im(s_k) ≈ k·π/R` (MZERO.1, quasi-periodic family at spacing `π/R`)
+enter as functions of `ε` with an exponentially small coupling `∼ exp(−z·R)` — the same factor that
+makes the unlike-pair inner formula ill-conditioned (the off-diagonal entry `Q̂₀_{01}(s,ε)` contains
+`exp(−z·R)·ε`). As `z·R → ∞`, `exp(−z·R) → 0`, so the poles decouple from the coupling and
+`R_conv → 0`. At 2YK physical parameters: `exp(−z₂·R_{01}) ≈ exp(−13.3) ≈ 2×10⁻⁶`, while
+`|ε_phys| = |K₂| ≈ 2.32` — FMSA is inside the disk but the exact MSA poles lie outside, confirming
+the series diverges.
+
+**Why post-MML.3.** The full statement needs the Mittag-Leffler assembly (MML.3) to identify the physical
+inner DCF as a convergent pole sum; the convergence radius claim then follows from the analytic
+structure of the poles in `ε`. MZERO.1 (pole existence) is sufficient to establish `R_conv > 0`; bounding
+it by `exp(−z·R)` needs the explicit quasi-periodic spacing from MZERO.2–MZERO.7.
+
+**Lean plan.**
+1. Define `Q0_coupling (ε : ℝ) (s : ℂ) := det(Q̂₀(s, ε·K))` — holomorphic in both arguments.
+2. From MZERO.1/MZERO.2–MZERO.7: for each `n`, ∃`s_n(ε)` with `Q0_coupling ε s_n = 0` near `Im ≈ n·π/R`.
+3. Show `|s_n(0) - z| < δ` (at ε=0, roots near the Yukawa poles), then by implicit function theorem
+   (holomorphic IFT, available in Mathlib via `analytic_implicit_function` or similar) `s_n(ε)` is
+   analytic in `ε` in a disk of radius ≥ `C·exp(−z·R)`.
+4. Conclude `R_conv ≤ C·exp(−z·R)` (the poles become non-analytic at `|ε| ∼ exp(−z·R)`).
+5. Specialize to 2YK: `R_conv ≲ 2×10⁻⁶ ≪ |K₂| = 2.32`.
+
+**Depends on.** MZERO.1 (poles exist), MZERO.2–MZERO.7 (quasi-periodic family + spacing `π/R`), MML.3
+(Mittag-Leffler assembly, for the "exact MSA inner DCF" conclusion). The implicit function theorem
+step needs `AnalyticAt` for `Q0_coupling` in both arguments simultaneously (Mathlib has this via
+`AnalyticOn.implicitFunction` or the complex IFT). The `exp(−z·R)` bound needs the off-diagonal
+structure `Q̂₀_{01} = … · exp(−z·R_{01})` (from M.10, `QhatDecomposition.lean`).
+
+**Status.** ☐ not started. Effort: HARD (the analytic IFT + `ε`-coupling parameterization is new
+infrastructure; the quasi-periodic spacing from MZERO.2–MZERO.7 is the key geometric input).
+
+---

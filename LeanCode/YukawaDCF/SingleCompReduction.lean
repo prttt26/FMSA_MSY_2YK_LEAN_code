@@ -7,8 +7,8 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.SingleCompIdentity
-import LeanCode.YukawaDCF.MatrixIdentity
+import LeanCode.HardSphere.SingleCompIdentity
+import LeanCode.HardSphere.MatrixIdentity
 
 /-!
 # Single-component reduction: [chsY] Eq. 42 origin check and factoring  (Task 4.4)
@@ -18,7 +18,7 @@ import LeanCode.YukawaDCF.MatrixIdentity
 r·c(1)(r)/K = e^{-z(r-1)} - [S^2·e^{-z(r-1)} + (12etaL)^2·e^{+z(r-1)} + poly4(r)] / D^2
 ```
 with D = S + 12etaL·e^(-z), S = S(z), L = L(z) the Baxter polynomials ([chsY] Eq. 52).
-Setting g := S/D, a := 12etaL/D (so g+ae^(-z)=1 by Task 4.2), this factors as Eq. 43:
+Setting g := S/D, a := 12etaL/D (so g+ae^(-z)=1 by Task M.9), this factors as Eq. 43:
 ```
 r·c(1)(r)/K = (1-g^2)·e^{-z(r-1)} - a^2·e^{+z(r-1)} + poly4(r)/D^2
 ```
@@ -33,7 +33,7 @@ r·c(1)(r)/K = (1-g^2)·e^{-z(r-1)} - a^2·e^{+z(r-1)} + poly4(r)/D^2
    `e^z - (S^2e^z + M^2e^(-z) + 2SM) / (S + Me^(-z))^2 = 0`
    Physical meaning: r·c(0) must be 0.
 
-3. `sq_of_g_add_a_exp_eq_one` — Task 4.2 implies origin check:
+3. `sq_of_g_add_a_exp_eq_one` — Task M.9 implies origin check:
    `g + ae^(-z) = 1  →  g^2e^z + a^2e^(-z) + 2ga = e^z`
    Proof: from `correction_sq_eq` with the hypothesis h.
 
@@ -90,9 +90,9 @@ theorem f42_zero_at_origin_baxter (eta z S L : ℝ)
   rw [h2SM]
   exact f42_zero_at_origin S (12 * eta * L) z hD
 
-/-! ## 3. Connection to Task 4.2 -/
+/-! ## 3. Connection to Task M.9 -/
 
-/-- **Task 4.2 implies the origin-check identity (Task 4.4):**
+/-- **Task M.9 implies the origin-check identity (Task 4.4):**
 If g + a·e^(-z) = 1, then `g^2·e^z + a^2·e^(-z) + 2·g·a = e^z`.
 Proof: `correction_sq_eq g a z` gives LHS = (g+ae^(-z))^2·e^z; h gives 1·e^z = e^z. -/
 theorem sq_of_g_add_a_exp_eq_one (g a z : ℝ)
@@ -163,8 +163,8 @@ theorem eq41_n1_reduces_to_eq42
 /-- **Task C.1 — N=1 corrected FMSA_GA_matrix_mix = [chsY] Eq. 43 (FMSA_pure):**
 
 For N=1, with Baxter scalars `g`, `a`, shift `c` satisfying `h : g + a * c = 1`
-(from Task 4.2 / M.1), the corrected FMSA_GA_matrix_mix formula uses decaying coefficient
-`(1 - g^2)` and growing coefficient `a^2`.  The key B.3 contact identity confirms
+(from Task M.9 / M.1), the corrected FMSA_GA_matrix_mix formula uses decaying coefficient
+`(1 - g^2)` and growing coefficient `a^2`.  The key M.11 contact identity confirms
 these are consistent at `r = R` (where Em = Ep = 1, `c = exp(-z·sigma_min)`):
 
 ```
@@ -189,7 +189,7 @@ theorem c1_n1_from_mat_identity (S M D c : ℝ)
 /-- **Task C.2 — the N=1 like-pair two-exp formula is bounded (the "exp-cancellation").**
 
 For the single-component Baxter data `g = S/D`, `a = 12ηL/D`, with the defining relation
-`D = S + 12ηL·exp(−z·d)` (Task 4.2 / [chsY] Eq. 44), the growing-exponential factor of the
+`D = S + 12ηL·exp(−z·d)` (Task M.9 / [chsY] Eq. 44), the growing-exponential factor of the
 inner-core coefficient is uniformly controlled:
 ```
 |(1 − (S/D)²) · exp(z(d−r))| ≤ 2 · (12η|L|/D²) · |D + S|.
@@ -206,7 +206,7 @@ and `exp(−z·r) ≤ 1` for `z, r ≥ 0`.  This is the mathematical reason the 
 Group GA), so the base `exp(z·R_{ij})` grows without bound.  The proved constant is actually half
 the stated bound (`12η|L||D+S|/D²`); the factor 2 leaves slack.
 
-**Depends on:** the Task 4.2 relation `D − S = 12ηL·exp(−z·d)` (here as `hD_def`). -/
+**Depends on:** the Task M.9 relation `D − S = 12ηL·exp(−z·d)` (here as `hD_def`). -/
 theorem c1_n1_twoexp_bounded {S L D eta z d r : ℝ}
     (hD_def : D = S + 12 * eta * L * Real.exp (-z * d))
     (hD : D ≠ 0) (heta : 0 < eta) (hz : 0 ≤ z) (hr : 0 ≤ r) :

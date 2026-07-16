@@ -393,12 +393,12 @@ said this case "needs the Fredholm alternative, likely absent from Mathlib." Bot
   `baxter_wiener_hopf_factorization`; `BaxterRealSpace.lean` gives the real-space form). What is
   missing is the explicit inverse/solution from it — `(I−K)=(I−K₊)(I−K₋)`, each one-sided factor
   Volterra (spectral radius 0) hence invertible ⇒ `(I−K)` invertible ⇒ existence+uniqueness — which
-  is exactly Tasks BAXTER.12–13's `h_explicit`. So OZ.10 mid/high is **same-core as, and gated by,
+  is exactly Task POLE.4/Group OZFIX's `h_explicit`. So OZ.10 mid/high is **same-core as, and gated by,
   the BAXTER Wiener–Hopf line**; the missing piece is a concrete construction, not Mathlib-absent
   machinery.
 
 **Status:** ◑ mixed — dilute case (Task OZ.10-dilute) ✓ DONE, no axiom, no sorry; mid/high density
-TRUE but still axiomatic here, gated by the BAXTER line (Baxter factorization BAXTER.3 → BAXTER.12–13
+TRUE but still axiomatic here, gated by the BAXTER line (Baxter factorization BAXTER.3 → POLE.4/Group OZFIX
 explicit inverse), not by any missing Mathlib theory. K's non-compactness rules out the compact
 Fredholm route.
 
@@ -698,7 +698,7 @@ this to derive `g0_HS_contact_value` — which is **not attempted**. That needs 
 closed-form-in-`k` Fourier-domain OZ solution back to real space (residue calculus / the
 classical PY closed-form solution), a multi-session undertaking on the scale of the Baxter
 Wiener–Hopf work (Task `BAXTER.3`) already flagged elsewhere as out of scope. Tracked separately
-as Task `BAXTER.4` (`proof_notes_baxter.md`, Group BAXTER).
+as Task `CONTACT.1` (`proof_notes_baxter.md`, Group BAXTER).
 
 **In Lean:** `LeanCode/HardSphere/RadialFourierCHS.lean` (new file, no sorry, no axiom).
 
@@ -763,8 +763,8 @@ real `s`) via `push_cast; ring`. The main theorem substitutes `s := -Complex.I*k
 
 **Status:** ✓ DONE (Parts A+B) — `LeanCode/HardSphere/RadialFourierCHS.lean`, no sorry, no
 axiom. Part C (bridge to `g0_HS_contact_value`) as originally scoped (full residue inversion) —
-see Task `BAXTER.4`, `proof_notes_baxter.md`; a narrower alternative route succeeded instead, see
-Task `BAXTER.8`.
+see Task `CONTACT.1`, `proof_notes_baxter.md`; a narrower alternative route succeeded instead, see
+Task `CONTACT.5`.
 
 ---
 
@@ -785,8 +785,8 @@ closure) left after Gap A closed — previously an explicit hypothesis `hcore` o
 - **Route B (via Baxter's second relation) — not taken.** Would also unlock
   `g0_HS_contact_value`, but needs a from-primary-source re-derivation first — see
   `proof_notes_baxter.md` Task `BAXTER.2` (full `h(r)`, all `r`) and the narrower Task
-  `BAXTER.5` (contact value only, since achieved via `BAXTER.6`–`8`), both built on Task
-  `BAXTER.3`'s Wiener–Hopf factorization. Task `BAXTER.4` (full residue-calculus inversion of
+  `CONTACT.2` (contact value only, since achieved via `CONTACT.3`–`8`), both built on Task
+  `BAXTER.3`'s Wiener–Hopf factorization. Task `CONTACT.1` (full residue-calculus inversion of
   OZ.8's Fourier closed form) turned out **not** to be an independent route — it shares
   `BAXTER.2`/`5`'s same underlying analyticity question.
 
@@ -833,16 +833,16 @@ would not make its conclusion any more trustworthy; not worth building.
 `oz_fourier_oz_eq_of_PY_core` (`OZFourierBridge.lean`), no sorry. Route B / the Wiener–Hopf
 factorization / the OZ.8 residue-calculus route turned out to be one underlying problem, not
 three independent ones — `BAXTER.3` (the factorization) is DONE; `BAXTER.2`, `4`, `5` all build
-on it. `BAXTER.5`-`8` (the jump-asymptotic sub-chain) succeeded and closed `g0_HS_contact_value`
+on it. `CONTACT.2`-`8` (the jump-asymptotic sub-chain) succeeded and closed `g0_HS_contact_value`
 (conditionally); `BAXTER.2`'s own full `h(r)` construction (needed to retire *this* axiom) is
 still open — see `proof_notes_baxter.md`.
 
 ---
 
 **Tasks OZ.11–OZ.17 (and their `OZ.13` sibling) have moved to `proof_notes_baxter.md`,
-renumbered `BAXTER.2`–`BAXTER.8` (plus `BAXTER.4` for the old `OZ.13`)** — Baxter's
+renumbered `BAXTER.2`–`CONTACT.5` (plus `CONTACT.1` for the old `OZ.13`)** — Baxter's
 Wiener–Hopf factorization, the jump-asymptotic route to `g0_HS_contact_value`, and the
-staged plan (`BAXTER.9`–`13`) for the full residue-series construction needed to retire
+staged plan (`POLE.1`–`13`) for the full residue-series construction needed to retire
 `oz_core_closure` itself. See `proof_notes_baxter.md`, Group BAXTER, for the full writeups.
 
 ---

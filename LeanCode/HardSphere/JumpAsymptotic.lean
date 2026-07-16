@@ -12,23 +12,23 @@ import LeanCode.HardSphere.OZFourierBridge
 import LeanCode.HardSphere.PYOZ_GHS
 
 /-!
-# Tasks BAXTER.6/BAXTER.8 — general jump-asymptotic lemma and assembly
+# Tasks CONTACT.3/CONTACT.5 — general jump-asymptotic lemma and assembly
 *(formerly Tasks OZ.15/OZ.17; see `proof_notes_baxter.md`, Group BAXTER)*
 
-`radial_fourier_c_HS_remainder_le`/`Hhat_closed_asymptotic` (Task `BAXTER.7`,
+`radial_fourier_c_HS_remainder_le`/`Hhat_closed_asymptotic` (Task `CONTACT.4`,
 `RadialFourierCHS.lean`) give the large-`k` asymptotic of the *closed-form*
 `Ĥ(k) = Ĉ(k)/(1-ρĈ(k))`. This file supplies the missing link back to `g0_HS_contact_value`: a
-genuine, from-scratch real-analysis jump-asymptotic lemma (Task `BAXTER.6`, via integration by
+genuine, from-scratch real-analysis jump-asymptotic lemma (Task `CONTACT.3`, via integration by
 parts on `(σ,∞)` and the Riemann-Lebesgue lemma — already in Mathlib,
-`Analysis/Fourier/RiemannLebesgueLemma.lean`), applied to `oz_h` (Task `BAXTER.8`) and matched
-against `BAXTER.7`'s closed-form asymptotic via the algebraic identity
+`Analysis/Fourier/RiemannLebesgueLemma.lean`), applied to `oz_h` (Task `CONTACT.5`) and matched
+against `CONTACT.4`'s closed-form asymptotic via the algebraic identity
 `oz_fourier_oz_eq_of_PY_core` (Task OZ.9b).
 
 **Honest scope:** the exterior branch of `oz_h` (`r ≥ σ`) is currently only known to be bounded
 and continuous (`oz_fixed_pt_unique`) — not differentiable, not decaying. The jump-asymptotic
 lemma genuinely needs differentiability and a `(σ,∞)`-decay/integrability condition to run its
 integration-by-parts argument (this is the "main open risk" flagged in `proof_notes_baxter.md`
-Task `BAXTER.6`). Rather than assume this away, Task `BAXTER.8`'s final theorem carries it as an
+Task `CONTACT.3`). Rather than assume this away, Task `CONTACT.5`'s final theorem carries it as an
 explicit, clearly-labeled hypothesis on `oz_h` — matching this codebase's established practice of
 threading genuinely open regularity/integrability conditions explicitly (e.g.
 `oz_fourier_oz_eq_of_PY_core` already carries a long list of "routine integrability" hypotheses
@@ -189,7 +189,7 @@ theorem ibp_ioi_identity (a k : ℝ) (hk : k ≠ 0) (g g' : ℝ → ℝ)
 
 /-! ### Piece 2 — exterior (`(σ,∞)`) jump-asymptotic via IBP + Riemann-Lebesgue -/
 
-/-- **Task BAXTER.6's "hard half": the exterior `(a,∞)` piece.** For `g` differentiable on `Ici a`
+/-- **Task CONTACT.3's "hard half": the exterior `(a,∞)` piece.** For `g` differentiable on `Ici a`
 with `r·g(r) → 0` and both `r·g(r)` and `g(r)+r·g'(r)` absolutely integrable on `(a,∞)`,
 `k·∫_{(a,∞)} r·g(r)·sin(kr) dr - a·g(a)·cos(ka) → 0` as `k → ∞` — i.e. the sine-moment integral
 over `(a,∞)` is `a·g(a)·cos(ka)/k + o(1/k)`, genuinely (not just `O(1/k)`) faster than its own
@@ -270,9 +270,9 @@ theorem left_piece_const (sigma k c : ℝ) (hsigma : 0 < sigma) (hk : k ≠ 0) :
   field_simp
   ring
 
-/-! ### Piece 4 (Task BAXTER.6) — assembly: the general jump-asymptotic lemma -/
+/-! ### Piece 4 (Task CONTACT.3) — assembly: the general jump-asymptotic lemma -/
 
-/-- **Task BAXTER.6 (main theorem).** For `f` equal to the constant `c` on `(0,σ)` and equal to `g`
+/-- **Task CONTACT.3 (main theorem).** For `f` equal to the constant `c` on `(0,σ)` and equal to `g`
 on `(σ,∞)`, with `g` satisfying the exterior regularity/decay hypotheses of
 `right_piece_asymptotic`, `radial_fourier f k`'s deviation from its `cos(kσ)/k²` leading term —
 coefficient `4πσ·(g(σ)-c)`, i.e. `4πσ` times the jump `f(σ⁺)-f(σ⁻)` — is `o(1/k²)`:
@@ -366,7 +366,7 @@ theorem radial_fourier_jump_asymptotic (sigma c : ℝ) (hsigma : 0 < sigma)
     simpa using this
   exact Tendsto.congr' (Filter.EventuallyEq.symm hpointwise) hfinal2
 
-/-! ### Piece 5 (Task BAXTER.8) — assembly: closing `g0_HS_contact_value` -/
+/-! ### Piece 5 (Task CONTACT.5) — assembly: closing `g0_HS_contact_value` -/
 
 /-- **`Hhat_closed_asymptotic`'s explicit `O(1/k³)` bound, repackaged as a `Tendsto` statement.**
 Pure squeeze argument: the bound's numerator is `k`-independent, so
@@ -408,17 +408,17 @@ theorem eq_zero_of_tendsto_mul_cos (A sigma : ℝ) (hsigma : 0 < sigma)
   simp only [heq] at hcomp
   exact tendsto_nhds_unique tendsto_const_nhds hcomp
 
-/-- **Task BAXTER.8 (main theorem): `g0_HS_contact_value` from BAXTER.6+BAXTER.7+OZ.9b.**
+/-- **Task CONTACT.5 (main theorem): `g0_HS_contact_value` from CONTACT.3+CONTACT.4+OZ.9b.**
 
 Closes the `g0_HS_contact_value` axiom *conditionally* on `oz_h`'s exterior branch (`r ≥ σ`)
 being differentiable with derivative `g'`, `r·oz_h(r) → 0`, and `r·oz_h(r)`/`oz_h(r)+r·g'(r)`
 absolutely integrable on `(σ,∞)` — genuinely open regularity/decay facts about `oz_h` not yet
-established elsewhere in this codebase (see `proof_notes_baxter.md` Task BAXTER.6's "main open
+established elsewhere in this codebase (see `proof_notes_baxter.md` Task CONTACT.3's "main open
 risk"), carried here as explicit hypotheses exactly as `oz_fourier_oz_eq_of_PY_core`'s own "routine
 integrability" hypotheses already are. Given those, the proof itself is unconditional: apply
-`radial_fourier_jump_asymptotic` (Task BAXTER.6) to `f = oz_h`, `c = -1` (`oz_h_core`); separately
+`radial_fourier_jump_asymptotic` (Task CONTACT.3) to `f = oz_h`, `c = -1` (`oz_h_core`); separately
 identify `radial_fourier(oz_h)(k) = Hhat_closed(k)` via `oz_fourier_oz_eq_of_PY_core` (Task OZ.9b)
-and `one_sub_rho_mul_radial_fourier_c_HS_ne_zero`, then transfer BAXTER.7's asymptotic
+and `one_sub_rho_mul_radial_fourier_c_HS_ne_zero`, then transfer CONTACT.4's asymptotic
 (`Hhat_closed_asymptotic_tendsto`) across that identification; the two resulting asymptotic
 expansions of the *same* function `radial_fourier(oz_h)(k)` must have the same leading
 coefficient (`eq_zero_of_tendsto_mul_cos`), forcing `g0_HS(σ) = (1+η/2)/(1-η)²`. -/
@@ -455,7 +455,7 @@ theorem g0_HS_contact_value_of_oz_h_regularity {eta sigma rho : ℝ} (hsigma : 0
       (fun r => r * radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho) r * Real.sin (k * r))
       (volume.restrict (Ioi 0))) :
     g0_HS eta sigma rho sigma = (1 + eta / 2) / (1 - eta) ^ 2 := by
-  -- Fact A: via the algebraic identity (OZ.9b) + BAXTER.7's asymptotic, transferred across it.
+  -- Fact A: via the algebraic identity (OZ.9b) + CONTACT.4's asymptotic, transferred across it.
   have hFactA : Tendsto (fun k : ℝ => k ^ 2 * (radial_fourier (oz_h eta sigma rho) k -
       4 * Real.pi * sigma * cHS_leading_coeff eta * Real.cos (k * sigma) / k ^ 2))
       atTop (𝓝 0) := by
@@ -478,7 +478,7 @@ theorem g0_HS_contact_value_of_oz_h_regularity {eta sigma rho : ℝ} (hsigma : 0
       filter_upwards [hpointwise] with k hk
       rw [hk]
     exact Tendsto.congr' hAeq hB
-  -- Fact B: BAXTER.6 applied directly to `f := oz_h`, `c := -1`.
+  -- Fact B: CONTACT.3 applied directly to `f := oz_h`, `c := -1`.
   have hFactB : Tendsto (fun k : ℝ => k ^ 2 * (radial_fourier (oz_h eta sigma rho) k -
       4 * Real.pi * sigma * (oz_h eta sigma rho sigma - (-1)) * Real.cos (k * sigma) / k ^ 2))
       atTop (𝓝 0) :=
@@ -532,18 +532,18 @@ theorem g0_HS_contact_value_of_oz_h_regularity {eta sigma rho : ℝ} (hsigma : 0
 
 /-! ### Task OZ.3 — retiring the bare `g0_HS_contact_value` axiom
 
-BAXTER.8 (`g0_HS_contact_value_of_oz_h_regularity`) reduces the PY contact value to a bundle of
+CONTACT.5 (`g0_HS_contact_value_of_oz_h_regularity`) reduces the PY contact value to a bundle of
 exterior regularity/decay/integrability facts about `oz_h`. Those facts are genuinely open in this
 codebase (`oz_h` is only known bounded/continuous via `oz_fixed_pt_unique`), but they are standard
 analytic properties of the PY hard-sphere OZ solution in the exterior region (Wertheim 1963), not
-physics input. We package exactly BAXTER.8's extra hypotheses as one named axiom and derive the
+physics input. We package exactly CONTACT.5's extra hypotheses as one named axiom and derive the
 contact value as an unconditional theorem — replacing the old *physical-number* axiom
 (`g0_HS_contact_value`, formerly in `PYOZ_GHS.lean`) with an *analytic-regularity* axiom of strictly
 weaker epistemic content: the specific value `(1+η/2)/(1-η)²` is now proved, not assumed. -/
 
 /-- **`oz_h` exterior regularity/decay/integrability (named axiom, Task OZ.3).**
 
-Exactly the extra hypotheses `g0_HS_contact_value_of_oz_h_regularity` (Task BAXTER.8) consumes,
+Exactly the extra hypotheses `g0_HS_contact_value_of_oz_h_regularity` (Task CONTACT.5) consumes,
 bundled as an existential over the exterior derivative `g'`: on `[σ,∞)` the OZ solution `oz_h` is
 differentiable with derivative `g'`, its first moment `r·oz_h(r)` decays to `0` and is integrable,
 `oz_h + r·g'` is integrable, and the OZ-convolution/sine-transform integrands are integrable for
@@ -551,7 +551,7 @@ every `k > 0`. These are standard regularity/decay properties of the PY hard-sph
 the exterior (`c_HS` has compact support, so the convolution integrals converge), established in the
 literature but not yet formalized from Mathlib real-analysis for the opaque `Classical.choose`-built
 `oz_h`. This is the *only* remaining assumption behind the PY contact value; everything else
-(BAXTER.6/7 + OZ.9b) is proved. -/
+(CONTACT.3/CONTACT.4 + OZ.9b) is proved. -/
 axiom oz_h_exterior_regularity {eta sigma rho : ℝ} (hsigma : 0 < sigma)
     (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_lt : eta < 1) :
     ∃ g' : ℝ → ℝ,
@@ -590,9 +590,10 @@ axiom oz_h_exterior_regularity {eta sigma rho : ℝ} (hsigma : 0 < sigma)
     g0_HS(σ) = (1 + η/2) / (1 - η)²
 
 Same statement as the retired bare axiom (formerly in `PYOZ_GHS.lean`); proved by feeding the
-`oz_h_exterior_regularity` witnesses into BAXTER.8 (`g0_HS_contact_value_of_oz_h_regularity`).
-The physical contact value is thus *derived* from Fourier analysis (BAXTER.6/7 + OZ.9b), assuming
-only the analytic regularity of the OZ exterior solution. Still in namespace `FMSA.HardSphere`, so
+`oz_h_exterior_regularity` witnesses into CONTACT.5 (`g0_HS_contact_value_of_oz_h_regularity`).
+The physical contact value is thus *derived* from Fourier analysis (`CONTACT.3`/`CONTACT.4` +
+OZ.9b), assuming only the analytic regularity of the OZ exterior solution. Still in namespace
+`FMSA.HardSphere`, so
 the fully-qualified name `FMSA.HardSphere.g0_HS_contact_value` is unchanged. -/
 theorem g0_HS_contact_value {eta sigma rho : ℝ} (hsigma : 0 < sigma)
     (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_lt : eta < 1) :

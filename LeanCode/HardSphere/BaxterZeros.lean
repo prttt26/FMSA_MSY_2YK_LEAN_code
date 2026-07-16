@@ -10,7 +10,7 @@ import Mathlib
 import LeanCode.HardSphere.BaxterWienerHopf
 
 /-!
-# Task BAXTER.9 — `Qhat_complex : ℂ → ℂ`, entire, closed form
+# Task POLE.1 — `Qhat_complex : ℂ → ℂ`, entire, closed form
 
 The Fourier transform `q̂0(k) = ∫₀^σ q0_poly(r)·e^{-ikr} dr` of `q0_poly`
 (`BaxterRealSpace.lean`, Task `BAXTER.1`) is known so far only for **real** `k`
@@ -356,7 +356,7 @@ private theorem Qhat_complex_eq_poly (eta sigma rho : ℝ) (hsigma : 0 < sigma) 
   push_cast
   ring
 
-/-- **Task BAXTER.9, entireness half.** `Qhat_complex` is entire (differentiable at every
+/-- **Task POLE.1, entireness half.** `Qhat_complex` is entire (differentiable at every
 `k : ℂ`), proved from the raw integral representation via `entire_poly_exp_integral` applied to
 the (globally continuous) quadratic form `q0_poly_inner` gives on `[0,σ]` — sidesteps the
 closed-form's spurious removable singularity at `k=0` entirely. -/
@@ -377,7 +377,7 @@ theorem Qhat_complex_entire (eta sigma rho : ℝ) (hsigma : 0 < sigma) :
       rho * q_doubleprime_py eta / 2 * r ^ 2)
     (by fun_prop) sigma hsigma
 
-/-- **Task BAXTER.9, closed-form half.** `Qhat_complex` in closed form for `k ≠ 0` (complex),
+/-- **Task POLE.1, closed-form half.** `Qhat_complex` in closed form for `k ≠ 0` (complex),
 the direct analytic continuation of `q0poly_cos_integral_formula`/`_sin_integral_formula`. -/
 theorem Qhat_complex_formula (eta sigma rho : ℝ) (hsigma : 0 < sigma) {k : ℂ} (hk : k ≠ 0) :
     Qhat_complex eta sigma rho k =

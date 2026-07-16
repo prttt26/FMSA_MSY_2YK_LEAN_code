@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.HardSphere.BaxterResidue
+import LeanCode.Analysis.ResidueAtSimplePole
 
 /-!
 # Task C.5 — `K·G·exp` is the exact leading Yukawa-pole residue (provable core)
@@ -29,7 +29,7 @@ The mathematical content splits into two reusable pieces, both fully proved and 
 * `c5_residue_eq_K_mul_Ginv` — the residue assembly: given the Blum simple-pole shape of `ĉ^(1)`
   near `z_t` (`N/D` with a simple zero of `D` at `z_t`, and `N(z_t)/D'(z_t) = K_t·G_{ij}(z_t)`), the
   residue-defining limit `(s−z_t)·ĉ^(1) → K_t·G_{ij}(z_t)`.  Reuses the general simple-pole residue
-  lemma `FMSA.HardSphere.residue_of_simple_pole` (`BaxterResidue.lean`).
+  lemma `FMSA.HardSphere.residue_of_simple_pole` (`ResidueAtSimplePole.lean`).
 
 ## Modeling input (deferred)
 

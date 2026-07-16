@@ -166,4 +166,23 @@ theorem hs_pole_additive_insufficient
   have hrw : K * (Real.exp (z * R) - (n:ℝ)/z^2) = K * Real.exp (z*R) - (n:ℝ)*(K/z^2) := by ring
   rw [hrw]; linarith [hlb]
 
+/-- **Task GA.3 — the FMSA unlike-pair perturbation ratio is unbounded.**
+
+The ratio of the FMSA first-order Yukawa inner amplitude `K·exp(z·R)` (the peak size of the growing
+branch of `c^(1)_{01}`, GA.1) to a fixed, `z`-independent hard-sphere reference bound `M_HS > 0` on
+`‖c_HS,01‖` grows without bound as `z·R → ∞`: for any target `M` there is a state point `(z, R)`
+making the ratio `≥ M`. So the "small correction" FMSA adds is not small *relative to the reference* —
+the perturbation expansion is formally invalid at large `z·R` (e.g. 2YK `z₂≈9.3`, `R_{01}≈1.43`,
+`|K₂|≈2.32` gives ratio `≳ 3.5·10⁶`).
+
+`M_HS` is taken as an explicit hypothesis (rather than derived): `c_HS,01` is a piecewise polynomial
+in `r` whose coefficients depend only on packing fractions/diameters, not on `z`, so a `z`-independent
+sup bound `‖c_HS,01‖_∞ ≤ M_HS(η,σ)` exists — matching the codebase's style of threading such bounds
+(cf. `hs_pole_additive_insufficient`'s `hB`). Direct corollary of `unlike_pair_twoexp_unbounded`
+(GA.1): apply it at target `M·M_HS`. -/
+theorem perturbation_ratio_unbounded (K : ℝ) (hK : 0 < K) (M_HS : ℝ) (hM_HS : 0 < M_HS) (M : ℝ) :
+    ∃ z R : ℝ, 0 < z ∧ 0 < R ∧ M ≤ (K * Real.exp (z * R)) / M_HS := by
+  obtain ⟨z, R, hz, hR, hbound⟩ := unlike_pair_twoexp_unbounded K hK (M * M_HS)
+  exact ⟨z, R, hz, hR, by rw [le_div_iff₀ hM_HS]; linarith [hbound]⟩
+
 end FMSA.PolyApproxFails

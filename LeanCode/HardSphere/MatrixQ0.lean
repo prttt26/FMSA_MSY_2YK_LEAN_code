@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.QhatDecomposition
+import LeanCode.HardSphere.QhatDecomposition
 
 /-!
 # Task M.3 — det(Q̂₀) ≠ 0 for valid multi-component parameters
@@ -15,7 +15,7 @@ import LeanCode.YukawaDCF.QhatDecomposition
 ## Context
 
 The multi-component Baxter Q-matrix Q̂₀(z) is an n×n matrix whose (i,j) entry
-(from Task B.2 / `b2_qhat_entry_decomp`) has the form:
+(from Task M.10 / `b2_qhat_entry_decomp`) has the form:
 ```
 Q̂₀_{ij}(z) = δ_{ij} − √(ρᵢρⱼ) · exp(−λᵢⱼ·z) · [Q'ᵢⱼ·p₁(σᵢ,z) + Q''ᵢⱼ·p₂(σᵢ,z)]
 ```
@@ -40,9 +40,9 @@ for the abstract matrix identity `P·D⁻¹ + c·(E·D⁻¹) = I` (Task M.1).
 
 | Statement | Status |
 |---|---|
-| `q0_entry` | defined (concrete B.2 formula) |
+| `q0_entry` | defined (concrete M.10 formula) |
 | `Q0_mat` | defined (assembled n×n matrix) |
-| `Q0_mat_decomp` | proved (entry-wise application of B.2) |
+| `Q0_mat_decomp` | proved (entry-wise application of M.10) |
 | `Q0_mat_isUnit_det` (old, free `Qp`/`Qpp`) | **REMOVED — disproved** (see note below) |
 | `Q0phys`/`Qppphys`/`rhoGeoPhys` | defined (concrete Lebowitz/Baxter PY coefficients) |
 | `Q0_mat_phys` | defined (Q0_mat with physical coefficients substituted) |
@@ -75,7 +75,7 @@ checkable strict-diagonal-dominance hypothesis, via Mathlib's Gershgorin circle 
 no axiom, and the hypothesis is a concrete inequality one can check numerically at any given
 state point (rather than an opaque `‖C‖ < 1` operator-norm bound).
 
-**Task M.4 — rank-2 reduction: now formalized in `LeanCode/YukawaDCF/Q0DetRankTwo.lean`.**
+**Task M.4 — rank-2 reduction: now formalized in `LeanCode/HardSphere/Q0DetRankTwo.lean`.**
 Everything below except the final scalar inequality is a **proved theorem**, no `sorry`/
 `axiom`: `Umat`, `Vmat`, `Q0_mat_phys_eq_one_sub_mul` (the `1-U*V` factorization),
 `Q0_mat_phys_det_eq_two_by_two` (Sylvester reduction to the 2×2 `det`), and `fFun_neg`/
@@ -166,9 +166,9 @@ noncomputable def Q0_mat {n : ℕ} (z : ℝ)
   fun i j => q0_entry z (sigma i) ((sigma j - sigma i) / 2)
                (Qp i j) (Qpp i j) (rho_geo i j) (if i = j then 1 else 0)
 
-/-! ### Entry decomposition (proved from Task B.2) -/
+/-! ### Entry decomposition (proved from Task M.10) -/
 
-/-- Each (i,j) entry of Q̂₀ satisfies the B.2 decomposition
+/-- Each (i,j) entry of Q̂₀ satisfies the M.10 decomposition
 `Q̂₀_{ij} = P̂_{ij} + Ê_{ij} · exp(-z · σ_min)`. -/
 theorem Q0_mat_entry_decomp {n : ℕ} (z sigma_min : ℝ) (hz : z ≠ 0)
     (sigma : Fin n → ℝ)
@@ -240,7 +240,7 @@ Concrete counterexample: `n=2`, equal diameters, `z=1`, `rho_geo ≡ 0.1`, `Qpp�
 Proving the unconditional statement (`∀ z > 0`) for `Q0_mat_phys` is task M.4
 (`todo_lean.md`): numerically, diagonal dominance fails for large `z` whenever species
 diameters differ (the same exponential-growth obstruction as the FMSA_chsY/GA_matrix_mix
-2YK failure), so it likely needs the B.2 `P̂+Ê·exp(−z·σmin)` split rather than a direct bound
+2YK failure), so it likely needs the M.10 `P̂+Ê·exp(−z·σmin)` split rather than a direct bound
 on the raw matrix. This theorem is the useful, checkable, unconditional-modulo-hypothesis
 partial result available now. -/
 theorem Q0_mat_phys_isUnit_det_of_diag_dom {n : ℕ} {z : ℝ} {sigma rho : Fin n → ℝ}

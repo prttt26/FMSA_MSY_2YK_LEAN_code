@@ -11,11 +11,11 @@ import LeanCode.HardSphere.RadialFourierCHS
 import LeanCode.HardSphere.BaxterZeros
 
 /-!
-# `Chat_complex` — the complex extension of `radial_fourier (c_HS eta sigma)` (Task `BAXTER.12`)
+# `Chat_complex` — the complex extension of `radial_fourier (c_HS eta sigma)` (Task `POLE.4`)
 
 `Ĉ(k) := radial_fourier (c_HS eta sigma) k` (`RadialFourierCHS.lean`, Task OZ.8) is currently
-only defined for **real** `k`. The residue formula `BAXTER.12` needs (`Res_{k_n}[k·Ĉ(k)·e^{ikr}/
-(...)]`) needs `Ĉ` at the **complex** poles `k_n` found in `BAXTER.11`. This file builds that
+only defined for **real** `k`. The residue formula `POLE.4` needs (`Res_{k_n}[k·Ĉ(k)·e^{ikr}/
+(...)]`) needs `Ĉ` at the **complex** poles `k_n` found in `POLE.3`. This file builds that
 extension, mirroring `BaxterZeros.lean`'s `Qhat_complex` construction for `q0_poly`.
 
 ## Strategy
@@ -25,11 +25,11 @@ extension, mirroring `BaxterZeros.lean`'s `Qhat_complex` construction for `q0_po
 the closed form). Two consequences:
 
 1. **The prefactor's `k=0` singularity is not addressed here** — this file only proves
-   `Chat_complex` differentiable for `k ≠ 0` (not entire), since `BAXTER.11`'s poles all satisfy
-   `Re(k_n) = 2πn/σ > 0` for `n ≥ 1`, so `k ≠ 0` is all `BAXTER.12`'s residue formula needs.
+   `Chat_complex` differentiable for `k ≠ 0` (not entire), since `POLE.3`'s poles all satisfy
+   `Re(k_n) = 2πn/σ > 0` for `n ≥ 1`, so `k ≠ 0` is all `POLE.4`'s residue formula needs.
 2. **The `sin` kernel is handled by decomposition**: `sin(kr) = (e^{ikr}-e^{-ikr})/(2i)`, so
    `J(k) := ∫r·c_HS(r)·sin(kr)dr = (F(-k)-F(k))/(2i)`, `F(k) := ∫r·c_HS(r)·e^{-ikr}dr`. `F` is
-   entire via `entire_poly_exp_integral` (`BaxterZeros.lean`, `BAXTER.9`) applied to the
+   entire via `entire_poly_exp_integral` (`BaxterZeros.lean`, `POLE.1`) applied to the
    **polynomial expansion** `Chat_poly` of `r·c_HS(r)` (globally continuous — avoids `c_HS`'s own
    jump discontinuity at `r=σ`, same trick `Qhat_complex_eq_poly` used), hence so is `J` (a
    difference of two entire functions, one precomposed with negation). `Chat_complex := (4π/k)·J`
@@ -134,7 +134,7 @@ theorem Chat_F_formula (eta sigma : ℝ) (_hsigma : 0 < sigma) {k : ℂ} (hk : k
 /-- `J(k) := ∫₀^σ (r·c_HS(r))·sin(kr) dr`, via `F(-k)-F(k))/(2i)` (the raw integral, before
 decomposition, would use `Complex.sin` directly; this is definitionally the same value by
 `Complex.sin`'s own `exp`-decomposition, not reproven here — the closed form and entireness are
-what `BAXTER.12` needs from this function). -/
+what `POLE.4` needs from this function). -/
 noncomputable def Chat_J (eta sigma : ℝ) (k : ℂ) : ℂ :=
   (Chat_F eta sigma (-k) - Chat_F eta sigma k) / (2 * Complex.I)
 
@@ -152,8 +152,8 @@ theorem Chat_J_entire (eta sigma : ℝ) (hsigma : 0 < sigma) :
 noncomputable def Chat_complex (eta sigma : ℝ) (k : ℂ) : ℂ :=
   (4 * (Real.pi : ℂ) / k) * Chat_J eta sigma k
 
-/-- **`Chat_complex` is differentiable at every `k ≠ 0`** (all that `BAXTER.12`'s residue
-formula needs — `BAXTER.11`'s poles all satisfy `k ≠ 0`; no removable-singularity argument at
+/-- **`Chat_complex` is differentiable at every `k ≠ 0`** (all that `POLE.4`'s residue
+formula needs — `POLE.3`'s poles all satisfy `k ≠ 0`; no removable-singularity argument at
 `k=0` is attempted, unlike `Qhat_complex`, since it isn't needed here). -/
 theorem Chat_complex_differentiableAt (eta sigma : ℝ) (hsigma : 0 < sigma) {k : ℂ} (hk : k ≠ 0) :
     DifferentiableAt ℂ (Chat_complex eta sigma) k := by
@@ -162,7 +162,7 @@ theorem Chat_complex_differentiableAt (eta sigma : ℝ) (hsigma : 0 < sigma) {k 
     (differentiableAt_const _).div differentiableAt_id hk
   exact h1.mul ((Chat_J_entire eta sigma hsigma).differentiableAt)
 
-/-! ### `Chat_complex` magnitude bound at large `‖k‖` (Task `BAXTER.14`)
+/-! ### `Chat_complex` magnitude bound at large `‖k‖` (Task `POLE.5`)
 
 Each of `Chat_F_formula`'s three terms has the shape `coeff·(bracket·exp(-ikσ) + const)`, where
 `bracket` is a degree-≤5 polynomial in `1/(-ik)`. For `‖k‖≥1`, `bracket = O(1/‖k‖)` (the generic
@@ -379,7 +379,7 @@ theorem Chat_F_norm_bound (eta sigma : ℝ) (hsigma : 0 < sigma) {k : ℂ} (hk :
 `K₁,K₂` as in `Chat_F_norm_bound`. Combines `Chat_F(k)` (via the caller-supplied bound `E` on
 `|exp(-ikσ)|`) and `Chat_F(-k)` (bounded by `1`, needing only `Im(k)≥0` — no growth control) —
 kept symbolic in `‖k‖` (not crudely simplified) so the caller can combine this with `E`'s own
-`Θ(‖k‖²)` growth to get the `Θ(1)` bound `BAXTER.14` needs. -/
+`Θ(‖k‖²)` growth to get the `Θ(1)` bound `POLE.5` needs. -/
 theorem Chat_complex_norm_bound (eta sigma : ℝ) (hsigma : 0 < sigma) {k : ℂ} (hk : k ≠ 0)
     (hk1 : 1 ≤ ‖k‖) (hkim : 0 ≤ k.im) {E : ℝ}
     (hE : ‖Complex.exp (-Complex.I * k * sigma)‖ ≤ E) (hEnn : 0 ≤ E) :

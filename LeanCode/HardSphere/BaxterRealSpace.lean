@@ -213,6 +213,26 @@ theorem q0_poly_outer {eta sigma rho r : ℝ} (hr : sigma < r) : q0_poly eta sig
   have hle : ¬r <= sigma := not_le.mpr hr
   simp [q0_poly, phi1_real, phi2_real, hle]
 
+/-- `phi1_real` is globally continuous: its two branches (`r - sigma` and `0`) agree at the
+junction `r = sigma`. -/
+theorem phi1_real_continuous (sigma : ℝ) : Continuous (phi1_real sigma) := by
+  unfold phi1_real
+  exact Continuous.if_le (by fun_prop) continuous_const continuous_id continuous_const
+    (fun x hx => by rw [hx]; ring)
+
+/-- `phi2_real` is globally continuous: its two branches (`(r-sigma)^2/2` and `0`) agree at the
+junction `r = sigma`. -/
+theorem phi2_real_continuous (sigma : ℝ) : Continuous (phi2_real sigma) := by
+  unfold phi2_real
+  exact Continuous.if_le (by fun_prop) continuous_const continuous_id continuous_const
+    (fun x hx => by rw [hx]; ring)
+
+/-- `q0_poly` is globally continuous (a linear combination of `phi1_real`/`phi2_real`). -/
+theorem q0_poly_continuous (eta sigma rho : ℝ) : Continuous (q0_poly eta sigma rho) := by
+  unfold q0_poly
+  exact ((phi1_real_continuous sigma).const_smul (rho * q_prime_py eta sigma)).add
+    ((phi2_real_continuous sigma).const_smul (rho * q_doubleprime_py eta))
+
 /-! ### Baxter factorization (real-space convolution identity) -/
 
 /-- **Baxter--Wertheim real-space factorization identity (Baxter 1970, Wertheim 1963):**

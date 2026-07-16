@@ -26,7 +26,7 @@ satisfy:
 Ĝ + c • Â = P · D⁻¹ + c • (E · D⁻¹) = (P + c • E) · D⁻¹ = D · D⁻¹ = I
 ```
 
-This is the direct matrix lift of Task 4.2 (`g + a·e^{-z} = 1` in `SingleCompIdentity.lean`):
+This is the direct matrix lift of Task M.9 (`g + a·e^{-z} = 1` in `SingleCompIdentity.lean`):
 - N=1 scalar case:  `S/D + (12etaL/D)·e^{-z} = 1`  proved via `div_self`
 - N>1 matrix case:  `P·D⁻¹ + c•(E·D⁻¹) = I`        proved via `mul_nonsing_inv`
 
@@ -50,7 +50,7 @@ For any `n×n` matrices `P`, `E`, `D` over `ℝ` with `D = P + c • E` and `D` 
 ```
 P * D⁻¹ + c • (E * D⁻¹) = 1
 ```
-This is the matrix analog of `g + a·exp(-z) = 1` (Task 4.2, `SingleCompIdentity.lean`).
+This is the matrix analog of `g + a·exp(-z) = 1` (Task M.9, `SingleCompIdentity.lean`).
 
 **Proof:** Factor out `D⁻¹` on the right, substitute `D = P + c • E`, cancel `D * D⁻¹ = I`. -/
 theorem g_mat_add_a_mat_exp_eq_one {n : ℕ}

@@ -73,7 +73,7 @@ non-measurable pathological fixed points that the operator definition alone cann
 | `g0_HS_outer_eq_oz_h` | proved | `rfl` from concrete definition |
 | `oz_laplace_oz_eq` | **deleted 2026-07-15** | Laplace dead-end (used the false `radial_laplace_conv`); correct form is the sine-transform OZ.7 |
 | `g0_HS_laplace_spec` | **deleted 2026-07-15** | only consumed `oz_laplace_oz_eq`; no live callers |
-| `g0_HS_contact_value` | **theorem** (moved to `JumpAsymptotic.lean`) | PY contact value; now derived via BAXTER.8 + the `oz_h_exterior_regularity` axiom |
+| `g0_HS_contact_value` | **theorem** (moved to `JumpAsymptotic.lean`) | PY contact value; now derived via CONTACT.5 + the `oz_h_exterior_regularity` axiom |
 
 ## Net improvement over pre-OZ.2 state
 
@@ -85,7 +85,7 @@ non-measurable pathological fixed points that the operator definition alone cann
 | `g0_HS_outer_is_oz_fp` | axiom | **proved theorem** |
 | `g0_HS_outer_eq_oz_h` | axiom | **proved theorem** (`rfl`) |
 | `g0_HS_laplace_spec` | axiom (was in PYOZ.lean) | **deleted 2026-07-15** (Laplace dead-end) |
-| `g0_HS_contact_value` | axiom (was in PYOZ.lean) | **theorem** in `JumpAsymptotic.lean` (BAXTER.8) |
+| `g0_HS_contact_value` | axiom (was in PYOZ.lean) | **theorem** in `JumpAsymptotic.lean` (CONTACT.5) |
 -/
 
 open MeasureTheory Set Real intervalIntegral
@@ -218,8 +218,9 @@ compact-operator Fredholm alternative (`K` is not compact); see the mid/high-den
   the real-space form). What remains is the explicit inverse/solution from that factorization —
   `(I−K) = (I−K₊)(I−K₋)`, each one-sided factor Volterra (spectral radius 0) hence invertible, so
   `(I−K)` is invertible ⇒ existence+uniqueness — which is exactly the `h_explicit` construction of
-  Tasks BAXTER.12–13. So this axiom is **same-core as, and gated by, the BAXTER Wiener–Hopf line**;
-  it is not an independent target, and the missing piece is a concrete construction, not
+  Task `POLE.4`/Group OZFIX. So this axiom is **same-core as, and gated by, the BAXTER
+  Wiener–Hopf line**; it is not an independent target, and the missing piece is a concrete
+  construction, not
   Mathlib-absent machinery. (This supersedes the earlier speculative "`detQ`-zeros = spinodal"
   bridge: the clean statement is simply that hard spheres have no spinodal, the symbol never
   vanishes, and the Baxter factorization already supplies what is needed to invert `(I−K)`.)
@@ -343,9 +344,9 @@ See `proof_notes_hard_sphere.md`. -/
 
 `g0_HS_contact_value : g0_HS eta sigma rho sigma = (1 + eta/2) / (1 - eta)^2` used to be a bare
 physical axiom here (the Percus–Yevick / Wertheim 1963 monodisperse hard-sphere contact value).
-It is **no longer axiomatized**: Task BAXTER.8 (`g0_HS_contact_value_of_oz_h_regularity`,
-`JumpAsymptotic.lean`) derives exactly this value from the jump-asymptotic lemma (BAXTER.6) + the
-closed-form `Ĥ(k)` asymptotic (BAXTER.7) + the algebraic OZ identity (OZ.9b), conditional only on
+It is **no longer axiomatized**: Task CONTACT.5 (`g0_HS_contact_value_of_oz_h_regularity`,
+`JumpAsymptotic.lean`) derives exactly this value from the jump-asymptotic lemma (CONTACT.3) + the
+closed-form `Ĥ(k)` asymptotic (CONTACT.4) + the algebraic OZ identity (OZ.9b), conditional only on
 `oz_h`'s exterior analytic regularity/decay/integrability. Those conditions are packaged as the
 single named axiom `oz_h_exterior_regularity` (`JumpAsymptotic.lean`), from which the unconditional
 theorem `g0_HS_contact_value` is proved. Net effect: the specific physical *number* is no longer

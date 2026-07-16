@@ -43,8 +43,9 @@ from the Wiener–Hopf/Hilbert-transform split ([LN] §6.1–§6.4) — that who
 derivation is a Group-BAXTER-scale effort, not attempted here.  `A_{ij}(z)` as `[Q̂₀(z)⁻¹]_{ij}−δ`
 needs the complex Laplace-space `Q̂₀(s)` ([LN] Eq. 10); the codebase `Q0_mat` is real.
 
-Status: ◑ single-tail exact residue DONE (2026-07-15), axiom-clean; multi-tail + `b_{ij}` derivation
-deferred.
+Status: ✓ DONE (2026-07-15), axiom-clean — single-tail exact residue, single-tail collapse, and the
+**general distinct-`z` multi-tail residue** (`bMulti_residue`, `bMulti_residue_Qinv`) with per-pole
+term matching.  The `b_{ij}` *derivation* from the OZ equation is Y1.3 (done separately).
 -/
 
 set_option linter.style.longLine false
@@ -122,5 +123,59 @@ theorem bMulti_single_residue {n : ℕ} (Kmat Amat : Matrix (Fin n) (Fin n) ℂ)
       (𝓝 (((1 + Amat) * Kmat * (1 + Amat)ᵀ : Matrix (Fin n) (Fin n) ℂ) i j)) := by
   simp only [bMulti_single_eq]
   exact spectralAmp_residue Kmat (1 + Amat) z0 i j
+
+/-!
+## Y1.5 — general distinct-`z` multi-tail residue ([LN] Eq. 73/66)
+
+For distinct pole positions `z_{mn}`, the residue of `bMulti` at a chosen pole `s = −z₀` selects only
+the terms `(m,p)` whose pole equals `z₀` — the "per-pole term matching" of the multi-tail expansion.
+-/
+
+/-- **Off-pole term has zero residue.**  A summand `c/(s+w)` with `w ≠ z₀` is analytic at `s = −z₀`,
+so `(s − (−z₀))·c/(s+w) → 0`: the `(s+z₀)` factor vanishes while `c/(s+w) → c/(w−z₀)` is finite. -/
+theorem simplePole_offResidue (c z0 w : ℂ) (hw : w ≠ z0) :
+    Tendsto (fun s => (s - (-z0)) * (c / (s + w))) (𝓝[≠] (-z0)) (𝓝 0) := by
+  have h1 : Tendsto (fun s : ℂ => s - (-z0)) (𝓝[≠] (-z0)) (𝓝 0) := by
+    have h0 : Tendsto (fun s : ℂ => s - (-z0)) (𝓝 (-z0)) (𝓝 ((-z0) - (-z0))) :=
+      (continuous_id.sub continuous_const).tendsto (-z0)
+    simpa using h0.mono_left nhdsWithin_le_nhds
+  have hne : -z0 + w ≠ 0 := fun hh => hw (by linear_combination hh)
+  have hg : ContinuousAt (fun s : ℂ => s + w) (-z0) :=
+    (continuous_id.add continuous_const).continuousAt
+  have h2 : Tendsto (fun s : ℂ => c / (s + w)) (𝓝[≠] (-z0)) (𝓝 (c / (-z0 + w))) :=
+    (continuousAt_const.div hg hne).tendsto.mono_left nhdsWithin_le_nhds
+  simpa using h1.mul h2
+
+/-- **Y1.5 — general distinct-`z` multi-tail residue** ([LN] Eq. 73/66).  The residue of `bMulti` at
+the pole `s = −z₀` is the sum of the coefficients `(1+A)_{im} K_{mp} (1+A)_{jp}` over exactly the
+index pairs `(m,p)` with `z_{mp} = z₀` (each off-pole term contributes `0` by `simplePole_offResidue`,
+each on-pole term its coefficient by `simplePole_residue`). -/
+theorem bMulti_residue {n : ℕ} (Kmat Amat : Matrix (Fin n) (Fin n) ℂ)
+    (zmat : Fin n → Fin n → ℂ) (z0 : ℂ) (i j : Fin n) :
+    Tendsto (fun s => (s - (-z0)) * bMulti Kmat Amat zmat s i j) (𝓝[≠] (-z0))
+      (𝓝 (∑ m, ∑ p, if zmat m p = z0 then (1 + Amat) i m * Kmat m p * (1 + Amat) j p else 0)) := by
+  simp only [bMulti]
+  simp_rw [Finset.mul_sum]
+  apply tendsto_finsetSum; intro m _
+  apply tendsto_finsetSum; intro p _
+  by_cases h : zmat m p = z0
+  · rw [if_pos h, h]
+    exact simplePole_residue _ z0
+  · rw [if_neg h]
+    exact simplePole_offResidue _ z0 (zmat m p) h
+
+/-- `1 + (M − 1) = M` for matrices (additive cancellation). -/
+theorem one_add_sub_one {n : ℕ} (M : Matrix (Fin n) (Fin n) ℂ) :
+    (1 : Matrix (Fin n) (Fin n) ℂ) + (M - 1) = M := by abel
+
+/-- **Y1.5 — distinct-`z` residue in terms of `Q̂₀(z)⁻¹`** ([LN] Eq. 70).  Substituting the propagator
+identity `A_{ij}(z) = [Q̂₀(z)⁻¹]_{ij} − δ_{ij}` (`Amat = Qinv − 1`, so `I + A = Q̂₀⁻¹` by Y1.1), the
+residue at `s = −z₀` is `Σ_{(m,p): z_{mp}=z₀} [Q̂₀⁻¹]_{im} K_{mp} [Q̂₀⁻¹]_{jp}` — the doubly-propagated
+coupling summed over the matching poles (the multi-tail form of the single-tail `[Q̂₀⁻¹·K·Q̂₀⁻ᵀ]`). -/
+theorem bMulti_residue_Qinv {n : ℕ} (Kmat Qinv : Matrix (Fin n) (Fin n) ℂ)
+    (zmat : Fin n → Fin n → ℂ) (z0 : ℂ) (i j : Fin n) :
+    Tendsto (fun s => (s - (-z0)) * bMulti Kmat (Qinv - 1) zmat s i j) (𝓝[≠] (-z0))
+      (𝓝 (∑ m, ∑ p, if zmat m p = z0 then Qinv i m * Kmat m p * Qinv j p else 0)) := by
+  simpa only [one_add_sub_one] using bMulti_residue Kmat (Qinv - 1) zmat z0 i j
 
 end FMSA.SpectralAmplitude

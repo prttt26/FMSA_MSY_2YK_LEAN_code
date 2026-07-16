@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.SingleCompIdentity
+import LeanCode.HardSphere.SingleCompIdentity
 import LeanCode.HardSphere.BaxterFactor
 
 /-!
@@ -16,7 +16,7 @@ import LeanCode.HardSphere.BaxterFactor
 ## Statement
 
 For `n = 1`, the abstract `n×n` matrix propagators from Task M.1 reduce to the
-scalar single-component propagators from Task 4.2:
+scalar single-component propagators from Task M.9:
 
 ```
 Ĝ_{00} = (P̂ · D̂⁻¹)_{00} = S(z) / D(z) = g(z)
@@ -54,7 +54,7 @@ propagators g(z) and a(z) are well-defined.
 | `mat_fin1_mul_inv` | proved (from above) |
 | `g00_eq_g_baxter` | proved |
 | `a00_eq_a_baxter` | proved |
-| `m2_identity` | proved (uses Task 4.2 `g_add_a_mul_exp_eq_one`) |
+| `m2_identity` | proved (uses Task M.9 `g_add_a_mul_exp_eq_one`) |
 -/
 
 set_option linter.style.longLine false
@@ -112,7 +112,7 @@ theorem a00_eq_a_scalar (eta L D : ℝ) :
 
 /-- **Task M.2 — N=1 limit of Ĝ + Â·exp(-z) = I:**
 
-Combining the matrix reduction with Task 4.2 (`g_add_a_mul_exp_eq_one`):
+Combining the matrix reduction with Task M.9 (`g_add_a_mul_exp_eq_one`):
 in the N=1 case, the abstract matrix identity reduces exactly to the scalar identity
 `g(z) + a(z)·exp(-z) = 1`. -/
 theorem m2_identity {S L D eta z : ℝ}

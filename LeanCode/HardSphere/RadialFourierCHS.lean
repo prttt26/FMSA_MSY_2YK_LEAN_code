@@ -27,7 +27,7 @@ That needs inverting the closed-form-in-`k` Fourier-domain OZ solution back to r
 (residue calculus / the classical PY closed-form solution) — a multi-session undertaking
 comparable to the Baxter Wiener–Hopf work already flagged elsewhere as out of scope. See
 `proof_notes_hard_sphere.md` Task OZ.8 for the full scoping discussion (Part C was eventually
-supplied by a different route — see "Piece C" below, Task `BAXTER.7`, `proof_notes_baxter.md`).
+supplied by a different route — see "Piece C" below, Task `CONTACT.4`, `proof_notes_baxter.md`).
 -/
 
 open MeasureTheory Set Real intervalIntegral
@@ -317,20 +317,20 @@ theorem radial_fourier_c_HS_eq_C_HS_laplace_expr (eta sigma k : ℝ)
   field_simp
   ring
 
-/-! ### Piece C (Task BAXTER.7, formerly Task OZ.16) — large-`k` asymptotic of `Ĉ(k)` and `Ĥ(k)`
+/-! ### Piece C (Task CONTACT.4, formerly Task OZ.16) — large-`k` asymptotic of `Ĉ(k)` and `Ĥ(k)`
 
 `radial_fourier_c_HS_formula` (Piece A) gives an *exact* closed form for
 `Ĉ(k) := radial_fourier (c_HS eta sigma) k`. Expanding it out isolates the leading `cos(kσ)/k²`
 term exactly, leaving a genuinely bounded (not just asserted) remainder of order `1/k³` — pure
 finite algebra, cross-checked with `sympy` before this write-up. Combined with `Ĉ(k) → 0`, the
-same bound propagates to `Ĥ(k) := Ĉ(k)/(1-ρĈ(k))`, supplying Task BAXTER.7
+same bound propagates to `Ĥ(k) := Ĉ(k)/(1-ρĈ(k))`, supplying Task CONTACT.4
 (`proof_notes_baxter.md`). -/
 
 /-- **`Ĉ(k)`'s leading `cos(kσ)/k²` coefficient.** Already known in closed form via `py_f1_eq`
 (`PYDCF.lean`) to equal `(1+η/2)/(1-η)²`. -/
 noncomputable def cHS_leading_coeff (eta : ℝ) : ℝ := py_a0 eta + py_a1 eta + py_a3 eta
 
-/-- **Exact remainder identity (Task BAXTER.7, step 1).** `Ĉ(k)` minus its `cos(kσ)/k²` leading
+/-- **Exact remainder identity (Task CONTACT.4, step 1).** `Ĉ(k)` minus its `cos(kσ)/k²` leading
 term is exactly `(4π/k³)` times a finite trig-and-inverse-power expression — pure algebra on
 `radial_fourier_c_HS_formula`, cross-checked with `sympy` before this write-up. -/
 theorem radial_fourier_c_HS_remainder_eq (eta sigma k : ℝ) (hsigma : 0 < sigma) (hk : k ≠ 0) :
@@ -358,7 +358,7 @@ private lemma abs_coeff_mul_div_pow_le (c t k : ℝ) (n : ℕ) (hk : 1 ≤ k) (h
   calc |c| * (|t| / k ^ n) ≤ |c| * 1 := mul_le_mul_of_nonneg_left h1 (abs_nonneg c)
     _ = |c| := mul_one _
 
-/-- **Bound constant for Task BAXTER.7's `O(1/k³)` remainder** — literally the sum of the absolute
+/-- **Bound constant for Task CONTACT.4's `O(1/k³)` remainder** — literally the sum of the absolute
 values of the six coefficients appearing in `radial_fourier_c_HS_remainder_eq`'s bracket. -/
 noncomputable def cHS_remainder_bound (eta sigma : ℝ) : ℝ :=
   |(-(py_a0 eta) - 2 * py_a1 eta - 4 * py_a3 eta)| +
@@ -371,7 +371,7 @@ noncomputable def cHS_remainder_bound (eta sigma : ℝ) : ℝ :=
 theorem cHS_remainder_bound_nonneg (eta sigma : ℝ) : 0 ≤ cHS_remainder_bound eta sigma := by
   unfold cHS_remainder_bound; positivity
 
-/-- **Task BAXTER.7, step 2:** the remainder bracket in `radial_fourier_c_HS_remainder_eq` is
+/-- **Task CONTACT.4, step 2:** the remainder bracket in `radial_fourier_c_HS_remainder_eq` is
 bounded, uniformly in `k ≥ 1`, by the explicit constant `cHS_remainder_bound`. -/
 theorem cHS_remainder_bracket_bound (eta sigma k : ℝ) (hk : 1 ≤ k) :
     |(-(py_a0 eta) - 2 * py_a1 eta - 4 * py_a3 eta) * Real.sin (k * sigma) +
@@ -414,7 +414,7 @@ theorem cHS_remainder_bracket_bound (eta sigma k : ℝ) (hk : 1 ≤ k) :
   unfold cHS_remainder_bound
   constructor <;> linarith [e1.1, e1.2, e2.1, e2.2, e3.1, e3.2, e4.1, e4.2, e5.1, e5.2, e6.1, e6.2]
 
-/-- **Task BAXTER.7, step 3 (assembly):** `Ĉ(k)` deviates from its `cos(kσ)/k²` leading term by
+/-- **Task CONTACT.4, step 3 (assembly):** `Ĉ(k)` deviates from its `cos(kσ)/k²` leading term by
 at most `(4π·cHS_remainder_bound)/k³`, for all `k ≥ 1`. -/
 theorem radial_fourier_c_HS_remainder_le (eta sigma k : ℝ) (hsigma : 0 < sigma) (hk : 1 ≤ k) :
     |radial_fourier (c_HS eta sigma) k -
@@ -482,13 +482,13 @@ theorem radial_fourier_c_HS_le (eta sigma k : ℝ) (hsigma : 0 < sigma) (hk : 1 
   rw [add_div]
   linarith [htri, hlead, hrem, hk3le]
 
-/-- **`Ĥ(k) = Ĉ(k)/(1-ρĈ(k))`** — the closed-form Fourier-domain OZ solution (Task BAXTER.7's
+/-- **`Ĥ(k) = Ĉ(k)/(1-ρĈ(k))`** — the closed-form Fourier-domain OZ solution (Task CONTACT.4's
 main object), matching `oz_fourier_oz_eq_of_PY_core`'s `H·(1-ρC)=C` identity when the
 denominator is nonzero. -/
 noncomputable def Hhat_closed (eta sigma rho k : ℝ) : ℝ :=
   radial_fourier (c_HS eta sigma) k / (1 - rho * radial_fourier (c_HS eta sigma) k)
 
-/-- **Task BAXTER.7 (main theorem).** For `k` past an explicit threshold (depending on
+/-- **Task CONTACT.4 (main theorem).** For `k` past an explicit threshold (depending on
 `eta,sigma,rho`), `Ĥ(k)` deviates from its `cos(kσ)/k²` leading term — coefficient
 `4πσ(α0+α1+α3) = 4πσ(1+η/2)/(1-η)²` via `py_f1_eq` — by at most an explicit `O(1/k³)` bound. -/
 theorem Hhat_closed_asymptotic (eta sigma rho k : ℝ) (hsigma : 0 < sigma)
@@ -575,7 +575,7 @@ theorem Hhat_closed_asymptotic (eta sigma rho k : ℝ) (hsigma : 0 < sigma)
   linarith [hfinal, hstep1, hk34le, hrem]
 
 /-- **`1-ρĈ(k) ≠ 0` for `k` past the same explicit threshold used in `Hhat_closed_asymptotic`.**
-Extracted as its own reusable fact (Task BAXTER.8 needs it directly, to turn
+Extracted as its own reusable fact (Task CONTACT.5 needs it directly, to turn
 `oz_fourier_oz_eq_of_PY_core`'s `H·(1-ρC)=C` identity into `H=C/(1-ρC)=Hhat_closed`). -/
 theorem one_sub_rho_mul_radial_fourier_c_HS_ne_zero (eta sigma rho k : ℝ) (hsigma : 0 < sigma)
     (hk : 1 + 2 * |rho| * cHS_bound eta sigma ≤ k) :

@@ -9,7 +9,7 @@ Authors: FMSA project
 import Mathlib
 
 /-!
-# Task B.2 — Concrete Q̂0 = P̂ + Ê · exp(-z · sigma_min)  (scalar entry identity)
+# Task M.10 — Concrete Q̂0 = P̂ + Ê · exp(-z · sigma_min)  (scalar entry identity)
 
 Each (i,j) entry of the multi-component Baxter matrix Q̂0 in FMSA FMSA_GA_matrix_mix satisfies:
 ```
@@ -42,7 +42,7 @@ open Real
 
 namespace FMSA.PathB
 
-/-- **Task B.2 — Q̂0 entry decomposition (scalar):**
+/-- **Task M.10 — Q̂0 entry decomposition (scalar):**
 ```
 Q̂0_{ij} = P̂_{ij} + Ê_{ij} · exp(-z · sigma_min)
 ```

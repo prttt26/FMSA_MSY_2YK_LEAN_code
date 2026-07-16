@@ -17,7 +17,7 @@ This file provides two definitions used elsewhere:
 - `radial3d_conv` — the 3D Ornstein–Zernike convolution for radially symmetric functions,
   `(f ⊛₃D g)(r) = (2π/r) · ∫_0^∞ t·f(t) · [∫_{|r−t|}^{r+t} s·g(s) ds] dt`. A live,
   transform-independent object reused throughout the OZ chain (both the Laplace- and the
-  Fourier-domain bridges, and the `g0_HS_contact_value` / BAXTER.8 assembly).
+  Fourier-domain bridges, and the `g0_HS_contact_value` / CONTACT.5 assembly).
 - `radial_laplace` — the `r`-weighted one-sided Laplace transform
   `ℒ_r[f](s) = ∫_0^∞ r·f(r)·e^{-sr} dr`. Kept as a correct definition; currently caller-less
   after the Laplace dead-end line was deleted (see below), available for a future OZ.8

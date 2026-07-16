@@ -9,7 +9,7 @@ Authors: FMSA project
 import Mathlib
 
 /-!
-# Identity g + a·exp(-z) = 1  ([chsY] Eq. 44, Task 4.2)
+# Identity g + a·exp(-z) = 1  ([chsY] Eq. 44, Task M.9)
 
 **Statement:** For the single-component Baxter Q-function at the Yukawa pole z:
 ```
@@ -72,10 +72,10 @@ theorem g_add_a_mul_exp_eq_one_baxter (eta z : ℝ)
   simp only []
   exact g_add_a_mul_exp_eq_one rfl hD
 
-/-- **Task B.3 — Coefficient algebra identity (abstract form):**
+/-- **Task M.11 — Coefficient algebra identity (abstract form):**
 From `g + a * c = 1`, deduce `(1 - g^2) - a^2c^2 = 2·a·c·g`.
 
-Physical reading: with `c = exp(-z)`, `g = S/D`, `a = 12etaL/D` (Task 4.2), this
+Physical reading: with `c = exp(-z)`, `g = S/D`, `a = 12etaL/D` (Task M.9), this
 decomposes the FMSA_GA_matrix_mix inner-core coefficient into decaying + growing exponential pieces
 whose sum at r = R equals the physical contact value. Required by Task C.1. -/
 theorem coeff_identity (g a c : ℝ) (h : g + a * c = 1) :
@@ -83,7 +83,7 @@ theorem coeff_identity (g a c : ℝ) (h : g + a * c = 1) :
   have hg : g = 1 - a * c := by linarith
   rw [hg]; ring
 
-/-- **Task B.3 — Corollary (Baxter Q-function form):**
+/-- **Task M.11 — Corollary (Baxter Q-function form):**
 With Baxter g = S/D and a = 12etaL/D satisfying `g_add_a_mul_exp_eq_one`,
 the coefficient identity holds for c = exp(-z). -/
 theorem coeff_identity_baxter {S L D eta z : ℝ}

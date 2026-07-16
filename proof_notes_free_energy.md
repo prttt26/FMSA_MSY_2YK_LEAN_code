@@ -291,7 +291,7 @@ routes. The diagnostic theorem of interest is the **numeric bound on the differe
 requires substituting the FMSA expressions for K, A, g₀:
 
 **(D) Concrete bound theorem (physical parameters):**
-For single-component, N=1, using Task 4.2 (`g = S/D`, `a = 12ηL/D`) and Task 4.1
+For single-component, N=1, using Task M.9 (`g = S/D`, `a = 12ηL/D`) and Task 4.1
 (`(1+A)² = (1−η)⁴z⁶/D²`):
 ```lean
 -- The FMSA_GA_matrix_mix coefficient (1+A)² and the FMSA_pure coefficient (1-g²) differ:

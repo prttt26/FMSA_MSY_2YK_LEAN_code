@@ -24,8 +24,15 @@ conjugated residue of `B₁` (`Hhat1_residue`, via `matrix_conj_residue`).  With
 from Y1.5 (`SpectralAmplitude.bMulti`/`spectralAmp`, residue `[Q̂₀⁻¹·K·Q̂₀⁻ᵀ]`), this records the
 **exact** [LN] form of the first-order Yukawa-pole residue — no `K·G` simplification.
 
-Status: ✓ DONE (2026-07-15), axiom-clean (`matrix_conj_residue`, `Hhat1`, `Hhat1_spec`,
-`Hhat1_residue`).  Full Y1.3-dependent derivation of `B₁` from the OZ equation remains open.
+**Y1.3c support (`matrix_conj_residue_analytic`).**  The `s`-dependent-factor generalization of
+`matrix_conj_residue`: for conjugating factors analytic (convergent) at the pole, the residue of
+`Lf s · bfun s · Rf s` is `Lval · Bres · Rval`.  This is the tool the Wiener–Hopf outer term
+`T_U = [Q̂₀(−k)]⁻¹ U₁ [Q̂₀ᵀ(−k)]⁻¹` needs (inverse-Baxter factors depend on `s` but are analytic at
+the Yukawa pole).  Consumed by `YukawaCausalResidue.lean` (Y1.3c).
+
+Status: ✓ DONE (2026-07-15), axiom-clean (`matrix_conj_residue`, `matrix_conj_residue_analytic`,
+`Hhat1`, `Hhat1_spec`, `Hhat1_residue`).  Full Y1.3-dependent derivation of `B₁` from the OZ equation:
+Y1.3a (supports) + Y1.3c (residue extraction) done; Y1.3b (projection identity) remains open.
 -/
 
 set_option linter.style.longLine false
@@ -62,6 +69,32 @@ theorem matrix_conj_residue {n : ℕ} (L R : Matrix (Fin n) (Fin n) ℂ)
   apply tendsto_finsetSum; intro q _
   apply tendsto_finsetSum; intro p _
   exact (tendsto_const_nhds.mul (hb p q)).mul tendsto_const_nhds
+
+/-- **Y1.3c support — residue through *analytic* matrix conjugation.**  Generalizes
+`matrix_conj_residue` to `s`-dependent conjugating factors `Lf s`, `Rf s` that are merely *analytic*
+(here: convergent) at the pole `s₀`: if `Lf → Lval`, `Rf → Rval` and each entry of `bfun` has residue
+`Bres` at `s₀`, then `Lf s · bfun s · Rf s` has residue `Lval · Bres · Rval`.  This is exactly what the
+Wiener–Hopf outer term `T_U = [Q̂₀(−k)]⁻¹ U₁ [Q̂₀ᵀ(−k)]⁻¹` needs: the inverse-Baxter factors depend on
+`s` but are analytic at the Yukawa pole, so only their pole-values enter the residue. -/
+theorem matrix_conj_residue_analytic {n : ℕ} (Lf Rf bfun : ℂ → Matrix (Fin n) (Fin n) ℂ) (s0 : ℂ)
+    (Lval Rval Bres : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n)
+    (hL : ∀ p q, Tendsto (fun s => Lf s p q) (𝓝[≠] s0) (𝓝 (Lval p q)))
+    (hR : ∀ p q, Tendsto (fun s => Rf s p q) (𝓝[≠] s0) (𝓝 (Rval p q)))
+    (hb : ∀ p q, Tendsto (fun s => (s - s0) * bfun s p q) (𝓝[≠] s0) (𝓝 (Bres p q))) :
+    Tendsto (fun s => (s - s0) * (Lf s * bfun s * Rf s) i j) (𝓝[≠] s0)
+      (𝓝 ((Lval * Bres * Rval) i j)) := by
+  rw [triple_apply]
+  have hstep : ∀ s, (s - s0) * (Lf s * bfun s * Rf s) i j
+      = ∑ q, ∑ p, Lf s i p * ((s - s0) * bfun s p q) * Rf s q j := by
+    intro s
+    rw [triple_apply, Finset.mul_sum]
+    refine Finset.sum_congr rfl (fun q _ => ?_)
+    rw [Finset.mul_sum]
+    refine Finset.sum_congr rfl (fun p _ => ?_); ring
+  simp_rw [hstep]
+  apply tendsto_finsetSum; intro q _
+  apply tendsto_finsetSum; intro p _
+  exact ((hL i p).mul (hb p q)).mul (hR q j)
 
 /-- First-order RDF `Ĥ₁ = [Q̂₀ᵀ]⁻¹ · B₁ · [Q̂₀]⁻¹` ([LN] Eq. 68). -/
 noncomputable def Hhat1 {n : ℕ} (Q0 B : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=

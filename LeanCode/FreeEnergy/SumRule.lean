@@ -45,7 +45,7 @@ at the Yukawa pole).  The identity is:
 where `C_MSA` is the MSA structure factor at `k=0`.
 
 Formalisation requires algebraic manipulation of the Baxter factorisation identities
-(related to Task 4.2: `g + a·exp(-z) = 1`).
+(related to Task M.9: `g + a·exp(-z) = 1`).
 
 **Status:** sorry — highest physical value in Group F.
 -/

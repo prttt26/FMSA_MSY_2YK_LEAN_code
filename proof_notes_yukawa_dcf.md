@@ -77,29 +77,10 @@ where `A(z)` is the single-component propagator evaluated at the Yukawa pole.
 
 ---
 
-### Task 4.2 — Identity `g + a·exp(−z) = 1` ([chsY] Eq. 44)
-
-**Statement:** With `g(z) = S(z) / ((1−η)²z³Q₀(z))` and `a(z) = 12ηL(z) / ((1−η)²z³Q₀(z))`:
-```
-g(z) + a(z) · exp(−z) = 1
-```
-where `S(z)`, `L(z)`, `Q₀(z)` are the single-component structure factor, L-function, and Baxter
-Q-function evaluated at the Yukawa pole `s = z` ([chsY] Eq. 52).
-
-**Why it matters:** This identity encodes the continuity of `c^(1)(r)` at the contact `r = d`.
-It is the single-component analogue of the multi-species matching condition at `r = R_ij`.
-
-**Status:** ✓ complete — `LeanCode/YukawaDCF/SingleCompIdentity.lean`
-  (`g_add_a_mul_exp_eq_one`, `g_add_a_mul_exp_eq_one_baxter`; complete)
-
-  **Proof:** One `have` + four rewrites.
-  - `have hnum : S + 12ηLe^{-z} = D := hD_def.symm`
-  - `rw [div_mul_eq_mul_div]` — moves exp from multiplier to numerator position
-  - `rw [← add_div]` — combines into single fraction `(S + 12ηLe^{-z}) / D`
-  - `rw [hnum]` — substitutes `D` for numerator
-  - `div_self hD` — closes `D / D = 1`
-
-  Key lemmas: `div_mul_eq_mul_div`, `add_div` (from `Mathlib.Algebra.Field.Basic`), `div_self`
+*(Task 4.2 → re-IDed to **M.9** and moved to `proof_notes_matrix_q0.md` Group M on 2026-07-15 —
+the single-component Baxter contact identity `g + a·e^{−z} = 1` is hard-sphere content (the N=1
+scalar root of the M.1 matrix identity). Lean now `LeanCode/HardSphere/SingleCompIdentity.lean`
+(`g_add_a_mul_exp_eq_one`).)*
 
 ---
 
@@ -122,7 +103,7 @@ the Q-matrix determinant, I₁/I₂ integrals, and IV term.
 **Status:** ✓ DONE — all results proved in `LeanCode/YukawaDCF/SingleCompReduction.lean` (complete):
   - `correction_sq_eq`: S²eᶻ + M²e⁻ᶻ + 2SM = (S+Me⁻ᶻ)²eᶻ  (key cancellation identity)
   - `f42_zero_at_origin`: Eq. 42 gives r·c(0)=0  (physical origin check)
-  - `sq_of_g_add_a_exp_eq_one`: g+ae⁻ᶻ=1 (Task 4.2) → g²eᶻ+a²e⁻ᶻ+2ga=eᶻ
+  - `sq_of_g_add_a_exp_eq_one`: g+ae⁻ᶻ=1 (Task M.9) → g²eᶻ+a²e⁻ᶻ+2ga=eᶻ
   - `eq42_factored_bracket`: (D²−S²)Eₘ−M²Eₚ = D²(1−g²)Eₘ−D²a²Eₚ  (Eq. 42→43 factoring)
   - `eq41_n1_step_gate`: for r<1, θ(r−1)=0 kills Terms II/III/IV — only Term I survives
   - `eq41_n1_reduces_to_eq42`: Term I coefficient identity (1+A)² = (1−η)⁴z⁶/D²
@@ -188,77 +169,17 @@ machinery (Task 2.1), making Q̂₀ computations formally verifiable.
 
 ---
 
-### Task B.2 — Concrete Q̂₀ = P̂ + Ê·exp(−z·σ_min) decomposition
-
-**Context:** M.1 proves `P·D⁻¹ + c·(E·D⁻¹) = I` from the *abstract* hypothesis `D = P + c·E`
-(where `D` = Q̂₀, `c = exp(−z·σ_min)`).  Task B.2 proves that hypothesis concretely: the
-explicit P̂_{ij} and Ê_{ij} from §5 of `multicomp_g_a_derivation.md` satisfy:
-```
-Q̂₀_{ij}(z)  =  P̂_{ij}(z)  +  Ê_{ij}(z) · exp(−z · σ_min)
-```
-
-**Explicit forms (from §5):**
-```
-P̂_{ij}(z) = δ_{ij}
-           − √(ρᵢρⱼ) · exp(−λ_{ij}·z) · [ Q'_{ij} · (1−z·σᵢ)/z²
-                                           + Q''_j  · (1−z·σᵢ+(z·σᵢ)²/2)/z³ ]
-
-Ê_{ij}(z) = √(ρᵢρⱼ) · exp(−z·(R_{ij}−σ_min)) · (Q'_{ij}/z² + Q''_j/z³)
-```
-where `λ_{ij} = (σ_j−σ_i)/2`, `R_{ij} = (σ_i+σ_j)/2`, and
-`Q'_{ij} = (2π/Δ)·(R_{ij} + π·σ_i·σ_j·ξ₂/(4Δ))`, `Q''_j = (2π/Δ)·(1 + π·σ_j·ξ₂/(2Δ))`.
-
-**Proof strategy:** Substitute the B.1 split
-`∫₀^{σᵢ} r·exp(z(r−σᵢ)) dr = (z·σᵢ−1+exp(−z·σᵢ))/z²`
-into the Q̂₀ formula, then collect terms by whether they contain `exp(−z·σᵢ)`.
-Factor out `exp(−z·σ_min)` from the exponential part (valid since R_{ij} ≥ σ_min always,
-with equality for the smallest-diameter like pair). Close by `ring` + `Real.exp_add`.
-
-**Why it matters:** Supplies the concrete `hD_def` hypothesis for M.1, turning the abstract
-matrix identity into a verified statement about actual FMSA_GA_matrix_mix matrices.
-
-**Depends on:** B.1, Task 2.1 (`phi1_formula`, `phi2_formula`), M.1.
-
-**Status:** ✓ DONE — `LeanCode/YukawaDCF/QhatDecomposition.lean` (complete):
-  - `b2_qhat_entry_decomp`: scalar (i,j) entry identity `Q̂₀ = P̂ + Ê·exp(−z·σ_min)`.
-    Three-step proof: (1) `hexp` via `← exp_add` + `linear_combination -z * hR`;
-    (2) `h` (algebraic factor of exp(−zσ)) via `field_simp [pow_ne_zero]; ring`;
-    (3) `rw [h, hexp]; ring`.
-  Implementation notes: `λ` → `lam` (reserved keyword); `ρ̃` → `rho` (combining
-  tilde invalid in Lean 4 identifiers).
+*(Task B.2 → re-IDed to **M.10** and moved to `proof_notes_matrix_q0.md` Group M on 2026-07-15 —
+the concrete `Q̂₀ = P̂ + Ê·exp(−z·σ_min)` decomposition (the concrete `hD_def` for the M.1 matrix
+identity) is hard-sphere Baxter Q̂₀ content. Lean now `LeanCode/HardSphere/QhatDecomposition.lean`
+(`b2_qhat_entry_decomp`).)*
 
 ---
 
-### Task B.3 — Coefficient algebra: `(1 − g²) − a²·c² = 2·a·c·g`
-
-**Statement:** From `g + a·c = 1` (Task 4.2 / M.1 N=1 case), the following identity holds:
-```
-(1 − g²) − a² · c²  =  2 · a · c · g
-```
-**Equivalently:** `(1 − g²) + a²·c² = 2·a·c` (add `2a²c²` to both sides).
-
-**Proof:** Pure `ring` from the hypothesis `h : g + a*c = 1`:
-```lean
-theorem coeff_identity (g a c : ℝ) (h : g + a * c = 1) :
-    (1 - g ^ 2) - a ^ 2 * c ^ 2 = 2 * a * c * g := by linarith [sq_nonneg (g + a*c - 1), h]; ring
--- or more directly:
-    have : g = 1 - a * c := by linarith
-    rw [this]; ring
-```
-
-**Why it matters:**
-- Decomposes the decaying-exponential coefficient: `(1−g²) = a·c·(2−a·c) = 2ac − a²c²`
-- Decomposes the inner-core total: `(1−g²)·e^{-z(r-R)} − a²c²·e^{+z(r-R)}` at r = R gives
-  `(1−g²) − a²c² = 2acg`, and for N=1 `g·a·c = g·(1−g)` — a physical contact value.
-- Required lemma for Task C.1 (N=1 reduction to FMSA_pure).
-
-**Depends on:** Task 4.2 (`g_add_a_mul_exp_eq_one`).
-
-**Status:** ✓ DONE — `LeanCode/YukawaDCF/SingleCompIdentity.lean` (complete):
-  - `coeff_identity`: abstract form for any `g a c : ℝ` with `h : g + a * c = 1`;
-    proof: `have hg : g = 1 - a * c := by linarith; rw [hg]; ring`.
-  - `coeff_identity_baxter`: Baxter-specific corollary with `c = exp(−z)`, `g = S/D`,
-    `a = 12ηL/D`; proof: applies `g_add_a_mul_exp_eq_one` then `coeff_identity`.
+*(Task B.3 → re-IDed to **M.11** and moved to `proof_notes_matrix_q0.md` Group M on 2026-07-15 —
+the coefficient algebra `(1 − g²) − a²·c² = 2·a·c·g` of the single-component Baxter contact identity
+is hard-sphere content. Lean now `LeanCode/HardSphere/SingleCompIdentity.lean` (`coeff_identity`,
+`coeff_identity_baxter`).)*
 
 ---
 
@@ -283,7 +204,7 @@ The numerator cancels to zero without any normalization constraint.
 - The [chsY] Appendix A derivation fixes `p₀` so that Term I + Term IV = 0 at r = 0.
   This is an algebraic consequence of the Baxter factorization, not a normalization choice.
   Lean proof: substitute r = 0 in the full formula, use Task 1.3 zeros, and show that
-  the remaining terms cancel by the `g + a·c = 1` identity (Task 4.2) — specifically,
+  the remaining terms cancel by the `g + a·c = 1` identity (Task M.9) — specifically,
   `K·(1+A)² + p₀ = K·(1+A)² − K·(1+A)² = 0` once the polynomial constant is identified
   from the Baxter equations.
 
@@ -291,8 +212,8 @@ The numerator cancels to zero without any normalization constraint.
 normalization** — contrast with Task P.2 which shows FMSA_poly DOES. Together, B.4 + P.2
 give the complete Lean proof that FMSA_GA_matrix_mix is structurally superior at the origin.
 
-**Depends on:** Tasks 1.3 (`I1_at_zero`, `I2_at_zero`), Task 4.2 (`g_add_a_mul_exp_eq_one`),
-B.3 (`coeff_identity`).
+**Depends on:** Tasks 1.3 (`I1_at_zero`, `I2_at_zero`), Task M.9 (`g_add_a_mul_exp_eq_one`),
+M.11 (`coeff_identity`).
 
 **Status:** ✓ DONE — `LeanCode/YukawaDCF/B4OriginBC.lean` (complete, namespace `FMSA.PathB`):
   - `b4_I1_vanish_at_zero`, `b4_I2_vanish_at_zero`: Terms II and III are 0 at r=0
@@ -364,7 +285,7 @@ In Lean: formalise R_{ij}(s) and show `AnalyticAt ℝ R_{ij} 0` by composing the
 analyticity of each factor; invoke `AnalyticAt.taylorCoeff` to conclude all coefficients
 beyond order 4 vanish.
 
-**Depends on:** B.1, B.2, M.3; [LN] eqs. 1396–1407.
+**Depends on:** B.1, M.10, M.3; [LN] eqs. 1396–1407.
 
 **Status:** ✓ DONE — `B5MixturePoly.lean` (section `DegreeBound`), no `sorry`.
 
@@ -578,6 +499,31 @@ Two theorems, both proved but narrower than the original sketch:
   regime (`σ₁≠σ₂`, all positive) — it does **not** compute or bound `D_{12}` itself. The
   actual `D_{12} ≠ 0` claim from the Taylor recursion remains open.
 
+**2026-07-15 — Option B COMPLETE (cubic-coefficient mechanism, axiom-clean).** The genuine `D_{ij}`
+is the r³ coefficient `= R'_{ij}(0)/6`, assembled from the `s=0` Taylor coefficients of the Baxter
+building blocks `p1(σ,s)=(1−sσ−e^{−sσ})/s²`, `p2(σ,s)=(1−sσ+(sσ)²/2−e^{−sσ})/s³` and the
+`exp(−λ_ij·s)` prefactor of `q0_entry`. All of Option B is now proved in `B5MixturePoly.lean`,
+axiom-clean (`[propext, Classical.choice, Quot.sound]` only — **no project axiom**):
+- `p1_cubic_coeff` (=`σ⁵/120`), `p2_cubic_coeff` (=`−σ⁶/720`) — cubic Taylor coefficients of the
+  Baxter blocks (subtract order-0/1/2 terms, ÷`s³`; `Real.exp_bound`+squeeze at n=6/7).
+- `exp_neg_cubic_rem` — order-3 Taylor remainder of the `exp(−λz)` prefactor (`o(z³)`).
+- `q0_entry_taylor3` — the **assembly** (product-of-expansions): the order-3 Taylor of `q0_entry` is
+  `δ − ρ·Ep(z)·Pp(z)`, via `exp(−λz)·P − Ep·Pp = (exp(−λz)−Ep)·P + Ep·(P−Pp)`. Since every `exp` is
+  `exp(−s·L)`, the cubic coefficient `−ρ·(P₃−λP₂+(λ²/2)P₁−(λ³/6)P₀)` is an `exp`-free rational
+  polynomial in the parameters.
+- `b9_dij_cubic_nonzero` — for a concrete unlike pair (`σ_i=1`, `λ=1/2` i.e. `σ_j=2`, off-diagonal
+  `δ=0`, `Qp=Qpp=ρ=1`) the cubic Taylor coefficient of `q0_entry` is `−133/2880 ≠ 0`, extracted by a
+  `ring` polynomial identity + `norm_num`. This strengthens `b9_d_ij_nonzero_example` from
+  "valid unlike parameters exist" to "the cubic coefficient is computed and nonzero".
+
+**Scope (honest):** Option B proves the **cubic-coefficient mechanism** — the `exp(−λ·s)`-driven,
+`exp`-free-rational structure that makes `D_ij ≠ 0` for unlike pairs, with a concrete nonzero witness.
+The faithful inner-core identity `D_ij = R'_ij(0)/6` with the full inside-core Laplace remainder
+`R_ij(s) = s⁵[exp(sR)·S_ij − Y_ij]` (packaging that Lean does not yet have; same-core as the mixture
+groups' (MML/MZERO) pole/residue Mittag-Leffler representation, no quick bridge) is now the **optional
+Group MPOLY** (`proof_notes_yukawa_wh.md`). So **B.9 is closed at the mechanism level**; the exact
+`R'_ij(0)/6` packaging is the optional MPOLY upgrade.
+
 ---
 
 ### Task B.10 — Exact degree: natDegree P_{ij} = 4
@@ -646,7 +592,7 @@ reduces to [chsY] Eq. 43 / FMSA_pure:
 ```
 K · (1 − g²) · exp(−z(r−d)) − K · a² · exp(+z(r−d)) + Poly(r)
 ```
-where `g = S/D` and `a = 12ηL/D` with `g + a·exp(−z) = 1` (Task 4.2).
+where `g = S/D` and `a = 12ηL/D` with `g + a·exp(−z) = 1` (Task M.9).
 
 **Proof:**  Substitute M.2 (`Ĝ_{00} = g`, `Â_{00} = a`) into the corrected formula.
 The substitution is definitional (Ĝ_{00} equals g by M.2); the result matches Eq. 43
@@ -661,11 +607,11 @@ NOT reduce to Eq. 42 for N=1 (the (1+A)² ≠ 1−g² discrepancy, Task 4.3).
 - Uncorrected Eq. 41 → wrong coefficient (1+A)² (proved, Task 4.3)
 - Corrected FMSA_GA_matrix_mix formula → right coefficient (1−g²) (proved, C.1)
 
-**Depends on:** M.2 (`g_mat_n1_eq_g_scalar`), Task 4.2 (`g_add_a_mul_exp_eq_one`), B.3.
+**Depends on:** M.2 (`g_mat_n1_eq_g_scalar`), Task M.9 (`g_add_a_mul_exp_eq_one`), M.11.
 
 **Status:** ✓ DONE — `LeanCode/YukawaDCF/SingleCompReduction.lean` (complete):
   - `c1_n1_ga_matrix_mix_eq_fmsa_pure`: `(1-g²) - a²c² = 2acg` given `h : g + a*c = 1`;
-    one-liner via `coeff_identity` (B.3). File gains `import MatrixIdentity`.
+    one-liner via `coeff_identity` (M.11). File gains `import MatrixIdentity`.
   - `c1_n1_from_mat_identity`: instantiation from `g_mat_n1_eq_scalar` (M.1 N=1);
     `linear_combination` handles `c*(M/D)` vs `(M/D)*c` commutativity mismatch.
 
@@ -733,8 +679,8 @@ which encodes the PY core-closure boundary condition at r = d. For unlike pairs 
 analogous quantity `G_{ij} ≈ 0` (no algebraic structure forces `(1-G²)` small), so
 `(1-G²)·exp(z·R_{ij}) ≈ exp(z·R_{ij})` grows without bound.
 
-**Depends on:** C.1, Task 4.2 (`g + a·exp(-z·d) = 1` → `|G| < 1`), B.3 (`1-g² = 2acg`), M.2.
-`hDS : D - S = 12 * eta * L * Real.exp (-z * d)` follows directly from `hD_def` (Task 4.2), so no
+**Depends on:** C.1, Task M.9 (`g + a·exp(-z·d) = 1` → `|G| < 1`), M.11 (`1-g² = 2acg`), M.2.
+`hDS : D - S = 12 * eta * L * Real.exp (-z * d)` follows directly from `hD_def` (Task M.9), so no
 extra hypothesis is needed.
 
 **Status:** ✓ DONE (2026-07-15), axiom-clean — `c1_n1_twoexp_bounded` in
@@ -772,7 +718,7 @@ as `ĉ₂₂ = +8174` for like pair (2,2)) — fixing it needs better `K₀₁` 
 self-consistency), not a different inner formula. If C.5 were *disproved*, an additional inner-core
 term beyond `K·G·exp` would be required.
 
-**Depends on:** B.2 (Q̂₀ structure), M.3/M.4 (G/A matrices); requires Blum 1975's explicit
+**Depends on:** M.10 (Q̂₀ structure), M.3/M.4 (G/A matrices); requires Blum 1975's explicit
 Laplace-space formula for multicomponent Yukawa MSA (or an independent derivation).
 **Effort:** medium-high.
 

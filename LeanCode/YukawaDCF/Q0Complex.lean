@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.MatrixQ0
+import LeanCode.HardSphere.MatrixQ0
 
 /-!
 # Task Y1.1 — Complex Laplace-space Baxter matrix `Q̂₀(s)`
