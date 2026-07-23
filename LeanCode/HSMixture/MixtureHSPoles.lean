@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.Q0Complex
+import LeanCode.HSMixture.Q0Complex
 import LeanCode.Analysis.ResidueAtSimplePole
 
 /-!

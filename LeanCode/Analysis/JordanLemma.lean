@@ -17,7 +17,7 @@ contour — the classical Jordan's-lemma argument that the arc contribution vani
 `R → ∞`, so that `circleIntegral_eq_sum_two_pi_I_mul_of_simple_poles`
 (`LeanCode/Analysis/ContourDeformation.lean`) can be bootstrapped from a *finite* residue sum to
 the *infinite* Mittag-Leffler expansion a real-line Fourier-inversion argument needs. Group
-Y2/MZERO's own Route B (`proof_notes_yukawa_wh.md`, `MZERO.9`–`MZERO.11`) independently hits the
+Y2/MZERO's own Route B (`proof_notes_mixture_rdf.md`, `MZERO.9`–`MZERO.11`) independently hits the
 identical gap, so this is deliberately kept general-purpose.
 
 **Unlike `ContourDeformation.lean`, this needs no new axiom.** A dedicated research pass

@@ -17,7 +17,7 @@ Q̂0_{ij}(z) = delta_{ij} - rho · exp(-lam·z) · [Q' · p1(sigma,z) + Q'' · p
 ```
 where `rho = √(rhoirhoj)`, `lam = λij = (sigmaj-sigmai)/2`, and:
 ```
-p1(sigma,z) = (1-zsigma - exp(-zsigma)) / z^2     [= -φ1_shifted from Task B.1]
+p1(sigma,z) = (1-zsigma - exp(-zsigma)) / z^2     [= -φ1_shifted from Task 2.3, ex-B.1]
 p2(sigma,z) = (1-zsigma + (zsigma)^2/2 - exp(-zsigma)) / z^3
 ```
 
@@ -40,7 +40,7 @@ set_option linter.style.whitespace false
 
 open Real
 
-namespace FMSA.PathB
+namespace FMSA.HardSphere
 
 /-- **Task M.10 — Q̂0 entry decomposition (scalar):**
 ```
@@ -50,7 +50,7 @@ Parameters: `z` (Yukawa pole, `≠ 0`), `sigma` (diameter sigmai), `lam = (sigma
 `R = (sigmai+sigmaj)/2` (contact), `sigma_min`, `rho = √(rhoirhoj)`,
 `Q'`, `Q''`, `delta` (Kronecker deltaij).
 Hypothesis `hR : lam + sigma = R` encodes the contact-distance identity Rij = λij + sigmai. -/
-theorem b2_qhat_entry_decomp
+theorem qhat_entry_decomp
     (z sigma lam R sigma_min rho Q' Q'' delta : ℝ) (hz : z ≠ 0) (hR : lam + sigma = R) :
     delta - rho * exp (-(lam * z)) *
         (Q' * ((1 - z * sigma - exp (-(z * sigma))) / z ^ 2) +
@@ -78,4 +78,4 @@ theorem b2_qhat_entry_decomp
   -- Step 3: substitute hexp into h and rearrange by ring
   rw [h, hexp]; ring
 
-end FMSA.PathB
+end FMSA.HardSphere

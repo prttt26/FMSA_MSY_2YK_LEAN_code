@@ -75,11 +75,12 @@ of `oz_fixed_pt_unique`'s `ContinuousOn ... (Set.Ici sigma)` conjunct).
 via coercion of a `BoundedContinuousFunction`) — now known **false** (see `oz_fixed_pt_unique`'s
 doc comment, `PYOZ_GHS.lean`): `oz_h` has a genuine jump at `r = σ`, matching the PY contact
 discontinuity encoded by `g0_HS_contact_value`. -/
-theorem oz_h_continuousOn_ext {eta sigma rho : ℝ} (hsigma : 0 < sigma) :
+theorem oz_h_continuousOn_ext {eta sigma rho : ℝ}
+    (hex : ∃ f : ℝ → ℝ, OzFixedPt eta sigma rho f ∧ ContinuousOn f (Set.Ici sigma)
+        ∧ ∃ C, ∀ r, |f r| ≤ C) :
     ContinuousOn (oz_h eta sigma rho) (Set.Ici sigma) := by
-  unfold oz_h
-  rw [dif_pos hsigma]
-  exact (Classical.choose_spec (oz_fixed_pt_unique eta sigma rho hsigma).exists).2.1
+  simp only [oz_h, dif_pos hex]
+  exact (Classical.choose_spec hex).2.1
 
 /-! ### The pointwise (per-`t`) inner-integral identity -/
 
@@ -208,18 +209,22 @@ theorem oz_forcing_add_linear_op_eq_radial3d_conv {eta sigma rho : ℝ} (hsigma 
 
 /-- `oz_h` is a fixed point of `oz_operator` (derived from the public
 `g0_HS_outer_is_oz_fp` + `g0_HS_outer_eq_oz_h`, without needing the private `oz_h_is_fp`). -/
-private lemma oz_h_is_fixed_pt {eta sigma rho : ℝ} (hsigma : 0 < sigma) :
+private lemma oz_h_is_fixed_pt {eta sigma rho : ℝ}
+    (hex : ∃ f : ℝ → ℝ, OzFixedPt eta sigma rho f ∧ ContinuousOn f (Set.Ici sigma)
+        ∧ ∃ C, ∀ r, |f r| ≤ C) :
     OzFixedPt eta sigma rho (oz_h eta sigma rho) := by
   have heq : (fun r => g0_HS_outer eta sigma rho r - 1) = oz_h eta sigma rho :=
-    funext fun r => by rw [g0_HS_outer_eq_oz_h hsigma]; ring
+    funext fun r => by unfold g0_HS_outer; ring
   rw [← heq]
-  exact g0_HS_outer_is_oz_fp hsigma
+  exact g0_HS_outer_is_oz_fp hex
 
 /-- **Gap A, fully closed (proved, no new axiom):** `oz_h` satisfies the full pointwise
 3D-OZ convolution equation for all `r ≥ σ`, unconditionally. This is the entire content of
 `oz_laplace_oz_eq`'s "r ≥ σ half" — only Gap B (the `r < σ` core closure) remains to extend
 this to all `r`, which is needed before `radial_laplace_conv` can be invoked. -/
 theorem oz_h_satisfies_conv_ext {eta sigma rho : ℝ} (hsigma : 0 < sigma)
+    (hex : ∃ f : ℝ → ℝ, OzFixedPt eta sigma rho f ∧ ContinuousOn f (Set.Ici sigma)
+        ∧ ∃ C, ∀ r, |f r| ≤ C)
     {r : ℝ} (hr : sigma ≤ r)
     (hint1 : IntervalIntegrable
       (fun t => t * c_HS eta sigma t * (sigma ^ 2 - (r - t) ^ 2) *
@@ -230,8 +235,8 @@ theorem oz_h_satisfies_conv_ext {eta sigma rho : ℝ} (hsigma : 0 < sigma)
       MeasureTheory.volume 0 sigma) :
     oz_h eta sigma rho r =
     c_HS eta sigma r + rho * radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho) r := by
-  rw [c_HS_outer hr, zero_add, oz_fixed_pt_exterior (oz_h_is_fixed_pt hsigma) hr]
-  exact oz_forcing_add_linear_op_eq_radial3d_conv hsigma (oz_h_continuousOn_ext hsigma)
+  rw [c_HS_outer hr, zero_add, oz_fixed_pt_exterior (oz_h_is_fixed_pt hex) hr]
+  exact oz_forcing_add_linear_op_eq_radial3d_conv hsigma (oz_h_continuousOn_ext hex)
     (fun s hs => oz_h_core hsigma hs) hr hint1 hint2
 
 /-! ### Retired: the Laplace-domain assembly `oz_laplace_oz_eq_of_core_closure`

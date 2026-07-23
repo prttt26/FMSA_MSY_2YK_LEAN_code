@@ -4,7 +4,8 @@ Detailed proof records for method failures:
 - **Group chsY** — why the naive [chsY] Eq. 41 formula fails (wrong (1+A)² coefficient)
 - **Group P** — why polynomial approximation structurally fails for repulsive Yukawa tails
 - **Group GA** — why FMSA_GA_matrix_mix's *own* inner formula is ill-conditioned for unlike pairs
-  at large σ-ratio (Tasks GA.1–GA.4; positive counterparts C.2, C.5 stay in `proof_notes_yukawa_dcf.md` Group C)
+  at large σ-ratio (Tasks GA.1–GA.3; **GA.4 retired 2026-07-17** — doubly falsified, tombstone kept;
+  positive counterparts C.2, C.5 stay in `proof_notes_yukawa_dcf.md` Group C)
 
 See `todo_lean.md` for task status summary.
 
@@ -367,8 +368,8 @@ where the two-exponential base `K·exp(z·R_{ij})` diverges and no bounded addit
 rescue it.
 
 The core story has four parts; the two **failure** results are formalized here (GA.1, GA.2; further
-extended by GA.3/GA.4 below), and the two **positive** counterparts stay in `proof_notes_yukawa_dcf.md`
-Group C (C.2, C.5):
+extended by GA.3 below — **GA.4 retired 2026-07-17**, see its tombstone), and the two **positive**
+counterparts stay in `proof_notes_yukawa_dcf.md` Group C (C.2, C.5):
 
 - **C.2** *(Group C — positive)* — for N=1 like pairs an **exp-cancellation** keeps the two-exp
   formula bounded. This is *why* the single-component limit is well-conditioned; it is the
@@ -389,12 +390,14 @@ Group C (C.2, C.5):
   ĉ₁₂ ≈ 0 as *expected*, not a bug.) The concrete derivation now lives in **Group Y1** (Y1.1/Y1.5/Y1.6
   done; Y1.3 = remaining WH split).
 
-**Task IDs.** GA.1–GA.4 are the group-local task IDs. GA.1/GA.2 were renumbered 2026-07-15 from their
-original `C.3`/`C.4` when they were split out of Group C into this failure group (any in-progress
-proof effort keyed to the old `C.3`/`C.4` names should update to `GA.1`/`GA.2`). **GA.3** (perturbation
-*ratio* unbounded) and **GA.4** (perturbation *series* radius of convergence → 0, formerly `Y2.16`,
-moved here 2026-07-15 in the Group-Y2 split) extend the failure argument from the termwise base bound
-to the ratio and to the resummed series. C.1/C.2/C.5 remain in Group C.
+**Task IDs.** GA.1–GA.3 are the live group-local task IDs (**GA.4 retired 2026-07-17**, tombstone
+kept below). GA.1/GA.2 were renumbered 2026-07-15 from their original `C.3`/`C.4` when they were split
+out of Group C into this failure group (any in-progress proof effort keyed to the old `C.3`/`C.4` names
+should update to `GA.1`/`GA.2`). **GA.3** (perturbation *ratio* unbounded) extends the failure argument
+from the termwise base bound to the ratio. **GA.4** (perturbation *series* radius of convergence → 0,
+formerly `Y2.16`, moved here 2026-07-15 in the Group-Y2 split) was **retired as doubly falsified** — it
+over-reached from "the GA split is ill-conditioned" (true) to "perturbation theory itself diverges"
+(false). C.1/C.2/C.5 remain in Group C.
 
 *Source: `fmsa_hs_pole_residue.py` Route C analysis + `_build_pure_refs` bug fix (2026-07-15).*
 
@@ -417,12 +420,18 @@ theorem unlike_pair_twoexp_unbounded (K : ℝ) (hK : 0 < K) (M : ℝ) :
 **Statement (part B — additive correction insufficient):**
 ```lean
 theorem hs_pole_additive_insufficient
-    (K z R : ℝ) (hK : K > 0) (hz : z > 0) (hR : R > 0) (hzR : z * R > 1)
-    (n : ℕ) (B : Fin n → ℝ) (hB : ∀ k, |B k| ≤ K / z ^ 2)
-    (additive : ℝ) (hadditive : additive = ∑ k, B k) :
-    K * Real.exp (z * R) + additive ≥ K * (Real.exp (z * R) - n / z ^ 2) := by
-  ...
--- Corollary: for z*R >> 1, K·exp(z·R) dominates n·K/z² (finitely many poles)
+    {C K z R : ℝ} (_hK : 0 < K) (_hz : 0 < z) {n : ℕ} (B : Fin n → ℝ)
+    (hB : ∀ k, |B k| ≤ C * K / z ^ 2) :
+    K * Real.exp (z * R) - (n : ℝ) * (C * K / z ^ 2) ≤ K * Real.exp (z * R) + ∑ k, B k
+```
+(Corollary: for `z·R ≫ log n`, `K·exp(z·R)` dominates the fixed `n·C·K/z²`.)
+
+**Statement (part B, helper — `hB` discharged structurally, 2026-07-17):**
+```lean
+theorem residue_propagator_bound {n : ℕ} (A s : Fin n → ℂ) {C K z : ℝ}
+    (hK : 0 ≤ K) (hz : 0 < z) (hA : ∀ k, ‖A k‖ ≤ C)
+    (hsep : ∀ k, 2 * ‖s k‖ ≤ z) (k : Fin n) :
+    ‖A k * K / ((z : ℂ) ^ 2 - (s k) ^ 2)‖ ≤ 4 / 3 * C * K / z ^ 2
 ```
 
 **Why it matters:** Closes the Route C failure story. Groups P.3/P.C1 proved no POLYNOMIAL
@@ -436,8 +445,42 @@ when z·R ≫ log(n). This proves the HS-pole additive approach fails for any fi
 **Status:** ✓ DONE (2026-07-15), axiom-clean — `LeanCode/FMSAPoly/PolyApproxFails.lean`.
 Part A `unlike_pair_twoexp_unbounded` (witness `z=1`, `R = max 0 (log(M/K)) + 1`; `Real.exp_log` +
 `Real.exp_le_exp` + case split on `M ≤ 0`). Part B `hs_pole_additive_insufficient` (`|∑ B k| ≤
-∑|B k| ≤ n·(K/z²)` via `Finset.abs_sum_le_sum_abs`, then `linarith`); the `|B k| ≤ K/z²` residue
-bound stays the explicit hypothesis `hB` (numerically verified), as planned.
+∑|B k| ≤ n·(C·K/z²)` via `Finset.abs_sum_le_sum_abs`, then `linarith`).
+
+**Update 2026-07-17 — `hB` discharged; it was never a physics input.**  `hB` sat in the
+conditional-hypothesis table as `num` ("numerically verified").  That classification was **wrong**.
+Reading the Route-C implementation (`fmsa_hs_pole_residue.py:17,116`):
+```
+B_k = Σ_t  K_t · A_k / (z_t² − s_k²),      A_k := [adj Q̂₀(s_k)]_ij / det′Q̂₀(s_k)
+```
+`A_k` and `s_k` come from `ga._hs_adj` / `ga._hs_det_prime` / `ga._hs_poles` — the **hard-sphere**
+Baxter matrix alone.  They carry **no `z`-dependence**: every `z` in `B_k` sits in `K_t` or in the
+propagator `1/(z_t² − s_k²)`.  Two consequences:
+
+1. **The `O(K/z²)` shape is elementary**, now proved by `residue_propagator_bound`: away from
+   resonance (`2‖s_k‖ ≤ z`) the reverse triangle inequality gives `‖z² − s_k²‖ ≥ z² − ‖s_k‖² ≥
+   (3/4)z²`, hence `‖B_k‖ ≤ (4/3)·C·K/z²` with `C := max_k ‖A_k‖`.  The max exists because GA.1's
+   pole set is **finite** (`Fin n`) — which is why **no** `POLE.5`/`MML.5`-style per-pole magnitude
+   machinery is needed here.  That machinery is for *infinite* pole sums (`mixHS_summable`); GA.1
+   never needed it.
+2. **The sharp constant was fake precision.**  `‖B_k‖ ≤ K/z²` (i.e. `C = 1`) is **not** a theorem:
+   it forces `‖A_k‖ ≤ ‖1 − s_k²/z²‖`, whose limit as `z → ∞` is `1` — so it demands `‖A_k‖ ≲ 1`, a
+   numerical accident of the HS Baxter matrix, not a fact.  The theorem now quantifies over an
+   arbitrary `C`; the GA.1 argument is **insensitive** to it (it only needs `n·C·K/z²` *fixed* while
+   `K·exp(z·R) → ∞`).  Nothing was lost by dropping the sharp form.
+
+**Scope caveat — GA.1 bounds a formula that is itself a candidate.**  `fmsa_hs_pole_residue.py:27`
+states: *"This is an EXPERIMENTAL implementation. The residue coupling factor `1/(z_t²−s_k²)` is a
+**candidate** derived from the Laplace-space 1D Yukawa propagator."*  So GA.1's counting argument
+refutes one guessed ansatz, not HS-pole corrections in general.
+
+**The stronger reason Route C fails (2026-07-17).**  The shipped, validated `fmsa_double_prop`
+assembles `Ĉ₁(k) = Q̂₀(−k)·B₁(k)·Q̂₀ᵀ(−k)` — **no `Q̂₀⁻¹`, hence no HS poles in the DCF at all**; the
+zeros of `det Q̂₀` enter only the RDF `ĥ₁` (via `Q̂₀⁻¹`).  Route C's premise — adding HS-pole residues
+to the DCF inner core — adds objects that **do not belong there**.  GA.1's conclusion (Route C fails)
+stands, but this structural fact is a far stronger reason than the `O(K/z²)` counting.  Cf. the GA.3
+scope correction: the *true* `c^(1)` is O(1)-bounded (0.332 vs the GA formula's 1.78×10⁸), so the
+perturbation expansion is fine — it is the **split** that diverges.
 
 ---
 
@@ -464,7 +507,7 @@ M.10 (done), M.3/M.4. Done via a `Tendsto` layer over the M.4 rank-2 apparatus.
 `num→0` + `den→L≠0` ⟹ `num/den→0`, via `Tendsto.div`+`zero_div`) and `g_mat_offdiag_decay`
 (the exp-bound form, now a corollary via `squeeze_zero_norm`).
 
-*Concrete N=2 discharge* (`LeanCode/HardSphere/Q0DetLimit.lean`, all axiom-clean):
+*Concrete N=2 discharge* (`LeanCode/HSMixture/Q0DetLimit.lean`, all axiom-clean):
 - **atomic** `p1_tendsto_zero` / `p2_tendsto_zero`: `p1(σ,z),p2(σ,z)→0` as `z→∞` (term-split
   `p1 = 1/z² − σ/z − e^{−zσ}/z²` etc., each `→0`); propagated to `fFun_tendsto_zero`,
   `gFun_tendsto_zero`.
@@ -484,7 +527,28 @@ theorems: `[propext, Classical.choice, Quot.sound]`.
 
 ---
 
-### Task GA.3 — FMSA unlike-pair perturbation ratio unbounded; FMSA outside its own convergence domain
+### Task GA.3 — Unlike-pair ratio of the **GA-matrix split** is unbounded
+
+> **⚠ Scope corrected 2026-07-17 — this is about the GA-matrix *split*, not about perturbation theory.**
+>
+> The theorem is true and axiom-clean, but the original wording below ("FMSA outside its own
+> convergence domain", "the perturbation expansion is formally invalid at 2YK physical parameters")
+> **over-reached** — the same conflation that got **GA.4 retired**.
+>
+> What is unbounded is `K·exp(z·R_{01})`, the growing branch of the GA-matrix `(1−G²)/A²` **split**,
+> against a `z`-independent HS bound. As a statement about *this approximation formula* it is real:
+> `true_first_order_probe.md` measures GA-formula errors up to **10⁹** (pair (1,2): GA's
+> max |c^(1)| = **1.78×10⁸**).
+>
+> It is **not** a statement about first-order perturbation theory, which is **fine** at 2YK: the
+> **true** `c^(1)` is O(1)-bounded (max |c^(1)| = **0.332** for pair (1,2)), `c(s·K)` is smooth on
+> `s ∈ [0,1]`, and first order at **full** coupling `s=1` is **1.3% / 1.4%** accurate in `ĉ(0)`.
+> The exponentially large ratio is the split's **catastrophic cancellation**: the exact first-order
+> term contains cancellations (N=1 analogue `(1−g²)·e^{zR} = 2a − a²e^{−zR}`, bounded via
+> `Ĝ + Â·e^{−zσ} = I`) that the GA split destroys for unlike pairs because `R_ij > σ_min`.
+>
+> **Correct reading.** GA.3 ⇒ *the GA-matrix inner formula is unusable at large `z·R`* (which is why
+> Route C / `FMSA_double_prop` replaced it) — **not** *FMSA perturbation theory diverges*.
 
 **What to prove.** The ratio of the FMSA first-order inner amplitude to the zeroth-order (hard-sphere)
 reference grows without bound as `z·R_{01} → ∞`:
@@ -493,9 +557,10 @@ reference grows without bound as `z·R_{01} → ∞`:
 ‖c^(1)_{01}(r)‖_∞  /  ‖c_HS_{01}‖_∞  ≥  C · K · exp(z · R_{01})  →  ∞
 ```
 
-In plain terms: the "small correction" that FMSA adds is NOT small — it is exponentially large relative
-to the reference. For 2YK parameters (`z₂ ≈ 9.3`, `R_{01} ≈ 1.43`, `|K₂| ≈ 2.32`), the ratio is
-`≳ 2.32 · exp(13.3) ≈ 3.5 × 10⁶`.
+In plain terms: the amplitude **the GA split assigns** to the inner core is exponentially large relative
+to the HS reference. For 2YK parameters (`z₂ ≈ 9.3`, `R_{01} ≈ 1.43`, `|K₂| ≈ 2.32`), the ratio is
+`≳ 2.32 · exp(13.3) ≈ 3.5 × 10⁶` — matching the probe's measured GA artifact (1.78×10⁸ for pair (1,2)),
+and *not* the true `c^(1)` (0.332). See the scope box above.
 
 **Mathematical content.** This is a direct corollary of GA.1 (`unlike_pair_twoexp_unbounded`:
 `K · exp(z · R_{01}) → ∞`) combined with the observation that `c_HS` is bounded above by a constant
@@ -507,7 +572,7 @@ the growing exponential branch), while `c_HS` is bounded — ratio → ∞.
 **Why this is not just GA.1.** GA.1 proves the absolute amplitude `K·exp(z·R)→∞`; GA.3 phrases this
 as a *relative* statement (first-order / zeroth-order ratio), which is the standard definition of
 "not a small perturbation." GA.3 is the Lean-level bridge connecting the numerical observation
-(OZ+MSA ≠ FMSA for 2YK) to the formal perturbation-theory criterion.
+(OZ+MSA ≠ **GA-matrix** FMSA for 2YK) to a formal statement about **the split**.
 
 **Lean plan.** Add `perturbation_ratio_unbounded` to `FMSAPoly/PolyApproxFails.lean`:
 1. Quote `unlike_pair_twoexp_unbounded` (GA.1) for the numerator lower bound.
@@ -527,7 +592,35 @@ is threaded as an explicit hypothesis rather than derived — matching `hs_pole_
 ---
 
 
-### Task GA.4 — *(post-MML.3 Corollary)* Convergence radius of the unlike-pair MSA perturbation series → 0 as z·R → ∞
+### Task GA.4 — ~~*(post-MML.3 Corollary)* Convergence radius of the unlike-pair MSA perturbation series → 0 as z·R → ∞~~ **RETIRED (2026-07-17)**
+
+> **⚠ RETIRED 2026-07-17 — doubly falsified. Do not revive as stated.**
+>
+> **(i) The mechanism no longer exists.** The argument below rests on "the exact inner-DCF poles
+> `s_k(ε)`, roots of `det(Q̂₀(s,ε)) = 0`". (★) (Group MRS; `todo/to_Lean.md` §1) proves
+> `Ĉ₁ = Q̂₀(−k)·B₁·Q̂₀ᵀ(−k)` carries **no `Q̂₀⁻¹`**, so the inner **DCF has no HS poles at all** — the
+> `det Q̂₀` zeros never enter it. There are no inner-DCF poles to migrate with `ε`.
+>
+> **(ii) The conclusion is refuted numerically.** `numerical_notes/results/true_first_order_probe.md`
+> (`probe_true_first_order.py`; non-circular certified ground truth) states verbatim: *"the claimed
+> convergence radius `R_c ~ e^{−zR} ≈ 10⁻⁶` **is refuted**"*. Concretely: `c(s·K)` is **smooth on
+> `s ∈ [0,1]`** (OZ converges in 28 iterations at every `s` — no singularity); first order at **full**
+> coupling `s = 1` is **1.3% / 1.4%** accurate in `ĉ(0)` for pairs (1,2)/(2,2); the second-order
+> fraction grows only linearly in `s` (0.05 → 0.2) — *"consistent with a well-behaved series at
+> `s=1`"*. That is the exact opposite of `R_conv ≲ 2×10⁻⁶ ≪ |K₂| ≈ 2.3`.
+>
+> **(iii) Root cause — the conflation to avoid.** GA.4 read *the GA-matrix approximation's*
+> ill-conditioning (**real**: GA.1–GA.3; the probe measures GA-formula errors up to 10⁹) as
+> *first-order perturbation theory itself* diverging (**false**: the true `c^{(1)}` is O(1)-bounded —
+> max |c^{(1)}| inner = **0.332** for pair (1,2), vs GA's **1.78×10⁸**). This is precisely the
+> conflation called out in `true_first_order_probe.md` §5.4, which also forced a correction banner on
+> `numerical_notes/theory/perturbative_breakdown_large_sigma_ratio.md` §3–5.
+>
+> **Status.** Never started; no Lean code to retract. **GA.1–GA.3 are unaffected** — they are
+> statements about the GA-matrix *split*, not about perturbation theory, and the probe corroborates
+> them (the 10⁶–10⁸ magnitudes *are* that split's ill-conditioning).
+>
+> The original text is kept below as a record of the refuted argument.
 
 **Physical motivation.** GA.3 shows FMSA's first-order term is large (not a small perturbation). GA.4
 is the companion series-level statement: even summing all orders, the perturbation series in the Yukawa

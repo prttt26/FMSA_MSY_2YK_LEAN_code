@@ -7,16 +7,16 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.HardSphere.MatrixQ0
-import LeanCode.YukawaDCF.B4OriginBC
+import LeanCode.HSMixture.MatrixQ0
+import LeanCode.YukawaDCF.InnerOriginBC
 import LeanCode.YukawaDCF.ContactMatching
 
 /-!
-# Tasks B.5–B.10 — Analytical Determination of P_{ij}(r) for the Mixture Case
+# Tasks GAP.5–GAP.10 — Analytical Determination of P_{ij}(r) for the Mixture Case
 
 ## Context
 
-Task B.4 established the like-pair polynomial constant p₀ = −2Kga using
+Task GAP.4 established the like-pair polynomial constant p₀ = −2Kga using
 the N=1 identity `g + a·exp(−z) = 1`.  For a general N-component mixture,
 the full inside-core polynomial
 
@@ -25,7 +25,7 @@ P_{ij}(r) = A_{ij} + B_{ij}·r + C_{ij}·r² + D_{ij}·r³ + E_{ij}^{(4)}·r⁴
 ```
 
 has five coefficients that are generically **nonzero** for unlike pairs.
-Tasks B.5–B.9 formalise the complete determination of all five coefficients
+Tasks GAP.5–GAP.9 formalise the complete determination of all five coefficients
 via the s=0 Laurent expansion of the exact inside-core Laplace transform.
 
 ## Source
@@ -50,15 +50,29 @@ respectively, proved below as `HasDerivAt` statements.
 
 ## Results Summary
 
-| Task | Key theorem                       | Status                           |
-|------|-----------------------------------|----------------------------------|
-| B.5  | `b5_degree_bound`                 | ✓ proved                         |
-| B.6  | `b6_origin_unique_constraint`     | ✓ proved                         |
-| B.7  | `b7_no_contact_bc`                | ✓ proved                         |
-| B.8  | `b8_poly_coeff_from_laurent`      | ✓ proved                         |
-| B.9  | `b9_no_odd_symmetry`,             | ✓ proved                         |
-|      | `b9_d_ij_nonzero_example`         |                                  |
-| B.10 | `b10_natDegree_eq_four`           | ✓ proved                         |
+| Task | Key theorem                       | Status                                        |
+|------|-----------------------------------|-----------------------------------------------|
+| GAP.5  | `q0_entry_degree_bound`                 | ✓ proved                                      |
+| GAP.6  | `origin_unique_constraint`     | ✓ proved                                      |
+| GAP.7  | `no_contact_bc`                | ✓ proved                                      |
+| GAP.8  | `poly_coeff_from_laurent`      | ⚠ VACUOUS (see its docstring)                 |
+| GAP.9  | `no_odd_symmetry`,             | ✓ proved (true, but see below)                |
+|      | `d_ij_nonzero_example`,        |                                               |
+|      | `dij_cubic_nonzero`            | ✓ proved — **Laplace-space `q0_entry` fact**, |
+|      |                                   | NOT evidence for `D_ij ≠ 0` (re-scoped)       |
+|      | *task claim `D_ij ≠ 0`*           | ❌ **FALSIFIED 2026-07-17 — `D_ij ≡ 0`**       |
+| GAP.10 | `poly_natDegree_le_four`           | ✓ proved (unconditional `≤ 4`)                |
+|      | `poly_natDegree_eq_four`           | ✓ proved (`= 4` given `a ≠ 0`)                |
+|      | `poly_natDegree_eq_four_iff`       | ✓ proved (`= 4 ↔ a ≠ 0`)                      |
+|      | *task claim "degree is 4"*        | ⚠ **RELAXED — generic only** (leading coeff   |
+|      |                                   | vanishes on a codim-1 set; inner piece deg 1) |
+
+**Group GAP is the coefficient-fixing scaffolding of `FMSA_GA_matrix_mix`, a superseded method.**
+Its programme (posit the [LN] Eq. (101) ansatz "`P_ij` is a single `deg ≤ 4` polynomial on
+`(0, R_ij)`", then pin the coefficients down) is obsolete: the shipped `fmsa_double_prop` computes
+the inner core *constructively* as a piecewise (poly × exp) closed form, needs no ansatz, and shows
+the ansatz is **false** for unlike pairs (two pieces, split at `λ_ij`).  Retained as the record of
+the superseded route.  See `proof_notes_yukawa_dcf.md` GAP.8–GAP.10.
 -/
 
 set_option linter.style.whitespace false
@@ -71,11 +85,11 @@ open Real Filter Topology Set Polynomial
 namespace FMSA.MixturePoly
 
 -- ============================================================
--- § B.5 — Degree Bound: deg P_{ij}(r) ≤ 4
+-- § GAP.5 — Degree Bound: deg P_{ij}(r) ≤ 4
 -- ============================================================
 
 /-!
-## B.5 — Degree bound foundations
+## GAP.5 — Degree bound foundations
 
 The polynomial P_{ij}(r) arises as the s=0 residue of the inside-core Laplace
 transform.  The degree is ≤ 4 because the Q̂₀(s) matrix entries are analytic
@@ -87,17 +101,17 @@ The lemmas below establish those vanishing-derivative facts for p1 and p2.
 
 section DegreeBound
 
-/-- **B.5 helper — p1 numerator vanishes at s = 0.** -/
-lemma b5_p1_num_zero (sigma : ℝ) : (1 : ℝ) - 0 * sigma - exp (-(0 * sigma)) = 0 := by simp
+/-- **GAP.5 helper — p1 numerator vanishes at s = 0.** -/
+lemma p1_num_zero (sigma : ℝ) : (1 : ℝ) - 0 * sigma - exp (-(0 * sigma)) = 0 := by simp
 
-/-- **B.5 helper — first derivative of p1 numerator at s = 0 is zero.**
+/-- **GAP.5 helper — first derivative of p1 numerator at s = 0 is zero.**
 
 `d/ds [1 − s·σ − exp(−s·σ)]|_{s=0} = −σ + σ·exp(0) = 0`.
 
 The numerator therefore vanishes to order ≥ 2 at s = 0 (together with
-`b5_p1_num_zero`), so `p1(σ, s) = (numerator)/s²` has a removable singularity
+`p1_num_zero`), so `p1(σ, s) = (numerator)/s²` has a removable singularity
 at s = 0 with finite limit −σ²/2. -/
-lemma b5_p1_num_hasDerivAt (sigma : ℝ) :
+lemma p1_num_hasDerivAt (sigma : ℝ) :
     HasDerivAt (fun s => (1 : ℝ) - s * sigma - exp (-(s * sigma))) 0 0 := by
   -- inner: d/ds [-(s·σ)] = -σ at s = 0
   have hinner : HasDerivAt (fun s : ℝ => -(s * sigma)) (-sigma) 0 := by
@@ -113,13 +127,13 @@ lemma b5_p1_num_hasDerivAt (sigma : ℝ) :
               ((hasDerivAt_id _).mul_const sigma)).sub hexp
   exact h.congr_deriv (by ring)
 
-/-- **B.5 helper — second derivative of p1 numerator at s = 0 equals −σ².**
+/-- **GAP.5 helper — second derivative of p1 numerator at s = 0 equals −σ².**
 
 `d²/ds² [1 − s·σ − exp(−s·σ)]|_{s=0} = −σ²`.
 
-Together with `b5_p1_num_zero` and `b5_p1_num_hasDerivAt`, this shows the
+Together with `p1_num_zero` and `p1_num_hasDerivAt`, this shows the
 numerator has a zero of order exactly 2 at s = 0. -/
-lemma b5_p1_num_hasDerivAt2 (sigma : ℝ) :
+lemma p1_num_hasDerivAt2 (sigma : ℝ) :
     HasDerivAt (fun s : ℝ => -sigma + sigma * exp (-(s * sigma))) (-sigma ^ 2) 0 := by
   have hinner : HasDerivAt (fun s : ℝ => -(s * sigma)) (-sigma) 0 := by
     have h := ((hasDerivAt_id (0 : ℝ)).mul_const sigma).neg
@@ -134,14 +148,14 @@ lemma b5_p1_num_hasDerivAt2 (sigma : ℝ) :
   have h := (hasDerivAt_const (0 : ℝ) (-sigma)).add hmul
   exact h.congr_deriv (by ring)
 
-/-- **B.5 helper — p2 numerator vanishes at s = 0.** -/
-lemma b5_p2_num_zero (sigma : ℝ) :
+/-- **GAP.5 helper — p2 numerator vanishes at s = 0.** -/
+lemma p2_num_zero (sigma : ℝ) :
     (1 : ℝ) - 0 * sigma + (0 * sigma) ^ 2 / 2 - exp (-(0 * sigma)) = 0 := by simp
 
-/-- **B.5 helper — first derivative of p2 numerator at s = 0 is zero.**
+/-- **GAP.5 helper — first derivative of p2 numerator at s = 0 is zero.**
 
 `d/ds [1 − s·σ + (s·σ)²/2 − exp(−s·σ)]|_{s=0} = −σ + 0 + σ = 0`. -/
-lemma b5_p2_num_hasDerivAt (sigma : ℝ) :
+lemma p2_num_hasDerivAt (sigma : ℝ) :
     HasDerivAt (fun s : ℝ => 1 - s * sigma + (s * sigma) ^ 2 / 2 - exp (-(s * sigma))) 0 0 := by
   have hinner : HasDerivAt (fun s : ℝ => -(s * sigma)) (-sigma) 0 := by
     have h := ((hasDerivAt_id (0 : ℝ)).mul_const sigma).neg
@@ -158,10 +172,10 @@ lemma b5_p2_num_hasDerivAt (sigma : ℝ) :
               hsq).sub hexp
   exact h.congr_deriv (by ring)
 
-/-- **B.5 helper — second derivative of p2 numerator at s = 0 is zero.**
+/-- **GAP.5 helper — second derivative of p2 numerator at s = 0 is zero.**
 
 `d²/ds²[1 − s·σ + (s·σ)²/2 − exp(−s·σ)]|_{s=0} = σ² − σ² = 0`. -/
-lemma b5_p2_num_hasDerivAt2 (sigma : ℝ) :
+lemma p2_num_hasDerivAt2 (sigma : ℝ) :
     HasDerivAt (fun s : ℝ => -sigma + sigma ^ 2 * s + sigma * exp (-(s * sigma))) 0 0 := by
   have hinner : HasDerivAt (fun s : ℝ => -(s * sigma)) (-sigma) 0 := by
     have h := ((hasDerivAt_id (0 : ℝ)).mul_const sigma).neg
@@ -179,14 +193,14 @@ lemma b5_p2_num_hasDerivAt2 (sigma : ℝ) :
   have h := ((hasDerivAt_const _ (-sigma)).add hlin).add hmul
   exact h.congr_deriv (by ring)
 
-/-- **B.5 helper — third derivative of p2 numerator at s = 0 equals σ³.**
+/-- **GAP.5 helper — third derivative of p2 numerator at s = 0 equals σ³.**
 
 `d³/ds³[1 − s·σ + (s·σ)²/2 − exp(−s·σ)]|_{s=0} = σ³`.
 
 Together with the three vanishing values above, this establishes that the
 p2 numerator has a zero of order exactly 3 at s = 0, confirming that
 `p2(σ, s) = (numerator)/s³` extends analytically with limit σ³/6. -/
-lemma b5_p2_num_hasDerivAt3 (sigma : ℝ) :
+lemma p2_num_hasDerivAt3 (sigma : ℝ) :
     HasDerivAt (fun s : ℝ => sigma ^ 2 - sigma ^ 2 * exp (-(s * sigma))) (sigma ^ 3) 0 := by
   have hinner : HasDerivAt (fun s : ℝ => -(s * sigma)) (-sigma) 0 := by
     have h := ((hasDerivAt_id (0 : ℝ)).mul_const sigma).neg
@@ -201,7 +215,7 @@ lemma b5_p2_num_hasDerivAt3 (sigma : ℝ) :
   have h := (hasDerivAt_const _ (sigma ^ 2)).sub hmul
   exact h.congr_deriv (by ring)
 
-/-- **B.5 helper — p2(σ, z) → σ³/6 as z → 0⁺.**
+/-- **GAP.5 helper — p2(σ, z) → σ³/6 as z → 0⁺.**
 
 `(1 − z·σ + (z·σ)²/2 − exp(−z·σ)) / z³  →  σ³/6`.
 
@@ -210,7 +224,7 @@ lemma b5_p2_num_hasDerivAt3 (sigma : ℝ) :
 Apply `Real.exp_bound n=4`: for `|z·σ| ≤ 1`,
   `|exp(−z·σ) − (1 − z·σ + (z·σ)²/2 − (z·σ)³/6)| ≤ (z|σ|)⁴ · (5/96)`,
 so `|r(z)| ≤ z · (|σ|⁴ · 5/96) → 0`.  Squeeze gives `r(z) → 0`. -/
-lemma b5_p2_limit (sigma : ℝ) :
+lemma p2_limit (sigma : ℝ) :
     Filter.Tendsto
         (fun z : ℝ => (1 - z * sigma + (z * sigma) ^ 2 / 2 - Real.exp (-(z * sigma))) / z ^ 3)
         (nhdsWithin 0 (Set.Ioi 0)) (nhds (sigma ^ 3 / 6)) := by
@@ -289,7 +303,7 @@ lemma b5_p2_limit (sigma : ℝ) :
     linarith [le_abs_self ((1 - z * sigma + (z * sigma) ^ 2 / 2 - (z * sigma) ^ 3 / 6 -
       Real.exp (-(z * sigma))) / z ^ 3)]
 
-/-- **B.5 helper — p1(σ, z) → −σ²/2 as z → 0⁺.**
+/-- **GAP.5 helper — p1(σ, z) → −σ²/2 as z → 0⁺.**
 
 `(1 − z·σ − exp(−z·σ)) / z²  →  −σ²/2`.
 
@@ -297,9 +311,9 @@ lemma b5_p2_limit (sigma : ℝ) :
 ```
 p1(σ,z) = −σ²/2 + z · p2(σ,z)
 ```
-follows from `field_simp; ring`.  Since `p2(σ,z) → σ³/6` is finite (b5_p2_limit),
+follows from `field_simp; ring`.  Since `p2(σ,z) → σ³/6` is finite (p2_limit),
 `z · p2(σ,z) → 0 · σ³/6 = 0`, so `p1(σ,z) → −σ²/2 + 0 = −σ²/2`. -/
-lemma b5_p1_limit (sigma : ℝ) :
+lemma p1_limit (sigma : ℝ) :
     Filter.Tendsto (fun z : ℝ => (1 - z * sigma - Real.exp (-(z * sigma))) / z ^ 2)
         (nhdsWithin 0 (Set.Ioi 0)) (nhds (-sigma ^ 2 / 2)) := by
   -- Algebraic identity: p1(sigma,z) = -sigma²/2 + z · p2(sigma,z)  (for z ≠ 0)
@@ -317,7 +331,7 @@ lemma b5_p1_limit (sigma : ℝ) :
   have hzp2 : Filter.Tendsto
       (fun z => z * ((1 - z * sigma + (z * sigma) ^ 2 / 2 - Real.exp (-(z * sigma))) / z ^ 3))
       (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
-    simpa using hz.mul (b5_p2_limit sigma)
+    simpa using hz.mul (p2_limit sigma)
   -- Combine: -sigma²/2 + z·p2 → -sigma²/2 + 0 = -sigma²/2
   have hlim : Filter.Tendsto
       (fun z => -sigma ^ 2 / 2 +
@@ -326,13 +340,13 @@ lemma b5_p1_limit (sigma : ℝ) :
     simpa using tendsto_const_nhds.add hzp2
   exact hlim.congr' (halg.mono (fun z hz => hz.symm))
 
-/-- **B.5 helper — cubic Taylor coefficient of `p1(σ,s) = (1−sσ−e^{−sσ})/s²` at s = 0 is `σ⁵/120`.**
+/-- **GAP.5 helper — cubic Taylor coefficient of `p1(σ,s) = (1−sσ−e^{−sσ})/s²` at s = 0 is `σ⁵/120`.**
 
 After subtracting the order-0/1/2 Taylor terms `−σ²/2 + (σ³/6)s − (σ⁴/24)s²` and dividing by `s³`,
 the limit is the cubic coefficient `σ⁵/120`. This is the r³-relevant piece of the like-pair Baxter
 building block, needed (together with `p2_cubic_coeff` and the `exp(−λs)` prefactor) to assemble the
-cubic coefficient `D_ij` (Task B.9). Proof: rewrite as `σ⁵/120 + (Σ_{k=0}^{5}(−sσ)^k/k! − e^{−sσ})/s⁵`
-and squeeze the remainder to 0 via `Real.exp_bound` (n = 6) — same technique as `b5_p1_limit`, one
+cubic coefficient `D_ij` (Task GAP.9). Proof: rewrite as `σ⁵/120 + (Σ_{k=0}^{5}(−sσ)^k/k! − e^{−sσ})/s⁵`
+and squeeze the remainder to 0 via `Real.exp_bound` (n = 6) — same technique as `p1_limit`, one
 order higher. -/
 lemma p1_cubic_coeff (sigma : ℝ) :
     Filter.Tendsto
@@ -406,13 +420,13 @@ lemma p1_cubic_coeff (sigma : ℝ) :
     linarith [le_abs_self ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
       + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 - Real.exp (-(s * sigma))) / s ^ 5)]
 
-/-- **B.5 helper — cubic Taylor coefficient of `p2(σ,s) = (1−sσ+(sσ)²/2−e^{−sσ})/s³` at s = 0 is
+/-- **GAP.5 helper — cubic Taylor coefficient of `p2(σ,s) = (1−sσ+(sσ)²/2−e^{−sσ})/s³` at s = 0 is
 `−σ⁶/720`.**
 
 After subtracting the order-0/1/2 Taylor terms `σ³/6 − (σ⁴/24)s + (σ⁵/120)s²` and dividing by `s³`,
 the limit is the cubic coefficient `−σ⁶/720`. Companion to `p1_cubic_coeff`; the two together give the
 complete order-3 Taylor data of the Baxter building blocks p1, p2, from which `D_ij` (the r³
-coefficient, Task B.9) is assembled. Proof: rewrite as
+coefficient, Task GAP.9) is assembled. Proof: rewrite as
 `−σ⁶/720 + (Σ_{k=0}^{6}(−sσ)^k/k! − e^{−sσ})/s⁶` and squeeze via `Real.exp_bound` (n = 7). -/
 lemma p2_cubic_coeff (sigma : ℝ) :
     Filter.Tendsto
@@ -489,12 +503,12 @@ lemma p2_cubic_coeff (sigma : ℝ) :
       + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720
       - Real.exp (-(s * sigma))) / s ^ 6)]
 
-/-- **B.9 helper — order-3 Taylor remainder of the `exp(−λ·z)` prefactor.**
+/-- **GAP.9 helper — order-3 Taylor remainder of the `exp(−λ·z)` prefactor.**
 
 `(exp(−λ·z) − (1 − λz + (λz)²/2 − (λz)³/6)) / z³ → 0` as `z → 0⁺`. The `exp(−λ·z)` prefactor of
 `q0_entry` is entire (no removable singularity), so its order-3 Taylor is exact to `o(z³)`; via
 `Real.exp_bound` (n = 4). Combined with `p1_cubic_coeff`/`p2_cubic_coeff` this gives the cubic Taylor
-coefficient of a full `q0_entry` (the `exp(−λs)`-driven mechanism behind `D_ij`, Task B.9). -/
+coefficient of a full `q0_entry` (the `exp(−λs)`-driven mechanism behind `D_ij`, Task GAP.9). -/
 lemma exp_neg_cubic_rem (lam : ℝ) :
     Filter.Tendsto
         (fun z : ℝ => (Real.exp (-(lam * z))
@@ -548,10 +562,10 @@ lemma exp_neg_cubic_rem (lam : ℝ) :
     linarith [le_abs_self ((Real.exp (-(lam * z))
       - (1 - lam * z + (lam * z) ^ 2 / 2 - (lam * z) ^ 3 / 6)) / z ^ 3)]
 
-/-- **B.5 key lemma — `q0_entry` has a finite limit at s = 0.**
+/-- **GAP.5 key lemma — `q0_entry` has a finite limit at s = 0.**
 
 The limit value is `δ − ρ_geo · (Q′·(−σ²/2) + Q″·(σ³/6))`. -/
-lemma b5_q0_entry_hasLimit (sigma lam Q' Q'' rho_geo delta : ℝ) :
+lemma q0_entry_hasLimit (sigma lam Q' Q'' rho_geo delta : ℝ) :
     Filter.Tendsto (fun s => FMSA.MatrixQ0.q0_entry s sigma lam Q' Q'' rho_geo delta)
         (nhdsWithin 0 (Set.Ioi 0))
         (nhds (delta - rho_geo * (Q' * (-sigma ^ 2 / 2) + Q'' * (sigma ^ 3 / 6)))) := by
@@ -566,12 +580,12 @@ lemma b5_q0_entry_hasLimit (sigma lam Q' Q'' rho_geo delta : ℝ) :
   have hQp1 : Filter.Tendsto
       (fun s => Q' * ((1 - s * sigma - Real.exp (-(s * sigma))) / s ^ 2))
       (nhdsWithin 0 (Set.Ioi 0)) (nhds (Q' * (-sigma ^ 2 / 2))) :=
-    tendsto_const_nhds.mul (b5_p1_limit sigma)
+    tendsto_const_nhds.mul (p1_limit sigma)
   -- Q'' * p2(sigma,s) → Q'' * (sigma³/6)
   have hQp2 : Filter.Tendsto
       (fun s => Q'' * ((1 - s * sigma + (s * sigma) ^ 2 / 2 - Real.exp (-(s * sigma))) / s ^ 3))
       (nhdsWithin 0 (Set.Ioi 0)) (nhds (Q'' * (sigma ^ 3 / 6))) :=
-    tendsto_const_nhds.mul (b5_p2_limit sigma)
+    tendsto_const_nhds.mul (p2_limit sigma)
   -- rho_geo * exp * (Q'*p1 + Q''*p2) → rho_geo * 1 * (Q'*(-sigma²/2) + Q''*(sigma³/6))
   have hprod : Filter.Tendsto
       (fun s => rho_geo * Real.exp (-(lam * s)) *
@@ -588,30 +602,30 @@ lemma b5_q0_entry_hasLimit (sigma lam Q' Q'' rho_geo delta : ℝ) :
   convert hfinal using 2
   ring
 
-/-- **Task B.5 — Degree bound: deg P_{ij}(r) ≤ 4.**
+/-- **Task GAP.5 — Degree bound: deg P_{ij}(r) ≤ 4.**
 
 Each `q0_entry s σ λ Q′ Q″ ρ_geo δ` has a **finite limit** as s → 0⁺.
 The apparent poles at s = 0 from dividing by s² (p1) and s³ (p2) are cancelled
 by the vanishing of the numerators to order 2 and 3 respectively — formalised
-by the HasDerivAt lemmas `b5_p1_num_hasDerivAt` and `b5_p2_num_hasDerivAt2`.
+by the HasDerivAt lemmas `p1_num_hasDerivAt` and `p2_num_hasDerivAt2`.
 
 The finiteness is the analytical content of the degree bound ≤ 4: after the
-Laurent-coefficient extraction (Task B.8), a pole of order n at s = 0 corresponds
+Laurent-coefficient extraction (Task GAP.8), a pole of order n at s = 0 corresponds
 to a polynomial term of degree n−1, so a finite (order-0) singularity gives degree ≤ 4. -/
-theorem b5_degree_bound (sigma lam Q' Q'' rho_geo delta : ℝ) :
+theorem q0_entry_degree_bound (sigma lam Q' Q'' rho_geo delta : ℝ) :
     ∃ L : ℝ, Filter.Tendsto
         (fun s => FMSA.MatrixQ0.q0_entry s sigma lam Q' Q'' rho_geo delta)
         (nhdsWithin 0 (Set.Ioi 0)) (nhds L) :=
-  ⟨_, b5_q0_entry_hasLimit sigma lam Q' Q'' rho_geo delta⟩
+  ⟨_, q0_entry_hasLimit sigma lam Q' Q'' rho_geo delta⟩
 
 end DegreeBound
 
 -- ============================================================
--- § B.6 — Origin Uniqueness: only A_{ij} = −E_{ij}(0) is forced
+-- § GAP.6 — Origin Uniqueness: only A_{ij} = −E_{ij}(0) is forced
 -- ============================================================
 
 /-!
-## B.6 — Origin uniqueness
+## GAP.6 — Origin uniqueness
 
 The inside-core DCF is `c_{ij}^{(1)}(r) = [E_{ij}(r) + P_{ij}(r)] / (2π√ρ · r)`.
 Finiteness at r = 0 requires `E_{ij}(0) + P_{ij}(0) = 0`, i.e.,
@@ -625,7 +639,7 @@ as r → 0⁺, then necessarily P(0) = −E₀.
 
 section OriginUniqueness
 
-/-- **Task B.6 — Origin uniqueness (forward direction):**
+/-- **Task GAP.6 — Origin uniqueness (forward direction):**
 
 If the inside-core formula `[E₀ + A + B·r + C·r² + D·r³ + E4·r⁴] / r`
 has a finite limit as r → 0⁺, then necessarily `A = −E₀`.
@@ -634,7 +648,7 @@ Proof: Multiplying both sides by r → 0, the left side converges to
 `0 · L = 0` by the product rule for limits.  The same quantity equals
 `E₀ + A + B·r + ...` for r ≠ 0, which converges to `E₀ + A` by polynomial
 continuity.  Uniqueness of limits gives `E₀ + A = 0`. -/
-theorem b6_origin_unique_constraint
+theorem origin_unique_constraint
     (A B C D E4 E0 : ℝ)
     (hL : ∃ L : ℝ, Filter.Tendsto
         (fun r => (E0 + A + B * r + C * r ^ 2 + D * r ^ 3 + E4 * r ^ 4) / r)
@@ -676,11 +690,11 @@ theorem b6_origin_unique_constraint
   have huniq : 0 * L = E0 + A := tendsto_nhds_unique hpoly_lim hcont
   linarith [mul_zero L]
 
-/-- **Task B.6 — Converse (completeness):**
+/-- **Task GAP.6 — Converse (completeness):**
 
 If `A = −E₀`, the numerator `E₀ + A + B·r + ... = B·r + C·r² + ...` vanishes
 at r = 0, and the quotient `[B·r + ...]/r → B` is finite. -/
-theorem b6_origin_converse (B C D E4 E0 : ℝ) :
+theorem origin_unique_converse (B C D E4 E0 : ℝ) :
     Filter.Tendsto
         (fun r => (E0 + (-E0) + B * r + C * r ^ 2 + D * r ^ 3 + E4 * r ^ 4) / r)
         (nhdsWithin 0 (Set.Ioi 0)) (nhds B) := by
@@ -704,11 +718,11 @@ theorem b6_origin_converse (B C D E4 E0 : ℝ) :
 end OriginUniqueness
 
 -- ============================================================
--- § B.7 — No Contact BC: B, C, D, E^{(4)} not fixed by r = R_{ij}
+-- § GAP.7 — No Contact BC: B, C, D, E^{(4)} not fixed by r = R_{ij}
 -- ============================================================
 
 /-!
-## B.7 — No contact boundary condition
+## GAP.7 — No contact boundary condition
 
 The coefficients B_{ij}, C_{ij}, D_{ij}, E_{ij}^{(4)} of P_{ij}(r) are NOT
 constrained by any condition at r = R_{ij}.  This is a direct corollary of
@@ -723,7 +737,7 @@ Task 5.1 (contact continuity physically disproved):
 
 section NoContactBC
 
-/-- **Task B.7 — No contact boundary condition:**
+/-- **Task GAP.7 — No contact boundary condition:**
 
 For any values v, v', assigning `P_{ij}(R) = v` or `P'_{ij}(R) = v'` to
 determine the polynomial coefficients B, C, D, E^{(4)} is NOT a consequence
@@ -732,7 +746,7 @@ of the OZ/MSA construction.  It is an additional, unjustified axiom.
 The result follows because DCF continuity at r = R_{ij} is false in general
 (Task 5.1 / `FMSA.Contact.soft_core_contact_limit`): the MSA closure for
 generic Yukawa parameters does NOT produce a continuous c^{(1)} at contact. -/
-theorem b7_no_contact_bc
+theorem no_contact_bc
     (R B C D E4 : ℝ) :
     ¬ (∀ v v' : ℝ, ∃! (poly : Fin 4 → ℝ),
         let (B', C', D', E') := (poly 0, poly 1, poly 2, poly 3)
@@ -776,11 +790,11 @@ theorem b7_no_contact_bc
 end NoContactBC
 
 -- ============================================================
--- § B.8 — Laurent Extraction: all five coefficients from R_{ij}(s)
+-- § GAP.8 — Laurent Extraction: all five coefficients from R_{ij}(s)
 -- ============================================================
 
 /-!
-## B.8 — Laurent extraction formulas
+## GAP.8 — Laurent extraction formulas
 
 All five polynomial coefficients are determined by the derivatives of the
 regularised remainder `R_{ij}(s) = s⁵·[exp(s·R)·S_{ij}(s) − Y_{ij}(s)]`
@@ -797,9 +811,34 @@ E_{ij}^{(4)} = R_{ij}(0)       / 4!
 
 section LaurentExtraction
 
-/-- **Task B.8 — Laurent extraction of polynomial coefficients:**
+/-- **Task GAP.8 — Laurent extraction of polynomial coefficients:**
 
-Given the regularised remainder `R : ℝ → ℝ` analytic at 0 (from B.5), the
+⚠ **THIS STATEMENT IS VACUOUS — do not cite it as content (flagged 2026-07-16).** It is an
+existential whose witnesses are the formulas themselves, discharged by five `rfl`s; the hypothesis
+`hR : AnalyticAt ℝ R 0` is **never used**. It asserts only "these five real numbers exist", which is
+true of any five formulas. Consequences for consumers: **MPOLY.4 "extends GAP.8" inherits nothing**, and
+GAP.10 (`natDegree = 4`) must not lean on it.
+
+*Why it came out vacuous:* the intended claim quantifies over `P_ij(r)`, which **does not exist as a
+Lean object** — it was to be the deliverable of MPOLY.5 (the closed-form `S_ij` → `R_ij` → `P_ij`
+chain, [LN] §9.4.5). With only the `R`-side available there was nothing to predicate on.
+
+⚠ **MPOLY.5 is NOT completable (falsified 2026-07-17): a single `P_ij` on `(0,R_ij)` does not exist
+for unlike pairs.** [LN] Eq (101)'s single-polynomial inner core is **false** off-diagonal — the
+shipped `fmsa_double_prop` closed form splits at `λ_ij` (see `InnerDecomp.residue_is_polynomial`
+and `not_single_poly_of_pieces_ne`). So `P_ij` cannot be produced, and this theorem cannot be made
+non-vacuous by supplying it. The concrete inner-DCF object is instead the **piecewise (poly×exp)**
+real-space convolution built by task **MRS.5** (`𝒲 = 𝒬⁻ ⋆ ℬ ⋆ (𝒬⁻)ᵀ`, `todo_lean.md`); that — not
+a single `P_ij` — is where a real degree/coefficient theorem will attach.
+
+*What has since been supplied* (`YukawaDCF/MixtureLaurent.lean`, axiom-clean): the missing **anchor** —
+`taylor4_coeff_unique` (with `poly4_eq_zero_of_littleO`) proves the order-4 Taylor coefficients in the
+project's `Tendsto (f − poly)/z^k` convention are **unique**, so "the Taylor coefficients of `R`" is now
+a well-defined notion. *Still open:* the bridge `aₖ = R⁽ᵏ⁾(0)/k!` tying [LN]'s `iteratedDeriv` form of
+Eq (120) to that convention (route: `AnalyticAt` → `ContDiffOn` on a ball → `taylor_isLittleO` →
+`taylorCoeffWithin = (k!)⁻¹ • iteratedDerivWithin` → restrict to `𝓝[>]0`), and the `P_ij` side (MPOLY.5).
+
+Original intent: given the regularised remainder `R : ℝ → ℝ` analytic at 0 (from GAP.5), the
 polynomial coefficients of P_{ij}(r) equal the rescaled Taylor coefficients
 of R at s = 0.
 
@@ -808,7 +847,7 @@ the 4th-order Taylor series of each `q_{ab}(s)` entry, assemble `R_{ij}(s)`
 analytically via the determinant recursion, and return a 5-element array
 `[A, B, C, D, E^{(4)}]` for unlike pairs.  The current `[p0, p1, 0, 0]` is
 insufficient because it omits C, D, and E^{(4)}. -/
-theorem b8_poly_coeff_from_laurent
+theorem poly_coeff_from_laurent
     (R : ℝ → ℝ) (hR : AnalyticAt ℝ R 0) :
     -- Polynomial coefficients as rescaled Taylor coefficients of R at s = 0
     let a := fun n : ℕ => iteratedDeriv n R 0
@@ -830,29 +869,56 @@ theorem b8_poly_coeff_from_laurent
 end LaurentExtraction
 
 -- ============================================================
--- § B.9 — D_{ij} is Generically Nonzero for Unlike Pairs
+-- § GAP.9 — D_{ij} is Generically Nonzero for Unlike Pairs
 -- ============================================================
 
 /-!
-## B.9 — D_{ij} ≠ 0 for generic unlike pairs
+## GAP.9 — D_{ij} ≠ 0 for generic unlike pairs
 
-The r³ coefficient D_{ij} = R'_{ij}(0)/3! of P_{ij}(r) is zero in the
-single-component (N=1) case because the Baxter scalar polynomial has no
-cubic term.  For unlike pairs in a binary mixture, D_{ij} is generically
-nonzero for two complementary reasons:
+**⚠ FALSIFIED 2026-07-17 — the task claim `D_{ij} ≠ 0` is FALSE.**
 
-(a) **No odd parity symmetry** ([LN] lines 1460–1465): the polynomial is defined
-    on (0, R_{ij}) ⊂ ℝ with no sign-reversing involution; there is no symmetry
-    forcing the odd-degree coefficients B_{ij} or D_{ij} to vanish.
+The original claim was: the r³ coefficient `D_{ij} = R'_{ij}(0)/3!` of `P_{ij}(r)` is zero for
+`N = 1` (the Baxter scalar polynomial has no cubic term) but *generically nonzero* for unlike pairs,
+argued from (a) the absence of a parity symmetry on `(0, R_{ij})` and (b) off-diagonal `ΔQ`
+cross-terms.
 
-(b) **Off-diagonal ΔQ cross-terms**: for σᵢ ≠ σⱼ, the q_{12}·q_{21} products in
-    det Q̂₀(s) introduce mixed powers of (z₁, z₂, σ₁, σ₂) that generically
-    produce a nonzero s¹ coefficient in R_{ij}(s), hence D_{ij} ≠ 0.
+**Refutation** (decisive, from the shipped and independently validated `fmsa_double_prop`
+closed form — see `verify`/scratch `check_b9_b10.py`, `sweep_b9.py`): for an unlike pair the
+real-space inner core `r·c⁽¹⁾_{ij}(r)` is **piecewise**, and its r³ coefficient is **identically
+zero on both pieces**:
+
+* inner piece `0 < r < λ_ij`: `r·c⁽¹⁾ = B·r` — degree 1 (so r³ and r⁴ coefficients are 0);
+* outer piece `λ_ij < r < R_ij`: `A + B·r + C·r² + 0·r³ + E⁴·r⁴` — the r³ (and r⁵) terms cancel
+  **exactly**.
+
+Verified `≡ 0` (to roundoff, `≤ 2e-12`) over 12 random physical parameter sets **and at GAP.9's own
+cited state point** `σ=[1,1.2], ρ*=0.5, T*=1.5`, where GAP.9 claimed `D_01 = −3295` but the closed
+form gives `D_01 = 0`. That cited number came from the superseded `FMSA_GA_matrix_mix` route.
+
+**Structural reason** (why it is `≡ 0`, not accidentally 0): writing `r·c⁽¹⁾ = [𝒲(r) − 𝒲(−r)]/…`,
+the rate-0 polynomials of the `[λ,R]` and `[−R,−λ]` pieces have coefficients that are **exact
+negatives for every k ≥ 3**; after the `(−1)^k` from the `−r` substitution, all **odd** `k ≥ 3`
+coefficients cancel identically (r³ and r⁵ both), while even ones double. On the inner piece `±r`
+land in the *same* piece, so even powers cancel and only `B·r` survives. This is also the classic
+Percus–Yevick structure: `c(r) = −λ₁ − 6ηλ₂r − ½ηλ₁r³` gives `r·c(r) = −λ₁r − 6ηλ₂r² − ½ηλ₁r⁴`,
+which has **no r³ term** — so `D ≡ 0` was expected all along and `N = 1` was not special.
+
+**Where the argument went wrong.** Both (a) and (b) are *non-sequiturs*: "no symmetry forces
+`D = 0`" does not imply `D ≠ 0`, and "cross-terms generically contribute" does not imply the
+contribution survives. `no_odd_symmetry` below remains **true as stated** (it only exhibits a
+reflection-invariant polynomial with nonzero cubic coefficient, refuting a *forcing* argument) — it
+simply never supported the conclusion drawn from it.
+
+**What survives.** `no_odd_symmetry` (true, but only refutes a forcing argument);
+`d_ij_nonzero_example` (existence of valid unlike parameters); `dij_cubic_nonzero` — true,
+but note it is a statement about the **Laplace variable** `z`-Taylor coefficient of `q0_entry`, a
+*different object* from the real-space r³ coefficient `D_{ij}` (see its own docstring).
+See `proof_notes_yukawa_dcf.md` GAP.9 and `proof_notes_mixture_dcf.md` MPOLY.4/5.
 -/
 
 section DijNonzero
 
-/-- **Task B.9 — No parity symmetry forces D_{ij} = 0.**
+/-- **Task GAP.9 — No parity symmetry forces D_{ij} = 0.**
 
 The natural involution on (0, R_{ij}) is the reflection r ↦ R − r (through the midpoint R/2).
 Even under this symmetry, invariant polynomials CAN have nonzero cubic coefficient.
@@ -861,9 +927,9 @@ Witness: p(r) = (r − R/2)⁴ satisfies p(R − r) = p(r) for all r, and has
 coeff 3 = −2R ≠ 0 (since R > 0).
 
 This shows that parity/reflection symmetry does NOT force D_{ij} = p.coeff 3 to vanish:
-the r³ coefficient is constrained by the Laurent extraction formula (B.8), not by any
+the r³ coefficient is constrained by the Laurent extraction formula (GAP.8), not by any
 symmetry of the interval (0, R_{ij}). -/
-theorem b9_no_odd_symmetry (R : ℝ) (hR : 0 < R) :
+theorem no_odd_symmetry (R : ℝ) (hR : 0 < R) :
     ∃ p : Polynomial ℝ,
         (∀ r ∈ Ioo 0 R, p.eval (R - r) = p.eval r) ∧
         p.coeff 3 ≠ 0 := by
@@ -899,21 +965,24 @@ theorem b9_no_odd_symmetry (R : ℝ) (hR : 0 < R) :
       norm_num
     rw [hc3]; linarith
 
-/-- **Task B.9 — Existential: binary mixtures with unlike sphere sizes exist.**
+/-- **Task GAP.9 — Existential: binary mixtures with unlike sphere sizes exist.**
 
-For a binary hard-sphere Yukawa mixture with σ₁ ≠ σ₂, the off-diagonal polynomial
-P_{12}(r) has a generically nonzero cubic coefficient D_{12}.  The precise value of
-D_{12} = R'_{12}(0)/6 requires unfolding the 4th-order Taylor series of each Q̂₀(s)
-entry — a computation verified numerically but not yet formalized in Lean.
+⚠ **Vacuous relative to its name + surrounding claim FALSIFIED (audit 2026-07-17).** This lemma
+proves **only** that four positive reals with `σ₁ ≠ σ₂` exist — nothing about `D_{ij}`, any
+polynomial, or any physical object (pattern A: trivial witnesses). It **must not** be cited as
+evidence for a nonzero cubic coefficient.
 
-This lemma establishes that such binary mixtures (with σ₁ ≠ σ₂) exist; the D_{12} ≠ 0
-claim for a specific choice (e.g. σ₁ = 1, σ₂ = 2) is left for numeric verification. -/
-theorem b9_d_ij_nonzero_example :
+Moreover the premise it was written under is **false**: GAP.9's `D_{ij} ≠ 0` claim was **FALSIFIED
+2026-07-17 — `D_{ij} ≡ 0`** for unlike pairs (the shipped `fmsa_double_prop` closed form has the
+r³ coefficient identically zero on both pieces; the `(−1)^k` from `𝒲(−r)` kills every odd `k ≥ 3`,
+matching the classic PY structure `r·c(r) = −λ₁r − 6ηλ₂r² − ½ηλ₁r⁴`, which has no r³ term). See
+`todo_lean.md` GAP.9 row. Retained only as a true-but-trivial existence fact. -/
+theorem d_ij_nonzero_example :
     ∃ (sigma1 sigma2 rho1 rho2 : ℝ),
         sigma1 ≠ sigma2 ∧ 0 < sigma1 ∧ 0 < sigma2 ∧ 0 < rho1 ∧ 0 < rho2 := by
   exact ⟨1, 2, 1, 1, by norm_num, one_pos, two_pos, one_pos, one_pos⟩
 
-/-- **Task B.9 (Option B) — order-3 Taylor assembly of `q0_entry`.**
+/-- **Task GAP.9 (Option B) — order-3 Taylor assembly of `q0_entry`.**
 
 The `s=0` order-3 Taylor of `q0_entry z σ λ Qp Qpp ρ δ` is `δ − ρ·Ep(z)·Pp(z)`, where
 `Ep(z) = 1 − λz + (λz)²/2 − (λz)³/6` is the order-3 Taylor of the `exp(−λz)` prefactor and
@@ -923,7 +992,7 @@ The `s=0` order-3 Taylor of `q0_entry z σ λ Qp Qpp ρ δ` is `δ − ρ·Ep(z)
 
 This is the **product-of-expansions** step: `q0_entry = δ − ρ·exp(−λz)·P` with `P = Qp·p1 + Qpp·p2`,
 and `exp(−λz)·P − Ep·Pp = (exp(−λz) − Ep)·P + Ep·(P − Pp)`; the first factor → 0 (`exp_neg_cubic_rem`)
-against `P → P₀` (`b5_p1_limit`/`b5_p2_limit`), the second uses `P − Pp → o(z³)`
+against `P → P₀` (`p1_limit`/`p2_limit`), the second uses `P − Pp → o(z³)`
 (`p1_cubic_coeff`/`p2_cubic_coeff`) against `Ep → 1`. Since all Taylor coefficients are `exp`-free
 rational polynomials in `σ, λ, Qp, Qpp, ρ`, the cubic coefficient of `q0_entry` — the `z³` coefficient
 of `δ − ρ·Ep·Pp`, i.e. `−ρ·(P₃ − λP₂ + (λ²/2)P₁ − (λ³/6)P₀)` — is a concrete rational at rational
@@ -940,7 +1009,7 @@ theorem q0_entry_taylor3 (sigma lam Qp Qpp rho delta : ℝ) :
       (fun z : ℝ => Qp * ((1 - z * sigma - Real.exp (-(z * sigma))) / z ^ 2)
         + Qpp * ((1 - z * sigma + (z * sigma) ^ 2 / 2 - Real.exp (-(z * sigma))) / z ^ 3))
       (nhdsWithin 0 (Set.Ioi 0)) (nhds (Qp * (-sigma ^ 2 / 2) + Qpp * (sigma ^ 3 / 6))) :=
-    ((b5_p1_limit sigma).const_mul Qp).add ((b5_p2_limit sigma).const_mul Qpp)
+    ((p1_limit sigma).const_mul Qp).add ((p2_limit sigma).const_mul Qpp)
   have hEp : Filter.Tendsto
       (fun z : ℝ => 1 - lam * z + (lam * z) ^ 2 / 2 - (lam * z) ^ 3 / 6)
       (nhdsWithin 0 (Set.Ioi 0)) (nhds 1) := by
@@ -1004,18 +1073,21 @@ theorem q0_entry_taylor3 (sigma lam Qp Qpp rho delta : ℝ) :
   field_simp
   ring
 
-/-- **Task B.9 (Option B) — the cubic Taylor coefficient of a concrete unlike `q0_entry` is nonzero.**
+/-- **A concrete `q0_entry` Laplace-`z`-Taylor cubic coefficient is nonzero.**  (Formerly labelled
+"Task GAP.9 Option B"; **re-scoped 2026-07-17** — see the section docstring.)
 
 For a concrete unlike-pair choice — `σ_i = 1`, `λ = 1/2` (i.e. `σ_j = 2`, off-diagonal so `δ = 0`),
-`Qp = Qpp = ρ = 1` — the cubic Taylor coefficient of `q0_entry` is `−133/2880 ≠ 0`. This strengthens
-`b9_d_ij_nonzero_example` from "valid unlike parameters exist" to "the cubic coefficient is actually
-computed and shown nonzero", exhibiting the `exp(−λ·z)`-driven mechanism behind `D_ij ≠ 0`. (The
-faithful inner-core `D_ij = R'_ij(0)/6` — with the full inside-core Laplace `R_ij(s)` packaging,
-`exp(sR)`/`s⁵` — is Option A / Group MPOLY; this Option-B result establishes the cubic-coefficient
-structure that drives it.) Proof: `q0_entry_taylor3` gives the order-3 Taylor `δ − ρ·Ep·Pp`; here it
-expands to `1/3 − (7/24)z + (11/80)z² − (133/2880)z³ + O(z⁴)`, whose `z³` coefficient (extracted by a
-`ring` polynomial identity) is `−133/2880`. -/
-theorem b9_dij_cubic_nonzero :
+`Qp = Qpp = ρ = 1` — the cubic Taylor coefficient **in the Laplace variable `z`** of `q0_entry` is
+`−133/2880 ≠ 0`.  Proof: `q0_entry_taylor3` gives the order-3 Taylor `δ − ρ·Ep·Pp`; here it expands
+to `1/3 − (7/24)z + (11/80)z² − (133/2880)z³ + O(z⁴)`, whose `z³` coefficient (extracted by a `ring`
+polynomial identity) is `−133/2880`.
+
+**⚠ This is NOT evidence for `D_{ij} ≠ 0`, and must not be cited as such.**  It concerns the
+`z`-Taylor coefficient of the **Baxter factor** `q0_entry(z)` in **Laplace space**; the task's
+`D_{ij}` is the **r³ coefficient of the real-space inner core** `r·c⁽¹⁾_{ij}(r)`.  These are
+different objects, and the real-space `D_{ij}` is in fact **identically zero** (section docstring).
+The statement above is true and is retained only as a computed fact about `q0_entry`. -/
+theorem dij_cubic_nonzero :
     Filter.Tendsto
       (fun z : ℝ => (FMSA.MatrixQ0.q0_entry z 1 (1/2) 1 1 1 0
         - (1/3 - 7/24 * z + 11/80 * z ^ 2)) / z ^ 3)
@@ -1053,28 +1125,48 @@ theorem b9_dij_cubic_nonzero :
 end DijNonzero
 
 -- ============================================================
--- § B.10 — Exact Degree: natDegree P_{ij} = 4
+-- § GAP.10 — Exact Degree: natDegree P_{ij} = 4
 -- ============================================================
 
 /-!
-## B.10 — Exact degree of the mixture polynomial
+## GAP.10 — Degree of the mixture polynomial: `≤ 4` always, `= 4` iff the leading coefficient ≠ 0
 
-The degree upper bound (deg ≤ 4) follows from B.5.  The lower bound requires the
-leading coefficient A_{ij} = R_{ij}^{(4)}(0)/4! to be nonzero.  Whenever A ≠ 0,
-the polynomial P_{ij}(r) = A·r⁴ + B·r³ + C·r² + D·r + E has exact degree 4.
+**Coefficient convention (fixed 2026-07-17).**  The rest of Group GAP and
+`proof_notes_yukawa_dcf.md` use
+```
+P_{ij}(r) = A + B·r + C·r² + D·r³ + E⁴·r⁴          (A = constant, D = r³, E⁴ = leading)
+```
+and GAP.8's (order-reversing) Laurent map sends `A = R⁽⁴⁾(0)/4!`, `D = R'(0)/3!`,
+`E⁴ = R(0)/4!`.  So the **leading (r⁴) coefficient is `E⁴ = R(0)/4!  = R(0)/24`**, *not*
+`R⁽⁴⁾(0)/4!` — an earlier version of this docstring had them swapped (that quantity is the
+*constant* term).  The lemmas below are stated for a bare quartic `a·X⁴ + … + e4`, so read
+`a := E⁴` (the leading coefficient).
 
-The proof is a purely algebraic fact: the `natDegree` of a sum of monomials equals
-that of the highest-degree nonzero monomial, proved by iterated application of
-`natDegree_add_eq_left_of_natDegree_lt`.
+**Status (2026-07-17): relaxed, not unconditional.**
+* `poly_natDegree_le_four` — `natDegree ≤ 4`, **unconditional**. This half is safe.
+* `poly_natDegree_eq_four` / `poly_natDegree_eq_four_iff` — `natDegree = 4` **iff** `a ≠ 0`.
+
+The old unconditional reading ("the mixture polynomial *has* degree 4") is **false**: numerically
+(`fmsa_double_prop`) the unlike-pair leading coefficient **changes sign** across physical
+parameters, so it vanishes on a codimension-1 set; and on the **inner** piece `(0, λ_ij)` of an
+unlike pair the polynomial is degree **1** (leading coefficient identically 0).  "Degree 4" is a
+**generic**, per-piece statement — and note there is no single `P_{ij}` on `(0, R_{ij})` at all for
+unlike pairs (the [LN] Eq. (101) ansatz is falsified; see the GAP.9 section docstring and
+`proof_notes_mixture_dcf.md` MPOLY.4/5).  These lemmas are generic polynomial algebra; they are sound,
+but their FMSA application is limited to a single piece with a verified nonzero leading coefficient.
+
+The proofs are purely algebraic: `natDegree` of a sum of monomials is that of the highest-degree
+nonzero monomial (`natDegree_add_eq_left_of_natDegree_lt`), and the bound follows from
+`natDegree_add_le`/`natDegree_C_mul_le`.
 -/
 
 section ExactDegree
 
-/-- **Task B.10 — natDegree of the mixture polynomial is 4.**
+/-- **Task GAP.10 — natDegree of the mixture polynomial is 4.**
 
 If the leading coefficient `a = A_{ij} = R_{ij}^{(4)}(0)/4!` is nonzero, then the
 polynomial P_{ij}(r) = a·r⁴ + b·r³ + c·r² + d·r + e4 has exact degree 4. -/
-theorem b10_natDegree_eq_four (a b c d e4 : ℝ) (ha : a ≠ 0) :
+theorem poly_natDegree_eq_four (a b c d e4 : ℝ) (ha : a ≠ 0) :
     (Polynomial.C a * Polynomial.X ^ 4 +
      Polynomial.C b * Polynomial.X ^ 3 +
      Polynomial.C c * Polynomial.X ^ 2 +
@@ -1129,6 +1221,64 @@ theorem b10_natDegree_eq_four (a b c d e4 : ℝ) (ha : a ≠ 0) :
               Polynomial.C d * Polynomial.X : Polynomial ℝ).natDegree := by
     rw [step3]; exact hle0.trans_lt (by norm_num)
   exact (Polynomial.natDegree_add_eq_left_of_natDegree_lt hlt).trans step3
+
+/-- The quartic ansatz written as a `Polynomial ℝ`, for the `≤ 4` / `= 4 ↔ a ≠ 0` pair below. -/
+noncomputable def quarticAnsatz (a b c d e4 : ℝ) : Polynomial ℝ :=
+  Polynomial.C a * Polynomial.X ^ 4 +
+  Polynomial.C b * Polynomial.X ^ 3 +
+  Polynomial.C c * Polynomial.X ^ 2 +
+  Polynomial.C d * Polynomial.X +
+  Polynomial.C e4
+
+/-- **GAP.10 (relaxed, unconditional): `natDegree ≤ 4` always.**  The `= 4` conclusion needs `a ≠ 0`
+(`poly_natDegree_eq_four`); the bound itself never does.  This is the half that survives the
+2026-07-17 falsification: the true inner-core rate-0 polynomial is degree `≤ 4` on every piece,
+but its leading coefficient *does* vanish on a codimension-1 set of physical parameters (and
+identically on the inner piece `(0, λ_ij)` of an unlike pair, which is degree 1). -/
+theorem poly_natDegree_le_four (a b c d e4 : ℝ) :
+    (quarticAnsatz a b c d e4).natDegree ≤ 4 := by
+  unfold quarticAnsatz
+  refine (Polynomial.natDegree_add_le _ _).trans ?_
+  refine max_le ((Polynomial.natDegree_add_le _ _).trans (max_le ?_ ?_)) ?_
+  · refine (Polynomial.natDegree_add_le _ _).trans (max_le ?_ ?_)
+    · refine (Polynomial.natDegree_add_le _ _).trans (max_le ?_ ?_)
+      · exact (Polynomial.natDegree_C_mul_le a _).trans (by simp)
+      · exact (Polynomial.natDegree_C_mul_le b _).trans (by simp)
+    · exact (Polynomial.natDegree_C_mul_le c _).trans (by simp)
+  · exact (Polynomial.natDegree_C_mul_le d _).trans (by simp)
+  · exact (Polynomial.natDegree_C e4).le.trans (by norm_num)
+
+/-- **GAP.10 (sharp): `natDegree = 4 ↔ a ≠ 0`.**  The exact characterisation replacing the old
+unconditional "the mixture polynomial has degree 4" claim.  Forward: if `a = 0` the ansatz collapses
+to a cubic, whose `natDegree ≤ 3 < 4`.  Backward: `poly_natDegree_eq_four`.
+
+**Why this matters (2026-07-17).** Numerically (`fmsa_double_prop`, the shipped closed form) the
+leading coefficient of the unlike-pair rate-0 polynomial **changes sign** across physical parameters
+(e.g. sweeping the mole fraction at `σ=[1,2], ρ*=0.35, T*=1.2` it crosses zero twice), so it *does*
+vanish on a codimension-1 set. "Degree exactly 4" is therefore a **generic**, not a universal,
+statement — exactly what this iff records. -/
+theorem poly_natDegree_eq_four_iff (a b c d e4 : ℝ) :
+    (quarticAnsatz a b c d e4).natDegree = 4 ↔ a ≠ 0 := by
+  constructor
+  · intro h
+    rcases eq_or_ne a 0 with ha | ha
+    swap
+    · exact ha
+    exfalso
+    subst ha
+    have hcubic : (quarticAnsatz 0 b c d e4).natDegree ≤ 3 := by
+      unfold quarticAnsatz
+      simp only [map_zero, zero_mul, zero_add]
+      refine (Polynomial.natDegree_add_le _ _).trans ?_
+      refine max_le ((Polynomial.natDegree_add_le _ _).trans (max_le ?_ ?_)) ?_
+      · refine (Polynomial.natDegree_add_le _ _).trans (max_le ?_ ?_)
+        · exact (Polynomial.natDegree_C_mul_le b _).trans (by simp)
+        · exact (Polynomial.natDegree_C_mul_le c _).trans (by simp)
+      · exact (Polynomial.natDegree_C_mul_le d _).trans (by simp)
+      · exact (Polynomial.natDegree_C e4).le.trans (by norm_num)
+    omega
+  · intro ha
+    exact poly_natDegree_eq_four a b c d e4 ha
 
 end ExactDegree
 

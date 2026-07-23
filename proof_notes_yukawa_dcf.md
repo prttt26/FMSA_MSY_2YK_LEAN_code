@@ -100,7 +100,7 @@ the known-exact single-component result.  A Lean proof guarantees no algebraic e
 **Difficulty:** High — requires substituting N=1 into all four terms of [chsY] Eq. 41 and simplifying
 the Q-matrix determinant, I₁/I₂ integrals, and IV term.
 
-**Status:** ✓ DONE — all results proved in `LeanCode/YukawaDCF/SingleCompReduction.lean` (complete):
+**Status:** ✓ DONE — all results proved in `LeanCode/HardSphere/SingleCompReduction.lean` (complete):
   - `correction_sq_eq`: S²eᶻ + M²e⁻ᶻ + 2SM = (S+Me⁻ᶻ)²eᶻ  (key cancellation identity)
   - `f42_zero_at_origin`: Eq. 42 gives r·c(0)=0  (physical origin check)
   - `sq_of_g_add_a_exp_eq_one`: g+ae⁻ᶻ=1 (Task M.9) → g²eᶻ+a²e⁻ᶻ+2ga=eᶻ
@@ -121,58 +121,36 @@ the Q-matrix determinant, I₁/I₂ integrals, and IV term.
 file). That file holds Tasks M.1–M.8 (matrix identity, N=1 limit, det≠0 Gershgorin, rank-2 det
 reduction, and the M.5–M.8 det-positivity monotonicity lemmas).
 
-## Group B — FMSA_GA_matrix_mix Algebraic Foundation and Polynomial Determination  *(FMSA_GA_matrix_mix specific)*
+## Group GAP — FMSA_GA_matrix_mix Algebraic Foundation and Polynomial Determination  *(FMSA_GA_matrix_mix specific)*
 
 These tasks formalise the algebraic structure underlying `FMSA_GA_matrix_mix` ([chsY] FMSA_GA_matrix_mix corrected
 inner-core formula).  They connect the abstract matrix identity M.1 (`Ĝ + Â·c = I`) to the
 concrete Baxter Q-matrix decomposition used in `_decompose_Q0`, and verify that the corrected
 coefficients `(1−Ĝ²)` and `Â²` are algebraically consistent with FMSA_pure for N=1.
 
-> **Scope note (2026-07-15):** Group B here covers **B.1–B.10** (Q̂₀ decomposition + `P_ij`
-> polynomial determination). The inner-core *mediated breakpoint* tasks that were formerly
-> B.11–B.18 split off into **Group IB** — see
-> [proof_notes_breakpoints.md](proof_notes_breakpoints.md). The former B.19 (hard-sphere `λ_ij`
-> kink) moved to **Group OZ as OZ.18** — see [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md).
+> **Scope note (renamed from Group B → Group GAP on 2026-07-17).** Group GAP here covers
+> **GAP.4–GAP.10** (`P_ij` polynomial determination for `FMSA_GA_matrix_mix`). The old flat "B"
+> numbering was project-legacy; theorem and file names are now content-descriptive (no group prefix),
+> so tasks may be re-grouped without renaming code. Earlier "B" tasks that left the group:
+> **B.1 → Task 2.3** (shifted-exponent integral, Group 2, `proof_notes_hard_sphere.md`),
+> **B.2 → M.10** and **B.3 → M.11** (Q̂₀ decomposition / coeff algebra, Group M,
+> `proof_notes_matrix_q0.md`); the mediated-breakpoint tasks (ex-B.11–B.18) are **Group IB**
+> ([proof_notes_breakpoints.md](proof_notes_breakpoints.md)); the ex-B.19 hard-sphere `λ_ij` kink is
+> **OZ.18** ([proof_notes_hard_sphere.md](proof_notes_hard_sphere.md)).
 
 ---
 
-### Task B.1 — Shifted-exponent integral: `∫₀^R r·exp(z(r−R)) dr = (zR−1+exp(−zR))/z²`
-
-**Context:** `_build_Qhat` in `fmsa_ga_matrix_mix.py` computes Q̂₀_{ij} using the integral
-`∫₀^{σ_i} r·exp(z(r−σ_i)) dr` (positive exponent, shifted to vanish at r = σ_i), stored
-as `p1 = (1.0 - z*sigma - np.exp(-z*sigma)) / z**2` (which equals minus the integral).
-This is **different** from `phi1_formula` (Task 2.1), which computes `∫₀^R r·exp(−zr) dr`.
-
-**Statement:** For z ≠ 0:
-```
-∫₀^R r · exp(z · (r − R)) dr  =  (z·R − 1 + exp(−z·R)) / z²
-```
-i.e., `p1(R,z) = −∫₀^R r·exp(z(r−R)) dr = (1 − z·R − exp(−z·R)) / z²`.
-
-**Proof:** Factor out `exp(−zR)`:
-```
-∫₀^R r·exp(z(r−R)) dr = exp(−zR) · ∫₀^R r·exp(zr) dr = exp(−zR) · phi1_formula(R, −z)
-```
-where `phi1_formula(R, −z) = (1 − (1−zR)·exp(zR)) / z²` (Task 2.1 with `s = −z`).
-Then `exp(−zR) · (1 − (1−zR)·exp(zR)) / z² = (exp(−zR) − (1−zR)) / z² = (zR−1+exp(−zR))/z²`.
-In Lean: one `rw [← phi1_formula]` at `s = -z`, then `simp [Real.exp_neg]` + `ring`.
-
-**Why it matters:** Bridges the `p1`/`p2` values in `_build_Qhat` to the Lean `phi1`/`phi2`
-machinery (Task 2.1), making Q̂₀ computations formally verifiable.
-
-**Depends on:** Task 2.1 (`phi1_formula`).
-
-**Status:** ✓ DONE — `LeanCode/HardSphere/BaxterFactor.lean` (complete):
-  - `b1_hasDerivAt`: antiderivative `(x/z − 1/z²)·exp(z·(x−R))` via product rule;
-    `Function.id_def` + `simp only [sub_zero]` needed to avoid Pi.sub id-mismatch.
-  - `phi1_shifted_formula`: FTC + `simp only [hR, h0, exp_zero, ...]` + `field_simp [hz]; ring`.
-
+*(Task B.1 → re-IDed to **Task 2.3** and moved to `proof_notes_hard_sphere.md` Group 2 on
+2026-07-17 — the shifted-exponent integral `∫₀^R r·exp(z(r−R)) dr` is pure hard-sphere Baxter
+factor machinery (sibling of `phi1_formula`/`phi2_formula`, Task 2.1), not FMSA_GA_matrix_mix-
+specific. Lean unchanged in `LeanCode/HardSphere/BaxterFactor.lean`; helper lemma renamed
+`b1_hasDerivAt` → `phi1_shifted_hasDerivAt`.)*
 ---
 
 *(Task B.2 → re-IDed to **M.10** and moved to `proof_notes_matrix_q0.md` Group M on 2026-07-15 —
 the concrete `Q̂₀ = P̂ + Ê·exp(−z·σ_min)` decomposition (the concrete `hD_def` for the M.1 matrix
 identity) is hard-sphere Baxter Q̂₀ content. Lean now `LeanCode/HardSphere/QhatDecomposition.lean`
-(`b2_qhat_entry_decomp`).)*
+(`qhat_entry_decomp`).)*
 
 ---
 
@@ -183,10 +161,10 @@ is hard-sphere content. Lean now `LeanCode/HardSphere/SingleCompIdentity.lean` (
 
 ---
 
-### Task B.4 — FMSA_GA_matrix_mix origin BC is automatic: `lim_{r→0} r·c^(1)(r) = 0` without normalization
+### Task GAP.4 — FMSA_GA_matrix_mix origin BC is automatic: `lim_{r→0} r·c^(1)(r) = 0` without normalization
 
 **Context:** FMSA_poly requires the explicit normalization `p₀ = −E_ij(0)` (Task P.2) to
-ensure `c^(1)(r)/r` is finite at r = 0. Task B.4 proves that FMSA_GA_matrix_mix ([chsY] Eq. 41 full
+ensure `c^(1)(r)/r` is finite at r = 0. Task GAP.4 proves that FMSA_GA_matrix_mix ([chsY] Eq. 41 full
 formula) satisfies this automatically, with no free parameter choice.
 
 **Statement:** For the full FMSA_GA_matrix_mix inner-core formula (Terms I + II + III + IV of [chsY] Eq. 41),
@@ -209,29 +187,29 @@ The numerator cancels to zero without any normalization constraint.
   from the Baxter equations.
 
 **Why it matters:** The formal Lean statement that **FMSA_GA_matrix_mix does not need an ad hoc origin
-normalization** — contrast with Task P.2 which shows FMSA_poly DOES. Together, B.4 + P.2
+normalization** — contrast with Task P.2 which shows FMSA_poly DOES. Together, GAP.4 + P.2
 give the complete Lean proof that FMSA_GA_matrix_mix is structurally superior at the origin.
 
 **Depends on:** Tasks 1.3 (`I1_at_zero`, `I2_at_zero`), Task M.9 (`g_add_a_mul_exp_eq_one`),
 M.11 (`coeff_identity`).
 
-**Status:** ✓ DONE — `LeanCode/YukawaDCF/B4OriginBC.lean` (complete, namespace `FMSA.PathB`):
-  - `b4_I1_vanish_at_zero`, `b4_I2_vanish_at_zero`: Terms II and III are 0 at r=0
+**Status:** ✓ DONE — `LeanCode/YukawaDCF/InnerOriginBC.lean` (complete, namespace `FMSA.PathB`):
+  - `origin_termI1_vanish_at_zero`, `origin_termI2_vanish_at_zero`: Terms II and III are 0 at r=0
     (via `FMSA.DCF.I1_at_zero`, `I2_at_zero` — Task 1.3; one-line delegates).
-  - `b4_polynomial_constant`: `K*(1-g^2)*exp(z) - K*a^2*exp(-z) = 2*K*g*a` given
+  - `origin_polynomial_constant`: `K*(1-g^2)*exp(z) - K*a^2*exp(-z) = 2*K*g*a` given
     `g + a*exp(-z) = 1`; proof: `linear_combination -K * sq_of_g_add_a_exp_eq_one g a z h`.
-  - `b4_origin_bc_abstract`: abstract structure `term_i + 0 + 0 + p0 = 0` given
+  - `origin_bc_abstract`: abstract structure `term_i + 0 + 0 + p0 = 0` given
     `term_i + p0 = 0`; proof: `linarith`.
-  - `b4_ga_matrix_mix_origin_vanishes`: main theorem — full Eq. 42 formula at r=0 is 0
+  - `origin_bc_concrete`: main theorem — full Eq. 42 formula at r=0 is 0
     with `p0 = -(2*K*g*a)` Baxter-forced; same `linear_combination` proof.
-  - `b4_ga_matrix_mix_origin_baxter`: Baxter instantiation with `S/D`, `M/D`; uses
+  - `origin_bc_baxter`: Baxter instantiation with `S/D`, `M/D`; uses
     `simp only [] + apply + field_simp [hD]`.
 
 ---
 
-**Context for B.5–B.9:**
+**Context for GAP.5–GAP.9:**
 
-Task B.4 determined the constant term A_{ij} = p₀ for **like pairs only**, using the
+Task GAP.4 determined the constant term A_{ij} = p₀ for **like pairs only**, using the
 `g + a·exp(−z) = 1` identity specific to the N=1 Baxter scalar.  For a general
 N-component mixture, the full polynomial
 
@@ -239,18 +217,18 @@ N-component mixture, the full polynomial
 P_{ij}(r) = A_{ij} + B_{ij}·r + C_{ij}·r² + D_{ij}·r³ + E_{ij}^{(4)}·r⁴
 ```
 
-has five coefficients, none of which is zero in general for unlike pairs.  Tasks B.5–B.9
+has five coefficients, none of which is zero in general for unlike pairs.  Tasks GAP.5–GAP.9
 formalise the complete determination of all five via the s=0 Laurent expansion of the
 exact inside-core transform — the route described in [LN] §§ "Origin Regularity and
 Determination of the Polynomial" and "Explicit Derivative Formulas for the Mixture
 Coefficients" (lines 1319–1435).  Together they replace the code placeholder `[p0, p1, 0, 0]`
 with the algebraically exact five-coefficient expression for all pairs.
 
-**Lean file for B.5–B.9:** `LeanCode/YukawaDCF/B5MixturePoly.lean` (created, `namespace FMSA.MixturePoly`).
+**Lean file for GAP.5–GAP.9:** `LeanCode/YukawaDCF/MixturePolyCoeffs.lean` (created, `namespace FMSA.MixturePoly`).
 
 ---
 
-### Task B.5 — Degree bound: P_{ij} has degree ≤ 4
+### Task GAP.5 — Degree bound: P_{ij} has degree ≤ 4
 
 **Statement:**  For an N-component mixture with hard-sphere diameters σ₁ ≤ … ≤ σ_N,
 the polynomial P_{ij}(r) arising from the s=0 residue of the inside-core Laplace
@@ -285,17 +263,17 @@ In Lean: formalise R_{ij}(s) and show `AnalyticAt ℝ R_{ij} 0` by composing the
 analyticity of each factor; invoke `AnalyticAt.taylorCoeff` to conclude all coefficients
 beyond order 4 vanish.
 
-**Depends on:** B.1, M.10, M.3; [LN] eqs. 1396–1407.
+**Depends on:** Task 2.3 (ex-B.1), M.10, M.3; [LN] eqs. 1396–1407.
 
-**Status:** ✓ DONE — `B5MixturePoly.lean` (section `DegreeBound`), no `sorry`.
+**Status:** ✓ DONE — `MixturePolyCoeffs.lean` (section `DegreeBound`), no `sorry`.
 
 **Proof structure (as implemented):**
 
-The main theorem `b5_degree_bound` is proved via `b5_q0_entry_hasLimit`, which shows that each `q0_entry` coefficient has a finite limit as z → 0⁺ by composing:
-- `b5_p2_limit (σ)`: `(1 − z·σ + (z·σ)²/2 − exp(−z·σ)) / z³ → σ³/6` as z → 0⁺.  
+The main theorem `q0_entry_degree_bound` is proved via `q0_entry_hasLimit`, which shows that each `q0_entry` coefficient has a finite limit as z → 0⁺ by composing:
+- `p2_limit (σ)`: `(1 − z·σ + (z·σ)²/2 − exp(−z·σ)) / z³ → σ³/6` as z → 0⁺.  
   Proved by writing `p2 = σ³/6 + r(z)` and squeezing `r(z) → 0` via `Real.exp_bound n=4`.
-- `b5_p1_limit (σ)`: `(1 − z·σ − exp(−z·σ)) / z² → −σ²/2` as z → 0⁺.  
-  Proved from the algebraic identity `p1 = −σ²/2 + z·p2` (`field_simp; ring`) and `b5_p2_limit`.
+- `p1_limit (σ)`: `(1 − z·σ − exp(−z·σ)) / z² → −σ²/2` as z → 0⁺.  
+  Proved from the algebraic identity `p1 = −σ²/2 + z·p2` (`field_simp; ring`) and `p2_limit`.
 
 **Key Lean APIs used:**
 - `Real.exp_bound`: `|exp x − Σ_{m<n} xᵐ/m!| ≤ |x|ⁿ · (n.succ / (n! · n))` with `n=4`, `x = -(z·σ)`.
@@ -306,7 +284,7 @@ The main theorem `b5_degree_bound` is proved via `b5_q0_entry_hasLimit`, which s
 
 ---
 
-### Task B.6 — Origin uniqueness: only A_{ij} = −E_{ij}(0) is forced at r=0
+### Task GAP.6 — Origin uniqueness: only A_{ij} = −E_{ij}(0) is forced at r=0
 
 **Statement:**  The condition that c_{ij}^{(1)}(r) is finite at r = 0 imposes
 exactly one constraint on P_{ij}:
@@ -333,22 +311,22 @@ and contribute zero at r = 0 regardless of their values.
 In Lean: introduce `c_inner_num r := E_ij r + P_ij r`; prove
 `Tendsto (fun r => c_inner_num r / r) (nhdsWithin 0 (Set.Ioi 0)) (nhds L)` iff
 `c_inner_num 0 = 0`; use `HasDerivAt.tendsto_nhds` + L'Hôpital.
-Theorem `b6_origin_unique_constraint`: any P satisfying the finite-limit condition at
+Theorem `origin_unique_constraint`: any P satisfying the finite-limit condition at
 r=0 must have P(0) = −E_{ij}(0), and its higher coefficients are unconstrained.
 
-**Depends on:** B.4 (`b4_polynomial_constant`), P.2 (`origin_constraint`); [LN] eq. 1325.
+**Depends on:** GAP.4 (`origin_polynomial_constant`), P.2 (`origin_constraint`); [LN] eq. 1325.
 
-**Status:** ✓ DONE — `B5MixturePoly.lean` (section `OriginUniqueness`).
+**Status:** ✓ DONE — `MixturePolyCoeffs.lean` (section `OriginUniqueness`).
 
 Both directions proved:
-- `b6_origin_unique_constraint` (forward): if `[E₀+A+Br+...]/r → L` as r→0⁺, then `A = −E₀`.
+- `origin_unique_constraint` (forward): if `[E₀+A+Br+...]/r → L` as r→0⁺, then `A = −E₀`.
   Proof: multiply both sides by `r → 0` via `Tendsto.mul`; `field_simp [ne_of_gt hr]` (from `eventually_nhdsWithin_of_forall`) cancels `r`; `fun_prop` gives continuity of the polynomial; `tendsto_nhds_unique` with `haveI : (nhdsWithin 0 (Set.Ioi 0)).NeBot := nhdsWithin_Ioi_self_neBot`; `linarith` closes.
-- `b6_origin_converse` (backward): if `A = −E₀`, the quotient converges to `B`.
+- `origin_unique_converse` (backward): if `A = −E₀`, the quotient converges to `B`.
   Proof: `field_simp [ne_of_gt hr]` + `ring` rewrites to `B + Cr + ...`; `fun_prop` + `continuousAt.continuousWithinAt` + `simpa`.
 
 ---
 
-### Task B.7 — No contact BC: B, C, D, E^{(4)} are not fixed by r = R_{ij}
+### Task GAP.7 — No contact BC: B, C, D, E^{(4)} are not fixed by r = R_{ij}
 
 **Statement:**  The coefficients B_{ij}, C_{ij}, D_{ij}, E_{ij}^{(4)} are NOT
 determined by any continuity or matching condition at r = R_{ij}.
@@ -364,19 +342,19 @@ From 5.1 and FMSA_pure numerical evidence (V.1: c₁ gap ~ 1.1–1.7 at contact)
 3. Imposing P_{ij}(R_{ij}) = v or P'_{ij}(R_{ij}) = v' to fix B, C, D, E^{(4)} is
    unjustified by the FMSA construction.
 
-In Lean: cite `ContactMatching.lean` (Task 5.1); state `b7_no_contact_bc` as: for any P
-satisfying B.6, any specific value assignment of P(R_{ij}) or P'(R_{ij}) is an
+In Lean: cite `ContactMatching.lean` (Task 5.1); state `no_contact_bc` as: for any P
+satisfying GAP.6, any specific value assignment of P(R_{ij}) or P'(R_{ij}) is an
 additional axiom that does NOT follow from the OZ/MSA construction.
 
 **Depends on:** Task 5.1 (`contactMatching_full_continuity_false`); [LN] eqs. 1333–1339.
 
-**Status:** ✓ DONE — `B5MixturePoly.lean` (section `NoContactBC`), no `sorry`.
+**Status:** ✓ DONE — `MixturePolyCoeffs.lean` (section `NoContactBC`), no `sorry`.
 
-Theorem `b7_no_contact_bc` proves the conjunction `∀ v v', ∃! poly ∈ ℝ⁴, P(R)=v ∧ P'(R)=v'` is false (two equations in four unknowns), by explicit witness: the null vector `(R², −2R, 1, 0)` and the zero function both satisfy `P(R)=0 ∧ P'(R)=0`, contradicting uniqueness (with a separate `R=0` case handled directly).
+Theorem `no_contact_bc` proves the conjunction `∀ v v', ∃! poly ∈ ℝ⁴, P(R)=v ∧ P'(R)=v'` is false (two equations in four unknowns), by explicit witness: the null vector `(R², −2R, 1, 0)` and the zero function both satisfy `P(R)=0 ∧ P'(R)=0`, contradicting uniqueness (with a separate `R=0` case handled directly).
 
 ---
 
-### Task B.8 — Laurent extraction: all five coefficients from R_{ij}(s) at s=0
+### Task GAP.8 — Laurent extraction: all five coefficients from R_{ij}(s) at s=0
 
 **Statement:**  All five polynomial coefficients are given by ([LN] eqs. 1421–1427):
 
@@ -388,11 +366,11 @@ D_{ij}       = R_{ij}'(0)      / 3!
 E_{ij}^{(4)} = R_{ij}(0)       / 4!
 ```
 
-where R_{ij}(s) is the regularised remainder from B.5.
+where R_{ij}(s) is the regularised remainder from GAP.5.
 
 **Proof strategy:**
 
-By B.5, R_{ij}(s) is analytic at s=0 with Taylor expansion
+By GAP.5, R_{ij}(s) is analytic at s=0 with Taylor expansion
 ```
 R_{ij}(s) = a^{(-5)} + a^{(-4)}·s + a^{(-3)}·s² + a^{(-2)}·s³ + a^{(-1)}·s⁴ + O(s⁵).
 ```
@@ -406,7 +384,7 @@ f^{(n)}(0)/n!.
 
 In Lean:
 ```lean
-theorem b8_poly_coeff_from_laurent
+theorem poly_coeff_from_laurent
     (R : ℝ → ℝ) (hR : AnalyticAt ℝ R 0) :
     poly_coeff A = iteratedDeriv 4 R 0 / Nat.factorial 4 ∧
     poly_coeff B = iteratedDeriv 3 R 0 / Nat.factorial 3 ∧
@@ -422,12 +400,12 @@ Taylor series of each q_{ab}(s) element, assemble R_{ij}(s) analytically, and re
 5-element array `[A, B, C, D, E^{(4)}]` for unlike pairs.  The current `[p0, p1, 0, 0]`
 is insufficient.
 
-**Depends on:** B.5; [LN] eqs. 1353–1371.
+**Depends on:** GAP.5; [LN] eqs. 1353–1371.
 
-**Status:** ✓ DONE (weakened to an existence statement) — `B5MixturePoly.lean` (section
+**Status:** ✓ DONE (weakened to an existence statement) — `MixturePolyCoeffs.lean` (section
 `LaurentExtraction`), no `sorry`.
 
-The proved `b8_poly_coeff_from_laurent` is an existential — `∃ A B C D E4, A = a4/4! ∧ ... `,
+The proved `poly_coeff_from_laurent` is an existential — `∃ A B C D E4, A = a4/4! ∧ ... `,
 witnessed by the formulas themselves (`rfl` on each component) — rather than the originally
 sketched matching/uniqueness statement against a general analytic `R`. It records the
 coefficient *formulas* correctly but does not yet derive them from an independent
@@ -435,7 +413,7 @@ characterization of `P_{ij}`, so it does not by itself rule out other coefficien
 
 ---
 
-### Task B.9 — D_{ij} is generically nonzero for unlike pairs
+### Task GAP.9 — D_{ij} is generically nonzero for unlike pairs
 
 **Statement:**  For a generic binary mixture (i ≠ j), D_{ij} = R'_{ij}(0)/6 ≠ 0.
 No algebraic identity forces D_{ij} to vanish.
@@ -453,7 +431,7 @@ B_{ij} or D_{ij} to vanish.
 
 In Lean:
 ```lean
-theorem b9_no_odd_symmetry (R : ℝ) (hR : 0 < R) :
+theorem no_odd_symmetry (R : ℝ) (hR : 0 < R) :
     ¬ ∃ τ : ℝ → ℝ,
         (∀ r ∈ Set.Ioo 0 R, τ r ∈ Set.Ioo 0 R) ∧
         (∀ r, τ (τ r) = r) ∧
@@ -486,23 +464,49 @@ unlike pairs.  Setting D_{ij} = 0 (the current code) is provably wrong for gener
 unlike pairs.  The N=1 special case (D = 0) is a property of the scalar Baxter
 denominator, not a general fact.
 
-**Depends on:** B.8, B.5; [LN] lines 1460–1574.
+**Depends on:** GAP.8, GAP.5; [LN] lines 1460–1574.
 
-**Status:** ✓ DONE (both weakened) — `B5MixturePoly.lean` (section `DijNonzero`), no `sorry`.
+**Status:** ❌ **FALSIFIED 2026-07-17 — the task claim `D_{ij} ≠ 0` is FALSE; in fact `D_{ij} ≡ 0`.**
+The Lean theorems below are all still true; the *claim they were assembled to support* is refuted.
+
+*Refutation (decisive; shipped, independently validated `fmsa_double_prop` closed form).* For an
+unlike pair the real-space inner core `r·c⁽¹⁾_{ij}(r)` is **piecewise**, and its r³ coefficient is
+identically zero on both pieces:
+- inner `0 < r < λ_ij`: `r·c⁽¹⁾ = B·r`, degree 1 (r³ and r⁴ coefficients are 0);
+- outer `λ_ij < r < R_ij`: `A + B·r + C·r² + 0·r³ + E⁴·r⁴` — r³ and r⁵ cancel **exactly**.
+
+Verified `≡ 0` (≤ 2e-12, roundoff) over 12 random physical parameter sets, and **at GAP.9's own cited
+state point** σ=[1,1.2], ρ*=0.5, T*=1.5, where GAP.9 claimed `D_01 = −3295` while the closed form
+gives `D_01 = 0`. That cited number originated in the superseded `FMSA_GA_matrix_mix` route.
+
+*Structural cause.* With `r·c⁽¹⁾ = [𝒲(r) − 𝒲(−r)]/(2π√(ρᵢρⱼ))`, the rate-0 polynomials of the
+`[λ,R]` and `[−R,−λ]` pieces have **exactly opposite** coefficients for every `k ≥ 3`; the `(−1)^k`
+from the `−r` substitution then cancels every **odd** `k ≥ 3` identically (r³ and r⁵), and doubles
+the even ones. On the inner piece `±r` land in the *same* piece, so even powers cancel and only
+`B·r` survives. This also matches the classic Percus–Yevick form
+`c(r) = −λ₁ − 6ηλ₂r − ½ηλ₁r³` ⇒ `r·c(r) = −λ₁r − 6ηλ₂r² − ½ηλ₁r⁴`, which has **no r³ term**: so
+`D ≡ 0` was to be expected, and the `N = 1` case was never special.
+
+*Where the argument failed.* Both sketched reasons are **non-sequiturs**: (a) "no parity symmetry
+forces `D = 0`" does not imply `D ≠ 0`; (b) "ΔQ cross-terms generically contribute" does not imply
+the contribution survives — it cancels exactly. `no_odd_symmetry` is a *witness against a forcing
+argument*, and was mistaken for evidence of nonvanishing.
+
+*What is retained (all true, none support the claim):*
 
 Two theorems, both proved but narrower than the original sketch:
-- `b9_no_odd_symmetry`: exhibits `p(r) = (r − R/2)⁴`, invariant under `r ↦ R − r`, with
+- `no_odd_symmetry`: exhibits `p(r) = (r − R/2)⁴`, invariant under `r ↦ R − r`, with
   `p.coeff 3 = −2R ≠ 0`. This shows reflection-symmetry alone does *not* force the cubic
   coefficient to vanish (a necessary-condition witness), not the originally sketched
   "no involution forces D_{ij}=0 for every symmetric polynomial" statement.
-- `b9_d_ij_nonzero_example`: only asserts existence of a valid unlike-pair parameter
+- `d_ij_nonzero_example`: only asserts existence of a valid unlike-pair parameter
   regime (`σ₁≠σ₂`, all positive) — it does **not** compute or bound `D_{12}` itself. The
   actual `D_{12} ≠ 0` claim from the Taylor recursion remains open.
 
 **2026-07-15 — Option B COMPLETE (cubic-coefficient mechanism, axiom-clean).** The genuine `D_{ij}`
 is the r³ coefficient `= R'_{ij}(0)/6`, assembled from the `s=0` Taylor coefficients of the Baxter
 building blocks `p1(σ,s)=(1−sσ−e^{−sσ})/s²`, `p2(σ,s)=(1−sσ+(sσ)²/2−e^{−sσ})/s³` and the
-`exp(−λ_ij·s)` prefactor of `q0_entry`. All of Option B is now proved in `B5MixturePoly.lean`,
+`exp(−λ_ij·s)` prefactor of `q0_entry`. All of Option B is now proved in `MixturePolyCoeffs.lean`,
 axiom-clean (`[propext, Classical.choice, Quot.sound]` only — **no project axiom**):
 - `p1_cubic_coeff` (=`σ⁵/120`), `p2_cubic_coeff` (=`−σ⁶/720`) — cubic Taylor coefficients of the
   Baxter blocks (subtract order-0/1/2 terms, ÷`s³`; `Real.exp_bound`+squeeze at n=6/7).
@@ -511,9 +515,9 @@ axiom-clean (`[propext, Classical.choice, Quot.sound]` only — **no project axi
   `δ − ρ·Ep(z)·Pp(z)`, via `exp(−λz)·P − Ep·Pp = (exp(−λz)−Ep)·P + Ep·(P−Pp)`. Since every `exp` is
   `exp(−s·L)`, the cubic coefficient `−ρ·(P₃−λP₂+(λ²/2)P₁−(λ³/6)P₀)` is an `exp`-free rational
   polynomial in the parameters.
-- `b9_dij_cubic_nonzero` — for a concrete unlike pair (`σ_i=1`, `λ=1/2` i.e. `σ_j=2`, off-diagonal
+- `dij_cubic_nonzero` — for a concrete unlike pair (`σ_i=1`, `λ=1/2` i.e. `σ_j=2`, off-diagonal
   `δ=0`, `Qp=Qpp=ρ=1`) the cubic Taylor coefficient of `q0_entry` is `−133/2880 ≠ 0`, extracted by a
-  `ring` polynomial identity + `norm_num`. This strengthens `b9_d_ij_nonzero_example` from
+  `ring` polynomial identity + `norm_num`. This strengthens `d_ij_nonzero_example` from
   "valid unlike parameters exist" to "the cubic coefficient is computed and nonzero".
 
 **Scope (honest):** Option B proves the **cubic-coefficient mechanism** — the `exp(−λ·s)`-driven,
@@ -521,14 +525,14 @@ axiom-clean (`[propext, Classical.choice, Quot.sound]` only — **no project axi
 The faithful inner-core identity `D_ij = R'_ij(0)/6` with the full inside-core Laplace remainder
 `R_ij(s) = s⁵[exp(sR)·S_ij − Y_ij]` (packaging that Lean does not yet have; same-core as the mixture
 groups' (MML/MZERO) pole/residue Mittag-Leffler representation, no quick bridge) is now the **optional
-Group MPOLY** (`proof_notes_yukawa_wh.md`). So **B.9 is closed at the mechanism level**; the exact
+Group MPOLY** (`proof_notes_mixture_dcf.md`). So **GAP.9 is closed at the mechanism level**; the exact
 `R'_ij(0)/6` packaging is the optional MPOLY upgrade.
 
 ---
 
-### Task B.10 — Exact degree: natDegree P_{ij} = 4
+### Task GAP.10 — Exact degree: natDegree P_{ij} = 4
 
-**Statement:** The polynomial P_{ij}(r) extracted from R_{ij}(s) via B.8 has `Polynomial.natDegree = 4`, i.e., the degree is exactly 4, not merely ≤ 4.
+**Statement:** The polynomial P_{ij}(r) extracted from R_{ij}(s) via GAP.8 has `Polynomial.natDegree = 4`, i.e., the degree is exactly 4, not merely ≤ 4.
 
 **Proof structure:**
 
@@ -559,18 +563,40 @@ Equivalent to `leadingCoeff P ≠ 0`, i.e., `R 0 / 24 ≠ 0`, which follows dire
 The lower bound in the abstract theorem requires `hE4 : R 0 ≠ 0` as a hypothesis — it is not proved, merely assumed. Whether this hypothesis holds for the *actual* R_{ij}(s) from the FMSA construction is a separate question:
 
 - For a concrete binary mixture (σ₁=1, σ₂=2, explicit ρ, lam, Q', Q''), one could unfold `q0_entry` fully and verify `R 0 ≠ 0` by `native_decide` or `norm_num`. This is feasible but requires all Taylor recursion unfolded.
-- For generic parameters: follows from M.3 (det Q̂₀(0) ≠ 0) + the structure of W_{ij}(0)/ΔQ(0); needs symbolic argument analogous to B.9.
+- For generic parameters: follows from M.3 (det Q̂₀(0) ≠ 0) + the structure of W_{ij}(0)/ΔQ(0); needs symbolic argument analogous to GAP.9.
 
-**Verdict:** A separate lower-bound task is not necessary for the FMSA degree theory. The upper bound (`deg ≤ 4`) is the physically essential claim. The exact degree task B.10 is mathematically cleaner but the `hE4` hypothesis can remain as an explicit assumption rather than a derived fact, unless a concrete computational witness is desired.
+**Verdict:** A separate lower-bound task is not necessary for the FMSA degree theory. The upper bound (`deg ≤ 4`) is the physically essential claim. The exact degree task GAP.10 is mathematically cleaner but the `hE4` hypothesis can remain as an explicit assumption rather than a derived fact, unless a concrete computational witness is desired.
 
-**Depends on:** B.8 (for the full theorem; upper bound alone is trivial), M.3 (for the generic lower-bound instantiation).
+**Depends on:** GAP.8 (for the full theorem; upper bound alone is trivial), M.3 (for the generic lower-bound instantiation).
 
-**Status:** ✓ DONE — `B5MixturePoly.lean` (section `ExactDegree`, theorem
-`b10_natDegree_eq_four`), no `sorry`. Proves `natDegree = 4` for the abstract polynomial
-`a·X⁴+b·X³+c·X²+d·X+e4` given `a ≠ 0`, by chaining `natDegree_add_eq_left_of_natDegree_lt`
-down from the leading term — matching the sketch's upper/lower-bound structure, but stated
-directly over the coefficients rather than derived via `iteratedDeriv R`/`AnalyticAt`, so
-`hE4`/`hR 0 ≠ 0` here is simply `ha : a ≠ 0` taken as a hypothesis, not derived from M.3.
+**Status:** ⚠ **RELAXED 2026-07-17** — ✓ DONE in the relaxed form, axiom-clean, no `sorry`
+(`MixturePolyCoeffs.lean`, section `ExactDegree`). The unconditional reading "the mixture polynomial
+*has* degree 4" is **false**; what is true is the pair:
+- `poly_natDegree_le_four` — **`natDegree ≤ 4`, unconditional** (new 2026-07-17). This half is safe.
+- `poly_natDegree_eq_four` — `natDegree = 4` **given** `ha : a ≠ 0`.
+- `poly_natDegree_eq_four_iff` — **`natDegree = 4 ↔ a ≠ 0`** (new 2026-07-17), the sharp
+  characterisation: if `a = 0` the ansatz collapses to a cubic (`natDegree ≤ 3 < 4`).
+
+All three are stated over the bare quartic `a·X⁴+b·X³+c·X²+d·X+e4` (generic polynomial algebra,
+`natDegree_add_eq_left_of_natDegree_lt` / `natDegree_add_le`), with `ha : a ≠ 0` a hypothesis rather
+than derived from M.3.
+
+*Why "= 4" had to be relaxed to generic.* The shipped `fmsa_double_prop` closed form shows the FMSA
+leading coefficient **changes sign** across physical parameters — sweeping the mole fraction at
+σ=[1,2], ρ*=0.35, T*=1.2 it crosses zero **twice** (+20.7 → −18.2 → +0.45) — so it genuinely
+**vanishes on a codimension-1 set**, where the degree drops. Moreover on an unlike pair's **inner**
+piece `(0, λ_ij)` the polynomial is **degree 1** (leading coefficient identically 0). So `ha` is a
+*genuinely conditional* hypothesis (RESOLVED, not "open"): generically true, not universally.
+
+*Scope caveat.* There is **no single `P_ij` on `(0, R_ij)`** for unlike pairs at all — the [LN]
+Eq. (101) ansatz is falsified (see GAP.9 above and `proof_notes_mixture_dcf.md` Group MPOLY) — and
+GAP.10's `P_ij` would be supplied by GAP.8, which is **vacuous**. The lemmas are sound generic algebra;
+their FMSA application is limited to a **single piece with a verified nonzero leading coefficient**.
+
+*Convention fix.* Group GAP / this file use `P_ij(r) = A + B·r + C·r² + D·r³ + E⁴·r⁴` (A = constant,
+D = r³, E⁴ = leading), and GAP.8's order-reversing Laurent map gives `A = R⁽⁴⁾(0)/4!`, `D = R'(0)/3!`,
+`E⁴ = R(0)/4!`. So the **leading (r⁴) coefficient is `E⁴ = R(0)/24`**; an earlier GAP.10 docstring
+called `R⁽⁴⁾(0)/4!` the leading coefficient — that is the **constant** term. Fixed in the source.
 
 ---
 
@@ -609,7 +635,7 @@ NOT reduce to Eq. 42 for N=1 (the (1+A)² ≠ 1−g² discrepancy, Task 4.3).
 
 **Depends on:** M.2 (`g_mat_n1_eq_g_scalar`), Task M.9 (`g_add_a_mul_exp_eq_one`), M.11.
 
-**Status:** ✓ DONE — `LeanCode/YukawaDCF/SingleCompReduction.lean` (complete):
+**Status:** ✓ DONE — `LeanCode/HardSphere/SingleCompReduction.lean` (complete):
   - `c1_n1_ga_matrix_mix_eq_fmsa_pure`: `(1-g²) - a²c² = 2acg` given `h : g + a*c = 1`;
     one-liner via `coeff_identity` (M.11). File gains `import MatrixIdentity`.
   - `c1_n1_from_mat_identity`: instantiation from `g_mat_n1_eq_scalar` (M.1 N=1);
@@ -684,7 +710,7 @@ analogous quantity `G_{ij} ≈ 0` (no algebraic structure forces `(1-G²)` small
 extra hypothesis is needed.
 
 **Status:** ✓ DONE (2026-07-15), axiom-clean — `c1_n1_twoexp_bounded` in
-`LeanCode/YukawaDCF/SingleCompReduction.lean`.  Abstract in `S, L, D, eta, z, d, r`: `calc` chain
+`LeanCode/HardSphere/SingleCompReduction.lean`.  Abstract in `S, L, D, eta, z, d, r`: `calc` chain
 `(1−(S/D)²) = (D−S)(D+S)/D²`, `D−S = 12ηL·exp(−zd)` (from `hD_def`), exp-cancellation
 `exp(−zd)·exp(z(d−r)) = exp(−zr)`, then `abs` + `Real.exp_le_one`.  Proved bound is actually
 `12η|L||D+S|/D²` (half the stated factor-2 form).
@@ -731,15 +757,33 @@ Laplace-space formula for multicomponent Yukawa MSA (or an independent derivatio
   the residue-defining limit `(s−z_t)·(N/D) → K_t·(adj/det)`.  Reuses
   `FMSA.HardSphere.residue_of_simple_pole` (`BaxterResidue.lean`).
 
-**Deferred → concrete C.5 (source located, 2026-07-15).** The Laplace-space form needed to discharge
-`hblum` is in the **[LN] lecture notes** (`pdf/lecture_notes_OZ_Yukawa_poly.pdf`, Tang & Lu 1995),
-explicitly and in `s = −ik`:
+**❌ `hblum` is FALSIFIED — 2026-07-17 (Lean, axiom-clean).**  Not merely underivable: the single
+`K·G` **contradicts the proven exact residue**.  `SpectralAmplitude.c5_hblum_falsified` pairs the
+certified residue `K·G²` (`spectralAmp_residue_n1`) with `K·G² ≠ K·G` (equal only at `G∈{0,1}`, i.e.
+`Q̂₀(z_t)=I`, no interaction); `c5_hblum_falsified_matrix` gives the unlike-pair **sign flip**
+(`[G·K·Gᵀ]_{01}=+1` vs `K_{01}·G_{01}=−1`).  Shipped-`Q̂₀` 2YK magnitudes: exact/shorthand ratios
+`0.82`(00) / `0.061`(11) / **`−3.32`(01, sign flip)**.  The 2026-07-15 plan below aimed to *discharge*
+`hblum` from the [LN] Laplace-space form; that target is **void** — the exact residue is
+**doubly-propagated**, so the single `K·G` is only a leading-order shorthand and there is no equality
+to prove (there is, instead, an inequality to certify — done).
+- **RDF `ĥ^(1)`:** exact residue `[Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij} = K·G²`@N=1 — proved (`spectralAmp_residue`,
+  next block; `yukawaBaseAmp`, `MixtureInnerDCF.lean`).
+- **DCF `ĉ^(1)`:** by (★) = MRS.3 (`star_of_oz1_baxter`, `MixtureRealSpace.lean`, certified
+  `4.4×10⁻¹³`), `Ĉ₁ = Q̂₀(−k)·B₁·Q̂₀ᵀ(−k)` carries **forward** `Q̂₀`, **no inverse** — the
+  `yukawaBaseAmp` docstring explicitly refutes the single-`K·[Q̂₀⁻¹]` DCF-base claim.
+So `hblum` has no physical instantiation for either correlation function; `c5_residue_eq_K_mul_Ginv`
+is retained only as a *true conditional* (the residue-limit algebra). The [LN] source pointers below
+are kept for reference (they are what actually delivered the doubly-propagated form):
+
+*The Laplace-space form (2026-07-15 pointers) is in the* **[LN] lecture notes**
+*(`pdf/lecture_notes_OZ_Yukawa_poly.pdf`, Tang & Lu 1995), in `s = −ik`:*
 - **Eq. (10)** — the complex Baxter matrix `{Q̂₀(s)}_{ij} = δ_{ij} − (ρ_iρ_j)^{1/2}·e^{−sλ_{ij}}·
   [φ₁(R_i)Q'_{ij} + φ₂(R_i)Q''_j]` (extends the codebase's real `Q0_mat` to complex `s`);
 - **Eq. (14)** — `{[Q̂₀(s)]⁻¹}_{ij} = δ_{ij} + 2π(ρ_iρ_j)^{1/2}·W_{ij}(s)/(Δ·det(s))·e^{−sλ_{ij}}`,
   the GA-matrix `G` with the `adj/det(s)` structure (⇒ `g_entry_eq_adj_div_det`), and `det(s)` Eq. (16);
 - **§6.4.1** (spectral amplitude `b_{ij}(s)`) + **§8.1** (Laplace-space RDF) — the Yukawa-pole form of
-  `ĥ^(1)/ĉ^(1)_{ij}(s)` whose residue at `s = z_t` gives `K_t·G_{ij}(z_t)`, discharging `hblum`.
+  `ĥ^(1)_{ij}(s)` whose residue at `s = z_t` gives the **doubly-propagated** `[Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij}`
+  (**not** the single `K_t·G_{ij}` of `hblum`).
 
 **Concrete single-tail residue — DONE (2026-07-15), and a correction.** Reading the [LN] §6.4
 derivation to the end (Eq. 73) shows the spectral amplitude `b_{ij}(s)` — the residue-carrying

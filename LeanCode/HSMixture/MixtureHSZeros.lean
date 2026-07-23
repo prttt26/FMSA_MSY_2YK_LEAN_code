@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.Q0Complex
+import LeanCode.HSMixture.Q0Complex
 import LeanCode.Analysis.BanachPoleFamily
 
 /-!
@@ -51,14 +51,14 @@ namespace FMSA.MixtureHSPoles
 /-- At the Lean value `s = 0`, `Q0_mat_c` is the identity matrix: the `φ₁,φ₂` terms are `0/0 = 0`, so
 every entry collapses to `δ_{ij}`.  (This is the Lean division-convention value, not the analytic
 `s→0` limit; it suffices to witness that `det∘Q0_mat_c` is not the zero function.) -/
-theorem Q0_mat_c_at_zero {n : ℕ} (sigma : Fin n → ℂ) (rho_geo Qp Qpp : Fin n → Fin n → ℂ) :
+theorem Q0_mat_c_at_zero {N : ℕ} (sigma : Fin N → ℂ) (rho_geo Qp Qpp : Fin N → Fin N → ℂ) :
     FMSA.Q0Complex.Q0_mat_c 0 sigma rho_geo Qp Qpp = 1 := by
   funext i j
   simp [FMSA.Q0Complex.Q0_mat_c, FMSA.Q0Complex.q0_entry_c, Matrix.one_apply]
 
 /-- **MZERO.1 foundation — `det(Q̂₀)` is not identically zero.**  Witnessed at `s = 0`, where
 `Q0_mat_c 0 = I` so `det = 1 ≠ 0`. -/
-theorem Q0_det_c_not_identically_zero {n : ℕ} (sigma : Fin n → ℂ) (rho_geo Qp Qpp : Fin n → Fin n → ℂ) :
+theorem Q0_det_c_not_identically_zero {N : ℕ} (sigma : Fin N → ℂ) (rho_geo Qp Qpp : Fin N → Fin N → ℂ) :
     ∃ s : ℂ, (FMSA.Q0Complex.Q0_mat_c s sigma rho_geo Qp Qpp).det ≠ 0 := by
   refine ⟨0, ?_⟩
   rw [Q0_mat_c_at_zero, Matrix.det_one]
@@ -369,6 +369,73 @@ theorem Q0_det_c_zeros_infinite (sigma : Fin 2 → ℝ) (rho_geo Qp Qpp : Fin 2 
         rw [dist_eq_norm]
         have h2r : 2 * r < Real.pi := by linarith [hrspace]
         linarith [himge, hdistim, h2r] }
+
+/-- **MML.5-concrete growth witness (mixture pole family).** The same `ChordPoleFamily detC` as
+`Q0_det_c_zeros_infinite`, but exposing an injective zero family `g` with a **positive linear growth**
+`π·n + (π·N − r) ≤ ‖g n‖` (via `exists_zero_family_growth_of_chordPoleFamily`): the centres satisfy
+`‖s1 n‖ ≥ |Im(s1 n)| = π·n` (`Complex.abs_im_le_norm` + `hk1im`), and each zero is within `r` of its
+centre. With `N ≥ 1` and `r < π/2` the offset `π·N − r > π/2 > 0`. This is exactly the linear-growth
+hypothesis `mixHS_summable_of_growth` (MML.5) consumes; conditional on the MZERO.5 bounds, like
+`Q0_det_c_zeros_infinite`. -/
+theorem Q0_det_c_pole_family_growth (sigma : Fin 2 → ℝ) (rho_geo Qp Qpp : Fin 2 → Fin 2 → ℂ)
+    {r : ℝ} (hr : 0 < r) (hrspace : r < Real.pi / 2) (N : ℕ) (hN : 1 ≤ N) (s1 : ℕ → ℂ) (Fp1 : ℕ → ℂ)
+    (hk1im : ∀ n, N ≤ n → (s1 n).im = Real.pi * n)
+    (h0 : ∀ n, N ≤ n → (0 : ℂ) ∉ Metric.closedBall (s1 n) r)
+    (hFp1 : ∀ n, N ≤ n → Fp1 n ≠ 0) (K : NNReal) (hK1 : K < 1)
+    (hbound : ∀ n, N ≤ n → ∀ s ∈ Metric.closedBall (s1 n) r,
+        ‖1 - deriv (detC sigma rho_geo Qp Qpp) s / Fp1 n‖ ≤ K)
+    (hstep : ∀ n, N ≤ n → ‖detC sigma rho_geo Qp Qpp (s1 n) / Fp1 n‖ ≤ r * (1 - K)) :
+    ∃ g : ℕ → ℂ, Function.Injective g ∧ (∀ n, detC sigma rho_geo Qp Qpp (g n) = 0) ∧
+      ∃ cc dd : ℝ, 0 < cc ∧ 0 < dd ∧ ∀ n : ℕ, cc * (n : ℝ) + dd ≤ ‖g n‖ := by
+  have hcentre : ∀ n, N ≤ n → Real.pi * (n : ℝ) + 0 ≤ ‖s1 n‖ := by
+    intro n hn
+    have himle : |(s1 n).im| ≤ ‖s1 n‖ := Complex.abs_im_le_norm (s1 n)
+    rw [hk1im n hn, abs_of_nonneg (by positivity : (0 : ℝ) ≤ Real.pi * (n : ℝ))] at himle
+    linarith [himle]
+  obtain ⟨g, hinj, hzero, hg⟩ :=
+    exists_zero_family_growth_of_chordPoleFamily
+      (F := detC sigma rho_geo Qp Qpp)
+      { N := N
+        s1 := s1
+        Fp1 := Fp1
+        F' := deriv (detC sigma rho_geo Qp Qpp)
+        r := r
+        K := K
+        hr := hr
+        hK1 := hK1
+        hFp1 := hFp1
+        hderiv := fun n hn s hs => by
+          have hsne : s ≠ 0 := by rintro rfl; exact h0 n hn hs
+          exact (Q0_det_c_differentiableAt (fun i => (sigma i : ℂ)) rho_geo Qp Qpp hsne).hasDerivAt
+        hbound := hbound
+        hstep := hstep
+        hsep := fun m n hm hn hmn => by
+          have him : (s1 m).im - (s1 n).im = Real.pi * ((m : ℝ) - (n : ℝ)) := by
+            rw [hk1im m hm, hk1im n hn]; ring
+          have hnat : (1 : ℝ) ≤ |((m : ℝ) - (n : ℝ))| := by
+            have hmm : (m : ℤ) - (n : ℤ) ≠ 0 := sub_ne_zero.mpr (fun h => hmn (by exact_mod_cast h))
+            have h1 : (1 : ℤ) ≤ |(m : ℤ) - (n : ℤ)| := Int.one_le_abs hmm
+            have h2 : ((|(m : ℤ) - (n : ℤ)| : ℤ) : ℝ) = |((m : ℝ) - (n : ℝ))| := by push_cast; ring
+            rw [← h2]; exact_mod_cast h1
+          have himge : Real.pi ≤ |((s1 m).im - (s1 n).im)| := by
+            rw [him, abs_mul, abs_of_pos Real.pi_pos]
+            calc Real.pi = Real.pi * 1 := (mul_one _).symm
+              _ ≤ Real.pi * |((m : ℝ) - (n : ℝ))| := mul_le_mul_of_nonneg_left hnat Real.pi_pos.le
+          have hdistim : |((s1 m - s1 n).im)| ≤ ‖s1 m - s1 n‖ := Complex.abs_im_le_norm _
+          rw [Complex.sub_im] at hdistim
+          rw [dist_eq_norm]
+          have h2r : 2 * r < Real.pi := by linarith [hrspace]
+          linarith [himge, hdistim, h2r] }
+      (c := Real.pi) (d := 0) Real.pi_pos hcentre
+  refine ⟨g, hinj, hzero, Real.pi, Real.pi * (N : ℝ) - r, Real.pi_pos, ?_, fun n => ?_⟩
+  · have hN1 : (1 : ℝ) ≤ (N : ℝ) := by exact_mod_cast hN
+    have hpiN : Real.pi ≤ Real.pi * (N : ℝ) := by
+      have := mul_le_mul_of_nonneg_left hN1 Real.pi_pos.le
+      simpa using this
+    linarith [Real.pi_pos, hrspace, hpiN]
+  · calc Real.pi * (n : ℝ) + (Real.pi * (N : ℝ) - r)
+        = Real.pi * (n : ℝ) + (Real.pi * (N : ℝ) + 0 - r) := by ring
+      _ ≤ ‖g n‖ := hg n
 
 /-! ### MZERO.5a — the structural bridge: `det_c` is an `e^{±λs}`-free 2-frequency exp-polynomial -/
 

@@ -9,12 +9,14 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.HardSphere.OzFixedPtHExplicit
 import LeanCode.HardSphere.HExplicitRegularity
+import LeanCode.HardSphere.OzWienerHopfBounded
 
 /-!
 # Task OZFIX.8 — final assembly: `oz_h = ` the spliced `h_explicit`/`-1` function (conditional)
 
 Packages `OZFIX.5`–`7` into the `OzFixedPt ∧ ContinuousOn ∧ bounded` shape and invokes the
-(still-axiomatized) `oz_fixed_pt_unique` to conclude `oz_h eta sigma rho` equals the spliced
+theorem `oz_fixed_pt_unique_thm` (formerly the physics axiom `oz_fixed_pt_unique`) to conclude
+`oz_h eta sigma rho` equals the spliced
 `h_explicit`/`(-1)` function — **conditional** on two explicit hypotheses corresponding to the two
 genuine gaps found by `OZFIX.6`/`OZFIX.7`:
 
@@ -35,8 +37,8 @@ Everything else in the proof — the fixed-point equation on the core (`r<σ`, t
 observation that `oz_linear_op` never samples the spliced function outside `h_explicit`'s own
 valid domain `s≥σ` (so splicing doesn't change `oz_linear_op`'s value), global boundedness
 (gluing `OZFIX.7`'s `[r0,∞)` bound with a compactness argument on `[σ,r0]`, itself powered by
-`hcont_sigma`+`OZFIX.7`'s open-ray continuity), and the final `oz_fixed_pt_unique` invocation — is
-unconditional, no `sorry`/new axiom beyond the two explicit hypotheses above.
+`hcont_sigma`+`OZFIX.7`'s open-ray continuity), and the final `oz_fixed_pt_unique_thm` invocation
+— is unconditional, no `sorry`/new axiom beyond the two explicit hypotheses above.
 
 **Status:** ✓ DONE, conditional on `hcollapse` and `hcont_sigma` (plus the standard pole-family
 data `hkfam_zero`/`hkfam_im`/`hkfam_re`, `c`,`d`>0 — `POLE.3`'s `hstep` gap is not
@@ -55,6 +57,7 @@ noncomputable section
 continuity (`hcont_sigma`).** -/
 theorem oz_h_eq_spliced_h_explicit {eta sigma rho : ℝ} (hsigma : 0 < sigma)
     (heta0 : 0 < eta) (heta1 : eta < 1) (hrho : 0 < rho)
+    (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6)
     {kfam : ℕ → ℂ} {c d : ℝ} (hc : 0 < c) (hd : 0 < d)
     (hkfam_zero : ∀ n, G_baxter eta sigma rho (kfam n) = 0)
     (hkfam_im : ∀ n, 0 ≤ (kfam n).im)
@@ -168,16 +171,14 @@ theorem oz_h_eq_spliced_h_explicit {eta sigma rho : ℝ} (hsigma : 0 < sigma)
         rw [heq]
         have := hC1 r hr2.le
         linarith
-  have hunique := oz_fixed_pt_unique eta sigma rho hsigma
+  have huniq := oz_fixed_pt_unique_thm eta sigma rho hsigma hrho heta_def heta1
+  have hex := huniq.exists
   have hspliced_fp : OzFixedPt eta sigma rho hspliced ∧ ContinuousOn hspliced (Set.Ici sigma) ∧
       ∃ C, ∀ r, |hspliced r| ≤ C := ⟨hfp, hcontOn, hbdd⟩
-  have hoz_h_eq : oz_h eta sigma rho =
-      Classical.choose (oz_fixed_pt_unique eta sigma rho hsigma).exists := by
-    unfold oz_h
-    rw [dif_pos hsigma]
-  have hoz_h_fp := Classical.choose_spec (oz_fixed_pt_unique eta sigma rho hsigma).exists
+  have hoz_h_eq : oz_h eta sigma rho = Classical.choose hex := by simp only [oz_h, dif_pos hex]
+  have hoz_h_fp := Classical.choose_spec hex
   rw [hoz_h_eq]
-  exact hunique.unique hoz_h_fp hspliced_fp
+  exact huniq.unique hoz_h_fp hspliced_fp
 
 end
 

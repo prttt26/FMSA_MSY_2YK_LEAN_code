@@ -8,7 +8,7 @@ Authors: FMSA project
 
 import Mathlib
 import LeanCode.HardSphere.SingleCompIdentity
-import LeanCode.HardSphere.MatrixIdentity
+import LeanCode.Analysis.MatrixIdentity
 
 /-!
 # Single-component reduction: [chsY] Eq. 42 origin check and factoring  (Task 4.4)

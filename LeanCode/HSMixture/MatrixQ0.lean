@@ -15,7 +15,7 @@ import LeanCode.HardSphere.QhatDecomposition
 ## Context
 
 The multi-component Baxter Q-matrix Q̂₀(z) is an n×n matrix whose (i,j) entry
-(from Task M.10 / `b2_qhat_entry_decomp`) has the form:
+(from Task M.10 / `qhat_entry_decomp`) has the form:
 ```
 Q̂₀_{ij}(z) = δ_{ij} − √(ρᵢρⱼ) · exp(−λᵢⱼ·z) · [Q'ᵢⱼ·p₁(σᵢ,z) + Q''ᵢⱼ·p₂(σᵢ,z)]
 ```
@@ -75,7 +75,7 @@ checkable strict-diagonal-dominance hypothesis, via Mathlib's Gershgorin circle 
 no axiom, and the hypothesis is a concrete inequality one can check numerically at any given
 state point (rather than an opaque `‖C‖ < 1` operator-norm bound).
 
-**Task M.4 — rank-2 reduction: now formalized in `LeanCode/HardSphere/Q0DetRankTwo.lean`.**
+**Task M.4 — rank-2 reduction: now formalized in `LeanCode/HSMixture/Q0DetRankTwo.lean`.**
 Everything below except the final scalar inequality is a **proved theorem**, no `sorry`/
 `axiom`: `Umat`, `Vmat`, `Q0_mat_phys_eq_one_sub_mul` (the `1-U*V` factorization),
 `Q0_mat_phys_det_eq_two_by_two` (Sylvester reduction to the 2×2 `det`), and `fFun_neg`/
@@ -152,17 +152,17 @@ noncomputable def q0_entry (z sigma_i lam_ij Qp_ij Qpp_ij rho_geo_ij delta_ij : 
     (Qp_ij  * ((1 - z * sigma_i - exp (-(z * sigma_i))) / z ^ 2) +
      Qpp_ij * ((1 - z * sigma_i + (z * sigma_i) ^ 2 / 2 - exp (-(z * sigma_i))) / z ^ 3))
 
-/-- The n×n Baxter Q-matrix Q̂₀(z), assembled from `q0_entry`.
+/-- The N×N Baxter Q-matrix Q̂₀(z), assembled from `q0_entry`.
 
 Parameters:
-- `sigma : Fin n → ℝ`: species diameters
-- `rho_geo : Fin n → Fin n → ℝ`: `rho_geo i j = √(ρᵢ · ρⱼ)`
-- `Qp Qpp : Fin n → Fin n → ℝ`: Baxter DCF coefficients -/
-noncomputable def Q0_mat {n : ℕ} (z : ℝ)
-    (sigma : Fin n → ℝ)
-    (rho_geo : Fin n → Fin n → ℝ)
-    (Qp Qpp : Fin n → Fin n → ℝ)
-    : Matrix (Fin n) (Fin n) ℝ :=
+- `sigma : Fin N → ℝ`: species diameters
+- `rho_geo : Fin N → Fin N → ℝ`: `rho_geo i j = √(ρᵢ · ρⱼ)`
+- `Qp Qpp : Fin N → Fin N → ℝ`: Baxter DCF coefficients -/
+noncomputable def Q0_mat {N : ℕ} (z : ℝ)
+    (sigma : Fin N → ℝ)
+    (rho_geo : Fin N → Fin N → ℝ)
+    (Qp Qpp : Fin N → Fin N → ℝ)
+    : Matrix (Fin N) (Fin N) ℝ :=
   fun i j => q0_entry z (sigma i) ((sigma j - sigma i) / 2)
                (Qp i j) (Qpp i j) (rho_geo i j) (if i = j then 1 else 0)
 
@@ -170,11 +170,11 @@ noncomputable def Q0_mat {n : ℕ} (z : ℝ)
 
 /-- Each (i,j) entry of Q̂₀ satisfies the M.10 decomposition
 `Q̂₀_{ij} = P̂_{ij} + Ê_{ij} · exp(-z · σ_min)`. -/
-theorem Q0_mat_entry_decomp {n : ℕ} (z sigma_min : ℝ) (hz : z ≠ 0)
-    (sigma : Fin n → ℝ)
-    (rho_geo : Fin n → Fin n → ℝ)
-    (Qp Qpp : Fin n → Fin n → ℝ)
-    (i j : Fin n)
+theorem Q0_mat_entry_decomp {N : ℕ} (z sigma_min : ℝ) (hz : z ≠ 0)
+    (sigma : Fin N → ℝ)
+    (rho_geo : Fin N → Fin N → ℝ)
+    (Qp Qpp : Fin N → Fin N → ℝ)
+    (i j : Fin N)
     (hR : (sigma j - sigma i) / 2 + sigma i = (sigma i + sigma j) / 2) :
     Q0_mat z sigma rho_geo Qp Qpp i j =
     ((if i = j then 1 else 0) -
@@ -184,7 +184,7 @@ theorem Q0_mat_entry_decomp {n : ℕ} (z sigma_min : ℝ) (hz : z ≠ 0)
     rho_geo i j * exp (-(z * ((sigma i + sigma j) / 2 - sigma_min))) *
       (Qp i j / z ^ 2 + Qpp i j / z ^ 3) * exp (-(z * sigma_min)) := by
   unfold Q0_mat q0_entry
-  exact FMSA.PathB.b2_qhat_entry_decomp z (sigma i) ((sigma j - sigma i) / 2)
+  exact FMSA.HardSphere.qhat_entry_decomp z (sigma i) ((sigma j - sigma i) / 2)
     ((sigma i + sigma j) / 2) sigma_min (rho_geo i j) (Qp i j) (Qpp i j)
     (if i = j then 1 else 0) hz hR
 
@@ -192,39 +192,39 @@ theorem Q0_mat_entry_decomp {n : ℕ} (z sigma_min : ℝ) (hz : z ≠ 0)
 
 /-- Second packing-fraction moment `ξ₂ = Σᵢ ρᵢ σᵢ²` (no π/6 prefactor; matches
 `fmsa_ga_matrix_mix.py`'s `xi[2]`). -/
-noncomputable def xi2 {n : ℕ} (rho sigma : Fin n → ℝ) : ℝ :=
+noncomputable def xi2 {N : ℕ} (rho sigma : Fin N → ℝ) : ℝ :=
   ∑ i, rho i * sigma i ^ 2
 
 /-- Total packing fraction `η = (π/6) Σᵢ ρᵢ σᵢ³`. -/
-noncomputable def etaMix {n : ℕ} (rho sigma : Fin n → ℝ) : ℝ :=
+noncomputable def etaMix {N : ℕ} (rho sigma : Fin N → ℝ) : ℝ :=
   Real.pi / 6 * ∑ i, rho i * sigma i ^ 3
 
 /-- `vac = 1 − η`, the packing "vacancy" fraction. -/
-noncomputable def vacMix {n : ℕ} (rho sigma : Fin n → ℝ) : ℝ :=
+noncomputable def vacMix {N : ℕ} (rho sigma : Fin N → ℝ) : ℝ :=
   1 - etaMix rho sigma
 
 /-- Physical Baxter coefficient `Q'ᵢⱼ = Q₀[i,j]` (Lebowitz multicomponent PY solution),
 matching `fmsa_ga_matrix_mix.py`'s `_build_Q0_Qpp`:
 `Q₀[i,j] = (2π/vac) · (Rᵢⱼ + π·ξ₂·σᵢ·σⱼ/(4·vac))`, `Rᵢⱼ = (σᵢ+σⱼ)/2`. -/
-noncomputable def Q0phys {n : ℕ} (rho sigma : Fin n → ℝ) (i j : Fin n) : ℝ :=
+noncomputable def Q0phys {N : ℕ} (rho sigma : Fin N → ℝ) (i j : Fin N) : ℝ :=
   (2 * Real.pi / vacMix rho sigma) *
     ((sigma i + sigma j) / 2 +
       Real.pi * xi2 rho sigma * sigma i * sigma j / (4 * vacMix rho sigma))
 
 /-- Physical Baxter coefficient `Q''ᵢⱼ = Qpp[j]` (independent of `i`), matching
 `fmsa_ga_matrix_mix.py`'s `_build_Q0_Qpp`: `Qpp[j] = (2π/vac) · (1 + π·ξ₂·σⱼ/(2·vac))`. -/
-noncomputable def Qppphys {n : ℕ} (rho sigma : Fin n → ℝ) (_i j : Fin n) : ℝ :=
+noncomputable def Qppphys {N : ℕ} (rho sigma : Fin N → ℝ) (_i j : Fin N) : ℝ :=
   (2 * Real.pi / vacMix rho sigma) *
     (1 + Real.pi * xi2 rho sigma * sigma j / (2 * vacMix rho sigma))
 
 /-- Geometric-mean density `√(ρᵢρⱼ)`. -/
-noncomputable def rhoGeoPhys {n : ℕ} (rho : Fin n → ℝ) (i j : Fin n) : ℝ :=
+noncomputable def rhoGeoPhys {N : ℕ} (rho : Fin N → ℝ) (i j : Fin N) : ℝ :=
   Real.sqrt (rho i * rho j)
 
 /-- The physical (Lebowitz/Baxter) multicomponent Q̂₀(z) matrix, with `Qp`/`Qpp`/`rho_geo`
 substituted by their concrete PY-mixture formulas instead of left as free parameters. -/
-noncomputable def Q0_mat_phys {n : ℕ} (z : ℝ) (sigma rho : Fin n → ℝ) :
-    Matrix (Fin n) (Fin n) ℝ :=
+noncomputable def Q0_mat_phys {N : ℕ} (z : ℝ) (sigma rho : Fin N → ℝ) :
+    Matrix (Fin N) (Fin N) ℝ :=
   Q0_mat z sigma (rhoGeoPhys rho) (Q0phys rho sigma) (Qppphys rho sigma)
 
 /-- **Task M.3 (conditional, proved):** if the physical `Q0_mat_phys` satisfies strict row
@@ -243,7 +243,7 @@ diameters differ (the same exponential-growth obstruction as the FMSA_chsY/GA_ma
 2YK failure), so it likely needs the M.10 `P̂+Ê·exp(−z·σmin)` split rather than a direct bound
 on the raw matrix. This theorem is the useful, checkable, unconditional-modulo-hypothesis
 partial result available now. -/
-theorem Q0_mat_phys_isUnit_det_of_diag_dom {n : ℕ} {z : ℝ} {sigma rho : Fin n → ℝ}
+theorem Q0_mat_phys_isUnit_det_of_diag_dom {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
     (hdom : ∀ k, ∑ j ∈ Finset.univ.erase k, |Q0_mat_phys z sigma rho k j| <
                  |Q0_mat_phys z sigma rho k k|) :
     IsUnit (Q0_mat_phys z sigma rho).det := by

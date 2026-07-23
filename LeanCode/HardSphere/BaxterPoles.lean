@@ -176,6 +176,240 @@ theorem G_baxter_entire (eta sigma rho : ℝ) : Differentiable ℂ (G_baxter eta
   unfold G_baxter Npoly Dpoly
   fun_prop
 
+/-! ### Real-axis strict dominance `‖Dpoly‖ < ‖Npoly‖` (retires the no-spinodal physics axiom)
+
+Under the physical coupling `η = πρσ³/6` the PY coefficients collapse to
+`P0 = -6η/(σ(1-η))`, `P1 = -18η²/(σ²(1-η)²)`, `P2 = 6η(1+2η)/(σ³(1-η)²)`, and the two
+combinations entering `‖Npoly‖² - ‖Dpoly‖²` on the real axis vanish *identically*:
+`P0² + 2P1 = 0` and `P1² - 4P0P2 - (P1+2P2σ)² = 0`.  Hence for real `k`
+
+  `normSq (Npoly k) - normSq (Dpoly k) = k⁶ + (P0²+2P1)k⁴ + (P1²-4P0P2-(P1+2P2σ)²)k² = k⁶`,
+
+so `‖Dpoly‖ < ‖Npoly‖` for every real `k ≠ 0`, which forces `G_baxter ≠ 0` there. -/
+
+private theorem baxterP_sq_collapse (eta sigma rho : ℝ) (hsigma : 0 < sigma) (heta1 : eta < 1)
+    (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) :
+    baxterP0 eta sigma rho ^ 2 + 2 * baxterP1 eta sigma rho = 0 ∧
+      baxterP1 eta sigma rho ^ 2 - 4 * baxterP0 eta sigma rho * baxterP2 eta sigma rho
+        - (baxterP1 eta sigma rho + 2 * baxterP2 eta sigma rho * sigma) ^ 2 = 0 := by
+  have hs : sigma ≠ 0 := hsigma.ne'
+  have hpi : Real.pi ≠ 0 := Real.pi_ne_zero
+  have he : (1 : ℝ) - eta ≠ 0 := sub_ne_zero.mpr (ne_of_gt heta1)
+  have hrho_eq : rho = 6 * eta / (Real.pi * sigma ^ 3) := by
+    rw [heta_def]; field_simp
+  constructor <;>
+    · simp only [baxterP0, baxterP1, baxterP2, q_prime_py, q_doubleprime_py]
+      rw [hrho_eq]
+      field_simp
+      ring
+
+/-- **The real-axis identity** `‖Npoly(k)‖² - ‖Dpoly(k)‖² = k⁶`. -/
+theorem Npoly_normSq_sub_Dpoly_normSq_real {eta sigma rho : ℝ} (hsigma : 0 < sigma)
+    (heta1 : eta < 1) (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (k : ℝ) :
+    Complex.normSq (Npoly eta sigma rho (k : ℂ))
+      - Complex.normSq (Dpoly eta sigma rho (k : ℂ)) = k ^ 6 := by
+  obtain ⟨hB, hC⟩ := baxterP_sq_collapse eta sigma rho hsigma heta1 heta_def
+  have hN : Npoly eta sigma rho (k : ℂ)
+      = ((-baxterP0 eta sigma rho * k ^ 2 + 2 * baxterP2 eta sigma rho : ℝ) : ℂ)
+        + ((k ^ 3 + baxterP1 eta sigma rho * k : ℝ) : ℂ) * Complex.I := by
+    simp only [Npoly]; push_cast; ring
+  have hD : Dpoly eta sigma rho (k : ℂ)
+      = ((2 * baxterP2 eta sigma rho : ℝ) : ℂ)
+        + (((baxterP1 eta sigma rho + 2 * baxterP2 eta sigma rho * sigma) * k : ℝ) : ℂ)
+          * Complex.I := by
+    simp only [Dpoly]; push_cast; ring
+  rw [hN, hD, Complex.normSq_add_mul_I, Complex.normSq_add_mul_I]
+  linear_combination (k ^ 4) * hB + (k ^ 2) * hC
+
+/-- **Strict real-axis dominance.** `‖Dpoly(k)‖ < ‖Npoly(k)‖` for every real `k ≠ 0`. -/
+theorem Dpoly_norm_lt_Npoly_norm_of_real {eta sigma rho : ℝ} (hsigma : 0 < sigma)
+    (heta1 : eta < 1) (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) {k : ℝ} (hk : k ≠ 0) :
+    ‖Dpoly eta sigma rho (k : ℂ)‖ < ‖Npoly eta sigma rho (k : ℂ)‖ := by
+  have hid := Npoly_normSq_sub_Dpoly_normSq_real hsigma heta1 heta_def k
+  have hk6 : 0 < k ^ 6 := by positivity
+  have hsq : ‖Dpoly eta sigma rho (k : ℂ)‖ ^ 2 < ‖Npoly eta sigma rho (k : ℂ)‖ ^ 2 := by
+    rw [Complex.sq_norm, Complex.sq_norm]; linarith
+  nlinarith [hsq, norm_nonneg (Dpoly eta sigma rho (k : ℂ)),
+    norm_nonneg (Npoly eta sigma rho (k : ℂ))]
+
+/-- **`G_baxter` has no real zero besides `k = 0`.**  A zero would give
+`Npoly = Dpoly·e^{-ikσ}` with `‖e^{-ikσ}‖ = 1` on the real axis, hence `‖Npoly‖ = ‖Dpoly‖`,
+contradicting `Dpoly_norm_lt_Npoly_norm_of_real`. -/
+theorem G_baxter_ne_zero_of_real {eta sigma rho : ℝ} (hsigma : 0 < sigma) (heta1 : eta < 1)
+    (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) {k : ℝ} (hk : k ≠ 0) :
+    G_baxter eta sigma rho (k : ℂ) ≠ 0 := by
+  intro h
+  rw [G_baxter, sub_eq_zero] at h
+  have hexp : ‖Complex.exp (-Complex.I * (k : ℂ) * (sigma : ℂ))‖ = 1 := by
+    rw [Complex.norm_exp]
+    have him : (-Complex.I * (k : ℂ) * (sigma : ℂ)).re = 0 := by
+      simp [Complex.mul_re, Complex.mul_im]
+    rw [him, Real.exp_zero]
+  have heq : ‖Npoly eta sigma rho (k : ℂ)‖ = ‖Dpoly eta sigma rho (k : ℂ)‖ := by
+    rw [h, norm_mul, hexp, mul_one]
+  have := Dpoly_norm_lt_Npoly_norm_of_real hsigma heta1 heta_def hk
+  linarith
+
+/-- **Norm-dominant outer region: no zero, elementary, all `η`.**  If `‖Dpoly(k)‖ < ‖Npoly(k)‖` then
+`G_baxter(k) ≠ 0` for `Im k ≤ 0`: a zero would give `Npoly = Dpoly·e^{−ikσ}`, whence
+`‖Npoly‖ = ‖Dpoly‖·e^{σ·Im k} ≤ ‖Dpoly‖`, contradicting dominance. -/
+theorem G_baxter_ne_zero_of_norm_dominant {eta sigma rho : ℝ} (hsigma : 0 < sigma) {k : ℂ}
+    (hk : k.im ≤ 0) (hdom : ‖Dpoly eta sigma rho k‖ < ‖Npoly eta sigma rho k‖) :
+    G_baxter eta sigma rho k ≠ 0 := by
+  intro h
+  rw [G_baxter, sub_eq_zero] at h
+  have hexp : ‖Complex.exp (-Complex.I * k * (sigma : ℂ))‖ = Real.exp (sigma * k.im) := by
+    rw [Complex.norm_exp]; congr 1
+    simp [Complex.mul_re, Complex.mul_im, Complex.I_re, Complex.I_im]
+    ring
+  have hle : ‖Npoly eta sigma rho k‖ ≤ ‖Dpoly eta sigma rho k‖ := by
+    rw [h, norm_mul, hexp]
+    have hone : Real.exp (sigma * k.im) ≤ 1 :=
+      Real.exp_le_one_iff.mpr (mul_nonpos_of_nonneg_of_nonpos hsigma.le hk)
+    calc ‖Dpoly eta sigma rho k‖ * Real.exp (sigma * k.im)
+        ≤ ‖Dpoly eta sigma rho k‖ * 1 := mul_le_mul_of_nonneg_left hone (norm_nonneg _)
+      _ = ‖Dpoly eta sigma rho k‖ := mul_one _
+  linarith
+
+/-- **Escape bound (input 4 of the `MA.14` homotopy route).**  `‖Npoly‖ ∼ ‖k‖³` (cubic) overtakes
+`‖Dpoly‖ ∼ ‖k‖` (linear), so there is an explicit radius `R` beyond which `‖Dpoly(k)‖ < ‖Npoly(k)‖`
+for **all** `k` (not just the lower half-plane).  Consequently every zero of `G_baxter` — indeed
+every point of the `‖Npoly‖ ≤ ‖Dpoly‖` core — lies in `‖k‖ < R`, bounding the region the homotopy
+count is taken over.  Elementary polynomial-degree argument; no physics used. -/
+theorem Dpoly_norm_lt_Npoly_norm_of_coeff_bound (eta sigma rho : ℝ) {c0 c1 cq c2 : ℝ}
+    (h0 : |baxterP0 eta sigma rho| ≤ c0) (h1 : |baxterP1 eta sigma rho| ≤ c1)
+    (hqb : |baxterP1 eta sigma rho + 2 * baxterP2 eta sigma rho * sigma| ≤ cq)
+    (h2 : |baxterP2 eta sigma rho| ≤ c2) {k : ℂ} (hk : 1 + c0 + c1 + cq + 4 * c2 ≤ ‖k‖) :
+    ‖Dpoly eta sigma rho k‖ < ‖Npoly eta sigma rho k‖ := by
+  have ht0 : 0 ≤ ‖k‖ := norm_nonneg _
+  have hc0 : 0 ≤ c0 := le_trans (abs_nonneg _) h0
+  have hc1 : 0 ≤ c1 := le_trans (abs_nonneg _) h1
+  have hcq : 0 ≤ cq := le_trans (abs_nonneg _) hqb
+  have hc2 : 0 ≤ c2 := le_trans (abs_nonneg _) h2
+  have ht1 : (1 : ℝ) ≤ ‖k‖ := le_trans (by linarith) hk
+  -- ‖Npoly‖ ≥ ‖k‖³ − (|P0|·‖k‖² + |P1|·‖k‖ + 2·|P2|), from the reverse triangle inequality.
+  have hNlow : ‖k‖ ^ 3 - (|baxterP0 eta sigma rho| * ‖k‖ ^ 2 + |baxterP1 eta sigma rho| * ‖k‖
+      + 2 * |baxterP2 eta sigma rho|) ≤ ‖Npoly eta sigma rho k‖ := by
+    have hN : Npoly eta sigma rho k = Complex.I * k ^ 3 -
+        ((baxterP0 eta sigma rho : ℂ) * k ^ 2 - Complex.I * (baxterP1 eta sigma rho : ℂ) * k
+          - 2 * (baxterP2 eta sigma rho : ℂ)) := by
+      simp only [Npoly]; ring
+    have hlead : ‖Complex.I * k ^ 3‖ = ‖k‖ ^ 3 := by
+      rw [norm_mul, norm_pow, Complex.norm_I, one_mul]
+    have e0 : ‖(baxterP0 eta sigma rho : ℂ) * k ^ 2‖ = |baxterP0 eta sigma rho| * ‖k‖ ^ 2 := by
+      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, norm_pow]
+    have e1 : ‖Complex.I * (baxterP1 eta sigma rho : ℂ) * k‖ = |baxterP1 eta sigma rho| * ‖k‖ := by
+      rw [norm_mul, norm_mul, Complex.norm_I, Complex.norm_real, Real.norm_eq_abs, one_mul]
+    have e2 : ‖(2 : ℂ) * (baxterP2 eta sigma rho : ℂ)‖ = 2 * |baxterP2 eta sigma rho| := by
+      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, Complex.norm_ofNat]
+    have t1 : ‖(baxterP0 eta sigma rho : ℂ) * k ^ 2 - Complex.I * (baxterP1 eta sigma rho : ℂ) * k
+          - 2 * (baxterP2 eta sigma rho : ℂ)‖
+        ≤ ‖(baxterP0 eta sigma rho : ℂ) * k ^ 2 - Complex.I * (baxterP1 eta sigma rho : ℂ) * k‖
+          + ‖(2 : ℂ) * (baxterP2 eta sigma rho : ℂ)‖ := norm_sub_le _ _
+    have t2 : ‖(baxterP0 eta sigma rho : ℂ) * k ^ 2 - Complex.I * (baxterP1 eta sigma rho : ℂ) * k‖
+        ≤ ‖(baxterP0 eta sigma rho : ℂ) * k ^ 2‖
+          + ‖Complex.I * (baxterP1 eta sigma rho : ℂ) * k‖ := norm_sub_le _ _
+    have hrt : ‖Complex.I * k ^ 3‖ - ‖(baxterP0 eta sigma rho : ℂ) * k ^ 2
+        - Complex.I * (baxterP1 eta sigma rho : ℂ) * k - 2 * (baxterP2 eta sigma rho : ℂ)‖
+        ≤ ‖Npoly eta sigma rho k‖ := by rw [hN]; exact norm_sub_norm_le _ _
+    rw [hlead] at hrt
+    linarith [t1, t2, e0, e1, e2, hrt]
+  -- ‖Dpoly‖ ≤ |Q|·‖k‖ + 2·|P2|, from the triangle inequality.
+  have hDup : ‖Dpoly eta sigma rho k‖
+      ≤ |baxterP1 eta sigma rho + 2 * baxterP2 eta sigma rho * sigma| * ‖k‖
+        + 2 * |baxterP2 eta sigma rho| := by
+    have hD : Dpoly eta sigma rho k =
+        Complex.I * ((baxterP1 eta sigma rho + 2 * baxterP2 eta sigma rho * sigma : ℝ) : ℂ) * k
+          + 2 * (baxterP2 eta sigma rho : ℂ) := by
+      simp only [Dpoly]; push_cast; ring
+    have e1 : ‖Complex.I
+          * ((baxterP1 eta sigma rho + 2 * baxterP2 eta sigma rho * sigma : ℝ) : ℂ) * k‖
+        = |baxterP1 eta sigma rho + 2 * baxterP2 eta sigma rho * sigma| * ‖k‖ := by
+      rw [norm_mul, norm_mul, Complex.norm_I, Complex.norm_real, Real.norm_eq_abs, one_mul]
+    have e2 : ‖(2 : ℂ) * (baxterP2 eta sigma rho : ℂ)‖ = 2 * |baxterP2 eta sigma rho| := by
+      rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, Complex.norm_ofNat]
+    have hadd : ‖Complex.I
+            * ((baxterP1 eta sigma rho + 2 * baxterP2 eta sigma rho * sigma : ℝ) : ℂ) * k
+          + 2 * (baxterP2 eta sigma rho : ℂ)‖
+        ≤ ‖Complex.I
+            * ((baxterP1 eta sigma rho + 2 * baxterP2 eta sigma rho * sigma : ℝ) : ℂ) * k‖
+          + ‖(2 : ℂ) * (baxterP2 eta sigma rho : ℂ)‖ := norm_add_le _ _
+    rw [hD]; linarith [hadd, e1, e2]
+  -- Bound the |P_i| by the c_i and force `‖k‖³ − c0‖k‖² − (c1+cq)‖k‖ − 4c2 > 0`.
+  have b0 : |baxterP0 eta sigma rho| * ‖k‖ ^ 2 ≤ c0 * ‖k‖ ^ 2 :=
+    mul_le_mul_of_nonneg_right h0 (by positivity)
+  have b1 : |baxterP1 eta sigma rho| * ‖k‖ ≤ c1 * ‖k‖ := mul_le_mul_of_nonneg_right h1 ht0
+  have bq : |baxterP1 eta sigma rho + 2 * baxterP2 eta sigma rho * sigma| * ‖k‖ ≤ cq * ‖k‖ :=
+    mul_le_mul_of_nonneg_right hqb ht0
+  have hkey : cq * ‖k‖ + 2 * c2 < ‖k‖ ^ 3 - (c0 * ‖k‖ ^ 2 + c1 * ‖k‖ + 2 * c2) := by
+    nlinarith [ht1, hc0, hc1, hcq, hc2, hk, mul_nonneg ht0 ht0,
+      mul_nonneg (mul_nonneg ht0 ht0) ht0]
+  linarith [hDup, hNlow, hkey, b0, b1, bq, h2]
+
+/-- **Escape bound (input 4 of the `MA.14` homotopy route).**  `‖Npoly‖ ∼ ‖k‖³` (cubic) overtakes
+`‖Dpoly‖ ∼ ‖k‖` (linear), so there is an explicit radius `R` beyond which `‖Dpoly(k)‖ < ‖Npoly(k)‖`
+for **all** `k` (not just the lower half-plane).  Consequently every zero of `G_baxter` — indeed
+every point of the `‖Npoly‖ ≤ ‖Dpoly‖` core — lies in `‖k‖ < R`, bounding the region the homotopy
+count is taken over.  Elementary polynomial-degree argument; no physics used. -/
+theorem Dpoly_norm_lt_Npoly_norm_of_large (eta sigma rho : ℝ) :
+    ∃ R : ℝ, 0 < R ∧ ∀ k : ℂ, R ≤ ‖k‖ →
+      ‖Dpoly eta sigma rho k‖ < ‖Npoly eta sigma rho k‖ :=
+  ⟨1 + |baxterP0 eta sigma rho| + |baxterP1 eta sigma rho|
+      + |baxterP1 eta sigma rho + 2 * baxterP2 eta sigma rho * sigma|
+      + 4 * |baxterP2 eta sigma rho|,
+    by positivity, fun k hk =>
+      Dpoly_norm_lt_Npoly_norm_of_coeff_bound eta sigma rho le_rfl le_rfl le_rfl le_rfl hk⟩
+
+/-- **Uniform escape radius over a compact `η`-interval.**  Strengthens the escape bound to a single
+radius `R` valid for *every* parameter `t ∈ [a,b]` (with density `ρ = rhof t` varying continuously),
+provided `b < 1`.  This is what lets the `MA.14` homotopy count run over one fixed contour: the
+`‖Npoly‖ ≤ ‖Dpoly‖` core stays inside `‖k‖ < R` throughout the homotopy.  Proof: the coefficient
+magnitudes are continuous in `t` (rational in `η`, poles only at `η = 1`), hence bounded on the
+compact `[a,b]`; feed the bound to `Dpoly_norm_lt_Npoly_norm_of_coeff_bound`. -/
+theorem exists_uniform_escape_radius {a b sigma : ℝ} {rhof : ℝ → ℝ}
+    (hb : b < 1) (hrho : ContinuousOn rhof (Set.Icc a b)) :
+    ∃ R : ℝ, 0 < R ∧ ∀ t ∈ Set.Icc a b, ∀ k : ℂ, R ≤ ‖k‖ →
+      ‖Dpoly t sigma (rhof t) k‖ < ‖Npoly t sigma (rhof t) k‖ := by
+  rcases Set.eq_empty_or_nonempty (Set.Icc a b) with hemp | hne
+  · exact ⟨1, one_pos, fun t ht => by simp [hemp] at ht⟩
+  have hden : ∀ t ∈ Set.Icc a b, (1 - t) ^ 2 ≠ 0 := fun t ht =>
+    (pow_pos (by have := ht.2; linarith : (0 : ℝ) < 1 - t) 2).ne'
+  have hqp : ContinuousOn (fun t => q_prime_py t sigma) (Set.Icc a b) := by
+    simp only [q_prime_py]; exact ContinuousOn.div (by fun_prop) (by fun_prop) hden
+  have hqpp : ContinuousOn (fun t => q_doubleprime_py t) (Set.Icc a b) := by
+    simp only [q_doubleprime_py]; exact ContinuousOn.div (by fun_prop) (by fun_prop) hden
+  have hP0 : ContinuousOn (fun t => baxterP0 t sigma (rhof t)) (Set.Icc a b) := by
+    simp only [baxterP0]
+    exact ((hrho.mul hqpp).mul continuousOn_const |>.div_const 2).sub
+      ((hrho.mul hqp).mul continuousOn_const)
+  have hP1 : ContinuousOn (fun t => baxterP1 t sigma (rhof t)) (Set.Icc a b) := by
+    simp only [baxterP1]
+    exact (hrho.mul hqp).sub ((hrho.mul hqpp).mul continuousOn_const)
+  have hP2 : ContinuousOn (fun t => baxterP2 t sigma (rhof t)) (Set.Icc a b) := by
+    simp only [baxterP2]; exact (hrho.mul hqpp).div_const 2
+  have hPQ : ContinuousOn (fun t => baxterP1 t sigma (rhof t)
+      + 2 * baxterP2 t sigma (rhof t) * sigma) (Set.Icc a b) :=
+    hP1.add ((continuousOn_const.mul hP2).mul continuousOn_const)
+  have hg : ContinuousOn (fun t => |baxterP0 t sigma (rhof t)| + |baxterP1 t sigma (rhof t)|
+      + |baxterP1 t sigma (rhof t) + 2 * baxterP2 t sigma (rhof t) * sigma|
+      + |baxterP2 t sigma (rhof t)|) (Set.Icc a b) :=
+    ((hP0.abs.add hP1.abs).add hPQ.abs).add hP2.abs
+  obtain ⟨t0, _, ht0max⟩ := isCompact_Icc.exists_isMaxOn hne hg
+  set M := |baxterP0 t0 sigma (rhof t0)| + |baxterP1 t0 sigma (rhof t0)|
+      + |baxterP1 t0 sigma (rhof t0) + 2 * baxterP2 t0 sigma (rhof t0) * sigma|
+      + |baxterP2 t0 sigma (rhof t0)| with hMdef
+  have hM0 : 0 ≤ M := by rw [hMdef]; positivity
+  refine ⟨1 + 7 * M, by linarith, fun t ht k hk => ?_⟩
+  have hgt : |baxterP0 t sigma (rhof t)| + |baxterP1 t sigma (rhof t)|
+      + |baxterP1 t sigma (rhof t) + 2 * baxterP2 t sigma (rhof t) * sigma|
+      + |baxterP2 t sigma (rhof t)| ≤ M := ht0max ht
+  have a0 := abs_nonneg (baxterP0 t sigma (rhof t))
+  have a1 := abs_nonneg (baxterP1 t sigma (rhof t))
+  have aQ := abs_nonneg (baxterP1 t sigma (rhof t) + 2 * baxterP2 t sigma (rhof t) * sigma)
+  have a2 := abs_nonneg (baxterP2 t sigma (rhof t))
+  exact Dpoly_norm_lt_Npoly_norm_of_coeff_bound t sigma (rhof t) (c0 := M) (c1 := M) (cq := M)
+    (c2 := M) (by linarith) (by linarith) (by linarith) (by linarith) (by linarith)
+
 /-! ### The log-fixed-point map and Banach-contraction existence machinery
 
 `POLE.2`'s numerical feasibility check found a *log-fixed-point* contraction map with a

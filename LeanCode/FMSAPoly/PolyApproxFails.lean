@@ -145,35 +145,91 @@ theorem unlike_pair_twoexp_unbounded (K : ℝ) (hK : 0 < K) (M : ℝ) :
         _ ≤ K * Real.exp (max 0 (Real.log (M / K)) + 1) :=
             mul_le_mul_of_nonneg_left h2 hK.le
 
+/-- **GA.1 (part B, helper) — the HS-pole residue bound follows from the propagator, not numerics.**
+
+The Route-C residues are (`fmsa_hs_pole_residue.py:17`)
+`B_k = A_k · K / (z² − s_k²)`, where `A_k := [adj Q̂₀(s_k)]_ij / det′Q̂₀(s_k)` and the `s_k` are the
+zeros of `det Q̂₀`.  Both `A_k` and `s_k` are built from the **hard-sphere** Baxter matrix alone, so
+they carry **no `z`-dependence**: all of it sits in `K` and the propagator `1/(z² − s_k²)`.  Hence the
+`O(K/z²)` shape needs no numerical input — only that `z` outruns the poles.  Away from resonance
+(`2‖s_k‖ ≤ z`) the reverse triangle inequality gives `‖z² − s_k²‖ ≥ z² − ‖s_k‖² ≥ (3/4)z²`, so
+```
+‖B_k‖ ≤ C·K / ((3/4)·z²) = (4/3)·C·K/z²,      C := max_k ‖A_k‖.
+```
+`C` exists because GA.1's pole set is **finite** (`Fin n`); this is why no `POLE.5`/`MML.5`-style
+per-pole magnitude machinery is needed here — that is only required for *infinite* pole sums.
+
+⚠ The **sharp** constant (`‖B_k‖ ≤ K/z²`, i.e. `C = 1`) is *not* a theorem: it would force
+`‖A_k‖ ≤ ‖1 − s_k²/z²‖ → 1`, a numerical accident of the HS Baxter matrix.  This is why
+`hs_pole_additive_insufficient` below quantifies over an arbitrary `C` — the GA.1 argument only
+needs `n·C·K/z²` to be **fixed** while `K·exp(z·R) → ∞`. -/
+theorem residue_propagator_bound {n : ℕ} (A s : Fin n → ℂ) {C K z : ℝ}
+    (hK : 0 ≤ K) (hz : 0 < z) (hA : ∀ k, ‖A k‖ ≤ C)
+    (hsep : ∀ k, 2 * ‖s k‖ ≤ z) (k : Fin n) :
+    ‖A k * K / ((z : ℂ) ^ 2 - (s k) ^ 2)‖ ≤ 4 / 3 * C * K / z ^ 2 := by
+  have hC : 0 ≤ C := le_trans (norm_nonneg _) (hA k)
+  -- `‖s k‖² ≤ z²/4`
+  have hs4 : ‖s k‖ ^ 2 ≤ z ^ 2 / 4 := by
+    have h := hsep k
+    have h0 : 0 ≤ ‖s k‖ := norm_nonneg _
+    nlinarith [h, h0]
+  -- reverse triangle: `‖z² − s_k²‖ ≥ z² − ‖s_k‖² ≥ (3/4)z²`
+  have hden : 3 / 4 * z ^ 2 ≤ ‖(z : ℂ) ^ 2 - (s k) ^ 2‖ := by
+    have h1 : ‖((z : ℂ) ^ 2)‖ - ‖(s k) ^ 2‖ ≤ ‖(z : ℂ) ^ 2 - (s k) ^ 2‖ := norm_sub_norm_le _ _
+    have h2 : ‖((z : ℂ) ^ 2)‖ = z ^ 2 := by
+      rw [norm_pow, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hz]
+    have h3 : ‖(s k) ^ 2‖ = ‖s k‖ ^ 2 := by rw [norm_pow]
+    rw [h2, h3] at h1; linarith [hs4, h1]
+  have hzpos : (0 : ℝ) < z ^ 2 := by positivity
+  have hdpos : (0 : ℝ) < ‖(z : ℂ) ^ 2 - (s k) ^ 2‖ := lt_of_lt_of_le (by linarith) hden
+  -- numerator
+  have hnum : ‖A k * (K : ℂ)‖ ≤ C * K := by
+    rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hK]
+    exact mul_le_mul_of_nonneg_right (hA k) hK
+  rw [norm_div]
+  rw [div_le_div_iff₀ hdpos (by positivity : (0:ℝ) < z ^ 2)]
+  calc ‖A k * (K : ℂ)‖ * z ^ 2 ≤ (C * K) * z ^ 2 :=
+        mul_le_mul_of_nonneg_right hnum (le_of_lt hzpos)
+    _ ≤ 4 / 3 * C * K * ‖(z : ℂ) ^ 2 - (s k) ^ 2‖ := by
+        have h := mul_le_mul_of_nonneg_left hden (by positivity : (0:ℝ) ≤ 4 / 3 * C * K)
+        nlinarith [h]
+
 /-- **Task GA.1 (part B) — a bounded additive HS-pole sum cannot cancel the base.**  If every
-residue coefficient obeys `|B k| ≤ K/z²` (the `O(K/z²)` bound on Baxter adjugate residues, taken as
-hypothesis — numerically verified), then the corrected base can drop by at most `n·K/z²`:
+residue coefficient obeys `|B k| ≤ C·K/z²` (the `O(K/z²)` propagator bound, discharged structurally
+by `residue_propagator_bound` above with `C := max_k ‖A_k‖`), then the corrected base can drop by at
+most `n·C·K/z²`:
 ```
-K·(exp(z·R) − n/z²) ≤ K·exp(z·R) + ∑ₖ B k.
+K·exp(z·R) − n·(C·K/z²) ≤ K·exp(z·R) + ∑ₖ B k.
 ```
-Since `n·K/z²` is fixed while `K·exp(z·R) → ∞` (part A), no finite HS-pole set rescues the divergence. -/
+Since `n·C·K/z²` is fixed while `K·exp(z·R) → ∞` (part A), no finite HS-pole set rescues the
+divergence.  The bound is stated with an arbitrary `C` because the sharp `C = 1` is not provable —
+see `residue_propagator_bound`.  The argument is insensitive to `C`. -/
 theorem hs_pole_additive_insufficient
-    {K z R : ℝ} (_hK : 0 < K) (_hz : 0 < z) {n : ℕ} (B : Fin n → ℝ)
-    (hB : ∀ k, |B k| ≤ K / z ^ 2) :
-    K * (Real.exp (z * R) - (n : ℝ) / z ^ 2) ≤ K * Real.exp (z * R) + ∑ k, B k := by
-  have hlb : - ((n : ℝ) * (K / z ^ 2)) ≤ ∑ k, B k := by
-    have hab : |∑ k, B k| ≤ (n : ℝ) * (K / z ^ 2) := by
+    {C K z R : ℝ} (_hK : 0 < K) (_hz : 0 < z) {n : ℕ} (B : Fin n → ℝ)
+    (hB : ∀ k, |B k| ≤ C * K / z ^ 2) :
+    K * Real.exp (z * R) - (n : ℝ) * (C * K / z ^ 2) ≤ K * Real.exp (z * R) + ∑ k, B k := by
+  have hlb : - ((n : ℝ) * (C * K / z ^ 2)) ≤ ∑ k, B k := by
+    have hab : |∑ k, B k| ≤ (n : ℝ) * (C * K / z ^ 2) := by
       calc |∑ k, B k| ≤ ∑ k, |B k| := Finset.abs_sum_le_sum_abs _ _
-        _ ≤ ∑ _k : Fin n, (K / z ^ 2) := Finset.sum_le_sum (fun k _ => hB k)
-        _ = (n : ℝ) * (K / z ^ 2) := by
+        _ ≤ ∑ _k : Fin n, (C * K / z ^ 2) := Finset.sum_le_sum (fun k _ => hB k)
+        _ = (n : ℝ) * (C * K / z ^ 2) := by
             rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
     linarith [neg_abs_le (∑ k, B k), hab]
-  have hrw : K * (Real.exp (z * R) - (n:ℝ)/z^2) = K * Real.exp (z*R) - (n:ℝ)*(K/z^2) := by ring
-  rw [hrw]; linarith [hlb]
+  linarith [hlb]
 
 /-- **Task GA.3 — the FMSA unlike-pair perturbation ratio is unbounded.**
 
-The ratio of the FMSA first-order Yukawa inner amplitude `K·exp(z·R)` (the peak size of the growing
-branch of `c^(1)_{01}`, GA.1) to a fixed, `z`-independent hard-sphere reference bound `M_HS > 0` on
-`‖c_HS,01‖` grows without bound as `z·R → ∞`: for any target `M` there is a state point `(z, R)`
-making the ratio `≥ M`. So the "small correction" FMSA adds is not small *relative to the reference* —
-the perturbation expansion is formally invalid at large `z·R` (e.g. 2YK `z₂≈9.3`, `R_{01}≈1.43`,
+The ratio of the **GA-matrix split's** growing branch `K·exp(z·R)` (GA.1) to a fixed, `z`-independent
+hard-sphere reference bound `M_HS > 0` on `‖c_HS,01‖` grows without bound as `z·R → ∞`: for any target
+`M` there is a state point `(z, R)` making the ratio `≥ M` (e.g. 2YK `z₂≈9.3`, `R_{01}≈1.43`,
 `|K₂|≈2.32` gives ratio `≳ 3.5·10⁶`).
+
+**Scope (corrected 2026-07-17).** This says the **GA-matrix `(1−G²)/A²` split** is unusable at large
+`z·R` — it is *not* a statement that first-order perturbation theory fails. The **true** `c^(1)` is
+O(1)-bounded (max `|c^(1)|` = 0.332 for pair (1,2), vs this split's 1.78×10⁸) and first order at full
+coupling is 1–2% accurate in `ĉ(0)`; the exponential ratio measures the split's catastrophic
+cancellation. See `numerical_notes/results/true_first_order_probe.md` and the Task GA.3 scope box in
+`proof_notes_failures.md`. (The unscoped reading is what retired GA.4.)
 
 `M_HS` is taken as an explicit hypothesis (rather than derived): `c_HS,01` is a piecewise polynomial
 in `r` whose coefficients depend only on packing fractions/diameters, not on `z`, so a `z`-independent

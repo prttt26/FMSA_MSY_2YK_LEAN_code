@@ -106,10 +106,10 @@ theorem phi2_formula {s : ℝ} (hs : s ≠ 0) (R : ℝ) :
   have hs3 : s ^ 3 ≠ 0 := pow_ne_zero _ hs
   field_simp [hs]; ring
 
-/-! ### φ1 shifted (Task B.1) -/
+/-! ### φ1 shifted (Task 2.3, ex-B.1) -/
 
 /-- Antiderivative of `r * exp(z · (r - R))` is `(r/z - 1/z^2) * exp(z · (r - R))`. -/
-private lemma b1_hasDerivAt {z : ℝ} (hz : z ≠ 0) (R r : ℝ) :
+private lemma phi1_shifted_hasDerivAt {z : ℝ} (hz : z ≠ 0) (R r : ℝ) :
     HasDerivAt (fun x => (x / z - 1 / z ^ 2) * Real.exp (z * (x - R)))
                (r * Real.exp (z * (r - R))) r := by
   -- d/dx [x/z - 1/z^2] = 1/z  (use id_def to avoid Pi.sub id-mismatch)
@@ -126,7 +126,7 @@ private lemma b1_hasDerivAt {z : ℝ} (hz : z ≠ 0) (R r : ℝ) :
     hinner.exp
   exact (hf.mul hg).congr_deriv (by field_simp [hz]; ring)
 
-/-- **Task B.1** — Shifted-exponent integral:
+/-- **Task 2.3** *(ex-B.1, moved from Group GAP 2026-07-17 — pure HS Baxter factor)* — Shifted-exponent integral:
 `∫0^R r · exp(z · (r - R)) dr = (z·R - 1 + exp(-z·R)) / z^2` for `z ≠ 0`.
 
 Physical role: `p1(R,z) = -∫0^R r·exp(z·(r-R)) dr` is used in `_build_Qhat`
@@ -138,7 +138,7 @@ theorem phi1_shifted_formula {z : ℝ} (hz : z ≠ 0) (R : ℝ) :
     (continuous_id.mul (Real.continuous_exp.comp
       (continuous_const.mul (continuous_id.sub continuous_const)))).intervalIntegrable 0 R
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt
-        (fun r _ => b1_hasDerivAt hz R r) hint]
+        (fun r _ => phi1_shifted_hasDerivAt hz R r) hint]
   have hR : z * (R - R) = 0 := by ring
   have h0 : z * (0 - R) = -(z * R) := by ring
   simp only [hR, h0, Real.exp_zero, mul_one, zero_div, zero_sub]

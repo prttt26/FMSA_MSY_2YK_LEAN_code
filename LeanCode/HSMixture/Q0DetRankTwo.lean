@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.HardSphere.MatrixQ0
+import LeanCode.HSMixture.MatrixQ0
 
 /-!
 # Task M.4 — Rank-2 reduction of `det(Q0_mat_phys)`
@@ -15,8 +15,8 @@ import LeanCode.HardSphere.MatrixQ0
 ## Context
 
 `Q0_mat_phys(z)` is exactly a rank-2 perturbation of the identity: `Q0_mat_phys = 1 - U*V`
-for `U : Matrix (Fin n) (Fin 2) ℝ`, `V : Matrix (Fin 2) (Fin n) ℝ`. Mathlib's
-Weinstein–Aronszajn/Sylvester identity `det_one_sub_mul_comm` then reduces the n×n
+for `U : Matrix (Fin N) (Fin 2) ℝ`, `V : Matrix (Fin 2) (Fin N) ℝ`. Mathlib's
+Weinstein–Aronszajn/Sylvester identity `det_one_sub_mul_comm` then reduces the N×N
 determinant to a fixed 2×2 one, `det (1 - V*U)`, independent of the number of species.
 
 See `MatrixQ0.lean`'s M.4 roadmap note for the full derivation this file formalizes.
@@ -223,18 +223,18 @@ theorem g_identity {sigma z : ℝ} (hz : z ≠ 0) :
 
 /-- `fFun rho sigma i z := (π/vac) · (p1(σᵢ,z)·σᵢ + 2·p2(σᵢ,z))`, the coefficient of `u1_i`
 in the rank-2 factorization (`vac` and the implicit `ξ₂` come from the whole mixture). -/
-noncomputable def fFun {n : ℕ} (rho sigma : Fin n → ℝ) (i : Fin n) (z : ℝ) : ℝ :=
+noncomputable def fFun {N : ℕ} (rho sigma : Fin N → ℝ) (i : Fin N) (z : ℝ) : ℝ :=
   (Real.pi / vacMix rho sigma) * (p1 (sigma i) z * sigma i + 2 * p2 (sigma i) z)
 
 /-- `gFun rho sigma i z := (π/vac)·p1(σᵢ,z) + (π²ξ₂/vac²)·(p1(σᵢ,z)·σᵢ/2 + p2(σᵢ,z))`, the
 coefficient of `u2_i` in the rank-2 factorization. -/
-noncomputable def gFun {n : ℕ} (rho sigma : Fin n → ℝ) (i : Fin n) (z : ℝ) : ℝ :=
+noncomputable def gFun {N : ℕ} (rho sigma : Fin N → ℝ) (i : Fin N) (z : ℝ) : ℝ :=
   (Real.pi / vacMix rho sigma) * p1 (sigma i) z +
     (Real.pi ^ 2 * xi2 rho sigma / vacMix rho sigma ^ 2) *
       (p1 (sigma i) z * sigma i / 2 + p2 (sigma i) z)
 
 /-- `fFun < 0` for `σᵢ,z > 0` and a physical mixture (`vac > 0`). -/
-theorem fFun_neg {n : ℕ} {rho sigma : Fin n → ℝ} {i : Fin n} {z : ℝ}
+theorem fFun_neg {N : ℕ} {rho sigma : Fin N → ℝ} {i : Fin N} {z : ℝ}
     (hvac : 0 < vacMix rho sigma) (hsigma : 0 < sigma i) (hz : 0 < z) :
     fFun rho sigma i z < 0 := by
   unfold fFun
@@ -245,7 +245,7 @@ theorem fFun_neg {n : ℕ} {rho sigma : Fin n → ℝ} {i : Fin n} {z : ℝ}
   exact mul_neg_of_pos_of_neg (div_pos Real.pi_pos hvac) h1
 
 /-- `gFun < 0` for `σᵢ,z > 0` and a physical mixture (`vac > 0`, `ξ₂ ≥ 0`). -/
-theorem gFun_neg {n : ℕ} {rho sigma : Fin n → ℝ} {i : Fin n} {z : ℝ}
+theorem gFun_neg {N : ℕ} {rho sigma : Fin N → ℝ} {i : Fin N} {z : ℝ}
     (hvac : 0 < vacMix rho sigma) (hxi2 : 0 ≤ xi2 rho sigma)
     (hsigma : 0 < sigma i) (hz : 0 < z) :
     gFun rho sigma i z < 0 := by
@@ -388,7 +388,7 @@ theorem ratioPM_strictAntiOn : StrictAntiOn ratioPM (Set.Ioi (0 : ℝ)) := by
   exact strictAntiOn_of_hasDerivWithinAt_neg (convex_Ioi 0) hcont hderiv hneg
 
 /-- `gFun = fFun · (πξ₂/(2vac) + z·ratioPM(zσ))` — the `g/f` factorisation (uses M.5). -/
-private lemma gFun_ratio_eq {n : ℕ} {z : ℝ} {rho sigma : Fin n → ℝ} (i : Fin n)
+private lemma gFun_ratio_eq {N : ℕ} {z : ℝ} {rho sigma : Fin N → ℝ} (i : Fin N)
     (hz : 0 < z) (hvac : 0 < vacMix rho sigma) (hsig : 0 < sigma i) :
     gFun rho sigma i z =
       fFun rho sigma i z *
@@ -417,9 +417,9 @@ private lemma antiOn_mul_diff_nonpos {F : ℝ → ℝ} (hF : StrictAntiOn F (Set
     nlinarith
 
 /-- The cross term `(σₖ−σⱼ)·(fⱼgₖ − fₖgⱼ) ≤ 0` (uses M.5+M.7 via `gFun_ratio_eq`). -/
-private lemma cross_nonpos {n : ℕ} {z : ℝ} {rho sigma : Fin n → ℝ}
+private lemma cross_nonpos {N : ℕ} {z : ℝ} {rho sigma : Fin N → ℝ}
     (hz : 0 < z) (hvac : 0 < vacMix rho sigma)
-    (hsigma : ∀ i, 0 < sigma i) (j k : Fin n) :
+    (hsigma : ∀ i, 0 < sigma i) (j k : Fin N) :
     (sigma k - sigma j) *
       (fFun rho sigma j z * gFun rho sigma k z - fFun rho sigma k z * gFun rho sigma j z) ≤ 0 := by
   have hfj := fFun_neg hvac (hsigma j) hz
@@ -440,7 +440,7 @@ private lemma cross_nonpos {n : ℕ} {z : ℝ} {rho sigma : Fin n → ℝ}
 /-- **Task M.8.** `bc ≥ ad` universally: `(∑ⱼρⱼfⱼ)(∑ₖρₖσₖgₖ) ≤ (∑ⱼρⱼgⱼ)(∑ₖρₖσₖfₖ)`.
 By Cauchy–Binet `ad − bc = ½ ∑ⱼₖ ρⱼρₖ(σₖ−σⱼ)(fⱼgₖ−fₖgⱼ)`, each summand `≤ 0` (`cross_nonpos`).
 Turns M.4's informal "not Cauchy–Schwarz (bc can exceed ad)" into `bc ≥ ad` always. -/
-theorem moment_ad_le_bc {n : ℕ} {z : ℝ} {rho sigma : Fin n → ℝ}
+theorem moment_ad_le_bc {N : ℕ} {z : ℝ} {rho sigma : Fin N → ℝ}
     (hz : 0 < z) (hvac : 0 < vacMix rho sigma)
     (hrho : ∀ i, 0 ≤ rho i) (hsigma : ∀ i, 0 < sigma i) :
     (∑ j, rho j * fFun rho sigma j z) * (∑ k, rho k * sigma k * gFun rho sigma k z)
@@ -474,25 +474,263 @@ theorem moment_ad_le_bc {n : ℕ} {z : ℝ} {rho sigma : Fin n → ℝ}
       (cross_nonpos hz hvac hsigma j k)
   nlinarith [hS, hP, hPnonpos]
 
+/-! ### M.4 retirement — Route B kernel inequality (det ≥ 1)
+
+Numerically-guided reduction (`verify_q0_det_positivity.py` `route_scout` + `route_b_*.py`):
+`det ≥ 1 ⟺ bc − ad ≤ a + d`, which reduces (Cauchy–Binet, `vac`-free after the `ξ₂` terms cancel)
+to a **per-pair** kernel, and after `u = zσⱼ, v = zσₖ` (the `z⁶` cancels) to the clean 2-variable
+inequality `kernel_nonneg`.  With `M(u) := −mAux u ≥ 0`, `Q(u) := −pAux u ≥ 0`,
+`R(u) := u²/2 − Q u ≥ 0`, the make-or-break identity is
+`G(u,v) = M(u)·Φ(u,v) + M(v)·Φ(v,u)` with `Φ(u,v) = u·R(v) + v·Q(v) ≥ 0` — a manifestly-nonneg
+sum-of-products (verified symbolically, `route_b_decomp.py`). -/
+
+/-- `pAux(u) = 1 − u − e^{−u} ≤ 0` for all `u` (one line from `Real.add_one_le_exp`). -/
+theorem pAux_nonpos (u : ℝ) : pAux u ≤ 0 := by
+  have h := Real.add_one_le_exp (-u)
+  unfold pAux; linarith
+
+/-- `mAux(u) ≤ 0` for `u ≥ 0` (`mAux_neg` for `u > 0`, `mAux 0 = 0`). -/
+theorem mAux_nonpos {u : ℝ} (hu : 0 ≤ u) : mAux u ≤ 0 := by
+  rcases hu.lt_or_eq with h | h
+  · exact (mAux_neg h).le
+  · rw [← h]; simp [mAux]
+
+/-- `R(u) = u²/2 + pAux u ≥ 0` for `u ≥ 0`: `R 0 = 0` and `R'(u) = u − 1 + e^{−u} ≥ 0`
+(again `Real.add_one_le_exp`), so `R` is monotone on `[0,∞)`. -/
+theorem half_sq_add_pAux_nonneg {u : ℝ} (hu : 0 ≤ u) : 0 ≤ u ^ 2 / 2 + pAux u := by
+  set R : ℝ → ℝ := fun x => x ^ 2 / 2 + pAux x with hRdef
+  have hderiv : ∀ x, HasDerivAt R (x - 1 + Real.exp (-x)) x := by
+    intro x
+    have h1 : HasDerivAt (fun y : ℝ => y ^ 2 / 2) x x := by
+      have h := (hasDerivAt_pow 2 x).div_const 2
+      simpa using h
+    exact (h1.add (hasDerivAt_pAux x)).congr_deriv (by ring)
+  have hcont : ContinuousOn R (Set.Ici 0) :=
+    fun x _ => (hderiv x).continuousAt.continuousWithinAt
+  have hd : ∀ x ∈ interior (Set.Ici (0 : ℝ)),
+      HasDerivWithinAt R (x - 1 + Real.exp (-x)) (interior (Set.Ici (0 : ℝ))) x :=
+    fun x _ => (hderiv x).hasDerivWithinAt
+  have hpos : ∀ x ∈ interior (Set.Ici (0 : ℝ)), 0 ≤ x - 1 + Real.exp (-x) := by
+    intro x _; have := Real.add_one_le_exp (-x); linarith
+  have hmono : MonotoneOn R (Set.Ici 0) :=
+    monotoneOn_of_hasDerivWithinAt_nonneg (convex_Ici 0) hcont hd hpos
+  have h0 : R 0 = 0 := by simp [hRdef, pAux]
+  have h := hmono (Set.self_mem_Ici (a := (0 : ℝ))) (Set.mem_Ici.mpr hu) hu
+  rwa [h0] at h
+
+/-- `Φ(u,v) = u·(v²/2 + pAux v) − v·pAux v` (`= u·R(v) + v·Q(v)`). -/
+noncomputable def phiK (u v : ℝ) : ℝ := u * (v ^ 2 / 2 + pAux v) - v * pAux v
+
+theorem phiK_nonneg {u v : ℝ} (hu : 0 ≤ u) (hv : 0 ≤ v) : 0 ≤ phiK u v := by
+  have hR := half_sq_add_pAux_nonneg hv
+  have hQ : 0 ≤ -pAux v := neg_nonneg.mpr (pAux_nonpos v)
+  have hsplit : phiK u v = u * (v ^ 2 / 2 + pAux v) + v * (-pAux v) := by unfold phiK; ring
+  rw [hsplit]
+  exact add_nonneg (mul_nonneg hu hR) (mul_nonneg hv hQ)
+
+/-- **M.4 kernel (the crux).**  For `u, v ≥ 0`,
+`(v−u)·(mAux v · pAux u − mAux u · pAux v) ≤ ½·u·v·(−v·mAux u − u·mAux v)`.
+Proof: the RHS − LHS equals `(−mAux u)·Φ(u,v) + (−mAux v)·Φ(v,u)` (a polynomial identity in the four
+`mAux/pAux` atoms), and each summand is a product of nonnegatives. -/
+theorem kernel_nonneg {u v : ℝ} (hu : 0 ≤ u) (hv : 0 ≤ v) :
+    0 ≤ (1 / 2) * u * v * (-v * mAux u - u * mAux v)
+      - (v - u) * (mAux v * pAux u - mAux u * pAux v) := by
+  have hMu : 0 ≤ -mAux u := neg_nonneg.mpr (mAux_nonpos hu)
+  have hMv : 0 ≤ -mAux v := neg_nonneg.mpr (mAux_nonpos hv)
+  have hid : (1 / 2) * u * v * (-v * mAux u - u * mAux v)
+        - (v - u) * (mAux v * pAux u - mAux u * pAux v)
+      = (-mAux u) * phiK u v + (-mAux v) * phiK v u := by unfold phiK; ring
+  rw [hid]
+  exact add_nonneg (mul_nonneg hMu (phiK_nonneg hu hv)) (mul_nonneg hMv (phiK_nonneg hv hu))
+
+/-- **Per-pair moment bound.**  `kernel_nonneg` at `u = z·σⱼ, v = z·σₖ`, divided by `z > 0`:
+`(σₖ−σⱼ)·(mAux(zσₖ)pAux(zσⱼ) − mAux(zσⱼ)pAux(zσₖ)) ≤ −½z²σⱼσₖ(σₖ·mAux(zσⱼ) + σⱼ·mAux(zσₖ))`. -/
+theorem momentPair_le {z : ℝ} (hz : 0 < z) {σj σk : ℝ} (hj : 0 < σj) (hk : 0 < σk) :
+    (σk - σj) * (mAux (z * σk) * pAux (z * σj) - mAux (z * σj) * pAux (z * σk))
+      ≤ -(1 / 2) * z ^ 2 * σj * σk * (σk * mAux (z * σj) + σj * mAux (z * σk)) := by
+  have hK := kernel_nonneg (u := z * σj) (v := z * σk)
+    (mul_nonneg hz.le hj.le) (mul_nonneg hz.le hk.le)
+  have hEz :
+      (1 / 2) * (z * σj) * (z * σk) * (-(z * σk) * mAux (z * σj) - (z * σj) * mAux (z * σk))
+        - ((z * σk) - (z * σj)) *
+            (mAux (z * σk) * pAux (z * σj) - mAux (z * σj) * pAux (z * σk))
+      = z * (-(1 / 2) * z ^ 2 * σj * σk * (σk * mAux (z * σj) + σj * mAux (z * σk))
+        - (σk - σj) * (mAux (z * σk) * pAux (z * σj) - mAux (z * σj) * pAux (z * σk))) := by
+    ring
+  rw [hEz] at hK
+  nlinarith [hK, hz]
+
+/-- `pAux(zσ) = z²·p1(σ,z)`. -/
+theorem pAux_z_eq {z σ : ℝ} (hz : z ≠ 0) : pAux (z * σ) = z ^ 2 * p1 σ z := by
+  unfold pAux p1; field_simp
+
+/-- `mAux(zσ) = z³·(σ·p1 + 2·p2)` (= `f_identity` cleared). -/
+theorem mAux_z_eq {z σ : ℝ} (hz : z ≠ 0) : mAux (z * σ) = z ^ 3 * (p1 σ z * σ + 2 * p2 σ z) := by
+  rw [f_identity hz]; field_simp
+
+/-- `fFun i = (π/vac)·mAux(zσᵢ)/z³`. -/
+theorem fFun_eq_mAux {N : ℕ} {z : ℝ} (hz : z ≠ 0) {sigma rho : Fin N → ℝ} (i : Fin N) :
+    fFun rho sigma i z = Real.pi / vacMix rho sigma * (mAux (z * sigma i) / z ^ 3) := by
+  unfold fFun; rw [f_identity hz]
+
+/-- **Per-pair bound in `fFun`/`gFun` form.**  From `momentPair_le` (via `hfg_cross`, the `ξ₂`-free
+Cauchy–Binet cancellation `fₖgⱼ − fⱼgₖ = (π/vac)²/z⁵·(mAux(zσₖ)pAux(zσⱼ) − mAux(zσⱼ)pAux(zσₖ))`):
+`(σₖ−σⱼ)(fₖgⱼ − fⱼgₖ) ≤ −½(π/vac)·σⱼσₖ(σₖfⱼ + σⱼfₖ)`. -/
+theorem per_pair_f {N : ℕ} {z : ℝ} (hz : 0 < z) {sigma rho : Fin N → ℝ}
+    (hvac : 0 < vacMix rho sigma) (j k : Fin N) (hj : 0 < sigma j) (hk : 0 < sigma k) :
+    (sigma k - sigma j) *
+        (fFun rho sigma k z * gFun rho sigma j z - fFun rho sigma j z * gFun rho sigma k z)
+      ≤ -(1 / 2) * (Real.pi / vacMix rho sigma) * (sigma j * sigma k) *
+          (sigma k * fFun rho sigma j z + sigma j * fFun rho sigma k z) := by
+  have hz0 : z ≠ 0 := hz.ne'
+  have hvac0 : vacMix rho sigma ≠ 0 := hvac.ne'
+  have hcross : fFun rho sigma k z * gFun rho sigma j z
+        - fFun rho sigma j z * gFun rho sigma k z
+      = (Real.pi / vacMix rho sigma) ^ 2 / z ^ 5 *
+          (mAux (z * sigma k) * pAux (z * sigma j) - mAux (z * sigma j) * pAux (z * sigma k)) := by
+    rw [mAux_z_eq (σ := sigma k) hz0, mAux_z_eq (σ := sigma j) hz0,
+        pAux_z_eq (σ := sigma j) hz0, pAux_z_eq (σ := sigma k) hz0]
+    unfold fFun gFun
+    field_simp
+    ring
+  have hscale : (0 : ℝ) ≤ (Real.pi / vacMix rho sigma) ^ 2 / z ^ 5 := by positivity
+  calc (sigma k - sigma j) *
+          (fFun rho sigma k z * gFun rho sigma j z - fFun rho sigma j z * gFun rho sigma k z)
+      = (Real.pi / vacMix rho sigma) ^ 2 / z ^ 5 *
+          ((sigma k - sigma j) *
+            (mAux (z * sigma k) * pAux (z * sigma j) - mAux (z * sigma j) * pAux (z * sigma k))) := by
+        rw [hcross]; ring
+    _ ≤ (Real.pi / vacMix rho sigma) ^ 2 / z ^ 5 *
+          (-(1 / 2) * z ^ 2 * sigma j * sigma k *
+            (sigma k * mAux (z * sigma j) + sigma j * mAux (z * sigma k))) :=
+        mul_le_mul_of_nonneg_left (momentPair_le hz hj hk) hscale
+    _ = -(1 / 2) * (Real.pi / vacMix rho sigma) * (sigma j * sigma k) *
+          (sigma k * fFun rho sigma j z + sigma j * fFun rho sigma k z) := by
+        rw [fFun_eq_mAux hz0 j, fFun_eq_mAux hz0 k]; field_simp
+
+/-- **M.4 key inequality (`det ≥ 1`).**  `bc − ad ≤ a + d`, i.e.
+`(∑ρg)(∑ρσf) − (∑ρf)(∑ρσg) ≤ −(∑ρf) − (∑ρσg)`.  Sum of `per_pair_f` over `ρⱼρₖ ≥ 0`
+(Cauchy–Binet ⇒ `bc − ad = ½∑∑ρⱼρₖ(σₖ−σⱼ)(fₖgⱼ − fⱼgₖ)`), giving `bc − ad ≤ D := −½(π/vac)ξ₂(∑ρσf)`,
+then `D ≤ a + d` since `−(∑ρσg) = D + (π/vac)∑ρσ(−p1)` and `−(∑ρf), (π/vac)∑ρσ(−p1) ≥ 0`. -/
+theorem moment_key {N : ℕ} {z : ℝ} (hz : 0 < z) {sigma rho : Fin N → ℝ}
+    (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i) (hsigma : ∀ i, 0 < sigma i) :
+    (∑ j, rho j * gFun rho sigma j z) * (∑ k, rho k * sigma k * fFun rho sigma k z)
+      - (∑ j, rho j * fFun rho sigma j z) * (∑ k, rho k * sigma k * gFun rho sigma k z)
+      ≤ -(∑ j, rho j * fFun rho sigma j z) - (∑ k, rho k * sigma k * gFun rho sigma k z) := by
+  set f := fun i => fFun rho sigma i z with hfdef
+  set g := fun i => gFun rho sigma i z with hgdef
+  set vac := vacMix rho sigma with hvacdef
+  -- bc − ad = ½ ∑∑ ρⱼρₖ (σₖ−σⱼ)(fₖgⱼ − fⱼgₖ)
+  have e1 : (∑ j, rho j * g j) * (∑ k, rho k * sigma k * f k)
+        - (∑ j, rho j * f j) * (∑ k, rho k * sigma k * g k)
+      = ∑ j, ∑ k, rho j * rho k * sigma k * (f k * g j - f j * g k) := by
+    rw [Finset.sum_mul_sum, Finset.sum_mul_sum, ← Finset.sum_sub_distrib]
+    refine Finset.sum_congr rfl (fun j _ => ?_)
+    rw [← Finset.sum_sub_distrib]
+    exact Finset.sum_congr rfl (fun k _ => by ring)
+  have e2 : (2 : ℝ) * ∑ j, ∑ k, rho j * rho k * sigma k * (f k * g j - f j * g k)
+      = ∑ j, ∑ k, rho j * rho k * (sigma k - sigma j) * (f k * g j - f j * g k) := by
+    rw [two_mul]
+    nth_rewrite 2 [Finset.sum_comm]
+    rw [← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl (fun j _ => ?_)
+    rw [← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl (fun k _ => by ring)
+  -- summed per-pair bound
+  have hsum_le : ∑ j, ∑ k, rho j * rho k * (sigma k - sigma j) * (f k * g j - f j * g k)
+      ≤ ∑ j, ∑ k, rho j * rho k *
+          (-(1 / 2) * (Real.pi / vac) * (sigma j * sigma k) * (sigma k * f j + sigma j * f k)) := by
+    refine Finset.sum_le_sum (fun j _ => Finset.sum_le_sum (fun k _ => ?_))
+    have hpp := per_pair_f hz hvac j k (hsigma j) (hsigma k)
+    have hρρ : 0 ≤ rho j * rho k := mul_nonneg (hrho j) (hrho k)
+    nlinarith [mul_le_mul_of_nonneg_left hpp hρρ]
+  -- ∑∑ of the per-pair RHS = −(π/vac)·ξ₂·(∑ρσf)  (= 2·D)
+  have hRHS : ∑ j, ∑ k, rho j * rho k *
+          (-(1 / 2) * (Real.pi / vac) * (sigma j * sigma k) * (sigma k * f j + sigma j * f k))
+      = -(Real.pi / vac) * xi2 rho sigma * (∑ i, rho i * sigma i * f i) := by
+    have hstep : ∀ j, ∑ k, rho j * rho k *
+            (-(1 / 2) * (Real.pi / vac) * (sigma j * sigma k) * (sigma k * f j + sigma j * f k))
+        = -(1 / 2) * (Real.pi / vac) *
+            ((rho j * sigma j * f j) * (∑ k, rho k * sigma k ^ 2)
+              + (rho j * sigma j ^ 2) * (∑ k, rho k * sigma k * f k)) := by
+      intro j
+      rw [Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib, Finset.mul_sum]
+      exact Finset.sum_congr rfl (fun k _ => by ring)
+    rw [Finset.sum_congr rfl (fun j _ => hstep j), ← Finset.mul_sum,
+        Finset.sum_add_distrib, ← Finset.sum_mul, ← Finset.sum_mul]
+    unfold xi2
+    ring
+  have hbc_le : (∑ j, rho j * g j) * (∑ k, rho k * sigma k * f k)
+        - (∑ j, rho j * f j) * (∑ k, rho k * sigma k * g k)
+      ≤ -(1 / 2) * (Real.pi / vac) * xi2 rho sigma * (∑ i, rho i * sigma i * f i) := by
+    rw [e1]
+    have := hsum_le
+    rw [hRHS] at this
+    nlinarith [e2, this]
+  -- D ≤ a + d
+  have hf_np : ∑ j, rho j * f j ≤ 0 :=
+    Finset.sum_nonpos (fun j _ => mul_nonpos_of_nonneg_of_nonpos (hrho j)
+      (le_of_lt (fFun_neg (i := j) hvac (hsigma j) hz)))
+  have hp1_np : ∑ k, rho k * sigma k * p1 (sigma k) z ≤ 0 :=
+    Finset.sum_nonpos (fun k _ => mul_nonpos_of_nonneg_of_nonpos
+      (mul_nonneg (hrho k) (hsigma k).le) (le_of_lt (p1_neg (hsigma k) hz)))
+  have hsg : ∑ k, rho k * sigma k * g k
+      = (1 / 2) * (Real.pi / vac) * xi2 rho sigma * (∑ i, rho i * sigma i * f i)
+        + (Real.pi / vac) * (∑ k, rho k * sigma k * p1 (sigma k) z) := by
+    have hgk : ∀ k, rho k * sigma k * g k
+        = (Real.pi / vac) * (rho k * sigma k * p1 (sigma k) z)
+          + (Real.pi ^ 2 * xi2 rho sigma / vac ^ 2) *
+              (rho k * sigma k * (p1 (sigma k) z * sigma k / 2 + p2 (sigma k) z)) := by
+      intro k; simp only [hgdef, gFun, ← hvacdef]; ring
+    have hfk : ∀ i, rho i * sigma i * f i
+        = (Real.pi / vac) * (rho i * sigma i * (p1 (sigma i) z * sigma i + 2 * p2 (sigma i) z)) := by
+      intro i; simp only [hfdef, fFun, ← hvacdef]; ring
+    have hS : (∑ i, rho i * sigma i * f i)
+        = (Real.pi / vac) *
+            (∑ i, rho i * sigma i * (p1 (sigma i) z * sigma i + 2 * p2 (sigma i) z)) := by
+      rw [Finset.sum_congr rfl (fun i _ => hfk i), ← Finset.mul_sum]
+    have hLHS : (∑ k, rho k * sigma k * g k)
+        = (Real.pi / vac) * (∑ k, rho k * sigma k * p1 (sigma k) z)
+          + (Real.pi ^ 2 * xi2 rho sigma / vac ^ 2) *
+              (∑ k, rho k * sigma k * (p1 (sigma k) z * sigma k / 2 + p2 (sigma k) z)) := by
+      rw [Finset.sum_congr rfl (fun k _ => hgk k), Finset.sum_add_distrib,
+          ← Finset.mul_sum, ← Finset.mul_sum]
+    have hhalf : (∑ k, rho k * sigma k * (p1 (sigma k) z * sigma k / 2 + p2 (sigma k) z))
+        = (1 / 2) * (∑ i, rho i * sigma i * (p1 (sigma i) z * sigma i + 2 * p2 (sigma i) z)) := by
+      rw [Finset.mul_sum]
+      exact Finset.sum_congr rfl (fun k _ => by ring)
+    rw [hLHS, hhalf, hS]
+    have hvne : vac ≠ 0 := hvac.ne'
+    field_simp
+    ring
+  have hDad : -(1 / 2) * (Real.pi / vac) * xi2 rho sigma * (∑ i, rho i * sigma i * f i)
+      ≤ -(∑ j, rho j * f j) - (∑ k, rho k * sigma k * g k) := by
+    rw [hsg]
+    have hπvac : 0 < Real.pi / vac := div_pos Real.pi_pos hvac
+    have : (Real.pi / vac) * (∑ k, rho k * sigma k * p1 (sigma k) z) ≤ 0 :=
+      mul_nonpos_of_nonneg_of_nonpos hπvac.le hp1_np
+    linarith
+  exact le_trans hbc_le hDad
+
 /-! ### Rank-2 factorization -/
 
 /-- `Umat`'s two columns are `u1_i = √ρᵢ·exp(zσᵢ/2)·fFun(...)` (`k=0`) and
 `u2_i = √ρᵢ·exp(zσᵢ/2)·gFun(...)` (`k=1`). -/
-noncomputable def Umat {n : ℕ} (z : ℝ) (sigma rho : Fin n → ℝ) : Matrix (Fin n) (Fin 2) ℝ :=
+noncomputable def Umat {N : ℕ} (z : ℝ) (sigma rho : Fin N → ℝ) : Matrix (Fin N) (Fin 2) ℝ :=
   fun i k => Real.sqrt (rho i) * Real.exp (z * sigma i / 2) *
     (if k = 0 then fFun rho sigma i z else gFun rho sigma i z)
 
 /-- `Vmat`'s two rows are `v1_j = √ρⱼ·exp(-zσⱼ/2)` (`k=0`) and
 `v2_j = √ρⱼ·exp(-zσⱼ/2)·σⱼ` (`k=1`). -/
-noncomputable def Vmat {n : ℕ} (z : ℝ) (sigma rho : Fin n → ℝ) : Matrix (Fin 2) (Fin n) ℝ :=
+noncomputable def Vmat {N : ℕ} (z : ℝ) (sigma rho : Fin N → ℝ) : Matrix (Fin 2) (Fin N) ℝ :=
   fun k j => Real.sqrt (rho j) * Real.exp (-(z * sigma j / 2)) *
     (if k = 0 then 1 else sigma j)
 
 /-- Isolated computation of `(Umat*Vmat) i j`, merging the `√ρᵢ·√ρⱼ` and
 `exp(zσᵢ/2)·exp(-zσⱼ/2)` factors (the only nonlinear, non-`ring` step) before any of the
 `fFun`/`gFun`/`Q0phys`/`Qppphys` algebra. -/
-theorem UV_apply {n : ℕ} (z : ℝ) (sigma rho : Fin n → ℝ) (hrho : ∀ i, 0 ≤ rho i)
-    (i j : Fin n) :
+theorem UV_apply {N : ℕ} (z : ℝ) (sigma rho : Fin N → ℝ) (hrho : ∀ i, 0 ≤ rho i)
+    (i j : Fin N) :
     (Umat z sigma rho * Vmat z sigma rho) i j =
     Real.sqrt (rho i * rho j) * Real.exp (-((sigma j - sigma i) / 2 * z)) *
       (fFun rho sigma i z + gFun rho sigma i z * sigma j) := by
@@ -512,7 +750,7 @@ theorem UV_apply {n : ℕ} (z : ℝ) (sigma rho : Fin n → ℝ) (hrho : ∀ i, 
 /-- Pure algebraic identity connecting `fFun + gFun·σⱼ` to the `Q0phys`/`Qppphys`/`p1`/`p2`
 combination appearing in `q0_entry` — no `sqrt`/`exp` merging needed here, just
 `field_simp; ring` (`vac ≠ 0`, `z ≠ 0`). -/
-theorem fFun_gFun_eq {n : ℕ} {z : ℝ} {sigma rho : Fin n → ℝ} (i j : Fin n)
+theorem fFun_gFun_eq {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ} (i j : Fin N)
     (hz : z ≠ 0) (hvac : vacMix rho sigma ≠ 0) :
     fFun rho sigma i z + gFun rho sigma i z * sigma j =
     Q0phys rho sigma i j * p1 (sigma i) z + Qppphys rho sigma i j * p2 (sigma i) z := by
@@ -525,7 +763,7 @@ theorem fFun_gFun_eq {n : ℕ} {z : ℝ} {sigma rho : Fin n → ℝ} (i j : Fin 
 
 /-- The key structural fact: `Q0_mat_phys` is exactly a rank-2 perturbation of the identity.
 Requires `vac ≠ 0` (physical mixture, `η ≠ 1`), `z ≠ 0`, and `rho ≥ 0` (for `Real.sqrt_mul`). -/
-theorem Q0_mat_phys_eq_one_sub_mul {n : ℕ} {z : ℝ} {sigma rho : Fin n → ℝ}
+theorem Q0_mat_phys_eq_one_sub_mul {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
     (hz : z ≠ 0) (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i) :
     Q0_mat_phys z sigma rho = 1 - Umat z sigma rho * Vmat z sigma rho := by
   funext i j
@@ -546,7 +784,7 @@ individual `Q0_mat_phys` entries can diverge as `z → ∞` while the determinan
 `Vmat*Umat`'s entries are finite sums `Σᵢ ρᵢ·(...)` in which the `exp(zσᵢ/2)·exp(-zσᵢ/2) = 1`
 cancellation removes the blow-up (see `fFun_neg`/`gFun_neg`: all its entries are strictly
 negative, since `fFun,gFun < 0`). -/
-theorem Q0_mat_phys_det_eq_two_by_two {n : ℕ} {z : ℝ} {sigma rho : Fin n → ℝ}
+theorem Q0_mat_phys_det_eq_two_by_two {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
     (hz : z ≠ 0) (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i) :
     (Q0_mat_phys z sigma rho).det =
     (1 - Vmat z sigma rho * Umat z sigma rho).det := by
@@ -556,7 +794,7 @@ theorem Q0_mat_phys_det_eq_two_by_two {n : ℕ} {z : ℝ} {sigma rho : Fin n →
 /-- Entries of the reduced 2×2 matrix `Vmat*Umat` are finite species-sums with no
 `z`-dependent blow-up: `(Vmat*Umat) k l = Σⱼ ρⱼ·σⱼ^k·{fFun or gFun}(j)` (`σⱼ^0=1`), since
 `√ρⱼ·exp(-zσⱼ/2)·√ρⱼ·exp(zσⱼ/2) = ρⱼ` for every `j` (the exponentials cancel exactly). -/
-theorem VU_apply_00 {n : ℕ} (z : ℝ) (sigma rho : Fin n → ℝ) (hrho : ∀ j, 0 ≤ rho j) :
+theorem VU_apply_00 {N : ℕ} (z : ℝ) (sigma rho : Fin N → ℝ) (hrho : ∀ j, 0 ≤ rho j) :
     (Vmat z sigma rho * Umat z sigma rho) 0 0 = ∑ j, rho j * fFun rho sigma j z := by
   simp only [Matrix.mul_apply, Umat, Vmat, Fin.isValue]
   norm_num
@@ -579,7 +817,7 @@ inequality is the one genuinely open piece — not closed unconditionally despit
 numerical support (20,000 random physical trials, no counterexample) — so it is stated here
 as an explicit hypothesis rather than proved for all `z,η`. This is the smallest remaining
 gap: a single scalar inequality between four finite species-sums, not an n×n claim. -/
-theorem Q0_mat_phys_isUnit_det_of_two_by_two {n : ℕ} {z : ℝ} {sigma rho : Fin n → ℝ}
+theorem Q0_mat_phys_isUnit_det_of_two_by_two {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
     (hz : z ≠ 0) (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i)
     (hdet : (1 - (Vmat z sigma rho * Umat z sigma rho) 0 0) *
               (1 - (Vmat z sigma rho * Umat z sigma rho) 1 1) -
@@ -589,31 +827,58 @@ theorem Q0_mat_phys_isUnit_det_of_two_by_two {n : ℕ} {z : ℝ} {sigma rho : Fi
   rw [isUnit_iff_ne_zero, Q0_mat_phys_det_eq_two_by_two hz hvac hrho, Matrix.det_fin_two]
   simpa [Matrix.sub_apply, Matrix.one_apply] using hdet
 
-/-- **Task M.4 — the one open scalar inequality, taken as a NAMED, numerically-verified axiom.**
-For a physical mixture (`0<z`, `η<1` ⇔ `0<vacMix`, `0≤ρᵢ`, `0<σᵢ`) the reduced 2×2 determinant
-`det = (1+a)(1+d) − bc` is strictly positive.
+/-- General `Vmat*Umat` entry `(k,l)` as a species-sum (all four entries at once, `σⱼ^k`/`f‖g`). -/
+theorem VU_apply' {N : ℕ} (z : ℝ) (sigma rho : Fin N → ℝ) (hrho : ∀ j, 0 ≤ rho j) (k l : Fin 2) :
+    (Vmat z sigma rho * Umat z sigma rho) k l =
+      ∑ j, rho j * (if k = 0 then 1 else sigma j) *
+        (if l = 0 then fFun rho sigma j z else gFun rho sigma j z) := by
+  simp only [Matrix.mul_apply, Umat, Vmat, Fin.isValue]
+  refine Finset.sum_congr rfl (fun j _ => ?_)
+  have hsq : Real.sqrt (rho j) * Real.sqrt (rho j) = rho j := Real.mul_self_sqrt (hrho j)
+  have hexp : Real.exp (-(z * sigma j / 2)) * Real.exp (z * sigma j / 2) = 1 := by
+    rw [← Real.exp_add]; norm_num
+  have hkey :
+      Real.sqrt (rho j) * Real.exp (-(z * sigma j / 2)) * (if k = 0 then 1 else sigma j) *
+        (Real.sqrt (rho j) * Real.exp (z * sigma j / 2) *
+          (if l = 0 then fFun rho sigma j z else gFun rho sigma j z)) =
+      Real.sqrt (rho j) * Real.sqrt (rho j) *
+        (Real.exp (-(z * sigma j / 2)) * Real.exp (z * sigma j / 2)) *
+        ((if k = 0 then 1 else sigma j) *
+          (if l = 0 then fFun rho sigma j z else gFun rho sigma j z)) := by ring
+  rw [hkey, hsq, hexp]; ring
 
-Numerically bulletproof: 20 000 random physical trials give `det ≥ 1` always (min ≈ 1.0000020,
-approached only as `z→∞`); `det(z)` is monotone decreasing in `z` with `det(∞)=1`. The companion
-fact `bc ≥ ad` is *proved* (`moment_ad_le_bc`), so this is **not** Cauchy–Schwarz-closable; the
-residual `O(ρ²) bc−ad ≤ O(ρ)(1+a+d)` bound under `η<1` is the genuinely open piece. Kept as a
-**named** axiom (auditable via `#print axioms`, unlike a `sorry`) so downstream results can build on
-it; **retire when proved** — replace this `axiom` with a `theorem`. Full analysis:
-`numerical_notes/{theory,results}/q0_det_positivity.md`, `verify_q0_det_positivity.py`. -/
-axiom Q0_moment_det_pos {n : ℕ} {z : ℝ} {sigma rho : Fin n → ℝ}
+/-- **Task M.4 — now a THEOREM (axiom retired).**  For a physical mixture (`0<z`, `η<1 ⇔ 0<vacMix`,
+`0≤ρᵢ`, `0<σᵢ`) the reduced 2×2 determinant `det = (1+a)(1+d) − bc` is strictly positive — in fact
+`det ≥ 1`.  Route B (numerically scouted by `verify_q0_det_positivity.py`): `det = 1 + (a+d) − (bc−ad)`,
+and `moment_key` gives `bc − ad ≤ a + d`, so `det ≥ 1 > 0`.  The core is the elementary 2-variable
+kernel `kernel_nonneg` (`G(u,v) = M(u)Φ(u,v) + M(v)Φ(v,u) ≥ 0`, `M = −mAux`, `Φ = u·R(v)+v·Q(v)`),
+summed via `per_pair_f`.  Full derivation: `numerical_notes/…/q0_det_positivity.md`. -/
+theorem Q0_moment_det_pos {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
     (hz : 0 < z) (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i)
     (hsigma : ∀ i, 0 < sigma i) :
     0 < (1 - (Vmat z sigma rho * Umat z sigma rho) 0 0) *
           (1 - (Vmat z sigma rho * Umat z sigma rho) 1 1) -
         (Vmat z sigma rho * Umat z sigma rho) 0 1 *
-          (Vmat z sigma rho * Umat z sigma rho) 1 0
+          (Vmat z sigma rho * Umat z sigma rho) 1 0 := by
+  have h00 : (Vmat z sigma rho * Umat z sigma rho) 0 0 = ∑ j, rho j * fFun rho sigma j z := by
+    rw [VU_apply' z sigma rho hrho]; simp
+  have h01 : (Vmat z sigma rho * Umat z sigma rho) 0 1 = ∑ j, rho j * gFun rho sigma j z := by
+    rw [VU_apply' z sigma rho hrho]; simp
+  have h10 : (Vmat z sigma rho * Umat z sigma rho) 1 0
+      = ∑ k, rho k * sigma k * fFun rho sigma k z := by
+    rw [VU_apply' z sigma rho hrho]; simp
+  have h11 : (Vmat z sigma rho * Umat z sigma rho) 1 1
+      = ∑ k, rho k * sigma k * gFun rho sigma k z := by
+    rw [VU_apply' z sigma rho hrho]; simp
+  rw [h00, h01, h10, h11]
+  nlinarith [moment_key hz hvac hrho hsigma]
 
 /-- **Task M.4 (unconditional) — and Task M.3 (unconditional).** `Q0_mat_phys` is invertible for
 every physical mixture, from `Q0_moment_det_pos`. This is the unconditional `det(Q̂₀) ≠ 0` that M.3
 sought (no diagonal-dominance side hypothesis — see `MatrixQ0.lean`'s conditional
 `Q0_mat_phys_isUnit_det_of_diag_dom`) *and* the unconditional M.4. Depends on the `Q0_moment_det_pos`
 axiom; retiring that axiom makes this theorem axiom-clean. -/
-theorem Q0_mat_phys_isUnit_det {n : ℕ} {z : ℝ} {sigma rho : Fin n → ℝ}
+theorem Q0_mat_phys_isUnit_det {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
     (hz : 0 < z) (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i)
     (hsigma : ∀ i, 0 < sigma i) :
     IsUnit (Q0_mat_phys z sigma rho).det :=

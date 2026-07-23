@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.HardSphere.MatrixQ0
+import LeanCode.HSMixture.MatrixQ0
 
 /-!
 # Task Y1.1 — Complex Laplace-space Baxter matrix `Q̂₀(s)`
@@ -51,11 +51,11 @@ noncomputable def q0_entry_c (s : ℂ) (sigma_i lam_ij Qp_ij Qpp_ij rho_geo_ij d
     (Qp_ij  * ((1 - s * sigma_i - Complex.exp (-(s * sigma_i))) / s ^ 2) +
      Qpp_ij * ((1 - s * sigma_i + (s * sigma_i) ^ 2 / 2 - Complex.exp (-(s * sigma_i))) / s ^ 3))
 
-/-- Complex Baxter matrix `Q̂₀(s) : ℂ → Matrix (Fin n) (Fin n) ℂ` ([LN] Eq. 10), assembled from
+/-- Complex Baxter matrix `Q̂₀(s) : ℂ → Matrix (Fin N) (Fin N) ℂ` ([LN] Eq. 10), assembled from
 `q0_entry_c`.  Complexification of the real `FMSA.MatrixQ0.Q0_mat`. -/
-noncomputable def Q0_mat_c {n : ℕ} (s : ℂ)
-    (sigma : Fin n → ℂ) (rho_geo : Fin n → Fin n → ℂ) (Qp Qpp : Fin n → Fin n → ℂ)
-    : Matrix (Fin n) (Fin n) ℂ :=
+noncomputable def Q0_mat_c {N : ℕ} (s : ℂ)
+    (sigma : Fin N → ℂ) (rho_geo : Fin N → Fin N → ℂ) (Qp Qpp : Fin N → Fin N → ℂ)
+    : Matrix (Fin N) (Fin N) ℂ :=
   fun i j => q0_entry_c s (sigma i) ((sigma j - sigma i) / 2)
                (Qp i j) (Qpp i j) (rho_geo i j) (if i = j then 1 else 0)
 
@@ -71,7 +71,7 @@ theorem q0_entry_c_real (z sigma_i lam_ij Qp_ij Qpp_ij rho_geo_ij delta_ij : ℝ
 /-- **Inverse entry = adjugate / det** — the `[Q̂₀(s)⁻¹]_{ij} = adj/det` form of [LN] Eq. 14
 (Mathlib `Matrix.inv_def`; unconditional — both sides `0` when `det` is not a unit).  This is the
 GA-matrix `G_{ij}(s)` factor. -/
-theorem inv_apply_eq_adj_div_det {n : ℕ} (M : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) :
+theorem inv_apply_eq_adj_div_det {N : ℕ} (M : Matrix (Fin N) (Fin N) ℂ) (i j : Fin N) :
     M⁻¹ i j = M.adjugate i j / M.det := by
   rw [Matrix.inv_def, Matrix.smul_apply, smul_eq_mul, Ring.inverse_eq_inv', inv_mul_eq_div]
 

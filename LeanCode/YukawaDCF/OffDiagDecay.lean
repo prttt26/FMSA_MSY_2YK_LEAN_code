@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.HardSphere.Q0DetLimit
+import LeanCode.HSMixture.Q0DetLimit
 
 /-!
 # Task GA.2 — off-diagonal `G_{01}(z) → 0` for large σ-ratio (decay mechanism)
@@ -29,7 +29,7 @@ N=2 `Q̂₀` cofactor: given the numerator's exponential decay bound `|num z| �
 ## Concrete N=2 cofactor (DONE)
 
 The two hypotheses are now discharged from the explicit physical `Q0_mat_phys` in
-`LeanCode/HardSphere/Q0DetLimit.lean`: `Q0_mat_phys_offdiag01_tendsto_zero` (the off-diagonal
+`LeanCode/HSMixture/Q0DetLimit.lean`: `Q0_mat_phys_offdiag01_tendsto_zero` (the off-diagonal
 entry `→ 0`) and `Q0_mat_phys_det_tendsto_one` (`det → 1 ≠ 0`). Instead of the literal global
 bound `|Q̂₀_{01}(z)| ≤ C·exp(−z·(σ₁−σ₀)/2)` — which has no clean constant on all of `(0,∞)` (the
 bracket is `O(1/z)`, blowing up as `z→0⁺`) — we use the stronger, sufficient

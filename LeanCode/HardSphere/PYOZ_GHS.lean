@@ -63,7 +63,7 @@ non-measurable pathological fixed points that the operator definition alone cann
 | `oz_operator_core` | proved | `if_pos hr` from definition |
 | `oz_fixed_pt_core` | proved | from `oz_operator_core` |
 | `oz_fixed_pt_exterior` | proved | from `OzFixedPt` unfolding |
-| `oz_fixed_pt_unique` | **axiom** | scoped to `ContinuousOn (Ici sigma)` + bounded (2026 fix) |
+| `oz_fixed_pt_unique` | **RETIRED 2026-07-19** | axiom DELETED; proved as `oz_fixed_pt_unique_thm` (`OzWienerHopfBounded.lean`): existence = `ozBaxterFixedPt`, uniqueness via the L∞ Wiener–Hopf math axiom `oz_linear_op_bounded_injective` + coercivity from `pyhs_no_spinodal`. `oz_h` now defined axiom-free via `Classical.choose` over the existence Prop. |
 | `oz_h_core` | proved | from `oz_fixed_pt_core` |
 | `oz_h_ghs_core` | proved | arithmetic from `oz_h_core` |
 | `g0_HS_outer` | defined | concrete: `fun r => 1 + oz_h eta sigma rho r` |
@@ -73,7 +73,7 @@ non-measurable pathological fixed points that the operator definition alone cann
 | `g0_HS_outer_eq_oz_h` | proved | `rfl` from concrete definition |
 | `oz_laplace_oz_eq` | **deleted 2026-07-15** | Laplace dead-end (used the false `radial_laplace_conv`); correct form is the sine-transform OZ.7 |
 | `g0_HS_laplace_spec` | **deleted 2026-07-15** | only consumed `oz_laplace_oz_eq`; no live callers |
-| `g0_HS_contact_value` | **theorem** (moved to `JumpAsymptotic.lean`) | PY contact value; now derived via CONTACT.5 + the `oz_h_exterior_regularity` axiom |
+| `g0_HS_contact_value` | **theorem** (moved to `JumpAsymptotic.lean`) | PY contact value; now derived via CONTACT.5 + the `oz_h_exterior_regularity` **theorem** (retired as an axiom, OZFIX.22; flows through the `baxter_exterior_regularity` **theorem**) |
 
 ## Net improvement over pre-OZ.2 state
 
@@ -143,7 +143,12 @@ lemma oz_fixed_pt_exterior {eta sigma rho : ℝ} {h : ℝ → ℝ} (hfp : OzFixe
 
 /-! ### Uniqueness among bounded continuous fixed points (axiom) -/
 
-/-- **Axiom (OZ.10): the OZ operator has at most one bounded fixed point that is continuous
+/-! **RETIRED (2026-07-18) — `oz_fixed_pt_unique` is now the THEOREM `oz_fixed_pt_unique_thm`**
+(`OzWienerHopfBounded.lean`): existence is the constructed `ozBaxterFixedPt`, uniqueness is the
+coercive-symbol bounded Wiener–Hopf injectivity (`oz_linear_op_bounded_injective`, its coercivity
+discharged from `pyhs_no_spinodal`).  The original axiom docstring is kept below for the record.
+
+**Axiom (OZ.10): the OZ operator has at most one bounded fixed point that is continuous
 on the exterior `[σ,∞)`.**
 
 **2026 correction (read this first):** this axiom used to bundle the fixed point into
@@ -229,37 +234,51 @@ compact-operator Fredholm alternative (`K` is not compact); see the mid/high-den
 boundedness attached as explicit conjuncts (rather than bundled into a
 `BoundedContinuousFunction` type) — dropping regularity entirely would still admit
 non-measurable pathological fixed points that the operator definition alone cannot exclude. -/
-axiom oz_fixed_pt_unique (eta sigma rho : ℝ) (hsigma : 0 < sigma) :
-    ∃! h : ℝ → ℝ, OzFixedPt eta sigma rho h ∧ ContinuousOn h (Set.Ici sigma) ∧
-      ∃ C, ∀ r, |h r| ≤ C
 
 /-! ### Canonical total correlation function -/
 
 /-- The canonical OZ total correlation function `h0 = g0_HS - 1`.
 
 Defined as the unique fixed point of `oz_operator` (for `sigma > 0`); extended
-by the constant `-1` function for `sigma ≤ 0` (all physical values have `sigma > 0`). -/
-noncomputable def oz_h (eta sigma rho : ℝ) : ℝ → ℝ :=
-    if hsigma : 0 < sigma then
-      Classical.choose (oz_fixed_pt_unique eta sigma rho hsigma).exists
-    else fun _ => -1
+by the constant `-1` function for `sigma ≤ 0` (all physical values have `sigma > 0`).
 
-private lemma oz_h_is_fp {eta sigma rho : ℝ} (hsigma : 0 < sigma) :
+Defined via `Classical.choose` over the **existence Prop** itself (axiom-free: only
+`Classical.choice`), so `oz_h` no longer references `oz_fixed_pt_unique`.  When the fixed point
+exists it is `Classical.choose` of that; otherwise the fallback `-1`. -/
+noncomputable def oz_h (eta sigma rho : ℝ) : ℝ → ℝ := by
+    classical
+    exact if h : (∃ f : ℝ → ℝ, OzFixedPt eta sigma rho f ∧ ContinuousOn f (Set.Ici sigma)
+        ∧ ∃ C, ∀ r, |f r| ≤ C) then Classical.choose h else fun _ => -1
+
+private lemma oz_h_is_fp {eta sigma rho : ℝ}
+    (hex : ∃ f : ℝ → ℝ, OzFixedPt eta sigma rho f ∧ ContinuousOn f (Set.Ici sigma)
+        ∧ ∃ C, ∀ r, |f r| ≤ C) :
     OzFixedPt eta sigma rho (oz_h eta sigma rho) := by
-    simp only [oz_h, dif_pos hsigma]
-    exact (Classical.choose_spec (oz_fixed_pt_unique eta sigma rho hsigma).exists).1
+    simp only [oz_h, dif_pos hex]
+    exact (Classical.choose_spec hex).1
 
-/-- The canonical total correlation function equals `-1` inside the hard core. -/
-theorem oz_h_core {eta sigma rho r : ℝ} (hsigma : 0 < sigma) (hr : r < sigma) :
-    oz_h eta sigma rho r = -1 :=
-    oz_fixed_pt_core (oz_h_is_fp hsigma) hr
+/-- The canonical total correlation function equals `-1` inside the hard core (unconditional: the
+chosen fixed point is `-1` there, and the fallback `fun _ => -1` is too). -/
+theorem oz_h_core {eta sigma rho r : ℝ} (_hsigma : 0 < sigma) (hr : r < sigma) :
+    oz_h eta sigma rho r = -1 := by
+    unfold oz_h
+    split_ifs with h
+    · exact oz_fixed_pt_core (Classical.choose_spec h).1 hr
+    · rfl
 
 /-- Therefore `1 + oz_h(r) = 0` inside the hard core, consistent with `g0_HS = 0` there. -/
 theorem oz_h_ghs_core {eta sigma rho r : ℝ} (hsigma : 0 < sigma) (hr : r < sigma) :
     1 + oz_h eta sigma rho r = 0 := by
     have h : oz_h eta sigma rho r = -1 := oz_h_core hsigma hr; linarith
 
-/-- **Axiom (Task OZ.9a): the PY core closure — Gap B of `oz_laplace_oz_eq`.**
+/-! **RETIRED (Task OZ.9a → OZFIX.22): `oz_core_closure` is now a THEOREM**, proved in
+`HardSphere/OzCoreClosure.lean` (`oz_core_closure`, same name and statement), from `OZ★`
+(`baxterPsi_eq_phi_add_rho_conv`) + the bridge `oz_h = baxterPsi/·` (via the uniqueness theorem
+`oz_fixed_pt_unique_thm` + the explicit decay theorem `baxter_exterior_regularity`).  The original
+axiom docstring is kept below
+for the record.
+
+**Axiom (Task OZ.9a): the PY core closure — Gap B of `oz_laplace_oz_eq`.**
 
 For `0 < r < σ`, the OZ convolution equation itself (not just the known value `oz_h(r)=-1`,
 `oz_h_core`) holds with `c_HS`/`radial3d_conv`:
@@ -281,12 +300,9 @@ assumed (arbitrary unrelated `eta,sigma,rho` triples are not claimed). Proving t
 Mathlib-available real-analysis tools (rather than assuming it) needs Baxter's Wiener–Hopf
 factorization machinery — out of current scope; see `proof_notes_hard_sphere.md` Task OZ.9
 for the "Route B" alternative (via Baxter's second relation), staged and tracked as Group
-BAXTER's Task `BAXTER.2` (`proof_notes_baxter.md`) — scoped, not yet pursued to completion. -/
-axiom oz_core_closure {eta sigma rho : ℝ} (hsigma : 0 < sigma)
-    (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_lt : eta < 1) :
-    ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
-      oz_h eta sigma rho r =
-        c_HS eta sigma r + rho * radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho) r
+BAXTER's Task `BAXTER.2` (`proof_notes_baxter.md`) — scoped, not yet pursued to completion.
+
+**Now discharged — see `HardSphere/OzCoreClosure.lean`.** -/
 
 /-! ### Hard-sphere reference RDF (concrete definitions) -/
 
@@ -316,11 +332,13 @@ theorem g0_HS_core {eta sigma rho r : ℝ} (hr : r < sigma) : g0_HS eta sigma rh
 
 Follows from the concrete definition `g0_HS_outer r = 1 + oz_h r`:
 `g0_HS_outer r - 1 = oz_h r`, which is a fixed point by `oz_h_is_fp`. -/
-theorem g0_HS_outer_is_oz_fp {eta sigma rho : ℝ} (hsigma : 0 < sigma) :
+theorem g0_HS_outer_is_oz_fp {eta sigma rho : ℝ}
+    (hex : ∃ f : ℝ → ℝ, OzFixedPt eta sigma rho f ∧ ContinuousOn f (Set.Ici sigma)
+        ∧ ∃ C, ∀ r, |f r| ≤ C) :
     OzFixedPt eta sigma rho (fun r => g0_HS_outer eta sigma rho r - 1) := by
     have heq : (fun r => g0_HS_outer eta sigma rho r - 1) = oz_h eta sigma rho :=
         funext fun r => by unfold g0_HS_outer; ring
-    rw [heq]; exact oz_h_is_fp hsigma
+    rw [heq]; exact oz_h_is_fp hex
 
 /-- **`g0_HS_outer = 1 + oz_h`** — true by definition. -/
 theorem g0_HS_outer_eq_oz_h {eta sigma rho : ℝ} (_hsigma : 0 < sigma) (r : ℝ) :
@@ -347,10 +365,11 @@ physical axiom here (the Percus–Yevick / Wertheim 1963 monodisperse hard-spher
 It is **no longer axiomatized**: Task CONTACT.5 (`g0_HS_contact_value_of_oz_h_regularity`,
 `JumpAsymptotic.lean`) derives exactly this value from the jump-asymptotic lemma (CONTACT.3) + the
 closed-form `Ĥ(k)` asymptotic (CONTACT.4) + the algebraic OZ identity (OZ.9b), conditional only on
-`oz_h`'s exterior analytic regularity/decay/integrability. Those conditions are packaged as the
-single named axiom `oz_h_exterior_regularity` (`JumpAsymptotic.lean`), from which the unconditional
-theorem `g0_HS_contact_value` is proved. Net effect: the specific physical *number* is no longer
-assumed — it follows from Fourier analysis; the only remaining assumption is that the OZ exterior
+`oz_h`'s exterior analytic regularity/decay/integrability. Those conditions were packaged as
+`oz_h_exterior_regularity` (`JumpAsymptotic.lean`) — **retired as an axiom (OZFIX.22): now a theorem**
+derived from `baxter_exterior_regularity` via the bridge `oz_h = baxterPsi/·` — from which the
+unconditional theorem `g0_HS_contact_value` is proved. Net effect: the specific physical *number* is no
+longer assumed — it follows from Fourier analysis; the only remaining assumption is that the OZ exterior
 solution is as analytically well-behaved as physically expected. This file no longer declares the
 name (it now lives, still in namespace `FMSA.HardSphere`, in `JumpAsymptotic.lean`). -/
 

@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.HardSphere.Q0DetRankTwo
+import LeanCode.HSMixture.Q0DetRankTwo
 
 /-!
 # Large-`z` limits of the physical Baxter matrix `Q0_mat_phys` (support for Task GA.2)
@@ -92,7 +92,7 @@ theorem p2_tendsto_zero {σ : ℝ} (hσ : 0 < σ) :
 /-! ### Propagation to `fFun`, `gFun`, and the reduced `Vmat*Umat` entries -/
 
 /-- `fFun rho sigma i z → 0` as `z → ∞`. -/
-theorem fFun_tendsto_zero {n : ℕ} {rho sigma : Fin n → ℝ} (i : Fin n) (hsig : 0 < sigma i) :
+theorem fFun_tendsto_zero {N : ℕ} {rho sigma : Fin N → ℝ} (i : Fin N) (hsig : 0 < sigma i) :
     Tendsto (fun z : ℝ => fFun rho sigma i z) atTop (𝓝 0) := by
   have hp1 := p1_tendsto_zero (σ := sigma i) hsig
   have hp2 := p2_tendsto_zero (σ := sigma i) hsig
@@ -106,7 +106,7 @@ theorem fFun_tendsto_zero {n : ℕ} {rho sigma : Fin n → ℝ} (i : Fin n) (hsi
   have := hcomb.const_mul (Real.pi / vacMix rho sigma); rwa [mul_zero] at this
 
 /-- `gFun rho sigma i z → 0` as `z → ∞`. -/
-theorem gFun_tendsto_zero {n : ℕ} {rho sigma : Fin n → ℝ} (i : Fin n) (hsig : 0 < sigma i) :
+theorem gFun_tendsto_zero {N : ℕ} {rho sigma : Fin N → ℝ} (i : Fin N) (hsig : 0 < sigma i) :
     Tendsto (fun z : ℝ => gFun rho sigma i z) atTop (𝓝 0) := by
   have hp1 := p1_tendsto_zero (σ := sigma i) hsig
   have hp2 := p2_tendsto_zero (σ := sigma i) hsig
@@ -126,7 +126,7 @@ theorem gFun_tendsto_zero {n : ℕ} {rho sigma : Fin n → ℝ} (i : Fin n) (hsi
 
 /-- General `Vmat*Umat` entry (any `(k,l)`): `√ρ·√ρ = ρ` and the `exp` cancellation.
 Generalizes `VU_apply_00` from `Q0DetRankTwo.lean`. -/
-theorem VU_apply {n : ℕ} (z : ℝ) (sigma rho : Fin n → ℝ) (hrho : ∀ j, 0 ≤ rho j) (k l : Fin 2) :
+theorem VU_apply {N : ℕ} (z : ℝ) (sigma rho : Fin N → ℝ) (hrho : ∀ j, 0 ≤ rho j) (k l : Fin 2) :
     (Vmat z sigma rho * Umat z sigma rho) k l =
       ∑ j, rho j * (if k = 0 then 1 else sigma j) *
         (if l = 0 then fFun rho sigma j z else gFun rho sigma j z) := by
@@ -147,7 +147,7 @@ theorem VU_apply {n : ℕ} (z : ℝ) (sigma rho : Fin n → ℝ) (hrho : ∀ j, 
   ring
 
 /-- Each `Vmat*Umat` entry → 0 as `z → ∞` (finite species-sum of `fFun`/`gFun`, all → 0). -/
-theorem VU_entry_tendsto_zero {n : ℕ} {sigma rho : Fin n → ℝ}
+theorem VU_entry_tendsto_zero {N : ℕ} {sigma rho : Fin N → ℝ}
     (hrho : ∀ j, 0 ≤ rho j) (hsig : ∀ j, 0 < sigma j) (k l : Fin 2) :
     Tendsto (fun z : ℝ => (Vmat z sigma rho * Umat z sigma rho) k l) atTop (𝓝 0) := by
   have hfun : (fun z : ℝ => (Vmat z sigma rho * Umat z sigma rho) k l) =
@@ -157,7 +157,7 @@ theorem VU_entry_tendsto_zero {n : ℕ} {sigma rho : Fin n → ℝ}
   rw [hfun]
   have hsum : Tendsto (fun z : ℝ => ∑ j, rho j * (if k = 0 then 1 else sigma j) *
         (if l = 0 then fFun rho sigma j z else gFun rho sigma j z))
-        atTop (𝓝 (∑ _j : Fin n, (0:ℝ))) := by
+        atTop (𝓝 (∑ _j : Fin N, (0:ℝ))) := by
     apply tendsto_finsetSum
     intro j _
     have hcoeff : Tendsto (fun z : ℝ => if l = 0 then fFun rho sigma j z else gFun rho sigma j z)
@@ -174,7 +174,7 @@ theorem VU_entry_tendsto_zero {n : ℕ} {sigma rho : Fin n → ℝ}
 
 /-- **`det Q0_mat_phys(z) → 1` as `z → ∞`** (any `n`): the reduced 2×2 determinant
 `(1−VU₀₀)(1−VU₁₁) − VU₀₁·VU₁₀ → 1·1 − 0·0 = 1`. Axiom-clean; supplies the nonzero limit `L = 1`. -/
-theorem Q0_mat_phys_det_tendsto_one {n : ℕ} {sigma rho : Fin n → ℝ}
+theorem Q0_mat_phys_det_tendsto_one {N : ℕ} {sigma rho : Fin N → ℝ}
     (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i) (hsig : ∀ i, 0 < sigma i) :
     Tendsto (fun z : ℝ => (Q0_mat_phys z sigma rho).det) atTop (𝓝 1) := by
   have hcongr : (fun z : ℝ => (Q0_mat_phys z sigma rho).det) =ᶠ[atTop]

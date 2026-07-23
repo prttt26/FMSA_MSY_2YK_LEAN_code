@@ -31,15 +31,37 @@ The mathematical content splits into two reusable pieces, both fully proved and 
   residue-defining limit `(s−z_t)·ĉ^(1) → K_t·G_{ij}(z_t)`.  Reuses the general simple-pole residue
   lemma `FMSA.HardSphere.residue_of_simple_pole` (`ResidueAtSimplePole.lean`).
 
-## Modeling input (deferred)
+## Modeling input — `hblum` is NOT dischargeable as an equality (audit 2026-07-17)
 
-The **Blum-1975 Laplace-space formula** for `ĉ^(1)_{ij}(s)` — i.e. *why* `N(z_t)/D'(z_t)` equals
-`K_t·[Q̂₀(z_t)⁻¹]_{ij}` — is the hypothesis `hblum`.  Discharging it (defining
-`ĉ^(1)_{ij}(s)` outright from Blum's partial-fraction formula, which needs a **complex** `Q̂₀(s)`
-matrix — the codebase's `Q0_mat` is real) upgrades C.5 from conditional to concrete.  Left for a
-follow-up once the Laplace-space formula is pinned down.
+⚠ The hypothesis `hblum` (`N(z_t)/D'(z_t) = K_t·[Q̂₀(z_t)⁻¹]_{ij}`, i.e. the **singly-propagated**
+`K·G`) is a **leading-order shorthand, not the exact residue**, so it cannot be discharged as a
+literal equality — and doing so would formalise a superseded physical claim.  The exact residue is
+**doubly-propagated**:
 
-Status: ◑ conditional core DONE (2026-07-15), axiom-clean; concrete Blum form deferred.
+* **DCF `ĉ^(1)`:** by (★) = MRS.3 (`star_of_oz1_baxter`, `MixtureRealSpace.lean`), `Ĉ₁(k) =
+  Q̂₀(−k)·B₁(k)·Q̂₀ᵀ(−k)` — **no `Q̂₀⁻¹` at all** (numerically certified, N=2 k-sweep, max err
+  `4.4×10⁻¹³`).  So the DCF residue at `z_t` carries **forward** `Q̂₀`, not its inverse.  The
+  `yukawaBaseAmp` docstring (`MixtureInnerDCF.lean`) records this explicitly: the singly-propagated
+  `K·[Q̂₀⁻¹]₀₁` DCF-base claim "is **refuted** by (★) — the DCF has no inverse factor whatsoever."
+* **RDF `ĥ^(1)`:** the exact single-tail residue is `[Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij} = G·K·Gᵀ` (= `K·G²` at
+  N=1), already proved by `SpectralAmplitude.spectralAmp_residue` (Y1.5) and packaged as
+  `yukawaBaseAmp`.
+
+In **neither** case is the residue the single `K·G` of `hblum`.  Hence C.5's "upgrade to concrete"
+is already delivered — by `spectralAmp_residue` / MRS — which **supersede** `hblum` rather than
+discharge it.  The theorems below are kept as a *true conditional* (the residue-limit algebra is
+real and reusable), but `hblum` has **no physical instantiation**; do not attempt to prove it.
+
+**`hblum` is FALSIFIED, not merely underivable (2026-07-17).**  `SpectralAmplitude.c5_hblum_falsified`
+(axiom-clean) pairs the *proven* exact residue `K·G²` (`spectralAmp_residue_n1`) with `K·G² ≠ K·G`,
+so the single-`K·G` shape **contradicts** the proven residue whenever `G ∉ {0,1}` (any interacting
+point).  `c5_hblum_falsified_matrix` exhibits the unlike-pair **sign flip** (`[G·K·Gᵀ]_{01} = +1` vs
+`K_{01}·G_{01} = −1`).  Shipped-`Q̂₀` magnitudes (2YK ρ*=0.139 T*=1): exact/shorthand ratios
+`0.82` (00), `0.061` (11), `−3.32` (01).
+
+Status: ◑ conditional core DONE (2026-07-15), axiom-clean.  ❌ `hblum` FALSIFIED 2026-07-17
+(`c5_hblum_falsified`) — exact residue is doubly-propagated (`spectralAmp_residue` RDF / MRS.3 DCF),
+never the single `K·G`.
 -/
 
 set_option linter.style.longLine false
@@ -65,9 +87,14 @@ the GA-matrix entry:
 ```
 (s − z_t)·(N s / D s)  →  K_t · (adj(Q̂₀)_{ij} / det Q̂₀)   as s → z_t  (s ≠ z_t).
 ```
-The residue picks up `K_t·G_{ij}(z_t)` — Route C's inner `K·G·exp` term is correct at leading order.
-Reuses `residue_of_simple_pole` (elementary `(z−z0)·N/D → N(z0)/D'(z0)`) and
-`g_entry_eq_adj_div_det`. -/
+❌ **`hblum` is FALSIFIED (2026-07-17), not just a shorthand.**  It **contradicts** the proven exact
+residue: `SpectralAmplitude.c5_hblum_falsified` shows `K·G² ≠ K·G` (with `K·G²` certified as the
+residue by `spectralAmp_residue_n1`), and `c5_hblum_falsified_matrix` shows the unlike-pair sign
+flip.  The exact residue is **doubly-propagated** — RDF `G·K·Gᵀ` (`= K·G²` at N=1) or DCF
+`Q̂₀·B₁·Q̂₀ᵀ` (no inverse; (★)/MRS.3) — never the single `K·G` assumed here.  This lemma is a **true
+conditional** kept for the residue-limit algebra; `hblum` has no physical instantiation, so do not
+attempt to discharge it.  Reuses `residue_of_simple_pole`
+(elementary `(z−z0)·N/D → N(z0)/D'(z0)`) and `g_entry_eq_adj_div_det`. -/
 theorem c5_residue_eq_K_mul_Ginv (N Dfun : ℂ → ℂ) (Dprime z_t Kt : ℂ) {n : ℕ}
     (Q0 : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n)
     (hD : HasDerivAt Dfun Dprime z_t) (hDz : Dfun z_t = 0) (hDp : Dprime ≠ 0)

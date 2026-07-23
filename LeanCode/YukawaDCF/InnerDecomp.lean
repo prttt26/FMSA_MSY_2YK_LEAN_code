@@ -8,14 +8,14 @@ Authors: FMSA project
 
 import Mathlib
 import LeanCode.YukawaDCF.I1I2Integrals
-import LeanCode.YukawaDCF.B5MixturePoly
+import LeanCode.YukawaDCF.MixturePolyCoeffs
 
 /-!
 # Tasks IB.1–IB.5 — Inner DCF Decomposition: Mediated Vanishing and Term IV Breakpoints
 
 ## Context
 
-`B5MixturePoly.lean` establishes that `P_ij` has degree ≤ 4 (B.5) and provides the B.8
+`MixturePolyCoeffs.lean` establishes that `P_ij` has degree ≤ 4 (GAP.5) and provides the GAP.8
 Laplace-moment inversion.  This file addresses the complementary *structural* question:
 when does the cross-species **mediated** correction vanish in the inner region, where are
 its breakpoints, and is the residue `P_ij` a single polynomial on all of `(0, R_ij)`?
@@ -524,16 +524,86 @@ theorem binary_mediated_zero {M : ℕ} (X : Mix 2 M) (i j : Fin 2) :
 ## IB.4 — The residue is a *single* polynomial on the inner region
 -/
 
-/-- **Task IB.4.**  After exact subtraction of `c_HS` and `mediated`, the residue is one
-polynomial of degree ≤ 4 on all of `(0, R[i,j])` — with **no piecewise split** at the Term IV
-breakpoint `r*` or at the `c_HS` kink `|λ_ij|`.
+/-! ### IB.4 (redone 2026-07-17) — piecewise rigidity: when a *single* polynomial is impossible
 
-This is what licenses `oz_numerical._update_polycorr` to run a *single* B.8 moment inversion
-over the whole inner region after subtracting `get_HS_FMT` and `_compute_mediated`.
+The original IB.4 (`residue_is_polynomial`, below) is true but **vacuous** — its content sits in the
+hypothesis `hdecomp`.  The genuine content of "is the inner-core residue one polynomial?" is the
+**rigidity** below: a polynomial is pinned by its values on any infinite set, so two pieces that
+disagree cannot be covered by a single polynomial.  This is exactly why [LN] Eq (101) holds for like
+pairs (`λ=0`, one piece) and fails for unlike pairs (`λ_ij≠0`, two pieces). -/
 
-The degree bound is imported from B.5 (`b5_degree_bound`, `B5MixturePoly.lean`); the content
-here is that the same `P` works on both sides of every breakpoint, because `mediated` — the
-only source of a breakpoint at `r*` — has been removed exactly rather than approximated. -/
+/-- **IB.4a — piecewise rigidity.**  If `f` agrees with a polynomial `P₁` on `(0,λ)`,
+with `P₂` on `(λ,R)`, **and** with a single polynomial `Q` on all of `(0,R)`, then necessarily
+`P₁ = Q = P₂`.  Each of `(0,λ)` and `(λ,R)` is infinite, and a polynomial is determined by its
+values on any infinite set (`Polynomial.eq_of_infinite_eval_eq`). -/
+theorem single_poly_forces_pieces_eq {lam Rr : ℝ} (hlam : 0 < lam) (hlR : lam < Rr)
+    (f : ℝ → ℝ) (P₁ P₂ Q : Polynomial ℝ)
+    (h₁ : ∀ r ∈ Set.Ioo (0 : ℝ) lam, f r = P₁.eval r)
+    (h₂ : ∀ r ∈ Set.Ioo lam Rr, f r = P₂.eval r)
+    (hQ : ∀ r ∈ Set.Ioo (0 : ℝ) Rr, f r = Q.eval r) :
+    P₁ = Q ∧ P₂ = Q := by
+  constructor
+  · refine Polynomial.eq_of_infinite_eval_eq P₁ Q ((Set.Ioo_infinite hlam).mono ?_)
+    intro x hx
+    have hx' : x ∈ Set.Ioo (0 : ℝ) Rr := ⟨hx.1, hx.2.trans hlR⟩
+    simp only [Set.mem_setOf_eq]
+    rw [← h₁ x hx, hQ x hx']
+  · refine Polynomial.eq_of_infinite_eval_eq P₂ Q ((Set.Ioo_infinite hlR).mono ?_)
+    intro x hx
+    have hx' : x ∈ Set.Ioo (0 : ℝ) Rr := ⟨hlam.trans hx.1, hx.2⟩
+    simp only [Set.mem_setOf_eq]
+    rw [← h₂ x hx, hQ x hx']
+
+/-- **IB.4b — the contrapositive: genuinely different pieces admit NO single polynomial.**
+This is the mathematical core of the 2026-07-17 falsification of [LN] Eq (101): for an unlike
+pair the inner core splits at `λ_ij` with `P₁ ≠ P₂` (measured: `P₁ = 1.111·r` on `(0,λ)` vs
+`P₂ = −1.281 + 1.189r + 0.203r² + 0.0447r⁴` on `(λ,R)`), hence **no** single `P_ij` on `(0,R_ij)`
+exists.  For a like pair `λ = 0`, there is no interior breakpoint and the obstruction is vacuous —
+which is exactly why [LN] Eq (101) is correct for like pairs (and why N=1 Tang/FMSA_pure works). -/
+theorem not_single_poly_of_pieces_ne {lam Rr : ℝ} (hlam : 0 < lam) (hlR : lam < Rr)
+    (f : ℝ → ℝ) (P₁ P₂ : Polynomial ℝ)
+    (h₁ : ∀ r ∈ Set.Ioo (0 : ℝ) lam, f r = P₁.eval r)
+    (h₂ : ∀ r ∈ Set.Ioo lam Rr, f r = P₂.eval r)
+    (hne : P₁ ≠ P₂) :
+    ¬ ∃ Q : Polynomial ℝ, ∀ r ∈ Set.Ioo (0 : ℝ) Rr, f r = Q.eval r := by
+  rintro ⟨Q, hQ⟩
+  obtain ⟨e₁, e₂⟩ := single_poly_forces_pieces_eq hlam hlR f P₁ P₂ Q h₁ h₂ hQ
+  exact hne (e₁.trans e₂.symm)
+
+/-- **Task IB.4 — CONDITIONAL; the content is the hypothesis `hdecomp` (flagged 2026-07-17).**
+
+⚠ **This theorem asserts nothing about any physical object.**  `c1_inner`, `c_hs`, `term_I`,
+`prefac` are arbitrary functions, and the hypothesis `hdecomp` *already assumes* that a **single**
+polynomial `P` (deg ≤ 4) works on **all** of `(0, R[i,j])`; the conclusion merely takes it back
+(`Q := P`, closed by `ring`).  An earlier version of this docstring claimed "the content here is
+that the same `P` works on both sides of every breakpoint" — that claim was **wrong**: that *is*
+`hdecomp`, an **input**.  Same vacuity pattern as GAP.8 (`poly_coeff_from_laurent`).
+
+⚠ **`hdecomp` is FALSE for unlike pairs.**  Falsified 2026-07-17 by reading the shipped, validated
+`fmsa_double_prop` closed form: the unlike-pair inner core **splits at `λ_ij`**, with polynomial
+part `1.111·r` on `(0,λ)` (degree 1, zero constant = [LN] Eq 102 origin regularity) versus
+`−1.281 + 1.189r + 0.203r² + 0.0447r⁴` on `(λ,R)` (degree 4, nonzero constant).  Like pairs
+(`λ = 0`) have a single piece, so [LN] Eq (101) is correct there — hence N=1 Tang/FMSA_pure works.
+By `not_single_poly_of_pieces_ne` below, different pieces ⇒ **no** single `P` exists.
+
+⚠ **The licensing claim does not follow.**  This task was cited as licensing
+`oz_numerical._update_polycorr` to run a *single* GAP.8 moment inversion over the whole inner region.
+That licence is **not established** here (and GAP.8 itself is vacuous): the chain
+`GAP.5 → IB.4 (assumed) → _update_polycorr → GAP.8 (vacuous)` is assumption, not proof.
+
+Kept (it is *true*, and has no consumers) as the conditional it is.  The real content now lives in
+`single_poly_forces_pieces_eq` / `not_single_poly_of_pieces_ne` above.  The degree bound is
+imported from GAP.5 (`q0_entry_degree_bound`, `MixturePolyCoeffs.lean`).
+
+⚠ **Root cause (audit 2026-07-17): `c1_inner` has no `def` — it is an arbitrary parameter here.**
+There is no concrete `c1_inner` anywhere in `LeanCode/`; the real object is the real-space
+convolution `c1_inner_ij(r) = [𝒲(r) − 𝒲(−r)]/(2π√(ρᵢρⱼ)r)`, `𝒲 = 𝒬⁻ ⋆ ℬ ⋆ (𝒬⁻)ᵀ`, whose
+construction is the open task **MRS.5** (`todo_lean.md`; building blocks `q0MixEntry`,
+`Mix.lam`/`Mix.R`, `Mix.mediated`, `yukawaBaseTerm` already concrete). Until MRS.5 lands there is
+no concrete object to attach a "piecewise poly×exp / deg ≤ 4" theorem to — which is *why* this and
+GAP.8 can only quantify over abstract parameters. Do not stack further theorems on abstract
+`c1_inner` parameters.  Records: `proof_notes_breakpoints.md` IB.4, `proof_notes_mixture_dcf.md`
+Group MPOLY. -/
 theorem residue_is_polynomial {N M : ℕ} (X : Mix N M)
     (c1_inner c_hs term_I prefac : ℝ → ℝ) (i j : Fin N)
     (P : Polynomial ℝ) (hdeg : P.natDegree ≤ 4)

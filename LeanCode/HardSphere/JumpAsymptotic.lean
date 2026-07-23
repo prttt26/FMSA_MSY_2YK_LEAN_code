@@ -10,6 +10,8 @@ import Mathlib
 import LeanCode.HardSphere.RadialFourierCHS
 import LeanCode.HardSphere.OZFourierBridge
 import LeanCode.HardSphere.PYOZ_GHS
+import LeanCode.HardSphere.OzCoreClosure
+import LeanCode.HardSphere.OzWienerHopfBounded
 
 /-!
 # Tasks CONTACT.3/CONTACT.5 — general jump-asymptotic lemma and assembly
@@ -423,12 +425,15 @@ and `one_sub_rho_mul_radial_fourier_c_HS_ne_zero`, then transfer CONTACT.4's asy
 expansions of the *same* function `radial_fourier(oz_h)(k)` must have the same leading
 coefficient (`eq_zero_of_tendsto_mul_cos`), forcing `g0_HS(σ) = (1+η/2)/(1-η)²`. -/
 theorem g0_HS_contact_value_of_oz_h_regularity {eta sigma rho : ℝ} (hsigma : 0 < sigma)
+    (hrho : 0 < rho)
     (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_lt : eta < 1)
-    (g' : ℝ → ℝ)
-    (hderiv : ∀ r ∈ Ici sigma, HasDerivAt (oz_h eta sigma rho) (g' r) r)
+    (g g' : ℝ → ℝ)
+    (hderiv : ∀ r ∈ Ici sigma, HasDerivAt g (g' r) r)
+    (hf_right : ∀ r ∈ Ioi sigma, oz_h eta sigma rho r = g r)
+    (hg_sigma : g sigma = oz_h eta sigma rho sigma)
     (htendsto : Tendsto (fun r => r * oz_h eta sigma rho r) atTop (𝓝 0))
     (hg_int : IntegrableOn (fun r => r * oz_h eta sigma rho r) (Ioi sigma))
-    (hg'_int : IntegrableOn (fun r => oz_h eta sigma rho r + r * g' r) (Ioi sigma))
+    (hg'_int : IntegrableOn (fun r => g r + r * g' r) (Ioi sigma))
     (hintA1 : ∀ k : ℝ, 0 < k → ∀ r, sigma ≤ r → IntervalIntegrable
       (fun t => t * c_HS eta sigma t * (sigma ^ 2 - (r - t) ^ 2) *
         if r < sigma + t then (1 : ℝ) else 0) MeasureTheory.volume 0 sigma)
@@ -464,7 +469,8 @@ theorem g0_HS_contact_value_of_oz_h_regularity {eta sigma rho : ℝ} (hsigma : 0
       filter_upwards [eventually_ge_atTop (1 + 2 * |rho| * cHS_bound eta sigma),
         eventually_gt_atTop (0:ℝ)] with k hk hk0
       have hne := one_sub_rho_mul_radial_fourier_c_HS_ne_zero eta sigma rho k hsigma hk
-      have heq := oz_fourier_oz_eq_of_PY_core hsigma hk0 heta_def heta_lt
+      have heq := oz_fourier_oz_eq_of_PY_core hsigma hrho hk0 heta_def heta_lt
+        (oz_fixed_pt_unique_thm eta sigma rho hsigma hrho heta_def heta_lt)
         (hintA1 k hk0) (hintA2 k hk0) (htsIntC k hk0) (hjointC k hk0) (hintB1 k hk0)
         (hintConv k hk0)
       unfold Hhat_closed
@@ -479,12 +485,19 @@ theorem g0_HS_contact_value_of_oz_h_regularity {eta sigma rho : ℝ} (hsigma : 0
       rw [hk]
     exact Tendsto.congr' hAeq hB
   -- Fact B: CONTACT.3 applied directly to `f := oz_h`, `c := -1`.
+  have htendsto_g : Tendsto (fun r => r * g r) atTop (𝓝 0) := by
+    refine htendsto.congr' ?_
+    filter_upwards [eventually_gt_atTop sigma] with r hr
+    simp only [hf_right r hr]
+  have hg_int_g : IntegrableOn (fun r => r * g r) (Ioi sigma) :=
+    hg_int.congr_fun (fun r hr => by simp only [hf_right r hr]) measurableSet_Ioi
   have hFactB : Tendsto (fun k : ℝ => k ^ 2 * (radial_fourier (oz_h eta sigma rho) k -
       4 * Real.pi * sigma * (oz_h eta sigma rho sigma - (-1)) * Real.cos (k * sigma) / k ^ 2))
-      atTop (𝓝 0) :=
-    radial_fourier_jump_asymptotic sigma (-1) hsigma (oz_h eta sigma rho) g' hderiv htendsto
-      hg_int hg'_int (oz_h eta sigma rho)
-      (fun r hr => oz_h_core hsigma hr.2) (fun _ _ => rfl)
+      atTop (𝓝 0) := by
+    have hjump := radial_fourier_jump_asymptotic sigma (-1) hsigma g g' hderiv htendsto_g
+      hg_int_g hg'_int (oz_h eta sigma rho)
+      (fun r hr => oz_h_core hsigma hr.2) hf_right
+    rwa [hg_sigma] at hjump
   -- Difference of the two leading coefficients, matched via `eq_zero_of_tendsto_mul_cos`.
   have hdiff : Tendsto (fun k : ℝ =>
       4 * Real.pi * sigma * (cHS_leading_coeff eta - (oz_h eta sigma rho sigma + 1)) *
@@ -541,7 +554,14 @@ contact value as an unconditional theorem — replacing the old *physical-number
 (`g0_HS_contact_value`, formerly in `PYOZ_GHS.lean`) with an *analytic-regularity* axiom of strictly
 weaker epistemic content: the specific value `(1+η/2)/(1-η)²` is now proved, not assumed. -/
 
-/-- **`oz_h` exterior regularity/decay/integrability (named axiom, Task OZ.3).**
+/-- **`oz_h` exterior regularity/decay/integrability (Task OZ.3 → OZFIX.22: now a THEOREM).**
+
+Retired as an independent axiom (2026-07-17): via the bridge `oz_h = ozBaxterFixedPt` (a function
+equality, `oz_h_eq_ozBaxterFixedPt`) the whole statement rewrites to the exterior-regularity clause of
+`baxter_exterior_regularity` — the single explicit decay/regularity theorem about the *constructed*
+`baxterPsi`.  Net effect: `oz_h_exterior_regularity` + `oz_core_closure` (2 axioms about the opaque
+`oz_h`) are replaced by `baxter_exterior_regularity` (1 theorem about the explicit `baxterPsi`); the
+physics core-closure is a theorem.  Original axiom docstring:
 
 Exactly the extra hypotheses `g0_HS_contact_value_of_oz_h_regularity` (Task CONTACT.5) consumes,
 bundled as an existential over the exterior derivative `g'`: on `[σ,∞)` the OZ solution `oz_h` is
@@ -552,13 +572,15 @@ the exterior (`c_HS` has compact support, so the convolution integrals converge)
 literature but not yet formalized from Mathlib real-analysis for the opaque `Classical.choose`-built
 `oz_h`. This is the *only* remaining assumption behind the PY contact value; everything else
 (CONTACT.3/CONTACT.4 + OZ.9b) is proved. -/
-axiom oz_h_exterior_regularity {eta sigma rho : ℝ} (hsigma : 0 < sigma)
+theorem oz_h_exterior_regularity {eta sigma rho : ℝ} (hsigma : 0 < sigma) (hrho : 0 < rho)
     (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_lt : eta < 1) :
-    ∃ g' : ℝ → ℝ,
-      (∀ r ∈ Ici sigma, HasDerivAt (oz_h eta sigma rho) (g' r) r) ∧
+    ∃ g g' : ℝ → ℝ,
+      (∀ r ∈ Ici sigma, HasDerivAt g (g' r) r) ∧
+      (∀ r ∈ Ioi sigma, oz_h eta sigma rho r = g r) ∧
+      g sigma = oz_h eta sigma rho sigma ∧
       Tendsto (fun r => r * oz_h eta sigma rho r) atTop (𝓝 0) ∧
       IntegrableOn (fun r => r * oz_h eta sigma rho r) (Ioi sigma) ∧
-      IntegrableOn (fun r => oz_h eta sigma rho r + r * g' r) (Ioi sigma) ∧
+      IntegrableOn (fun r => g r + r * g' r) (Ioi sigma) ∧
       (∀ k : ℝ, 0 < k → ∀ r, sigma ≤ r → IntervalIntegrable
         (fun t => t * c_HS eta sigma t * (sigma ^ 2 - (r - t) ^ 2) *
           if r < sigma + t then (1 : ℝ) else 0) MeasureTheory.volume 0 sigma) ∧
@@ -583,7 +605,12 @@ axiom oz_h_exterior_regularity {eta sigma rho : ℝ} (hsigma : 0 < sigma)
         (volume.restrict (Ioi 0))) ∧
       (∀ k, 0 < k → Integrable
         (fun r => r * radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho) r * Real.sin (k * r))
-        (volume.restrict (Ioi 0)))
+        (volume.restrict (Ioi 0))) := by
+  -- The bridge `oz_h = ozBaxterFixedPt` (a function equality) rewrites the entire goal into the
+  -- exterior-regularity clause of `baxter_exterior_regularity` about the constructed solution.
+  rw [oz_h_eq_ozBaxterFixedPt hsigma hrho heta_def heta_lt
+    (oz_fixed_pt_unique_thm eta sigma rho hsigma hrho heta_def heta_lt)]
+  exact (baxter_exterior_regularity hsigma hrho heta_def heta_lt).2.2.2.2.2
 
 /-- **Exact PY contact value (Task OZ.3), now a theorem.**
 
@@ -595,13 +622,13 @@ The physical contact value is thus *derived* from Fourier analysis (`CONTACT.3`/
 OZ.9b), assuming only the analytic regularity of the OZ exterior solution. Still in namespace
 `FMSA.HardSphere`, so
 the fully-qualified name `FMSA.HardSphere.g0_HS_contact_value` is unchanged. -/
-theorem g0_HS_contact_value {eta sigma rho : ℝ} (hsigma : 0 < sigma)
+theorem g0_HS_contact_value {eta sigma rho : ℝ} (hsigma : 0 < sigma) (hrho : 0 < rho)
     (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_lt : eta < 1) :
     g0_HS eta sigma rho sigma = (1 + eta / 2) / (1 - eta) ^ 2 := by
-  obtain ⟨g', hderiv, htendsto, hg_int, hg'_int,
+  obtain ⟨g, g', hderiv, hf_right, hg_sigma, htendsto, hg_int, hg'_int,
       hintA1, hintA2, htsIntC, hjointC, hintB1, hintConv⟩ :=
-    oz_h_exterior_regularity hsigma heta_def heta_lt
-  exact g0_HS_contact_value_of_oz_h_regularity hsigma heta_def heta_lt g' hderiv htendsto
-    hg_int hg'_int hintA1 hintA2 htsIntC hjointC hintB1 hintConv
+    oz_h_exterior_regularity hsigma hrho heta_def heta_lt
+  exact g0_HS_contact_value_of_oz_h_regularity hsigma hrho heta_def heta_lt g g' hderiv hf_right
+    hg_sigma htendsto hg_int hg'_int hintA1 hintA2 htsIntC hjointC hintB1 hintConv
 
 end FMSA.HardSphere

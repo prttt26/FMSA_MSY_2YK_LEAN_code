@@ -330,7 +330,7 @@ Task 4.1 (`b_n1_baxter_formula`), Task 4.3 (counterexample `(1+A)² ≠ 1−g²`
 
 ## Group FW — White-Bear FMT / BMCSL Mixture Thermodynamics
 
-New file, `LeanCode/HardSphere/WhiteBearFMT.lean` — neither the Rosenfeld/White-Bear FMT
+New file, `LeanCode/HSMixture/WhiteBearFMT.lean` — neither the Rosenfeld/White-Bear FMT
 weighted-density machinery nor the BMCSL mixture contact-value formula existed in this
 codebase's Lean side before this task; both are Python-only (`fmsa_free_energy.py:57`,
 `FMSA_MC_cleaned_2cpp.py:1305-1332`).
@@ -439,7 +439,7 @@ historically derived: requiring the virial-route ansatz to match this scaled-par
 
 **Status:** ✓ DONE, no axiom, no sorry — `betaf_hs_species_symmetry`, `g0_bmcsl`,
 `wbPhi_ray_pressure_eq`, `g0_bmcsl_virial_sum_eq`, `bmcsl_virial_eq_fmt_pressure`, all in
-`LeanCode/HardSphere/WhiteBearFMT.lean`. Full project `lake build` green.
+`LeanCode/HSMixture/WhiteBearFMT.lean`. Full project `lake build` green.
 
 ---
 

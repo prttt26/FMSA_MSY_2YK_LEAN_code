@@ -14,10 +14,11 @@ import LeanCode.HardSphere.PYOZ_GHS
 
 ## Summary
 
-`oz_fixed_pt_unique` (`PYOZ_GHS.lean`) is an axiom. This file proves a genuine (non-axiomatic)
-restriction of it, `oz_fixed_pt_unique_dilute`, for the dilute regime (`eta < 1`,
+`oz_fixed_pt_unique` was a physics axiom (`PYOZ_GHS.lean`); it has since been retired to the
+theorem `oz_fixed_pt_unique_thm` (`OzWienerHopfBounded.lean`). This file proves a genuine
+(non-axiomatic) restriction of it, `oz_fixed_pt_unique_dilute`, for the dilute regime (`eta < 1`,
 `24·eta·bracket < 1`, i.e. `eta ≲ 0.088`), via Banach's contraction-mapping theorem applied to
-`oz_operator` restricted to the exterior `[σ,∞)` — see the axiom's own doc comment for the
+`oz_operator` restricted to the exterior `[σ,∞)` — see the original axiom's doc comment for the
 physical/mathematical background, and `proof_notes_hard_sphere.md` (Task OZ.10-dilute) for the
 full writeup, including what's still needed for middle/high density (Fredholm alternative).
 
@@ -78,7 +79,7 @@ theorem extendClamp_eq_extendCore {sigma : ℝ} (h : ExtDom sigma →ᵇ ℝ) {r
 /-- The `oz_forcing` integrand (measurable, bounded on `[0,σ]` for fixed `r`) is interval
 integrable on `[0,σ]` — via `c_HS_integrableOn` (integrable) times the remaining polynomial ×
 indicator factor (bounded, measurable), combined via `Integrable.mul_bdd`. -/
-private theorem oz_forcing_integrand_intervalIntegrable {eta sigma r : ℝ} (hsigma : 0 < sigma) :
+theorem oz_forcing_integrand_intervalIntegrable {eta sigma r : ℝ} (hsigma : 0 < sigma) :
     IntervalIntegrable (fun t => t * c_HS eta sigma t * (sigma ^ 2 - (r - t) ^ 2) *
       (if r < sigma + t then (1 : ℝ) else 0)) volume 0 sigma := by
   rw [intervalIntegrable_iff_integrableOn_Icc_of_le hsigma.le]
@@ -384,7 +385,7 @@ bounded by `N`. Combines `c_HS`'s known integrability (`c_HS_integrableOn`) with
 sufficient constant bound on the (continuous, hence a.e.-bounded on the compact `[0,σ]`) inner
 shell integral, via `Integrable.mul_bdd` — mirrors `oz_forcing_integrand_intervalIntegrable`'s
 technique. Only integrability is needed here; the tight numeric bound is applied separately. -/
-private theorem oz_linear_op_integrand_intervalIntegrable {eta sigma : ℝ}
+theorem oz_linear_op_integrand_intervalIntegrable {eta sigma : ℝ}
     (hsigma : 0 < sigma) {h : ℝ → ℝ} (hh : Continuous h) {N : ℝ} (hN0 : 0 ≤ N)
     (hN : ∀ x, |h x| ≤ N) {r : ℝ} (hr : sigma ≤ r) :
     IntervalIntegrable (fun t => t * c_HS eta sigma t *
@@ -691,7 +692,7 @@ theorem h_star_bounded {eta sigma rho : ℝ} (heta0 : 0 < eta) (heta1 : eta < 1)
       (le_max_right _ _)
 
 /-- **The dilute-regime uniqueness theorem — a genuine (non-axiomatic) restriction of
-`oz_fixed_pt_unique` to `eta < eta* ≈ 0.088`.** Compared to the axiom's stated signature, this
+`oz_fixed_pt_unique_thm` to `eta < eta* ≈ 0.088`.** Compared to that theorem's stated signature, this
 adds `heta1 : eta < 1`: `hsmall` alone does *not* force `eta < 1` (e.g. `eta = 5` satisfies
 `24·eta·bracket < 1` too, since the bracket goes negative there) but `eta < 1` is needed for
 `c_HS`'s sign lemma (`c_HS_neg`) and closed form (`c_HS_abs_integral`), both used throughout —

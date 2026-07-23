@@ -6,12 +6,12 @@ Authors: FMSA project
 
 -- Naming and notation conventions: see CONVENTIONS.md
 
-import LeanCode.YukawaDCF.SingleCompReduction
+import LeanCode.HardSphere.SingleCompReduction
 import LeanCode.HardSphere.SingleCompIdentity
 import LeanCode.YukawaDCF.I1I2Integrals
 
 /-!
-# Task B.4 — FMSA_GA_matrix_mix origin BC is automatic: `lim_{r→0} r·c^(1)(r) = 0`
+# Task GAP.4 — FMSA_GA_matrix_mix origin BC is automatic: `lim_{r→0} r·c^(1)(r) = 0`
 
 For the FMSA_GA_matrix_mix inner-core formula ([chsY] Eq. 41 → 42), the origin boundary condition
 `lim_{r→0} r·c^(1)_ij(r) = 0` is satisfied **automatically** — no explicit normalisation
@@ -53,38 +53,38 @@ No separate normalization step is required or permitted.
 
 | Statement | Status |
 |---|---|
-| `b4_I1_vanish_at_zero` | proved — `I_1(0,...) = 0` (Term II vanishes) |
-| `b4_I2_vanish_at_zero` | proved — `I_2(0,...) = 0` (Term III vanishes) |
-| `b4_polynomial_constant` | proved — non-polynomial part of Eq. 42 at r=0 equals `2*K*g*a` |
-| `b4_origin_bc_abstract` | proved — abstract: Term_I + 0 + 0 + p_0 = 0 |
-| `b4_ga_matrix_mix_origin_vanishes` | proved — full Eq. 42 at r=0 is 0 |
+| `origin_termI1_vanish_at_zero` | proved — `I_1(0,...) = 0` (Term II vanishes) |
+| `origin_termI2_vanish_at_zero` | proved — `I_2(0,...) = 0` (Term III vanishes) |
+| `origin_polynomial_constant` | proved — non-polynomial part of Eq. 42 at r=0 equals `2*K*g*a` |
+| `origin_bc_abstract` | proved — abstract: Term_I + 0 + 0 + p_0 = 0 |
+| `origin_bc_concrete` | proved — full Eq. 42 at r=0 is 0 |
 -/
 
 open Real intervalIntegral
 
-namespace FMSA.PathB
+namespace FMSA.MixturePoly
 
 /-! ### Terms II and III vanish at r = 0 -/
 
-/-- **Task B.4 helper — Term II vanishes at r = 0:**
+/-- **Task GAP.4 helper — Term II vanishes at r = 0:**
 
 The integral `I_1(0, alpha, z) = ∫_0^0 (alpha - v)*exp(z*v) dv = 0` (Task 1.3),
 so Term II of [chsY] Eq. 41 contributes zero at r = 0. -/
-lemma b4_I1_vanish_at_zero (alpha z : ℝ) :
+lemma origin_termI1_vanish_at_zero (alpha z : ℝ) :
     ∫ v in (0 : ℝ)..(0 : ℝ), (alpha - v) * Real.exp (z * v) = 0 :=
   FMSA.DCF.I1_at_zero
 
-/-- **Task B.4 helper — Term III vanishes at r = 0:**
+/-- **Task GAP.4 helper — Term III vanishes at r = 0:**
 
 The integral `I_2(0, alpha, z) = ∫_0^0 (alpha-v)^2*exp(z*v) dv = 0` (Task 1.3),
 so Term III of [chsY] Eq. 41 contributes zero at r = 0. -/
-lemma b4_I2_vanish_at_zero (alpha z : ℝ) :
+lemma origin_termI2_vanish_at_zero (alpha z : ℝ) :
     ∫ v in (0 : ℝ)..(0 : ℝ), (alpha - v) ^ 2 * Real.exp (z * v) = 0 :=
   FMSA.DCF.I2_at_zero
 
 /-! ### Polynomial constant is algebraically forced -/
 
-/-- **Task B.4 — Polynomial constant identity:**
+/-- **Task GAP.4 — Polynomial constant identity:**
 
 The non-polynomial part of [chsY] Eq. 42 at r = 0 equals `2*K*g*a`, where
 `g = S/D`, `a = 12*eta*L/D`, and `g + a*exp(-z) = 1` (Task M.9).
@@ -94,25 +94,27 @@ this is what makes the full formula vanish at r = 0.
 
 Proof: rearranges to `g^2*exp(z) + a^2*exp(-z) + 2*g*a = exp(z)`,
 which is `sq_of_g_add_a_exp_eq_one` (Task 4.4). -/
-theorem b4_polynomial_constant (g a z K : ℝ)
+theorem origin_polynomial_constant (g a z K : ℝ)
     (h : g + a * Real.exp (-z) = 1) :
     K * (1 - g ^ 2) * Real.exp z - K * a ^ 2 * Real.exp (-z) = 2 * K * g * a := by
   linear_combination -K * FMSA.SingleComp.sq_of_g_add_a_exp_eq_one g a z h
 
-/-! ### Abstract and concrete B.4 theorems -/
+/-! ### Abstract and concrete GAP.4 theorems -/
 
-/-- **Task B.4 (abstract form):**
+/-- **Task GAP.4 (abstract form).**
 
-Given that Terms II and III are zero (from `b4_I1_vanish_at_zero`, `b4_I2_vanish_at_zero`)
-and that Term I + p_0 = 0, the full formula at r = 0 vanishes.
-
-The hypothesis `h_cancel` is supplied by the Baxter factorization; see
-`b4_ga_matrix_mix_origin_vanishes` for the concrete N=1 case. -/
-theorem b4_origin_bc_abstract (term_i p0 : ℝ)
+⚠ **Content-free scaffolding (vacuity audit 2026-07-17).** `term_i`, `p0` are arbitrary reals;
+the conclusion is the hypothesis `h_cancel` with two literal `+ 0`s inserted (the "Terms II/III
+vanish" are hard-coded numerals here, **not** the `origin_termI1_vanish_at_zero`/`origin_termI2_vanish_at_zero`
+lemmas). This asserts nothing about any physical object and **must not** be cited as GAP.4's content.
+GAP.4's real content is carried by the concrete siblings `origin_bc_concrete`
+(below) and `origin_bc_baxter`, which do the actual algebra via
+`sq_of_g_add_a_exp_eq_one`. Kept as an illustrative shape only; no production-path licensing. -/
+theorem origin_bc_abstract (term_i p0 : ℝ)
     (h_cancel : term_i + p0 = 0) :
     term_i + 0 + 0 + p0 = 0 := by linarith
 
-/-- **Task B.4 — FMSA_GA_matrix_mix origin BC is automatic (N=1 / single-component):**
+/-- **Task GAP.4 — FMSA_GA_matrix_mix origin BC is automatic (N=1 / single-component):**
 
 For the single-component FMSA_GA_matrix_mix formula ([chsY] Eq. 42) with Baxter scalars
 `g`, `a` satisfying `g + a * exp(-z) = 1` (Task M.9), and polynomial constant
@@ -124,23 +126,23 @@ K*(1-g^2)*exp(z) - K*a^2*exp(-z) + p_0 = 0
 
 **No explicit normalisation is needed:** `p_0` is uniquely determined by the Baxter
 structure.  FMSA_poly (Task P.2) must instead impose `p_0 = -E_ij(0)` by hand. -/
-theorem b4_ga_matrix_mix_origin_vanishes (g a z K : ℝ)
+theorem origin_bc_concrete (g a z K : ℝ)
     (h : g + a * Real.exp (-z) = 1) :
     K * (1 - g ^ 2) * Real.exp z - K * a ^ 2 * Real.exp (-z) +
       (-(2 * K * g * a)) = 0 := by
   linear_combination -K * FMSA.SingleComp.sq_of_g_add_a_exp_eq_one g a z h
 
-/-- **Task B.4 (Baxter form):**
+/-- **Task GAP.4 (Baxter form):**
 
 Concrete instantiation with `S`, `M` (Baxter polynomial values) and `D = S + M*exp(-z)`,
 setting `g = S/D`, `a = M/D`.  The polynomial constant is `p_0 = -2*K*S*M/D^2`. -/
-theorem b4_ga_matrix_mix_origin_baxter (S M z K : ℝ)
+theorem origin_bc_baxter (S M z K : ℝ)
     (hD : S + M * Real.exp (-z) ≠ 0) :
     let D := S + M * Real.exp (-z)
     K * (1 - (S / D) ^ 2) * Real.exp z - K * (M / D) ^ 2 * Real.exp (-z) +
       (-(2 * K * (S / D) * (M / D))) = 0 := by
   simp only []
-  apply b4_ga_matrix_mix_origin_vanishes
+  apply origin_bc_concrete
   field_simp [hD]
 
-end FMSA.PathB
+end FMSA.MixturePoly

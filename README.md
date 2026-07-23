@@ -84,9 +84,11 @@ authoritative group↔file map):
   proof_notes_pole.md        — Group POLE (complex-analytic Baxter pole/residue construction)
   proof_notes_ozfix.md       — Group OZFIX (h_explicit → OzFixedPt assembly)
   proof_notes_matrix_q0.md   — Group M (multi-component Q̂₀ matrix identity, det positivity)
-  proof_notes_yukawa_dcf.md  — Groups 1, 4, B, C, 5
+  proof_notes_yukawa_dcf.md  — Groups 1, 4, GAP, C, 5
   proof_notes_breakpoints.md — Group IB (inner-core mediated breakpoints)
-  proof_notes_yukawa_wh.md   — Groups Y1, MML, MZERO, MPOLY (Wiener–Hopf; N=2 mixture Mittag-Leffler)
+  proof_notes_yukawa_wh.md   — Group Y1 (first-order Yukawa RDF via Wiener–Hopf; general foundation)
+  proof_notes_mixture_rdf.md — Groups MML, MZERO (N=2 mixture inner RDF h₁: Mittag-Leffler HS-pole series + det zero family)
+  proof_notes_mixture_dcf.md — Groups MRS, MPOLY (N=2 mixture inner DCF: real-space Baxter finite closed form)
   proof_notes_failures.md    — Groups chsY, P, GA (method-failure analysis)
   proof_notes_free_energy.md — Groups F, FW (free energy; White-Bear FMT/BMCSL)
 

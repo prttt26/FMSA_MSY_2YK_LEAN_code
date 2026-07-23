@@ -11,7 +11,7 @@ to 18 tasks, 1455 lines) once this sub-family's own scope — pole existence/asy
 exponential-polynomial entire function, residue calculus, `OzFixedPt` construction — turned out
 to need genuinely different (complex-analysis) machinery from the rest of Group OZ. Task IDs
 below were renumbered from their original `OZ.*` names to the `BAXTER.*` prefix (matching how
-`Group OZ`/`Group F`/`Group M`/`Group B` all have their ID prefix match their group name); the
+`Group OZ`/`Group F`/`Group M`/`Group GAP` all have their ID prefix match their group name); the
 renumbering is recorded in each task's own text where it was originally introduced under the old
 name.
 
@@ -504,3 +504,78 @@ existing `q0_poly`/`Q_old` (no new function needed).
 
 ---
 
+
+### Task BAXTER.16 — PY-HS symbol positivity / "no spinodal" (`1−ρĈ(k) > 0 ∀k`) — DILUTE DONE (`η<0.177`), full-`η` OPEN (task a)
+
+> **Re-homed as the fundamental HS task `OZ.20`** (`proof_notes_hard_sphere.md`, 2026-07-18): the
+> direct-analytic framing (from `c_HS`, not Baxter) + the full closed-form structure
+> (`1−ρĈ = (N₁²+N₂²)/(t⁶(1−η)⁴)`, SOS ⇒ `≥0` free; strict `>0` = no common zero of two
+> transcendentals, **no η-uniform gap** since `min→0` as `η→1` ⇒ no elementary/SOS certificate).
+> Equivalence `qhat_complex_ne_one_iff_no_spinodal` (`BaxterNoSpinodalEquiv.lean`, axiom-clean) ties
+> `Q̂≠1 ⟺ 1−ρĈ>0` on the real axis. See OZ.20 for the verdict; BAXTER.16 kept below for the
+> Baxter-factorization writeup.
+
+**Goal.** `1 − ρ·Ĉ(k) > 0` for all `k ∈ ℝ` and all `η ∈ (0,1)`. Physically = the PY hard-sphere
+structure factor `S(k)=1/(1−ρĈ)` is finite everywhere = **no spinodal** (no fluid-fluid critical
+point / no divergence of correlations). NB: a *property of the PY closure* (provable math), not a
+thermodynamics claim; hard spheres do freeze (fluid–solid), but the PY fluid has no spinodal.
+
+**Where it stands — half done.** `baxter_wiener_hopf_complex_real` (`BaxterWienerHopfComplex.lean`)
+already proves, for real `k≠0`,
+`1 − ρĈ(k) = (1 − Re Q̂(k))² + (Im Q̂(k))² = |1 − Q̂(k)|²` ⇒ **`≥ 0` is FREE**. The task is the
+**strict** inequality:
+- `k = 0`: `1−ρĈ(0) = (1+2η)²/(1−η)⁴ > 0` (PY inverse compressibility, explicit, clearly positive).
+- `k ≠ 0`: `1−ρĈ(k) > 0 ⟺ 1 − Q̂(k) ≠ 0` (the sum of squares vanishes iff `Q̂(k)=1`). Reduce to
+  **`Qhat_complex(k) ≠ 1` for real `k`** via the explicit `Qhat_complex_formula`.
+
+**Difficulty: MODERATE** (concrete nonvanishing of an explicit transcendental; the minimum of
+`1−ρĈ` sits at the `S(k)` peak, numerically `min_k = 0.92/0.80/0.66/0.49/0.31/0.15/0.052` at
+η=0.1/0.2/0.3/0.4/0.5/0.6/0.7 — strictly positive, `→0` only as `η→1`, so the lower bound is
+**η-dependent**, `≥ c(η)>0`; `verify_wienerhopf_wall.py`). Not a one-liner (trig positivity) but
+bounded.
+
+**Value / caveats.** (i) A genuine standalone "PY-HS no-spinodal" theorem. (ii) EXACTLY the
+symbol-nonvanishing hypothesis the coercivity route consumes — the consumer EXISTS:
+`Analysis/WienerHopf.lean` `wienerHopf_positive_symbol_injective` (positive symbol `a≥ε>0` ⇒
+injective) + Plancherel wrappers. index 0 is free (positive real symbol). ⚠ **ALONE it retires no
+axiom** — a *hypothesis* for the `oz_fixed_pt_unique` retirement. Implied by `POLE.11`.
+
+**⚠ Investigation 2026-07-18 — HARDER than first scoped; full `η<1` is research-scale.**
+- **`1−A(k)` (=Re(1−Q̂)) goes NEGATIVE for `η≳0.45`** (numeric: η=0.5 min ≈ −0.51) ⇒ **no
+  single-real-inequality shortcut**; strict positivity genuinely couples Re and Im (at `1−A=0`,
+  `B≈−0.4≠0`). The explicit `1−ρĈ(k)` (symbolic) is a messy `sin k / cos k / k` trig-rational over
+  `k⁶(1−η)⁴` — not an `nlinarith` target. It IS the classical PY structure-factor positivity.
+- **`Q0_imaginary_axis_ne_zero` (`BaxterFactor.lean:191`, `Re Q0(iq)≥1`) is a RED HERRING** — a
+  DIFFERENT object (FMSAPoly `Q0`, coeff `12η`, Laplace `φ_py`). Verified numerically: `|Q0(iq)|²` =
+  4→31→81→106 (grows) while `1−ρĈ` = 4.5→2.5→0.86→1.02 (dips). `Q0 ≠ 1−Q̂` (opposite Re behaviour);
+  NOT bridgeable to the HS symbol.
+- **Large `k` is DONE:** `one_sub_rho_mul_radial_fourier_c_HS_ne_zero` (`RadialFourierCHS.lean:580`)
+  gives `1−ρĈ(k)≠0` for `k ≥ 1+2|ρ|·cHS_bound` (via `|ρĈ|≤1/2`). ⇒ BAXTER.16 reduces to the **compact
+  range `[0, threshold]`** (the structure-factor-peak region, where it dips) — the hard core.
+- **Dilute `η<(3−√7)/2≈0.177` (`∫|q0|<1`): ✅ DONE 2026-07-18 (axiom-clean)** —
+  `HardSphere/BaxterDiluteSymbol.lean`, `one_sub_rho_radial_fourier_c_HS_pos_of_dilute`
+  (`0 < 1−ρ·radial_fourier(c_HS) k` for `k≠0`, all `η<(3−√7)/2`) + `_all` (∀k). Route: the REAL
+  factorization `baxter_wiener_hopf_factorization` gives `1−ρĈ(k) = (1−A)²+B²`
+  (`A=∫₀^σ q0 cos(kr)`, `B=∫₀^σ q0 sin(kr)`); the Fourier-cosine bound `|A| ≤ ∫₀^σ|q0| = M`
+  (`q0_cos_transform_abs_le`, `|cos|≤1`) + `M<1` (`q0AbsL1_lt_one_of_dilute`) ⇒ `1−A ≥ 1−M > 0` ⇒
+  `(1−A)²+B² ≥ (1−M)² > 0`. **`k=0` caveat:** `radial_fourier`'s Lean encoding carries a `1/k`, so
+  its value at `k=0` is the junk `0` (NOT the physical compressibility `(1+2η)²/(1−η)⁴`) — the ∀k
+  theorem's `k=0` case is the trivial `1−ρ·0=1>0`, honest but not the compressibility (out of scope;
+  a `k→0` limit / different symbol object). Reuses `BaxterDiluteDecay.lean`'s `q0_poly` sign +
+  `q0AbsL1` machinery. Note the earlier "`1−A=1+∫|q0|cos ≥ 1−M`" sketch had a sign slip; the clean
+  bound is `|A|≤M` directly.
+  - **MA.12 interface (coercivity gap closed).** Strengthened to the UNIFORM bound
+    `(1−M)² ≤ 1−ρĈ(k) ∀k` (`one_sub_rho_radial_fourier_c_HS_ge_of_dilute{_all}`) ⇒
+    `hs_symbol_coercive_of_dilute : ∃ε>0, ∀k, ε ≤ 1−ρĈ(k)` (`ε=(1−M)²`) — the **exact `haε`
+    hypothesis** of `FMSA.wienerHopf_positive_symbol_injective` (MA.12, `Analysis/WienerHopf.lean`).
+    So the coercivity/positive-symbol input for retiring `oz_fixed_pt_unique` (dilute) is now a
+    theorem. **Still missing** before MA.12 fires: (routine) measurability + a global sup bound on
+    the symbol (needs the genuine `k→0` value, not the junk 0), and — the real work — the
+    **operator identification** casting `d = h₁−h₂` (difference of two bounded `OzFixedPt`s) as an
+    `L²` half-line `u` with `T_a u = 0`, i.e. OZ ↔ half-line WH with `a=1−ρĈ` (the 3D-radial ↔ 1D
+    reduction, `Q̂` 1D vs `Ĉ` 3D-radial, cf. OZFIX.18). That bridge is the substance of the
+    `oz_fixed_pt_unique` retirement and remains a separate large task.
+- **Full `η<1`: recommend folding into `POLE.11`** (all zeros of `1−Q̂` off ℝ / in UHP via MA.11
+  argument principle + magnitude bounds ⇒ real-axis nonvanishing free). No elementary real-axis-only
+  route (q0≤0 alone is insufficient — a nonneg function's FT can hit −1). No Mathlib Bochner.
+Home: `HardSphere/BaxterWienerHopfComplex.lean` (or `BaxterZeros.lean`).

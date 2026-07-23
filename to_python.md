@@ -120,7 +120,7 @@ this: the shifted basis satisfies Eq. 76 trivially.
 
 ### M.8 (DONE, 2026-07-15): bc ≥ ad confirms det(Q̂₀) > 0
 
-**Lean result**: `moment_ad_le_bc` (M.8, `HardSphere/Q0DetRankTwo.lean`): for all N components
+**Lean result**: `moment_ad_le_bc` (M.8, `HSMixture/Q0DetRankTwo.lean`): for all N components
 and all z > 0, bc ≥ ad (Cauchy–Binet identity + Wronskian argument, no axiom/sorry). Together with
 M.4 (axiom `Q0_moment_det_pos`): det(Q̂₀(z)) > 0 for all physical z > 0.
 

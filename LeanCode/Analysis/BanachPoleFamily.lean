@@ -173,4 +173,60 @@ theorem zeros_infinite_of_chordPoleFamily {F : ℂ → ℂ} (fam : ChordPoleFami
     linarith
   exact Set.infinite_of_injective_forall_mem hinj hgzero
 
+/-- **Growth-exposing variant of `zeros_infinite_of_chordPoleFamily`.** If, in addition, the family's
+disk centres grow at least linearly (`c·n + d ≤ ‖s1 n‖` for `n ≥ N`, with `0 < c`), then the
+constructed zero family `g` is injective, consists of `F`-zeros, and **inherits linear growth**
+`c·n + (c·N + d − r) ≤ ‖g n‖` — each zero is within `r` of its centre (reverse triangle inequality
+`norm_sub_norm_le`). This is the magnitude/growth input the summability lemmas need
+(scalar `h_explicit_summable_of_pole_family` / mixture MML.5's `mixHS_summable_of_growth`), so one
+construction serves both POLE.5 and MML.5-concrete. -/
+theorem exists_zero_family_growth_of_chordPoleFamily {F : ℂ → ℂ} (fam : ChordPoleFamily F)
+    {c d : ℝ} (hc : 0 < c)
+    (hcentre : ∀ n, fam.N ≤ n → c * (n : ℝ) + d ≤ ‖fam.s1 n‖) :
+    ∃ g : ℕ → ℂ, Function.Injective g ∧ (∀ n, F (g n) = 0) ∧
+      ∀ n : ℕ, c * (n : ℝ) + (c * (fam.N : ℝ) + d - fam.r) ≤ ‖g n‖ := by
+  have hwitness : ∀ n : ℕ,
+      ∃ s ∈ Metric.closedBall (fam.s1 (n + fam.N)) fam.r, F s = 0 := by
+    intro n
+    have hm : fam.N ≤ n + fam.N := Nat.le_add_left fam.N n
+    have hLip := chordPhi_lipschitzOnWith (F := F) (F' := fam.F') (Fp1 := fam.Fp1 (n + fam.N))
+      (s1 := fam.s1 (n + fam.N)) (r := fam.r) fam.K (fam.hderiv (n + fam.N) hm)
+      (fam.hbound (n + fam.N) hm)
+    have hstep' : dist (fam.s1 (n + fam.N))
+        (chordPhi F (fam.Fp1 (n + fam.N)) (fam.s1 (n + fam.N))) ≤ fam.r * (1 - (fam.K : ℝ)) := by
+      simp only [chordPhi, dist_eq_norm, sub_sub_cancel]
+      exact fam.hstep (n + fam.N) hm
+    have hMapsTo := mapsTo_closedBall_of_lipschitzOnWith_of_dist_le
+      (chordPhi F (fam.Fp1 (n + fam.N))) (fam.s1 (n + fam.N)) fam.r fam.hr.le fam.K hLip hstep'
+    exact chord_zero_exists_of_bounds F (fam.Fp1 (n + fam.N)) (fam.s1 (n + fam.N)) fam.r fam.hr
+      (fam.hFp1 (n + fam.N) hm) fam.K fam.hK1 hMapsTo hLip
+  choose g hgmem hgzero using hwitness
+  refine ⟨g, ?_, hgzero, ?_⟩
+  · intro a b hab
+    by_contra hne
+    have hdist2r : dist (fam.s1 (a + fam.N)) (fam.s1 (b + fam.N)) ≤ 2 * fam.r := by
+      calc dist (fam.s1 (a + fam.N)) (fam.s1 (b + fam.N))
+          ≤ dist (fam.s1 (a + fam.N)) (g a) + dist (g a) (fam.s1 (b + fam.N)) := dist_triangle _ _ _
+        _ = dist (g a) (fam.s1 (a + fam.N)) + dist (g b) (fam.s1 (b + fam.N)) := by
+            rw [dist_comm (fam.s1 (a + fam.N)) (g a), hab]
+        _ ≤ fam.r + fam.r :=
+            add_le_add (Metric.mem_closedBall.mp (hgmem a)) (Metric.mem_closedBall.mp (hgmem b))
+        _ = 2 * fam.r := by ring
+    have hsep := fam.hsep (a + fam.N) (b + fam.N) (Nat.le_add_left _ _) (Nat.le_add_left _ _)
+      (by omega)
+    linarith
+  · intro n
+    have hm : fam.N ≤ n + fam.N := Nat.le_add_left fam.N n
+    have hball : dist (g n) (fam.s1 (n + fam.N)) ≤ fam.r := Metric.mem_closedBall.mp (hgmem n)
+    have hcent : c * ((n + fam.N : ℕ) : ℝ) + d ≤ ‖fam.s1 (n + fam.N)‖ := hcentre (n + fam.N) hm
+    have hrev : ‖fam.s1 (n + fam.N)‖ - ‖g n‖ ≤ ‖fam.s1 (n + fam.N) - g n‖ := norm_sub_norm_le _ _
+    have hdd : ‖fam.s1 (n + fam.N) - g n‖ = dist (fam.s1 (n + fam.N)) (g n) := (dist_eq_norm _ _).symm
+    have hd3 : dist (fam.s1 (n + fam.N)) (g n) ≤ fam.r := by rw [dist_comm]; exact hball
+    have hcast : ((n + fam.N : ℕ) : ℝ) = (n : ℝ) + (fam.N : ℝ) := by push_cast; ring
+    rw [hcast] at hcent
+    have hge : ‖fam.s1 (n + fam.N)‖ - fam.r ≤ ‖g n‖ := by
+      have := hrev.trans (le_of_eq hdd)
+      linarith [hd3]
+    nlinarith [hge, hcent]
+
 end FMSA.BanachPoleFamily

@@ -20,7 +20,7 @@ require the *full* residue series, not a termwise argument). A dedicated reconna
 no `Complex.residue` definition, no winding number (hence no argument principle/Rouché), no general
 Mittag-Leffler theorem, no contour-based Fourier/Laplace inversion — corroborated by Mathlib's own
 `docs/1000.yaml` tracker, which lists "Residue theorem," "Mittag-Leffler's theorem," and "Rouché's
-theorem" as tracked but unformalized. Group MZERO's Route B (`MZERO.8`–`MZERO.11`, `proof_notes_yukawa_wh.md`)
+theorem" as tracked but unformalized. Group MZERO's Route B (`MZERO.8`–`MZERO.11`, `proof_notes_mixture_rdf.md`)
 independently hit the identical gap ("Mathlib has NO ready Rouché/argument-principle").
 
 **What Mathlib *does* have, and why it's not quite enough.** The disk Cauchy integral formula

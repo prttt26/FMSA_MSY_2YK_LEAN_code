@@ -8,7 +8,7 @@
 > re-ID of the old single-component tasks 4.2/B.2/B.3 into Group M as M.9/M.10/M.11 — recipe was
 > `todo/lean_move_groupM.md`, now executed).
 
-Status index: [todo_lean.md](todo_lean.md). Lean files: `LeanCode/HardSphere/MatrixIdentity.lean`
+Status index: [todo_lean.md](todo_lean.md). Lean files: `LeanCode/Analysis/MatrixIdentity.lean`
 (M.1), `MatrixN1.lean` (M.2), `MatrixQ0.lean` (M.3), `Q0DetRankTwo.lean` (M.4–M.8),
 `SingleCompIdentity.lean` (M.9, M.11), `QhatDecomposition.lean` (M.10). Split from
 `proof_notes_yukawa_dcf.md` on 2026-07-15 (Group M outgrew it). Numerical analysis:
@@ -48,7 +48,7 @@ Left-distributes `D⁻¹`, substitutes `D = P + c•E`, then applies `IsUnit.mul
 
 **Lean:**
 ```lean
--- LeanCode/HardSphere/MatrixIdentity.lean
+-- LeanCode/Analysis/MatrixIdentity.lean
 theorem g_mat_add_a_mat_exp_eq_one {n : ℕ}
     (P E D : Matrix (Fin n) (Fin n) ℝ) (c : ℝ)
     (hD_def : D = P + c • E)
@@ -60,7 +60,7 @@ theorem g_mat_add_a_mat_exp_eq_one {n : ℕ}
 
 **Depends on:** Nothing new — pure matrix algebra (Mathlib `Matrix` API).
 
-**Status:** ✓ DONE — `g_mat_add_a_mat_exp_eq_one` in `LeanCode/HardSphere/MatrixIdentity.lean` (complete):
+**Status:** ✓ DONE — `g_mat_add_a_mat_exp_eq_one` in `LeanCode/Analysis/MatrixIdentity.lean` (complete):
   `rw [← Algebra.smul_mul_assoc, ← add_mul, ← hD_def]` + `Matrix.mul_nonsing_inv D hD`.
   Note: hypothesis is `IsUnit D.det` (not `D.det ≠ 0`); Mathlib's `Matrix.mul_nonsing_inv`
   requires `IsUnit`. Also includes `g_mat_n1_eq_scalar` (N=1 scalar limit sanity check):
@@ -152,7 +152,7 @@ Key results in `namespace FMSA.MatrixQ0`:
   `Qp`/`Qpp` (used only for the pure M.10 algebraic identity, which holds for any `Qp`/`Qpp`)
 - `Q0_mat`: n×n matrix assembled from `q0_entry`
 - `Q0_mat_entry_decomp` (proved): each entry satisfies the M.10 decomposition
-  `Q̂₀ᵢⱼ = P̂ᵢⱼ + Êᵢⱼ · exp(-z·σ_min)` via `b2_qhat_entry_decomp`
+  `Q̂₀ᵢⱼ = P̂ᵢⱼ + Êᵢⱼ · exp(-z·σ_min)` via `qhat_entry_decomp`
 - `Q0_mat_isUnit_det` (old axiom): **removed — disproved**, see above
 - `xi2`, `etaMix`, `vacMix`, `Q0phys`, `Qppphys`, `rhoGeoPhys` (defined): concrete
   Lebowitz/Baxter multicomponent PY coefficients, matching the Python implementation
@@ -173,7 +173,7 @@ off-diagonal entries of `Q0_mat_phys` blow up exponentially as `z→∞` wheneve
 diameters differ, so M.3's Gershgorin approach cannot reach this; M.4 instead exploits that the
 determinant itself stays bounded even though entries don't.
 
-**Rank-2 reduction** (`LeanCode/HardSphere/Q0DetRankTwo.lean`, no `sorry`/`axiom`):
+**Rank-2 reduction** (`LeanCode/HSMixture/Q0DetRankTwo.lean`, no `sorry`/`axiom`):
 `Q0_mat_phys(z)` is exactly `1 - U·V` for `U : n×2`, `V : 2×n` built from
 `u1ᵢ=√ρᵢ·exp(zσᵢ/2)·f(σᵢ,z)`, `u2ᵢ=√ρᵢ·exp(zσᵢ/2)·g(σᵢ,z)`,
 `v1ⱼ=√ρⱼ·exp(-zσⱼ/2)`, `v2ⱼ=√ρⱼ·exp(-zσⱼ/2)·σⱼ` — proved as `Q0_mat_phys_eq_one_sub_mul`
@@ -212,7 +212,7 @@ possible remaining gap for M.4.
 (`verify_q0_det_positivity.py monotone_in_z_scan`: 0 genuine violations over 28 000 trials), so
 `det(z) > det(∞) = 1 > 0`; splits into `lim_{z→∞} det = 1` and `d(det)/dz < 0`.
 **Update 2026-07-15 — the `lim_{z→∞} det = 1` half is NOW PROVED in Lean, axiom-clean:**
-`Q0_mat_phys_det_tendsto_one` (`LeanCode/HardSphere/Q0DetLimit.lean`; `#print axioms` =
+`Q0_mat_phys_det_tendsto_one` (`LeanCode/HSMixture/Q0DetLimit.lean`; `#print axioms` =
 `[propext, Classical.choice, Quot.sound]`, **not** using `Q0_moment_det_pos`). It rewrites `det` in
 the reduced-2×2 form `(1−VU₀₀)(1−VU₁₁) − VU₀₁·VU₁₀` and shows each `V·U` entry `Σⱼρⱼ(…) → 0`
 (`VU_apply`/`VU_entry_tendsto_zero`) from the atomic `p1_tendsto_zero`/`p2_tendsto_zero`
@@ -232,7 +232,7 @@ axiom→theorem). It discharges `hdet` in the new unconditional theorem
 `Q0_moment_det_pos` (routes (a)/(b) above) ⇒ replace the `axiom` with a `theorem` ⇒ `#print axioms`
 drops it everywhere, no downstream edits needed.
 
-Key results in `LeanCode/HardSphere/Q0DetRankTwo.lean` (`namespace FMSA.MatrixQ0`):
+Key results in `LeanCode/HSMixture/Q0DetRankTwo.lean` (`namespace FMSA.MatrixQ0`):
 - `p1_neg`, `mAux_neg`, `nAux_neg` (proved): one-variable sign facts underlying `fFun`/`gFun`
 - `fFun_neg`, `gFun_neg` (proved): `fFun,gFun < 0` for all physical `σ,z>0`
 - `Umat`, `Vmat` (defined): the rank-2 factors
@@ -241,13 +241,12 @@ Key results in `LeanCode/HardSphere/Q0DetRankTwo.lean` (`namespace FMSA.MatrixQ0
 - `VU_apply_00` (proved): `(V·U) 0 0 = Σⱼ ρⱼ·fFun(...)` — the exact-cancellation identity
 - `Q0_mat_phys_isUnit_det_of_two_by_two` (proved, conditional on `hdet`): kept as the honest
   conditional form — `IsUnit …` given the one scalar inequality `hdet`
-- **`Q0_moment_det_pos` (axiom, 2026-07-15):** the open inequality `0 < (1+a)(1+d)−bc` under the
-  physical hyps `0<z, 0<vacMix, 0≤ρ, 0<σ`
-- **`Q0_mat_phys_isUnit_det` (theorem):** unconditional invertibility (= M.3 & M.4), feeds
-  `Q0_moment_det_pos` into `..._of_two_by_two`. `#print axioms` → `[propext, Classical.choice,
-  Quot.sound, Q0_moment_det_pos]`
+- **`Q0_moment_det_pos` (THEOREM, axiom retired 2026-07-16):** `0 < (1+a)(1+d)−bc` (in fact `det ≥ 1`)
+  under `0<z, 0<vacMix, 0≤ρ, 0<σ` — proved via Route B (see the Route B block below), axiom-clean
+- **`Q0_mat_phys_isUnit_det` (theorem):** unconditional invertibility (= M.3 & M.4). `#print axioms` →
+  `[propext, Classical.choice, Quot.sound]` (**axiom-clean** since the retirement)
 
-Large-`z` limit facts in `LeanCode/HardSphere/Q0DetLimit.lean` (`namespace FMSA.MatrixQ0`,
+Large-`z` limit facts in `LeanCode/HSMixture/Q0DetLimit.lean` (`namespace FMSA.MatrixQ0`,
 axiom-clean, 2026-07-15; built for Task GA.2 concrete but directly relevant to closure route (a)):
 - `p1_tendsto_zero`, `p2_tendsto_zero` (proved): `p1(σ,z), p2(σ,z) → 0` as `z→∞`; propagated to
   `fFun_tendsto_zero`, `gFun_tendsto_zero`
@@ -261,10 +260,31 @@ axiom-clean, 2026-07-15; built for Task GA.2 concrete but directly relevant to c
 `p(0)=0,p'(0)=0,p''>0` derivative-chain technique, reused for `p1_neg`/`mAux_neg`/`nAux_neg`;
 `moment_ad_le_bc` (M.8, `bc≥ad`) as the key structural fact.
 
-**Status:** ✓ **unconditional, modulo the named axiom `Q0_moment_det_pos`** (which carries the one
-open scalar inequality, numerically bulletproof — see the Axioms + "Numerically verified" tables in
-`todo_lean.md`). Retire the axiom when proved (routes (a)/(b) above) to make `Q0_mat_phys_isUnit_det`
-fully axiom-clean. The conditional `..._of_two_by_two` (no axiom/sorry) is retained alongside.
+**Status:** ✓ **DONE, axiom-clean (2026-07-16) — `Q0_moment_det_pos` proved, axiom retired.** M.3 & M.4
+unconditional; `Q0_mat_phys_isUnit_det` `#print axioms` = `[propext, Classical.choice, Quot.sound]`.
+The conditional `..._of_two_by_two` (`hdet` hyp) is retained alongside.
+
+### M.4 proof — Route B (algebraic, `det ≥ 1`), all in `Q0DetRankTwo.lean`
+
+Numerically scouted (`verify_q0_det_positivity.py route_scout`; reduction verified in
+`route_b_{reductions,2var,decomp}.py`). **NOT the monotonicity route** — `det'(z)≤0` holds but has no
+clean factorization (`z³·det'` spans 8 orders). Route B instead:
+
+- `det = 1 + (a+d) − (bc−ad)`, so `det ≥ 1 ⟺ bc − ad ≤ a + d` (`moment_key`). Empirically
+  `(bc−ad)/(a+d) ≤ 0.29` uniformly (even η→0.999): the `1/vac` blow-ups cancel in the ratio — **not** a
+  knife-edge.
+- **Cauchy–Binet with `ξ₂`-cancellation** (the `ξ₂` cross-terms vanish since `σp₁/2+p₂ = ½(σp₁+2p₂)`):
+  `bc−ad = ½(π/vac)²/z⁵ · Σⱼₖ ρⱼρₖ(σₖ−σⱼ)(mAux(zσₖ)pAux(zσⱼ) − mAux(zσⱼ)pAux(zσₖ))` (`hfg_cross`).
+- **Per-pair** (`per_pair_f`, via `momentPair_le`): after `u=zσⱼ, v=zσₖ` (the `z⁶` cancels), reduces to
+  the **clean 2-variable kernel** `kernel_nonneg`: for `u,v ≥ 0`,
+  `(v−u)(mAux v · pAux u − mAux u · pAux v) ≤ ½uv(−v·mAux u − u·mAux v)`.
+- **The crux decomposition** (sympy-exact): `G(u,v) = M(u)·Φ(u,v) + M(v)·Φ(v,u)` with `M = −mAux ≥ 0`,
+  `Φ(u,v) = u·R(v) + v·Q(v)`, `Q = −pAux ≥ 0`, `R = ½v² − Q ≥ 0`. Each nonneg via the "value 0 at 0 +
+  nonneg derivative" pattern, reusing existing infra: `M ≥ 0` from `mAux_neg`; `Q ≥ 0`
+  (`pAux_nonpos`) and `R ≥ 0` (`half_sq_add_pAux_nonneg`) both one-liners off `Real.add_one_le_exp`.
+- **Chain:** `pAux_nonpos`/`mAux_nonpos`/`half_sq_add_pAux_nonneg` → `phiK_nonneg` → **`kernel_nonneg`**
+  → `momentPair_le` → `per_pair_f` → **`moment_key`** (summation + vac-algebra: `−(∑ρσg) = D + (π/vac)∑ρσ(−p₁)`,
+  `−(∑ρf) ≥ 0`) → **`Q0_moment_det_pos`** (theorem, via `VU_apply'` + `nlinarith`). All axiom-clean.
 
 ---
 
@@ -425,7 +445,7 @@ P̂_{ij}(z) = δ_{ij}
 where `λ_{ij} = (σ_j−σ_i)/2`, `R_{ij} = (σ_i+σ_j)/2`, and
 `Q'_{ij} = (2π/Δ)·(R_{ij} + π·σ_i·σ_j·ξ₂/(4Δ))`, `Q''_j = (2π/Δ)·(1 + π·σ_j·ξ₂/(2Δ))`.
 
-**Proof strategy:** Substitute the B.1 split
+**Proof strategy:** Substitute the Task 2.3 (ex-B.1) split
 `∫₀^{σᵢ} r·exp(z(r−σᵢ)) dr = (z·σᵢ−1+exp(−z·σᵢ))/z²`
 into the Q̂₀ formula, then collect terms by whether they contain `exp(−z·σᵢ)`.
 Factor out `exp(−z·σ_min)` from the exponential part (valid since R_{ij} ≥ σ_min always,
@@ -434,10 +454,10 @@ with equality for the smallest-diameter like pair). Close by `ring` + `Real.exp_
 **Why it matters:** Supplies the concrete `hD_def` hypothesis for M.1, turning the abstract
 matrix identity into a verified statement about actual FMSA_GA_matrix_mix matrices.
 
-**Depends on:** B.1, Task 2.1 (`phi1_formula`, `phi2_formula`), M.1.
+**Depends on:** Task 2.3 (ex-B.1), Task 2.1 (`phi1_formula`, `phi2_formula`), M.1.
 
 **Status:** ✓ DONE — `LeanCode/HardSphere/QhatDecomposition.lean` (complete):
-  - `b2_qhat_entry_decomp`: scalar (i,j) entry identity `Q̂₀ = P̂ + Ê·exp(−z·σ_min)`.
+  - `qhat_entry_decomp`: scalar (i,j) entry identity `Q̂₀ = P̂ + Ê·exp(−z·σ_min)`.
     Three-step proof: (1) `hexp` via `← exp_add` + `linear_combination -z * hR`;
     (2) `h` (algebraic factor of exp(−zσ)) via `field_simp [pow_ne_zero]; ring`;
     (3) `rw [h, hexp]; ring`.

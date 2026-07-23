@@ -9,6 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.HardSphere.OZExteriorBridge
 import LeanCode.HardSphere.RadialFourier
+import LeanCode.HardSphere.OzCoreClosure
 
 /-!
 # Task OZ.7 — Fourier-domain exterior OZ equation for `oz_h`
@@ -46,7 +47,10 @@ for Gap A and for `radial_fourier_conv`.** This is the mathematically correct co
 `oz_laplace_oz_eq_of_core_closure`, replacing the false `radial_laplace_conv` step with the
 proved `radial_fourier_conv`. -/
 theorem oz_fourier_oz_eq_of_core_closure {eta sigma rho k : ℝ}
-    (hsigma : 0 < sigma) (hk : 0 < k)
+    (hsigma : 0 < sigma)
+    (hex : ∃ f : ℝ → ℝ, OzFixedPt eta sigma rho f ∧ ContinuousOn f (Set.Ici sigma)
+        ∧ ∃ C, ∀ r, |f r| ≤ C)
+    (hk : 0 < k)
     (hcore : ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
       oz_h eta sigma rho r =
         c_HS eta sigma r + rho * radial3d_conv (c_HS eta sigma) (oz_h eta sigma rho) r)
@@ -84,7 +88,7 @@ theorem oz_fourier_oz_eq_of_core_closure {eta sigma rho k : ℝ}
     intro r hrpos
     by_cases hr : r < sigma
     · exact hcore r ⟨hrpos, hr⟩
-    · exact oz_h_satisfies_conv_ext hsigma (not_lt.mp hr) (hintA1 r (not_lt.mp hr))
+    · exact oz_h_satisfies_conv_ext hsigma hex (not_lt.mp hr) (hintA1 r (not_lt.mp hr))
         (hintA2 r (not_lt.mp hr))
   -- Step 2: apply `radial_fourier` to both sides.
   have hsum : (∫ r in Set.Ioi (0 : ℝ), r * c_HS eta sigma r * Real.sin (k * r)) +
@@ -123,8 +127,10 @@ in the whole `radial_laplace_conv`/`oz_laplace_oz_eq` lineage: Gap A (proved,
 are all now accounted for by name, with only the routine integrability hypotheses remaining
 open. -/
 theorem oz_fourier_oz_eq_of_PY_core {eta sigma rho k : ℝ}
-    (hsigma : 0 < sigma) (hk : 0 < k)
+    (hsigma : 0 < sigma) (hrho : 0 < rho) (hk : 0 < k)
     (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (heta_lt : eta < 1)
+    (huniq : ∃! h : ℝ → ℝ, OzFixedPt eta sigma rho h ∧ ContinuousOn h (Set.Ici sigma)
+        ∧ ∃ C, ∀ r, |h r| ≤ C)
     (hintA1 : ∀ r, sigma ≤ r → IntervalIntegrable
       (fun t => t * c_HS eta sigma t * (sigma ^ 2 - (r - t) ^ 2) *
         if r < sigma + t then (1 : ℝ) else 0) MeasureTheory.volume 0 sigma)
@@ -152,7 +158,8 @@ theorem oz_fourier_oz_eq_of_PY_core {eta sigma rho k : ℝ}
       (MeasureTheory.volume.restrict (Set.Ioi 0))) :
     (radial_fourier (oz_h eta sigma rho) k) *
       (1 - rho * radial_fourier (c_HS eta sigma) k) = radial_fourier (c_HS eta sigma) k :=
-  oz_fourier_oz_eq_of_core_closure hsigma hk (oz_core_closure hsigma heta_def heta_lt)
+  oz_fourier_oz_eq_of_core_closure hsigma huniq.exists hk
+    (oz_core_closure hsigma hrho heta_def heta_lt huniq)
     hintA1 hintA2 htsIntC hjointC hintB1 hintConv
 
 end FMSA.HardSphere
