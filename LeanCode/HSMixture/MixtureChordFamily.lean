@@ -4109,15 +4109,25 @@ interface is left to the mixture session (`mixHS_summable_of_growth` is stated f
 
 **Exponent.**  `p(r) < −1 ⟺ r > max(σ₀/2, (σ₁−σ₀)/2)`.  The `σ₀/2` branch is the numerically
 measured one (`p_eff ≈ (σ₀−σ₁−2r)/σ₁`); the extra `(σ₁−σ₀)/2` branch comes from the genuine
-`σ₀/s` term of `q01` and binds only when `2σ₀ < σ₁`. -/
+`σ₀/s` term of `q01` and binds only when `2σ₀ < σ₁`.
+
+**Non-vanishing (added 2026-07-24).**  The family also satisfies `g n ≠ 0` and `det′(g n) ≠ 0` —
+strict consequences of the same `disk_facts` (`1 ≤ ‖g n‖`, and `‖det′(g n)‖ ≥ σ₁μ/(24(μ+K₁)) > 0`)
+that the magnitude bound already uses.  These are exactly the *simple-zero* hypotheses of
+`b_k_residue` (MML.2), so with them the coefficient `−q01(g n)/det′(g n)` fed to `mixHSterm` can be
+**identified with the residue `B_k`** rather than merely resembling it — see
+`detF_Bcoef_eq_b_k_residue` (`MixtureMLBound.lean`), which closes MML.5's last bookkeeping item. -/
 theorem detF_family_magnitude_bound (P : MixParams) (hP : P.Phys) {rdist : ℝ}
     (hrd : max (P.sig0 / 2) ((P.sig1 - P.sig0) / 2) < rdist) :
     ∃ (g : ℕ → ℂ) (C p : ℝ), p < -1 ∧ 0 < C ∧ Function.Injective g ∧
       (∀ n, P.detF (g n) = 0) ∧
       (∃ c d : ℝ, 0 < c ∧ 0 < d ∧ ∀ n : ℕ, c * (n : ℝ) + d ≤ ‖g n‖) ∧
+      (∀ n : ℕ, g n ≠ 0 ∧ derivF P (g n) ≠ 0) ∧
       (∀ n : ℕ, ‖q01 P (g n)‖ * Real.exp (rdist * (g n).re) / ‖derivF P (g n)‖ ≤
         C * ‖g n‖ ^ p) := by
   have hs1 : 0 < P.sig1 := lt_trans hP.1 hP.2.1
+  have hmu : 0 < P.mu := mul_pos (hP.2.2.1 1 1) (hP.2.2.2.1 1 1)
+  have hK10 := K1_nonneg P hP
   obtain ⟨N1, hN1⟩ := chord_conditions_eventually P hP
   have htends : Filter.Tendsto (fun n : ℕ => 2 * Real.pi * (n : ℝ) / P.sig1)
       Filter.atTop Filter.atTop :=
@@ -4133,8 +4143,19 @@ theorem detF_family_magnitude_bound (P : MixParams) (hP : P.Phys) {rdist : ℝ}
     (fun n hn => by
       obtain ⟨a1, a2, a3, a4, _⟩ := hN1 n (le_trans hNN1 hn)
       exact ⟨a1, a2, a3, a4⟩)
+  -- the three disk facts, hoisted: used both for the non-vanishing and for the magnitude bound
+  have hfacts : ∀ n : ℕ, 1 ≤ ‖g n‖ ∧
+      |(-(g n).re) - 2 * Real.log ‖g n‖ / P.sig1| ≤ P.Kdev ∧
+      P.sig1 * P.mu / (24 * (P.mu + P.K1)) ≤ ‖derivF P (g n)‖ := by
+    intro n
+    have hm : N1 ≤ n + N := le_trans hNN1 (Nat.le_add_left N n)
+    obtain ⟨c1, c2, c3, c4, c5, c6, c7, c8, c9, c10⟩ := hN1 (n + N) hm
+    have hm2 : (2 : ℝ) ≤ 2 * Real.pi * ((n + N : ℕ) : ℝ) / P.sig1 :=
+      hN2 (n + N) (le_trans hNN2 (Nat.le_add_left N n))
+    have hn1 : 1 ≤ n + N := le_trans hN1le (Nat.le_add_left N n)
+    exact disk_facts P hP (n + N) rfl hn1 hm2 c6 c7 c8 c9 c10 c3 (hmem n)
   refine ⟨g, P.Cmag rdist, P.pexp rdist, pexp_lt_neg_one P hP hrd, Cmag_pos P hP rdist,
-    hinj, hzero, ?_, ?_⟩
+    hinj, hzero, ?_, ?_, ?_⟩
   · refine ⟨2 * Real.pi / P.sig1, (2 * Real.pi - 1 / 20) / P.sig1, by positivity,
       div_pos (by linarith [Real.pi_gt_three]) hs1, ?_⟩
     intro n
@@ -4152,13 +4173,20 @@ theorem detF_family_magnitude_bound (P : MixParams) (hP : P.Phys) {rdist : ℝ}
     have he : 2 * Real.pi / P.sig1 * (n : ℝ) + (2 * Real.pi - 1 / 20) / P.sig1 +
         1 / (20 * P.sig1) = 2 * Real.pi * ((n : ℝ) + 1) / P.sig1 := by field_simp; ring
     linarith
+  · -- non-vanishing of the zero and of `det′` there: both are strict consequences of `hfacts`
+    intro n
+    obtain ⟨f1, _, f3⟩ := hfacts n
+    have hDpos : (0 : ℝ) < P.sig1 * P.mu / (24 * (P.mu + P.K1)) :=
+      div_pos (mul_pos hs1 hmu) (by linarith)
+    refine ⟨?_, ?_⟩
+    · intro h
+      rw [h, norm_zero] at f1
+      linarith
+    · intro h
+      rw [h, norm_zero] at f3
+      linarith
   · intro n
-    have hm : N1 ≤ n + N := le_trans hNN1 (Nat.le_add_left N n)
-    obtain ⟨c1, c2, c3, c4, c5, c6, c7, c8, c9, c10⟩ := hN1 (n + N) hm
-    have hm2 : (2 : ℝ) ≤ 2 * Real.pi * ((n + N : ℕ) : ℝ) / P.sig1 :=
-      hN2 (n + N) (le_trans hNN2 (Nat.le_add_left N n))
-    have hn1 : 1 ≤ n + N := le_trans hN1le (Nat.le_add_left N n)
-    obtain ⟨f1, f2, f3⟩ := disk_facts P hP (n + N) rfl hn1 hm2 c6 c7 c8 c9 c10 c3 (hmem n)
+    obtain ⟨f1, f2, f3⟩ := hfacts n
     exact magnitude_bound_at P hP rdist f1 f2 f3
 
 end

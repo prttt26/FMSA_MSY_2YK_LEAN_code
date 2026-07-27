@@ -65,21 +65,38 @@ existence theory; upper version only. Mathlib has no Hilbert transform / P.V. AP
 re-routed around this gap). Checked on 3 test functions (linear-in-`ε` convergence). **Retires**
 when Mathlib gains a Hilbert-transform/P.V. API.
 
-### Axiom 4 — `contourIntegral_eq_of_homotopic_loops`
-`HomotopyInvariance.lean` (2026-07-16, pre-placed on request; **no consumer yet**). Homotopy form
-of Cauchy's theorem (Ahlfors Ch. 4 Thm 16): `C¹` loops freely homotopic **through loops** inside an
-open `U` on which `f` is holomorphic off a countable set have equal contour integrals. The
-`hHloop` condition is essential — the statement is false without it. **Derives**
-`contourIntegral_eq_zero_of_null_homotopic`, plus the axiom-free bridge
-`circleIntegral_eq_unitLoop_integral`. Checked with positive, null-homotopic, **and negative**
-controls (loops in different homotopy classes differ by exactly `|2πi·res₁|`, so the hypothesis
-does real work).
+### Axiom 4 — `contourIntegral_eq_of_homotopic_loops` — ✅ RETIRED to a theorem 2026-07-24
+Formerly `HomotopyInvariance.lean` (2026-07-16, pre-placed, no consumer). Homotopy form of Cauchy's
+theorem: loops freely homotopic **through loops** inside an open `U` on which `f` is holomorphic have
+equal contour integrals.
 
-*An addition, not a replacement.* It is the principle behind Axioms 1/2, which are classical
-corollaries via keyhole homotopies — but those derivations are **open follow-on work**, so all
-three stand. Pre-placed against a recommendation to keep the two narrow axioms: a general "unified
-residue theorem" cannot even be *stated* in current Mathlib vocabulary, and this statement
-quantifies over all homotopies, so it cannot be spot-checked the way Axioms 1/2 were.
+**Retirement (2026-07-24) — the gap closed upstream.** A `.lake` recon (`Explore` sweep of Mathlib
+`v4.31.0`) found the former justification ("Mathlib lacks homotopy/winding machinery") **stale**:
+Mathlib has gained the **Poincaré lemma for `1`-forms** (`CurveIntegral/Poincare.lean`), in
+particular `ContinuousMap.Homotopy.curveIntegral_add_curveIntegral_eq_of_hasFDerivWithinAt` — curve
+integrals of a **closed** `1`-form along two paths joined by a `C²` homotopy agree. The content is now
+axiom-free in `Analysis/ContourHomotopy.lean`:
+
+* `holoForm f z := (ContinuousLinearMap.id ℂ ℂ).smulRight (f z)` — the `1`-form `f(z)·dz`, with
+  `holoForm f z w = w • f z`; `curveIntegral_holoForm` identifies its `curveIntegral` with the usual
+  contour integral `∫₀¹ γ'(t)•f(γ(t))dt`.
+* `holoForm_fderiv_symm` — **Cauchy–Riemann closedness**: `fderiv ℝ (holoForm f)` is symmetric when
+  `f` is `ℂ`-differentiable (`fderiv ℝ f = restrictScalars (fderiv ℂ f)`, then `v•(u•c)=u•(v•c)` by
+  commutativity). This is the "closed `1`-form" hypothesis Mathlib's lemma needs.
+* `contourIntegral_holoForm_eq_of_homotopic_loops` (+ Cauchy null-homotopic form
+  `contourIntegral_holoForm_eq_zero_of_nullhomotopic`): `#print axioms = {std three}`.
+
+Stated in Mathlib's bundled `Path`/`Homotopy` + `C²` vocabulary — a **free strengthening** (MA.8 was
+consumer-less; its only intended future use, the keyhole-homotopy derivations of Axioms 1/2, builds
+*smooth* homotopies), and exactly the form Mathlib's Poincaré lemma consumes. So this retirement also
+**sets up the Axiom 1/2 retirement**: construct the keyhole `C²` homotopy and apply this theorem.
+Two proof-design keys worth reusing: take the ambient set `t := range φ` (compact ⇒
+`closure t = t`, dodging the `ContinuousOn ω (closure U)` hypothesis that `t := U` would impose), and
+pass `dω := fderiv ℝ (holoForm f)` explicitly (so symmetry is proved for *all* directions and the
+tangent-cone/`fderivWithin` reasoning of the `diffContOnCl` variant is avoided). The
+fully-**continuous**-`H` (non-`C²`) form remains a Mathlib gap (upstream #24019), but is irrelevant
+to the intended smooth use. Only the axiom-free `circleIntegral_eq_unitLoop_integral` bridge is kept
+in `HomotopyInvariance.lean`; the raw-function axiom + its raw null-homotopic corollary were removed.
 
 ## The axioms — Wiener / Hermite–Biehler (2, awaiting processing, added 2026-07-18)
 
@@ -140,6 +157,22 @@ integral; forcing tail-vanishing from `baxterForcing_eq_zero_of_two_sigma_le`; s
 on `{Re z ≥ 0}`, ⟺ `Q̂ ≠ 1` on `{Im k ≤ 0}` via `z = ik`) is **MA.14**'s output, left as an explicit
 hypothesis so the wiring is independent of MA.14's in-progress file. Discharges the
 `Tendsto baxterPsiOuter atTop 0` hypothesis of `BaxterExteriorDecayReduction.lean`.
+
+### Axiom 5 — MA.13 — **RESHAPED 2026-07-21: bespoke decay axiom → the named `wiener_causal_resolvent`**
+
+> `volterra_renewal_tendsto_zero` is **no longer an axiom** — it is a THEOREM
+> (`Analysis/WienerRenewal.lean`).  What is assumed is now exactly **Wiener's `1/f` theorem** for the
+> causal `L¹` convolution algebra `ℂ·δ ⊕ L¹(0,∞)` (`wiener_causal_resolvent`): symbol nonvanishing on
+> the closed RHP ⇒ a causal resolvent `R ∈ L¹(0,∞)` with `R = q + q ⋆ R`.  Nothing about decay or
+> integrability is assumed any more; both are derived — `resolvent_conv_eq` (Fubini on the triangle +
+> the resolvent equation) gives `ψ = g + R ⋆ g` via `MA.10` uniqueness (`volterra_unique_Ici`), then
+> the moving-window `L¹` tail gives `ψ → 0` and Young gives `ψ ∈ L¹(0,∞)`.
+> **Irreducible:** in the physical regime `‖q‖₁ > 1`, so the spectral radius
+> `sup_{Re z≥0}|q̂(z)| = |q̂(0)| = ‖q‖₁ > 1` and the Neumann series for `R` diverges — existence really
+> is the Gelfand/Wiener statement.  Mathlib still has no Wiener algebra, Laplace transform,
+> Paley–Wiener or Hardy spaces (re-verified 2026-07-21).  Route triage + numerics (decay rate = the
+> Ornstein–Zernike `Im k₁`): `proof_notes_pole.md` → "POLE.11 decay half / MA.13",
+> `verify_ma13_route.py`.
 
 ### Axiom 6 — MA.14 — **`baxter_no_open_lhp_pole_core` FULLY RETIRED → theorem 2026-07-21; MA.14 is now the abstract `zeroFree_lowerHalfPlane_of_homotopy`**
 
@@ -497,7 +530,7 @@ Charter: survey missing-Mathlib machinery, prove what's provable, pre-place admi
 | MA.5 | Jensen counting — **axiom retired, proved**; bug 1. Discharges `MZERO.11`'s `hJensen` (done 2026-07-16, `detC_jensen_log_bound`) ⇒ MZERO Route B's only open input is `DetBoundaryGrowth` (MZERO.10). |
 | MA.6 | Relocated misfiled pure math `HardSphere/ → Analysis/` (`ResidueAtSimplePole`, `BanachPoleFamily`): `import Mathlib`-only, zero project deps; namespaces kept, 5 consumer imports updated. |
 | MA.7 | Sokhotski–Plemelj — Axiom 3, pre-placed. |
-| MA.8 | Homotopy-invariance Cauchy — Axiom 4, pre-placed. Open follow-ons: keyhole-homotopy derivations of Axioms 1/2 from it. |
+| MA.8 | Homotopy-invariance Cauchy — **✅ RETIRED to a theorem 2026-07-24** (Axiom 4 above). The gap closed upstream: Mathlib `v4.31.0` gained the Poincaré lemma for `1`-forms (`CurveIntegral/Poincare.lean`), so the axiom was removed and the content proved axiom-free in `Analysis/ContourHomotopy.lean` (`contourIntegral_holoForm_eq_of_homotopic_loops` + null-homotopic form; `holoForm` `1`-form + `holoForm_fderiv_symm` Cauchy–Riemann closedness). Bundled `Path`/`Homotopy` + `C²` form (free strengthening, consumer-less); also **sets up the Axiom 1/2 retirement** (keyhole `C²` homotopy + this theorem). Found by re-verifying gap justifications against current Mathlib — see Axiom 4. |
 | MA.9 | Radial Fourier inversion — **never axiomatized, proved**; bug 4. Fully closed (antiderivative form needs no `hC`). |
 | MA.10 | Volterra 2nd kind existence/uniqueness — **never axiomatized, proved** (~130 lines). Discharges `OZFIX.15`(A)'s and `OZFIX.17`'s conditional hypotheses; route to `OZ.10`. |
 | MA.11 | Argument principle / signed zero-pole count — **never axiomatized, proved** (~90 lines). Per-circle bridge `∮ logDeriv((·−k)^n·g) = 2πi·n` axiom-clean; assembled via MA.1 into `∮ logDeriv f = 2πi·∑ nᵢ`. Rouché not included (needs winding-number machinery Mathlib lacks). |

@@ -1109,3 +1109,105 @@ triage pass above (Mathlib genuinely lacks Rouché / the parametric argument pri
 to reach `|r|`; `HasDerivAt.pow`/`ContinuousOn` fold-direction issues with `set` (kept coefficients
 raw); a `private def` for the wall `η*` broke defeq unification with the dilute lemma's literal
 `(3−√7)/2` — inlined the literal and carried `√7<3` / `1<√7` as `nlinarith` facts instead.
+
+### POLE.11 decay half / `MA.13` — recon 2026-07-21: **irreducible, it IS Wiener's 1/f theorem**
+
+Status check after the MA.14 retirement.  POLE.11 splits cleanly, and only one half is now open:
+
+| POLE.11 part | `#print axioms` | verdict |
+|---|---|---|
+| task a `BAXTER.16` real-axis `1−ρĈ>0` | standard three | ✅ axiom-clean (`pyhs_no_spinodal` is a theorem) |
+| task b **premise** — poles in open UHP (`baxter_pole_im_pos`) | + `zeroFree_lowerHalfPlane_of_homotopy` | ✅ closed 2026-07-21 (MA.14 retirement) |
+| task b **conclusion** — decay (`baxterPsi_bounded_Ici`, `r_mul_ozBaxterFixedPt_tendsto_zero`) | + **`volterra_renewal_tendsto_zero` (MA.13)** | ⚠ **open** |
+| both halves, dilute `η<(3−√7)/2` | standard three | ✅ unconditional |
+
+**Why MA.13 cannot be retired the way MA.14 was.**  The MA.14 win came from replacing the *posited*
+abstract input (Hermite–Biehler / winding) with a **weaker, more general** one (zero-count homotopy
+invariance) plus an elementary real-axis discharge.  No such downgrade exists here, and the reason is
+sharp: in the **causal `L¹` convolution algebra** the spectral radius of the kernel is
+`sup_{Re z ≥ 0}|q̂(z)| = |q̂(0)| = M = η(4−η)/(1−η)²` — **verified numerically to be attained exactly at
+`z=0`** (`verify_ma13_route.py`: `sup_RHP|q̂| = M` to all printed digits, `η=0.3, 0.6`).  For
+`η > (3−√7)/2` this is `> 1`, so the Neumann series for the resolvent **diverges**, and the resolvent's
+*existence* is precisely the statement that `1−q̂` is invertible in the algebra given that it does not
+vanish on the maximal ideal space (= the closed RHP).  **That is Wiener's `1/f` theorem.**  Every route
+tried reduces to it:
+* iterating (`‖q^{*n}‖₁ = Mⁿ` exactly, since `q0_poly ≤ 0` makes `q^{*n}` single-signed) — no gain;
+* exponential reweighting `q(t)e^{εt}` — mass only grows;
+* window/Grönwall sup-bounds `S_{n+1} ≤ M·max(S_n,S_{n+1})` — vacuous for `M>1` (the decay is pure
+  oscillatory cancellation, i.e. spectral, not majorisable);
+* Fourier/`L²`: the multiplier `1/(1−q̂(iξ))` IS bounded (see below) so an `L²` solution exists, but
+  identifying it with the *causal* Volterra solution is again the half-plane analyticity = Paley–Wiener;
+* a priori `ψ` only lives in a heavily weighted `e^{−γr}L²` (`γ` large makes `q*` a contraction there);
+  pulling `γ` down to `0` is the contour shift, i.e. Paley–Wiener once more.
+
+**Mathlib recon re-run (libraries move): still absent** — no Laplace transform, no Wiener algebra, no
+Paley–Wiener, no Hardy spaces, no renewal theory (`find` over `Mathlib/` for
+`*laplace*/*wiener*/*paley*/*renewal*/*hardy*` returns nothing).  It *does* have
+`Analysis/Fourier/RiemannLebesgueLemma.lean` and `Fourier/Inversion.lean`.
+
+**The axiom's statement is TRUE — sharply confirmed.**  Direct simulation of
+`ψ(r)=g(r)+∫₀^r q(r−t)ψ(t)dt` with `g = baxterForcing` gives a decay rate matching **`Im k₁`, the
+lowest Baxter pole**, to 3–4 digits (`η=0.2/0.4/0.6`: ratio `1.000/1.001/0.999`; `η=0.8` reads `0.859`
+only because the rate `0.019` has not reached its asymptote by `r=32`), and `∫|ψ| < ∞` throughout.
+This is exactly the textbook **Ornstein–Zernike asymptotic decay** `h(r) ~ e^{−Im k₁·r}/r`, so the
+axiom is not merely consistent — its content is the known physics, with the correct constant.
+
+**What *is* elementary here (recorded for the eventual refactor):** `|1−q̂| ≥ δ > 0` on the *closed
+RHP* is provable with tools Mathlib has — `q̂ → 0` as `|z|→∞` in the closed RHP (Riemann–Lebesgue for
+`|Im z|→∞`, dominated convergence for `Re z→∞`), so `1−q̂ → 1`; outside a large ball `≥ 1/2`, inside
+the compact remainder a nonvanishing continuous function has a positive min.  Measured:
+`min|1−q̂| = 0.812 / 0.392 / 0.054` at `η = 0.3 / 0.6 / 0.9`.
+
+**Recommended disposition (not yet executed).**  Do **not** attempt an elementary retirement.  Two
+defensible next moves, both leaving the count at 8:
+1. **Reshape** MA.13 into the standard citable form — axiom = *causal Wiener `1/f`*: `q ∈ L¹` compactly
+   supported with `1−q̂ ≠ 0` on the closed RHP ⇒ ∃ resolvent `r ∈ L¹(0,∞)`, `r = q + q*r` — and then
+   **prove** the rest in Lean (`ψ = g + r*g` by the already-proven Volterra uniqueness `MA.10`;
+   `ψ ∈ L¹` by Young, which Mathlib has; `ψ → 0` because `|(r*g)(x)| ≤ ‖g‖_∞ ∫_{x−T}^{x}|r| → 0`).
+   Converts a bespoke axiom into a named classical theorem plus proved content.
+2. **Residue/Mittag-Leffler route** — genuinely aims at retirement, using machinery this project has
+   already *proved* (MA.2 Mittag-Leffler, Jordan's lemma, `POLE.5` summability, and now the
+   pole-location `baxter_pole_im_pos`): invert the Laplace transform by closing the contour and summing
+   residues `Σ e^{i k_n r}`, each decaying since `Im k_n > 0`.  Research-scale, and the arc/summability
+   estimates are the real work — but unlike Wiener it does not need an absent library.
+
+#### Route 1 EXECUTED (2026-07-21) — `MA.13` reshaped to a named theorem; `volterra_renewal_tendsto_zero` is now a THEOREM
+
+Per the disposition above, option 1 was taken: the bespoke decay axiom is gone, replaced by the
+single *citable classical theorem* it always was.  Full build green (8694 jobs), 0 `sorry`.
+`#print axioms volterra_renewal_tendsto_zero` = `{propext, Classical.choice, Quot.sound,
+wiener_causal_resolvent}`.
+
+**New axiom (the only thing assumed):** `wiener_causal_resolvent` (`Analysis/WienerRenewal.lean`) —
+**Wiener's `1/f` theorem** for the causal `L¹` convolution algebra `ℂ·δ ⊕ L¹(0,∞)`, whose maximal
+ideal space is the closed RHP and whose Gelfand transform is the Laplace transform.  Applied to
+`δ − q` it yields the causal resolvent `R ∈ L¹(0,∞)` with `R = q + q ⋆ R`.  Nothing about decay or
+integrability is assumed.
+
+**Everything else is now proved** (all in `Analysis/`, axiom-clean apart from that one axiom):
+
+| lemma | content |
+|---|---|
+| `triangle_indicator_integrable` | the joint-integrability hypothesis of the triangle swap, from continuity on a compact box × finite measure |
+| `resolvent_conv_eq` | **the core**: `q ⋆ (g + R ⋆ g) = R ⋆ g` — Fubini on `{0≤u≤t≤x}`, inner change of variable `t = v+u`, one use of the resolvent equation at `x−u` |
+| `volterra_unique_Ici` | two continuous solutions on `[0,∞)` agree — `MA.10` on each `Icc 0 r`, undoing `Set.IccExtend` |
+| `resolvent_conv_tendsto_zero` | `R ⋆ g → 0`: only the window `[x−T,x]` contributes, and `L¹` tails vanish (`tendsto_integral_Ioi_zero`) |
+| `forcing_integrableOn`, `resolvent_conv_integrable` | `g ∈ L¹(0,∞)`; `R ⋆ g ∈ L¹` by **Young** (`Integrable.integrable_convolution`) after identifying the Volterra integral with a genuine convolution of the zero-extended kernels |
+
+**Supporting refactor:** `intervalIntegral_triangle_swap{,_gen}` moved `HardSphere/BaxterRenewal.lean`
+→ new `Analysis/IntervalIntegralSwap.lean` (they are project-independent real analysis, and the
+`Analysis/` layer now needs them).  The three original call sites needed **no edit** — inside
+`namespace FMSA.HardSphere`, Lean's outward name resolution finds `FMSA.intervalIntegral_triangle_swap_gen`.
+
+**Ledger unchanged at 8** (7 math + 1 physics): `volterra_renewal_tendsto_zero` →
+`wiener_causal_resolvent`.  Both remaining POLE.11 inputs are now *named classical theorems absent
+from Mathlib* — Wiener's `1/f` and the argument-principle/Hurwitz zero-count invariance — rather
+than bespoke statements.  **POLE.11 general-`η` therefore rests on exactly two named gaps**;
+`r_mul_ozBaxterFixedPt_tendsto_zero` = `{std three, wiener_causal_resolvent,
+zeroFree_lowerHalfPlane_of_homotopy}`.
+
+**Lean pitfalls:** `Continuous.intervalIntegrable _ _` leaves the measure a metavariable ⇒ stuck
+`IsLocallyFiniteMeasure` instance — pin `(μ := volume)` on the *consuming* lemma; `Set.indicator_of_mem`
+needs the membership *as a set membership* (`show p ∈ {p | p.1 < p.2}`), a bare `h : p.1 < p.2` makes
+Lean look for `Set.Ioi`; `Set.IccExtend` needs `Function.comp_apply` alongside `Set.projIcc_of_mem`
+before `rfl` closes.

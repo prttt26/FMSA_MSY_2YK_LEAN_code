@@ -9,12 +9,14 @@ import LeanCode.Analysis.JensenCounting
 import LeanCode.Analysis.RadialFourierInversion
 import LeanCode.Analysis.HomotopyInvariance
 import LeanCode.Analysis.Volterra
+import LeanCode.Analysis.IntervalIntegralSwap
 import LeanCode.Analysis.ArgumentPrinciple
 import LeanCode.Analysis.HalfDiskArgumentPrinciple
 import LeanCode.Analysis.WienerRenewal
 import LeanCode.Analysis.WienerHopf
 import LeanCode.Analysis.RadialWienerHopf
 import LeanCode.Analysis.ConvolutionLeibniz
+import LeanCode.Analysis.ContourHomotopy
 import LeanCode.HardSphere.BaxterRenewalDecay
 import LeanCode.HardSphere.Splitting
 import LeanCode.HardSphere.BaxterFactor
@@ -30,6 +32,7 @@ import LeanCode.HSMixture.WhiteBearFMT
 import LeanCode.HardSphere.OzFixedPtDilute
 import LeanCode.HardSphere.OzExteriorIntegrability
 import LeanCode.HardSphere.BaxterOzStar
+import LeanCode.HardSphere.ShellKernel
 import LeanCode.HardSphere.OzExteriorDerivBundle
 import LeanCode.HardSphere.OzExteriorSmooth
 import LeanCode.HardSphere.OzExteriorConvIntegrable
@@ -101,6 +104,10 @@ import LeanCode.YukawaDCF.MixtureMLSeries
 import LeanCode.HSMixture.MixtureMLBound
 import LeanCode.YukawaDCF.MixtureInnerDCF
 import LeanCode.YukawaDCF.MixtureRealSpace
+import LeanCode.YukawaDCF.MixtureRDFStructureFactor
+import LeanCode.YukawaDCF.MixtureRDFPoleData
+import LeanCode.HSMixture.MixtureOzStar
+import LeanCode.YukawaDCF.MixtureRDFAntideriv
 import LeanCode.YukawaDCF.OffDiagDecay
 import LeanCode.YukawaDCF.ContactMatching
 import LeanCode.FMSAPoly.OriginCheck

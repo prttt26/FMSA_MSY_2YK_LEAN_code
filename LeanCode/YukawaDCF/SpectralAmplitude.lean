@@ -210,4 +210,54 @@ theorem bMulti_residue_Qinv {N : ℕ} (Kmat Qinv : Matrix (Fin N) (Fin N) ℂ)
       (𝓝 (∑ m, ∑ p, if zmat m p = z0 then Qinv i m * Kmat m p * Qinv j p else 0)) := by
   simpa only [one_add_sub_one] using bMulti_residue Kmat (Qinv - 1) zmat z0 i j
 
+/-! ### `bMulti` decays like `1/‖s‖` — the RDF numerator is *not* exponentially growing
+
+The spectral amplitude `bMulti` (the WH-projected first-order numerator `B₁`, [LN] Eq. 66/73) is a
+**pure sum of simple poles** `Σ_{m,p} c_{mp}/(s + z_{mp})` — it carries **no** `e^{−sR}` factor (that
+sits in the *outer* DCF transform `U₁`, [LN] Eq. 34; the causal WH projection absorbs it into the
+pole residues, `outer_residue_eq_spectralAmp_residue`).  Hence `‖B₁(s)‖ = O(1/‖s‖)` for `‖s‖` beyond
+the pole radius: the RDF numerator **decays**, not grows, along the HS pole family.
+
+This settles a live scoping question for MML.14 Rung 1 (`MixtureRDFAntideriv.lean`): the double-pole
+coefficients `α_n, β_n = N/det′², …` with `N = adjᵀ·B₁·adj` obey `‖α_n‖, ‖β_n‖ ≤ C·‖s_n‖^q` with
+`q < 1` (in fact strongly negative), because `B₁` decays (here), the adjugate entries are bounded on
+the family (`q0_entry_c → δ`), and `det Q̂₀ → 1` makes `det′, det″` bounded.  So the `Kterm` tower is
+genuinely **threshold-free** and `mixHSAntideriv2_summable_of_component_bounds` applies — the earlier
+worry that an `e^{−sR}`-carrying `B₁` might force `q ≥ 1` (and reinstate the MML.5 `rdist` threshold)
+does **not** materialise for the WH-projected numerator. -/
+theorem bMulti_norm_le {N : ℕ} (Kmat Amat : Matrix (Fin N) (Fin N) ℂ)
+    (zmat : Fin N → Fin N → ℂ) (s : ℂ) (i j : Fin N) {Z C0 : ℝ}
+    (hZ : ∀ m p, ‖zmat m p‖ ≤ Z) (hs : 2 * Z ≤ ‖s‖) (hspos : 0 < ‖s‖)
+    (hC0 : ∀ m p, ‖(1 + Amat) i m‖ * ‖Kmat m p‖ * ‖(1 + Amat) j p‖ ≤ C0) :
+    ‖bMulti Kmat Amat zmat s i j‖ ≤ (N : ℝ) ^ 2 * (2 * C0) / ‖s‖ := by
+  have hC0nn : 0 ≤ C0 := le_trans (by positivity) (hC0 i i)
+  have hterm : ∀ m p, ‖(1 + Amat) i m * Kmat m p * (1 + Amat) j p / (s + zmat m p)‖
+      ≤ 2 * C0 / ‖s‖ := by
+    intro m p
+    have hden : ‖s‖ / 2 ≤ ‖s + zmat m p‖ := by
+      have h1 : ‖s‖ ≤ ‖s + zmat m p‖ + ‖zmat m p‖ := by
+        calc ‖s‖ = ‖(s + zmat m p) + (-(zmat m p))‖ := by ring_nf
+          _ ≤ ‖s + zmat m p‖ + ‖-(zmat m p)‖ := norm_add_le _ _
+          _ = ‖s + zmat m p‖ + ‖zmat m p‖ := by rw [norm_neg]
+      have h2 : ‖zmat m p‖ ≤ ‖s‖ / 2 := by linarith [hZ m p, hs]
+      linarith
+    rw [norm_div, norm_mul, norm_mul]
+    calc ‖(1 + Amat) i m‖ * ‖Kmat m p‖ * ‖(1 + Amat) j p‖ / ‖s + zmat m p‖
+        ≤ C0 / (‖s‖ / 2) := div_le_div₀ hC0nn (hC0 m p) (by positivity) hden
+      _ = 2 * C0 / ‖s‖ := by ring
+  unfold bMulti
+  calc ‖∑ m, ∑ p, (1 + Amat) i m * Kmat m p * (1 + Amat) j p / (s + zmat m p)‖
+      ≤ ∑ m, ‖∑ p, (1 + Amat) i m * Kmat m p * (1 + Amat) j p / (s + zmat m p)‖ :=
+        norm_sum_le _ _
+    _ ≤ ∑ m : Fin N, ∑ p : Fin N,
+          ‖(1 + Amat) i m * Kmat m p * (1 + Amat) j p / (s + zmat m p)‖ := by
+        apply Finset.sum_le_sum; intro m _; exact norm_sum_le _ _
+    _ ≤ ∑ m : Fin N, ∑ p : Fin N, (2 * C0 / ‖s‖) := by
+        apply Finset.sum_le_sum; intro m _
+        apply Finset.sum_le_sum; intro p _
+        exact hterm m p
+    _ = (N : ℝ) ^ 2 * (2 * C0) / ‖s‖ := by
+        simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+        ring
+
 end FMSA.SpectralAmplitude

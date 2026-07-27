@@ -187,9 +187,34 @@ threshold turned out to be `max(σ₀/2, (σ₁−σ₀)/2)`, not `σ₀/2`.
 `exists_zero_family_growth_of_chordPoleFamily` (`Analysis/BanachPoleFamily.lean`);
 `Q0_det_c_pole_family_growth` (`MixtureHSZeros.lean`); `detF_family_magnitude_bound`,
 `detF_zero_family_growth`, `detF_mixHS_summable` (`MixtureChordFamily.lean`/`MixtureMLBound.lean`).
-**Status.** ✅ CLOSED (2026-07-17), axiom-clean — abstract + reduction + growth-witness
-(2026-07-16) + concrete magnitude gate + end-to-end `Summable` (2026-07-17). Only cosmetic
-bookkeeping (`Bcoef = b_k_residue` identification in the DCF assembly) remains.
+**Status.** ✅ **FULLY CLOSED (2026-07-24), axiom-clean, no remainder** — abstract + reduction +
+growth-witness (2026-07-16) + concrete magnitude gate + end-to-end `Summable` (2026-07-17) + the
+`Bcoef = b_k_residue` identification (2026-07-24, below).
+
+**✅ 2026-07-24 — the last bookkeeping item CLOSED: the summed coefficient *is* the residue.**
+Until now `Bcoef n = −q01(g n)/det′(g n)` was a *formula* that resembled MML.2's `B_k` but was never
+proved equal to it, so "the series converges" and "the series is the HS-pole Mittag-Leffler series"
+were separate claims. Both new pieces are axiom-clean, full build green:
+
+- `detF_family_magnitude_bound` (`MixtureChordFamily.lean`) **strengthened** with a non-vanishing
+  clause `∀ n, g n ≠ 0 ∧ det′(g n) ≠ 0`. No new analysis: both are strict consequences of the
+  `disk_facts` the magnitude chain already consumed (`1 ≤ ‖g n‖`, and
+  `‖det′(g n)‖ ≥ σ₁μ/(24(μ+K₁)) > 0`). The proof only needed those three facts *hoisted* out of the
+  per-`n` bullet into a shared `hfacts`, so both conclusions can read them.
+- `detF_Bcoef_eq_b_k_residue` + `detF_eq_det_Q0` (`MixtureMLBound.lean`, which now also imports
+  `MixtureHSPoles`): at any `s_k ≠ 0` with `detF s_k = 0`, `det′(s_k) ≠ 0`, the coefficient
+  `−q01(s_k)/det′(s_k)` **is** `Res_{s_k}[Q̂₀(z)⁻¹]₀₁`. The three `b_k_residue` inputs come from the
+  `MixParams` layer: `detF_hasDerivAt` (needs `s_k ≠ 0`), `hzero`, and
+  `q0_entry_c_differentiableAt` for the entry's continuity. `detF_eq_det_Q0` is `rfl` — the
+  parameter pack's `detF` *is* `det Q̂₀` of the cast matrix — and `q01_eq` was already there.
+- `detF_mixHS_summable` correspondingly gains a third clause certifying the identification for the
+  constructed family, so a single theorem now delivers: injective zero family + each coefficient is
+  a genuine HS-pole residue + the series is `Summable`.
+
+⚠ Note the shape of the fix: the non-vanishing was *already inside* the old proof and was simply
+being discarded. Whenever a "cosmetic remainder" is logged, check first whether the missing fact is
+already established and merely unexported — here that turned a projected analysis task into a
+five-line restructure.
 
 **✅ 2026-07-17 — MML.5-concrete GATE PROVED (reflected form), axiom-clean.**
 `detF_family_magnitude_bound` (`HSMixture/MixtureChordFamily.lean`, module green, no `sorry`,
@@ -531,6 +556,721 @@ MRS.4/5 in progress) but on the *DCF* side. Once both exist, MML.8's collapse is
 transcription of OZFIX.22 modulo the matrix decay axiom. **Priority is unchanged: RDF-only, off the
 DCF path** — the template lowers MML.8's difficulty ceiling, not its priority.
 
+**⇒ SHARPENED 2026-07-24 by MML.9 (below): the "matrix OZ★" MML.8 still needs is a
+*hard-sphere* statement, not a Yukawa one.** `Ĥ₁ = S₀·Ĉ₁·S₀` with `Ĉ₁` HS-pole-free (MRS.3) and
+finite (MRS.5) ⇒ every HS pole of the first-order RDF is contributed by the two `S₀ = (I−Ĉ₀)⁻¹`
+factors, which contain **no Yukawa data at all**. The Yukawa half of MML.8 is therefore already
+closed by Group MRS; the residual collapse content is the mixture **hard-sphere** RDF.
+
+---
+
+### Task MML.9 — the structure-factor form `Ĥ₁ = S₀·Ĉ₁·S₀`, and where the RDF's HS poles come from
+
+**Statement.** Solve the same first-order OZ equation MRS.2 solves for the DCF, but for the RDF:
+from `Ĥ₁·T₀ = S₀·Ĉ₁` (`hoz`) and `T₀·S₀ = I` (`hTS`, the zeroth-order OZ `S₀ = (I−Ĉ₀)⁻¹`),
+
+    Ĥ₁ = Ĥ₁·(T₀·S₀) = (Ĥ₁·T₀)·S₀ = (S₀·Ĉ₁)·S₀ = S₀·Ĉ₁·S₀ .
+
+Physically: **the first-order RDF is the first-order DCF dressed on both sides by the hard-sphere
+structure factor** `S₀ = I + Ĥ₀`. Pure matrix algebra, and with *strictly weaker* hypotheses than
+MRS.2's `star_of_first_order_oz` (no MRS.1 factorization, no MRS.7 symmetry).
+
+**Why it matters for MML.8.** Combined with the two established facts
+
+* **(★)** `Ĉ₁ = Q̂₀(−k)·B₁·Q̂₀ᵀ(−k)` carries no `Q̂₀⁻¹` ⇒ the first-order **DCF has no HS poles**
+  (MRS.3 `star_entry_differentiableAt`) and is a finite closed form (MRS.5), and
+* `T₀ = Q̂₀(k)·Q̂₀ᵀ(−k)` (MRS.6) ⇒ `det T₀ = det Q̂₀(k)·det Q̂₀(−k)`,
+
+this **localizes the RDF's entire HS-pole content in the two `S₀` factors** — objects built from the
+hard-sphere DCF `Ĉ₀` alone, with no Yukawa data in them. So MML.8's remaining collapse content is a
+*hard-sphere* mixture statement; the Yukawa factor sandwiched between the two `S₀`s is finite and
+pole-free, already delivered by Group MRS. This is a genuine narrowing of the "still needed" list
+above, not a new route.
+
+**Consequence — the pole set is reflection-symmetric, matching MML.5-concrete's convention.**
+`det T₀ = det Q̂₀(k)·det Q̂₀(−k)` is invariant under `k ↦ −k`, so the RDF's HS poles are Group MZERO's
+`det Q̂₀` zeros **together with their reflections**. That is exactly the "mirror pairing" the MML.8
+completeness caveat refers to, and it is the same reflection `detF_mixHS_summable`
+(`MixtureMLBound.lean`) already builds in (`s_k := −(g n)`, `Re s_k > 0`).
+
+**Second, independent proof of Crux #1.** `rdf_entry_eq_num_div_det_sq` derives the `N/det²` shape —
+hence the order-2 pole, hence term (II)'s `r`-prefactor — **from the OZ equation**, never mentioning
+`B₁`. The original Crux #1 argument (`doubly_prop_entry_eq`) runs through Y1.6's
+`Ĥ₁ = [Q̂₀ᵀ]⁻¹·B₁·[Q̂₀]⁻¹`. Two independent routes to the same double-pole conclusion.
+
+**The DCF/RDF dividing line as a single hypothesis.** `rdf_entry_differentiableAt` is the exact
+counterpart of MRS.3's `star_entry_differentiableAt`, with one added hypothesis: `det T₀(k) ≠ 0`.
+The DCF statement pointedly has no such hypothesis. That one hypothesis *is* the dividing line.
+
+**The four-term dressing — the HS poles' exact residence (added 2026-07-24).** Writing the structure
+factor as `S₀ = I + Ĥ₀` and expanding `Ĥ₁ = S₀·Ĉ₁·S₀` (`structureFactorDressing`,
+`rdf_four_term_dressing`) gives
+
+    Ĥ₁ = Ĉ₁ + Ĥ₀·Ĉ₁ + Ĉ₁·Ĥ₀ + Ĥ₀·Ĉ₁·Ĥ₀ ,
+
+i.e. in real space `h₁ = c₁ + h₀⋆c₁ + c₁⋆h₀ + h₀⋆c₁⋆h₀`. Since `Ĉ₁` is finite and HS-pole-free
+(MRS.3/MRS.5), the undressed term carries **no** HS pole, so `rdf_sub_dcf_is_dressed`
+(`Ĥ₁ − Ĉ₁ = Ĥ₀·Ĉ₁ + Ĉ₁·Ĥ₀ + Ĥ₀·Ĉ₁·Ĥ₀`) locates **every** HS pole of the first-order RDF in the three
+`Ĥ₀`-dressed terms. This is the sharpest form of MML.9's "the residual collapse content is
+hard-sphere": MML.8's target `assembly = r·h₁` is term-by-term over exactly these three `h₀`-dressed
+convolutions, and the mixture HS RDF `h₀` (= `S₀`'s pole content) is the only object whose ML
+collapse is still owed. The Fourier identity is mechanical (`noncomm_ring`); the real-space
+convolution reading of `⋆` is the still-missing transform step — the same transform gap that Group
+MRS's finite-form assembly (MRS.5) is working through on the DCF side.
+
+**Cofactor-free Laurent coefficients.** `double_pole_second_coeff` states `α_k` through the analytic
+cofactor `E` of the simple-zero factorization `D = (·−s_k)·E`. `E` is auxiliary — a consumer (the
+concrete `detF` family, or numerics) holds `D = det Q̂₀` and its derivatives, not `E`. Eliminating it
+via `D′(s_k) = E(s_k)` and `D″(s_k) = 2·E′(s_k)` gives both coefficients in terms of `D` alone:
+
+    β_k = N(s_k)/D′(s_k)²                                  (`double_pole_leading_coeff`)
+    α_k = N′(s_k)/D′(s_k)² − N(s_k)·D″(s_k)/D′(s_k)³        (`double_pole_second_coeff_deriv_form`)
+
+⚠ **The `D″` step needs only `ContinuousAt E′`, not a second derivative of `E`.** `D′ = E + (·−s_k)·E′`,
+and the extra linear factor supplies the missing differentiability all by itself: `(·−s_k)·g` has
+derivative `g(s_k)` at `s_k` for merely *continuous* `g` (`hasDerivAt_sub_mul_of_continuousAt`, one
+line from the slope characterization). Attempting this with a `ContDiff`/2nd-order-Taylor hypothesis
+on `E` is unnecessary work — the same "the linear factor does the analysis for you" observation that
+made `double_pole_second_coeff` avoid the (ℂ-absent) L'Hôpital route.
+
+**Depends on.** MRS.2 `oz1_C1_eq` (the dual it mirrors), MRS.3 (★), MRS.6 factorization,
+MML.8 `double_pole_leading_coeff` / `double_pole_second_coeff`. Nothing new is assumed.
+
+**Lean.** New file `YukawaDCF/MixtureRDFStructureFactor.lean` (ns `FMSA.MixtureRDF`), all
+axiom-clean, full build green:
+`oz1_H1_eq`, `structureFactor_eq_inv` (`T₀⁻¹ = S₀` — no invertibility hypothesis needed,
+`Matrix.inv_eq_right_inv`), `rdf_eq_inv_conj`, `inv_conj_entry_eq` (the transpose-free sibling of
+`doubly_prop_entry_eq`), `rdf_entry_eq_num_div_det_sq`, `det_eq_of_wienerHopf_factorization`,
+`rdf_entry_star_eq` (capstone), `triple_entry_eq`, `adjugate_entry_differentiableAt` (`Fin 2`),
+`rdf_entry_differentiableAt`, `rdf_entry_double_pole`; then
+`hasDerivAt_sub_mul_of_continuousAt`, `factor_hasDerivAt`, `factor_hasDerivAt_at_zero`,
+`factor_second_hasDerivAt`, `double_pole_second_coeff_deriv_form`; and the dressing
+`structureFactorDressing`, `rdf_four_term_dressing`, `rdf_sub_dcf_is_dressed`.
+
+**Lean pitfalls hit.** (1) `fin_cases p <;> fin_cases q` leaves indices as `⟨1, ⋯⟩`, which does **not**
+match the numeral `1` for `rw` — use `Fin.forall_fin_two.2 ⟨…⟩` on a `∀ p q` conclusion instead.
+(2) `field_simp` on the slope goal leaves a `s_k * (1 − 1) * g s_k` residue; close with `ring`.
+
+**Status.** ✓ **DONE (2026-07-24), axiom-clean.** Does **not** discharge `MixRDFInnerCollapse` — it
+shows which poles are being summed (`S₀`'s, at `det Q̂₀`'s zeros and their reflections) and that
+their order is 2, and it narrows MML.8's residual input to the hard-sphere side.
+
+---
+
+### Task MML.10 — term (II)'s coefficient factors as `HS residue × (finite Yukawa DCF) × HS residue`, and the mixture collapse factor
+
+**Statement.** MML.9 says the RDF's HS poles all come from the two `S₀` factors. This task turns
+that into an identity between *numbers*, and then extracts the mixture analog of the scalar
+collapse factor.
+
+**(a) The residue-matrix sandwich.** Define the hard-sphere structure factor's residue matrix at a
+simple zero `s_k` of `det T₀`,
+
+    R_k := det′T₀(s_k)⁻¹ • adj T₀(s_k) .
+
+`structureFactor_entry_residue` certifies that this **is** the residue of `S₀ = T₀⁻¹` entrywise
+(`inv_apply_eq_adj_div_det` + `residue_of_simple_pole`): **one `S₀` factor ⇒ one simple pole**, so
+the RDF's two factors give the order-2 pole of MML.9's `rdf_entry_double_pole`. Then
+`num_div_det_sq_eq_sandwich` (pure `smul` algebra) rewrites the order-2 Laurent coefficient as
+
+    β_k = (R_k · Ĉ₁(s_k) · R_k) i j ,
+
+and with (★) substituted (`rdf_double_pole_coeff_star`)
+
+    β_k = (R_k · Q̂₀(−s_k) · B₁(s_k) · Q̂₀ᵀ(−s_k) · R_k) i j .
+
+`R_k` is built from `T₀ = I − Ĉ₀` alone — **no Yukawa data whatsoever** — while `Ĉ₁(s_k)` is a plain
+evaluation of the finite, HS-pole-free (★) closed form (MRS.3/MRS.5). So the MML.9 narrowing is no
+longer only a structural reading: term (II)'s coefficients are *literally* factored into hard-sphere
+spectral data × closed-form Yukawa data.
+
+**(b) The mixture collapse factor — MML.8 Crux #2's "first concrete sub-piece", now trivial.**
+The scalar `hcollapse` (`OZFIX.11`) turns on `ρĈ(kₙ) = 1`, i.e. `1 − ρĈ` vanishes at the pole, which
+kills the forcing term per pole. MML.8's own scoping named the mixture counterpart as its first
+concrete sub-piece — "`det(I−Ĉ_mix)(s_k) = 0` … entry-wise collapse will need the **adjugate-level**
+version". Both now land in two lines:
+
+* the determinant statement is `det_eq_of_wienerHopf_factorization` (MML.9) — MRS.6's
+  `T₀ = Q̂₀(k)·Q̂₀ᵀ(−k)` with `T₀ = I − Ĉ₀` its `Cmix0` definition;
+* the adjugate-level statement is `hsResidue_annihilates`: `R_k·T₀(s_k) = T₀(s_k)·R_k = 0`,
+  straight from Mathlib's `adjugate_mul` / `mul_adjugate` (`adj A·A = det A • I`) at `det A = 0`.
+
+Rewriting with `T₀ = I − Ĉ₀` gives `hsResidue_eq_mul_cmix`:
+
+    R_k = R_k · Ĉ₀(s_k) = Ĉ₀(s_k) · R_k ,
+
+**the literal matrix transcription of `ρĈ(kₙ) = 1`** — the residue matrix is a fixed point of
+multiplication by the hard-sphere DCF at the pole. (Scalar check: at `N = 1`, `R_k` is a nonzero
+number and cancels, leaving `Ĉ₀(s_k) = 1`.)
+
+⚠ **Why this was cheap and the 2026-07-17 scoping expected it to be expensive.** That scoping listed
+the sub-piece as needing a matrix Wiener–Hopf factorization "currently ABSENT from Lean". MRS.6/MRS.7
+supplied the factorization in the meantime, and once `hsResidueMatrix` is *defined through the
+adjugate*, the collapse factor is a Mathlib one-liner rather than an analytic construction. The
+lesson is the same as MML.5's: re-check a stale blocker against what has landed since.
+
+**Depends on.** MML.9 (`rdf_entry_double_pole`, `det_eq_of_wienerHopf_factorization`), MML.2's
+`residue_of_simple_pole` route, Y1.1's `inv_apply_eq_adj_div_det`, MRS.3 (★), MRS.6.
+
+**Lean.** `YukawaDCF/MixtureRDFStructureFactor.lean`, axiom-clean, full build green:
+`hsResidueMatrix`, `num_div_det_sq_eq_sandwich`, `structureFactor_entry_residue`,
+`rdf_double_pole_coeff_sandwich`, `rdf_double_pole_coeff_star`, `hsResidue_annihilates`,
+`hsResidue_eq_mul_cmix`.
+
+**Lean pitfall.** In `hsResidue_eq_mul_cmix`, `rw [hT] at hL hR` also rewrites the `T0` *inside*
+`hsResidueMatrix T0 Dprime`, desynchronising the hypothesis from the goal; and
+`linear_combination (norm := module)` then reports the useless `⊢ 2 = 0`. Fix: never rewrite the
+hypotheses — build `R*T₀ = R − R*C₀` as its own `have` (there `rw [hT]` rewrites *both* sides
+uniformly, which is harmless), substitute `hL`, and finish with `sub_eq_zero.mp`.
+
+**Status.** ✓ **DONE (2026-07-24), axiom-clean.** Still does not discharge `MixRDFInnerCollapse`.
+What MML.8 now has: the pole set (MZERO zeros + reflections), the pole order (2), both Laurent
+coefficients in closed form (MML.9), the coefficients factored HS × Yukawa (a), and the per-pole
+collapse factor (b). What it lacks is unchanged and is the hard part: the **real-space** step
+identifying the summed series with the inner-core value — the matrix analog of `OZFIX.12`/`OZFIX.22`,
+now visibly a hard-sphere-only obligation.
+
+---
+
+### Task MML.11 — the *concrete* term-(II) data: one pole family carrying poles, coefficients and summability
+
+**Statement.** MML.9/MML.10 pinned the RDF's pole structure for free matrices. MML.11 produces the
+concrete instance for the actual `N=2` mixture: a single explicit pole family on which the pole
+locations, the order-2 Laurent coefficient, and MML.5's summability all live simultaneously.
+
+**⚠ Which of the two `Ĥ₁` forms to instantiate — a real choice, not bookkeeping.** MML.9's
+`Ĥ₁ = S₀·Ĉ₁·S₀` has denominator `det T₀ = det Q̂₀(k)·det Q̂₀(−k)`. Making *that* concrete would
+require a zero of `det Q̂₀` to remain a **simple** zero of the product, i.e. `det Q̂₀(−s_k) ≠ 0` — a
+reflection-asymmetry fact nobody has proved, and one that MZERO does not supply (MZERO gives
+infinitude, not asymmetry). Y1.6's `Ĥ₁ = [Q̂₀ᵀ]⁻¹·B₁·[Q̂₀]⁻¹` has denominator `det Q̂₀(k)²`, so its
+poles are the `det Q̂₀` zeros **directly** and simplicity there is exactly `det′ ≠ 0` — which the
+strengthened MML.5 family now exports. The two forms agree (`oz1_H1_eq` vs `Hhat1_spec`); only the
+Y1.6 one has an available concrete instance. **This is why MML.5's non-vanishing clause was worth
+adding: it is the enabling hypothesis for MML.11, not a cosmetic tidy-up.**
+
+**The chain.**
+- `hhat1_entry_eq_num_div_det_sq` — `Ĥ₁ i j = ((adj Q̂₀)ᵀ·B₁·adj Q̂₀) i j / (det Q̂₀)²`, from
+  `(Mᵀ)⁻¹ = (det M)⁻¹ • (adj M)ᵀ` (`Matrix.adjugate_transpose` + `Matrix.det_transpose`). The
+  transposed sibling of MML.9's `inv_conj_entry_eq` and of `doubly_prop_entry_eq`.
+- `num_div_det_sq_eq_transpose_sandwich` + `hhat1_double_pole` — the order-2 coefficient is the
+  residue-matrix sandwich `β_k = (R̃ᵀ·B₁(s_k)·R̃) i j`, `R̃ = det′(s_k)⁻¹ • adj Q̂₀(s_k)`
+  (MML.10's `hsResidueMatrix`, now at `Q̂₀` instead of `T₀`).
+- **`q0Residue_zero_one` — the loop closes on MML.5/MML.2**: `R̃ 0 1 = −q01(s_k)/det′(s_k)`. The
+  `(0,1)` entry of MML.10's *matrix* residue is literally the `Bcoef` that `detF_mixHS_summable`
+  sums and that `detF_Bcoef_eq_b_k_residue` certified to be MML.2's `B_k`. Matrix-level and
+  scalar-level residues are **one object**, not two parallel constructions. (Proof: MML.1's
+  `adjugate_fin_two_zero_one` `adj M 0 1 = −M 0 1`, plus `q01_eq`.)
+- `detF_rdf_pole_family` — the capstone: for physical data and `rdist > max(σ₀/2,(σ₁−σ₀)/2)` there
+  is **one** injective `g` with (i) `detF (g n) = 0 ∧ g n ≠ 0 ∧ det′(g n) ≠ 0`, (ii) the order-2
+  pole of `Ĥ₁` at each `g n` with coefficient `rdfBeta P B1f (g n) i j`, (iii) `Summable` for the
+  reflected series with coefficient `q0Residue P (g n) 0 1`.
+
+**Non-vacuity.** The only hypothesis on the Yukawa side is entrywise continuity of `B₁`, satisfied
+by any continuous matrix (and supplied in the physical case by the finite (★) closed form,
+MRS.3/MRS.5); the parameter hypotheses are `P.Phys` + the `rdist` threshold, both satisfiable. The
+coefficient clause states the *value* of the limit, not that it is nonzero — order-2-ness for a
+particular `B₁` is `double_pole_leading_coeff_ne_zero` at `Num(s_k) ≠ 0`, separately.
+
+**Depends on.** MML.5 (strengthened family), MML.10 (`hsResidueMatrix`), MML.2/MML.1, Y1.6
+(`Hhat1`), MML.8's `double_pole_leading_coeff`.
+
+**Lean.** New file `YukawaDCF/MixtureRDFPoleData.lean` (ns `FMSA.MixtureRDF`), axiom-clean, full
+build green: `hhat1_entry_eq_num_div_det_sq`, `num_div_det_sq_eq_transpose_sandwich`,
+`triple_entry_transpose_eq`, `adjugate_entry_continuousAt`, `hhat1_double_pole`, `q0Mat`,
+`q0Mat_det` (`rfl`), `q0Residue`, `q0Residue_zero_one`, `rdfBeta`, `q0Mat_entry_continuousAt`,
+`detF_rdf_pole_family`. `detF_mixHS_summable` (`MixtureMLBound.lean`) correspondingly upgraded to
+export the simple-zero triple.
+
+**Lean pitfalls.** (1) Mathlib has no `continuousAt_finset_sum`/`ContinuousAt.fun_sum` — use
+`tendsto_finsetSum` (the `_finset_sum` spelling is deprecated), which applies directly because
+`ContinuousAt f x` is definitionally the right `Tendsto`. (2) After `Summable.congr` the goal
+carries unreduced beta redexes `(fun n ↦ …) n`, so `rw [q0Residue_zero_one]` fails to find its
+pattern; `simp only [mixHSterm, q0Residue_zero_one]` beta-reduces and closes it.
+
+**Status.** ✓ **DONE (2026-07-24), axiom-clean.** Term (II) is now fully concrete. MML.8's residual
+content is exactly the real-space identification (below), unchanged.
+
+---
+
+### Task MML.12 — the collapse *region*: a scoping correction, and what the ML series can never reach
+
+**Trigger.** `MixRDFInnerCollapse` quantifies `∀ r, 0 < r → r < R_ij`, but term (II)'s convergence is
+established only for `r > max(σ₀/2, (σ₁−σ₀)/2)` (MML.5's gate exponent
+`p(r) = max((σ₀−σ₁−2r)/σ₁, (−σ₀−2r)/σ₁)` is `< −1` exactly there). The two ranges were never
+reconciled.
+
+**(1) Scoping correction — state the collapse on the annulus.** Below the threshold there is no
+summability result, and the evidence points the wrong way: the scalar precedent (`Kterm`, `OZFIX.12`)
+is genuinely **divergent** for `u ≤ σ/2`, and MML.5's own numerics measured `p(0.45) = −0.867 > −1`
+at `σ = [0.8, 2.3]`. Lean's `tsum` of a non-summable family is the junk value `0`, so
+`mixHS_series2` becomes `0` there and the predicate silently degenerates into `base r + p0 = r·h₁(r)`
+— a *different* claim, with no reason to hold. **This is the `Kterm` vacuity trap the MML.8 notes
+warned about (Crux #2, item 4), reaching MML.8 through the quantifier range rather than through the
+summand** — which is why the earlier check ("add antiderivatives until the decay exponent is `< −1`")
+did not catch it: the summand is fine, the *interval* is not.
+
+⚠ **Honest disposition: this does not prove the `(0, R_ij)` form false.** It shows its content below
+the threshold is unsupported and junk-valued. The fix is to state the identity where term (II)
+converges — `MixRDFInnerCollapseAnnulus` — and `threshold_lt_contact` shows that region is **never
+empty** (`max(σ₀/2, (σ₁−σ₀)/2) < (σ₀+σ₁)/2` for every physical pair, both branches strict from
+`0 < σ₁` and `0 < σ₀`), so the restriction costs no generality.
+
+**(2) Structural — the ML series only ever reaches the OUTER inner-core piece.** The threshold's
+second branch is *exactly* the inner-core knot:
+
+    (σ₁ − σ₀)/2  =  Mix.lam 0 1  =  λ₀₁ .
+
+Hence `λ₀₁ ≤ max(σ₀/2, λ₀₁) = threshold` (`lam01_le_threshold`), and the entire collapse region lies
+inside `(λ₀₁, R₀₁)` — the **outer** of the two pieces into which the unlike-pair inner core splits
+(IB.4 / MPOLY.5: `(0,λ)` degree 1, `(λ,R)` degree 4). ⇒ **the HS-pole Mittag-Leffler series can never
+certify the inner piece `(0, λ₀₁)`, whatever happens to MML.8's real-space step**; that piece must
+come from Group MRS's finite closed form. The coincidence is not accidental in the other direction
+either: MML.5 recorded that the `(σ₁−σ₀)/2` branch "binds only when `2σ₀ < σ₁`", and
+`σ₀/2 ≥ λ₀₁ ⟺ 2σ₀ ≥ σ₁` — the same condition, now with a geometric reading.
+
+This also sharpens the DCF/RDF division of labour: Group MRS covers the whole inner core with a
+finite closed form; the RDF's ML series covers only its outer piece. They are not two routes to the
+same interval.
+
+**Depends on.** MML.5 (the threshold and its numerics), MML.11 (the concrete family), IB.4/MPOLY.5
+(the `λ₀₁` split), `Mix.lam`/`Mix.R` (`InnerDecomp.lean`).
+
+**Lean.** `YukawaDCF/MixtureRDFPoleData.lean`, axiom-clean, full build green: `rdfCollapseThreshold`,
+`contactR01`, `lam01`, `lam01_le_threshold`, `lam01_lt_of_threshold_lt`, `threshold_lt_contact`,
+`threshold_pos`, `exists_mem_collapse_region`, `MixRDFInnerCollapseAnnulus`,
+`mixRDFInnerCollapseAnnulus_of_collapse` (the `(0,R)` form implies the annulus form; the converse
+fails, and the difference is precisely the junk-valued region).
+
+**Status.** ✓ **DONE (2026-07-24), axiom-clean.** MML.8's target is now stated on the interval where
+its own term (II) converges, and its reach is bounded below by `λ₀₁` for good.
+
+---
+
+### Task MML.13 — the `n = 1` soundness bridge for MML.9–MML.12
+
+**Why.** MML.8's collapse is unproved and MML.9–MML.12 are matrix statements with **no consumer
+yet**. The one mechanical test such a body of statements admits is the degenerate case: instantiate
+at a single component and check it reproduces the *known* scalar theory rather than something new.
+Same test MRS.0b ran on the consumer-less physics axiom `pyhs_mixture_no_spinodal`
+(`MixtureNoSpinodalN1.lean`), and the project's record says it earns its keep — the statement bugs in
+MA.5 (junk-valued zero set), MA.2 (partial-sum grouping) and `baxter_exterior_regularity` clause 6a
+(a jump at `σ`) were all caught by confronting a case whose answer was independently known.
+
+**Check 1 — the collapse factor.** MML.10's `R_k = R_k·Ĉ₀(s_k)` at `Fin 1` yields `Ĉ₀(s_k) = 1`, the
+scalar `ρĈ(kₙ) = 1` behind `OZFIX.11` (`cmix_eq_one_fin_one`, routed through the matrix identity,
+cancelling the nonzero `det′` via `hsResidueMatrix_fin_one`: `adj = 1` so `R = det′⁻¹ • I`).
+
+⚠ **Read this correctly — it is a consistency check, not independent confirmation.** At `Fin 1` the
+conclusion is already forced by `det T₀(s_k) = 0` alone (`cmix_eq_one_fin_one_of_det`, via
+`Matrix.det_fin_one`, no residue matrix in sight). So the two routes are not independent evidence.
+What the test rules out is a **sign slip, a transposition error, or a wrong `det′` power** in
+`hsResidue_eq_mul_cmix` — any of those would land the first route somewhere else and contradict the
+second. That is what a degenerate-case test can check, and all it can check; overstating it as
+"two independent confirmations" would be wrong.
+
+**Check 2 — the pole order.** `hhat1_fin_one_entry`: Y1.6's `Ĥ₁` at one component is the scalar
+`B₁/(det Q̂₀)²`, a genuine **double** pole at a simple zero — matching the `Q̂₀⁻¹`-count reading (two
+inverse factors ⇒ order 2) that MML.8's Crux #1 rests on.
+
+**Check 3 — the term-(II) coefficient.** `hhat1_double_pole_fin_one`: MML.11's residue-matrix
+sandwich `β_k = (R̃ᵀ·B₁(s_k)·R̃) i j` degenerates to the elementary scalar double-pole coefficient
+`β_k = B₁(s_k)/det′(s_k)²`. **No matrix artifact survives** — the outcome the general formula had to
+produce and did not have to.
+
+**Non-vacuity certificate.** A degenerate-case test proves nothing if its own case is empty, and this
+repo has produced true-but-vacuous statements before (`b4_origin_bc_abstract`,
+`b9_d_ij_nonzero_example`). So the witness is recorded as a Lean `example`: `Q̂₀(z) = !![z − 1]` has a
+simple determinant zero at `s_k = 1` with `det′ = 1 ≠ 0`, and a constant `B₁` is continuous — all
+four hypotheses of `hhat1_double_pole_fin_one` (hence of `hhat1_double_pole`) simultaneously
+satisfied.
+
+**Lean.** `YukawaDCF/MixtureRDFPoleData.lean`, axiom-clean, full build green:
+`hsResidueMatrix_fin_one`, `cmix_eq_one_fin_one`, `cmix_eq_one_fin_one_of_det`,
+`hhat1_fin_one_entry`, `hhat1_double_pole_fin_one`, + the non-vacuity `example`.
+Mathlib inputs: `Matrix.adjugate_fin_one` (`adj A = 1`), `Matrix.det_fin_one`, `Matrix.one_apply_eq`.
+
+**Status.** ✓ **DONE (2026-07-24), axiom-clean. All three checks pass, no statement bug found.**
+Unlike MA.5/MA.2/clause-6a, this bridge did **not** turn up a defect — a clean pass, recorded so that
+a future session does not re-run it. It does not advance the collapse itself.
+
+---
+
+### Task MML.14 — matrix real-space infrastructure I: the antiderivative tower of term (II)
+
+**The step past scaffolding.** MML.9–MML.13 characterised MML.8's remaining obligation; MML.14 begins
+**building** the infrastructure that obligation needs. The scalar `hcollapse` (`OZFIX.11`/`OZFIX.12`)
+runs on an **antiderivative tower** over the per-pole Fourier residue —
+`residue_term → Hterm → Kterm` (`OzCollapseInner.lean`) — each rung one integration in `r` and one
+power of `1/‖k‖` better in summability, so that `Kterm` (two rungs) is summable at **every** `u > 0`
+and the inner region (sampled down toward `r = 0`) can be reached. MML.14 is the mixture counterpart.
+
+**The key structural fact (proved).** The mixture per-pole term is already in hand as
+`mixHSterm2 α β s r = (α + β·r)·e^{−s·r}` (the double pole's envelope, MML.8/MML.9/MML.11). Its tower
+needs **no new function shapes**:
+
+> the family `{(a + b·r)·e^{−s·r} : a, b ∈ ℂ}` (`expLinTerm`) is **closed under antidifferentiation
+> in `r`**, with coefficient map `antiCoeff s (a,b) = (−a/s − b/s², −b/s)`.
+
+`expLinTerm_antideriv_hasDerivAt` (`s ≠ 0`) proves `expLinTerm (antiCoeff s a b) s` is an
+antiderivative of `expLinTerm a b s` — the mixture analog of `Kterm_hasDerivAt`. Iterating gives the
+two concrete rungs `mixHSAntideriv1` (matrix `Hterm`) and `mixHSAntideriv2` (matrix `Kterm`), with the
+`HasDerivAt` chain `mixHSAntideriv2 → mixHSAntideriv1 → mixHSterm2`.
+
+**Why the tower buys summability, made precise.** `expLinTerm_norm`:
+`‖(a+b·r)·e^{−s·r}‖ = ‖a+b·r‖·e^{−r·Re s}`, so on the reflected family (`Re s_n > 0`) the exponential
+is `≤ 1` for `r ≥ 0` (`expLinTerm_norm_le_of_re_nonneg`) and the size is set by the coefficient. Each
+`antiCoeff` divides by `s`: `antiCoeff_snd_norm` (`‖B‖ = ‖b‖/‖s‖`) and `antiCoeff_fst_norm_le`
+(`‖A‖ ≤ ‖a‖/‖s‖ + ‖b‖/‖s‖²`). **Two rungs ⇒ two spare powers of `1/‖s_n‖`**, which should push the
+summability exponent below `−1` *without* the `rdist > max(σ₀/2, λ₀₁)` threshold the untowered series
+(MML.5) needs — the mixture form of `Kterm`'s all-`u>0` summability, and the mechanism that reaches
+the inner core.
+
+**Summability, reduced to one coefficient bound.** `mixHSAntideriv2_eq_mixHSterm` writes the `Kterm`
+rung as a plain `mixHSterm` at its `r`-absorbed coefficient, and `mixHSAntideriv2_summable_of_growth`
+then gives `Summable` from linear pole growth + a `‖s_n‖^p` bound (`p < −1`) on that coefficient
+(reusing `mixHS_summable_of_growth`). **The one remaining analysis obligation is isolated as the
+hypothesis `hbound`**: magnitude bounds on the double-pole coefficients `α_n`, `β_n` in `‖s_n‖` — the
+mixture analog of the scalar `residue_term_norm_bound`, which MML.5's `detF_family_magnitude_bound`
+did for the *simple*-pole residue `B_k = −q01/det′` but not yet for the double-pole `α, β`.
+
+**Roadmap — the remaining rungs of the infrastructure.**
+1. ✅ **Rung 1 DONE (2026-07-24) — the coefficient step is discharged.** See the Rung 1 note below.
+   What remains of it is only the concrete `α, β` bounds (the mixture `residue_term_norm_bound`).
+2. **The collapse predicate** — a matrix `CoreSeriesClosure`: an explicit, always-summable series
+   identity (over the `Kterm` rung) equal to a polynomial in `r`, carried as a hypothesis exactly as
+   the scalar `CoreSeriesClosure` is (⚠ the `Kterm`-form, not `Hterm`, to dodge the vacuity trap —
+   this is the MML.12 lesson at the series level).
+3. **The reduction** — a matrix `oz_collapse_inner_of_star`: per-pole integration by parts
+   (`mixHSAntideriv2′ = mixHSAntideriv1`, `mixHSAntideriv1′ = mixHSterm2`, both proved here) converts
+   the convolution over the annulus into `Kterm`-values at endpoints + one interval integral, which
+   the collapse identity then closes by polynomial algebra.
+
+**Depends on.** `mixHSterm2` (MML.8), `mixHS_summable_of_growth` (MML.5 infra). Mathlib:
+`HasDerivAt.cexp`, `Complex.ofRealCLM.hasDerivAt`, `Complex.norm_exp`.
+
+**Lean.** New file `YukawaDCF/MixtureRDFAntideriv.lean` (ns `FMSA.MixtureRDF`), axiom-clean, full
+build green: `expLinTerm`, `mixHSterm2_eq_expLinTerm`, `expLinTerm_hasDerivAt`, `expLinTerm_deriv_eq`,
+`antiCoeff`, `expLinTerm_antideriv_hasDerivAt`, `mixHSAntideriv1`/`2` + their `hasDerivAt` chain,
+`expLinTerm_norm`, `expLinTerm_norm_le_of_re_nonneg`, `antiCoeff_snd_norm`, `antiCoeff_fst_norm_le`,
+`mixHSAntideriv2Coeff`, `mixHSAntideriv2_eq_mixHSterm`, `mixHSAntideriv2_summable_of_growth`.
+
+**Lean pitfall.** `once-/twice` in prose closes a `/-! -/` docstring early (the `-/`); write
+`once- or twice-`. The `expLinTerm` derivative is cleanest via `rw [show <deriv-value> = <product-rule
+form> from by ring]; exact hlin.mul hexp` rather than `convert … ; ring` (which leaves a non-ring
+`HasDerivAt` goal fragment).
+
+**Status.** ◑ **Tower + decay mechanism DONE (2026-07-24), axiom-clean.** Summability reduced to one
+explicit coefficient bound, then Rung 1 (below) discharges that bound down to the concrete `α, β`
+estimate. Roadmap rungs 2–3 remain.
+
+---
+
+### Task MML.14 Rung 1 — threshold-free summability of the `Kterm` tower
+
+**What it delivers.** The `hbound` hypothesis left open by `mixHSAntideriv2_summable_of_growth` is now
+proved from the inputs a concrete pole family actually supplies. Given a **common `‖s_n‖^q` bound**
+(`q < 1`) on the two double-pole coefficients `α_n`, `β_n`, plus reflected positivity `Re s_n ≥ 0`,
+`‖s_n‖ ≥ 1`, and linear pole growth, the `Kterm`-rung series `Σ_n mixHSAntideriv2` is `Summable` at
+**every** `r ≥ 0` (`mixHSAntideriv2_summable_of_coeff_bounds`). The two `antiCoeff` divisions turn `q`
+into the summability exponent `p = q − 2 < −1`, **with no `rdist > max(σ₀/2, λ₀₁)` threshold** — this
+is exactly the mixture form of the scalar `Kterm`'s all-`u>0` summability (`Kterm_summable_of_pole_family`),
+and it is what lets the tower reach arbitrarily close to `r = 0` (the inner-core sampling).
+
+**The arithmetic, done once.**
+- `mixHSAntideriv2Coeff_eq` — the `Kterm`-rung coefficient in closed form: `α/s² + 2β/s³ + (β/s²)·r`
+  (`field_simp; ring` at `s ≠ 0`), exhibiting the two spare `1/s` powers concretely.
+- `mixHSAntideriv2Coeff_norm_le` — `‖coeff‖ ≤ (‖α_n‖ + (2+r)·‖β_n‖) / ‖s_n‖²`, folding the `1/‖s‖³`
+  term into `1/‖s‖²` via `‖s‖ ≥ 1`.
+- `mixHSAntideriv2_summable_of_coeff_bounds` — assembles: on the reflected family
+  `‖mixHSterm coeff‖ = ‖coeff‖·e^{−r·Re s} ≤ ‖coeff‖` (the exp is a genuine decay), then the coeff
+  bound + the `‖s_n‖^q` inputs land `‖·‖ ≤ Cc(3+r)·‖s_n‖^{q−2}`, and `mixHS_summable_of_growth`
+  closes it. The `‖s‖^q/‖s‖² = ‖s‖^{q−2}` step is `Real.rpow_sub` + `Real.rpow_two`.
+
+**The remaining concrete input — reduced twice, then validated.** The `α, β` bounds are the mixture
+analog of the scalar `residue_term_norm_bound`. From MML.11, `β_n = N(s_n)/det′(s_n)²` and
+`α_n = N′(s_n)/det′(s_n)² − N(s_n)·det″(s_n)/det′(s_n)³`, with `N = ((adj Q̂₀)ᵀ·B₁·adj Q̂₀)ᵢⱼ`. Rung 1
+(below) discharges this down to **component** magnitudes and then confirms `q < 1` genuinely holds.
+Isolated as `hα`, `hβ`.
+
+**Reduction to component magnitudes (`mixHSAntideriv2_summable_of_component_bounds`).** The `α, β`
+bounds reduce, by pure algebra, to component magnitudes on the RDF numerator: `coeff_div_sq_norm_le`
+gives `‖β‖ = ‖N/det′²‖ ≤ ‖N‖/c₀²` and `coeff_alpha_norm_le` gives
+`‖α‖ ≤ ‖N′‖/c₀² + ‖N‖·‖det″‖/c₀³`, from a constant `det′` lower bound `c₀` (MML.5's `disk_facts` f3).
+So the tower is summable given common `‖s_n‖^q` (`q < 1`) bounds on `‖N‖`, `‖N′‖`, and the *product*
+`‖N‖·‖det″‖`.
+
+**⚠ A live scoping question — resolved in the tower's favour (`bMulti_norm_le`).** Whether `q < 1`
+actually holds turns on the growth of the Yukawa numerator `B₁` along the pole family. Earlier worry:
+if `B₁` carried the outer DCF's `e^{−ikR}` it could grow like `‖s_n‖^{2R/σ₁}` at the raw zeros
+(`Re s_n < 0`), forcing `q ≥ 1` and reinstating the MML.5 `rdist` threshold (the tower buying nothing
+past MML.12's annulus). **It does not.** The WH-projected `B₁` is the spectral amplitude
+`bMulti = Σ_{m,p} c_{mp}/(s + z_{mp})` — a **pure sum of simple poles, no exponential** (the `e^{−ikR}`
+lives in the *outer* transform `U₁` and is absorbed into the residues by the causal projection,
+`outer_residue_eq_spectralAmp_residue`). `bMulti_norm_le` (`SpectralAmplitude.lean`, axiom-clean)
+proves `‖B₁(s)‖ ≤ C·N²/‖s‖` past the pole radius: **`B₁` decays like `1/‖s‖`.** With the adjugate
+entries bounded (`q0_entry_c → δ`) and `det Q̂₀ → 1` (`Q0_det_c_tendsto_one`, so `det′, det″` bounded),
+all three component bounds hold with `q < 1` (in fact strongly negative). The tower is genuinely
+threshold-free.
+
+**The numerator assembly (`triple_transpose_entry_norm_le`, `tower_summable_of_matrix_bounds`).**
+The RDF numerator `N = ((adj Q̂₀)ᵀ·B₁·adj Q̂₀)ᵢⱼ` bound is now **assembled from entry-level primitives**:
+`triple_transpose_entry_norm_le` gives `‖(Aᵀ·B·A)ᵢⱼ‖ ≤ NN²·Ca²·Cb` from `‖A_pq‖ ≤ Ca`, `‖B_pq‖ ≤ Cb`
+(via the proved `triple_entry_transpose_eq` + finite triangle inequality). Feeding the adjugate entry
+bound `Ca` and the Yukawa entry bound `Cb·‖s_n‖^q` (which `bMulti_norm_le` supplies at `q = −1`) gives
+`‖N(s_n)‖ ≤ K·‖s_n‖^q`, and `‖N·det″‖ ≤ K·CDpp·‖s_n‖^q` (`det″` bounded). `tower_summable_of_matrix_bounds`
+then closes tower summability from these plus the `det′` lower bound `c₀` and the `N′` bound — the
+`N`- and `N·det″`-sides are assembled internally; only `N′` is an input.
+
+**What is left of Rung 1.** Two mechanical pieces, no open obstacle:
+1. **The `N′` assembly** — the same triple-product pattern applied to `N′ = (adj′ᵀ·B₁·adj + adjᵀ·B₁′·adj
+   + adjᵀ·B₁·adj′)ᵢⱼ`, needing the adjugate/`B₁` *derivative* entry bounds (a `bMulti′` decay `~1/‖s‖²`
+   and `q0_entry_c′` bounds). Taken as the input `hNd` for now.
+2. **The raw per-entry primitives** — `‖adj Q̂₀(s_n)‖ ≤ Ca`, `‖B₁‖ ≤ Cb/‖s_n‖` (`bMulti_norm_le`, done),
+   `‖det″‖ ≤ CDpp`, `c₀ ≤ ‖det′‖` (`disk_facts` f3) — standard magnitude estimates on the *explicit*
+   Baxter matrix and its determinant, i.e. the mixture `residue_term_norm_bound`; the `adj` bound is a
+   `q01_norm_le`-style estimate on the pole disks, `det″` bounded from `det Q̂₀ → 1`. Cofinite-to-`∀n`
+   bookkeeping (`bMulti_norm_le` needs `‖s‖` past the pole radius) is the only wiring subtlety.
+The crux (`B₁` growth) is settled and the numerator assembly is complete; what remains is the
+per-entry magnitude grind, not new structure.
+
+**Depends on.** MML.14 tower; `bMulti` (Y1.5, `SpectralAmplitude.lean`); MML.11 coefficient formulas;
+`Q0_det_c_tendsto_one`, `disk_facts` f3. Mathlib: `Real.rpow_sub`, `Real.rpow_two`, `div_le_div₀`,
+`pow_le_pow_left₀`, `Complex.norm_real` (⚠ → real `‖r‖`, then `Real.norm_eq_abs`).
+
+**Lean.** `YukawaDCF/MixtureRDFAntideriv.lean` (`mixHSAntideriv2Coeff_eq`,
+`mixHSAntideriv2Coeff_norm_le`, `mixHSAntideriv2_summable_of_coeff_bounds`, `coeff_div_sq_norm_le`,
+`coeff_alpha_norm_le`, `mixHSAntideriv2_summable_of_component_bounds`);
+`YukawaDCF/SpectralAmplitude.lean` (`bMulti_norm_le`); `YukawaDCF/MixtureRDFPoleData.lean`
+(`triple_transpose_entry_norm_le`, `tower_summable_of_matrix_bounds`) — all axiom-clean, full build green.
+
+**Lean pitfalls.** A binder `∀ n, … (n:ℝ) … sfam n …` makes Lean infer `n : ℝ` from the cast —
+annotate `∀ n : ℕ`. `Complex.norm_real` rewrites `‖(r:ℂ)‖` to the *real* norm `‖r‖`, not `|r|` (follow
+with `Real.norm_eq_abs`). `div_le_div` is renamed `div_le_div₀`.
+
+**Status.** ✅ **DONE (2026-07-24), axiom-clean.** The tower is summable threshold-free; the full
+reduction chain is built (tower ← coefficient ← component ← matrix-primitive bounds); the RDF
+numerator `N` and `N·det″` are **assembled** from entry bounds (`tower_summable_of_matrix_bounds`); and
+the crux (`B₁` decays like `1/‖s‖`, `bMulti_norm_le`) is proved, so `q < 1` genuinely holds and the
+tower approach is validated. What remains is purely the per-entry magnitude grind — the `N′` assembly
+(same triple-product pattern) and the standard `adj`/`det″` bounds on the explicit Baxter matrix (the
+mixture `residue_term_norm_bound`), no new structure. Roadmap rung 2 (matrix `CoreSeriesClosure`)
+remains; rung 3 (the integration-by-parts toolkit) is done — see below.
+
+---
+
+### Task MML.14 Rung 3 — the per-pole integration-by-parts toolkit
+
+**What it delivers.** The scalar `hcollapse` reduction (`OZFIX.12`, `oz_collapse_of_two_sigma_le`) runs
+on **per-pole integration by parts** — the antiderivative tower `Kterm′ = Hterm`,
+`Hterm′ = h_explicit_term` turns the collapse's outer `t`-integral into endpoint antiderivative values
+plus a lower-order integral, which the core series identity then closes. Rung 3 is the mixture analog,
+built directly on MML.14's proved `HasDerivAt` chain `mixHSAntideriv2 → mixHSAntideriv1 → mixHSterm2`,
+all axiom-clean:
+
+* `expLinTerm_continuous` — the `(a+b·r)e^{−s·r}` shape is continuous in `r` (⇒ interval-integrable).
+* `mixHSterm2_integral` / `mixHSAntideriv1_integral` — **per-pole FTC** on the two rungs:
+  `∫_a^b mixHSterm2 = [mixHSAntideriv1]_a^b`, `∫_a^b mixHSAntideriv1 = [mixHSAntideriv2]_a^b`
+  (`integral_eq_sub_of_hasDerivAt` + the chain).
+* `mixHSterm2_weighted_ibp` — **integration by parts against a weight** `w`:
+  `∫_a^b w·mixHSterm2 = [w·mixHSAntideriv1]_a^b − ∫_a^b w′·mixHSAntideriv1`
+  (`integral_mul_deriv_eq_deriv_mul`). This is the step that moves the derivative off the per-pole
+  term onto the weight, lowering the integrand's `r`-order — the mechanism the collapse's outer
+  integral needs.
+* `mixHSterm2_integral_tsum` — **termwise integration of the series**:
+  `∫_a^b (∑ₙ mixHSterm2 · n) = ∑ₙ [mixHSAntideriv1 n]_a^b`, from `MeasureTheory.integral_tsum`
+  (each summand continuous ⇒ `AEStronglyMeasurable`) + the per-pole FTC. The `L¹` hypothesis
+  `∑ₙ ∫⁻ ‖·‖ₑ ≠ ∞` holds on the annulus, where the term series is summable (MML.5). This carries the
+  collapse from `r·h₁ = r·(∑ …)` to a per-pole endpoint sum.
+
+**What the full reduction still needs (not this task).** Rung 3 is the *plumbing*; the full matrix
+`oz_collapse_of_two_sigma_le` additionally requires (i) Rung 2's matrix `CoreSeriesClosure` — the
+series identity that closes the endpoint terms — and (ii) the **matrix OZ★** real-space convolution
+that exhibits the collapse as such an integral identity in the first place (the mixture
+`baxterPsi_eq_phi_add_rho_conv`, still unbuilt). Rung 3 gives the calculus that consumes those two;
+it does not supply them.
+
+**Depends on.** MML.14 tower `HasDerivAt` chain (`mixHSAntideriv1_hasDerivAt`,
+`mixHSAntideriv2_hasDerivAt`). Mathlib: `integral_eq_sub_of_hasDerivAt`,
+`integral_mul_deriv_eq_deriv_mul`, `MeasureTheory.integral_tsum`.
+
+**Lean.** `YukawaDCF/MixtureRDFAntideriv.lean` (§ Rung 3): `expLinTerm_continuous`,
+`mixHSterm2_integral`, `mixHSAntideriv1_integral`, `mixHSterm2_weighted_ibp`,
+`mixHSterm2_integral_tsum` — all axiom-clean, full build green.
+
+**Lean pitfall.** The enorm notation `‖·‖ₑ` (needed for `integral_tsum`'s hypothesis) requires
+`open ENNReal` (or `open scoped ENNReal`) — without it, `‖x‖ₑ` fails to parse ("expected token"),
+even under `open MeasureTheory`. `Continuous.intervalIntegrable`/`.aestronglyMeasurable.restrict` take
+the endpoints/measure explicitly.
+
+**Status.** ✅ **DONE (2026-07-24), axiom-clean.** The per-pole IBP/FTC toolkit is complete. The full
+collapse reduction is gated on Rung 2 (`CoreSeriesClosure`) and the matrix OZ★ — neither of which is
+Rung 3.
+
+---
+
+### Task MML.14 Rung 2 — the matrix `CoreSeriesClosure` predicate and its non-vacuity
+
+**What it delivers.** The scalar collapse reduces to a single series identity `CoreSeriesClosure`
+(`OzCollapseInner.lean`): the twice-antidifferentiated (`Kterm`-form), always-summable residue
+series, corrected by its first-order Taylor data at the anchor `σ`, equals an explicit polynomial in
+`u` (content: *the exterior residue series, continued into the core, reproduces the inner value*).
+Rung 2 is the matrix analog — the predicate plus its non-vacuity.
+
+* `MixCoreSeriesClosure alpha beta sfam anchor poly` — the predicate: on `(0, anchor]`,
+  `∑ₙ [mixHSAntideriv2(r) − mixHSAntideriv2(anchor) − (r−anchor)·mixHSAntideriv1(anchor)] = poly r`.
+  The bracket is the **first-order Taylor remainder** of `mixHSAntideriv2` at `anchor` (since
+  `mixHSAntideriv2′ = mixHSAntideriv1`, MML.14 chain). `poly : ℝ → ℂ` is general (the matrix analog
+  of the scalar's `π(σ²(u−σ) − (u³−σ³)/3)`; its concrete value comes from the inner core via the
+  unbuilt matrix OZ★).
+* `mixCoreSeriesClosure_summand_summable` — **non-vacuity**: the summand is `Summable` from the three
+  Rung-1 summabilities (`mixHSAntideriv2` at `r`, at `anchor`; `mixHSAntideriv1` at `anchor`), so the
+  predicate is about a *convergent* `tsum` — exactly the scalar `coreSeriesClosure_summand_summable`.
+* `mixHSAntideriv1_summable_of_coeff_bounds` — the `Hterm`-rung summability that discharges the
+  `mixHSAntideriv1` hypothesis: one `antiCoeff` gain ⇒ exponent `q − 1`, so it needs `q < 0` (vs the
+  `Kterm` rung's `q < 1`); the RDF's `q ≈ −1` clears it. Plumbing: `mixHSAntideriv1Coeff`,
+  `_eq_mixHSterm`, `mixHSAntideriv1Coeff_norm_le` (one `1/‖s‖` gain).
+
+⚠ **The `Kterm`-form is essential — MML.12's vacuity lesson at the series level.** The `Hterm`-form
+(`mixHSAntideriv1`) series is summable only for `q < 0` at a fixed point and (raw) only above the
+MML.5 threshold, so a predicate stated on it would be false/vacuous near `r = 0`. The `Kterm`-form
+(`mixHSAntideriv2`) is summable at every `r ≥ 0` (Rung 1), and the *remainder* combination is
+genuinely summable — this is why the predicate uses `mixHSAntideriv2` with the first-order correction,
+not a bare series.
+
+**Held as a `Prop`, not an axiom** — identical discipline to the scalar `CoreSeriesClosure`: a naive
+series-value axiom is satisfiable by sub-families summing to the wrong value (`MZERO.1`-infinitude ≠
+pole-exhaustion). It is discharged only by a genuine pole-enumerating family, and the concrete `poly`
+needs the matrix OZ★ real-space identity — the one input Rung 2 does not (and should not) supply.
+
+**Depends on.** MML.14 tower (`mixHSAntideriv1`/`2`, `mixHS_summable_of_growth`); Rung 1 summabilities.
+
+**Lean.** `YukawaDCF/MixtureRDFAntideriv.lean` (§ Rung 2): `mixHSAntideriv1Coeff`,
+`mixHSAntideriv1_eq_mixHSterm`, `mixHSAntideriv1Coeff_eq`, `mixHSAntideriv1Coeff_norm_le`,
+`mixHSAntideriv1_summable_of_coeff_bounds`, `MixCoreSeriesClosure`,
+`mixCoreSeriesClosure_summand_summable` — all axiom-clean, full build green.
+
+**Status.** ✅ **DONE (2026-07-24), axiom-clean.** The predicate is defined and proved non-vacuous.
+What remains for the full collapse is discharging `MixCoreSeriesClosure` for the genuine pole family —
+which needs the **matrix OZ★** (the concrete `poly` from the inner value) — plus the matrix
+`oz_fixed_pt_unique` bridge, i.e. the mixture real-space Baxter core (`OZFIX.15–20` analog), started
+below (MML.15).
+
+---
+
+### Task MML.15 — matrix OZ★: the mixture real-space OZ identity (foundation / START)
+
+**The last unbuilt piece of MML.8's infrastructure, launched.** The three calculus rungs (Rung 1
+summability, Rung 2 `CoreSeriesClosure`, Rung 3 IBP) are complete; they all **consume** the matrix
+OZ★ — the real-space matrix Ornstein–Zernike identity that (i) exhibits the collapse as an integral
+identity and (ii) supplies `MixCoreSeriesClosure`'s concrete `poly` from the inner value. The scalar
+OZ★ `baxterPsi_ozstar` (`BaxterOzStar.lean`, unconditional) is
+`baxterPsi(r) = r·c_HS(r) + ρ·r·radial3d_conv(c_HS, baxterPsi/·)(r)`; the general-`N` matrix analog is
+the mixture version of the *entire* `BaxterRenewal.lean` + `BaxterOzStar.lean` apparatus
+(`OZFIX.15–20`) — large. MML.15 lays the **structural foundation** and validates the target shape.
+
+* `matRadialConv` — the entrywise matrix radial convolution `(A ⋆ B)ᵢⱼ = ∑ₖ radial3d_conv(Aᵢₖ, Bₖⱼ)`,
+  reducing the matrix OZ convolution to the *scalar* `radial3d_conv` machinery per entry, with a
+  **species-coupling sum** over the intermediate `k`.
+* `MatOZStar Ψ Φ ρ` — the matrix OZ★ predicate: `Ψᵢⱼ(r) = r·Φᵢⱼ(r) + ρ·r·(matRadialConv Φ (Ψ/·))ᵢⱼ(r)`
+  for `r > 0`. Held as a `Prop` — the concrete `Ψ, Φ` and the proof are the matrix-Baxter construction
+  (the research-scale remainder); this fixes the *target shape*.
+* `matOZStar_entry` — the explicit coupled entry equation, exhibiting the `∑ₖ radial3d_conv(Φᵢₖ, Ψₖⱼ/·)`
+  species coupling that makes the matrix OZ★ genuinely more than `N` independent scalar problems.
+* `matOZStar_fin_one_of_scalar` — **the `n = 1` soundness bridge**: at one component `MatOZStar`
+  (`Ψ = baxterPsi`, `Φ = c_HS`) is *exactly* the proved scalar `baxterPsi_ozstar`. The framework
+  specializes correctly to the known scalar theory (MML.13 / MRS.0b discipline) and this doubles as a
+  non-vacuity witness — `MatOZStar` is instantiable, not a vacuous `Prop`.
+
+**The real-space factorization foundation (started 2026-07-24).** The scalar OZ★ is *built on* the
+real-space Baxter factorization (`OZFIX.18` KDEF, `rho_baxterK_eq_q0_self_conv`):
+`ρ·K(v) = q0(v) − ∫_v^σ q0(t)·q0(t−v)dt`, the real-space content of `1 − ρĈ = Q̂(k)·Q̂(−k)`. The
+mixture factorization `I − Ĉ₀ = Q̂₀(k)·Q̂₀ᵀ(−k)` (MRS.6 `Cmix0_factorization`, Fourier) inverse-
+transforms with the same second foundational layer, now built:
+* `matSelfConv` — the matrix self-convolution `(Q ⋆ Qᵀ)ᵢⱼ(v) = ∑ₖ ∫_v^σ Qᵢₖ(t)·Qⱼₖ(t−v) dt`, the
+  real-space image of `Q̂₀(k)·Q̂₀ᵀ(−k)` (the `ᵀ` gives the species-summed `∑ₖ`; the `−k` makes it a
+  correlation), reducing to the scalar self-convolution per entry-pair.
+* `MatBaxterFactorization` — the matrix real-space KDEF `ρ·Kᵢⱼ(v) = qᵢⱼ(v) − (matSelfConv q)ᵢⱼ(v)` on
+  `(0, σ)`, held as a `Prop`.
+* `matBaxterFactorization_fin_one_of_scalar` — the **`n = 1` bridge**: at one component
+  (`K = baxterK`, `q = q0_poly`) it is *exactly* the scalar `rho_baxterK_eq_q0_self_conv`.
+
+**The shell-conv = K-conv bridge — third layer (`OZFIX.19` analog, 2026-07-24).** The scalar
+`radial3d_conv_eq_baxterK_shell` ties the 3D radial convolution (the OZ★ shape) to a 1D convolution
+with the Baxter shell kernel `K` (the factorization): `r·radial3d_conv(c_HS, g)(r) = ∫₀^σ baxterK(u)·
+(oddExt g(r−u) + oddExt g(r+u)) du`. **The matrix analog is that scalar identity summed over the
+intermediate species `k`** — no new analysis, since `matRadialConv` is a sum of scalar
+`radial3d_conv`s and `r` pulls inside the sum:
+* `matShellConv` — the 1D Baxter-kernel form `∑ₖ ∫₀^σ Kᵢₖ(u)·(oddExt Gₖⱼ(r−u) + oddExt Gₖⱼ(r+u)) du`.
+* `matRadialConv_eq_matShellConv` — the bridge `r·(matRadialConv C G)ᵢⱼ = (matShellConv K G)ᵢⱼ` from
+  the per-`(i,k)` scalar shell identity (`hentry`); pure assembly (`Finset.mul_sum` + `sum_congr`).
+* `matShellBridge_fin_one_of_scalar` — the **`n = 1` bridge**: the per-entry `hentry` is exactly the
+  proved scalar `radial3d_conv_eq_baxterK_shell` (carrying its two integrability hypotheses,
+  discharged unconditionally in `BaxterOzStar.lean` for `g = baxterPsi/·`). This layer connects the
+  OZ★ shape (layer 1, `matRadialConv`) to the factorization (layer 2, `matSelfConv`/`K`).
+
+**The general-`c` shell identity — the per-entry analytic input, now proved (2026-07-24).** The
+mixture entries `C₀ᵢₖ` are each a different `c`-shape at their own `σ_ik`, not the single `c_HS`, so
+the shell bridge's `hentry` needed the shell identity for an *arbitrary* kernel. `ShellKernel.lean`
+supplies it: `shellKernel c σ v = 2π ∫_|v|^σ s·c(s) ds` (the general Baxter shell kernel), and
+`radial3d_conv_eq_shellKernel` proves `r·radial3d_conv(c, g)(r) = ∫₀^σ shellKernel(c)(u)·(oddExt
+g(r−u)+oddExt g(r+u)) du` for **any** `c` supported in `[0,σ]`. The proof is a transcription of the
+scalar `radial3d_conv_eq_baxterK_shell` with `c_HS → c`, `baxterK → shellKernel c`, `c_HS_outer →
+hc_outer` — `c_HS` was used only through its support and `baxterK`'s definition; everything else
+(`radial3d_conv_eq_oddExt`, `intervalIntegral_triangle_swap`, the inner shell reassembly) is generic.
+`shellKernel_c_HS` confirms it reduces to `baxterK`. **Consumed by**
+`matRadialConv_eq_matShellConv_of_shellKernel` (`MixtureOzStar.lean`): the matrix shell bridge with
+the kernel *built from the entries* `Kᵢₖ = shellKernel(C₀ᵢₖ)`, discharging `hentry` per entry — the
+general-`N` form the assembly consumes, with only per-entry support + integrability as hypotheses.
+
+**The matrix `baxterPsi` construction — shape + renewal equation (2026-07-24).** The scalar
+`baxterPsi` is the three-branch glued solution (outer Volterra `baxterPsiOuter` on `[σ,∞)`, odd
+reflection, definitional core `−v`), satisfying `baxterPsiOuter_spec`. The matrix analog now has the
+same shape:
+* `matBaxterPsi Ψouter Ψcore σ` — the glued matrix solution; `matBaxterPsi_core` / `_outer` /
+  `_reflect` the branch equations.
+* `MatRenewalEq Ψouter F Q σ` — the matrix renewal equation `Ψouterᵢⱼ(r) = Fᵢⱼ(r) + ∑ₖ ∫_σ^r
+  Qᵢₖ(r−t)·Ψouterₖⱼ(t) dt` (`r ≥ σ`), the **coupled** Volterra system across species `k` (the
+  coupling that distinguishes it from `N` scalar renewals).
+* `matBaxterPsi_fin_one_of_scalar` / `matRenewalEq_fin_one_of_scalar` — the **`n = 1` bridges**: the
+  matrix `baxterPsi` core is the scalar `baxterPsi`, and `MatRenewalEq` is the proved scalar
+  `baxterPsiOuter_spec`.
+`Ψouter` is a parameter — solving the coupled matrix Volterra system (the matrix `volterraGlobal` /
+`MA.10` analog) to *construct* it is the remaining analytic core; this fixes the object's shape and
+its defining equation, validated at `n = 1`.
+
+**What remains (the analytic core).** The general-`N` proof still needs: **constructing** `Ψouter`
+(solving the coupled matrix Volterra `MatRenewalEq`); the matrix analogs of `F[K]=Ĉ` (`OZFIX.18`
+F-part) and the 2D reindex (`OZFIX.20`); and the fourteen integrability side-conditions
+(`BaxterOzStar.lean`'s `ozstar_h…`). Per `OZFIX.17`, the assembly will inherit the matrix analog of
+the *pole-in-LHP ⇔ decay* obstacle — the genuine hard input, isolable as a matrix decay axiom (the
+`baxter_exterior_regularity` analog) per the OZFIX.22 template.
+
+**Depends on.** Scalar `baxterPsi_ozstar`, `rho_baxterK_eq_q0_self_conv`, `baxterK`, `q0_poly`
+(`BaxterOzStar.lean`/`BaxterRenewal.lean`); `radial3d_conv` (`RadialLaplace.lean`).
+
+**Lean.** `HSMixture/MixtureOzStar.lean` (ns `FMSA.MixtureOzStar`): `matRadialConv`,
+`matRadialConv_apply`, `matRadialConv_fin_one`, `MatOZStar`, `matOZStar_entry`,
+`matOZStar_fin_one_of_scalar`; `matSelfConv`, `matSelfConv_apply`, `matSelfConv_fin_one`,
+`MatBaxterFactorization`, `matBaxterFactorization_fin_one_of_scalar`; `matShellConv`,
+`matShellConv_apply`, `matRadialConv_eq_matShellConv`, `matShellBridge_fin_one_of_scalar`,
+`matRadialConv_eq_matShellConv_of_shellKernel`; `matBaxterPsi`, `matBaxterPsi_core`/`_outer`/`_reflect`,
+`MatRenewalEq`, `matBaxterPsi_fin_one_of_scalar`, `matRenewalEq_fin_one_of_scalar` — all axiom-clean.
+Plus `HardSphere/ShellKernel.lean` (`shellKernel`, `radial3d_conv_eq_shellKernel`, `shellKernel_c_HS`).
+Full build green.
+
+**Status.** ◑ **STARTED (2026-07-24), axiom-clean foundation — four layers.** (1) The OZ★ target
+shape (`MatOZStar`, entrywise reduction to scalar `radial3d_conv`); (2) its real-space factorization
+foundation (`MatBaxterFactorization`, `matSelfConv`); (3) the shell-conv = K-conv bridge
+(`matRadialConv_eq_matShellConv`, general-`c` via `ShellKernel.lean`) connecting (1) to (2); (4) the
+matrix `baxterPsi` construction shape + renewal equation (`matBaxterPsi`, `MatRenewalEq`). Each has an
+`n = 1` bridge to a proved scalar theorem (`baxterPsi_ozstar`, `rho_baxterK_eq_q0_self_conv`,
+`radial3d_conv_eq_baxterK_shell`, `baxterPsi_core`/`baxterPsiOuter_spec`). The
+general-`N` analytic construction (matrix `baxterPsi`, `OZFIX.18` F-part + `OZFIX.20` reindex,
+renewal + integrability, modulo the matrix decay axiom) is the remaining research-scale work — the
+last unbuilt piece of MML.8. **The general-`c` shell identity (`radial3d_conv_eq_shellKernel`,
+`ShellKernel.lean`) is now proved**, so the shell-bridge layer is complete for arbitrary mixture
+entries, not just `c_HS`.
+
 ---
 
 ## Group MZERO — Mixture `det(Q̂₀)` Zero Family (HS-pole existence)
@@ -540,6 +1280,19 @@ residues feed MML.4/MML.8's Mittag-Leffler series). **MZERO.1** is the foundatio
 **MZERO.2–MZERO.11** decompose it across two independent routes (Banach contraction / Jensen
 zero-counting), either of which alone closes MZERO.1. The route overview precedes the numbered
 tasks below.
+
+**✅ GROUP CLOSED — audited 2026-07-24, no open item.** The audit was mechanical rather than a
+re-read of recorded statuses: every named deliverable of MZERO.1–MZERO.11 was `#print axioms`-checked
+and returns the standard three only (`detC_zeros_infinite_unconditional`, `chordPoleFamily_detC_exists`,
+`chord_zero_exists_of_bounds`, `chordPhi_fixedPt_iff`, `chordPhi_lipschitzOnWith`,
+`mapsTo_closedBall_of_lipschitzOnWith_of_dist_le`, `Q0_det_c_zeros_infinite`,
+`Q0_det_c_pole_family_growth`, `det_meromorphicOn`, `det_divisor_nonneg`, `detC_jensen_log_bound`,
+`detBoundaryGrowth_of_linear`, `detC_boundaryGrowth_iff_infinite_zeros`,
+`detC_zeros_infinite_of_boundaryGrowth`). ⚠ **Namespace note for future audits:** the MZERO.3/4/6
+Banach machinery lives in `FMSA.BanachPoleFamily` and MZERO.10's growth predicate in
+`FMSA.BoundaryGrowth` — **not** in `FMSA.MixtureHSPoles`, because the generic layer was migrated to
+`Analysis/` (MRS.0d). Looking them up under the mixture namespace reports "unknown constant" and
+looks like a missing proof.
 
 ---
 
