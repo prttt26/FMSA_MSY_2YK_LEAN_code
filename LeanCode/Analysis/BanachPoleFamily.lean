@@ -178,7 +178,7 @@ disk centres grow at least linearly (`c·n + d ≤ ‖s1 n‖` for `n ≥ N`, wi
 constructed zero family `g` is injective, consists of `F`-zeros, and **inherits linear growth**
 `c·n + (c·N + d − r) ≤ ‖g n‖` — each zero is within `r` of its centre (reverse triangle inequality
 `norm_sub_norm_le`). This is the magnitude/growth input the summability lemmas need
-(scalar `h_explicit_summable_of_pole_family` / mixture MML.5's `mixHS_summable_of_growth`), so one
+(scalar `h_explicit_summable_of_pole_family` / mixture MML.5's `poleExpTerm_summable_of_growth`), so one
 construction serves both POLE.5 and MML.5-concrete. -/
 theorem exists_zero_family_growth_of_chordPoleFamily {F : ℂ → ℂ} (fam : ChordPoleFamily F)
     {c d : ℝ} (hc : 0 < c)

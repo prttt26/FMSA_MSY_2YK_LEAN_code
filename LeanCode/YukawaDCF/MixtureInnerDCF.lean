@@ -55,13 +55,13 @@ The singularity-cancellation constant `p₀ = −(Yukawa base + HS-pole sum)|_{r
   fully-generic `origin_necessity` (P.2, `OriginConstraint.lean`) with `E := base + hsum`.
 * `origin_constant_eij_mix` — the Yukawa specialization with `base := eij` (its continuity via
   `fun_prop`, as in Y1.7): `P 0 = −(Σ_k A_k·exp(−z_k R) + hsum 0)` — exactly `_precompute_p0`'s
-  `−(E_ij(0) + Σ_k 2·Re[B_k])` form (with `hsum := mixHS_series` at `r=0`, whose continuity-at-0 is
+  `−(E_ij(0) + Σ_k 2·Re[B_k])` form (with `hsum := poleExpSeriesRe` at `r=0`, whose continuity-at-0 is
   the one deferred ingredient).
 
 ## MML.8 — term (II) in the doubly-propagated RDF form + the collapse reduction target
 
 The surviving RDF term (II) is the **double-pole** envelope `(α_k + β_k·r)·e^{−s_k r}`, not the
-*singly* simple-exponential `mixHS_series` that `(★)`/Group MRS refuted for the DCF. **Both Laurent
+*singly* simple-exponential `poleExpSeriesRe` that `(★)`/Group MRS refuted for the DCF. **Both Laurent
 coefficients are now certified:** `double_pole_leading_coeff` gives the order-2
 `β_k = N(s_k)/D′(s_k)²` (the `r`-prefactor), and `double_pole_reg_hasDerivAt` /
 `double_pole_second_coeff` give the order-1
@@ -72,7 +72,7 @@ coefficients are now certified:** `double_pole_leading_coeff` gives the order-2
   order-1 coefficient `α_k` as the derivative of the regularization `N/E²` (which `= (·−s_k)²·N/D²`
   near `s_k`), i.e. `α_k` as the simple-pole residue coefficient.
 * `mixHSterm2` / `mixHS_series2` — term (II) in doubly form; `mixHSterm2_eq` / `mixHS_series2_eq`
-  identify them (definitionally) with the singly `mixHSterm`/`mixHS_series` at the `r`-absorbed
+  identify them (definitionally) with the singly `poleExpTerm`/`poleExpSeriesRe` at the `r`-absorbed
   coefficient `α_k + β_k·r`, so all summability API transfers.
 * `mixHS_series2_summable` — convergence from the MML.5-concrete growth bounds (non-vacuity).
 * `mixRDFInnerAssembly`, `MixRDFInnerCollapse` — the `(I)+(II)+(III)` assembly and the collapse
@@ -290,7 +290,7 @@ theorem double_pole_second_coeff (N D E : ℂ → ℂ) (Nprime Eprime s_k : ℂ)
 
 Crux #1 (`double_pole_leading_coeff`) proved the RDF `h₁ = [Q̂₀ᵀ]⁻¹·B₁·[Q̂₀]⁻¹` has **double** HS
 poles (the two inverse factors give an `N/det²` entry, `doubly_prop_entry_eq`). So — unlike the
-*singly*-propagated DCF reading, whose term (II) is the simple-exponential `mixHS_series`
+*singly*-propagated DCF reading, whose term (II) is the simple-exponential `poleExpSeriesRe`
 (`MixtureMLSeries.lean`) and which `(★)`/Group MRS refuted for the DCF — the surviving **RDF** term
 (II) is the **double-pole envelope** `(α_k + β_k·r)·e^{−s_k r}`, with the `r`-prefactor `β_k` the
 order-2 leading Laurent coefficient `N(s_k)/det′(s_k)²` that `double_pole_leading_coeff` computes and
@@ -305,29 +305,29 @@ OZFIX.22 template, the single clean input MML.8 reduces to once the matrix real-
 /-- **MML.8 — term (II), doubly-propagated (RDF) form.** The double-pole real-space HS term
 `(α_k + β_k·r)·exp(−s_k·r)`. The `r`-prefactor `β_k` is the order-2 leading Laurent coefficient
 (`double_pole_leading_coeff`); `α_k` is the simple-pole part. It is definitionally the *singly*
-`mixHSterm` with the `r`-absorbed coefficient `α_k + β_k·r` (`mixHSterm2_eq`), so it inherits all of
-`mixHSterm`'s summability API. -/
+`poleExpTerm` with the `r`-absorbed coefficient `α_k + β_k·r` (`mixHSterm2_eq`), so it inherits all of
+`poleExpTerm`'s summability API. -/
 noncomputable def mixHSterm2 (alpha beta sfam : ℕ → ℂ) (r : ℝ) (n : ℕ) : ℂ :=
   (alpha n + beta n * (r : ℂ)) * Complex.exp (-(sfam n) * (r : ℂ))
 
-/-- The doubly-propagated term is the singly `mixHSterm` with the `r`-absorbed coefficient
+/-- The doubly-propagated term is the singly `poleExpTerm` with the `r`-absorbed coefficient
 `α_k + β_k·r` (definitional). -/
 theorem mixHSterm2_eq (alpha beta sfam : ℕ → ℂ) (r : ℝ) (n : ℕ) :
     mixHSterm2 alpha beta sfam r n
-      = mixHSterm (fun m => alpha m + beta m * (r : ℂ)) sfam r n := rfl
+      = poleExpTerm (fun m => alpha m + beta m * (r : ℂ)) sfam r n := rfl
 
 /-- **MML.8 — term (II) series, doubly-propagated (RDF) form** `Σ_k 2·Re[(α_k + β_k·r)·e^{−s_k r}]`.
-This is the surviving RDF term (II); the singly `mixHS_series` was the refuted DCF reading. -/
+This is the surviving RDF term (II); the singly `poleExpSeriesRe` was the refuted DCF reading. -/
 noncomputable def mixHS_series2 (alpha beta sfam : ℕ → ℂ) (r : ℝ) : ℝ :=
   2 * (∑' n : ℕ, mixHSterm2 alpha beta sfam r n).re
 
-/-- The doubly series is the singly `mixHS_series` at the `r`-absorbed coefficient (definitional). -/
+/-- The doubly series is the singly `poleExpSeriesRe` at the `r`-absorbed coefficient (definitional). -/
 theorem mixHS_series2_eq (alpha beta sfam : ℕ → ℂ) (r : ℝ) :
     mixHS_series2 alpha beta sfam r
-      = mixHS_series (fun m => alpha m + beta m * (r : ℂ)) sfam r := rfl
+      = poleExpSeriesRe (fun m => alpha m + beta m * (r : ℂ)) sfam r := rfl
 
 /-- **MML.8 — summability of the doubly-propagated term (II).** Same growth-bound hypotheses as
-`mixHS_summable_of_growth` (the shape MML.5-concrete's `detF_family_magnitude_bound` produces): the
+`poleExpTerm_summable_of_growth` (the shape MML.5-concrete's `detF_family_magnitude_bound` produces): the
 exponential `e^{−r·Re s_k}` dominates the polynomial growth of the coefficient `α_k + β_k·r`, so the
 `r`-prefactor costs nothing. Establishes that `mixHS_series2` is a genuine convergent sum, i.e. the
 collapse predicate below is non-vacuous (cf. `coreSeriesClosure_summand_summable`, OZFIX.12). -/
@@ -337,9 +337,9 @@ theorem mixHS_series2_summable {alpha beta sfam : ℕ → ℂ} {r : ℝ} {C p c 
     (hbound : ∀ n : ℕ, ‖mixHSterm2 alpha beta sfam r n‖ ≤ C * ‖sfam n‖ ^ p) :
     Summable (mixHSterm2 alpha beta sfam r) := by
   have hb' : ∀ n : ℕ,
-      ‖mixHSterm (fun m => alpha m + beta m * (r : ℂ)) sfam r n‖ ≤ C * ‖sfam n‖ ^ p := by
+      ‖poleExpTerm (fun m => alpha m + beta m * (r : ℂ)) sfam r n‖ ≤ C * ‖sfam n‖ ^ p := by
     intro n; rw [← mixHSterm2_eq]; exact hbound n
-  have hsum := mixHS_summable_of_growth (Bcoef := fun m => alpha m + beta m * (r : ℂ))
+  have hsum := poleExpTerm_summable_of_growth (Bcoef := fun m => alpha m + beta m * (r : ℂ))
     (sfam := sfam) (r := r) hp hC hc hd hgrowth hb'
   exact hsum.congr (fun n => (mixHSterm2_eq alpha beta sfam r n).symm)
 

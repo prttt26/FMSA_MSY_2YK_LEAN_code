@@ -8,6 +8,11 @@ the rate Im(k1) of the lowest Baxter pole (= the Ornstein-Zernike correlation de
 See `proof_notes_pole.md` -> "POLE.11 decay half / MA.13".
 """
 import numpy as np
+
+try:                      # numpy >= 2.0 renamed trapz -> trapezoid
+    _trapz = np.trapezoid
+except AttributeError:
+    _trapz = np.trapz
 s=1.0
 def par(eta):
     rho=6*eta/(np.pi*s**3); qp=np.pi*s*(2+eta)/(1-eta)**2; qpp=2*np.pi*(1+2*eta)/(1-eta)**2
@@ -48,7 +53,7 @@ for eta in [0.2,0.4,0.6,0.8]:
     qv=q0(r,eta)
     # baxterForcing(r) = int_0^sigma q0(r-u)*(-u) du   (support [sigma,2sigma])
     gu=np.linspace(0,s,2001)
-    g=np.array([np.trapezoid(q0(rr-gu,eta)*(-gu),gu) for rr in r])
+    g=np.array([_trapz(q0(rr-gu,eta)*(-gu),gu) for rr in r])
     psi=np.zeros(n)
     # Volterra: trapezoid, psi(r_i)=g_i + h*sum_j w_j q(r_i-r_j) psi_j ; diagonal q(0)=0 (q0(sigma)=0? no, q0(0)!=0)
     q0v=qv[0]
@@ -70,4 +75,4 @@ for eta in [0.2,0.4,0.6,0.8]:
     k1=lowest[eta]
     print(f"  eta={eta:<5} |psi(40)|={abs(psi[-1]):.3e}  fitted decay rate={-A[0]:.4f}"
           f"   Im k1={k1.imag:.4f}   ratio={-A[0]/k1.imag:.3f}")
-    print(f"          int_0^40 |psi| = {np.trapezoid(np.abs(psi),r):.4f}  (finite => psi in L1)")
+    print(f"          int_0^40 |psi| = {_trapz(np.abs(psi),r):.4f}  (finite => psi in L1)")

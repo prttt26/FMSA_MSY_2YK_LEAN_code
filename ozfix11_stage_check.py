@@ -25,6 +25,11 @@ Checks:
      pieces (Jordan-readiness) + abs-convergence of sum ||Hterm(sigma)||
 """
 import numpy as np
+
+try:                      # numpy >= 2.0 renamed trapz -> trapezoid
+    _trapz = np.trapezoid
+except AttributeError:
+    _trapz = np.trapz
 from scipy.integrate import quad
 
 eta, sigma = 0.3, 1.0
@@ -229,7 +234,7 @@ for N in [10, 40, 120]:
     R = 0.5 * (abs(poles[N]) + abs(poles[N + 1]))
     th = np.linspace(0, np.pi, 4001)
     vals = np.array([Hhat_stable(R * np.exp(1j * t)) for t in th])
-    mean_full = np.trapezoid(vals.real, th) / np.pi   # full-circle mean via conj symmetry
+    mean_full = _trapz(vals.real, th) / np.pi   # full-circle mean via conj symmetry
     supH = np.max(np.abs(vals))
     print(f"  N={N:3d} R={R:8.2f}: mean={mean_full:+.6f} (-1/rho={-1/rho:+.6f}) "
           f"sup||Hhat||={supH:.6f} (1/rho={1/rho:.6f})")

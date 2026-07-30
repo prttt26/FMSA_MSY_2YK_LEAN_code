@@ -198,7 +198,7 @@ theorem detF_rdf_pole_family (P : MixParams) (hP : P.Phys) {rdist : ℝ}
       (∀ n, P.detF (g n) = 0 ∧ g n ≠ 0 ∧ derivF P (g n) ≠ 0) ∧
       (∀ n, Tendsto (fun z => (z - g n) ^ 2 * (FMSA.YukawaWH.Hhat1 (q0Mat P z) (B1f z) i j))
         (𝓝[≠] (g n)) (𝓝 (rdfBeta P B1f (g n) i j))) ∧
-      Summable (mixHSterm (fun n => q0Residue P (g n) 0 1) (fun n => -(g n)) rdist) := by
+      Summable (poleExpTerm (fun n => q0Residue P (g n) 0 1) (fun n => -(g n)) rdist) := by
   obtain ⟨g, hinj, hpoledata, _hres, hsum⟩ := detF_mixHS_summable P hP hrd
   refine ⟨g, hinj, hpoledata, ?_, ?_⟩
   · intro n
@@ -224,7 +224,7 @@ theorem detF_rdf_pole_family (P : MixParams) (hP : P.Phys) {rdist : ℝ}
       exact ((hadj p i).mul (hB1 (g n) p q)).mul (hadj q j)
     exact hhat1_double_pole (fun z => q0Mat P z) B1f (g n) (derivF P (g n)) i j hD hD0 hDp hNum
   · refine hsum.congr (fun n => ?_)
-    simp only [mixHSterm, q0Residue_zero_one]
+    simp only [poleExpTerm, q0Residue_zero_one]
 
 /-! ### MML.12 — the collapse region, and what the ML series can *never* reach
 

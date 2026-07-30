@@ -768,3 +768,24 @@ be derived, but does **not** eliminate the exterior-decay content — that stays
 space choice or in a companion bridge lemma. The MA Session should treat MA.12 as "make OZ.10 citable",
 not "make OZ.10 free". Numerical/analytic backing for the wall: `verify_wienerhopf_wall.py`,
 `proof_notes_ozfix.md` `OZFIX.23` (elementary reach is exactly `M(η)=η(4−η)/(1−η)²<1`, `η<(3−√7)/2`).
+
+
+## `matRadialShell_bounded_injective` (matrix Wiener–Hopf, MML.8 value route) — committed 2026-07-30
+
+The **matrix analog** of `radialShell_bounded_injective` (`Analysis/RadialWienerHopf.lean`, the scalar
+`MA.15`).  For a coercive matrix symbol `I − ρĈ(k) ⪰ εI` (`MatSymbolCoercive`), the homogeneous matrix
+radial shell operator `dᵢⱼ(r) = ρ·r·∑ₖ (2π/r)∫₀^∞ t·Cᵢₖ(t)·∫_{|r−t|}^{r+t} s·(dₖⱼ/s)` (raw integrals) is
+injective on bounded,
+exterior-continuous, core-vanishing matrix functions — `D ≡ 0`.
+
+**Same Mathlib gap as the scalar** (docstring of `radialShell_bounded_injective`): the bounded/`L∞`
+route needs Wiener-algebra resolvent inversion (`δ + L¹` invertibility, the `MA.13` gap); the `L²`
+Plancherel proof (`MA.12` `wienerHopf_positive_symbol_injective`) does not survive to `L∞`.  The
+coercivity is a hypothesis, discharged by the physical no-spinodal as in the scalar case
+(`matStructureFactor_isUnit_of_det_ne_zero`: `det Q̂₀ ≠ 0` from `mixtureDet_pole_free_N`).
+
+**Home:** `LeanCode/Analysis/MatrixRadialWienerHopf.lean` — **abstracted to `Analysis/` in raw-integral
+form 2026-07-30** (arbitrary matrix kernel `C`, no project defs), mirroring the scalar
+`radialShell_bounded_injective`.  **Consumer:** `MixtureRDFUniqueness.lean` re-exposes it as the theorem
+`matRadialShell_bounded_injective` (definitional bridges `matOZHom_raw`/`matRadialSymbol`), feeding
+`matOzStar_unique` — the unconditional matrix `oz_fixed_pt_unique` (value route).

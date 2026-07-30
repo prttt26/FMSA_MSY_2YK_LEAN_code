@@ -1603,6 +1603,115 @@ theorem dbl_conv_reindex {sigma : ℝ} (hsigma : 0 < sigma) (q0 psi : ℝ → �
     ring
   rw [hLHS, hRHS]
 
+/-! ### `OZFIX.20` (matrix) — two-function double-convolution reindex -/
+
+/-- **Two-function 2D reindex (`OZFIX.20`, matrix generalization).**  The double convolution of
+two *different* Baxter factors `q0a, q0b` against `psi`, reindexed to shell-kernel form with the two
+asymmetric self-kernels `∫_u^σ q0a·q0b(·−u)` (weighting `ψ(r+u)`) and `∫_u^σ q0b·q0a(·−u)`
+(weighting `ψ(r−u)`).  For `q0a = q0b` this collapses to the scalar `dbl_conv_reindex`. -/
+theorem dbl_conv_reindex_two {sigma : ℝ} (hsigma : 0 < sigma) (q0a q0b psi : ℝ → ℝ) (r : ℝ)
+    (hswapP : MeasureTheory.Integrable
+      (Function.uncurry fun u t => (Set.Ioi u).indicator
+        (fun t => q0a t * q0b (t - u) * psi (r + u)) t)
+      ((MeasureTheory.volume.restrict (Set.Ioc 0 sigma)).prod
+        (MeasureTheory.volume.restrict (Set.Ioc 0 sigma))))
+    (hswapM : MeasureTheory.Integrable
+      (Function.uncurry fun u t => (Set.Ioi u).indicator
+        (fun t => q0b t * q0a (t - u) * psi (r - u)) t)
+      ((MeasureTheory.volume.restrict (Set.Ioc 0 sigma)).prod
+        (MeasureTheory.volume.restrict (Set.Ioc 0 sigma))))
+    (hswapA : MeasureTheory.Integrable
+      (Function.uncurry fun t s => (Set.Ioi t).indicator
+        (fun s => q0a t * q0b s * psi (r + t - s)) s)
+      ((MeasureTheory.volume.restrict (Set.Ioc 0 sigma)).prod
+        (MeasureTheory.volume.restrict (Set.Ioc 0 sigma))))
+    (hsliceLa : ∀ t : ℝ, IntervalIntegrable (fun s => q0a t * q0b s * psi (r + t - s))
+      MeasureTheory.volume 0 t)
+    (hsliceRa : ∀ t : ℝ, IntervalIntegrable (fun s => q0a t * q0b s * psi (r + t - s))
+      MeasureTheory.volume t sigma)
+    (haddI : IntervalIntegrable (fun t => ∫ s in (0:ℝ)..t, q0a t * q0b s * psi (r + t - s))
+      MeasureTheory.volume 0 sigma)
+    (haddII : IntervalIntegrable (fun t => ∫ s in t..sigma, q0a t * q0b s * psi (r + t - s))
+      MeasureTheory.volume 0 sigma)
+    (haddRp : IntervalIntegrable
+      (fun u => (∫ t in u..sigma, q0a t * q0b (t - u)) * psi (r + u)) MeasureTheory.volume 0 sigma)
+    (haddRm : IntervalIntegrable
+      (fun u => (∫ t in u..sigma, q0b t * q0a (t - u)) * psi (r - u)) MeasureTheory.volume 0 sigma) :
+    (∫ t in (0:ℝ)..sigma, q0a t * ∫ s in (0:ℝ)..sigma, q0b s * psi (r + t - s))
+      = ∫ u in (0:ℝ)..sigma,
+          ((∫ t in u..sigma, q0a t * q0b (t - u)) * psi (r + u)
+            + (∫ t in u..sigma, q0b t * q0a (t - u)) * psi (r - u)) := by
+  -- the two triangle-half integrands
+  set Tplus : ℝ := ∫ t in (0:ℝ)..sigma, ∫ s in (0:ℝ)..t,
+    q0a t * q0b s * psi (r + t - s) with hTplus
+  set Tminus : ℝ := ∫ t in (0:ℝ)..sigma, ∫ s in (0:ℝ)..t,
+    q0a s * q0b t * psi (r + s - t) with hTminus
+  -- RHS = Tplus + Tminus
+  have hRHS : (∫ u in (0:ℝ)..sigma,
+      ((∫ t in u..sigma, q0a t * q0b (t - u)) * psi (r + u)
+        + (∫ t in u..sigma, q0b t * q0a (t - u)) * psi (r - u)))
+      = Tplus + Tminus := by
+    rw [intervalIntegral.integral_add haddRp haddRm]
+    congr 1
+    · -- ∫ u, (∫_u^σ q0a q0b(·−u)) ψ(r+u) = Tplus
+      have hpull : (∫ u in (0:ℝ)..sigma, (∫ t in u..sigma, q0a t * q0b (t - u)) * psi (r + u))
+          = ∫ u in (0:ℝ)..sigma, ∫ t in u..sigma, q0a t * q0b (t - u) * psi (r + u) := by
+        refine intervalIntegral.integral_congr fun u _ => ?_
+        rw [intervalIntegral.integral_mul_const]
+      rw [hpull, intervalIntegral_triangle_swap_gen hsigma.le
+        (fun u t => q0a t * q0b (t - u) * psi (r + u)) hswapP, hTplus]
+      refine intervalIntegral.integral_congr fun t _ => ?_
+      have hcv := intervalIntegral.integral_comp_sub_left (a := (0:ℝ)) (b := t)
+        (f := fun u => q0a t * q0b u * psi (r + t - u)) t
+      simp only [sub_zero, sub_self] at hcv
+      rw [← hcv]
+      refine intervalIntegral.integral_congr fun u _ => ?_
+      show q0a t * q0b (t - u) * psi (r + u) = q0a t * q0b (t - u) * psi (r + t - (t - u))
+      rw [show r + t - (t - u) = r + u by ring]
+    · -- ∫ u, (∫_u^σ q0b q0a(·−u)) ψ(r−u) = Tminus
+      have hpull : (∫ u in (0:ℝ)..sigma, (∫ t in u..sigma, q0b t * q0a (t - u)) * psi (r - u))
+          = ∫ u in (0:ℝ)..sigma, ∫ t in u..sigma, q0b t * q0a (t - u) * psi (r - u) := by
+        refine intervalIntegral.integral_congr fun u _ => ?_
+        rw [intervalIntegral.integral_mul_const]
+      rw [hpull, intervalIntegral_triangle_swap_gen hsigma.le
+        (fun u t => q0b t * q0a (t - u) * psi (r - u)) hswapM, hTminus]
+      refine intervalIntegral.integral_congr fun t _ => ?_
+      have hcv := intervalIntegral.integral_comp_sub_left (a := (0:ℝ)) (b := t)
+        (f := fun u => q0a u * q0b t * psi (r + u - t)) t
+      simp only [sub_zero, sub_self] at hcv
+      rw [← hcv]
+      refine intervalIntegral.integral_congr fun u _ => ?_
+      show q0b t * q0a (t - u) * psi (r - u)
+        = q0a (t - u) * q0b t * psi (r + (t - u) - t)
+      rw [show r + (t - u) - t = r - u by ring]; ring
+  -- LHS = Tplus + Tminus
+  have hLHS : (∫ t in (0:ℝ)..sigma, q0a t * ∫ s in (0:ℝ)..sigma, q0b s * psi (r + t - s))
+      = Tplus + Tminus := by
+    have hpull : (∫ t in (0:ℝ)..sigma, q0a t * ∫ s in (0:ℝ)..sigma, q0b s * psi (r + t - s))
+        = ∫ t in (0:ℝ)..sigma, ∫ s in (0:ℝ)..sigma, q0a t * q0b s * psi (r + t - s) := by
+      refine intervalIntegral.integral_congr fun t _ => ?_
+      show q0a t * (∫ s in (0:ℝ)..sigma, q0b s * psi (r + t - s))
+        = ∫ s in (0:ℝ)..sigma, q0a t * q0b s * psi (r + t - s)
+      rw [← intervalIntegral.integral_const_mul]
+      refine intervalIntegral.integral_congr fun s _ => ?_
+      show q0a t * (q0b s * psi (r + t - s)) = q0a t * q0b s * psi (r + t - s)
+      ring
+    have hsplit : (∫ t in (0:ℝ)..sigma, ∫ s in (0:ℝ)..sigma, q0a t * q0b s * psi (r + t - s))
+        = (∫ t in (0:ℝ)..sigma, ∫ s in (0:ℝ)..t, q0a t * q0b s * psi (r + t - s))
+          + ∫ t in (0:ℝ)..sigma, ∫ s in t..sigma, q0a t * q0b s * psi (r + t - s) := by
+      rw [← intervalIntegral.integral_add haddI haddII]
+      refine intervalIntegral.integral_congr fun t _ => ?_
+      show (∫ s in (0:ℝ)..sigma, q0a t * q0b s * psi (r + t - s))
+        = (∫ s in (0:ℝ)..t, q0a t * q0b s * psi (r + t - s))
+          + ∫ s in t..sigma, q0a t * q0b s * psi (r + t - s)
+      rw [intervalIntegral.integral_add_adjacent_intervals (hsliceLa t) (hsliceRa t)]
+    have hI2 : (∫ t in (0:ℝ)..sigma, ∫ s in t..sigma, q0a t * q0b s * psi (r + t - s))
+        = Tminus := by
+      rw [hTminus, intervalIntegral_triangle_swap_gen hsigma.le
+        (fun t s => q0a t * q0b s * psi (r + t - s)) hswapA]
+    rw [hpull, hsplit, hI2, hTplus]
+  rw [hLHS, hRHS]
+
 /-! ### `OZFIX.21` — consolidation bricks -/
 
 /-- **`OZFIX.21` brick — `oddExt (baxterPsi/·) = baxterPsi`.**

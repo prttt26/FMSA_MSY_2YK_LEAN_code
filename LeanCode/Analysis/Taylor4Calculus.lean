@@ -16,7 +16,9 @@ A little algebra of "`f` has quartic Taylor data `(a0,…,a4)` at `0`", meaning
 reciprocal, plus the uniqueness of the coefficients.
 
 Everything here is stated for **arbitrary** `f g : ℝ → ℝ` — no hard-sphere or Yukawa object
-appears, which is why it lives in `Analysis/` (split out of `MixtureLaurent.lean` on 2026-07-19).
+appears, which is why it lives in `Analysis/` (split out of `MixtureLaurent.lean` on 2026-07-19;
+the `p1`/`p2`/`exp` Baxter-block Taylor family below was consolidated here from
+`MixtureLaurent`/`MixturePolyCoeffs` across `MRS.9d`, 2026-07-27).
 
 * `taylor4_mul` / `taylor4_sub` / `taylor4_neg` / `taylor4_recip` — the closure rules; `taylor4_recip`
   needs `d0 ≠ 0` and the reciprocal coefficients supplied as hypotheses.
@@ -24,8 +26,11 @@ appears, which is why it lives in `Analysis/` (split out of `MixtureLaurent.lean
   concrete consumer.
 * `poly4_eq_zero_of_littleO` — a degree-`≤ 4` polynomial that is `o(r⁴)` has all coefficients zero;
   the engine behind `taylor4_coeff_unique`.
-* `exp_neg_quartic_rem`, `p1_quartic_coeff` — the quartic expansions of `e^{−λr}` and of the first
-  Laplace kernel, both elementary functions of a free real parameter.
+* The `p1`/`p2` Baxter-block Taylor family — removable-singularity limits and Taylor coefficients of
+  `p1(σ,s) = (1−sσ−e^{−sσ})/s²` and `p2(σ,s) = (1−sσ+(sσ)²/2−e^{−sσ})/s³`, elementary functions of a
+  free real `σ`: `p1_limit`/`p2_limit` (order 0), `p1_cubic_coeff`/`p2_cubic_coeff` (order 3),
+  `p1_quartic_coeff`/`p2_quartic_coeff` (order 4); plus the `e^{−λr}` remainders
+  `exp_neg_cubic_rem`/`exp_neg_quartic_rem`.
 -/
 
 set_option linter.style.longLine false
@@ -567,5 +572,419 @@ theorem taylor4_coeff_unique (f : ℝ → ℝ) (a0 a1 a2 a3 a4 b0 b1 b2 b3 b4 : 
     field_simp; ring
   obtain ⟨e0, e1, e2, e3, e4⟩ := poly4_eq_zero_of_littleO _ _ _ _ _ hdiff
   refine ⟨by linarith, by linarith, by linarith, by linarith, by linarith⟩
+
+/-- **GAP.5 helper — p2(σ, z) → σ³/6 as z → 0⁺.**
+
+`(1 − z·σ + (z·σ)²/2 − exp(−z·σ)) / z³  →  σ³/6`.
+
+**Proof:** Write `p2(σ,z) = σ³/6 + r(z)` where
+  `r(z) = (1 − z·σ + (z·σ)²/2 − (z·σ)³/6 − exp(−z·σ)) / z³`.
+Apply `Real.exp_bound n=4`: for `|z·σ| ≤ 1`,
+  `|exp(−z·σ) − (1 − z·σ + (z·σ)²/2 − (z·σ)³/6)| ≤ (z|σ|)⁴ · (5/96)`,
+so `|r(z)| ≤ z · (|σ|⁴ · 5/96) → 0`.  Squeeze gives `r(z) → 0`. -/
+lemma p2_limit (sigma : ℝ) :
+    Filter.Tendsto
+        (fun z : ℝ => (1 - z * sigma + (z * sigma) ^ 2 / 2 - Real.exp (-(z * sigma))) / z ^ 3)
+        (nhdsWithin 0 (Set.Ioi 0)) (nhds (sigma ^ 3 / 6)) := by
+  -- Write p2(sigma,z) = sigma³/6 + r(z), r(z) = (1-zσ+(zσ)²/2-(zσ)³/6-exp(-zσ))/z³
+  have halg : ∀ᶠ z in nhdsWithin 0 (Set.Ioi 0),
+      (1 - z * sigma + (z * sigma) ^ 2 / 2 - Real.exp (-(z * sigma))) / z ^ 3 =
+      sigma ^ 3 / 6 +
+        (1 - z * sigma + (z * sigma) ^ 2 / 2 - (z * sigma) ^ 3 / 6 -
+          Real.exp (-(z * sigma))) / z ^ 3 := by
+    filter_upwards [self_mem_nhdsWithin] with z hz
+    have hz' : z ≠ 0 := (Set.mem_Ioi.mp hz).ne'
+    field_simp [hz']; ring
+  suffices hrem : Filter.Tendsto
+      (fun z : ℝ => (1 - z * sigma + (z * sigma) ^ 2 / 2 - (z * sigma) ^ 3 / 6 -
+        Real.exp (-(z * sigma))) / z ^ 3)
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) by
+    have hconst : Filter.Tendsto (fun _ : ℝ => sigma ^ 3 / 6)
+        (nhdsWithin 0 (Set.Ioi 0)) (nhds (sigma ^ 3 / 6)) :=
+      tendsto_const_nhds
+    have hlim := hconst.add hrem
+    simpa using hlim.congr' (halg.mono (fun z hz => hz.symm))
+  -- Bound r(z) → 0 by exp_bound n=4 and squeeze
+  have htend_z : Filter.Tendsto (fun z : ℝ => z) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) :=
+    tendsto_nhdsWithin_of_tendsto_nhds tendsto_id
+  set C := |sigma| ^ 4 * (5 / 96) with hC_def
+  have hbnd : Filter.Tendsto (fun z : ℝ => z * C) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) :=
+    by simpa using htend_z.mul_const C
+  have hbnd_neg : Filter.Tendsto (fun z : ℝ => -(z * C)) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) :=
+    by simpa [neg_zero] using hbnd.neg
+  -- Restrict to z with |z*sigma| <= 1 so exp_bound hypothesis holds
+  have hsmall : ∀ᶠ z in nhdsWithin 0 (Set.Ioi 0), |z * sigma| <= 1 := by
+    have hpos : (0 : ℝ) < 1 / (|sigma| + 1) := by positivity
+    have h0 : ∀ᶠ z in nhds (0 : ℝ), |z * sigma| <= 1 := by
+      filter_upwards [Metric.ball_mem_nhds 0 hpos] with z hz
+      rw [Metric.mem_ball, Real.dist_eq, sub_zero] at hz
+      calc |z * sigma| = |z| * |sigma| := abs_mul z sigma
+        _ <= |z| * (|sigma| + 1) := by nlinarith [abs_nonneg z, abs_nonneg sigma]
+        _ <= 1 / (|sigma| + 1) * (|sigma| + 1) :=
+              le_of_lt (mul_lt_mul_of_pos_right hz (by positivity))
+        _ = 1 := by field_simp
+    exact h0.filter_mono nhdsWithin_le_nhds
+  -- Key bound: |r(z)| <= z * C for z ∈ Ioi 0 near 0
+  have habs_ev : ∀ᶠ z in nhdsWithin 0 (Set.Ioi 0),
+      |(1 - z * sigma + (z * sigma) ^ 2 / 2 - (z * sigma) ^ 3 / 6 -
+        Real.exp (-(z * sigma))) / z ^ 3| <= z * C := by
+    filter_upwards [self_mem_nhdsWithin, hsmall] with z hz hzsigma
+    have hz0 : (0 : ℝ) < z := Set.mem_Ioi.mp hz
+    -- exp_bound with x = -(z*sigma), n = 4
+    have hbc : |-(z * sigma)| <= 1 := by rwa [abs_neg]
+    have hbound := Real.exp_bound hbc (n := 4) (by norm_num)
+    -- Evaluate the sum ∑_{m=0}^3 (-(z·sigma))^m / m!
+    have hsum : ∑ m ∈ Finset.range 4, (-(z * sigma)) ^ m / (m.factorial : ℝ) =
+        1 - z * sigma + (z * sigma) ^ 2 / 2 - (z * sigma) ^ 3 / 6 := by
+      simp only [Finset.sum_range_succ, Finset.range_zero, Finset.sum_empty, zero_add]
+      norm_num [Nat.factorial]; ring
+    rw [hsum, abs_neg, abs_mul, abs_of_pos hz0] at hbound
+    -- hbound: |exp(-zσ)-(1-zσ+(zσ)²/2-(zσ)³/6)| <= (z*|sigma|)⁴ * (5 / (24*4))
+    rw [abs_div, abs_of_pos (pow_pos hz0 3), div_le_iff₀ (pow_pos hz0 3)]
+    calc |1 - z * sigma + (z * sigma) ^ 2 / 2 - (z * sigma) ^ 3 / 6 - Real.exp (-(z * sigma))|
+        = |Real.exp (-(z * sigma)) - (1 - z * sigma + (z * sigma) ^ 2 / 2 - (z * sigma) ^ 3 / 6)| :=
+          abs_sub_comm _ _
+      _ <= (z * |sigma|) ^ 4 * ((Nat.succ 4 : ℝ) / ((Nat.factorial 4 : ℝ) * 4)) := hbound
+      _ = z * C * z ^ 3 := by
+          rw [hC_def]
+          have h1 : (Nat.factorial 4 : ℝ) = 24 := by norm_num [Nat.factorial]
+          have h2 : (Nat.succ 4 : ℝ) = 5 := by norm_num
+          rw [h1, h2]; ring
+  -- Squeeze: -z*C <= r(z) <= z*C → r(z) → 0
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le' hbnd_neg hbnd
+  · filter_upwards [habs_ev] with z habs
+    have h1 := neg_le_neg habs
+    have h2 := neg_abs_le ((1 - z * sigma + (z * sigma) ^ 2 / 2 - (z * sigma) ^ 3 / 6 -
+      Real.exp (-(z * sigma))) / z ^ 3)
+    linarith
+  · filter_upwards [habs_ev] with z habs
+    linarith [le_abs_self ((1 - z * sigma + (z * sigma) ^ 2 / 2 - (z * sigma) ^ 3 / 6 -
+      Real.exp (-(z * sigma))) / z ^ 3)]
+
+/-- **GAP.5 helper — p1(σ, z) → −σ²/2 as z → 0⁺.**
+
+`(1 − z·σ − exp(−z·σ)) / z²  →  −σ²/2`.
+
+**Proof:** The exact algebraic identity (valid for all z ≠ 0)
+```
+p1(σ,z) = −σ²/2 + z · p2(σ,z)
+```
+follows from `field_simp; ring`.  Since `p2(σ,z) → σ³/6` is finite (p2_limit),
+`z · p2(σ,z) → 0 · σ³/6 = 0`, so `p1(σ,z) → −σ²/2 + 0 = −σ²/2`. -/
+lemma p1_limit (sigma : ℝ) :
+    Filter.Tendsto (fun z : ℝ => (1 - z * sigma - Real.exp (-(z * sigma))) / z ^ 2)
+        (nhdsWithin 0 (Set.Ioi 0)) (nhds (-sigma ^ 2 / 2)) := by
+  -- Algebraic identity: p1(sigma,z) = -sigma²/2 + z · p2(sigma,z)  (for z ≠ 0)
+  have halg : ∀ᶠ z in nhdsWithin 0 (Set.Ioi 0),
+      (1 - z * sigma - Real.exp (-(z * sigma))) / z ^ 2 =
+      -sigma ^ 2 / 2 +
+        z * ((1 - z * sigma + (z * sigma) ^ 2 / 2 - Real.exp (-(z * sigma))) / z ^ 3) := by
+    filter_upwards [self_mem_nhdsWithin] with z hz
+    have hz' : z ≠ 0 := (Set.mem_Ioi.mp hz).ne'
+    field_simp [hz']
+    ring
+  -- z * p2(sigma,z) → 0  (z → 0, p2 → sigma³/6 finite)
+  have hz : Filter.Tendsto (fun z : ℝ => z) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) :=
+    tendsto_nhdsWithin_of_tendsto_nhds tendsto_id
+  have hzp2 : Filter.Tendsto
+      (fun z => z * ((1 - z * sigma + (z * sigma) ^ 2 / 2 - Real.exp (-(z * sigma))) / z ^ 3))
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
+    simpa using hz.mul (p2_limit sigma)
+  -- Combine: -sigma²/2 + z·p2 → -sigma²/2 + 0 = -sigma²/2
+  have hlim : Filter.Tendsto
+      (fun z => -sigma ^ 2 / 2 +
+        z * ((1 - z * sigma + (z * sigma) ^ 2 / 2 - Real.exp (-(z * sigma))) / z ^ 3))
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds (-sigma ^ 2 / 2)) := by
+    simpa using tendsto_const_nhds.add hzp2
+  exact hlim.congr' (halg.mono (fun z hz => hz.symm))
+
+/-- Order-4 Taylor coefficient of `p2(σ,s) = (1−sσ+(sσ)²/2−e^{−sσ})/s³` at 0 is `σ⁷/5040`. -/
+lemma p2_quartic_coeff (sigma : ℝ) :
+    Filter.Tendsto
+        (fun s : ℝ => ((1 - s * sigma + (s * sigma) ^ 2 / 2 - Real.exp (-(s * sigma))) / s ^ 3
+          - (sigma ^ 3 / 6 - sigma ^ 4 / 24 * s + sigma ^ 5 / 120 * s ^ 2 - sigma ^ 6 / 720 * s ^ 3))
+            / s ^ 4)
+        (nhdsWithin 0 (Set.Ioi 0)) (nhds (sigma ^ 7 / 5040)) := by
+  have halg : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0),
+      ((1 - s * sigma + (s * sigma) ^ 2 / 2 - Real.exp (-(s * sigma))) / s ^ 3
+          - (sigma ^ 3 / 6 - sigma ^ 4 / 24 * s + sigma ^ 5 / 120 * s ^ 2 - sigma ^ 6 / 720 * s ^ 3))
+            / s ^ 4 =
+      sigma ^ 7 / 5040 +
+        ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
+          - Real.exp (-(s * sigma))) / s ^ 7) := by
+    filter_upwards [self_mem_nhdsWithin] with s hs
+    have hs' : s ≠ 0 := (Set.mem_Ioi.mp hs).ne'
+    field_simp [hs']; ring
+  suffices hrem : Filter.Tendsto
+      (fun s : ℝ => (1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
+          - Real.exp (-(s * sigma))) / s ^ 7)
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) by
+    have hlim := (tendsto_const_nhds (x := sigma ^ 7 / 5040)).add hrem
+    simpa using hlim.congr' (halg.mono (fun s hs => hs.symm))
+  have htend_s : Filter.Tendsto (fun s : ℝ => s) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) :=
+    tendsto_nhdsWithin_of_tendsto_nhds tendsto_id
+  set C := |sigma| ^ 8 * (9 / (40320 * 8)) with hC_def
+  have hbnd : Filter.Tendsto (fun s : ℝ => s * C) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
+    simpa using htend_s.mul_const C
+  have hbnd_neg : Filter.Tendsto (fun s : ℝ => -(s * C)) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
+    simpa [neg_zero] using hbnd.neg
+  have hsmall : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0), |s * sigma| ≤ 1 := by
+    have hpos : (0 : ℝ) < 1 / (|sigma| + 1) := by positivity
+    have h0 : ∀ᶠ s in nhds (0 : ℝ), |s * sigma| ≤ 1 := by
+      filter_upwards [Metric.ball_mem_nhds 0 hpos] with s hs
+      rw [Metric.mem_ball, Real.dist_eq, sub_zero] at hs
+      calc |s * sigma| = |s| * |sigma| := abs_mul s sigma
+        _ ≤ |s| * (|sigma| + 1) := by nlinarith [abs_nonneg s, abs_nonneg sigma]
+        _ ≤ 1 / (|sigma| + 1) * (|sigma| + 1) :=
+              le_of_lt (mul_lt_mul_of_pos_right hs (by positivity))
+        _ = 1 := by field_simp
+    exact h0.filter_mono nhdsWithin_le_nhds
+  have habs_ev : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0),
+      |(1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
+          - Real.exp (-(s * sigma))) / s ^ 7| ≤ s * C := by
+    filter_upwards [self_mem_nhdsWithin, hsmall] with s hs hssigma
+    have hs0 : (0 : ℝ) < s := Set.mem_Ioi.mp hs
+    have hbc : |-(s * sigma)| ≤ 1 := by rwa [abs_neg]
+    have hbound := Real.exp_bound hbc (n := 8) (by norm_num)
+    have hsum : ∑ m ∈ Finset.range 8, (-(s * sigma)) ^ m / (m.factorial : ℝ) =
+        1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040 := by
+      simp only [Finset.sum_range_succ, Finset.range_zero, Finset.sum_empty, zero_add]
+      norm_num [Nat.factorial]; ring
+    rw [hsum, abs_neg, abs_mul, abs_of_pos hs0] at hbound
+    rw [abs_div, abs_of_pos (pow_pos hs0 7), div_le_iff₀ (pow_pos hs0 7)]
+    calc |1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+            - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
+            - Real.exp (-(s * sigma))|
+        = |Real.exp (-(s * sigma)) - (1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
+            + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720
+            - (s * sigma) ^ 7 / 5040)| :=
+          abs_sub_comm _ _
+      _ ≤ (s * |sigma|) ^ 8 * ((Nat.succ 8 : ℝ) / ((Nat.factorial 8 : ℝ) * 8)) := hbound
+      _ = s * C * s ^ 7 := by
+          rw [hC_def]
+          have h1 : (Nat.factorial 8 : ℝ) = 40320 := by norm_num [Nat.factorial]
+          have h2 : (Nat.succ 8 : ℝ) = 9 := by norm_num
+          rw [h1, h2]; ring
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le' hbnd_neg hbnd
+  · filter_upwards [habs_ev] with s habs
+    linarith [neg_le_neg habs, neg_abs_le ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
+      + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
+        - Real.exp (-(s * sigma))) / s ^ 7)]
+  · filter_upwards [habs_ev] with s habs
+    linarith [le_abs_self ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
+      + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
+        - Real.exp (-(s * sigma))) / s ^ 7)]
+
+
+/-- Order-3 Taylor coefficient of `p1(σ,s) = (1−sσ−e^{−sσ})/s²` at `0` is `σ⁵/120` — the order-3
+companion of `p1_limit` and `p1_quartic_coeff`. -/
+lemma p1_cubic_coeff (sigma : ℝ) :
+    Filter.Tendsto
+        (fun s : ℝ => ((1 - s * sigma - Real.exp (-(s * sigma))) / s ^ 2
+          - (-sigma ^ 2 / 2 + sigma ^ 3 / 6 * s - sigma ^ 4 / 24 * s ^ 2)) / s ^ 3)
+        (nhdsWithin 0 (Set.Ioi 0)) (nhds (sigma ^ 5 / 120)) := by
+  have halg : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0),
+      ((1 - s * sigma - Real.exp (-(s * sigma))) / s ^ 2
+          - (-sigma ^ 2 / 2 + sigma ^ 3 / 6 * s - sigma ^ 4 / 24 * s ^ 2)) / s ^ 3 =
+      sigma ^ 5 / 120 +
+        ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 - Real.exp (-(s * sigma))) / s ^ 5) := by
+    filter_upwards [self_mem_nhdsWithin] with s hs
+    have hs' : s ≠ 0 := (Set.mem_Ioi.mp hs).ne'
+    field_simp [hs']; ring
+  suffices hrem : Filter.Tendsto
+      (fun s : ℝ => (1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 - Real.exp (-(s * sigma))) / s ^ 5)
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) by
+    have hlim := (tendsto_const_nhds (x := sigma ^ 5 / 120)).add hrem
+    simpa using hlim.congr' (halg.mono (fun s hs => hs.symm))
+  have htend_s : Filter.Tendsto (fun s : ℝ => s) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) :=
+    tendsto_nhdsWithin_of_tendsto_nhds tendsto_id
+  set C := |sigma| ^ 6 * (7 / (720 * 6)) with hC_def
+  have hbnd : Filter.Tendsto (fun s : ℝ => s * C) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
+    simpa using htend_s.mul_const C
+  have hbnd_neg : Filter.Tendsto (fun s : ℝ => -(s * C)) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
+    simpa [neg_zero] using hbnd.neg
+  have hsmall : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0), |s * sigma| ≤ 1 := by
+    have hpos : (0 : ℝ) < 1 / (|sigma| + 1) := by positivity
+    have h0 : ∀ᶠ s in nhds (0 : ℝ), |s * sigma| ≤ 1 := by
+      filter_upwards [Metric.ball_mem_nhds 0 hpos] with s hs
+      rw [Metric.mem_ball, Real.dist_eq, sub_zero] at hs
+      calc |s * sigma| = |s| * |sigma| := abs_mul s sigma
+        _ ≤ |s| * (|sigma| + 1) := by nlinarith [abs_nonneg s, abs_nonneg sigma]
+        _ ≤ 1 / (|sigma| + 1) * (|sigma| + 1) :=
+              le_of_lt (mul_lt_mul_of_pos_right hs (by positivity))
+        _ = 1 := by field_simp
+    exact h0.filter_mono nhdsWithin_le_nhds
+  have habs_ev : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0),
+      |(1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 - Real.exp (-(s * sigma))) / s ^ 5| ≤ s * C := by
+    filter_upwards [self_mem_nhdsWithin, hsmall] with s hs hssigma
+    have hs0 : (0 : ℝ) < s := Set.mem_Ioi.mp hs
+    have hbc : |-(s * sigma)| ≤ 1 := by rwa [abs_neg]
+    have hbound := Real.exp_bound hbc (n := 6) (by norm_num)
+    have hsum : ∑ m ∈ Finset.range 6, (-(s * sigma)) ^ m / (m.factorial : ℝ) =
+        1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 := by
+      simp only [Finset.sum_range_succ, Finset.range_zero, Finset.sum_empty, zero_add]
+      norm_num [Nat.factorial]; ring
+    rw [hsum, abs_neg, abs_mul, abs_of_pos hs0] at hbound
+    rw [abs_div, abs_of_pos (pow_pos hs0 5), div_le_iff₀ (pow_pos hs0 5)]
+    calc |1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+            - (s * sigma) ^ 5 / 120 - Real.exp (-(s * sigma))|
+        = |Real.exp (-(s * sigma)) - (1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
+            + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120)| :=
+          abs_sub_comm _ _
+      _ ≤ (s * |sigma|) ^ 6 * ((Nat.succ 6 : ℝ) / ((Nat.factorial 6 : ℝ) * 6)) := hbound
+      _ = s * C * s ^ 5 := by
+          rw [hC_def]
+          have h1 : (Nat.factorial 6 : ℝ) = 720 := by norm_num [Nat.factorial]
+          have h2 : (Nat.succ 6 : ℝ) = 7 := by norm_num
+          rw [h1, h2]; ring
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le' hbnd_neg hbnd
+  · filter_upwards [habs_ev] with s habs
+    have h2 := neg_abs_le ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
+      + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 - Real.exp (-(s * sigma))) / s ^ 5)
+    linarith [neg_le_neg habs]
+  · filter_upwards [habs_ev] with s habs
+    linarith [le_abs_self ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
+      + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 - Real.exp (-(s * sigma))) / s ^ 5)]
+
+/-- Order-3 Taylor coefficient of `p2(σ,s) = (1−sσ+(sσ)²/2−e^{−sσ})/s³` at `0` is `−σ⁶/720` — the
+order-3 companion of `p2_limit` and `p2_quartic_coeff`. -/
+lemma p2_cubic_coeff (sigma : ℝ) :
+    Filter.Tendsto
+        (fun s : ℝ => ((1 - s * sigma + (s * sigma) ^ 2 / 2 - Real.exp (-(s * sigma))) / s ^ 3
+          - (sigma ^ 3 / 6 - sigma ^ 4 / 24 * s + sigma ^ 5 / 120 * s ^ 2)) / s ^ 3)
+        (nhdsWithin 0 (Set.Ioi 0)) (nhds (-sigma ^ 6 / 720)) := by
+  have halg : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0),
+      ((1 - s * sigma + (s * sigma) ^ 2 / 2 - Real.exp (-(s * sigma))) / s ^ 3
+          - (sigma ^ 3 / 6 - sigma ^ 4 / 24 * s + sigma ^ 5 / 120 * s ^ 2)) / s ^ 3 =
+      -sigma ^ 6 / 720 +
+        ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - Real.exp (-(s * sigma))) / s ^ 6) := by
+    filter_upwards [self_mem_nhdsWithin] with s hs
+    have hs' : s ≠ 0 := (Set.mem_Ioi.mp hs).ne'
+    field_simp [hs']; ring
+  suffices hrem : Filter.Tendsto
+      (fun s : ℝ => (1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - Real.exp (-(s * sigma))) / s ^ 6)
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) by
+    have hlim := (tendsto_const_nhds (x := -sigma ^ 6 / 720)).add hrem
+    simpa using hlim.congr' (halg.mono (fun s hs => hs.symm))
+  have htend_s : Filter.Tendsto (fun s : ℝ => s) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) :=
+    tendsto_nhdsWithin_of_tendsto_nhds tendsto_id
+  set C := |sigma| ^ 7 * (8 / (5040 * 7)) with hC_def
+  have hbnd : Filter.Tendsto (fun s : ℝ => s * C) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
+    simpa using htend_s.mul_const C
+  have hbnd_neg : Filter.Tendsto (fun s : ℝ => -(s * C)) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
+    simpa [neg_zero] using hbnd.neg
+  have hsmall : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0), |s * sigma| ≤ 1 := by
+    have hpos : (0 : ℝ) < 1 / (|sigma| + 1) := by positivity
+    have h0 : ∀ᶠ s in nhds (0 : ℝ), |s * sigma| ≤ 1 := by
+      filter_upwards [Metric.ball_mem_nhds 0 hpos] with s hs
+      rw [Metric.mem_ball, Real.dist_eq, sub_zero] at hs
+      calc |s * sigma| = |s| * |sigma| := abs_mul s sigma
+        _ ≤ |s| * (|sigma| + 1) := by nlinarith [abs_nonneg s, abs_nonneg sigma]
+        _ ≤ 1 / (|sigma| + 1) * (|sigma| + 1) :=
+              le_of_lt (mul_lt_mul_of_pos_right hs (by positivity))
+        _ = 1 := by field_simp
+    exact h0.filter_mono nhdsWithin_le_nhds
+  have habs_ev : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0),
+      |(1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - Real.exp (-(s * sigma))) / s ^ 6|
+        ≤ s * C := by
+    filter_upwards [self_mem_nhdsWithin, hsmall] with s hs hssigma
+    have hs0 : (0 : ℝ) < s := Set.mem_Ioi.mp hs
+    have hbc : |-(s * sigma)| ≤ 1 := by rwa [abs_neg]
+    have hbound := Real.exp_bound hbc (n := 7) (by norm_num)
+    have hsum : ∑ m ∈ Finset.range 7, (-(s * sigma)) ^ m / (m.factorial : ℝ) =
+        1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 := by
+      simp only [Finset.sum_range_succ, Finset.range_zero, Finset.sum_empty, zero_add]
+      norm_num [Nat.factorial]; ring
+    rw [hsum, abs_neg, abs_mul, abs_of_pos hs0] at hbound
+    rw [abs_div, abs_of_pos (pow_pos hs0 6), div_le_iff₀ (pow_pos hs0 6)]
+    calc |1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
+            - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - Real.exp (-(s * sigma))|
+        = |Real.exp (-(s * sigma)) - (1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
+            + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720)| :=
+          abs_sub_comm _ _
+      _ ≤ (s * |sigma|) ^ 7 * ((Nat.succ 7 : ℝ) / ((Nat.factorial 7 : ℝ) * 7)) := hbound
+      _ = s * C * s ^ 6 := by
+          rw [hC_def]
+          have h1 : (Nat.factorial 7 : ℝ) = 5040 := by norm_num [Nat.factorial]
+          have h2 : (Nat.succ 7 : ℝ) = 8 := by norm_num
+          rw [h1, h2]; ring
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le' hbnd_neg hbnd
+  · filter_upwards [habs_ev] with s habs
+    have h2 := neg_abs_le ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
+      + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720
+      - Real.exp (-(s * sigma))) / s ^ 6)
+    linarith [neg_le_neg habs]
+  · filter_upwards [habs_ev] with s habs
+    linarith [le_abs_self ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
+      + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720
+      - Real.exp (-(s * sigma))) / s ^ 6)]
+
+/-- Order-3 Taylor remainder of the entire function `e^{−λz}`:
+`(e^{−λz} − (1 − λz + (λz)²/2 − (λz)³/6))/z³ → 0` as `z → 0⁺` — the order-3 companion of
+`exp_neg_quartic_rem`. -/
+lemma exp_neg_cubic_rem (lam : ℝ) :
+    Filter.Tendsto
+        (fun z : ℝ => (Real.exp (-(lam * z))
+          - (1 - lam * z + (lam * z) ^ 2 / 2 - (lam * z) ^ 3 / 6)) / z ^ 3)
+        (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
+  have htend_z : Filter.Tendsto (fun z : ℝ => z) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) :=
+    tendsto_nhdsWithin_of_tendsto_nhds tendsto_id
+  set C := |lam| ^ 4 * (5 / (24 * 4)) with hC_def
+  have hbnd : Filter.Tendsto (fun z : ℝ => z * C) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
+    simpa using htend_z.mul_const C
+  have hbnd_neg : Filter.Tendsto (fun z : ℝ => -(z * C)) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
+    simpa [neg_zero] using hbnd.neg
+  have hsmall : ∀ᶠ z in nhdsWithin 0 (Set.Ioi 0), |z * lam| ≤ 1 := by
+    have hpos : (0 : ℝ) < 1 / (|lam| + 1) := by positivity
+    have h0 : ∀ᶠ z in nhds (0 : ℝ), |z * lam| ≤ 1 := by
+      filter_upwards [Metric.ball_mem_nhds 0 hpos] with z hz
+      rw [Metric.mem_ball, Real.dist_eq, sub_zero] at hz
+      calc |z * lam| = |z| * |lam| := abs_mul z lam
+        _ ≤ |z| * (|lam| + 1) := by nlinarith [abs_nonneg z, abs_nonneg lam]
+        _ ≤ 1 / (|lam| + 1) * (|lam| + 1) :=
+              le_of_lt (mul_lt_mul_of_pos_right hz (by positivity))
+        _ = 1 := by field_simp
+    exact h0.filter_mono nhdsWithin_le_nhds
+  have habs_ev : ∀ᶠ z in nhdsWithin 0 (Set.Ioi 0),
+      |(Real.exp (-(lam * z))
+          - (1 - lam * z + (lam * z) ^ 2 / 2 - (lam * z) ^ 3 / 6)) / z ^ 3| ≤ z * C := by
+    filter_upwards [self_mem_nhdsWithin, hsmall] with z hz hzlam
+    have hz0 : (0 : ℝ) < z := Set.mem_Ioi.mp hz
+    have hbc : |-(lam * z)| ≤ 1 := by rw [abs_neg, mul_comm]; exact hzlam
+    have hbound := Real.exp_bound hbc (n := 4) (by norm_num)
+    have hsum : ∑ m ∈ Finset.range 4, (-(lam * z)) ^ m / (m.factorial : ℝ) =
+        1 - lam * z + (lam * z) ^ 2 / 2 - (lam * z) ^ 3 / 6 := by
+      simp only [Finset.sum_range_succ, Finset.range_zero, Finset.sum_empty, zero_add]
+      norm_num [Nat.factorial]; ring
+    rw [hsum] at hbound
+    have hlamz : |-(lam * z)| = |lam| * z := by rw [abs_neg, abs_mul, abs_of_pos hz0]
+    rw [hlamz] at hbound
+    rw [abs_div, abs_of_pos (pow_pos hz0 3), div_le_iff₀ (pow_pos hz0 3)]
+    calc |Real.exp (-(lam * z)) - (1 - lam * z + (lam * z) ^ 2 / 2 - (lam * z) ^ 3 / 6)|
+        ≤ (|lam| * z) ^ 4 * ((Nat.succ 4 : ℝ) / ((Nat.factorial 4 : ℝ) * 4)) := hbound
+      _ = z * C * z ^ 3 := by
+          rw [hC_def]
+          have h1 : (Nat.factorial 4 : ℝ) = 24 := by norm_num [Nat.factorial]
+          have h2 : (Nat.succ 4 : ℝ) = 5 := by norm_num
+          rw [h1, h2]; ring
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le' hbnd_neg hbnd
+  · filter_upwards [habs_ev] with z habs
+    linarith [neg_le_neg habs, neg_abs_le ((Real.exp (-(lam * z))
+      - (1 - lam * z + (lam * z) ^ 2 / 2 - (lam * z) ^ 3 / 6)) / z ^ 3)]
+  · filter_upwards [habs_ev] with z habs
+    linarith [le_abs_self ((Real.exp (-(lam * z))
+      - (1 - lam * z + (lam * z) ^ 2 / 2 - (lam * z) ^ 3 / 6)) / z ^ 3)]
 
 end FMSA.Taylor4

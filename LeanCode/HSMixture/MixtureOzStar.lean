@@ -11,6 +11,7 @@ import LeanCode.HardSphere.BaxterOzStar
 import LeanCode.HardSphere.RadialLaplace
 import LeanCode.HardSphere.BaxterRenewal
 import LeanCode.HardSphere.ShellKernel
+import LeanCode.Analysis.VolterraBanach
 
 /-!
 # Matrix OZ★ — the mixture real-space Ornstein–Zernike identity (foundation)
@@ -317,6 +318,309 @@ theorem matRenewalEq_fin_one_of_scalar {eta sigma rho : ℝ} :
   fin_cases i; fin_cases j
   simp only [Fin.sum_univ_one]
   exact baxterPsiOuter_spec hr
+
+/-- **Constructing `Ψouter` — the matrix Volterra system is solvable.**  The mixture Baxter renewal
+`Ψ(r) = F(r) + ∫_σ^r Q(r−t)·Ψ(t) dt` (matrix product; the species-coupling `∑ₖ Qᵢₖ·Ψₖⱼ` *is*
+`(Q·Ψ)ᵢⱼ`) has a **unique continuous matrix solution** on `[σ,b]` — the `Ψouter` the matrix
+`baxterPsi` needs. Direct instantiation of the Banach generalization of `MA.10`
+(`volterra_convolution_existsUniqueE`, `Analysis/VolterraBanach.lean`) at the complete normed ring
+`E = Matrix (Fin N) (Fin N) ℝ` (with the submultiplicative `Matrix.linftyOp` norm). The entrywise
+`MatRenewalEq` form follows by the matrix-entry evaluation commuting with the integral
+(`Matrix.mul_apply` + `ContinuousLinearMap.intervalIntegral_comp_comm`), a mechanical step. -/
+theorem matVolterra_convolution_existsUnique {N : ℕ} {sigma b : ℝ} (hsb : sigma ≤ b)
+    (Q F : ℝ → Matrix (Fin N) (Fin N) ℝ) (hQ : Continuous Q) (hF : Continuous F) :
+    letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+    letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+    ∃! u : C(Set.Icc sigma b, Matrix (Fin N) (Fin N) ℝ), ∀ r : Set.Icc sigma b,
+      u r = F r + ∫ t in sigma..(r : ℝ), Q ((r : ℝ) - t) * Set.IccExtend hsb u t := by
+  letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+  exact FMSA.VolterraBanach.volterra_convolution_existsUniqueE hsb Q F hQ hF
+
+/-! ### Entry extraction — from the matrix-product renewal to the `∑ₖ` `MatRenewalEq` form
+
+`matVolterra_convolution_existsUnique` gives `Ψouter` in **matrix-product** form
+`u(r) = F(r) + ∫ Q(r−t)·u(t) dt`. Getting the entrywise `MatRenewalEq` (`∑ₖ ∫ Qᵢₖ·Ψₖⱼ`) needs the
+matrix-entry evaluation to commute with the Bochner integral. This routes through
+`ContinuousLinearMap.intervalIntegral_comp_comm` at the entry CLM `Matrix.entryLinearMap.toCLM`, which
+requires `IntervalIntegrable (f : ℝ → Matrix ℝ)`.
+
+⚠ **Matrix-norm instance-diamond fix.** Under the `letI`'d `Matrix.linftyOp` norm, that predicate does
+**not** elaborate on its own — `ENormedAddMonoid (Matrix ℝ)` is not synthesized (the default `Matrix`
+product topology competes with the norm's, so `NormedAddCommGroup.toENormedAddCommMonoid`'s topology
+does not unify). The fix is to **provide it explicitly**:
+`letI : ENormedAddCommMonoid (Matrix ℝ) := NormedAddCommGroup.toENormedAddCommMonoid`, which pins the
+norm-induced topology. With that one `letI`, the entry-of-integral commute goes through. -/
+
+/-- **Entry of a matrix interval integral = interval integral of the entry.**  `(∫ f)ᵢⱼ = ∫ fᵢⱼ` for
+`f : ℝ → Matrix ℝ`, via `ContinuousLinearMap.intervalIntegral_comp_comm` at the entry CLM.  The
+`ENormedAddCommMonoid` `letI` is the instance-diamond fix (see the section note). -/
+theorem matrix_intervalIntegral_apply {N : ℕ}
+    (f : ℝ → Matrix (Fin N) (Fin N) ℝ) (a b : ℝ) (i j : Fin N)
+    (hf : letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+          letI : ENormedAddCommMonoid (Matrix (Fin N) (Fin N) ℝ) :=
+            NormedAddCommGroup.toENormedAddCommMonoid
+          IntervalIntegrable f MeasureTheory.volume a b) :
+    letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+    letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+    (∫ t in a..b, f t) i j = ∫ t in a..b, (f t) i j := by
+  letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+  letI : ENormedAddCommMonoid (Matrix (Fin N) (Fin N) ℝ) :=
+    NormedAddCommGroup.toENormedAddCommMonoid
+  let hL : Matrix (Fin N) (Fin N) ℝ →L[ℝ] ℝ :=
+    LinearMap.toContinuousLinearMap (Matrix.entryLinearMap ℝ ℝ i j)
+  exact (hL.intervalIntegral_comp_comm hf).symm
+
+/-- **The renewal's convolution term, entrywise = the `∑ₖ` `MatRenewalEq` form.**
+`(∫ Q(t)·U(t) dt)ᵢⱼ = ∑ₖ ∫ Qᵢₖ(t)·Uₖⱼ(t) dt` for continuous matrix-valued `Q, U` — the composite of
+`matrix_intervalIntegral_apply`, `Matrix.mul_apply`, and `intervalIntegral.integral_finsetSum`. This
+turns the matrix-product `Ψouter` (`matVolterra_convolution_existsUnique`) into the `∑ₖ` species-sum
+of `MatRenewalEq`. -/
+theorem matrix_mul_intervalIntegral_entry {N : ℕ}
+    (Q U : ℝ → Matrix (Fin N) (Fin N) ℝ) (a b : ℝ) (i j : Fin N)
+    (hQ : Continuous Q) (hU : Continuous U) :
+    letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+    letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+    (∫ t in a..b, Q t * U t) i j = ∑ k, ∫ t in a..b, (Q t) i k * (U t) k j := by
+  letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+  letI : ENormedAddCommMonoid (Matrix (Fin N) (Fin N) ℝ) :=
+    NormedAddCommGroup.toENormedAddCommMonoid
+  have hint : IntervalIntegrable (fun t => Q t * U t) MeasureTheory.volume a b :=
+    (hQ.mul hU).intervalIntegrable a b
+  rw [matrix_intervalIntegral_apply _ a b i j hint]
+  have hstep : (fun t => (Q t * U t) i j) = fun t => ∑ k, (Q t) i k * (U t) k j := by
+    funext t; rw [Matrix.mul_apply]
+  rw [hstep, intervalIntegral.integral_finsetSum]
+  intro k _
+  exact ((hQ.matrix_elem i k).mul (hU.matrix_elem k j)).intervalIntegrable a b
+
+/-- **Entry extraction, end-to-end — the matrix-product renewal *is* `MatRenewalEq`.**  From a
+matrix-product renewal `Ψ(r) = F(r) + ∫_σ^r Q(r−t)·Ψ(t) dt` (the `matVolterra_convolution_existsUnique`
+form) with continuous `Ψ, Q`, the entrywise `MatRenewalEq` holds for the entry families
+`Ψᵢⱼ = (Ψ ·)ᵢⱼ`, `Fᵢⱼ = (F ·)ᵢⱼ`, `Qᵢₖ = (Q ·)ᵢₖ`.  Pure application of
+`matrix_mul_intervalIntegral_entry` per entry — so `Ψouter` is now constructed **in the `∑ₖ`
+`MatRenewalEq` form the matrix `baxterPsi` consumes**, the plumbing fully resolved. -/
+theorem matRenewalEq_of_matrixProduct {N : ℕ} {sigma : ℝ}
+    (Psi Q F : ℝ → Matrix (Fin N) (Fin N) ℝ) (hQ : Continuous Q) (hPsi : Continuous Psi)
+    (hrenewal : letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+      letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+      ∀ r : ℝ, sigma ≤ r → Psi r = F r + ∫ t in sigma..r, Q (r - t) * Psi t) :
+    MatRenewalEq (fun i j => fun r => (Psi r) i j) (fun i j => fun r => (F r) i j)
+      (fun i k => fun s => (Q s) i k) sigma := by
+  letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+  intro i j r hr
+  change (Psi r) i j = (F r) i j + ∑ k, ∫ t in sigma..r, (Q (r - t)) i k * (Psi t) k j
+  have hentry : (Psi r) i j = (F r) i j + (∫ t in sigma..r, Q (r - t) * Psi t) i j := by
+    rw [hrenewal r hr]; rfl
+  rw [hentry]
+  congr 1
+  exact matrix_mul_intervalIntegral_entry (fun t => Q (r - t)) Psi sigma r i j
+    (hQ.comp (continuous_const.sub continuous_id)) hPsi
+
+/-! ### Matrix `F[K]=Ĉ` (`OZFIX.18` F-part) — per entry via the general-`c` shell identity
+
+The scalar `baxterK_cos_eq_radial_fourier` (`OZFIX.18` F-part) matches the Fourier transform of the
+Baxter shell kernel with the DCF `radial_fourier`. Its matrix form is that identity **per entry**
+`(i,j)`, with the general-`c` `shellKernel_cos_eq_radial_fourier` (`ShellKernel.lean`) as the input —
+each mixture DCF entry `C₀ᵢⱼ` being a different `c`-shape. The `n = 1` bridge recovers the scalar. -/
+
+/-- **Matrix `F[K]=Ĉ`, entrywise.**  `2∫₀^σ shellKernel(C₀ᵢⱼ)·cos(kv) dv = radial_fourier(C₀ᵢⱼ)(k)`
+for `k ≠ 0`, from the general-`c` `shellKernel_cos_eq_radial_fourier`. The Fourier-side factorization
+`I − ρĈ` matches `F[ρK]` for the matrix Baxter kernels, per entry. -/
+theorem matShellKernel_cos_eq_radial_fourier {N : ℕ} (C : Matrix (Fin N) (Fin N) (ℝ → ℝ))
+    {sigma : ℝ} (hsigma : 0 < sigma) (i j : Fin N)
+    (hc_outer : ∀ s, sigma ≤ s → C i j s = 0)
+    (hint : ∀ a b, IntervalIntegrable (fun s : ℝ => s * C i j s) MeasureTheory.volume a b)
+    (hccore : ∀ v ∈ Set.Ioo (0 : ℝ) sigma, ContinuousAt (fun s : ℝ => s * C i j s) v)
+    (hmeas : ∀ v ∈ Set.Ioo (0 : ℝ) sigma,
+      StronglyMeasurableAtFilter (fun s : ℝ => s * C i j s) (nhds v))
+    {k : ℝ} (hk : k ≠ 0) :
+    2 * ∫ v in (0 : ℝ)..sigma, shellKernel (C i j) sigma v * Real.cos (k * v)
+      = radial_fourier (C i j) k :=
+  shellKernel_cos_eq_radial_fourier hsigma hc_outer hint hccore hmeas hk
+
+/-- **`n = 1` bridge — matrix `F[K]=Ĉ` at one component is the scalar `baxterK_cos_eq_radial_fourier`.** -/
+theorem matShellKernel_cos_eq_radial_fourier_fin_one_of_scalar {eta sigma : ℝ} (hsigma : 0 < sigma)
+    {k : ℝ} (hk : k ≠ 0) :
+    2 * ∫ v in (0 : ℝ)..sigma,
+        shellKernel ((fun _ _ => c_HS eta sigma : Matrix (Fin 1) (Fin 1) (ℝ → ℝ)) 0 0) sigma v
+          * Real.cos (k * v)
+      = radial_fourier ((fun _ _ => c_HS eta sigma : Matrix (Fin 1) (Fin 1) (ℝ → ℝ)) 0 0) k := by
+  show 2 * ∫ v in (0 : ℝ)..sigma, shellKernel (c_HS eta sigma) sigma v * Real.cos (k * v)
+      = radial_fourier (c_HS eta sigma) k
+  simp only [shellKernel_c_HS]
+  exact baxterK_cos_eq_radial_fourier hsigma hk
+
+/-! ### Matrix 2D reindex (`OZFIX.20`) — the double-convolution associativity, two-function form -/
+
+/-- **Matrix 2D reindex (`OZFIX.20`).**  Summing the two-function reindex over the intermediate
+species `k`: the matrix double convolution `∑ₖ (Qᵢₖ ⋆ Qⱼₖ) ⋆ ψ` collapses to the matrix
+self-kernel `matSelfConv` in the two asymmetric weights.  The kernels are `matSelfConv Q σ u i j`
+(weighting `ψ(r+u)`) and its transpose `matSelfConv Q σ u j i` (weighting `ψ(r−u)`). -/
+theorem matDblConv_reindex {N : ℕ} (Q : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (psi : ℝ → ℝ)
+    {sigma : ℝ} (hsigma : 0 < sigma) (r : ℝ) (i j : Fin N)
+    (hswapP : ∀ k, MeasureTheory.Integrable
+      (Function.uncurry fun u t => (Set.Ioi u).indicator
+        (fun t => Q i k t * Q j k (t - u) * psi (r + u)) t)
+      ((MeasureTheory.volume.restrict (Set.Ioc 0 sigma)).prod
+        (MeasureTheory.volume.restrict (Set.Ioc 0 sigma))))
+    (hswapM : ∀ k, MeasureTheory.Integrable
+      (Function.uncurry fun u t => (Set.Ioi u).indicator
+        (fun t => Q j k t * Q i k (t - u) * psi (r - u)) t)
+      ((MeasureTheory.volume.restrict (Set.Ioc 0 sigma)).prod
+        (MeasureTheory.volume.restrict (Set.Ioc 0 sigma))))
+    (hswapA : ∀ k, MeasureTheory.Integrable
+      (Function.uncurry fun t s => (Set.Ioi t).indicator
+        (fun s => Q i k t * Q j k s * psi (r + t - s)) s)
+      ((MeasureTheory.volume.restrict (Set.Ioc 0 sigma)).prod
+        (MeasureTheory.volume.restrict (Set.Ioc 0 sigma))))
+    (hsliceLa : ∀ k (t : ℝ), IntervalIntegrable (fun s => Q i k t * Q j k s * psi (r + t - s))
+      MeasureTheory.volume 0 t)
+    (hsliceRa : ∀ k (t : ℝ), IntervalIntegrable (fun s => Q i k t * Q j k s * psi (r + t - s))
+      MeasureTheory.volume t sigma)
+    (haddI : ∀ k, IntervalIntegrable (fun t => ∫ s in (0:ℝ)..t, Q i k t * Q j k s * psi (r + t - s))
+      MeasureTheory.volume 0 sigma)
+    (haddII : ∀ k, IntervalIntegrable (fun t => ∫ s in t..sigma, Q i k t * Q j k s * psi (r + t - s))
+      MeasureTheory.volume 0 sigma)
+    (haddRp : ∀ k, IntervalIntegrable
+      (fun u => (∫ t in u..sigma, Q i k t * Q j k (t - u)) * psi (r + u))
+      MeasureTheory.volume 0 sigma)
+    (haddRm : ∀ k, IntervalIntegrable
+      (fun u => (∫ t in u..sigma, Q j k t * Q i k (t - u)) * psi (r - u))
+      MeasureTheory.volume 0 sigma) :
+    (∑ k, ∫ t in (0:ℝ)..sigma, Q i k t * ∫ s in (0:ℝ)..sigma, Q j k s * psi (r + t - s))
+      = ∫ u in (0:ℝ)..sigma,
+          (matSelfConv Q sigma u i j * psi (r + u) + matSelfConv Q sigma u j i * psi (r - u)) := by
+  have hper : ∀ k, (∫ t in (0:ℝ)..sigma, Q i k t * ∫ s in (0:ℝ)..sigma, Q j k s * psi (r + t - s))
+      = ∫ u in (0:ℝ)..sigma, ((∫ t in u..sigma, Q i k t * Q j k (t - u)) * psi (r + u)
+          + (∫ t in u..sigma, Q j k t * Q i k (t - u)) * psi (r - u)) := fun k =>
+    dbl_conv_reindex_two hsigma (Q i k) (Q j k) psi r (hswapP k) (hswapM k) (hswapA k)
+      (hsliceLa k) (hsliceRa k) (haddI k) (haddII k) (haddRp k) (haddRm k)
+  calc (∑ k, ∫ t in (0:ℝ)..sigma, Q i k t * ∫ s in (0:ℝ)..sigma, Q j k s * psi (r + t - s))
+      = ∑ k, ∫ u in (0:ℝ)..sigma, ((∫ t in u..sigma, Q i k t * Q j k (t - u)) * psi (r + u)
+          + (∫ t in u..sigma, Q j k t * Q i k (t - u)) * psi (r - u)) :=
+        Finset.sum_congr rfl (fun k _ => hper k)
+    _ = ∫ u in (0:ℝ)..sigma, ∑ k, ((∫ t in u..sigma, Q i k t * Q j k (t - u)) * psi (r + u)
+          + (∫ t in u..sigma, Q j k t * Q i k (t - u)) * psi (r - u)) :=
+        (intervalIntegral.integral_finsetSum (fun k _ => (haddRp k).add (haddRm k))).symm
+    _ = ∫ u in (0:ℝ)..sigma,
+          (matSelfConv Q sigma u i j * psi (r + u) + matSelfConv Q sigma u j i * psi (r - u)) := by
+        refine intervalIntegral.integral_congr fun u _ => ?_
+        rw [Finset.sum_add_distrib, ← Finset.sum_mul, ← Finset.sum_mul]
+        rfl
+
+/-- **`n = 1` bridge — matrix 2D reindex at `Fin 1` is the scalar two-function reindex (`q0a=q0b`).** -/
+theorem matDblConv_reindex_fin_one {q0 psi : ℝ → ℝ} {sigma : ℝ} (hsigma : 0 < sigma) (r : ℝ)
+    (Q : Matrix (Fin 1) (Fin 1) (ℝ → ℝ)) (hQ : Q 0 0 = q0)
+    (hswapP : MeasureTheory.Integrable
+      (Function.uncurry fun u t => (Set.Ioi u).indicator
+        (fun t => q0 t * q0 (t - u) * psi (r + u)) t)
+      ((MeasureTheory.volume.restrict (Set.Ioc 0 sigma)).prod
+        (MeasureTheory.volume.restrict (Set.Ioc 0 sigma))))
+    (hswapM : MeasureTheory.Integrable
+      (Function.uncurry fun u t => (Set.Ioi u).indicator
+        (fun t => q0 t * q0 (t - u) * psi (r - u)) t)
+      ((MeasureTheory.volume.restrict (Set.Ioc 0 sigma)).prod
+        (MeasureTheory.volume.restrict (Set.Ioc 0 sigma))))
+    (hswapA : MeasureTheory.Integrable
+      (Function.uncurry fun t s => (Set.Ioi t).indicator
+        (fun s => q0 t * q0 s * psi (r + t - s)) s)
+      ((MeasureTheory.volume.restrict (Set.Ioc 0 sigma)).prod
+        (MeasureTheory.volume.restrict (Set.Ioc 0 sigma))))
+    (hsliceLa : ∀ t : ℝ, IntervalIntegrable (fun s => q0 t * q0 s * psi (r + t - s))
+      MeasureTheory.volume 0 t)
+    (hsliceRa : ∀ t : ℝ, IntervalIntegrable (fun s => q0 t * q0 s * psi (r + t - s))
+      MeasureTheory.volume t sigma)
+    (haddI : IntervalIntegrable (fun t => ∫ s in (0:ℝ)..t, q0 t * q0 s * psi (r + t - s))
+      MeasureTheory.volume 0 sigma)
+    (haddII : IntervalIntegrable (fun t => ∫ s in t..sigma, q0 t * q0 s * psi (r + t - s))
+      MeasureTheory.volume 0 sigma)
+    (haddR : IntervalIntegrable
+      (fun u => (∫ t in u..sigma, q0 t * q0 (t - u)) * psi (r + u))
+      MeasureTheory.volume 0 sigma)
+    (haddR' : IntervalIntegrable
+      (fun u => (∫ t in u..sigma, q0 t * q0 (t - u)) * psi (r - u))
+      MeasureTheory.volume 0 sigma) :
+    (∑ k, ∫ t in (0:ℝ)..sigma, Q 0 k t * ∫ s in (0:ℝ)..sigma, Q 0 k s * psi (r + t - s))
+      = ∫ u in (0:ℝ)..sigma,
+          (matSelfConv Q sigma u 0 0 * psi (r + u) + matSelfConv Q sigma u 0 0 * psi (r - u)) := by
+  subst hQ
+  exact matDblConv_reindex Q psi hsigma r 0 0
+    (fun k => by fin_cases k; exact hswapP) (fun k => by fin_cases k; exact hswapM)
+    (fun k => by fin_cases k; exact hswapA) (fun k => by fin_cases k; exact hsliceLa)
+    (fun k => by fin_cases k; exact hsliceRa) (fun k => by fin_cases k; exact haddI)
+    (fun k => by fin_cases k; exact haddII) (fun k => by fin_cases k; exact haddR)
+    (fun k => by fin_cases k; exact haddR')
+
+/-! ### Matrix OZ★ assembly (`OZFIX.15/19/20` combined) — `MatOZStar` from renewal + KDEF + bridge -/
+
+/-- **claimB, KDEF split.**  Substituting the matrix factorization `ρ·Kᵢₖ = Qᵢₖ − matSelfConv(i,k)`
+(a.e. on the open core) into `ρ·matShellConv` splits it into the linear `Q`-shell minus the
+self-convolution shell — the matrix analog of the scalar `hsplitB`/`hFirst` step. -/
+theorem matShellConv_kdef_split {N : ℕ} (Kmat Q G : Matrix (Fin N) (Fin N) (ℝ → ℝ))
+    {rho sigma r : ℝ} (hsigma : 0 < sigma) (i j : Fin N)
+    (hfact : MatBaxterFactorization Kmat Q rho sigma)
+    (hQint : ∀ k, IntervalIntegrable
+      (fun u => Q i k u * (oddExt (G k j) (r - u) + oddExt (G k j) (r + u)))
+      MeasureTheory.volume 0 sigma)
+    (hSint : ∀ k, IntervalIntegrable
+      (fun u => matSelfConv Q sigma u i k * (oddExt (G k j) (r - u) + oddExt (G k j) (r + u)))
+      MeasureTheory.volume 0 sigma) :
+    rho * matShellConv Kmat G sigma r i j
+      = (∑ k, ∫ u in (0:ℝ)..sigma,
+            Q i k u * (oddExt (G k j) (r - u) + oddExt (G k j) (r + u)))
+        - ∑ k, ∫ u in (0:ℝ)..sigma,
+            matSelfConv Q sigma u i k * (oddExt (G k j) (r - u) + oddExt (G k j) (r + u)) := by
+  rw [matShellConv_apply, Finset.mul_sum, ← Finset.sum_sub_distrib]
+  refine Finset.sum_congr rfl fun k _ => ?_
+  rw [← intervalIntegral.integral_const_mul, ← intervalIntegral.integral_sub (hQint k) (hSint k)]
+  have hne : ∀ᵐ (x : ℝ), x ≠ sigma := by
+    rw [MeasureTheory.ae_iff]; simp [MeasureTheory.measure_singleton]
+  refine intervalIntegral.integral_congr_ae ?_
+  rw [Set.uIoc_of_le hsigma.le]
+  filter_upwards [hne] with u hune hmem
+  have hu : u ∈ Set.Ioo (0:ℝ) sigma := ⟨hmem.1, lt_of_le_of_ne hmem.2 hune⟩
+  show rho * (Kmat i k u * (oddExt (G k j) (r - u) + oddExt (G k j) (r + u)))
+      = Q i k u * (oddExt (G k j) (r - u) + oddExt (G k j) (r + u))
+        - matSelfConv Q sigma u i k * (oddExt (G k j) (r - u) + oddExt (G k j) (r + u))
+  rw [show rho * (Kmat i k u * (oddExt (G k j) (r - u) + oddExt (G k j) (r + u)))
+      = (rho * Kmat i k u) * (oddExt (G k j) (r - u) + oddExt (G k j) (r + u)) by ring,
+    hfact i k u hu]
+  ring
+
+/-- **Matrix OZ★, assembled (`OZFIX.15/19/20` combined).**  From the matrix renewal identity in
+shell form (`hclaimA`, the `OZFIX.15` analog of `baxter_psi_conv_eq_phi`), the shell-conv bridge
+(`hbridge`, `OZFIX.19` = `matRadialConv_eq_matShellConv`), the factorization (`hfact`, KDEF), and
+the shell integrability, the matrix real-space Ornstein–Zernike identity `MatOZStar` holds.  Mirrors
+the scalar `baxterPsi_eq_phi_add_rho_conv`: `claimA` (renewal) supplies `Ψ − r·Φ`, and `ρ·matShellConv`
+(bridge + KDEF split) supplies the same shell expression. -/
+theorem matOzStar_of_shellClaims {N : ℕ} (Psi Phi Kmat Q : Matrix (Fin N) (Fin N) (ℝ → ℝ))
+    {rho sigma : ℝ} (hsigma : 0 < sigma)
+    (hfact : MatBaxterFactorization Kmat Q rho sigma)
+    (hbridge : ∀ (i j : Fin N) (r : ℝ), 0 < r →
+      r * matRadialConv Phi (fun k l => fun x => Psi k l x / x) r i j
+        = matShellConv Kmat (fun k l => fun x => Psi k l x / x) sigma r i j)
+    (hQint : ∀ (i j : Fin N) (r : ℝ), 0 < r → ∀ k, IntervalIntegrable
+      (fun u => Q i k u * (oddExt (fun x => Psi k j x / x) (r - u)
+        + oddExt (fun x => Psi k j x / x) (r + u))) MeasureTheory.volume 0 sigma)
+    (hSint : ∀ (i j : Fin N) (r : ℝ), 0 < r → ∀ k, IntervalIntegrable
+      (fun u => matSelfConv Q sigma u i k * (oddExt (fun x => Psi k j x / x) (r - u)
+        + oddExt (fun x => Psi k j x / x) (r + u))) MeasureTheory.volume 0 sigma)
+    (hclaimA : ∀ (i j : Fin N) (r : ℝ), 0 < r → Psi i j r = r * Phi i j r
+        + ((∑ k, ∫ u in (0:ℝ)..sigma, Q i k u
+              * (oddExt (fun x => Psi k j x / x) (r - u) + oddExt (fun x => Psi k j x / x) (r + u)))
+          - ∑ k, ∫ u in (0:ℝ)..sigma, matSelfConv Q sigma u i k
+              * (oddExt (fun x => Psi k j x / x) (r - u) + oddExt (fun x => Psi k j x / x) (r + u)))) :
+    MatOZStar Psi Phi rho := by
+  intro i j r hr
+  rw [hclaimA i j r hr]
+  congr 1
+  rw [hbridge i j r hr,
+    matShellConv_kdef_split Kmat Q (fun k l => fun x => Psi k l x / x) hsigma i j hfact
+      (hQint i j r hr) (hSint i j r hr)]
 
 end
 

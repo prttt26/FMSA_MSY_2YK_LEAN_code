@@ -8,7 +8,7 @@ Authors: FMSA project
 
 import Mathlib
 import LeanCode.Analysis.Taylor4Calculus
-import LeanCode.YukawaDCF.MixturePolyCoeffs
+import LeanCode.HSMixture.MatrixQ0
 
 /-!
 # Task MPOLY — Faithful inner-core polynomial coefficients via the `s=0` Laurent expansion
@@ -25,8 +25,11 @@ q₁₁q₂₂−q₁₂q₂₁` + the inverse-entry series (Eq 130). **MPOLY.4*
 machinery (Eq 105/120, extends GAP.8; the fallback endpoint). **MPOLY.5 (crux)** — the exact `S_01(s)`
 from the transform equation (§9.4.5) ⇒ concrete `D_01`.
 
-The Taylor-remainder lemmas mirror GAP.9's cubic ones (`p1_cubic_coeff`, `p2_cubic_coeff`,
-`exp_neg_cubic_rem`), one order higher, via `Real.exp_bound`.
+The order-`k` p1/p2 Baxter-block Taylor coefficients (`p1_limit`/`p2_limit`, the cubic ones, and
+`p1_quartic_coeff`/`p2_quartic_coeff`/`exp_neg_quartic_rem`) are pure real-analysis and live in
+`Analysis/Taylor4Calculus.lean` (`open FMSA.Taylor4` above); this file keeps only the mixture
+assembly (`q0_entry_taylor4`, `taylor4_inv_entry`).  Moved to `HSMixture/` and de-coupled from
+`MixturePolyCoeffs` in `MRS.9d` (2026-07-27) — see `proof_notes_mixture_rdf.md`.
 -/
 
 set_option linter.style.longLine false
@@ -36,87 +39,6 @@ open Filter
 open FMSA.Taylor4
 
 namespace FMSA.MixtureLaurent
-
-/-- Order-4 Taylor coefficient of `p2(σ,s) = (1−sσ+(sσ)²/2−e^{−sσ})/s³` at 0 is `σ⁷/5040`. -/
-lemma p2_quartic_coeff (sigma : ℝ) :
-    Filter.Tendsto
-        (fun s : ℝ => ((1 - s * sigma + (s * sigma) ^ 2 / 2 - Real.exp (-(s * sigma))) / s ^ 3
-          - (sigma ^ 3 / 6 - sigma ^ 4 / 24 * s + sigma ^ 5 / 120 * s ^ 2 - sigma ^ 6 / 720 * s ^ 3))
-            / s ^ 4)
-        (nhdsWithin 0 (Set.Ioi 0)) (nhds (sigma ^ 7 / 5040)) := by
-  have halg : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0),
-      ((1 - s * sigma + (s * sigma) ^ 2 / 2 - Real.exp (-(s * sigma))) / s ^ 3
-          - (sigma ^ 3 / 6 - sigma ^ 4 / 24 * s + sigma ^ 5 / 120 * s ^ 2 - sigma ^ 6 / 720 * s ^ 3))
-            / s ^ 4 =
-      sigma ^ 7 / 5040 +
-        ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
-          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
-          - Real.exp (-(s * sigma))) / s ^ 7) := by
-    filter_upwards [self_mem_nhdsWithin] with s hs
-    have hs' : s ≠ 0 := (Set.mem_Ioi.mp hs).ne'
-    field_simp [hs']; ring
-  suffices hrem : Filter.Tendsto
-      (fun s : ℝ => (1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
-          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
-          - Real.exp (-(s * sigma))) / s ^ 7)
-      (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) by
-    have hlim := (tendsto_const_nhds (x := sigma ^ 7 / 5040)).add hrem
-    simpa using hlim.congr' (halg.mono (fun s hs => hs.symm))
-  have htend_s : Filter.Tendsto (fun s : ℝ => s) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) :=
-    tendsto_nhdsWithin_of_tendsto_nhds tendsto_id
-  set C := |sigma| ^ 8 * (9 / (40320 * 8)) with hC_def
-  have hbnd : Filter.Tendsto (fun s : ℝ => s * C) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
-    simpa using htend_s.mul_const C
-  have hbnd_neg : Filter.Tendsto (fun s : ℝ => -(s * C)) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
-    simpa [neg_zero] using hbnd.neg
-  have hsmall : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0), |s * sigma| ≤ 1 := by
-    have hpos : (0 : ℝ) < 1 / (|sigma| + 1) := by positivity
-    have h0 : ∀ᶠ s in nhds (0 : ℝ), |s * sigma| ≤ 1 := by
-      filter_upwards [Metric.ball_mem_nhds 0 hpos] with s hs
-      rw [Metric.mem_ball, Real.dist_eq, sub_zero] at hs
-      calc |s * sigma| = |s| * |sigma| := abs_mul s sigma
-        _ ≤ |s| * (|sigma| + 1) := by nlinarith [abs_nonneg s, abs_nonneg sigma]
-        _ ≤ 1 / (|sigma| + 1) * (|sigma| + 1) :=
-              le_of_lt (mul_lt_mul_of_pos_right hs (by positivity))
-        _ = 1 := by field_simp
-    exact h0.filter_mono nhdsWithin_le_nhds
-  have habs_ev : ∀ᶠ s in nhdsWithin 0 (Set.Ioi 0),
-      |(1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
-          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
-          - Real.exp (-(s * sigma))) / s ^ 7| ≤ s * C := by
-    filter_upwards [self_mem_nhdsWithin, hsmall] with s hs hssigma
-    have hs0 : (0 : ℝ) < s := Set.mem_Ioi.mp hs
-    have hbc : |-(s * sigma)| ≤ 1 := by rwa [abs_neg]
-    have hbound := Real.exp_bound hbc (n := 8) (by norm_num)
-    have hsum : ∑ m ∈ Finset.range 8, (-(s * sigma)) ^ m / (m.factorial : ℝ) =
-        1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
-          - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040 := by
-      simp only [Finset.sum_range_succ, Finset.range_zero, Finset.sum_empty, zero_add]
-      norm_num [Nat.factorial]; ring
-    rw [hsum, abs_neg, abs_mul, abs_of_pos hs0] at hbound
-    rw [abs_div, abs_of_pos (pow_pos hs0 7), div_le_iff₀ (pow_pos hs0 7)]
-    calc |1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6 + (s * sigma) ^ 4 / 24
-            - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
-            - Real.exp (-(s * sigma))|
-        = |Real.exp (-(s * sigma)) - (1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
-            + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720
-            - (s * sigma) ^ 7 / 5040)| :=
-          abs_sub_comm _ _
-      _ ≤ (s * |sigma|) ^ 8 * ((Nat.succ 8 : ℝ) / ((Nat.factorial 8 : ℝ) * 8)) := hbound
-      _ = s * C * s ^ 7 := by
-          rw [hC_def]
-          have h1 : (Nat.factorial 8 : ℝ) = 40320 := by norm_num [Nat.factorial]
-          have h2 : (Nat.succ 8 : ℝ) = 9 := by norm_num
-          rw [h1, h2]; ring
-  apply tendsto_of_tendsto_of_tendsto_of_le_of_le' hbnd_neg hbnd
-  · filter_upwards [habs_ev] with s habs
-    linarith [neg_le_neg habs, neg_abs_le ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
-      + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
-        - Real.exp (-(s * sigma))) / s ^ 7)]
-  · filter_upwards [habs_ev] with s habs
-    linarith [le_abs_self ((1 - s * sigma + (s * sigma) ^ 2 / 2 - (s * sigma) ^ 3 / 6
-      + (s * sigma) ^ 4 / 24 - (s * sigma) ^ 5 / 120 + (s * sigma) ^ 6 / 720 - (s * sigma) ^ 7 / 5040
-        - Real.exp (-(s * sigma))) / s ^ 7)]
 
 /-- **MPOLY.1 — order-4 Taylor assembly of `q0_entry`.** The `s=0` order-4 Taylor of
 `q0_entry z σ λ Qp Qpp ρ δ` is `δ − ρ·Ep₄·Pp₄`, where `Ep₄` is the order-4 Taylor of `exp(−λz)` and
@@ -137,8 +59,8 @@ theorem q0_entry_taylor4 (sigma lam Qp Qpp rho delta : ℝ) :
       (fun z : ℝ => Qp * ((1 - z * sigma - Real.exp (-(z * sigma))) / z ^ 2)
         + Qpp * ((1 - z * sigma + (z * sigma) ^ 2 / 2 - Real.exp (-(z * sigma))) / z ^ 3))
       (nhdsWithin 0 (Set.Ioi 0)) (nhds (Qp * (-sigma ^ 2 / 2) + Qpp * (sigma ^ 3 / 6))) :=
-    ((FMSA.MixturePoly.p1_limit sigma).const_mul Qp).add
-      ((FMSA.MixturePoly.p2_limit sigma).const_mul Qpp)
+    ((p1_limit sigma).const_mul Qp).add
+      ((p2_limit sigma).const_mul Qpp)
   have hEp : Filter.Tendsto
       (fun z : ℝ => 1 - lam * z + (lam * z) ^ 2 / 2 - (lam * z) ^ 3 / 6 + (lam * z) ^ 4 / 24)
       (nhdsWithin 0 (Set.Ioi 0)) (nhds 1) := by

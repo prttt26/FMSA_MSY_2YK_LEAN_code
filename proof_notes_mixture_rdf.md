@@ -490,6 +490,37 @@ collapse itself.**
 The collapse identity itself (discharging `MixRDFInnerCollapse` for the genuine pole family) is the
 remaining (future) content — the bridge `assembly = r·h₁`, which per the OZFIX.22 template awaits a
 matrix `oz_fixed_pt_unique` + matrix OZ★ (Group MRS).
+
+**⟳ RE-EVALUATION 2026-07-29 (after matrix OZ★ + all-`N` pole-freeness landed).**  Two findings:
+1. **The blocker "awaits matrix OZ★" is STALE** — matrix OZ★ is now built (`matOzStar_of_shellClaims`,
+   `MixtureOzStar.lean`).  `MixtureRDFAntideriv.lean`'s "neither built yet (i)+(ii)" is stale for (ii).
+2. **The non-circular OZFIX.22-template route is now assembled up to ONE scoped gap**
+   (`MixtureRDFUniqueness.lean`, axiom-clean, ledger unchanged 7):
+   * `MatOZHom` + `matOzStar_sub_hom` — difference of two `MatOZStar` solutions solves the homogeneous
+     matrix radial OZ★ equation (matrix analog of `oz_linear_op_sub`).
+   * `matOzStar_unique_of_injective` — **conditional matrix `oz_fixed_pt_unique`**: two solutions
+     coincide given the matrix WH injectivity `hinj`.
+   * `matStructureFactor_isUnit_of_det_ne_zero` — `det Q̂₀ ≠ 0` ⇒ `T₀ = Q̂₀(k)Q̂₀(−k)ᵀ` a unit
+     (`det_eq_of_wienerHopf_factorization`), i.e. the **coercivity input** `hinj` needs is exactly what
+     `mixtureDet_pole_free_N` + `pyhs_mixture_no_spinodal` supply.
+   The gap `hinj` = matrix analog of the scalar KEPT axiom `radialShell_bounded_injective`
+   (bounded/`L∞` WH injectivity; the `L∞`-Wiener-algebra gap, same class as `MA.13`, that `MA.12`'s
+   `L²` Plancherel does not reach).  **✅ COMMITTED 2026-07-30** as `matRadialShell_bounded_injective`
+   (`MixtureRDFUniqueness.lean`, one new **math** axiom, ledger `7 → 8` = 7 math + 1 physics).
+   `matOzStar_unique` now discharges `hinj` via it — the **value route is UNCONDITIONAL** (no abstract
+   injectivity hypothesis), resting on: the axiom + the coercive matrix symbol `MatSymbolCoercive`
+   (`vᵀ(I − ρĈ(k))v ≥ ε‖v‖²`, the multicomponent no-spinodal — a hypothesis exactly as in the scalar
+   axiom, whose invertibility `det Q̂₀ ≠ 0` is `matStructureFactor_isUnit_of_det_ne_zero` from
+   `mixtureDet_pole_free_N`) + the solutions' regularity.  `matRadialSymbol` = the matrix radial sine
+   symbol.  **✅ ABSTRACTED to `Analysis/MatrixRadialWienerHopf.lean` 2026-07-30**: the axiom is now
+   the project-independent, raw-integral `FMSA.matRadialShell_bounded_injective` (arbitrary matrix
+   kernel, no project defs — mirrors the scalar `radialShell_bounded_injective`);
+   `MixtureRDFUniqueness.lean` re-exposes it as a theorem via the definitional bridges `matOZHom_raw`
+   (operator = raw `∑ₖ(2π/r)∫∫`) and `matRadialSymbol` (symbol).  Bucket now **`Analysis` 7 +
+   `HSMixture` 1** (the 1 = physics `pyhs_mixture_no_spinodal`).
+3. **The literal pole-series collapse `MixRDFInnerCollapse` stays open/circular** (Fourier route,
+   inherited from scalar `CoreSeriesClosure`); the OZ★+uniqueness route above targets the RDF *value*,
+   not the pole-series representation.
 **Crux #2 — CIRCULARITY WARNING inherited from the scalar case (2026-07-16, 2nd pass).** The scalar
 `hcollapse` was pushed to completion this session and closed as a **negative result** (`OZFIX.14`,
 `proof_notes_ozfix.md`): closing the contour on the pole sum is *value-neutral* — with `ρĈ(kₙ)=1` the
@@ -1234,16 +1265,286 @@ same shape:
 * `matBaxterPsi_fin_one_of_scalar` / `matRenewalEq_fin_one_of_scalar` — the **`n = 1` bridges**: the
   matrix `baxterPsi` core is the scalar `baxterPsi`, and `MatRenewalEq` is the proved scalar
   `baxterPsiOuter_spec`.
-`Ψouter` is a parameter — solving the coupled matrix Volterra system (the matrix `volterraGlobal` /
-`MA.10` analog) to *construct* it is the remaining analytic core; this fixes the object's shape and
-its defining equation, validated at `n = 1`.
+**`Ψouter` is now constructed (2026-07-24) — the coupled matrix Volterra is solvable.** The mixture
+renewal `Ψ(r) = F(r) + ∫_σ^r Q(r−t)·Ψ(t) dt` is a **matrix product** — the species-coupling sum
+`∑ₖ Qᵢₖ·Ψₖⱼ` *is* `(Q·Ψ)ᵢⱼ` — so it is a Volterra equation on the complete normed ring
+`E = Matrix (Fin N) (Fin N) ℝ`. Two pieces:
+* **`Analysis/VolterraBanach.lean` — the Banach generalization of `MA.10`.** For any complete normed
+  ring `E` (`NormedRing`, `NormedAlgebra ℝ`, `CompleteSpace`) and continuous convolution kernel
+  `q : ℝ → E`, `volterra_convolution_existsUniqueE` gives a unique continuous `E`-valued solution of
+  `u(r) = g(r) + ∫_a^r q(r−t)·u(t) dt`. The proof is the *identical* iterate-contraction argument as
+  the scalar `MA.10`; the only change is `|K·u| ≤ M·|u|` becoming `‖q·u‖ ≤ ‖q‖·‖u‖` via `norm_mul_le`
+  (submultiplicativity). Axiom-clean — a mechanical generalization, not new mathematics.
+* **`matVolterra_convolution_existsUnique`** (`MixtureOzStar.lean`) — the instantiation at
+  `E = Matrix (Fin N) (Fin N) ℝ` under the submultiplicative `Matrix.linftyOp` norm: the matrix
+  renewal has a unique continuous matrix solution `Ψouter`. The entrywise `MatRenewalEq` form follows
+  by matrix-entry evaluation commuting with the integral (`Matrix.mul_apply` +
+  `ContinuousLinearMap.intervalIntegral_comp_comm`), a mechanical step.
 
-**What remains (the analytic core).** The general-`N` proof still needs: **constructing** `Ψouter`
-(solving the coupled matrix Volterra `MatRenewalEq`); the matrix analogs of `F[K]=Ĉ` (`OZFIX.18`
-F-part) and the 2D reindex (`OZFIX.20`); and the fourteen integrability side-conditions
-(`BaxterOzStar.lean`'s `ozstar_h…`). Per `OZFIX.17`, the assembly will inherit the matrix analog of
-the *pole-in-LHP ⇔ decay* obstacle — the genuine hard input, isolable as a matrix decay axiom (the
-`baxter_exterior_regularity` analog) per the OZFIX.22 template.
+**Entry-extraction is complete — the matrix-norm plumbing is solved (2026-07-24).** The entrywise
+`MatRenewalEq` (`∑ₖ ∫ Qᵢₖ·Ψₖⱼ`) from the matrix-product solution needs `(∫ f)ᵢⱼ = ∫ fᵢⱼ` (entry
+evaluation commuting with the matrix Bochner integral), through
+`ContinuousLinearMap.intervalIntegral_comp_comm` at the entry CLM, hence through
+`IntervalIntegrable (f : ℝ → Matrix ℝ)`.
+
+⚠ **The instance-diamond fix.** That predicate does not elaborate on its own under the `letI`'d
+`Matrix.linftyOp` norm — `ENormedAddMonoid (Matrix ℝ)` is not synthesized, because the default
+`Matrix` product topology competes with the norm's and
+`NormedAddCommGroup.toENormedAddCommMonoid`'s topology does not unify (it *is* synthesized for an
+abstract `[NormedAddCommGroup E]`, so a Matrix-topology-diamond, not a gap). **The one-line fix:
+`letI : ENormedAddCommMonoid (Matrix ℝ) := NormedAddCommGroup.toENormedAddCommMonoid`**, which pins
+the norm-induced topology. Three lemmas then close the extraction:
+* `matrix_intervalIntegral_apply` — `(∫ f)ᵢⱼ = ∫ fᵢⱼ` (via the entry CLM + the fix).
+* `matrix_mul_intervalIntegral_entry` — `(∫ Q·U)ᵢⱼ = ∑ₖ ∫ Qᵢₖ·Uₖⱼ` (`matrix_intervalIntegral_apply`
+  + `Matrix.mul_apply` + `intervalIntegral.integral_finsetSum`).
+* `matRenewalEq_of_matrixProduct` — **end-to-end**: a matrix-product renewal `Ψ(r) = F(r) + ∫ Q(r−t)·
+  Ψ(t) dt` (the `matVolterra_convolution_existsUnique` form) *is* `MatRenewalEq` for the entry
+  families. So `Ψouter` is now constructed in the exact `∑ₖ` form the matrix `baxterPsi` consumes.
+
+**Matrix `F[K]=Ĉ` DONE (2026-07-24, `OZFIX.18` F-part).** The scalar `baxterK_cos_eq_radial_fourier`
+matches the Fourier transform of the Baxter shell kernel with the DCF `radial_fourier`. Its
+matrix form is that identity per entry, so the genuine content is the **general-`c` version**, now
+proved in `HardSphere/ShellKernel.lean` (like the shell identity, `c_HS`-independent):
+* `shellKernel_hasDerivAt` — `shellKernel(c)′(v) = −2π·v·c(v)` on `(0,σ)` (FTC-1, the general-`c`
+  `hasDerivAt_baxterK`); `shellKernel_apply_sigma` (`K(σ)=0`), `shellKernel_continuousOn` (primitive).
+* `radial_fourier_eq_intervalIntegral_of_support` — `radial_fourier(c) = (4π/k)∫₀^σ r·c(r)·sin`
+  for `c` supported in `[0,σ]`.
+* `shellKernel_cos_eq_radial_fourier` — `2∫₀^σ shellKernel(c)·cos(kv) = radial_fourier(c)(k)`, one
+  integration by parts (boundary killed by `K(σ)=0`), for `c` supported in `[0,σ]`, continuous on the
+  open core, `s·c(s)` interval-integrable.
+`MixtureOzStar.lean`: `matShellKernel_cos_eq_radial_fourier` (per entry `C₀ᵢⱼ`) +
+`matShellKernel_cos_eq_radial_fourier_fin_one_of_scalar` (the `n = 1` bridge to
+`baxterK_cos_eq_radial_fourier`).
+
+**Matrix 2D reindex DONE (2026-07-27, `OZFIX.20`).** The scalar `dbl_conv_reindex` uses the *same*
+`q0` for both Baxter factors; the matrix self-convolution `matSelfConv i j = ∑ₖ Qᵢₖ⋆Qⱼₖ` couples
+*different* factors `Qᵢₖ, Qⱼₖ` (off-diagonal), so the genuine content is a **two-function** reindex:
+* `dbl_conv_reindex_two` (`BaxterRenewal.lean`) — for two distinct factors `q0a, q0b`,
+  `∫ q0a(t)∫ q0b(s)ψ(r+t−s) = ∫_u [(∫_u^σ q0a·q0b(·−u))·ψ(r+u) + (∫_u^σ q0b·q0a(·−u))·ψ(r−u)]`.
+  Both sides route through the *asymmetric* triangle-split double integral
+  `∫ t ∫_{s<t} [q0a(t)q0b(s)ψ(r+t−s) + q0a(s)q0b(t)ψ(r+s−t)]` (the scalar's symmetrized `ψ(r±u)`
+  splits because the two factors no longer commute across the diagonal). Same
+  `intervalIntegral_triangle_swap_gen` + `integral_comp_sub_left` change of variable as the scalar;
+  9 fine-grained integrability hypotheses. For `q0a = q0b` it collapses to `dbl_conv_reindex`.
+* `matDblConv_reindex` (`MixtureOzStar.lean`) — sums the two-function reindex over the intermediate
+  species `k` (`intervalIntegral.integral_finsetSum` + `Finset.sum_mul` regroup), giving
+  `∑ₖ (Qᵢₖ⋆Qⱼₖ)⋆ψ = ∫_u [matSelfConv Q σ u i j · ψ(r+u) + matSelfConv Q σ u j i · ψ(r−u)]`
+  (the second kernel is the `i↔j` transpose). `matDblConv_reindex_fin_one` = the `n = 1` bridge.
+
+**Integrability side-conditions DONE (2026-07-27, `OZFIX.20` discharge).** The matrix reindex is
+stated with nine per-species integrability hypotheses; `MixtureOzStarIntegrable.lean` discharges all
+nine from the **natural regularity** of the Baxter data (factors `Q i j` continuous, `psi` measurable
++ `|psi|` `uIcc`-bounded), exactly the regularity the scalar `ozstar_h…` (`BaxterOzStar.lean`) exploit
+for `q0_poly`/`baxterPsi`. Generic engine:
+* `bddOn_uIcc_of_continuous`, `psiComp_bddOn` — compact-interval bounds from continuity (via
+  `isCompact_uIcc.exists_isMaxOn`);
+* `swap_indicator_integrable` — the shared Fubini `(Ioi ·).indicator` engine, factoring the three
+  product-measure side-conditions (`integrable_prod_restrict_of_measurable_bddOn` + indicator
+  boundedness); `swapPM_integrable` / `swapA_integrable` specialise it to the `ga(t)·gb(t−u)·ψ(w u)`
+  and `ga(t)·gb(s)·ψ(r+t−s)` shapes;
+* `constMul_psi_intervalIntegrable` — the slice side-conditions;
+* `paramLo_/paramHi_/paramKernel_mul_intervalIntegrable` — the parametric inner-integral
+  side-conditions (`measurable_intervalIntegral_param` + `norm_integral_le_of_norm_le_const`).
+`matDblConv_reindex_of_regular` assembles them: the matrix reindex conditional only on
+`(∀ a b, Continuous (Q a b))`, `Measurable psi`, and `psi`'s `uIcc`-boundedness — the matrix analog of
+the way `baxterPsi_ozstar` is unconditional.
+
+**Matrix OZ★ ASSEMBLED (2026-07-28, `OZFIX.15/19/20` combined) — axiom-clean, no decay axiom.**
+`matOzStar_of_shellClaims` (`MixtureOzStar.lean`) derives the matrix real-space OZ identity
+`MatOZStar Ψ Φ ρ` from four inputs, exactly mirroring the scalar `baxterPsi_eq_phi_add_rho_conv`:
+* `hfact` — `MatBaxterFactorization` (matrix KDEF `ρKᵢₖ = Qᵢₖ − matSelfConv(i,k)`);
+* `hbridge` — `matRadialConv_eq_matShellConv` (matrix `OZFIX.19` shell-conv bridge);
+* `hQint`/`hSint` — shell integrability (dischargeable via `MixtureOzStarIntegrable.lean`);
+* `hclaimA` — the **matrix renewal identity in shell form** (`OZFIX.15` analog of
+  `baxter_psi_conv_eq_phi`): `Ψᵢⱼ(r) = r·Φᵢⱼ(r) + (shell-Q − self-conv-shell)`.
+The load-bearing algebra is `matShellConv_kdef_split` (KDEF substituted a.e. on the open core splits
+`ρ·matShellConv` into shell-`Q` minus self-conv-shell). `claimA` supplies `Ψ − r·Φ`, and
+`ρ·matShellConv` (bridge + KDEF split) supplies the *same* shell expression ⇒ `MatOZStar`.
+Validated at `N = 1` by the pre-existing `matOZStar_fin_one_of_scalar` (= unconditional scalar
+`baxterPsi_ozstar`). **The assembly needed NO matrix decay axiom** — the hard content lives entirely
+in the three `constructed-solution` Prop inputs (`hfact`/`hbridge`/`hclaimA`).
+
+**Structural finding (general-`N`).** The self-convolution is *not* symmetric:
+`matSelfConv(i,k) ≠ matSelfConv(k,i)`, and `matDblConv_reindex` outputs the asymmetric pairing
+`matSelfConv(i,k)·ψ(r+u) + matSelfConv(k,i)·ψ(r−u)`, whereas the symmetric `matShellConv` weights
+both shells by `Kᵢₖ`. The two align only at `N=1` / symmetric `Q`. The assembly sidesteps this by
+taking `claimA` **directly in shell form** (which the renewal construction provides), so the reindex
+is not needed to close `MatOZStar`; the asymmetry is absorbed into the renewal identity `claimA`.
+
+**Matrix pole-freeness needs NO new axiom (2026-07-28, `OZFIX.17` matrix).** The scalar
+`baxter_no_open_lhp_pole_core` retirement feeds the *general* argument-principle axiom
+`zeroFree_lowerHalfPlane_of_homotopy` (`ZeroCountHomotopy.lean`), which is stated for an **arbitrary**
+continuous family of entire functions `H : ℝ → ℂ → ℂ`. So the matrix `det Q̂ ≠ 0` on the open LHP is
+that **same** axiom at `H t z = (M t z).det`. `MatrixDetPoleFree.lean`:
+* `differentiable_matrix_det` / `continuousOn_matrix_det` — entrywise regularity ⇒ `det` regularity
+  (Leibniz expansion `det_apply'` is a finite sum of products of entries; stated entrywise so **no**
+  matrix normed-space instance is needed);
+* `matDet_zeroFree_lowerHalfPlane_of_homotopy` — the matrix pole-freeness reduction, depending only on
+  `zeroFree_lowerHalfPlane_of_homotopy` (verified via `#print axioms`) — **no new axiom**.
+
+**`hbound` escape mechanism DONE (2026-07-28, `MixtureDetEscape.lean`) — no new axiom.**  Under the
+Baxter convention the open lower half `k`-plane is the **right** half `s`-plane, so `hbound` is
+`det Q̂₀(s) ≠ 0` for `Re s ≥ 0`, `‖s‖ ≥ R`.  The **escape mechanism** is proved via the MML monomial
+bridge `s⁶·detF = Mc + M₀e^{−sσ₀} + M₁e^{−sσ₁} + M₀₁e^{−s(σ₀+σ₁)}` (`detC_monomial_eq`):
+* `exp_neg_mul_norm_le_one` — `Re s ≥ 0 ⇒ ‖e^{−sσ}‖ ≤ 1` (the exponentials are contractions in the
+  right half-plane, hence subdominant);
+* `Wfun_ne_zero_of_dominant` / `detF_ne_zero_of_dominant` — if the degree-6 leading `Mc` outweighs
+  `M₀+M₁+M₀₁`, then `W ≠ 0`, hence `detF ≠ 0`.  Matrix analog of the scalar `exists_uniform_escape_radius`.
+**`hbound` FULLY CLOSED (2026-07-28, `exists_escape_radius`) — axiom-clean, no new axiom.**  The
+large-`‖s‖` polynomial asymptotics are discharged by evaluating the existing `MixtureChordFamily.lean`
+bounds at `M := ‖s‖` (all `‖·‖ ≤ … · M^k` become `… · ‖s‖^k`): `McNum_sub_norm_le` gives
+`‖Mc‖ ≥ ‖s‖⁶ − K_Mc‖s‖⁵` (reverse triangle), and `M0Num_norm_le`/`M1Num_norm_le`/`M01Num_norm_le`
+give `‖M₀‖+‖M₁‖+‖M₀₁‖ ≤ (K₀+μ+K₁+K₀₁)‖s‖⁴`.  So for `‖s‖ ≥ R := max(1, K_Mc+K₀+μ+K₁+K₀₁+1)` the
+dominance `‖M₀‖+‖M₁‖+‖M₀₁‖ < ‖Mc‖` holds (`nlinarith`) and `detF_ne_zero_of_dominant` gives
+`detF(s) ≠ 0`.  `exists_escape_radius : ∃ R > 0, ∀ s, Re s ≥ 0 → R ≤ ‖s‖ → detF s ≠ 0` — the exact
+`hbound` input, `#print axioms` = standard three.  (Nonnegativity of the `K`-constants and `μ` from
+the existing `KMc_nonneg`/`K0_nonneg`/`K1_nonneg`/`K01_nonneg` + new `mu_nonneg`.)
+
+**Density-homotopy scaffold BUILT (2026-07-28, `MixtureDetHomotopy.lean`) — axiom-clean.**  The
+`s=0` pole is handled by running the homotopy on the **entire** monomial form `W(s) = s⁶·detF(s)`
+(`detC_monomial_eq`; `W = 0 ⇔ detF = 0` for `s ≠ 0`) rather than the meromorphic `detF`, and applying
+the **scalar** `zeroFree_lowerHalfPlane_of_homotopy` at `H t z = W(Pscale t P, I·z)` (`detF` is
+scalar-valued, so no matrix-`det` machinery is needed).  Convention `s = I·z` gives `Re s = −Im z`, so
+`Im z < 0` (open lower half `z`-plane) is `Re s > 0`.  Ingredients (all axiom-clean):
+* `Pscale t P` = coupling homotopy `rr ↦ t·rr` (`Pscale 1 P = P`, `Pscale 0 P` = zero coupling);
+  `Pscale_Phys` (positivity for `t > 0`).
+* `Wfun_Pscale_zero` — dilute base `W(P₀, s) = s⁶`; `Wfun_dilute_ne_zero` = **`hbase`**
+  (`W(P₀, I·z) = −z⁶ ≠ 0` for `Im z < 0`).
+* `Wfun_ne_zero_of_norm_ge` — **`hbound`** in `z`-form, from `exists_escape_radius` through `s = I·z`.
+* `Wfun_comp_I_differentiable` — **`hholo`** (via `Wfun_hasDerivAt`); `Wfun_Pscale_comp_I_continuous`
+  — **`hcont`** (via `fun_prop`).
+
+**Homotopy ASSEMBLED (2026-07-28, conditional) — no new axiom.**  `Wfun_zeroFree_of_hreal` /
+`detF_zeroFree_of_hreal` wire the four geometric bricks (`hcont`/`hholo`/`hbound`/`hbase`) into the
+scalar `zeroFree_lowerHalfPlane_of_homotopy` at `H t z = W(Pscale t P, I·z)`, concluding
+`detF(I·z) ≠ 0` for `Im z < 0` — **conditional on** a uniform-in-`t` escape radius (`hRunif`) and
+`hreal`.  `#print axioms` = standard three + the existing `zeroFree_lowerHalfPlane_of_homotopy`.
+
+**Structural finding — the `Pscale` (linear-`rr`) family is the wrong homotopy for `hreal`.**  `hreal`
+(`detF(Pscale t P, I·k) ≠ 0` for real `k`, all `t`) is the no-spinodal condition *along the path*.
+`pyhs_mixture_no_spinodal` holds for any physical density (`etaMix < 1`), so it discharges `hreal`
+along the **physical density path** (`ρ ↦ t·ρ`, `etaMix(t·ρ) = t·etaMix(ρ) < 1`) — but the `Pscale`
+family scales only the coupling `rr` *linearly*, which does **not** correspond to a physical
+`(σ, ρ')` point (the PY closure ties `rr = √(ρᵢρⱼ)`, `Qp`, `Qpp` together non-linearly), so
+no-spinodal does not cover `Pscale t P` for `t ∈ (0,1)`.  Completing `hreal` therefore needs the
+homotopy re-based on the physical density scaling `Pdens t` (deriving `rr/Qp/Qpp` from `(σ, t·ρ)` via
+`rhoGeoPhys`/`Q0phys`/`Qppphys`); the four bricks' *structure* transfers (they are family-generic:
+dilute base, escape radius, entire, continuous), only the concrete family changes.
+
+**Physical density path BUILT (2026-07-28, `MixtureDetHomotopyPhys.lean`) — `hreal` (`k ≠ 0`) done, no
+new axiom.**  `Pdens σ ρ t` = the `MixParams` at density `t·ρ` (`rhoGeoPhys(t·ρ)` scales linearly in
+`t`, but `Q0phys`/`Qppphys` vary via the vacancy `1−η`, so unlike `Pscale` every point is a genuine
+physical state).
+* `detF_Pdens_eq` — the bridge `detF(Pdens σ ρ t) = det Q̂₀-phys(σ, t·ρ)` (both `det Q0_mat_c` with the
+  same substituted PY coefficients; the only mismatch `![σ₀,σ₁]` vs `σ` closed by `fin_cases`).
+  **Axiom-clean.**
+* `etaMix_smul` — `η(t·ρ) = t·η(ρ)`, so `t ≤ 1 ⇒ η(t·ρ) = t·η(ρ) ≤ η(ρ) < 1`.
+* `detF_Pdens_ne_zero` — **`hreal` for `k ≠ 0`**: `detF(Pdens σ ρ t, I·k) ≠ 0` for real `k ≠ 0`,
+  `t ∈ (0,1]`, directly from the existing `pyhs_mixture_no_spinodal` at density `t·ρ`.  (HS has no
+  spinodal at any density ⇒ the physical path is singularity-free.)  Depends only on the existing
+  physics axiom — no new axiom.
+
+**Remaining subtlety found — run the homotopy on the ENTIRE `detF`, not `W`.**  `W(P₀, 0) = 0` (the
+dilute base `W = z⁶` has a zero at the origin), which breaks `hreal` at `z = 0`; the scalar track
+avoided this by using `1−Q̂` (entire, nonzero at origin).  The matrix analog is `detF` itself, which is
+**entire** — each `q0_entry_c` has a *removable* singularity at `s = 0` (`q0_entry_c_differentiableAt`
+only records `s ≠ 0`).  So completing the assembly needs: (i) `detF` entire; (ii) the `z = 0` value
+`detF(Pdens t, 0) = det Q̂₀(0) ≠ 0`; (iii) a uniform-in-`t` escape radius.  All three are transcription,
+**not** new axioms.
+
+**`detF` entire DONE (2026-07-28, `MixtureDetEntire.lean`) — axiom-clean.**  The Lean `detF` is
+`0/0`-junk at `s = 0` but analytic away from `0` (`Q0_det_c_differentiableAt`) with a finite removable
+limit (`detC_tendsto`, from the already-proved `q0_entry_c_tendsto`: `φ₁(0)=−σ²/2`, `φ₂(0)=σ³/6`).
+* `detF_update_differentiable` — `Function.update detF 0 c` is **entire** for the limit `c`, by
+  Riemann's removable-singularity theorem `analyticAt_of_differentiable_on_punctured_nhds_of_continuousAt`
+  (differentiable on the punctured `𝓝` since `update = detF` off `0`; `ContinuousAt 0` via
+  `nhdsNE_sup_pure` + the limit).
+* `detF_tendsto` / `detF_ext_differentiable` — package the limit with the entire extension.
+This is the entire object the homotopy runs on (`hholo`), the matrix analog of the scalar `1−Q̂`.
+**Dilute base of the extension DONE (2026-07-28) — `hbase` for `detF_ext`.**  `Pdens_zero_rr`
+(`rr(Pdens σ ρ 0) = 0`, since `rhoGeoPhys(0·ρ) = √0 = 0`) + `Q0_mat_c_rho_geo_zero`
+(`Q0_mat_c` at zero coupling `= I`) ⇒ `detF_Pdens_zero` (`detF(Pdens σ ρ 0) ≡ 1`, no `0/0` issue) and
+`detF_ext_Pdens_zero` (`update (detF(Pdens 0)) 0 1 ≡ 1`, nonzero everywhere incl. `z = 0`).
+Axiom-clean.
+
+**Precise remaining accounting for the concrete pole-freeness theorem** (all no-new-axiom):
+* **`hholo`** = `detF_ext_differentiable` ✓; **`hbase`** = `detF_ext_Pdens_zero` ✓;
+  **`hreal` (`k ≠ 0`)** = `detF_Pdens_ne_zero` ✓ (existing no-spinodal); **`hbound`** = lift
+  `exists_escape_radius` to `detF_ext` in `z`-form ✓ (mechanical).
+* **`hreal` at `z = 0` — the origin value `detF_ext(Pdens t, 0) = c_t ≠ 0`** — is the genuine remaining
+  physical sub-fact, characterised precisely (2026-07-28):
+  - `c_t` = `det` of the removable **moment matrix** `Mᵢⱼ = δᵢⱼ − ρ_geoᵢⱼ(Qpᵢⱼ(−σᵢ²/2) + Qppᵢⱼ(σᵢ³/6))`
+    (the `q0_entry_c_tendsto` values) — **not** the Lean `0/0`-junk value `1`; physically it is the
+    `k = 0` structure factor = **compressibility**.
+  - **`pyhs_mixture_no_spinodal` does not cover it** (it is stated with `k ≠ 0`, precisely to dodge the
+    `s = 0` removable value); `Q0_moment_det_pos` gives `det > 0` for real `z > 0`, hence only
+    `c_t = lim_{z→0⁺} ≥ 0`, **not** strict.
+  - **`c_t ≠ 0` is NOT derivable from the axis non-vanishing** (`detF ≠ 0` on the real-positive axis
+    via `Q0_mat_phys_isUnit_det`, and on the imaginary axis via no-spinodal): if `c_t = 0` then the
+    entire `detF_ext ~ a·zⁿ` near `0`, which is consistent with non-vanishing on **both** axes
+    (`a·zⁿ > 0` for `z > 0`; `a·iⁿyⁿ ≠ 0`) — no contradiction.  So `c_t > 0` is genuine `k = 0`
+    compressibility content.
+  - **✅ CLOSED (2026-07-28, `Q0MomentGeOne.lean` + `MixtureDetOrigin.lean`) — AXIOM-CLEAN, no physics
+    axiom.**  Route 1 (explicit moment determinant): `moment_key` gives not just `det > 0` but
+    `ad − bc ≥ a + d`, hence `det = 1 − (a+d) + (ad−bc) ≥ 1` (`Q0_moment_det_ge_one`,
+    `Q0_mat_phys_det_ge_one`) — a **strict-with-margin** bound.  It survives the `z → 0` limit: at real
+    `z > 0`, `detF(Pdens σ ρ t, z) = det Q0_mat_phys(z, σ, t·ρ) ≥ 1` (`detF_Pdens_ofReal` +
+    `Q0_mat_phys_det_ge_one`), so `Re(c) = lim_{z→0⁺} det ≥ 1 > 0` (`ge_of_tendsto`), hence `c ≠ 0`
+    (`detF_Pdens_origin_ne_zero`; `hreal` at `z=0` = `detF_ext_Pdens_origin_ne_zero`).  `#print axioms`
+    = standard three — the `k = 0` compressibility positivity is **proved**, not a companion axiom
+    (`moment_key` is proved algebra; `pyhs_mixture_no_spinodal` is not even used).  Bonus: real
+    removable values `p1 → −σ²/2`, `p2 → σ³/6` (`p1_tendsto_zero_nhds`, `p2_tendsto_zero_nhds`).
+* **`hcont`** (joint continuity of the family extension) and **uniform-`t` escape radius**
+  (`K`-constants `rr`-monotone) — mechanical.
+
+**Concrete pole-freeness theorem ASSEMBLED (2026-07-28, `MixtureDetOrigin.lean`) — no new axiom.**
+`mixtureDet_pole_free_of_regular` : for the physical mixture `(σ, ρ)`, `detF(Pdens σ ρ 1, I·z) ≠ 0`
+throughout the open lower half `z`-plane — the LHP pole-freeness of `det Q̂₀`.  It runs the density
+homotopy on the entire removable extension via `zeroFree_lowerHalfPlane_of_homotopy`, discharging
+**every** pointwise input from the proved lemmas: `hholo` (`detF_update_differentiable`), `hbase`
+(dilute `detF ≡ 1`), `hreal` for `k ≠ 0` (`Pdens_detF_imag_ne_zero`, no-spinodal) and `k = 0`
+(`cf_ne_zero`, the axiom-clean compressibility), `hbound` (uniform escape).  `#print axioms` = the two
+**existing** axioms only (`zeroFree_lowerHalfPlane_of_homotopy` + `pyhs_mixture_no_spinodal`) — no new
+axiom.  Conditional only on the two **family-regularity** hypotheses `hcont` (joint continuity of the
+`(t,z) ↦ detF_ext(Pdens t)(I·z)` family) and `hRunif` (uniform-in-`t` escape radius) — both purely
+mechanical (continuity of a parametrised analytic family; `K`-bound over the compact `[0,1]`), the
+last remainder.
+
+**Progress on the remainder (2026-07-28).**  `detF_ne_zero_of_Kbound` (`MixtureDetEscape.lean`) — the
+**uniform escape mechanism** for `hRunif`: from a common bound `K_Mc,K₀,μ,K₁,K₀₁ ≤ B`, `detF(P,s) ≠ 0`
+for `Re s ≥ 0`, `‖s‖ ≥ max(1,5B+1)` (axiom-clean).  Building blocks for the uniform `B`:
+`vacMix`/`xi2` continuous in `t` on `[0,1]` (`fun_prop`), `vac > 0` there (`etaMix(t·ρ)=t·etaMix(ρ)<1`).
+**`hRunif` DONE (2026-07-29, `MixtureDetUniform.lean`) — axiom-clean.**  `hRunif_Pdens` : a single
+`R = max(1, 5B+1)` works for all `t ∈ [0,1]`.  The five `K`-constants of `Pdens t` are continuous in
+`t` (`Ksum_cont` — `vacMix`/`xi2` continuous via `fun_prop`, `vac(t)=1−t·η(ρ)>0`, so `Q0phys`/`Qppphys`
+= `…/vac` continuous by `ContinuousOn.div`, then `cB`/`K`s are polynomials in the fields), hence their
+sum is bounded on the compact `[0,1]` (`isCompact_Icc.exists_bound_of_continuousOn`); `Pdens_Phys`
+(physicality for `t > 0`, from `Q0phys_pos`/`Qppphys_pos`/`rhoGeoPhys_pos`) + `detF_ne_zero_of_Kbound`
+close it (`t = 0` is dilute `detF ≡ 1`).
+
+**`hcont` DONE ⇒ UNCONDITIONAL theorem (2026-07-29, `MixtureDetHcont.lean`).**  The `0/0`-junk of
+`detF` at `s = 0` comes only from `φ₁,φ₂ = num/sⁿ`, which depend on `s`/`σ` **not** on `t`.  Replacing
+them with continuous removable extensions `psi1`,`psi2` (`psi{1,2}_continuous` via `phi{1,2}_tendsto` +
+`nhdsNE_sup_pure`) gives the `ψ`-form det `detFpsi` — **manifestly jointly continuous**
+(`detFpsi_continuous`; fields of `Pdens t` continuous in `t`, `ψ` continuous in `s`) and `= detF` away
+from `0` (`detFpsi_eq_detF`).  Since `cf t = detFpsi(Pdens t) 0` (`cf_eq_detFpsi_zero`), the
+update-based `detF_ext = detFpsi`, so `hcont` follows by `ContinuousOn.congr` (`hcont_Pdens`).  No
+parametrised removable-singularity theorem was needed — the `t`-independence of `φ` sidesteps it.
+
+**`mixtureDet_pole_free`** : `detF(Pdens σ ρ 1, I·z) ≠ 0` on the open lower half `z`-plane for every
+physical `N=2` hard-sphere mixture — **fully unconditional**.  `hcont`/`hRunif`/`cf` all discharged;
+`#print axioms` = the two **existing** axioms only (`zeroFree_lowerHalfPlane_of_homotopy` +
+`pyhs_mixture_no_spinodal`).  The matrix `pole-in-LHP ⇔ decay` obstacle (`OZFIX.17`) is fully resolved
+for `N=2` — no new axiom, everything else proved (including the axiom-clean `k=0` compressibility).
+
+**Answer to "does the matrix track need a NEW math axiom?" — NO.**  Pole-freeness reuses the existing
+`zeroFree_lowerHalfPlane_of_homotopy` (`matDet_zeroFree_lowerHalfPlane_of_homotopy`); `hreal` is the
+existing `pyhs_mixture_no_spinodal`; `hbase` = `det Q̂₀(0)=1` (MML `Q0_mat_c_at_zero`); `hbound`'s
+mechanism is now proved (this file). The matrix Baxter factorization is **explicit**
+(`Q0_mat_phys_eq_one_sub_mul`, proved) — no abstract Wiener–Hopf existence gap. What remains
+(`hfact`/`hbridge`/`hclaimA` for the concrete mixture, the poly asymptotics, the homotopy scaffold,
+`s=0` pole) is **transcription work, not new axioms** — the matrix track can reach the scalar track's
+standard modulo only the *existing* kept math axioms.
 
 **Depends on.** Scalar `baxterPsi_ozstar`, `rho_baxterK_eq_q0_self_conv`, `baxterK`, `q0_poly`
 (`BaxterOzStar.lean`/`BaxterRenewal.lean`); `radial3d_conv` (`RadialLaplace.lean`).
@@ -1255,10 +1556,12 @@ the *pole-in-LHP ⇔ decay* obstacle — the genuine hard input, isolable as a m
 `matShellConv_apply`, `matRadialConv_eq_matShellConv`, `matShellBridge_fin_one_of_scalar`,
 `matRadialConv_eq_matShellConv_of_shellKernel`; `matBaxterPsi`, `matBaxterPsi_core`/`_outer`/`_reflect`,
 `MatRenewalEq`, `matBaxterPsi_fin_one_of_scalar`, `matRenewalEq_fin_one_of_scalar` — all axiom-clean.
-Plus `HardSphere/ShellKernel.lean` (`shellKernel`, `radial3d_conv_eq_shellKernel`, `shellKernel_c_HS`).
-Full build green.
+`matVolterra_convolution_existsUnique`. Plus `HardSphere/ShellKernel.lean` (`shellKernel`,
+`radial3d_conv_eq_shellKernel`, `shellKernel_c_HS`) and `Analysis/VolterraBanach.lean` (the Banach
+`MA.10`: `volterraTE`, `volterra_iterate_boundE`, `volterra_existsUniqueE`,
+`volterra_convolution_existsUniqueE`). Full build green.
 
-**Status.** ◑ **STARTED (2026-07-24), axiom-clean foundation — four layers.** (1) The OZ★ target
+**Status.** ◑ **STARTED (2026-07-24), axiom-clean foundation — four layers, `Ψouter` constructed.** (1) The OZ★ target
 shape (`MatOZStar`, entrywise reduction to scalar `radial3d_conv`); (2) its real-space factorization
 foundation (`MatBaxterFactorization`, `matSelfConv`); (3) the shell-conv = K-conv bridge
 (`matRadialConv_eq_matShellConv`, general-`c` via `ShellKernel.lean`) connecting (1) to (2); (4) the
@@ -1291,7 +1594,7 @@ and returns the standard three only (`detC_zeros_infinite_unconditional`, `chord
 `detC_zeros_infinite_of_boundaryGrowth`). ⚠ **Namespace note for future audits:** the MZERO.3/4/6
 Banach machinery lives in `FMSA.BanachPoleFamily` and MZERO.10's growth predicate in
 `FMSA.BoundaryGrowth` — **not** in `FMSA.MixtureHSPoles`, because the generic layer was migrated to
-`Analysis/` (MRS.0d). Looking them up under the mixture namespace reports "unknown constant" and
+`Analysis/` (MRS.9b). Looking them up under the mixture namespace reports "unknown constant" and
 looks like a missing proof.
 
 ---
@@ -1626,7 +1929,18 @@ still dead for `N ≥ 2` (term-wise dominance fails 300/300, even at diameter ra
 artifact, not a weakness of the claim), so MRS.0 remains MA.14-class, needing a winding argument.
 The bridge is a *validation*, not a step toward the proof.
 
-### Task MRS.0c — `LeanCode/HSMixture/` — the N-component hard-sphere layer
+
+### Task MRS.9 — `HSMixture/` library reorganization
+
+**✓ Overall COMPLETE: 9a–9c DONE 2026-07-19, 9d DONE 2026-07-27.**  The library reorganization is **one** task —
+create the `HSMixture/` layer, re-home misfiled files, split straddlers into `Analysis/`, normalize
+the species binder — so it is recorded here as `MRS.9` with four sub-parts, **not** as four letter
+suffixes of the physics axiom `MRS.0`.  Consolidated from the ex-`MRS.0c/0d/0e/0f` records
+2026-07-19 (`MRS.0`/`MRS.0b` remain the physics-axiom cluster above).  The layering invariant it
+establishes — `Analysis/ ← HardSphere/ ← HSMixture/ ← YukawaDCF/`, imports leftward only — is in
+`CONVENTIONS.md`.
+
+#### MRS.9a — `LeanCode/HSMixture/` — the N-component hard-sphere layer
 
 **✓ DONE 2026-07-19, build green (8683 jobs, identical to the pre-move baseline ⇒ pure move,
 no declaration added or removed), all four invariants re-verified.**
@@ -1679,12 +1993,63 @@ empty; (3) the axiom ledger is **byte-identical** before/after — 8 axioms (7 m
 physics one now under the `HSMixture` bucket; (4) `#print axioms pyhs_mixture_no_spinodal_n1` still
 `[propext, Classical.choice, Quot.sound]`.
 
-**Follow-up (`MRS.0d`, not done):** split the three straddling files, general half leftward —
+**Continued as `MRS.9b` (below):** split the three straddling files, general half leftward —
 `MatrixN1` (4 abstract lemmas → `Analysis/`, `m2_identity_baxter` stays), `MixtureHSCounting`
 (`DetBoundaryGrowth`/`infinite_zeros_of_growth`/`expTaylor2,3`/… → `Analysis/`), `MixtureLaurent`
 (`taylor4_*` generic calculus → `Analysis/`). That also unblocks the two moves above.
 
-### Task MRS.0e — species binder normalised to `N`
+
+#### MRS.9b — splitting the straddling files: general math moved into `Analysis/`
+
+**✓ DONE 2026-07-19, build green (8688 jobs), no `sorry`, all four invariants re-verified.**
+Directory counts `Analysis 18→23`, `HardSphere 56`, `HSMixture 14→15`, `YukawaDCF 23→22`.
+
+Stage 2 of the `HSMixture/` reorganisation (`MRS.9a`): a file that straddles the layering boundary
+is **split**, not filed by majority vote — the general half moves left, per Group MA admissibility
+rule (c) and the `BanachPoleFamily` / `radialShell_bounded_injective` precedents.
+
+**Five new `Analysis/` files, all imports = Mathlib only (except `BoundaryGrowth`).**
+
+| new file | extracted from | contents |
+|---|---|---|
+| `MatrixFin1.lean` | `HardSphere/MatrixN1` | `1×1` matrix mul/inv = scalar mul/div; unconditional (`D = 0` ⇒ both sides `0`) |
+| `ExpTaylorLimits.lean` | `HSMixture/MixtureHSCounting` | `remainder_div_tendsto_zero`, `expTaylor2/3`, `phi1/phi2_tendsto` — removable singularities at `s = 0` for arbitrary `σ ≠ 0` |
+| `BoundaryGrowth.lean` | same | `DetBoundaryGrowth`, `detBoundaryGrowth_of_linear`, `infinite_zeros_of_growth`, `finset_sum_le_finsum_of_nonneg` — abstract `f : ℂ → ℂ` |
+| `Taylor4Calculus.lean` | `YukawaDCF/MixtureLaurent` | the order-4 Taylor germ algebra: `taylor4_mul/sub/neg/recip`, `poly4_eq_zero_of_littleO`, `taylor4_coeff_unique` — arbitrary `f g : ℝ → ℝ` |
+| `PoleSeriesSummable.lean` | `YukawaDCF/MixtureMLSeries` | `mixHSterm`, `mixHS_summable`, `mixHS_summable_of_growth` — arbitrary `Bcoef sfam : ℕ → ℂ` |
+
+**A 4th split was needed and was not in the plan.** `MixtureMLBound` was blocked by
+`MixtureMLSeries`, which I had classified as "genuinely Yukawa" from keyword counts. That was
+right about the *file* (it defines `yukawaCoupling`, the Laplace-space propagator factor) but wrong
+about the *dependency*: `MixtureMLBound` uses only `mixHSterm` / `mixHS_summable_of_growth`, both
+fully abstract. Splitting those out unblocked it, and **`MixtureMLBound` is now in `HSMixture/`**.
+
+**⚠ `MixtureLaurent` is still blocked — the plan's claim that stage 2 would unblock it was wrong.**
+Its residual three theorems need `q0_entry_taylor3`, `p1_limit`, `p2_limit`, `p1/p2_cubic_coeff`,
+`exp_neg_cubic_rem` from `MixturePolyCoeffs`, which imports `InnerOriginBC` + `ContactMatching`
+(real Yukawa). Those six lemmas do **not** themselves touch the Yukawa imports, so a 5th split is
+*feasible* — but `MixturePolyCoeffs` is 1300+ lines and currently carries ~390 lines of uncommitted
+edits from another session, so it was left alone. Recorded as `MRS.9d`.
+
+**Extraction-method notes** (all three hazards actually bit):
+* Blocks were located by script (declaration + its preceding `/--` docstring) rather than by hand,
+  and re-inserted verbatim — no proof was retyped.
+* ⚠ The extractor matched `/--` but not `/-!`, so **section headers were orphaned**: `MixtureLaurent`
+  kept a `/-! ### Well-definedness …` header whose theorem had moved. Check `^/-! ###` after any
+  extraction.
+* ⚠ The last block of a file swallows its `end Namespace` line. `MixtureLaurent` lost its `end` and
+  **still built** — Lean auto-closes at EOF and only emits a `linter.style.missingEnd` warning.
+  Green build ⇏ balanced namespaces; grep `^namespace` vs `^end ` counts.
+* `open` does not propagate through `import`: every downstream consumer of a moved declaration needs
+  its own `open` (`MixtureInnerDCF`, `MixtureMLBound` both did).
+
+**Deliberate non-goal.** `PoleSeriesSummable`'s `mixHS*` names are historical and now live in
+`Analysis/` despite the domain-flavoured prefix. Renaming them to content-descriptive names is a
+follow-up (`MRS.9d`), deferred to keep this split's blast radius small while other sessions have
+uncommitted work in the same files.
+
+
+#### MRS.9c — species binder normalised to `N`
 
 **✓ DONE 2026-07-19, build green (8683 jobs, unchanged), convention recorded in `CONVENTIONS.md`.**
 
@@ -1714,51 +2079,85 @@ skipping any block that already bound `N` (relevant: `MixtureHSZeros` uses `N` f
 in *other* declarations), and (iii) a post-hoc grep of all 9 files for `∀ N`/`intro N`/`fun N`/
 `induction N` — all empty, so no local was captured.
 
-### Task MRS.0d — splitting the straddling files: general math moved into `Analysis/`
 
-**✓ DONE 2026-07-19, build green (8688 jobs), no `sorry`, all four invariants re-verified.**
-Directory counts `Analysis 18→23`, `HardSphere 56`, `HSMixture 14→15`, `YukawaDCF 23→22`.
+#### MRS.9d — split `MixturePolyCoeffs`, move `MixtureLaurent`, rename `mixHS*` (ex-`0f`)
 
-Stage 2 of the `HSMixture/` reorganisation (`MRS.0c`): a file that straddles the layering boundary
-is **split**, not filed by majority vote — the general half moves left, per Group MA admissibility
-rule (c) and the `BanachPoleFamily` / `radialShell_bounded_injective` precedents.
+**✓ DONE 2026-07-27, build green (8699 jobs), layering invariant re-verified, axiom ledger
+byte-identical (pure reorg).**  The deferral blocker is gone — the other session's `MixturePolyCoeffs`
+edits landed in commits `93f10f6`/`b3896eb`, so the tree is clean.
 
-**Five new `Analysis/` files, all imports = Mathlib only (except `BoundaryGrowth`).**
+**⚠ The 2026-07-19 dependency list above was STALE — re-derived before acting** (per
+`feedback_stale_blockers`).  The recorded back-edge was six lemmas; the *current* `MixtureLaurent`
+needed **only `p1_limit` + `p2_limit`** from `MixturePolyCoeffs`.  The other four (`q0_entry_taylor3`,
+`p1_cubic_coeff`, `p2_cubic_coeff`, `exp_neg_cubic_rem`) had dropped out of `MixtureLaurent`'s
+dependency set — `q0_entry_taylor4` now uses the already-extracted `p1_quartic_coeff` /
+`exp_neg_quartic_rem` (`Taylor4Calculus`), so only the two order-0 limits remained.  A `grep` of the
+actual references, not the note, is what caught this.
 
-| new file | extracted from | contents |
-|---|---|---|
-| `MatrixFin1.lean` | `HardSphere/MatrixN1` | `1×1` matrix mul/inv = scalar mul/div; unconditional (`D = 0` ⇒ both sides `0`) |
-| `ExpTaylorLimits.lean` | `HSMixture/MixtureHSCounting` | `remainder_div_tendsto_zero`, `expTaylor2/3`, `phi1/phi2_tendsto` — removable singularities at `s = 0` for arbitrary `σ ≠ 0` |
-| `BoundaryGrowth.lean` | same | `DetBoundaryGrowth`, `detBoundaryGrowth_of_linear`, `infinite_zeros_of_growth`, `finset_sum_le_finsum_of_nonneg` — abstract `f : ℂ → ℂ` |
-| `Taylor4Calculus.lean` | `YukawaDCF/MixtureLaurent` | the order-4 Taylor germ algebra: `taylor4_mul/sub/neg/recip`, `poly4_eq_zero_of_littleO`, `taylor4_coeff_unique` — arbitrary `f g : ℝ → ℝ` |
-| `PoleSeriesSummable.lean` | `YukawaDCF/MixtureMLSeries` | `mixHSterm`, `mixHS_summable`, `mixHS_summable_of_growth` — arbitrary `Bcoef sfam : ℕ → ℂ` |
+**What was done.**
+1. **Extracted to `Analysis/Taylor4Calculus.lean`** (namespace `FMSA.Taylor4`, its established home for
+   the p1/p2 block-coefficient lemmas — `p1_quartic_coeff`/`exp_neg_quartic_rem` were already there):
+   `p2_limit`, `p1_limit` (from `MixturePolyCoeffs`; `p1_limit` uses `p2_limit`, kept in that order)
+   and `p2_quartic_coeff` (from `MixtureLaurent` itself — pure real-analysis, its only consumer was
+   `q0_entry_taylor4` in the same file, so it left with the general lemmas rather than riding along to
+   `HSMixture/`).  All three are `#print axioms = {std three}`.  Names kept (`p1`/`p2` is the
+   file's existing convention, not a domain leak).  `MixturePolyCoeffs` now `import`s
+   `Analysis/Taylor4Calculus` + `open FMSA.Taylor4` for its three internal `p1_limit`/`p2_limit`
+   call sites; nothing else references them externally.
+2. **Moved `MixtureLaurent` `YukawaDCF/ → HSMixture/`** (`git mv`, namespace `FMSA.MixtureLaurent`
+   unchanged — content-descriptive).  Imports are now `Mathlib` + `Analysis.Taylor4Calculus` +
+   `HSMixture.MatrixQ0` (the `q0_entry` it uses, previously pulled in transitively via
+   `MixturePolyCoeffs`, now imported directly).  `p1_limit`/`p2_limit`/`p2_quartic_coeff` resolve via
+   its existing `open FMSA.Taylor4`.  Its theorems (`q0_entry_taylor4`, `taylor4_inv_entry`) have no
+   code consumers, so the move is a leaf relocation.  `LeanCode.lean` import path updated.
+3. **Renamed the four generic `mixHS*` in `Analysis/PoleSeriesSummable`** to content-descriptive
+   names (word-boundary `sed`, 70 occurrences across 7 files):
+   `mixHSterm → poleExpTerm`, `mixHS_series → poleExpSeriesRe`,
+   `mixHS_summable → poleExpTerm_summable_of_decay`,
+   `mixHS_summable_of_growth → poleExpTerm_summable_of_growth`.
+   **Scope = only the generics in `Analysis/`.**  The domain-layer *derived* objects
+   (`mixHSterm2`, `mixHS_series2`, `mixHSAntideriv*`, `detF_mixHS_summable`) keep their `mixHS*`
+   names — they are genuinely mixture-HS specific and live in `YukawaDCF/`/`HSMixture/`, where a
+   domain prefix is correct.  ⚠ The rename must be `\b`-anchored: `mixHSterm` is a substring of the
+   preserved `mixHSterm2` (digit-suffixed) and `detF_mixHS_summable` / `…_eq_mixHSterm` (`_`-prefixed);
+   the word boundary protects all of them, verified by before/after counts
+   (`mixHSterm2` 34→34, `detF_mixHS_summable` 8→8).
+4. **Re-verified the layering invariant** (`MRS.9a`'s three greps): `Analysis/ ⊬ higher`,
+   `HardSphere/ ⊬ {HSMixture,YukawaDCF}`, **`HSMixture/ ⊬ YukawaDCF`** — all empty.  Directory counts
+   now `Analysis 27, HardSphere 59, HSMixture 17, YukawaDCF 24`.
 
-**A 4th split was needed and was not in the plan.** `MixtureMLBound` was blocked by
-`MixtureMLSeries`, which I had classified as "genuinely Yukawa" from keyword counts. That was
-right about the *file* (it defines `yukawaCoupling`, the Laplace-space propagator factor) but wrong
-about the *dependency*: `MixtureMLBound` uses only `mixHSterm` / `mixHS_summable_of_growth`, both
-fully abstract. Splitting those out unblocked it, and **`MixtureMLBound` is now in `HSMixture/`**.
+**MRS.9 (`9a`–`9d`) is now COMPLETE.**  Follow-up (2026-07-27): the order-3 p1/p2 lemmas
+(`p1_cubic_coeff`, `p2_cubic_coeff`, `exp_neg_cubic_rem`) — verified genuinely physics-independent
+(they take only `(σ : ℝ)`/`(λ : ℝ)` and prove via `Real.exp_bound`; NO `q0_entry`/`MatrixQ0`/Yukawa
+in the *code*, only in motivating prose) — were **also moved to `Analysis/Taylor4Calculus.lean`**,
+completing the p1/p2/exp Baxter-block Taylor family there (orders 0, 3, 4 now all in `Analysis/`).
+Their sole consumers were `MixturePolyCoeffs`-internal (`q0_entry_taylor3`), which resolve via the
+`open FMSA.Taylor4` already added in `MRS.9d`; verbose GAP.9/`D_ij` docstrings trimmed to the
+domain-neutral house style.  Build green 8699, all three `#print axioms = {std three}`.  ⚠ A crude
+"references a domain object?" grep suggests a few remaining `p1_num*`/`p2_num*` numerator-derivative
+helpers *may* also be general, but the classifier split sibling lemmas inconsistently, so migrating
+those needs per-lemma reading and is left as a genuinely-optional future pass — not started.
 
-**⚠ `MixtureLaurent` is still blocked — the plan's claim that stage 2 would unblock it was wrong.**
-Its residual three theorems need `q0_entry_taylor3`, `p1_limit`, `p2_limit`, `p1/p2_cubic_coeff`,
-`exp_neg_cubic_rem` from `MixturePolyCoeffs`, which imports `InnerOriginBC` + `ContactMatching`
-(real Yukawa). Those six lemmas do **not** themselves touch the Yukawa imports, so a 5th split is
-*feasible* — but `MixturePolyCoeffs` is 1300+ lines and currently carries ~390 lines of uncommitted
-edits from another session, so it was left alone. Recorded as `MRS.0f`.
 
-**Extraction-method notes** (all three hazards actually bit):
-* Blocks were located by script (declaration + its preceding `/--` docstring) rather than by hand,
-  and re-inserted verbatim — no proof was retyped.
-* ⚠ The extractor matched `/--` but not `/-!`, so **section headers were orphaned**: `MixtureLaurent`
-  kept a `/-! ### Well-definedness …` header whose theorem had moved. Check `^/-! ###` after any
-  extraction.
-* ⚠ The last block of a file swallows its `end Namespace` line. `MixtureLaurent` lost its `end` and
-  **still built** — Lean auto-closes at EOF and only emits a `linter.style.missingEnd` warning.
-  Green build ⇏ balanced namespaces; grep `^namespace` vs `^end ` counts.
-* `open` does not propagate through `import`: every downstream consumer of a moved declaration needs
-  its own `open` (`MixtureInnerDCF`, `MixtureMLBound` both did).
+**GENERAL-`N` — UNCONDITIONAL (2026-07-29, `MixtureDetGeneralN.lean`).**  The `N=2`
+`mixtureDet_pole_free` generalises to arbitrary `N`, `mixtureDet_pole_free_N` : `det Q̂₀(I·z) ≠ 0`
+on the open lower half `z`-plane for every physical `N`-component mixture, **fully unconditional**,
+`#print axioms` = the same two existing axioms (`zeroFree_lowerHalfPlane_of_homotopy`,
+`pyhs_mixture_no_spinodal`) — no new axiom.  Route: the already-`N`-general framework
+`matDet_zeroFree_lowerHalfPlane_of_homotopy` applied to the entire `ψ`-matrix `Mdens` (physical `Q̂₀`
+with each `φ = num/sⁿ` replaced by its entire removable extension `ψ`, so every entry is entire
+(`hholo`, `Mdens_hholo`) and jointly continuous (`hcont`, `Mdens_hcont`)).  `hbase` = dilute `Mdens 0
+= I`.  `hreal` = `k≠0` no-spinodal (`{N}`) + `k=0` compressibility `detMdens_origin_ne_zero`
+(axiom-clean, `det ≥ 1` via `Q0_mat_phys_det_ge_one_N` = rank-2 reduction + `moment_key`, which is
+`{N}`).
 
-**Deliberate non-goal.** `PoleSeriesSummable`'s `mixHS*` names are historical and now live in
-`Analysis/` despite the domain-flavoured prefix. Renaming them to content-descriptive names is a
-follow-up (`MRS.0f`), deferred to keep this split's blast radius small while other sessions have
-uncommitted work in the same files.
+**The escape `hbound` (the crux `N`-general obstacle) — SOLVED cleanly via a diagonal similarity.**
+Individual `Q̂₀` entries blow up as `Re s → ∞` (`e^{−λ_{ij}s}`, `λ_{ij}<0`), but the phase
+`e^{−λ_{ij}s} = e^{σᵢs/2}·e^{−σⱼs/2}` **is** a diagonal similarity `D(·)D⁻¹`, so
+`det Q̂₀ = det Mgauge` (`det_Q0_eq_det_gauge`, via `det_mul` + `det_diagonal`, `∏e^{σᵢs/2}·∏e^{−σⱼs/2}
+= e^0 = 1`) where `Mgauge` has the phase stripped (`lam=0`, entries bounded).  Then `Mgauge = 1 − A`,
+`‖A‖_{L∞ op} ≤ Abnd/‖s‖ → 0` (kernel bounds `‖φ₁‖ ≤ (2+σ)/‖s‖`, `‖φ₂‖ ≤ (2+σ+σ²/2)/‖s‖` from
+`‖e^{−sσ}‖ = e^{−σ Re s} ≤ 1`; `linfty_opNorm_le_row`), uniformly in `t` (`Abnd_cont` + compact
+`[0,1]`), so `1 − A = Mgauge` is a unit (`isUnit_one_sub_of_norm_lt_one`) and `det ≠ 0` for `‖s‖ ≥ R`
+(`exists_uniform_escape`, axiom-clean).  This is **cleaner than the `N=2` monomial bridge** and needed
+no complex VU factorisation.  **`OZFIX.17` matrix pole↔decay is now RESOLVED for ALL `N`.**

@@ -25,6 +25,11 @@ Checks:
 """
 import numpy as np
 
+try:                      # numpy >= 2.0 renamed trapz -> trapezoid
+    _trapz = np.trapezoid
+except AttributeError:
+    _trapz = np.trapz
+
 eta, sigma = 0.3, 1.0
 rho = 6 * eta / (np.pi * sigma**3)
 
@@ -122,7 +127,7 @@ for N in Ns:
     # true arc integral of z*Hhat(z)*e^{izr} dz
     z = R * np.exp(1j * TH)
     integ = np.array([zz * Hhat_stable(zz) * np.exp(1j * zz * r) * 1j * zz for zz in z])
-    arc = np.trapezoid(integ, TH)
+    arc = _trapz(integ, TH)
     print(f"  R={R:8.2f}: Jordan bound pi*M/a={np.pi*M/a:.4e}   true |arc|={abs(arc):.4e}"
           f"   (|arc|*R={abs(arc)*R:.2f})")
 

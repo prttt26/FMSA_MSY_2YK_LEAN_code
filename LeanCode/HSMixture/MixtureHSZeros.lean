@@ -375,7 +375,7 @@ theorem Q0_det_c_zeros_infinite (sigma : Fin 2 → ℝ) (rho_geo Qp Qpp : Fin 2 
 `π·n + (π·N − r) ≤ ‖g n‖` (via `exists_zero_family_growth_of_chordPoleFamily`): the centres satisfy
 `‖s1 n‖ ≥ |Im(s1 n)| = π·n` (`Complex.abs_im_le_norm` + `hk1im`), and each zero is within `r` of its
 centre. With `N ≥ 1` and `r < π/2` the offset `π·N − r > π/2 > 0`. This is exactly the linear-growth
-hypothesis `mixHS_summable_of_growth` (MML.5) consumes; conditional on the MZERO.5 bounds, like
+hypothesis `poleExpTerm_summable_of_growth` (MML.5) consumes; conditional on the MZERO.5 bounds, like
 `Q0_det_c_zeros_infinite`. -/
 theorem Q0_det_c_pole_family_growth (sigma : Fin 2 → ℝ) (rho_geo Qp Qpp : Fin 2 → Fin 2 → ℂ)
     {r : ℝ} (hr : 0 < r) (hrspace : r < Real.pi / 2) (N : ℕ) (hN : 1 ≤ N) (s1 : ℕ → ℂ) (Fp1 : ℕ → ℂ)

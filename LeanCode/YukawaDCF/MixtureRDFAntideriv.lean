@@ -199,7 +199,7 @@ theorem antiCoeff_fst_norm_le (s a b : ℂ) :
 
 /-! ### Summability of the tower — reduced to a coefficient bound
 
-The second antiderivative rung, viewed as an `r`-absorbed `mixHSterm`, is `Summable` at **every**
+The second antiderivative rung, viewed as an `r`-absorbed `poleExpTerm`, is `Summable` at **every**
 `r` for which its coefficient obeys a `‖s‖^p` bound with `p < −1`.  On the reflected family the two
 `antiCoeff` divisions supply two spare powers of `1/‖s_n‖` over the raw residue, which is what should
 push `p` below `−1` **without** the `rdist > max(σ₀/2, λ₀₁)` threshold that the untowered series
@@ -209,28 +209,28 @@ push `p` below `−1` **without** the `rdist > max(σ₀/2, λ₀₁)` threshold
 obligation, isolated here as the hypothesis `hbound`. -/
 
 /-- The `r`-absorbed coefficient of `mixHSAntideriv2` (its constant-plus-linear envelope, packaged so
-the rung is a plain `mixHSterm`). -/
+the rung is a plain `poleExpTerm`). -/
 def mixHSAntideriv2Coeff (alpha beta sfam : ℕ → ℂ) (r : ℝ) (n : ℕ) : ℂ :=
   (-(-alpha n / sfam n - beta n / (sfam n) ^ 2) / sfam n - (-beta n / sfam n) / (sfam n) ^ 2)
     + (-(-beta n / sfam n) / sfam n) * (r : ℂ)
 
-/-- `mixHSAntideriv2` is the plain `mixHSterm` at its `r`-absorbed coefficient (definitional). -/
+/-- `mixHSAntideriv2` is the plain `poleExpTerm` at its `r`-absorbed coefficient (definitional). -/
 theorem mixHSAntideriv2_eq_mixHSterm (alpha beta sfam : ℕ → ℂ) (r : ℝ) (n : ℕ) :
     mixHSAntideriv2 alpha beta sfam n r
-      = FMSA.PoleSeries.mixHSterm (mixHSAntideriv2Coeff alpha beta sfam r) sfam r n := rfl
+      = FMSA.PoleSeries.poleExpTerm (mixHSAntideriv2Coeff alpha beta sfam r) sfam r n := rfl
 
 /-- **Summability of the `Kterm`-analog rung, reduced to the coefficient bound.**  Given the pole
 family's linear growth and a `‖s_n‖^p` bound (`p < −1`) on the `r`-absorbed second-antiderivative
-coefficient, `mixHSAntideriv2 … r` is `Summable`.  Direct reuse of `mixHS_summable_of_growth` through
+coefficient, `mixHSAntideriv2 … r` is `Summable`.  Direct reuse of `poleExpTerm_summable_of_growth` through
 `mixHSAntideriv2_eq_mixHSterm`; the point is that the tower's two `1/‖s‖` gains are what make such a
 `p < −1` bound attainable at every `r ≥ 0`, threshold-free. -/
 theorem mixHSAntideriv2_summable_of_growth {alpha beta sfam : ℕ → ℂ} {r : ℝ} {C p c d : ℝ}
     (hp : p < -1) (hC : 0 ≤ C) (hc : 0 < c) (hd : 0 < d)
     (hgrowth : ∀ n : ℕ, c * (n : ℝ) + d ≤ ‖sfam n‖)
-    (hbound : ∀ n : ℕ, ‖FMSA.PoleSeries.mixHSterm (mixHSAntideriv2Coeff alpha beta sfam r) sfam r n‖
+    (hbound : ∀ n : ℕ, ‖FMSA.PoleSeries.poleExpTerm (mixHSAntideriv2Coeff alpha beta sfam r) sfam r n‖
       ≤ C * ‖sfam n‖ ^ p) :
     Summable (fun n => mixHSAntideriv2 alpha beta sfam n r) := by
-  have hsum := FMSA.PoleSeries.mixHS_summable_of_growth (Bcoef := mixHSAntideriv2Coeff alpha beta sfam r)
+  have hsum := FMSA.PoleSeries.poleExpTerm_summable_of_growth (Bcoef := mixHSAntideriv2Coeff alpha beta sfam r)
     (sfam := sfam) (r := r) hp hC hc hd hgrowth hbound
   exact hsum.congr (fun n => (mixHSAntideriv2_eq_mixHSterm alpha beta sfam r n).symm)
 
@@ -304,10 +304,10 @@ theorem mixHSAntideriv2_summable_of_coeff_bounds {alpha beta sfam : ℕ → ℂ}
   set S := ‖sfam n‖ with hS
   have hSpos : 0 < S := lt_of_lt_of_le zero_lt_one (hs1 n)
   have hsne : sfam n ≠ 0 := by rw [← norm_pos_iff, ← hS]; exact hSpos
-  -- `‖mixHSterm coeff‖ = ‖coeff‖·e^{−r·Re s} ≤ ‖coeff‖` on the reflected family
-  have hterm : ‖FMSA.PoleSeries.mixHSterm (mixHSAntideriv2Coeff alpha beta sfam r) sfam r n‖
+  -- `‖poleExpTerm coeff‖ = ‖coeff‖·e^{−r·Re s} ≤ ‖coeff‖` on the reflected family
+  have hterm : ‖FMSA.PoleSeries.poleExpTerm (mixHSAntideriv2Coeff alpha beta sfam r) sfam r n‖
       ≤ ‖mixHSAntideriv2Coeff alpha beta sfam r n‖ := by
-    unfold FMSA.PoleSeries.mixHSterm
+    unfold FMSA.PoleSeries.poleExpTerm
     rw [norm_mul, Complex.norm_exp]
     have hexp : Real.exp (-(sfam n) * (r : ℂ)).re ≤ 1 := by
       rw [Real.exp_le_one_iff]
@@ -556,14 +556,14 @@ series-value assumption would be satisfiable by sub-families summing to the wron
 the poles, and the concrete `poly` needs the matrix OZ★ real-space identity — the one input Rung 2
 does not supply. -/
 
-/-- **Rung 2 — the `Hterm`-rung coefficient** `−α/s − β/s² + (−β/s)·r` (as a plain `mixHSterm`). -/
+/-- **Rung 2 — the `Hterm`-rung coefficient** `−α/s − β/s² + (−β/s)·r` (as a plain `poleExpTerm`). -/
 def mixHSAntideriv1Coeff (alpha beta sfam : ℕ → ℂ) (r : ℝ) (n : ℕ) : ℂ :=
   (-alpha n / sfam n - beta n / (sfam n) ^ 2) + (-beta n / sfam n) * (r : ℂ)
 
-/-- `mixHSAntideriv1` is the plain `mixHSterm` at its `r`-absorbed coefficient (definitional). -/
+/-- `mixHSAntideriv1` is the plain `poleExpTerm` at its `r`-absorbed coefficient (definitional). -/
 theorem mixHSAntideriv1_eq_mixHSterm (alpha beta sfam : ℕ → ℂ) (r : ℝ) (n : ℕ) :
     mixHSAntideriv1 alpha beta sfam n r
-      = FMSA.PoleSeries.mixHSterm (mixHSAntideriv1Coeff alpha beta sfam r) sfam r n := rfl
+      = FMSA.PoleSeries.poleExpTerm (mixHSAntideriv1Coeff alpha beta sfam r) sfam r n := rfl
 
 /-- The `Hterm`-rung coefficient in a sign-explicit closed form (`s ≠ 0`). -/
 theorem mixHSAntideriv1Coeff_eq (alpha beta sfam : ℕ → ℂ) (r : ℝ) (n : ℕ) (hs : sfam n ≠ 0) :
@@ -613,16 +613,16 @@ theorem mixHSAntideriv1_summable_of_coeff_bounds {alpha beta sfam : ℕ → ℂ}
     (hgrowth : ∀ n : ℕ, c * (n : ℝ) + d ≤ ‖sfam n‖)
     (hα : ∀ n, ‖alpha n‖ ≤ Cc * ‖sfam n‖ ^ q) (hβ : ∀ n, ‖beta n‖ ≤ Cc * ‖sfam n‖ ^ q) :
     Summable (fun n => mixHSAntideriv1 alpha beta sfam n r) := by
-  have hsum := FMSA.PoleSeries.mixHS_summable_of_growth
+  have hsum := FMSA.PoleSeries.poleExpTerm_summable_of_growth
     (Bcoef := mixHSAntideriv1Coeff alpha beta sfam r) (sfam := sfam) (r := r)
     (C := Cc * (2 + r)) (p := q - 1) (by linarith) (by positivity) hc hd hgrowth (fun n => ?_)
   · exact hsum.congr (fun n => (mixHSAntideriv1_eq_mixHSterm alpha beta sfam r n).symm)
   · set S := ‖sfam n‖ with hS
     have hSpos : 0 < S := lt_of_lt_of_le zero_lt_one (hs1 n)
     have hsne : sfam n ≠ 0 := by rw [← norm_pos_iff, ← hS]; exact hSpos
-    have hterm : ‖FMSA.PoleSeries.mixHSterm (mixHSAntideriv1Coeff alpha beta sfam r) sfam r n‖
+    have hterm : ‖FMSA.PoleSeries.poleExpTerm (mixHSAntideriv1Coeff alpha beta sfam r) sfam r n‖
         ≤ ‖mixHSAntideriv1Coeff alpha beta sfam r n‖ := by
-      unfold FMSA.PoleSeries.mixHSterm
+      unfold FMSA.PoleSeries.poleExpTerm
       rw [norm_mul, Complex.norm_exp]
       have hexp : Real.exp (-(sfam n) * (r : ℂ)).re ≤ 1 := by
         rw [Real.exp_le_one_iff]

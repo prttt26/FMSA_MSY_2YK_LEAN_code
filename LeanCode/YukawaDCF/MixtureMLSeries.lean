@@ -28,7 +28,7 @@ The per-pole term is defined over an **abstract** coefficient family `Bcoef : �
 singly-vs-doubly-propagation modeling choice to MML.8; here we only tie a *given* `B_k` to the
 proven MML.2 residue.
 
-* `mixHSterm` / `mixHS_series` — the `B_k·e^{−s_k r}` term and the `2·Re`-of-tsum series.
+* `poleExpTerm` / `poleExpSeriesRe` — the `B_k·e^{−s_k r}` term and the `2·Re`-of-tsum series.
 * `yukawaCoupling` / `yukawaCoupling_continuousAt` — the Laplace-space Yukawa propagator factor
   `Σ_t K_t/(z_t²−s²)`, continuous away from the Yukawa poles `s²=z_t²`.
 * `b_k_residue_coupled` — **MML.4**: multiplying MML.2's `Res_{s_k}[Q̂₀⁻¹]₀₁ = −Q̂₀₀₁(s_k)/det′`
@@ -38,7 +38,7 @@ proven MML.2 residue.
 
 ## MML.5 — convergence (abstract)
 
-* `mixHS_summable` — **MML.5 (abstract)**: given a magnitude decay `‖mixHSterm n‖ ≤ C·(n+1)^p`
+* `poleExpTerm_summable_of_decay` — **MML.5 (abstract)**: given a magnitude decay `‖poleExpTerm n‖ ≤ C·(n+1)^p`
   with `p < −1`, the series is `Summable`. Near-copy of `h_explicit_summable`, closing through
   `Real.summable_nat_rpow`. The *concrete* discharge of this hypothesis (a `|adj/det′|`-growth
   bound tied to the MZERO.1 pole family, a POLE.5-analog for the two-frequency `detC`) is the

@@ -3975,7 +3975,7 @@ theorem Cmag_pos (P : MixParams) (hP : P.Phys) (rdist : ℝ) : 0 < P.Cmag rdist 
 /-- **The per-point MML.5 magnitude bound.**  For any `s` carrying the three disk facts
 (`‖s‖ ≥ 1`, log-lift deviation `≤ Kdev`, derivative floor), the residue magnitude
 `‖q01(s)‖·e^{r·Re s}/‖F′(s)‖` is `≤ Cmag(r)·‖s‖^{p(r)}` — stated in the `rpow` form the
-consumer `mixHS_summable_of_growth` wants. -/
+consumer `poleExpTerm_summable_of_growth` wants. -/
 theorem magnitude_bound_at (P : MixParams) (hP : P.Phys) (rdist : ℝ)
     {s : ℂ} (hA : 1 ≤ ‖s‖) (hdev : |(-s.re) - 2 * Real.log ‖s‖ / P.sig1| ≤ P.Kdev)
     (hD : P.sig1 * P.mu / (24 * (P.mu + P.K1)) ≤ ‖derivF P s‖) :
@@ -4104,8 +4104,8 @@ linear growth `‖g n‖ ≥ c·n + d` on which
 **Reflection convention.**  The constructed zeros have `Re (g n) < 0`.  Writing `s_k := −(g n)`
 (so `Re s_k > 0`, the physical HS pole), the bound reads `‖B_k‖·e^{−rdist·Re s_k} ≤ C‖s_k‖^p` with
 `p < −1` — exactly MML.5's gate, since `B_k = −q01(z_k)/det′(z_k)` (`b_k_residue`,
-`MixtureHSPoles.lean`).  Consequently `mixHSterm` must be fed `−g n`, not `g n`; fixing that
-interface is left to the mixture session (`mixHS_summable_of_growth` is stated for `sfam` directly).
+`MixtureHSPoles.lean`).  Consequently `poleExpTerm` must be fed `−g n`, not `g n`; fixing that
+interface is left to the mixture session (`poleExpTerm_summable_of_growth` is stated for `sfam` directly).
 
 **Exponent.**  `p(r) < −1 ⟺ r > max(σ₀/2, (σ₁−σ₀)/2)`.  The `σ₀/2` branch is the numerically
 measured one (`p_eff ≈ (σ₀−σ₁−2r)/σ₁`); the extra `(σ₁−σ₀)/2` branch comes from the genuine
@@ -4114,7 +4114,7 @@ measured one (`p_eff ≈ (σ₀−σ₁−2r)/σ₁`); the extra `(σ₁−σ₀
 **Non-vanishing (added 2026-07-24).**  The family also satisfies `g n ≠ 0` and `det′(g n) ≠ 0` —
 strict consequences of the same `disk_facts` (`1 ≤ ‖g n‖`, and `‖det′(g n)‖ ≥ σ₁μ/(24(μ+K₁)) > 0`)
 that the magnitude bound already uses.  These are exactly the *simple-zero* hypotheses of
-`b_k_residue` (MML.2), so with them the coefficient `−q01(g n)/det′(g n)` fed to `mixHSterm` can be
+`b_k_residue` (MML.2), so with them the coefficient `−q01(g n)/det′(g n)` fed to `poleExpTerm` can be
 **identified with the residue `B_k`** rather than merely resembling it — see
 `detF_Bcoef_eq_b_k_residue` (`MixtureMLBound.lean`), which closes MML.5's last bookkeeping item. -/
 theorem detF_family_magnitude_bound (P : MixParams) (hP : P.Phys) {rdist : ℝ}

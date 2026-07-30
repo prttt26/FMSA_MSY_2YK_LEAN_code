@@ -41,7 +41,7 @@ the support intersections.
 
 **Source.** `todo/to_Lean.md` §1–§2 (2026-07-16 numerical session): `fmsa_double_prop.py`,
 `probe_dp_assembly.py`, `probe_true_first_order.py`; results in
-`numerical_notes/results/fmsa_dp_comparison.md`.
+`numerical_notes/results/single_point/fmsa_dp_comparison.md`.
 
 **Numerical status (from the handoff).** (★) at N=2 over a k-sweep: **max abs err 4.4×10⁻¹³**; at
 N=1 exact. Finite-basis fit `{rⁿ} ∪ {e^{±z_q r}}` to `r·c^{(1)}_{01}`: **unsplit** core resid
