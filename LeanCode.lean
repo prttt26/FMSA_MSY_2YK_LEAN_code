@@ -17,6 +17,7 @@ import LeanCode.Analysis.WienerRenewal
 import LeanCode.Analysis.WienerHopf
 import LeanCode.Analysis.RadialWienerHopf
 import LeanCode.Analysis.MatrixRadialWienerHopf
+import LeanCode.Analysis.MatrixWienerHopf
 import LeanCode.Analysis.ConvolutionLeibniz
 import LeanCode.Analysis.ContourHomotopy
 import LeanCode.HardSphere.BaxterRenewalDecay
@@ -95,12 +96,14 @@ import LeanCode.YukawaDCF.YukawaCausalResidue
 import LeanCode.YukawaDCF.WHSupports
 import LeanCode.YukawaDCF.MixtureConvolution
 import LeanCode.YukawaDCF.MixtureClosedForm
+import LeanCode.YukawaDCF.MixtureHSDCF
 import LeanCode.YukawaDCF.MixtureDCFSmooth
 import LeanCode.YukawaDCF.YukawaCausalProjection
 import LeanCode.YukawaDCF.YukawaInnerCore
 import LeanCode.HSMixture.MixtureHSPoles
 import LeanCode.HSMixture.MixtureHSZeros
 import LeanCode.HSMixture.MixtureChordFamily
+import LeanCode.HSMixture.MixtureZerosPhys
 import LeanCode.HSMixture.MixtureHSCounting
 import LeanCode.YukawaDCF.MixtureMLSeries
 import LeanCode.HSMixture.MixtureMLBound
@@ -110,6 +113,7 @@ import LeanCode.YukawaDCF.MixtureRDFStructureFactor
 import LeanCode.YukawaDCF.MixtureRDFPoleData
 import LeanCode.HSMixture.MixtureOzStar
 import LeanCode.HSMixture.MixtureOzStarIntegrable
+import LeanCode.HSMixture.MixtureBaxterSeed
 import LeanCode.HSMixture.MatrixDetPoleFree
 import LeanCode.HSMixture.MixtureDetEscape
 import LeanCode.HSMixture.MixtureDetHomotopy

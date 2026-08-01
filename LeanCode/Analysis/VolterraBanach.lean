@@ -186,4 +186,122 @@ theorem volterra_convolution_existsUniqueE (hab : a ≤ b) (q g : ℝ → E)
   refine ⟨u, fun r => (ContinuousMap.ext_iff.mp hu r).symm,
     fun w hw => huniq w (ContinuousMap.ext fun r => (hw r).symm)⟩
 
+/-! ## The global `E`-valued Volterra solution on `[a,∞)`
+
+`volterra_convolution_existsUniqueE` produces a solution on each **compact** `[a,b]` separately, as an
+element of the dependent type `C(Icc a b, E)`.  The mixture Baxter outer solution `Ψouter` needs
+**one** function on `[a,∞)`.  As in the scalar `volterraGlobal` (`BaxterRenewal.lean`), uniqueness is
+the glue: a solution on the longer interval, restricted, still solves the shorter equation (the
+integration range `[a,r]` never leaves `[a,b]`), hence **is** the shorter solution.  Evaluating the
+`b := r` solution at its own right endpoint therefore defines a single global solution satisfying the
+renewal equation at every `r ≥ a`.  This is the exact Banach-ring transcription of the proved scalar
+chain, so the matrix `Ψouter` is a direct instantiation at `E = Matrix (Fin N) (Fin N) ℝ`. -/
+
+/-- The local `E`-valued Volterra solution on `[a,b]` (`volterra_convolution_existsUniqueE`, named). -/
+def volterraSolE (hab : a ≤ b) (q g : ℝ → E) (hq : Continuous q) (hg : Continuous g) :
+    C(Icc a b, E) :=
+  (volterra_convolution_existsUniqueE hab q g hq hg).choose
+
+theorem volterraSolE_spec (hab : a ≤ b) (q g : ℝ → E) (hq : Continuous q) (hg : Continuous g)
+    (r : Icc a b) :
+    volterraSolE hab q g hq hg r = g r + ∫ t in a..(r : ℝ),
+      q ((r : ℝ) - t) * Set.IccExtend hab (volterraSolE hab q g hq hg) t :=
+  (volterra_convolution_existsUniqueE hab q g hq hg).choose_spec.1 r
+
+theorem volterraSolE_unique (hab : a ≤ b) (q g : ℝ → E) (hq : Continuous q) (hg : Continuous g)
+    (v : C(Icc a b, E))
+    (hv : ∀ r : Icc a b, v r = g r + ∫ t in a..(r : ℝ),
+      q ((r : ℝ) - t) * Set.IccExtend hab v t) :
+    v = volterraSolE hab q g hq hg :=
+  (volterra_convolution_existsUniqueE hab q g hq hg).choose_spec.2 v hv
+
+/-- **Compatibility: the local solutions agree on overlaps.**  Restricting the `[a,b']` solution to
+`[a,b]` (`b ≤ b'`) still solves the `[a,b]` equation, so uniqueness on `[a,b]` forces the equality. -/
+theorem volterraSolE_compat (hab : a ≤ b) {b' : ℝ} (hab' : a ≤ b') (hbb' : b ≤ b')
+    (q g : ℝ → E) (hq : Continuous q) (hg : Continuous g) (r : ℝ) (hr : r ∈ Set.Icc a b) :
+    volterraSolE hab' q g hq hg ⟨r, ⟨hr.1, le_trans hr.2 hbb'⟩⟩
+      = volterraSolE hab q g hq hg ⟨r, hr⟩ := by
+  have hsub : Set.Icc a b ⊆ Set.Icc a b' := Set.Icc_subset_Icc_right hbb'
+  set v : C(Set.Icc a b, E) :=
+    (volterraSolE hab' q g hq hg).comp ⟨Set.inclusion hsub, continuous_inclusion hsub⟩ with hvdef
+  have hvapp : ∀ x : Set.Icc a b, v x = volterraSolE hab' q g hq hg (Set.inclusion hsub x) :=
+    fun _ => rfl
+  have hext : ∀ t ∈ Set.Icc a b,
+      Set.IccExtend hab' (volterraSolE hab' q g hq hg) t = Set.IccExtend hab v t := by
+    intro t ht
+    rw [Set.IccExtend_of_mem hab' _ (hsub ht), Set.IccExtend_of_mem hab _ ht, hvapp ⟨t, ht⟩]
+  have hv : ∀ x : Set.Icc a b, v x = g x + ∫ t in a..(x : ℝ),
+      q ((x : ℝ) - t) * Set.IccExtend hab v t := by
+    intro x
+    have hx := volterraSolE_spec hab' q g hq hg (Set.inclusion hsub x)
+    have hxv : ((Set.inclusion hsub x : Set.Icc a b') : ℝ) = (x : ℝ) := rfl
+    rw [hxv] at hx
+    rw [hvapp x, hx]
+    congr 1
+    refine intervalIntegral.integral_congr ?_
+    intro t ht
+    dsimp only []
+    rw [Set.uIcc_of_le x.2.1] at ht
+    have htmem : t ∈ Set.Icc a b := ⟨ht.1, le_trans ht.2 x.2.2⟩
+    rw [hext t htmem]
+  have hvu := volterraSolE_unique hab q g hq hg v hv
+  calc volterraSolE hab' q g hq hg ⟨r, ⟨hr.1, le_trans hr.2 hbb'⟩⟩
+      = v ⟨r, hr⟩ := rfl
+    _ = volterraSolE hab q g hq hg ⟨r, hr⟩ := by rw [hvu]
+
+/-- **The global `E`-valued Volterra solution on `[a,∞)`** — evaluate the `b := r` local solution at
+its own right endpoint.  Off `[a,∞)` it is `0`. -/
+def volterraGlobalE (a : ℝ) (q g : ℝ → E) (hq : Continuous q) (hg : Continuous g) (r : ℝ) : E :=
+  if h : a ≤ r then volterraSolE h q g hq hg ⟨r, ⟨h, le_refl r⟩⟩ else 0
+
+/-- `volterraGlobalE` agrees with every local solution on that solution's own interval. -/
+theorem volterraGlobalE_eq_sol (hab : a ≤ b) (q g : ℝ → E)
+    (hq : Continuous q) (hg : Continuous g) (r : ℝ) (hr : r ∈ Set.Icc a b) :
+    volterraGlobalE a q g hq hg r = volterraSolE hab q g hq hg ⟨r, hr⟩ := by
+  rw [volterraGlobalE, dif_pos hr.1]
+  exact (volterraSolE_compat (b := r) (b' := b) hr.1 hab hr.2 q g hq hg r
+    ⟨hr.1, le_refl r⟩).symm
+
+/-- `volterraGlobalE` satisfies the renewal equation at **every** `r ≥ a`, with the *same* function
+under the integral sign. -/
+theorem volterraGlobalE_spec (a : ℝ) (q g : ℝ → E) (hq : Continuous q) (hg : Continuous g)
+    {r : ℝ} (hr : a ≤ r) :
+    volterraGlobalE a q g hq hg r
+      = g r + ∫ t in a..r, q (r - t) * volterraGlobalE a q g hq hg t := by
+  have hmem : r ∈ Set.Icc a r := ⟨hr, le_refl r⟩
+  rw [volterraGlobalE_eq_sol hr q g hq hg r hmem, volterraSolE_spec hr q g hq hg ⟨r, hmem⟩]
+  congr 1
+  refine intervalIntegral.integral_congr ?_
+  intro t ht
+  dsimp only []
+  rw [Set.uIcc_of_le hr] at ht
+  rw [volterraGlobalE_eq_sol hr q g hq hg t ht, Set.IccExtend_of_mem hr _ ht]
+
+/-- The global solution is continuous on every compact `[a,b]` (it *is* the bundled local solution
+there). -/
+theorem volterraGlobalE_continuousOn (hab : a ≤ b) (q g : ℝ → E)
+    (hq : Continuous q) (hg : Continuous g) :
+    ContinuousOn (volterraGlobalE a q g hq hg) (Set.Icc a b) := by
+  rw [continuousOn_iff_continuous_restrict]
+  have heq : Set.restrict (Set.Icc a b) (volterraGlobalE a q g hq hg)
+      = fun x => volterraSolE hab q g hq hg x := by
+    funext x
+    exact volterraGlobalE_eq_sol hab q g hq hg (x : ℝ) x.2
+  rw [heq]
+  exact (volterraSolE hab q g hq hg).continuous
+
+/-- The global solution is continuous on the whole half-line `[a,∞)` (glue the compact-interval
+continuity: each point of `Ici a` sits in the interior of some `Icc a (x+1)` relative to `Ici a`). -/
+theorem volterraGlobalE_continuousOn_Ici (a : ℝ) (q g : ℝ → E)
+    (hq : Continuous q) (hg : Continuous g) :
+    ContinuousOn (volterraGlobalE a q g hq hg) (Set.Ici a) := by
+  intro x hx
+  have hax : a ≤ x := hx
+  have hb : a ≤ x + 1 := by linarith
+  have hcont := (volterraGlobalE_continuousOn (b := x + 1) hb q g hq hg) x ⟨hax, by linarith⟩
+  refine hcont.mono_of_mem_nhdsWithin ?_
+  exact Filter.mem_of_superset
+    (inter_mem_nhdsWithin (Set.Ici a) (IsOpen.mem_nhds isOpen_Iio (show x < x + 1 by linarith)))
+    (fun y hy => ⟨hy.1, le_of_lt hy.2⟩)
+
 end FMSA.VolterraBanach

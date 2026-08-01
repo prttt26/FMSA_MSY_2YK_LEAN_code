@@ -7,6 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
+import LeanCode.Analysis.MatrixIdentity
 import LeanCode.YukawaDCF.MixtureRealSpace
 import LeanCode.YukawaDCF.MixtureInnerDCF
 
@@ -46,7 +47,9 @@ purely the pole content of `S₀`, i.e. of the **hard-sphere mixture RDF** `Ĥ�
   (`doubly_prop_entry_eq` argued from `Ĥ₁ = [Q̂₀ᵀ]⁻¹B₁[Q̂₀]⁻¹`; this one argues from the OZ equation
   and never mentions `B₁`), and it is the form `double_pole_leading_coeff` consumes.
 * `det_eq_of_wienerHopf_factorization` — `det T₀ = det Q̂₀(k) · det Q̂₀(−k)`, pinning the pole
-  locations to Group MZERO's zero family (at `k` **and** its reflection).
+  locations to Group MZERO's zero family (at `k` **and** its reflection).  Its generic core is
+  `Analysis.MatrixIdentity.det_mul_transpose`, homed there because `HSMixture/MixtureRDFUniqueness.lean`
+  needs it too and may not import this file (`CONVENTIONS.md` layering).
 * `rdf_entry_differentiableAt` — the sharp localization (`Fin 2`): off the zeros of `det T₀`, the
   RDF entries are differentiable wherever `T₀` and `Ĉ₁` are.  The exact counterpart of MRS.3's
   `star_entry_differentiableAt`, with the `det T₀ ≠ 0` hypothesis that the DCF statement pointedly
@@ -172,7 +175,7 @@ RDF's HS poles are exactly the zeros of `det Q̂₀` **and their reflections** �
 being precisely the one `detF_mixHS_summable` (`MixtureMLBound.lean`) enumerates. -/
 theorem det_eq_of_wienerHopf_factorization {N : ℕ} (Qp Qm T0 : Matrix (Fin N) (Fin N) ℂ)
     (hfact : T0 = Qp * Qmᵀ) : T0.det = Qp.det * Qm.det := by
-  rw [hfact, Matrix.det_mul, Matrix.det_transpose]
+  rw [hfact, FMSA.MatrixIdentity.det_mul_transpose]
 
 /-- **The whole first-order RDF in one line.**  Combining the OZ dual with MRS.1 and (★): the
 numerator is built from the *finite*, HS-pole-free (★) DCF `Ĉ₁ = Q̂₀(−k)·B₁·Q̂₀ᵀ(−k)`, and the entire

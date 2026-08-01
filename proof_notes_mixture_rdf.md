@@ -1364,6 +1364,154 @@ Validated at `N = 1` by the pre-existing `matOZStar_fin_one_of_scalar` (= uncond
 `baxterPsi_ozstar`). **The assembly needed NO matrix decay axiom** — the hard content lives entirely
 in the three `constructed-solution` Prop inputs (`hfact`/`hbridge`/`hclaimA`).
 
+**Assembly integrability plumbing FINISHED (2026-07-30, `MixtureOzStarIntegrable.lean`, axiom-clean).**
+`matOzStar_of_shellClaims` still carried its two shell-integrability side-conditions (`hQint`, the
+linear `Q`-shell; `hSint`, the self-conv shell) as *bare* hypotheses — the last un-plumbed integral in
+the matrix assembly, the analog of the reindex's nine that `matDblConv_reindex_of_regular` already
+discharged. Now closed by the capstone **`matOzStar_of_regular`**, which discharges both from the same
+natural regularity (`Q` continuous, `oddExt (Psi·/·)` measurable + `uIcc`-bounded per entry) and keeps
+only the genuine constructed-solution inputs `hfact`/`hbridge`/`hclaimA` — so the matrix assembly now
+needs *no* integrability hypotheses, exactly mirroring the unconditional scalar
+`baxterPsi_eq_phi_add_rho_conv`. Two reused engine lemmas: `shellQ_intervalIntegrable`
+(`g·(psi(r−u)+psi(r+u))` = two `mulCont_psi_intervalIntegrable`, the `c=1` slice of
+`constMul_psi_intervalIntegrable`) and `shellS_intervalIntegrable` (expand `matSelfConv` into the
+species sum of `paramKernel_mul_intervalIntegrable` shapes, close by `IntervalIntegrable.sum` +
+`Finset.sum_mul`). `#print axioms` on all four = standard three only, **no new axiom, ledger unchanged**.
+
+**`Ψouter` CONSTRUCTED — no longer a parameter (2026-07-31, axiom-clean).**  The renewal scaffolding
+took `Ψouter` (the coupled matrix Volterra outer solution) as a *parameter*; the note "constructing it
+is the remaining analytic core" is now discharged.  Built by lifting the proved scalar global-gluing
+chain (`volterraSol`→`volterraGlobal`→`volterraGlobal_spec`, `BaxterRenewal.lean`) to **any complete
+normed ring** in `Analysis/VolterraBanach.lean` — `volterraSolE`/`volterraSolE_spec`/`_unique`,
+`volterraSolE_compat` (overlap agreement from uniqueness), `volterraGlobalE` (`if a≤r then sol(b:=r) at
+r else 0`), `volterraGlobalE_eq_sol`/`_spec`/`_continuousOn`/`_continuousOn_Ici` (half-line continuity by
+`mono_of_mem_nhdsWithin` gluing).  Instantiated at `E = Matrix (Fin N) (Fin N) ℝ` (`linftyOp` ring) in
+`MixtureOzStar.lean`: `matBaxterPsiOuterFun` = `volterraGlobalE` precomposed with `max σ ·` (globally
+continuous, agrees with the solution on `[σ,∞)`; `matBaxterPsiOuterFun_continuous` via
+`ContinuousOn.comp_continuous`, `_renewal` via `volterraGlobalE_spec` + `integral_congr`).  Capstone
+**`matBaxterPsiOuter_matRenewalEq`**: for *any* continuous matrix Baxter data `Q, F`, the entries of
+`matBaxterPsiOuterFun` satisfy the entrywise `∑ₖ` `MatRenewalEq` (via `matRenewalEq_of_matrixProduct`).
+`#print axioms` = standard three, **no new axiom, ledger unchanged**.  **Still open for the full
+`hclaimA`:** (i) instantiate `Q, F` with the concrete real-space matrix Baxter kernel + forcing (the
+momentum→real-space `Q0_mat_c` data), and (ii) the **matrix seed identity** — the analog of
+`baxter_psi_conv_eq_phi` converting `MatRenewalEq` (the `∫_σ^r` renewal) to the OZ★ shell form (the
+`oddExt`/`∫_0^σ` shell).  The existence/renewal half of the construction is now done; the seed identity
+is the remaining research-scale piece.
+
+**Matrix seed — claim (A) + outer half BUILT (2026-07-31, `MixtureBaxterSeed.lean`, axiom-clean).**
+The scalar seed `baxter_psi_conv_eq_phi` (`Ψ⋆Q₊⋆Q₋ = r·c_HS`) rests on `baxter_u_outer` (claim (A):
+`u := Ψ⋆Q₊ ≡ 0` on `[σ,∞)`) + `baxter_core_seed` (the Wertheim–Thiele affine algebra on the core).
+Built for the matrix:
+* `intervalConv_sub_open` — the reusable analytic heart: `∫_0^σ q(t)ψ(r−t) = ∫_0^r q(r−s)ψ(s)` for any
+  continuous `q` supported in `[0,σ]` (substitute `s=r−t`, then the `[0,r−σ]` tail vanishes since
+  `q(r−s)=0` there).  Carries NO core/forcing content — the general form of the scalar reduction.
+* `matBaxterU` (`uᵢⱼ = Ψᵢⱼ − ∑ₖ ∫_0^σ Qᵢₖ·Ψₖⱼ(r−·)`) + **`matBaxterU_outer`** — matrix claim (A):
+  the coupled `MatRenewalEq` (with forcing `Fᵢⱼ(r)=∑ₖ∫_0^σ Qᵢₖ(r−s)·Ψcoreₖⱼ(s)`) is equivalent on
+  `[σ,∞)` to `Ψᵢⱼ(r)=∑ₖ∫_0^σ Qᵢₖ(t)·Ψₖⱼ(r−t)`.  Proof = `intervalConv_sub_open` **summed over species
+  `k`** (`Finset.sum_congr`), `[0,r]` split at `σ` (`integral_add_adjacent_intervals`), the `[0,σ]`
+  piece matched to the forcing via core values a.e. (jump at `σ` null).  Integrability per `k` from
+  core-continuous on `[0,σ]` (a.e.) + outer-`ContinuousOn` on `[σ,r]` — the glued-solution regularity.
+* `matBaxterUQm` (second convolution `⋆Q₋`) + **`matBaxterUQm_zero_of_uOuter`** — the **outer half of
+  the seed**: `Ψ⋆Q₊⋆Q₋ ≡ 0` on `[σ,∞)` (both `uᵢⱼ(r)` and `uₖⱼ(r+t)` vanish; matches `r·c_HS(r)=0`
+  since `c_HS` supported in `[0,σ]`), reduced abstractly to the claim-(A) conclusion `hUouter`.
+`#print axioms` all three = std 3.  **Still open (the CORE half, `0<r<σ`):** `matBaxterU_core` (affine
+`u = r·(M₀−1)−M₁`) + matrix `baxter_core_seed` (the WT/PY moment algebra tying it to `c_HS`) — both
+need the concrete real-space matrix moments/DCF, i.e. piece (i).  Claim (A) is the renewal-side half
+and is now unconditional (given the glued-solution regularity); the core half is the concrete-data half.
+
+**⚠️ RETRACTED (2026-07-31) — the "piece (i)" real-space kernel below was a DUPLICATE, file removed.**
+The real-space matrix Baxter factor **already exists**: `WHSupports.q0MixEntry` ("[LN] Eq. 56/10") =
+`X.Q0·(r−Rᵢⱼ) + X.Qpp·(r−Rᵢⱼ)²/2` windowed on `Icc λᵢⱼ Rᵢⱼ` (`Rᵢⱼ = σ̄ᵢⱼ`), from the `Mix` struct —
+**with the causal lower-cut** that my `q0MatReal` lacked (mine was continuous / no cut / `ρ_geo`-bundled ⇒
+wrong for unlike pairs: misses the `λᵢⱼ` jump and the separate `λᵢⱼ`-delta).  The momentum factorization
+is also long-standing (`Cmix0 = I − Q̂₀(k)Q̂₀ᵀ(−k)`, MRS.6 `Cmix0_factorization`; `Q0_mat_c`).
+`MixtureBaxterRealSpace.lean` (q0MatReal + moments + transform) deleted; **`matBaxterU_core` kept** (it is
+abstract / Q-agnostic).  The paragraphs below are the retracted account; see the gap map after them.
+
+**Claim (B) `matBaxterU_core` BUILT (2026-07-31, `MixtureBaxterSeed.lean`, axiom-clean).**  Matrix analog of
+scalar `baxter_u_core`: for `Ψ` with core value `Ψₖⱼ(v)=−v` on `(−σ,σ)`, on `0<r<σ` the whole sample range
+`r−t` stays in the core, so `matBaxterU Psi Q σ i j r = r·(∑ₖ M₀ᵢₖ − 1) − ∑ₖ M₁ᵢₖ` with `M₀ᵢₖ=∫_0^σ Qᵢₖ`,
+`M₁ᵢₖ=∫_0^σ t·Qᵢₖ` (the scalar computation summed over `k`).  **Stated with integrability (`hQ0`/`hQ1`),
+not continuity**, so it accepts the discontinuous physical `q0MixEntry`.  The `−1` is the single
+`Ψᵢⱼ(r)=−r` term (Baxter identity part), not summed.
+
+**GAP MAP toward concrete `hclaimA` (2026-07-31).**  (1) **Matrix Wertheim core seed** `matBaxterUQm_ij(r)
+= r·c_HS_ij(r)` on the core — needs a real-space matrix PY DCF `c_HS_ij(r)` and the WT/PY algebra (matrix
+analog of `baxter_core_seed`).  **The crux.**  **⚠ Verified 2026-07-31: the real-space matrix PY DCF closed
+form exists NOWHERE in the project** (not a forgotten formula).  The matrix PY DCF is present only in
+**momentum** space (`Cmix0 = I − Q̂₀Q̂₀ᵀ`, MRS.6); the **real-space** HS DCF the project uses is the **FMT**
+form (`cHS_FMT`/`CHSKink`; Python `get_HS_FMT` in every route).  A real-space PY closed form = the inverse
+transform of `Cmix0` = the **Lebowitz/Wertheim** result, which `MixtureRealSpace.lean` explicitly **defers as
+MRS.8** ("`Ĉ₀` equals the physical HS DCF transform").  So gap #1's two halves collapse: defining `c_HS_ij`
+real-space **is** the Wertheim derivation, not a transcription — the project deliberately sidesteps it (FMT
+real-space + `Cmix0` momentum).  **✅ ADDRESSED 2026-07-31 (`YukawaDCF/MixtureHSDCF.lean`, axiom-clean):
+zeroth-order HS DCF built REUSING the existing `q0MixEntry`/`pMixEntry`/`⋆` machinery.**  Key structural
+fact: `Cmix0 = I − Q̂₀(k)Q̂₀ᵀ(−k)` is **forward × reflected**, so `qpConv = qFwd ⋆ pMixEntry` (`qFwd` = the
+forward `2π√ρ·q0MixEntry`), support `[−Rᵢⱼ,Rᵢⱼ]` with `σₙ` cancelling (`λᵢₙ−Rⱼₙ=−Rᵢⱼ`, exactly like
+`bConvP`; both-reflected `P⋆P` would keep `σₙ`).  `cHSmixRaw_ij = qFwd_ij + pMixEntry_ji − ∑ₗ qpConv_ilj`
+= the real-space non-delta part of `[Cmix0]_ij` (verified by the `Cmix0` expansion), supported on
+`[−Rᵢⱼ,Rᵢⱼ]`.  Remaining: the inverse-transform theorem `cHSmixRaw = [Cmix0]_ij` (parallel to `(★)`), the
+`2π√ρ·t` normalization + odd part, then `matBaxterUQm = r·c_HS`.
+**✅ `cHSodd` done + MML.8 trace (2026-07-31).**  The normalization/odd-part (#2) was **not a theorem but a
+def-pattern**: the first-order DCF is *defined* as the odd part `dcfOdd = fun x => Wmix x − Wmix (−x)`
+(`= 2π√ρ·r·c^(1)`); mirrored as `cHSodd = fun x => cHSmixRaw x − cHSmixRaw (−x)` (`= 2π√ρ·r·c^HS`, since
+`r·c` is odd), with `cHSodd_odd` + `cHSodd_support_subset [−Rᵢⱼ,Rᵢⱼ]`.  **Trace conclusion — the c_HS/seed
+line is on the critical path, not redundant:** `Ĥ₁ = S₀Ĉ₁S₀`, `S₀ = I+Ĥ₀`, dressing (done) ⇒
+`h₁ = c₁ + h₀⋆c₁ + c₁⋆h₀ + h₀⋆c₁⋆h₀`, and since `Ĉ₁` is HS-pole-free **every HS pole of `h₁` is in the
+three `h₀`-dressed terms** ⇒ MML.8's residual is `h₀` (the zeroth-order HS RDF) = the OZ★ solution
+`matBaxterPsi`.  The momentum route to `h₀` (`(I−Cmix0)⁻¹−I`) is the *circular* ML-collapse; the chosen
+non-circular route is `matOzStar_unique` (uniqueness, done, **abstract `Phi`**) + a **concrete
+`matBaxterPsi` existence** (= `hclaimA`, needs concrete `Phi = c_HS`).  So the single missing MML.8 input
+is `h₀ = matBaxterPsi` as a concrete `MatOZStar` solution — `c₁`/dressing/uniqueness are all done.
+(2) **Matrix KDEF `hfact`** `ρK=Q−matSelfConv(Q)` for the concrete `q0MixEntry` — only N=1
+(`matBaxterFactorization_fin_one_of_scalar`); needs the matrix real-space self-convolution factorization.
+(3) **The `λᵢⱼ` jump/delta** — the physical factor is `q0MixEntry`(quadratic) + a `λᵢⱼ`-delta + `δᵢⱼ·δ(r)`;
+the seed treats `Q` as the quadratic function only, so the whole chain is rigorous **only for equal
+diameters** (like pairs, `λ=0`: continuous, delta-free, common-`σ` core holds).  Unequal diameters need the
+delta incorporated ("drop it ⇒ wrong identity").  (4) **Wiring** `Q:=q0MixEntry`, `F:=core convolution`,
+discharge (A)/(B) hyps, combine (A)+(B)+core-seed into the full seed, feed `matOzStar_of_regular`.  Deep
+gaps = (1) + (3).
+
+<details><summary>Retracted account (q0MatReal — do not build on this)</summary>
+
+**Piece (i) — real-space matrix Baxter kernel BUILT (2026-07-31, `MixtureBaxterRealSpace.lean`,
+axiom-clean).**  The momentum entry `q0_entry_c(s) = δᵢⱼ − ρ_geo·e^{−λᵢⱼs}·(Q'·φ̂₁(s,σᵢ) + Q''·φ̂₂(s,σᵢ))`
+(`λᵢⱼ=(σⱼ−σᵢ)/2`; `φ̂₁,φ̂₂` = Laplace transforms of `phi1_real`/`phi2_real`) inverse-transforms to a
+δ-at-origin (the `δᵢⱼ` identity part) plus the **function part**
+`q0MatReal(r) = ρ_geo·(Q'·phi1_real(σᵢ,r−λᵢⱼ) + Q''·phi2_real(σᵢ,r−λᵢⱼ))` — the single-component
+polynomial shifted by `λᵢⱼ` with the multicomponent PY coefficients `Q0phys`/`Qppphys`/`rhoGeoPhys`
+(`MatrixQ0.lean`).  Built + proved:
+* `q0MatReal` (def) + `q0MatReal_continuous` (`hQcont`) + `q0MatReal_support` (vanishes for
+  `r ≥ σ̄ᵢⱼ=(σᵢ+σⱼ)/2`; `hQsupp` for the seed, with a common bound `σ_max ≥ σ̄ᵢⱼ` at the use site).
+* `shift_laplace` (reusable: substituting `u=r−λ` factors `e^{−sλ}`, no continuity needed) +
+  **`q0MatReal_laplace`** — the **inverse-transform certificate**: `∫_{λ}^{σ̄} q0MatReal·e^{−sr} =
+  ρ_geo·e^{−sλ}·(Q'·φ̂₁ + Q''·φ̂₂)` (via `shift_laplace` + scalar `phi1_real_laplace`/`phi2_real_laplace`
+  + interval-integral linearity), so `q̂₀ᵢⱼ = δᵢⱼ − (this)`.  This is exactly the `q0_entry_c` bracket ⇒
+  `q0MatReal` IS the regular part of `Q0_mat_c`'s inverse transform.
+`#print axioms` all three = std 3.  **Still open in piece (i):** the moments `M₀ᵢⱼ`/`M₁ᵢⱼ` + the matrix
+`baxter_core_seed` (core WT/PY algebra), the forcing `Fmat`, and wiring `q0MatReal` into `matBaxterU_outer`
+(feed `Q := q0MatReal`, discharge `hQcont`/`hQsupp`).  The λᵢⱼ<0 (σⱼ<σᵢ) causality subtlety is invisible
+to the seed's `∫_0^σ` convolutions (only `r ≥ 0` sampled) but would matter for a full two-sided transform.
+
+**Matrix moments `M₀ᵢⱼ`/`M₁ᵢⱼ` BUILT (2026-07-31, `MixtureBaxterRealSpace.lean`, axiom-clean).**  Checked
+first: **NOT in the library** — the matrix HS DCF exists only in *White-Bear FMT* form (`CHSKink`/
+`CHSFlatInner`), the MRS `star_*` lemmas are the *first-order Yukawa* momentum-space `(★)`, and the
+zeroth-order matrix Baxter–Wertheim real-space factorization is proved only at N=1
+(`matBaxterFactorization_fin_one_of_scalar`).  Built the moments: the four convention-independent
+`phi`-basis atoms (`phi1_real_int`=`∫_0^σ phi1=−σ²/2`, `phi2_real_int`=σ³/6, `phi1_real_mom1`=`∫u·phi1=
+−σ³/6`, `phi2_real_mom1`=σ⁴/24; each one FTC via `integral_eq_sub_of_hasDerivAt` + explicit
+antiderivative) and the matrix moments **`matBaxterM0`/`matBaxterM1`** (defs + `_eq` proofs) — the
+zeroth/first moments of `q0MatReal` over its physical support `[λᵢⱼ,σ̄ᵢⱼ]`: `M₀=ρ_geo(Q'(−σᵢ²/2)+Q''σᵢ³/6)`
+(shift-invariant), `M₁=ρ_geo[(Q'(−σᵢ³/6)+Q''σᵢ⁴/24)+λᵢⱼ·(Q'(−σᵢ²/2)+Q''σᵢ³/6)]` (the `λᵢⱼ·M₀` weight
+correction).  Proved by direct polynomial FTC on `[λ,σ̄]` (`integral_congr` to the shifted polynomial +
+one antiderivative each; the `integral_add`/`const_mul` linearity route was too fragile — it elaborates
+the integrand as a Pi-product `f·g` that the `rw` pattern misses).  `#print axioms` all = std 3.
+**Still open in the core-seed:** the matrix `baxter_core_seed` (the WT/PY identity tying the matrix DCF
+`c_HS` to the `q0MatReal` self-convolution), then `matBaxterU_core` (affine `u=r(M₀−1)−M₁` on the core,
+consuming `M₀`/`M₁`), and the matrix KDEF `hfact` — plus the causal-kernel convention decision for λᵢⱼ<0.
+
+</details>
+
 **Structural finding (general-`N`).** The self-convolution is *not* symmetric:
 `matSelfConv(i,k) ≠ matSelfConv(k,i)`, and `matDblConv_reindex` outputs the asymmetric pairing
 `matSelfConv(i,k)·ψ(r+u) + matSelfConv(k,i)·ψ(r−u)`, whereas the symmetric `matShellConv` weights
@@ -1555,7 +1703,12 @@ standard modulo only the *existing* kept math axioms.
 `MatBaxterFactorization`, `matBaxterFactorization_fin_one_of_scalar`; `matShellConv`,
 `matShellConv_apply`, `matRadialConv_eq_matShellConv`, `matShellBridge_fin_one_of_scalar`,
 `matRadialConv_eq_matShellConv_of_shellKernel`; `matBaxterPsi`, `matBaxterPsi_core`/`_outer`/`_reflect`,
-`MatRenewalEq`, `matBaxterPsi_fin_one_of_scalar`, `matRenewalEq_fin_one_of_scalar` — all axiom-clean.
+`MatRenewalEq`, `matBaxterPsi_fin_one_of_scalar`, `matRenewalEq_fin_one_of_scalar`;
+`matShellConv_kdef_split`, `matOzStar_of_shellClaims` — all axiom-clean.  `HSMixture/MixtureOzStarIntegrable.lean`
+discharges every integral side-condition of the assembly: the reindex's nine
+(`matDblConv_reindex_of_regular`) and the assembly's two shell conditions
+(`mulCont_psi_intervalIntegrable`, `shellQ_intervalIntegrable`, `shellS_intervalIntegrable`,
+capstone `matOzStar_of_regular`) — all axiom-clean.
 `matVolterra_convolution_existsUnique`. Plus `HardSphere/ShellKernel.lean` (`shellKernel`,
 `radial3d_conv_eq_shellKernel`, `shellKernel_c_HS`) and `Analysis/VolterraBanach.lean` (the Banach
 `MA.10`: `volterraTE`, `volterra_iterate_boundE`, `volterra_existsUniqueE`,
@@ -1572,7 +1725,12 @@ general-`N` analytic construction (matrix `baxterPsi`, `OZFIX.18` F-part + `OZFI
 renewal + integrability, modulo the matrix decay axiom) is the remaining research-scale work — the
 last unbuilt piece of MML.8. **The general-`c` shell identity (`radial3d_conv_eq_shellKernel`,
 `ShellKernel.lean`) is now proved**, so the shell-bridge layer is complete for arbitrary mixture
-entries, not just `c_HS`.
+entries, not just `c_HS`.  **UPDATE 2026-07-31 — the assembly integrability and the `Ψouter`
+existence/renewal are now BUILT** (`matOzStar_of_regular`; `matBaxterPsiOuter_matRenewalEq` via the
+Banach global Volterra chain `VolterraBanach.volterraGlobalE`), so what remains of MML.8's construction
+narrows to: (a) the concrete real-space matrix Baxter data `Q, F` (momentum→real-space `Q0_mat_c`),
+and (b) the **matrix seed identity** (analog of `baxter_psi_conv_eq_phi`, `MatRenewalEq` → OZ★ shell
+form).  See the "`Ψouter` CONSTRUCTED" note above.
 
 ---
 
@@ -1596,6 +1754,117 @@ Banach machinery lives in `FMSA.BanachPoleFamily` and MZERO.10's growth predicat
 `FMSA.BoundaryGrowth` — **not** in `FMSA.MixtureHSPoles`, because the generic layer was migrated to
 `Analysis/` (MRS.9b). Looking them up under the mixture namespace reports "unknown constant" and
 looks like a missing proof.
+
+#### Re-audit 2026-07-31 — the 07-24 audit still holds, plus three findings
+
+**Re-measured, not re-read.** All 20 MZERO constants (the 14 above plus `Q0_det_c_tendsto_one`,
+`Q0_det_c_not_identically_zero`, `Q0_det_c_differentiableAt`, `detC_boundaryGrowth_of_infinite_zeros`,
+`infinite_zeros_of_growth`, `detC_zeros_infinite_of_growth`) `#print axioms` = **standard three**.
+Nothing moved under MZERO's feet in the `be70ac4` "General N" rewrite or the MRS.9d file shuffle.
+
+**1. Split the group's status honestly: the machinery is load-bearing, the headline is
+consumer-less.** These are different facts and the group note ran them together.
+
+| MZERO artifact | Lean consumers outside its own file |
+|---|---|
+| **`detF_family_magnitude_bound`** (the MZERO.5 magnitude/growth work) | **`MixtureMLBound.lean` (MML.5), `MixtureInnerDCF.lean` (MML.8), `MixtureRDFPoleData.lean` (MML.11)** — genuinely load-bearing |
+| **`ChordPoleFamily` / `zeros_infinite_of_chordPoleFamily`** (MZERO.3/4/6/7's abstraction) | **`HardSphere/BaxterChordFamily.lean`, `HardSphere/BaxterPoles.lean`** — the **scalar** track reuses it, so the `Analysis/` migration paid off outside the mixture |
+| **`detC_zeros_infinite_unconditional`, `detF_zeros_infinite`, `Q0_det_c_zeros_infinite`** (MZERO.1, Route A) | **none** — every hit is a docstring |
+| **`detC_zeros_infinite_of_boundaryGrowth`, `detC_zeros_infinite_of_growth`** (MZERO.11, Route B) | **none** — every hit is a docstring |
+
+So "infinitely many HS poles" is currently **proved and unconsumed**. That is *expected*, not a
+defect: **MRS.3** removed the DCF consumer outright (the `det Q̂₀` zeros never enter `Ĉ₁`), and the
+only remaining consumer is **MML.8**, which is open. Worth stating because this project treats
+consumer-less statements as a hazard class (cf. MRS.0b, written precisely to test a consumer-less
+axiom; four axioms here were false *as stated* and every one was caught by a proof attempt, never by
+`#print axioms`). MZERO's headline has had no such test — but unlike an axiom it is *proved*, so the
+exposure is only to a mis-*statement*, and finding 3 below is the check that closes that.
+
+**2. ⚠ Naming trap: `MixParams.Phys` does NOT mean "the physical Lebowitz coefficients".** Its own
+docstring is accurate — "ordered positive diameters and entrywise positive matrices" — but
+`chordPoleFamily_detF_exists P hP` with `hP : P.Phys` reads, at a glance, as though MZERO had been
+instantiated at the actual PY mixture. It has not: `rr`, `Qp`, `Qpp` are **free** matrices
+constrained only by positivity. `Q0phys` / `Qppphys` / `rhoGeoPhys` **appear nowhere** in
+`MixtureChordFamily.lean`, `MixtureHSZeros.lean`, or `MixtureHSCounting.lean`.
+
+**3. The physical bridge is available, favourable, and unwritten — this is the one actionable item.**
+Reading the definitions in `MatrixQ0.lean`, the Lebowitz coefficients are *manifestly* entrywise
+positive whenever `vac = 1−η > 0`, `σ > 0`, `ρ ≥ 0`:
+
+```
+Q0phys  = (2π/vac)·( (σᵢ+σⱼ)/2 + π·ξ₂·σᵢσⱼ/(4·vac) )     every summand > 0
+Qppphys = (2π/vac)·( 1 + π·ξ₂·σⱼ/(2·vac) )                every summand > 0
+rhoGeo  = √(ρᵢρⱼ) > 0,      ξ₂ = Σ ρᵢσᵢ² ≥ 0
+```
+
+Confirmed numerically at the reference mixture (σ=[1,2], x=[0.25,0.75], ρ*=0.139 ⇒ η=0.4549,
+vac=0.5451): `min Q0phys = 19.03`, `min Qppphys = 26.53`, `min rhoGeo = 0.0348`, `0<σ₀<σ₁` — so
+**`MixParams.Phys` holds for the physical mixture** and `detC_zeros_infinite_unconditional` applies
+to it. End-to-end non-vacuity re-checked by locating the zeros themselves at those *physical*
+coefficients (Newton from MZERO.5's anchor `i·2πn/σ₁`): 8 distinct zeros,
+`s = −0.417+3.389i, −0.946+6.291i, …, −2.362+25.075i`, `|detC| ≤ 3.4e-15`, mean `Im` spacing
+**3.098** against the predicted `2π/σ₁ = 3.1416` — reproducing MZERO.2's recorded "Δ Im ≈ π" GO gate.
+
+### ✅ MZERO.12 — the physical instantiation, WRITTEN (2026-07-31)
+
+**`LeanCode/HSMixture/MixtureZerosPhys.lean`** (ns `FMSA.MixtureHSPoles`), axiom-clean, full build
+green (8716 jobs). A **new file**, so `MixtureChordFamily.lean` and its neighbours — the MML.8
+working set — are untouched.
+
+| theorem | statement |
+|---|---|
+| `Pdens_one` | `Pdens sigma rho 1` **is** the physical pack (`1 • rho = rho`) — the bridge between the homotopy packaging and the plain coefficients |
+| **`detC_zeros_infinite_phys`** | `0 < σᵢ`, `σ₀ < σ₁`, `0 < ρᵢ`, `η < 1` ⇒ `{s : ℂ \| detC ![σ₀,σ₁] (↑rhoGeoPhys) (↑Q0phys) (↑Qppphys) s = 0}.Infinite` |
+| **`Q0_mat_c_phys_det_zeros_infinite`** | the same on the matrix itself — `(Q0_mat_c s σ ↑rhoGeoPhys ↑Q0phys ↑Qppphys).det`, i.e. **definitionally MRS.7's `Qphys`**. The form a consumer wants |
+| `example` (non-vacuity) | the four hypotheses hold simultaneously at the project's reference mixture `σ=[1,2]`, `ρ=[0.03475,0.10425]` (`η ≈ 0.4549`); the `η < 1` step needs only `π < 4` |
+
+⚠ **It proves nothing new — and the reason is the finding.** The three `MixParams.Phys` positivity
+obligations were **already theorems**: `Q0phys_pos`, `Qppphys_pos`, `rhoGeoPhys_pos`, and even the
+packaged **`Pdens_Phys`**, all in `MixtureDetUniform.lean`. They were built for the **density
+homotopy** of the physics-axiom-retirement track (`MatrixDetPoleFree` / `MixtureDetHomotopyPhys`),
+whose consumer is `hRunif_Pdens` — and **nobody ever pointed them at `detF_zeros_infinite`**. So the
+whole corollary is `Pdens_Phys … 1` plus `1 • rho = rho`. My first draft re-proved all three from
+scratch and the build caught it as a name clash (`environment already contains
+'FMSA.MixtureHSPoles.Qppphys_pos'`) — `feedback_stale_blockers` again, in its purest form: the
+missing fact was already in the tree, merely never exported to the group that needed it. **Two
+tracks had each done half of this and neither knew.**
+
+Layering respected (`HSMixture/` may not import `YukawaDCF/`), so the statement stops at the
+`Q0_mat_c` level; an `FMSA.MRS`-side restatement in terms of the literal `Qphys` alias is a one-liner
+whenever someone wants it.
+
+---
+
+### ⚠ Layering violation in `MixtureRDFUniqueness.lean` — found and repaired 2026-07-31
+
+Checking that layering claim turned up a real back-edge, present since `c8efdc4`:
+**`HSMixture/MixtureRDFUniqueness.lean` imported `YukawaDCF/MixtureRDFStructureFactor.lean`**, so
+`CONVENTIONS.md`'s first self-check grep had been non-empty. All three greps print nothing again.
+
+**The dependency was one declaration out of 26** — `det_eq_of_wienerHopf_factorization`, i.e.
+`T₀ = Qp·Qmᵀ ⇒ det T₀ = det Qp · det Qm`, whose proof is `Matrix.det_mul` then
+`Matrix.det_transpose`. No Baxter, Yukawa or mixture content whatsoever; it was in `YukawaDCF/`
+only because MML.9 happened to be where it was first needed.
+
+**Repair (not a file move).** The generic core is now
+**`Analysis/MatrixIdentity.det_mul_transpose`** — `(A * Bᵀ).det = A.det * B.det`, stated without the
+factorization hypothesis so it is a plain rewrite rule, generic in ring and index type. Both sides
+cite it: `MixtureRDFUniqueness.matStructureFactor_isUnit_of_det_ne_zero` now does
+`rw [Matrix.isUnit_iff_isUnit_det, hfact, det_mul_transpose]` and dropped the `YukawaDCF` import;
+`MixtureRDF.det_eq_of_wienerHopf_factorization` keeps its name, its physics-facing docstring and all
+four of its in-file uses, and became a one-line consequence.
+
+**Moving the file up would have been wrong.** `MixtureRDFUniqueness` is matrix OZ★ uniqueness — a
+**hard-sphere** statement (MML.9 itself established that the residual collapse content is `Ĥ₀`, the
+Yukawa factor `Ĉ₁` between the two `S₀`'s being pole-free). Relocating it to `YukawaDCF/` would have
+encoded the false claim that it needs a Yukawa tail. Push the generic lemma **down**; do not move the
+specific file **up**.
+
+**Ledger unchanged** — verified, not assumed: `#print axioms` after the repair gives
+`det_mul_transpose`, `det_eq_of_wienerHopf_factorization`,
+`matStructureFactor_isUnit_of_det_ne_zero`, `rdf_entry_star_eq`, `rdf_entry_double_pole` = standard
+three, and **`matOzStar_unique` still carries exactly `FMSA.matRadialShell_bounded_injective`** and
+nothing new. Full build green (8716 jobs).
 
 ---
 
@@ -1843,7 +2112,9 @@ order `n`) + finite support ⇒ finite zeros give the `O(log R)` bound. ✓ **DO
 
 ### Task MZERO.10 — boundary growth hypothesis
 
-*(Route B, Lean, `MixtureHSCounting.lean`.)* ✓ **DONE** as the input hypothesis `DetBoundaryGrowth f`
+*(Route B, Lean; the `detC` half in `HSMixture/MixtureHSCounting.lean`, the generic predicate and
+`detBoundaryGrowth_of_linear` in **`Analysis/BoundaryGrowth.lean`** ns `FMSA.BoundaryGrowth` — migrated
+by MRS.9b, checked 2026-07-31.)* ✓ **DONE** as the input hypothesis `DetBoundaryGrowth f`
 (`circleAverage (Real.log‖f·‖) 0 R` beats every `M·log R + C`) + `detBoundaryGrowth_of_linear` (a
 `≥ c·R − C₀` estimate implies it, via `Real.isLittleO_log_id_atTop`). Axiom-clean.
 
@@ -1865,7 +2136,8 @@ independent route is **Route A (MZERO.5/hstep)**.
 
 ### Task MZERO.11 — Jensen capstone ⇒ ∞ many zeros
 
-*(Route B, Lean, `MixtureHSCounting.lean`.)* ✓ **structural capstone DONE** (`infinite_zeros_of_growth`: a
+*(Route B, Lean; `infinite_zeros_of_growth` now in **`Analysis/BoundaryGrowth.lean`**, the `detC`
+capstones in `HSMixture/MixtureHSCounting.lean` — checked 2026-07-31.)* ✓ **structural capstone DONE** (`infinite_zeros_of_growth`: a
 Jensen log-bound for the finite-zeros case + `DetBoundaryGrowth` ⇒ `Set.Infinite {f=0}`; pure
 contradiction) and `detC_zeros_infinite_of_growth` (**independent Route-B proof** of
 `Set.Infinite {detC=0}`, matching Route A's `Q0_det_c_zeros_infinite`). Axiom-clean. Reuses

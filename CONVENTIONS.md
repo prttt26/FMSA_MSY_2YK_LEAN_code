@@ -26,6 +26,23 @@ Mathlib vocabulary. Its value is that it is *citable without buying into the phy
 back-edge would destroy that. The same reasoning cascades: `HSMixture/` results must hold for a hard
 sphere mixture with no Yukawa tail attached.
 
+**⚠ Run the three greps — the invariant HAS been broken (caught and repaired 2026-07-31).**
+`HSMixture/MixtureRDFUniqueness.lean` imported `YukawaDCF/MixtureRDFStructureFactor.lean`, so the
+first grep was non-empty from commit `c8efdc4` until the repair. All three now print nothing again.
+
+The instructive part is **how small the offending dependency was**: of the 26 declarations in that
+`YukawaDCF/` file, exactly **one** was used, and it was
+`T₀ = Qp·Qmᵀ ⇒ det T₀ = det Qp · det Qm` — two Mathlib rewrites, no Baxter, Yukawa or mixture content
+at all. The generic core is now `Analysis/MatrixIdentity.det_mul_transpose` and both sides cite it.
+
+**The lesson for the next back-edge:** a violation usually does *not* mean the importing file is
+misfiled. Check first *which names* it actually uses (`for d in <decls of the target>; do grep -q
+"\b$d\b" <importer>; done`). If the answer is a handful of generic lemmas, the fix is to push those
+**down** to `Analysis/`, not to move the whole file **up** — moving the file up would have dragged an
+`HSMixture/` result into `YukawaDCF/` and quietly asserted that matrix OZ★ uniqueness needs a Yukawa
+tail, which is false. Verify afterwards that `#print axioms` on the affected capstones is unchanged
+(here `matOzStar_unique` still carries exactly `FMSA.matRadialShell_bounded_injective`).
+
 **Classifying a file — do not trust its name.** Established traps, all real:
 
 * Grep `Fin [A-Za-z]+ → (ℝ|ℂ)`, never `Fin n` alone. Species binders are `N` by the rule below, but

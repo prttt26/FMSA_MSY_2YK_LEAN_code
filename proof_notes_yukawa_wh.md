@@ -28,10 +28,22 @@ first-order OZ equation `H̃₁(I − C̃₀) = (I + H̃₀)C̃₁` ([LN] Eq. 7)
 `proof_notes_yukawa_dcf.md` (2026-07-15) since it is a Group-BAXTER-scale body of work, not a
 Group-C "consistency check".
 
-**Status (2026-07-15).** The task chain Y1.1–Y1.7 is **fully proved** (all axiom-clean), including the
-Y1.5 general distinct-`z` multi-tail residue. Y1.3 was re-routed off [LN]'s Hilbert-transform
-presentation to the codebase's algebraic real-space method (support + residues). **Group Y1 is
-complete.**
+**Status (2026-07-15; re-verified 2026-07-31).** The task chain Y1.1–Y1.7 is **fully proved** (all
+axiom-clean), including the Y1.5 general distinct-`z` multi-tail residue. Y1.3 was re-routed off
+[LN]'s Hilbert-transform presentation to the codebase's algebraic real-space method (support +
+residues). **Group Y1 is complete.**
+
+**Re-verification (2026-07-31).** `lake build` green (8714 jobs); **no `sorry` anywhere in
+`LeanCode/`**; `#print axioms` run on all 19 Y1 declarations named below
+(`q0_entry_c_real`, `inv_apply_eq_adj_div_det`, `outerDCF_transform`, `q0MixEntry_support_subset`,
+`fourier_{Ici,Iic}_eq_full`, `causal_projection_{real,fourier}`,
+`outer_residue_eq_spectralAmp_residue`, `matrix_conj_residue{,_analytic}`, `spectralAmp_residue`,
+`bMulti_residue{,_Qinv}`, `Hhat1_spec`, `Hhat1_residue`, `b1_causal_eq_U1_fourier`,
+`origin_constraint_eq76`, `innerS1_contact_value`) — **every one returns exactly
+`[propext, Classical.choice, Quot.sound]`**. Group Y1 uses **no** Group-MA axiom of any kind.
+Two stale notes were corrected in the process: Y1.4's "Y1.3 is deferred" (Y1.3 landed the same day —
+see Y1.4) and Y1.7's "the N=2 mixture groups remain *below*" (they were split into two sibling files
+2026-07-17).
 
 ## Already-proved pieces (reused across Y1)
 
@@ -72,7 +84,11 @@ with `W_{ij}` (Eq. 15), `det` (Eq. 16). Complex extension of the real `Q0_mat` (
 self-contained to avoid the transitively-broken `BaxterResidue` import).
 **Depends on.** M.10 (real `Q0_mat` structure), M.3/M.4 (`det ≠ 0`).
 **Status.** ✓ DONE (2026-07-15), axiom-clean. *Deferred:* the closed-form inverse [LN] Eq. 14
-(`W/det`); `adj/det` is the usable form for the residue chain.
+(`W/det`); `adj/det` is the usable form for the residue chain. **Re-checked 2026-07-31 — the deferral
+is harmless and should stay deferred:** nothing downstream asks for `W/det`, and the one place a
+*concrete* inverse entry is needed (the N=2 HS-pole residue) is served by **MML.1**'s
+`Q0_det_fin_two` / `Q0inv_zero_one` (`HSMixture/MixtureHSPoles.lean`), which give
+`[Q̂₀⁻¹]₀₁ = −Q̂₀₀₁/det` directly from `Matrix.det_fin_two`.
 
 ---
 
@@ -179,10 +195,27 @@ with `{B₁(k)}_{ij} = b_{ij}(ik) e^{−ikR_{ij}}` (Eq. 66).
 `matrix_conj_residue` — **the residue-theorem step in matrix form**: if every entry of `bfun` has
 residue `Bres` at `s₀`, then `L·bfun·R` has residue `L·Bres·R` (entrywise `Tendsto` pushed through
 the two constant matrix factors). Self-contained (local, not importing the broken `BaxterResidue`).
-**Depends on.** Y1.2 (`U₁` poles), Y1.1 (`[Q̂₀⁻¹]`). Y1.3 (the WH projection producing the Eq. 63
-integrand) is **deferred** — `matrix_conj_residue` takes the projected form as its input.
-**Status.** ◑ residue-theorem step DONE (2026-07-15), axiom-clean (`matrix_conj_residue`); the full
-Y1.3-dependent derivation of the Eq. 63 integrand from the OZ equation remains open.
+**Depends on.** Y1.2 (`U₁` poles), Y1.1 (`[Q̂₀⁻¹]`), Y1.3c (the projected integrand).
+
+**⚠ Stale blocker removed (2026-07-31).** This entry read "Y1.3 … is **deferred** —
+`matrix_conj_residue` takes the projected form as its input", and the status was `◑` on that basis.
+**Y1.3 landed the same day** (a/b/c all ✓), so the deferral never survived its own session; the
+`todo_lean.md` row had already been upgraded and the two files disagreed. This is the
+`feedback_stale_blockers` pattern: a "blocked on X" note freezes the tree as of the moment of
+deferral.
+
+**Status.** ✓ **DONE as the route needs it** (2026-07-15), axiom-clean. `matrix_conj_residue` +
+`triple_apply` are the residue-theorem step, and its Eq.-63 integrand is supplied by **Y1.3c**
+(`matrix_conj_residue_analytic` → `outer_residue` → `outer_residue_eq_spectralAmp_residue`).
+
+**What is deliberately NOT formalized, and why that is not a gap.** [LN] Eq. 67's literal shape — the
+Cauchy formula `B₁(k) = −E(k)[Res_{y=iz}{…}/(y−k)]E(k)` obtained by *closing the contour in the upper
+half-plane* — has no Lean counterpart and should not get one. It is an artifact of [LN]'s k-space
+presentation, and **Y1.3's re-route to real space bypasses it**: the projection is `1_{[R,∞)}·`
+(`causal_projection_fourier`, elementary), and the residues are extracted algebraically (Y1.3c,
+Y1.5). Formalizing Eq. 67 would mean re-importing exactly the contour machinery Y1.3 was re-routed to
+avoid, to reach a `B₁` that Y1.5's `bMulti` already supplies in closed form. Recorded so that nobody
+re-opens it as "the missing piece of Y1".
 
 ---
 
@@ -259,4 +292,21 @@ the P.2 origin-regularity condition + `eij_at_origin`; §7 matching *is* Group 5
 `soft_core_contact_limit`), P.2 (`origin_necessity`/`origin_finiteness`), P.1 (`eij`,
 `eij_at_origin`).
 **Status.** ✓ DONE (2026-07-15), axiom-clean. **Group Y1 complete** (Y1.1–Y1.7 all proved, including
-the Y1.5 distinct-`z` multi-tail residue; the N=2 mixture groups MML/MZERO/MPOLY remain, below).
+the Y1.5 distinct-`z` multi-tail residue).
+
+---
+
+## Where the mixture work went (this file no longer hosts it)
+
+Corrects the old closing phrase *"the N=2 mixture groups MML/MZERO/MPOLY remain, **below**"* — they
+were split out 2026-07-17 and nothing of them is in this file:
+
+| group | file | status as of 2026-07-31 |
+|---|---|---|
+| **MML / MZERO** (RDF `h₁`, two `Q̂₀⁻¹` ⇒ HS-pole series) | [proof_notes_mixture_rdf.md](proof_notes_mixture_rdf.md) | MML.8's real-space collapse is the **only** open item of the two groups |
+| **MRS** (DCF, no `Q̂₀⁻¹` ⇒ finite closed form) | [proof_notes_mixture_dcf.md](proof_notes_mixture_dcf.md) | MRS.5 **closed at general N**; MRS.8 deferred off the critical path |
+| **MPOLY** (single inner-core polynomial `P_ij`) | [proof_notes_mixture_dcf.md](proof_notes_mixture_dcf.md) | ❌ **falsified** — no single `P_ij` exists for unlike pairs |
+
+Y1 is what all three consume: `Hhat1_spec` (Y1.6) is MRS.2's `hB1`, `spectralAmp_residue` (Y1.5) is
+MML.6's certification target, and `causal_projection_fourier` (Y1.3b) is what Y1.7 and MML.8 both
+instantiate.

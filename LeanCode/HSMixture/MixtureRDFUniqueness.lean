@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 -/
 import LeanCode.HSMixture.MixtureOzStar
-import LeanCode.YukawaDCF.MixtureRDFStructureFactor
+import LeanCode.Analysis.MatrixIdentity
 import LeanCode.Analysis.MatrixRadialWienerHopf
 
 /-!
@@ -24,7 +24,8 @@ up to a single, clearly-scoped Mathlib gap:
   solves `MatOZHom`).
 * `matStructureFactor_isUnit_of_det_ne_zero` — the **coercivity input** for `hinj`: `det Q̂₀ ≠ 0` (at
   both Wiener–Hopf factors of `T₀ = Q̂₀(k)·Q̂₀(−k)ᵀ`) makes the zeroth-order structure-factor inverse
-  `T₀` a unit (`det_eq_of_wienerHopf_factorization` + `isUnit_iff_ne_zero`).  The nonvanishing is
+  `T₀` a unit (`Analysis.MatrixIdentity.det_mul_transpose` + `isUnit_iff_ne_zero`).  The
+  nonvanishing is
   exactly what `mixtureDet_pole_free_N` + `pyhs_mixture_no_spinodal` supply.
 
 The gap `hinj` is the matrix analog of the scalar kept axiom `radialShell_bounded_injective`
@@ -92,7 +93,7 @@ inverse `T₀` is a unit — the invertibility (coercivity) input the matrix Wie
 Supplied by `mixtureDet_pole_free_N` (LHP) + `pyhs_mixture_no_spinodal` (real axis). -/
 theorem matStructureFactor_isUnit_of_det_ne_zero {N : ℕ} (Qp Qm T0 : Matrix (Fin N) (Fin N) ℂ)
     (hfact : T0 = Qp * Qmᵀ) (hQp : Qp.det ≠ 0) (hQm : Qm.det ≠ 0) : IsUnit T0 := by
-  rw [Matrix.isUnit_iff_isUnit_det, FMSA.MixtureRDF.det_eq_of_wienerHopf_factorization Qp Qm T0 hfact]
+  rw [Matrix.isUnit_iff_isUnit_det, hfact, FMSA.MatrixIdentity.det_mul_transpose]
   exact isUnit_iff_ne_zero.mpr (mul_ne_zero hQp hQm)
 
 

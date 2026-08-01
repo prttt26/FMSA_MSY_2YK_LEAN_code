@@ -255,5 +255,82 @@ theorem matDblConv_reindex_of_regular {N : ℕ} (Q : Matrix (Fin N) (Fin N) (ℝ
     (fun k => paramKernel_mul_intervalIntegrable (hQ j k) (hQ i k) hpm hpb hsigma
       (by fun_prop : Continuous (fun u => r - u)))
 
+/-! ### Shell-integrability side-conditions of the OZ★ assembly (`OZFIX.15/19/20` discharge)
+
+`matOzStar_of_shellClaims` carries two shell-integrability hypotheses, `hQint` and `hSint`, one for
+the linear `Q`-shell `Qᵢₖ(u)·(oddExt Gₖⱼ(r−u) + oddExt Gₖⱼ(r+u))` and one for the self-convolution
+shell `matSelfConv(i,k)(u)·(…)`.  Both are discharged from the *same* natural regularity that closes
+the reindex side-conditions: the Baxter factors `Q` continuous, and the shell density `psi`
+(here `oddExt (Psi·/·)`) measurable + `uIcc`-bounded.  The capstone `matOzStar_of_regular` then
+mirrors `matDblConv_reindex_of_regular`. -/
+
+/-- Continuous factor times a bounded measurable `psi ∘ (continuous shift)` is interval integrable
+(the `c = 1` slice of `constMul_psi_intervalIntegrable`). -/
+theorem mulCont_psi_intervalIntegrable {g psi : ℝ → ℝ} (hg : Continuous g) (hpm : Measurable psi)
+    (hpb : ∀ a b, ∃ C, 0 ≤ C ∧ ∀ s ∈ Set.uIcc a b, |psi s| ≤ C)
+    {h : ℝ → ℝ} (hh : Continuous h) (a b : ℝ) :
+    IntervalIntegrable (fun s => g s * psi (h s)) volume a b := by
+  have := constMul_psi_intervalIntegrable hg hpm hpb 1 hh a b
+  simpa only [one_mul] using this
+
+/-- **`hQint` shape.**  The linear `Q`-shell integrand `g(u)·(psi(r−u) + psi(r+u))` is interval
+integrable on `[a,b]` for `g` continuous and `psi` measurable + `uIcc`-bounded. -/
+theorem shellQ_intervalIntegrable {g psi : ℝ → ℝ} (hg : Continuous g) (hpm : Measurable psi)
+    (hpb : ∀ a b, ∃ C, 0 ≤ C ∧ ∀ s ∈ Set.uIcc a b, |psi s| ≤ C) (r a b : ℝ) :
+    IntervalIntegrable (fun u => g u * (psi (r - u) + psi (r + u))) volume a b := by
+  have e : (fun u => g u * (psi (r - u) + psi (r + u)))
+      = (fun u => g u * psi (r - u) + g u * psi (r + u)) := by funext u; ring
+  rw [e]
+  exact (mulCont_psi_intervalIntegrable (h := fun u => r - u) hg hpm hpb (by fun_prop) a b).add
+        (mulCont_psi_intervalIntegrable (h := fun u => r + u) hg hpm hpb (by fun_prop) a b)
+
+/-- **`hSint` shape.**  The self-convolution shell integrand `matSelfConv(i,k)(u)·(psi(r−u) +
+psi(r+u))` is interval integrable on `[0,σ]`.  Expand `matSelfConv` into the species sum of
+`paramKernel` shapes; each `(∫_u^σ Qᵢₗ·Qₖₗ(·−u))·psi(r±u)` is `paramKernel_mul_intervalIntegrable`,
+so the whole sum is interval integrable by `IntervalIntegrable.sum`. -/
+theorem shellS_intervalIntegrable {N : ℕ} (Q : Matrix (Fin N) (Fin N) (ℝ → ℝ)) {psi : ℝ → ℝ}
+    (hQ : ∀ a b, Continuous (Q a b)) (hpm : Measurable psi)
+    (hpb : ∀ a b, ∃ C, 0 ≤ C ∧ ∀ s ∈ Set.uIcc a b, |psi s| ≤ C)
+    {sigma : ℝ} (hsigma : 0 < sigma) (r : ℝ) (i k : Fin N) :
+    IntervalIntegrable
+      (fun u => matSelfConv Q sigma u i k * (psi (r - u) + psi (r + u))) volume 0 sigma := by
+  have key := IntervalIntegrable.sum (μ := volume) (a := (0:ℝ)) (b := sigma) Finset.univ
+    (f := fun (l : Fin N) u => (∫ t in u..sigma, Q i l t * Q k l (t - u)) * psi (r - u)
+        + (∫ t in u..sigma, Q i l t * Q k l (t - u)) * psi (r + u))
+    (fun l _ => (paramKernel_mul_intervalIntegrable (hQ i l) (hQ k l) hpm hpb hsigma
+        (by fun_prop : Continuous (fun u => r - u))).add
+      (paramKernel_mul_intervalIntegrable (hQ i l) (hQ k l) hpm hpb hsigma
+        (by fun_prop : Continuous (fun u => r + u))))
+  refine key.congr fun u _ => ?_
+  rw [Finset.sum_apply, matSelfConv_apply, Finset.sum_mul]
+  exact Finset.sum_congr rfl fun l _ => by ring
+
+/-- **Matrix OZ★ from natural regularity (`OZFIX.15/19/20` side-conditions discharged).**  The two
+shell-integrability hypotheses `hQint`/`hSint` of `matOzStar_of_shellClaims` follow from the Baxter
+factors `Q` being continuous and the shell density `oddExt (Psi·/·)` being measurable + `uIcc`-bounded
+per entry.  The genuine constructed-solution content stays in `hfact` (KDEF), `hbridge` (shell-conv
+bridge), and `hclaimA` (renewal in shell form); this is the matrix analog of the way the scalar
+`baxterPsi_eq_phi_add_rho_conv` needs no integrability hypotheses. -/
+theorem matOzStar_of_regular {N : ℕ} (Psi Phi Kmat Q : Matrix (Fin N) (Fin N) (ℝ → ℝ))
+    {rho sigma : ℝ} (hsigma : 0 < sigma)
+    (hQ : ∀ a b, Continuous (Q a b))
+    (hpm : ∀ a b, Measurable (oddExt (fun x => Psi a b x / x)))
+    (hpb : ∀ a b (c d : ℝ), ∃ C, 0 ≤ C ∧
+      ∀ s ∈ Set.uIcc c d, |oddExt (fun x => Psi a b x / x) s| ≤ C)
+    (hfact : MatBaxterFactorization Kmat Q rho sigma)
+    (hbridge : ∀ (i j : Fin N) (r : ℝ), 0 < r →
+      r * matRadialConv Phi (fun k l => fun x => Psi k l x / x) r i j
+        = matShellConv Kmat (fun k l => fun x => Psi k l x / x) sigma r i j)
+    (hclaimA : ∀ (i j : Fin N) (r : ℝ), 0 < r → Psi i j r = r * Phi i j r
+        + ((∑ k, ∫ u in (0:ℝ)..sigma, Q i k u
+              * (oddExt (fun x => Psi k j x / x) (r - u) + oddExt (fun x => Psi k j x / x) (r + u)))
+          - ∑ k, ∫ u in (0:ℝ)..sigma, matSelfConv Q sigma u i k
+              * (oddExt (fun x => Psi k j x / x) (r - u) + oddExt (fun x => Psi k j x / x) (r + u)))) :
+    MatOZStar Psi Phi rho :=
+  matOzStar_of_shellClaims Psi Phi Kmat Q hsigma hfact hbridge
+    (fun i j r _ k => shellQ_intervalIntegrable (hQ i k) (hpm k j) (hpb k j) r 0 sigma)
+    (fun i j r _ k => shellS_intervalIntegrable Q hQ (hpm k j) (hpb k j) hsigma r i k)
+    hclaimA
+
 end
 end FMSA.MixtureOzStar

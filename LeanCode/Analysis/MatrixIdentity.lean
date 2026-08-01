@@ -36,12 +36,35 @@ r·c^(1)_ij(r) = K·(1 - Ĝ^2_{ij})·e^{-z(r-R)} - K·Â^2_{ij}·e^{+z(r-R)} + P
 ```
 uses coefficients `Ĝ_{ij}` and `Â_{ij}` satisfying the correct boundary identity.
 See `problem_answers/multicomp_g_a_derivation.md` for the physical derivation.
+
+## Also here: the determinant of a Wiener–Hopf-shaped factorization
+
+`det_mul_transpose` — `(A * Bᵀ).det = A.det * B.det`.  Two Mathlib rewrites (`det_mul`,
+`det_transpose`) and no domain content whatsoever, but it is consumed on *both sides of a
+directory boundary*: by `YukawaDCF/MixtureRDFStructureFactor.lean` (MML.9, where
+`T₀ = Q̂₀(k)·Q̂₀ᵀ(−k)` pins the RDF's poles at the MZERO zeros *and their reflections*) and by
+`HSMixture/MixtureRDFUniqueness.lean` (MML.8, where it turns `det Q̂₀ ≠ 0` into `IsUnit T₀`).
+Homing it here is what lets the second stop importing the first: `HSMixture/` may not import
+`YukawaDCF/` (see `CONVENTIONS.md`), and that back-edge is exactly how the violation arose.
 -/
 
 set_option linter.style.longLine false
 set_option linter.style.whitespace false
 
+open scoped Matrix
+
 namespace FMSA.MatrixIdentity
+
+/-- **Determinant of a `A · Bᵀ` factorization.**  `det (A * Bᵀ) = det A * det B` — `Matrix.det_mul`
+followed by `Matrix.det_transpose`.
+
+Stated without the factorization hypothesis so that it is a plain rewrite rule; a consumer holding
+`hfact : T = A * Bᵀ` uses `rw [hfact, det_mul_transpose]`.  Generic in the ring and index type: there
+is nothing Baxter-, Yukawa- or mixture-specific in it, which is why it belongs in `Analysis/` rather
+than in either of the two files that need it. -/
+theorem det_mul_transpose {n : Type*} [DecidableEq n] [Fintype n] {R : Type*} [CommRing R]
+    (A B : Matrix n n R) : (A * Bᵀ).det = A.det * B.det := by
+  rw [Matrix.det_mul, Matrix.det_transpose]
 
 /-! ## Task M.1 — Main theorem -/
 

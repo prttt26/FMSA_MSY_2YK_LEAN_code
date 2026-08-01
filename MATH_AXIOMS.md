@@ -780,9 +780,16 @@ exterior-continuous, core-vanishing matrix functions — `D ≡ 0`.
 
 **Same Mathlib gap as the scalar** (docstring of `radialShell_bounded_injective`): the bounded/`L∞`
 route needs Wiener-algebra resolvent inversion (`δ + L¹` invertibility, the `MA.13` gap); the `L²`
-Plancherel proof (`MA.12` `wienerHopf_positive_symbol_injective`) does not survive to `L∞`.  The
-coercivity is a hypothesis, discharged by the physical no-spinodal as in the scalar case
-(`matStructureFactor_isUnit_of_det_ne_zero`: `det Q̂₀ ≠ 0` from `mixtureDet_pole_free_N`).
+Plancherel proof does not survive to `L∞`.  The coercivity is a hypothesis, discharged by the physical
+no-spinodal as in the scalar case (`matStructureFactor_isUnit_of_det_ne_zero`: `det Q̂₀ ≠ 0` from
+`mixtureDet_pole_free_N`).
+
+**✅ The `L²` twin is now PROVED** (`Analysis/MatrixWienerHopf.lean`,
+`FMSA.matWienerHopf_positive_symbol_injective`, axiom-clean 2026-07-30) — the matrix analog of `MA.12`
+via **matrix Plancherel**, one new ingredient `matrix_quadratic_coercive` (real coercivity `vᵀAv ≥
+ε‖v‖²` ⇒ complex `Re⟨Aw,w⟩ ≥ ε‖w‖²` by `Re`/`Im` split), everything else reusing the scalar `mulLp`/`𝓕`
+componentwise.  So the matrix `L²`/`L∞` pair now fully mirrors the scalar `MA.12`/`MA.15`: only the
+`L∞`/bounded version (this axiom) stays assumed.
 
 **Home:** `LeanCode/Analysis/MatrixRadialWienerHopf.lean` — **abstracted to `Analysis/` in raw-integral
 form 2026-07-30** (arbitrary matrix kernel `C`, no project defs), mirroring the scalar

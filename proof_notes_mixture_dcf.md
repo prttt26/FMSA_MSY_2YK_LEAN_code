@@ -5,6 +5,12 @@ replaces the refuted Mittag-Leffler premise of MML.8 (see `proof_notes_mixture_r
 Split out of `proof_notes_yukawa_wh.md` (2026-07-17) once the DCF real-space line (**MRS**) and the
 inner-core polynomial-coefficient line (**MPOLY**) outgrew the shared Wiener–Hopf file.
 
+> **⚠ "N=2" in the title is historical (noted 2026-07-31).** It was the scope when the group was
+> opened. The delivered Lean is **general `N`** — the kernel record is `Mix N M` and every MRS.5
+> lemma quantifies over `(i m n j : Fin N)`. The only `Fin 2`-specific content left in the group is
+> **MRS.6/MRS.7**'s symmetry reduction. Read "N=2" as "the case the numerics were checked against",
+> not as the theorems' scope.
+
 **Groups in this file.**
 - **Group MRS** — Mixture Real-Space Baxter route. Pivot: **(★)** `Ĉ₁(k) = Q̂₀(−k)·B₁(k)·Q̂₀ᵀ(−k)`
   (no `Q̂₀⁻¹` ⇒ the DCF has **only Yukawa poles**, `det Q̂₀`'s zeros never enter ⇒ a **finite closed
@@ -50,42 +56,78 @@ N=1 exact. Finite-basis fit `{rⁿ} ∪ {e^{±z_q r}}` to `r·c^{(1)}_{01}`: **u
 interior `λ` knot) 6×10⁻⁶ = the same noise floor. That is the decisive signal that the object is
 finite-but-piecewise, not an infinite pole sum.
 
-## ✅ Group MRS — completion status (2026-07-17)
+## ✅ Group MRS — completion status (audited 2026-07-31)
 
 **The group's goal is achieved: the inner DCF is a FINITE closed form** (refuting MML.8's
-infinite-HS-pole-sum premise), and every structural step is **proved in Lean, axiom-clean modulo the
-one already-accepted MA.3 half-disk axiom** (`halfDiskBoundary_eq_sum_of_small_circles`). Lean home:
-`YukawaDCF/MixtureRealSpace.lean` (ns `FMSA.MRS`).
+infinite-HS-pole-sum premise), **explicitly, at arbitrary `N`**, and every step *of the route that
+delivers it* is proved in Lean with `#print axioms` = `[propext, Classical.choice, Quot.sound]`
+(measured on 25 declarations, 2026-07-31; `lake build` green, 8714 jobs, no `sorry` in `LeanCode/`).
+
+**Two corrections this audit made** (both were the file lagging behind the tree, not new work):
+
+1. **Group MRS's delivered result uses NO axiom at all.** The old header said "axiom-clean modulo the
+   one already-accepted MA.3 half-disk axiom". Measured: `halfDiskBoundary_eq_sum_of_small_circles`
+   is carried by **exactly two** declarations, `fourier_kernel_finite_poles` and
+   `innerDCF_finite_closed_form` — the *k-space* inversion mechanism, which **this file itself tells
+   you not to use** (see MRS.5's "two routes": the concrete `Ĉ₁` fails that route's global `hpp`).
+   The **real-space chain that actually delivers the closed form is axiom-free**, from the bridges
+   through `dcfOdd`. *(Naming, while we are here: **MA.3** is the theorem `fourier_kernel_one_pole`;
+   the axiom is **MA.1**'s `halfDiskBoundary_eq_sum_of_small_circles`. "MA.3's half-disk axiom" was
+   wrong on both counts.)*
+2. **MRS.5's "what remains" list was entirely closed on 2026-07-19**, at general `N`, in a file this
+   note never mentioned: **`YukawaDCF/MixtureDCFSmooth.lean`**. The work landed under the **IB.9**
+   banner (`proof_notes_breakpoints.md`), so the MRS record was never updated. See MRS.5 below.
+
+**`N=2` in this file's title is now only historical.** The kernel structure `Mix N M`
+(`InnerDecomp.lean`) is `N`-general and so is every MRS.5 lemma. The **only** genuinely `Fin 2`
+content in the group is **MRS.6/MRS.7**'s symmetry reduction (`fin2_transpose_eq_iff_offdiag`,
+`swap_offdiag_of_keys`, `Qphys_T0_isSymm`) — even `q0Mix_jump_amplitude` (MRS.4) is general `N`.
 
 | Task | Title | Status |
 |------|-------|--------|
 | ~~MRS.1~~ | ~~Matrix WH factorization `Q̂₀(k)Q̂₀ᵀ(−k)=I−Ĉ₀`~~ — **decomposed → MRS.6/7/8** | ✗ retired |
-| MRS.2 | [LN] eq:OZ1_Baxter (a) — **physical route to (★)** | ✓ `oz1_C1_eq`, `star_of_first_order_oz` |
-| MRS.3 | **(★)** `Ĉ₁ = Q̂₀(−k)·B₁·Q̂₀ᵀ(−k)`; only-Yukawa-poles corollary | ✓ `star_of_oz1_baxter_hhat1`, `star_entry_differentiableAt`, **`starMix_entry_differentiableAt`** (concrete for `Q0_mat_c`) |
-| MRS.4 | real-space `q_ij` + `λ_ij` jump amplitude + symmetry | ✓ **jump-value core** (`q0Mix_jump_amplitude` `=−σᵢσⱼ/(2Δ)`, `_symm`, `_quad_at_R`, `lam_sub_R_eq`); δ-distribution reframing avoided (not needed) |
-| MRS.5 | inversion ⇒ **finite closed form** | ✅ **COMPLETE + machine-verified end-to-end** (`MixtureClosedForm.lean`, 29 thm/def, all axiom-clean). **Engine:** 3 bridges (`indicator_ici/icc_conv_indicator_icc/ici` + single-window `indicator_icc_conv_general`), 5 atoms (`integral_quadratic_exp{neg,pos}_conv`, `integral_quartic_exppos_conv`, `integral_quartic`, product-integrals `integral_quad_quadReflected(_exppos)`), capstones, connectors. **All 4 𝒲 terms in closed form:** T2 `bConvP_closed_form`(+`_outer`), T3 `pConvB_closed_form` (validated vs `scipy.quad` 1.8e-15); **T4 `pbpConv_eq_intervalIntegral` = `∫P·bConvP`, and THAT integral is now CLOSED**: `expQuadClosed_decomp` (the `bracket_u`-constant cancellation ⇒ bConvP = pure-exp + quadratic) + `intervalIntegral_P_expQuadClosed` (`∫P·expQuadClosed = expQuadClosedPos + A·quartic-integral`, no residual integral, validated 1.1e-12). **Odd-part capstone** `innerDCF_N1_oddPart`: `r·c₁ = −bConvP(r)−pConvB(r)+pbpConv(r)−pbpConv(−r)`, **reproduces `get_c1_inner` to 1.2e-15**. Every integral of the DCF chain is a proven axiom-clean closed form. arbitrary-N realized+certified in `fmsa_double_prop.py` |
-| MRS.6 | WH-factorization frame; `hfact` + reduce `hT0symm` to a scalar | ✓ `Cmix0`, `Cmix0_factorization`, `Cmix0_isSymm_iff`, `fin2_transpose_eq_iff_offdiag` |
-| MRS.7 | swap identity ⇒ **`hT0symm`** for the physical matrix | ✓ `Qphys_T0_isSymm` (via `swap_offdiag_of_keys` + KEY 1/2) |
-| MRS.8 | `Ĉ₀ = physical HS DCF` (behind MRS.2's OZ hyps) | ✗ **deprioritized** — off the critical path (payoff needs only (★)+`Q̂₀` entire); a mixture PY `Ĉ₀` does not exist in Lean and is not needed |
+| MRS.2 | [LN] eq:OZ1_Baxter (a) — **physical route to (★)** | ◑ `oz1_C1_eq`, `star_of_first_order_oz` — **conditional on 5 named matrix identities** (`hoz`/`hTS`/`hfact`/`hT0symm`/`hB1`), of which `hfact`+`hT0symm` are discharged (MRS.6/7) and `hB1` is Y1.6; `hoz` is the theory's physical starting point |
+| MRS.3 | **(★)** `Ĉ₁ = Q̂₀(−k)·B₁·Q̂₀ᵀ(−k)`; only-Yukawa-poles corollary | ✓ `star_of_oz1_baxter_hhat1`, `star_entry_differentiableAt`, **`starMix_entry_differentiableAt`** (concrete for `Q0_mat_c`, general `N`) |
+| MRS.4 | real-space `q_ij` + `λ_ij` jump amplitude + symmetry | ◑ **jump-value core** (`q0Mix_jump_amplitude` `=−σᵢσⱼ/(2Δ)`, `_symm`, `_quad_at_R`, `lam_sub_R_eq`); the δ-**distribution** statement is not in Lean and is **not needed** — the closed form is built from ordinary compactly-supported convolutions |
+| MRS.5 | inversion ⇒ **finite closed form** | ✅ **COMPLETE, EXPLICIT, GENERAL `N`** — see the task section; engine in `MixtureClosedForm.lean`, general-`N` assembly in `MixtureDCFSmooth.lean` (`Wmix`, `dcfOdd`) |
+| MRS.6 | WH-factorization frame; `hfact` + reduce `hT0symm` to a scalar | ✓ `Cmix0`, `Cmix0_factorization`, `Cmix0_isSymm_iff` (general `N`), `fin2_transpose_eq_iff_offdiag` (`Fin 2`) |
+| MRS.7 | swap identity ⇒ **`hT0symm`** for the physical matrix | ✓ `Qphys_T0_isSymm` (`Fin 2`, via `swap_offdiag_of_keys` + KEY 1/2) |
+| MRS.8 | `Ĉ₀ = physical HS DCF` (behind MRS.2's OZ hyps) | ☐ deferred, but **no longer dormant — work started 2026-07-31**, see the note below the table |
 
-**What "complete" means here.** Everything provable at the structural level is proved: the DCF route
-`(★) → no HS poles → finite exponential + polynomial pieces` is established, with the WH-factorization
-gate (`hfact`/`hT0symm`) discharged for the physical matrix. **The single remaining item is the
-explicit N=2 coefficient extraction** (MRS.5's `hpp`).
+**What "complete" means here.** The DCF route `(★) → no HS poles → finite exponential + polynomial
+pieces` is established *and the pieces are written down explicitly*: `Wmix` is the four-term
+`ℬ − Σ_n ℬ⋆P − Σ_m P⋆ℬ + Σ_{m,n} P⋆ℬ⋆P` double sum over species, and every term of it has a proved
+closed-form value (`bConvP_closed_form`(`_outer`), `pConvB_closed_form`, and the four regions of the
+double convolution). The WH-factorization gate (`hfact`/`hT0symm`) is discharged for the physical
+matrix. The old note's "single remaining item — the explicit N=2 coefficient extraction (MRS.5's
+`hpp`)" **is closed**, and it was closed at general `N`, not just `N=2`.
 
-*Route for that extraction (corrected).* It is **not** a distribution/contour problem — the
-**real-space** route (which MRS is built around, and which `integral_poly_exp_conv` targets) reaches
-it with definite integrals only. Expand `𝒬⁻ = δ − q⁻` algebraically first: `𝒞 = 𝒬⁻ ⋆ ℬ ⋆ (𝒬⁻)ᵀ`
-becomes four terms — `ℬ` (pure exp tail), `q⁻ ⋆ ℬ` and `ℬ ⋆ (q⁻)ᵀ` (poly ⋆ exp), and
-`q⁻ ⋆ ℬ ⋆ (q⁻)ᵀ` (poly ⋆ exp ⋆ poly) — with **no literal `δ`-convolutions surviving** (the `δ`s just
-select which factors appear). Each term is a convolution of *compactly-supported* functions =
-a **piecewise definite integral**, computed by `integral_poly_exp_conv` per overlap region (the
-`min/max` limits are the knots). So the extraction is **elementary but voluminous** — many definite
-integrals + a case-split on `r`'s region + the 2×2 matrix bookkeeping — reachable with the building
-block already proved. It is **not** faked here (it is a large multi-lemma derivation), but it is
-neither a machinery gap nor genuinely hard analysis; the structural finite-form result stands without
-it, and the one hard sub-question (contour vs. real-space) is settled in favour of the tractable
-real-space route.
+**⚠ MRS.8 is being worked on right now — do not re-audit it as "absent" (observed 2026-07-31).**
+While this audit was running, `LeanCode/YukawaDCF/MixtureHSDCF.lean` appeared (untracked, already
+wired into `LeanCode.lean:98`, builds clean). It is the **zeroth-order** backbone MRS.8 needs, built
+deliberately out of the MRS machinery rather than from scratch: `qFwd` (the *forward* Baxter window,
+the new piece), `qpConv = qFwd ⋆ pMixEntry`, and `cHSmixRaw = qFwd + pMixEntry − Σ_l qpConv` with
+support `⊆ [−R_ij, R_ij]` — the intermediate species `n` cancelling exactly as it does in `bConvP`.
+What this is: the **support geometry** of the real-space `c^{HS}_ij`. What it is not, yet: the
+identification of that object with `Cmix0 = I − Q̂₀(k)Q̂₀ᵀ(−k)`, which is MRS.8's actual statement.
+So MRS.8's 2026-07-17 verdict ("a mixture PY `Ĉ₀` does not exist in Lean") is **still literally true
+of the transform identity**, and is **already obsolete as a description of the effort**. Anyone
+picking this up should read that file first, and the two sibling starts of the same week —
+`HSMixture/MixtureBaxterSeed.lean` (matrix `Ψ ⋆ Q₊`, OZ★/RDF track) and
+`Analysis/MatrixWienerHopf.lean`.
+
+**The three things Group MRS still does not have, stated plainly.**
+- **MRS.2's `hoz`** — the first-order OZ equation itself is a hypothesis, not a theorem. It is [LN]'s
+  physical starting point; deriving it is MRS.8's job and MRS.8 is off the critical path.
+- **`Q̂₀` entire** — `starMix_entry_differentiableAt` covers `k ≠ 0`; the `k = 0` removable value is
+  known (`q0_entry_c_tendsto`, `φ₁(0)=−σ²/2`, `φ₂(0)=σ³/6`) but the per-entry `Function.update`
+  extension is not written. The identical Riemann-removable step **is** already executed one level up
+  for the determinant (`detF_update_differentiable`, `MixtureDetEntire.lean`), so this is a
+  ten-line copy, not analysis.
+- **A single `r·c^{(1)}_ij(r) = ⟨explicit formula⟩` equation.** What exists is the *chain*: `dcfOdd`
+  as a def, plus a proved closed-form value for each of its terms on each region. Contracting that
+  into one displayed identity is transcription over proved lemmas, and `MixtureDCFSmooth` does not
+  need it (it consumes the pieces directly to get `ContDiffOn`).
 
 ---
 
@@ -296,9 +338,16 @@ MML.8's premise (see the box there) and dissolves its blockers for the DCF.
 **Not yet formalized here:** that `Q̂₀` *is* entire and `B₁`'s only poles are Yukawa. Those are the
 concrete inputs to `star_entry_differentiableAt`'s two hypotheses; the removable values
 `φ₁(0) = −σ²/2`, `φ₂(0) = σ³/6` already exist (`phi1_tendsto`/`phi2_tendsto`, MZERO.9's chain), so
-this is wiring, not new analysis.
+this is wiring, not new analysis. **Sharpened 2026-07-31:** the entry-level removable *limit* is now a
+named theorem — `q0_entry_c_tendsto` (`HSMixture/MixtureHSCounting.lean`) — and the
+`Function.update` + Riemann-removable-singularity step that turns such a limit into an entire
+extension is **already executed, one level up, for the determinant**
+(`detF_update_differentiable`, `HSMixture/MixtureDetEntire.lean`). So "wiring" is now literal: copy
+that proof per entry.
 
 **Status.** ✓ **DONE (2026-07-17), axiom-clean** — conditional only on (a) = MRS.2 (hypothesis).
+*(Re-verified 2026-07-31: `star_of_oz1_baxter_hhat1`, `star_entry_differentiableAt`,
+`starMix_entry_differentiableAt` all `#print axioms` = standard three.)*
 
 **Numerical certification.** (★) verified at N=2 over a k-sweep to **max abs err 4.4×10⁻¹³**
 against the independently validated assembly; exact at N=1 (the `Q`-inverse cancellation
@@ -306,7 +355,8 @@ against the independently validated assembly; exact at N=1 (the `Q`-inverse canc
 
 **Depends on.** MRS.2 (a), Y1.6 (b), `Q̂₀` entirety (Group M / MZERO.9's removable values).
 
-**Status.** ☐ not started — algebraically immediate once MRS.2 is in place.
+⚠ *A second, contradictory `**Status.** ☐ not started` line sat here until 2026-07-31 — editing
+residue from before the task was done, in the same section whose body says "✓ DONE". Removed.*
 
 ---
 
@@ -353,7 +403,9 @@ precisely the `r < λ_ij` piece.
 
 **Depends on.** Group M (Q̂₀ entries), Group IB (`R`/`lam` infra).
 
-**Status.** ☐ not started.
+**Status.** ◑ — jump-value core done, δ-distribution statement absent **and not needed**; see the
+Lean block below. *(This line read "☐ not started" until 2026-07-31, contradicting the Lean block
+directly beneath it.)*
 
 ---
 
@@ -375,6 +427,17 @@ The **delta amplitude is now proved**, with the concrete Lebowitz/Baxter PY coef
 arithmetic core; the trap (modelling `q'` as a plain function on the open support drops the delta)
 is why the jump must be carried explicitly. `q0MixEntry` (Y1.3a, `WHSupports.lean`) is the windowed
 `q_ij` these attach to.
+
+**⚠ Scope note (2026-07-31) — the delta is a hazard of the `q'` formulation, not of the route MRS.5
+took.** The formalization warning above is about Baxter's *differentiated* relation
+`r·c = −q'_ij(r) + q'_ji(−r) − 2πΣ_m ρ_m ∫ q_im q'_jm`, where the boundary term is load-bearing (it
+broke `c_ij = c_ji` by O(20) on the Python side). **MRS.5 does not use that formulation.** It works
+from the *undifferentiated* triple convolution `𝒞 = 𝒬⁻ ⋆ ℬ ⋆ (𝒬⁻)ᵀ` with `𝒬⁻ = δ − q⁻` expanded
+algebraically first, so the only kernels that ever appear are `pMixEntry` (an `Icc`-windowed
+**quadratic**, `Set.indicator`, no derivative) and `bMixEntry` (an `Ici`-windowed exponential sum).
+No `q'` is ever formed and no distribution is ever needed. Hence MRS.4 stays `◑` **by choice, not by
+blockage**: its remaining half is the arithmetic of a route the group does not take. Keep the warning
+for anyone who returns to the differentiated form (e.g. to re-derive the HS `c₀` for MRS.8).
 
 ---
 
@@ -439,7 +502,8 @@ k-space route dissolves it** — the mixture analog of the OZFIX.10 dissolution.
   convergence issue, unlike the RDF's infinite HS-pole series). Direct linear combination of MA.3
   `fourier_kernel_one_pole` over the finite pole set. `#print axioms` =
   `[halfDiskBoundary_eq_sum_of_small_circles, propext, Classical.choice, Quot.sound]` — i.e. **only
-  MA.3's already-accepted half-disk deformation axiom**, no new assumption.
+  MA.1's already-accepted half-disk deformation axiom** (reached through the MA.3 *theorem*
+  `fourier_kernel_one_pole`), no new assumption.
 - **Polynomial×exponential part** — `integral_poly_exp_conv` (above): the core-Baxter `q ⋆ ℬ`
   convolution pieces, `= poly + one exp`. (This is the directly-applicable analog of
   `radial_inversion_antideriv` for the real-space convolution structure.)
@@ -447,7 +511,10 @@ k-space route dissolves it** — the mixture analog of the OZFIX.10 dissolution.
 Both inversion mechanisms are proved, plus a capstone:
 - `innerDCF_finite_closed_form` — **if** `Ĉ₁` agrees on the real axis with its finite principal-part
   sum `Σ_q A_q/(k−k_q)`, its inverse FT is the finite exp sum `Σ_q A_q·2πi·e^{ik_q r}`. Wraps
-  `fourier_kernel_finite_poles`; axiom dependency = only MA.3's half-disk.
+  `fourier_kernel_finite_poles`; axiom dependency = only MA.1's half-disk. **⚠ These two
+  declarations are the whole axiom footprint of Group MRS, and they sit on the k-space route that the
+  "two routes" note below says to avoid — the real-space route that delivers the closed form is
+  axiom-free.**
 
 **Two routes to the concrete N=2 coefficients — the real-space one is the tractable one.**
 - *k-space* (harder): the concrete `Ĉ₁` is **not** a global finite principal-part sum on ℝ (`Q̂₀(−k)`,
@@ -463,9 +530,13 @@ Both inversion mechanisms are proved, plus a capstone:
   derivation. (An earlier note here wrongly escalated it to "needs a contour argument"; that route
   exists but the real-space route sidesteps it.)
 
-**Status.** ◑ **finite-form structure + all per-piece atoms + the convolution-VALUE engine (both
-directions) + the mixture-kernel connectors DONE, axiom-clean modulo MA.3.**
-k-space mechanism: `fourier_kernel_finite_poles` + `innerDCF_finite_closed_form`.  Real-space atoms
+**The engine (2026-07-18) — finite-form structure + all per-piece atoms + the convolution-VALUE engine
+(both directions) + the mixture-kernel connectors, all axiom-free.**  *(This block used to carry
+`**Status.** ◑ … axiom-clean modulo MA.3`; the group status is now the `✅ CLOSED` section below, and
+the axiom attribution was wrong — see the group header's correction 1.)*
+k-space mechanism: `fourier_kernel_finite_poles` + `innerDCF_finite_closed_form` (**the only two
+declarations in Group MRS that use an axiom**, and both are on the route this file says to avoid).
+Real-space atoms
 (`MixtureRealSpace.lean`): `integral_poly_exp_conv` / `integral_linear_exp_conv` /
 `integral_quadratic_exp_conv`.  **NEW `MixtureClosedForm.lean` (2026-07-18) — the convolution-value
 engine the transcription was blocked on** (`MixtureConvolution.lean` had only the *support* geometry,
@@ -488,23 +559,127 @@ no values; it flagged "the Mathlib-convolution ⇄ interval-integral bridge" as 
   of single-exp windows).  So the engine applies **verbatim** to the actual mixture kernels — the
   "last mile" is a definitional rewrite, not new analysis.
 
-All 8 lemmas axiom-clean (only `propext`/`Classical.choice`/`Quot.sound`; the bridge needs *no* MA.3).
-The Python oracle `fmsa_double_prop.py` `_build_closed_form` remains the independently-certified
-arbitrary-N assembly (outer=MSA tail 1e-14, N=1 inner=Tang 1e-9) and an exact per-piece checker.
+All 8 lemmas axiom-clean (only `propext`/`Classical.choice`/`Quot.sound`; the bridge needs *no*
+half-disk axiom). The Python oracle `fmsa_double_prop.py` `_build_closed_form` remains the
+independently-certified arbitrary-N assembly (outer=MSA tail 1e-14, N=1 inner=Tang 1e-9) and an exact
+per-piece checker.
 
-**What remains — the multi-term assembly (mechanical chaining of the proved pieces above).** (i) the
-double convolution `P⋆ℬ⋆P` (convolve `pMixEntry` against the already-closed-form `bConvP` — same atoms,
-more regions); (ii) the "other" `max`/`min` region of each convolution (the capstones cover the aligned
-region); (iii) convolution-linearity over the finite `Σ_q` (`bMixEntry_eq_sum`) and the `Σ_{m,n}`
-species sum; (iv) the 4-term `𝒲 = ℬ − Σℬ⋆P − ΣP⋆ℬ + ΣP⋆ℬ⋆P` and the odd part
-`[𝒲(r)−𝒲(−r)]/(2π√ρᵢρⱼ·r)`.  **Not** a machinery gap — every atom, bridge, and connector it needs is
-now proved and validated; it is bookkeeping over proved lemmas, with the Python oracle as per-piece
-checker.  Deliberately not ground out in full here; the arbitrary-N closed form is realized and
-certified in Python.
+---
+
+### ✅ MRS.5 — the multi-term assembly is CLOSED, at general `N` (audited 2026-07-31)
+
+**This section previously listed four remaining items (i)–(iv) and said the assembly was
+"deliberately not ground out here; the arbitrary-N closed form is realized and certified in Python".
+All four were closed in Lean on 2026-07-18/19** — in **`YukawaDCF/MixtureDCFSmooth.lean`**
+(ns `FMSA.MixtureDCFSmooth`, committed under `be70ac4` *"General N"*). The work was filed under the
+**IB.9** banner in `proof_notes_breakpoints.md`, so this record never learned about it. Item by item:
+
+| was listed as remaining | actually closed by | general `N`? |
+|---|---|---|
+| **(i)** the double convolution `P⋆ℬ⋆P` | `pbpConvG_eq` (the interval-integral form, with the `hint` gate discharged) + `outerHalfG_eq` / `alignedHalfG_eq` / `midHalfG_eq` / `neg_halfG_eq` — **all four regions**, each `= Σ_q outerPerPoleVal` / `Σ_q alignedPerPoleVal` | ✅ `(i m n j : Fin N)` |
+| **(ii)** the "other" `max`/`min` region | `bConvP_closed_form_outer` (the `max` resolving the other way), and the outer/aligned/mid/reflected split above | ✅ |
+| **(iii)** linearity over `Σ_q`, and the `Σ_{m,n}` species sum | `Σ_q` is *inside* every closed form (they are literally `∑ q : Fin M, …`); `Σ_m`, `Σ_n` are in `Wmix` | ✅ |
+| **(iv)** the 4-term `𝒲` and its odd part | **`Wmix`** = `ℬ_ij − Σ_n ℬ_in⋆P_jn − Σ_m P_im⋆ℬ_mj + Σ_{m,n} P_im⋆ℬ_mn⋆P_jn`, and **`dcfOdd`** = `𝒲(x) − 𝒲(−x)` | ✅ |
+
+**Nothing is left as an unevaluated integral.** `outerPerPoleVal` and `alignedPerPoleVal` are
+explicit `poly · exp` expressions — the aligned one is `expQuadClosedPos` plus a degree-5 polynomial
+bracket (the `integral_quad_quadReflected` residue), with no `∫` in sight. ⚠ Note that
+`intervalIntegral_P_expQuadClosed`, read alone, *does* still show a residual `∫` on its RHS; that
+integral is closed by `integral_quad_quadReflected`, and `alignedPerPoleVal` is the composition of
+the two. So "no residual integral" is true of the chain, and *not* of that one lemma's statement —
+which is why the two must be quoted together.
+
+**The integrability gate is discharged, not assumed.** `pbpConv_eq_intervalIntegral` carries an
+`hint` hypothesis; `pbpIntegrand_intervalIntegrable` / `pbpIntegrandG_ii_{outer,aligned,mid}`
+discharge it by **piecewise** integrability — split at the jump `t₀ = x − R`, each half equals a
+continuous closed form, `IntervalIntegrable.trans` glues. No continuity of the (genuinely
+discontinuous) convolution kernels is needed.
+
+**Capstones, and what they are.** `dcfOdd_contDiffOn_upper` / `_lower` / `_like` are the general-`N`
+statements this chain was built for: `c^{(1)}_ij` is `ContDiffOn ℝ ⊤` on each side of `λ_ij`, so
+`λ_ij` is its **only** interior knot (IB.9). They are *smoothness* statements — the closed-form
+**values** live in the per-region lemmas above, which is the right factoring, but means there is no
+single displayed `r·c^{(1)}_ij(r) = …` equation. `innerDCF_N1_oddPart` (`Mix 1 M`) is the `N=1`
+odd-part reduction and `innerDCF_N1_contDiffOn` its smoothness corollary.
+
+**Axiom status — measured 2026-07-31, not inherited.** `#print axioms` on `pbpConvG_eq`,
+`outerHalfG_eq`, `alignedHalfG_eq`, `midHalfG_eq`, `neg_halfG_eq`, `dcfOdd_contDiffOn_{upper,lower,like}`,
+`innerDCF_N1_contDiffOn`, `pbpConv_{forward,reflected}_contDiffOn`, plus the 14 `MixtureRealSpace` /
+`MixtureClosedForm` declarations named above: **all `[propext, Classical.choice, Quot.sound]`**. The
+only two MRS declarations that touch an axiom are `fourier_kernel_finite_poles` and
+`innerDCF_finite_closed_form`, on the abandoned k-space route.
+
+**Status.** ✅ **DONE, general `N`, axiom-free.** The Python oracle keeps its role as the
+independent per-piece checker, but it is no longer the *only* place the arbitrary-`N` closed form
+exists.
 
 ---
 
 ## Group MPOLY — Mixture Inner-Core Polynomial Coefficients (`D_ij = R'_ij(0)/6`)
+
+### ❌ Group MPOLY — final disposition (audited 2026-07-31)
+
+**The group's target does not exist, and that is settled.** MPOLY.1–3 are done and axiom-clean;
+**MPOLY.4 and MPOLY.5 are `NOT COMPLETABLE`** because [LN] Eq (101)'s single degree-≤4 `P_ij` on all
+of `(0,R_ij)` is **false for unlike pairs**. Nothing below is a "remaining task".
+
+**The falsification was re-verified against the current tree (2026-07-31), exactly and without
+fitting**, by reading the analytic pieces of the shipped `fmsa_double_prop` closed form and forming
+the odd part `f = 𝒲(r) − 𝒲(−r)` symbolically on each side of `λ₀₁`. Reference 2YK mixture
+(`σ=[1,2]`, `ε=[1,0.5]`, `x=[0.25,0.75]`, `ρ*=0.139`, `T*=1`), unlike pair `(0,1)`,
+`λ₀₁ = 0.4649`, `R₀₁ = 1.4322`:
+
+| region | `W(+r)`, `W(−r)` in the same piece? | rate-0 polynomial of `f` |
+|---|---|---|
+| `(0, λ₀₁)` | **yes** (both in `[−λ, +λ]`) ⇒ `f` is odd ⇒ even powers cancel | `+1.1115·r` — **degree 1, zero constant** |
+| `(λ₀₁, R₀₁)` | **no** (`[λ,R]` vs `[−R,−λ]`) | `−1.2813 + 1.1890 r + 0.2029 r² + 0.0447 r⁴` — **degree 4, nonzero constant**, `r³` and `r⁵` absent |
+
+Max coefficient difference **1.2813** ⇒ `P₁ ≠ P₂` ⇒ by `not_single_poly_of_pieces_ne` (IB.4,
+axiom-clean) **no single `Q` exists on `(0,R₀₁)`**. This reproduces the 2026-07-17 record
+**digit for digit** (it read `1.111·r` and `−1.281 + 1.189r + 0.203r² + 0.0447r⁴`), so the ruling is
+not stale after `b3896eb` / the "General N" rewrite. Control: the **like** pair `(0,0)` has
+`λ = 0`, one piece on `(0,R)`, no obstruction — **Eq (101) is correct for like pairs**, which is why
+N=1 Tang / `FMSA_pure` works. Sanity: the reconstructed odd part reproduces `get_c1_inner` to all
+printed digits on both sides of `λ`.
+
+**⚠ Read the epistemic status correctly.** This is a **disproof by counterexample**, in two parts:
+the *rigidity* (`different pieces ⇒ no single polynomial`) is **proved in Lean, axiom-clean**; the
+*premise* (`P₁ ≠ P₂` for this pair) is a **machine computation** from the validated closed form —
+structural, not a fit, but not a Lean theorem. Making it one would need `dcfOdd`'s two pieces
+extracted as `Polynomial ℝ` and compared; IB.9's `dcfOdd_contDiffOn_{upper,lower}` proves each side
+is smooth for **all `N`** but does *not* by itself prove the sides differ. Nobody should need this —
+the constructive replacement (Group MRS's finite closed form) is done at general `N`.
+
+**Second, independent contradiction** (also re-confirmed): MRS.3's (★)
+`Ĉ₁ = Q̂₀(−k)·B₁(k)·Q̂₀ᵀ(−k)` carries **no `Q̂₀⁻¹` and no HS poles**, directly against this
+umbrella's premise that "`S_ij(s)` involves `Q̂₀(s)⁻¹`" and against MPOLY.3's
+`[Q̂₀⁻¹]₀₁ = −q₁₂/Δ_Q` route. The HS poles belong to the RDF `ĥ₁` only.
+
+**⚠ Every file path in the sections below is stale — MRS.9d moved this code on 2026-07-27.**
+`YukawaDCF/MixtureLaurent.lean` **no longer exists**. Current homes:
+
+| content | file (2026-07-31) | namespace |
+|---|---|---|
+| the whole order-4 Taylor **calculus** — `taylor4_recip`, `taylor4_mul`, `taylor4_sub`, `taylor4_neg`, `taylor4_tendsto_const`, `taylor4_deltaQ`, `taylor4_coeff_unique`, `poly4_eq_zero_of_littleO`, `p1/p2_{cubic,quartic}_coeff`, `p1/p2_limit`, `exp_neg_{cubic,quartic}_rem` | **`Analysis/Taylor4Calculus.lean`** | `FMSA.Taylor4` |
+| the two mixture-specific capstones — `q0_entry_taylor4`, `taylor4_inv_entry` | **`HSMixture/MixtureLaurent.lean`** | `FMSA.MixtureLaurent` |
+| GAP.8/9/10 — `poly_coeff_from_laurent`, `q0_entry_taylor3`, `dij_cubic_nonzero`, `poly_natDegree_*` | `YukawaDCF/MixturePolyCoeffs.lean` | **`FMSA.MixturePoly`** (not `MixturePolyCoeffs`) |
+
+**This move is the best thing that happened to MPOLY.** "What survives" is no longer a pile of
+mixture leftovers — it is a **general-purpose, project-independent `Analysis/` library**: order-4
+Taylor arithmetic (Cauchy product, reciprocal recursion, coefficient uniqueness) usable by anything.
+The falsified part took the mixture-specific `S_ij`/`Y_ij` packaging with it and left nothing behind.
+
+**Axiom audit (2026-07-31).** `#print axioms` on all 18 MPOLY-related declarations — MPOLY.1/2/3's
+eleven, the two survivors, IB.4's two rigidity lemmas, and GAP.8/9/10's three — **every one returns
+`[propext, Classical.choice, Quot.sound]`**.
+
+**GAP.8's vacuity re-confirmed by reading the proof term.** `poly_coeff_from_laurent` is
+`∃ A B C D E4, A = iteratedDeriv 4 R 0 / 4! ∧ …`, discharged by
+`exact ⟨…, rfl, rfl, rfl, rfl, rfl⟩` — the witnesses *are* the right-hand sides, and the hypothesis
+`hR : AnalyticAt ℝ R 0` is **never used**. It asserts only "five reals exist". Unchanged since the
+2026-07-16 flag.
+
+---
 
 **Motivation (2026-07-15).** Task **GAP.9 Option B** (`MixturePolyCoeffs.lean`) is DONE and axiom-clean: it
 proves the **cubic-coefficient mechanism** behind `D_ij ≠ 0` for unlike pairs — `p1_cubic_coeff`
@@ -544,12 +719,17 @@ overlaps the Y1.3/MML.8 inner-core-Laplace machinery. (Note: `[Q̂₀⁻¹]₀�
 `s=0` — `φ₁,φ₂` are finite there — so it is *not* `S_ij`; the `1/s⁵` pole lives in `S_ij` itself.)
 
 **Decomposition (2026-07-15) — MPOLY is the umbrella; the pipeline is split into independent tasks
-`MPOLY.1`–`MPOLY.5`** (`YukawaDCF/MixtureLaurent.lean`), each with its own section below: **MPOLY.1** order-4
+`MPOLY.1`–`MPOLY.5`** (then `YukawaDCF/MixtureLaurent.lean`; **see the disposition box for where the
+code lives now**), each with its own section below: **MPOLY.1** order-4
 Taylor of `q0_entry` (✓ DONE) → **MPOLY.2** reciprocal series `1/Δ_Q` (Eq 136–137) → **MPOLY.3** `Δ_Q` +
 inverse-entry series (Eq 130) → **MPOLY.4** Laurent→coeff machinery (Eq 105/120, the self-contained
 *fallback endpoint*, extends GAP.8) → **MPOLY.5 (crux)** exact `S_01(s)` from Eq 128/129 ⇒ `D_01` matching
 GAP.9's `−133/2880`-style value.
-**Status.** ◑ umbrella; MPOLY.1 done, MPOLY.2–MPOLY.5 staged. Effort: HARD (MPOLY.5 = closed-form `S_ij`).
+**Status.** ❌ **CLOSED — umbrella target does not exist** (see the disposition box at the top of this
+group). MPOLY.1 ✓, MPOLY.2 ✓, MPOLY.3 ✓ (all 2026-07-15/16, axiom-clean); **MPOLY.4 ❌ and MPOLY.5 ❌
+NOT COMPLETABLE** (2026-07-17, re-verified 2026-07-31). *(This line read "◑ umbrella; MPOLY.1 done,
+MPOLY.2–MPOLY.5 staged. Effort: HARD" — written 2026-07-15, i.e. before MPOLY.2/3 landed and before
+MPOLY.4/5 were falsified. It described the plan, not the outcome.)*
 
 ---
 
@@ -561,7 +741,8 @@ blocks (`p1p₄`'s `z⁴`-coefficient is `−σ⁶/720`, `p2p₄`'s is `σ⁷/50
 `q_ij(s) = q^[0] + q^[1]s + … + q^[4]s⁴ + O(s⁵)` structure ([LN] Eq 134) that `Δ_Q`/`1/Δ_Q`
 (MPOLY.2–MPOLY.3) require.
 
-**Lean (`YukawaDCF/MixtureLaurent.lean`, ns `FMSA.MixtureLaurent`).** `q0_entry_taylor4` — the
+**Lean (`HSMixture/MixtureLaurent.lean`, ns `FMSA.MixtureLaurent`; the `p*` remainder lemmas now in
+`Analysis/Taylor4Calculus.lean`, ns `FMSA.Taylor4` — MRS.9d, 2026-07-27).** `q0_entry_taylor4` — the
 product-of-expansions assembly, mirroring GAP.9's `q0_entry_taylor3` one order up; via the new order-4
 remainder lemmas `p1_quartic_coeff` (`→ −σ⁶/720`), `p2_quartic_coeff` (`→ σ⁷/5040`),
 `exp_neg_quartic_rem`, each extending its GAP.9 cubic analog by one order (`Real.exp_bound` at `n+1`).
@@ -580,7 +761,8 @@ remainder lemmas `p1_quartic_coeff` (`→ −σ⁶/720`), `p2_quartic_coeff` (`�
 ```
 A self-contained numerical-series identity (no physics input).
 
-**Lean (`MixtureLaurent.lean`).** `taylor4_recip` — the `Tendsto` reciprocal-Taylor statement, in the
+**Lean (`Analysis/Taylor4Calculus.lean`, ns `FMSA.Taylor4` — moved out of `MixtureLaurent.lean` by
+MRS.9d, 2026-07-27).** `taylor4_recip` — the `Tendsto` reciprocal-Taylor statement, in the
 file's convention: from `Δ = d₀+…+d₄z⁴ + o(z⁴)` at `0⁺` and `d₀ ≠ 0`, conclude
 `1/Δ = r₀+…+r₄z⁴ + o(z⁴)`, with the `rₖ` supplied as the Eq-(137) hypotheses `hr0`–`hr4` (`n = 0..4`).
 
@@ -616,7 +798,8 @@ the `congr'` step closes by `field_simp; linear_combination -hk`.
 via MPOLY.2. **Note:** this object is **analytic** at `s=0` (`φ₁,φ₂` are finite there); the `1/s⁵` pole
 of the Laurent form lives in `S_ij` (MPOLY.5), not here.
 
-**Lean (`MixtureLaurent.lean`).** A small **order-4 Taylor calculus** in the file's `Tendsto`
+**Lean (`Analysis/Taylor4Calculus.lean`, ns `FMSA.Taylor4`; the `taylor4_inv_entry` capstone stayed in
+`HSMixture/MixtureLaurent.lean` — MRS.9d, 2026-07-27).** A small **order-4 Taylor calculus** in the `Tendsto`
 convention, then the two capstones:
 - `taylor4_tendsto_const` — order-4 Taylor data ⇒ the `0⁺` limit is the constant term (reused by
   `taylor4_mul`, and the same block MPOLY.2's proof needs).
@@ -655,7 +838,8 @@ in particular `D_ij = R'_ij(0)/6`. Extends GAP.8's `poly_coeff_from_laurent`; **
 abstract**, so it is the self-contained fallback deliverable (formalizes [LN] §9.4.2–9.4.3 without the
 closed-form `S_ij`).
 
-**Lean (`MixtureLaurent.lean`).** `R_ij` as a def + the coefficient formulas (from `iteratedDeriv` / GAP.8)
+**Lean (never written — the task is ❌ NOT COMPLETABLE).** Would have been `R_ij` as a def + the
+coefficient formulas (from `iteratedDeriv` / GAP.8)
 + the Eq-120 unified corollary.
 
 **Depends on.** ~~GAP.8~~ — **GAP.8 is vacuous** (`∃` closed by 5 `rfl`s; its `AnalyticAt` hypothesis is

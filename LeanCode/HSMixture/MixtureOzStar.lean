@@ -420,6 +420,64 @@ theorem matRenewalEq_of_matrixProduct {N : ℕ} {sigma : ℝ}
   exact matrix_mul_intervalIntegral_entry (fun t => Q (r - t)) Psi sigma r i j
     (hQ.comp (continuous_const.sub continuous_id)) hPsi
 
+/-! ### The concrete matrix outer solution `Ψouter` (Banach global Volterra at the matrix ring)
+
+The scaffolding above took `Ψouter` as a parameter (`MatRenewalEq` for an *assumed* outer solution).
+Instantiating the Banach **global** Volterra solution (`VolterraBanach.volterraGlobalE`) at the matrix
+ring `Matrix (Fin N) (Fin N) ℝ` (the `linftyOp` norm) constructs it concretely.  Its `max σ ·`-
+precomposed representative `matBaxterPsiOuterFun` is continuous on all of `ℝ` and agrees with the
+solution on `[σ,∞)`, so it feeds `matRenewalEq_of_matrixProduct` and yields the entrywise `∑ₖ`
+`MatRenewalEq` — `Ψouter` is now a **constructed** object, not a hypothesis, for any continuous
+mixture Baxter data `Q, F`. -/
+
+/-- **The concrete matrix outer solution.**  The Banach global Volterra solution at the matrix ring,
+precomposed with `max σ ·` so it is continuous on all of `ℝ` (and equals the solution on `[σ,∞)`). -/
+def matBaxterPsiOuterFun {N : ℕ} (sigma : ℝ) (Q F : ℝ → Matrix (Fin N) (Fin N) ℝ)
+    (hQ : Continuous Q) (hF : Continuous F) : ℝ → Matrix (Fin N) (Fin N) ℝ :=
+  letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+  fun r => FMSA.VolterraBanach.volterraGlobalE sigma Q F hQ hF (max sigma r)
+
+/-- The constructed outer solution is continuous everywhere. -/
+theorem matBaxterPsiOuterFun_continuous {N : ℕ} (sigma : ℝ) (Q F : ℝ → Matrix (Fin N) (Fin N) ℝ)
+    (hQ : Continuous Q) (hF : Continuous F) : Continuous (matBaxterPsiOuterFun sigma Q F hQ hF) := by
+  letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+  exact (FMSA.VolterraBanach.volterraGlobalE_continuousOn_Ici sigma Q F hQ hF).comp_continuous
+    (continuous_const.max continuous_id) (fun r => le_max_left sigma r)
+
+/-- On `[σ,∞)` the constructed outer solution satisfies the matrix-product renewal equation. -/
+theorem matBaxterPsiOuterFun_renewal {N : ℕ} (sigma : ℝ) (Q F : ℝ → Matrix (Fin N) (Fin N) ℝ)
+    (hQ : Continuous Q) (hF : Continuous F) :
+    letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+    letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+    ∀ r : ℝ, sigma ≤ r → matBaxterPsiOuterFun sigma Q F hQ hF r
+      = F r + ∫ t in sigma..r, Q (r - t) * matBaxterPsiOuterFun sigma Q F hQ hF t := by
+  letI := Matrix.linftyOpNormedRing (n := Fin N) (α := ℝ)
+  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin N) (α := ℝ)
+  intro r hr
+  have hbase := FMSA.VolterraBanach.volterraGlobalE_spec sigma Q F hQ hF hr
+  have hself : matBaxterPsiOuterFun sigma Q F hQ hF r
+      = FMSA.VolterraBanach.volterraGlobalE sigma Q F hQ hF r := by
+    simp only [matBaxterPsiOuterFun, max_eq_right hr]
+  rw [hself, hbase]
+  congr 1
+  refine intervalIntegral.integral_congr (fun t ht => ?_)
+  rw [Set.uIcc_of_le hr] at ht
+  simp only [matBaxterPsiOuterFun, max_eq_right ht.1]
+
+/-- **`Ψouter` constructed — the matrix outer solution satisfies `MatRenewalEq`.**  For any
+continuous matrix Baxter data `Q, F`, the entries of `matBaxterPsiOuterFun` solve the entrywise
+species-summed renewal equation.  This discharges the "`Ψouter` is taken as a parameter" gap: the
+outer solution is now **built** (Banach global Volterra at the matrix ring) rather than assumed. -/
+theorem matBaxterPsiOuter_matRenewalEq {N : ℕ} (sigma : ℝ) (Q F : ℝ → Matrix (Fin N) (Fin N) ℝ)
+    (hQ : Continuous Q) (hF : Continuous F) :
+    MatRenewalEq (fun i j => fun r => (matBaxterPsiOuterFun sigma Q F hQ hF r) i j)
+      (fun i j => fun r => (F r) i j) (fun i k => fun s => (Q s) i k) sigma :=
+  matRenewalEq_of_matrixProduct (matBaxterPsiOuterFun sigma Q F hQ hF) Q F hQ
+    (matBaxterPsiOuterFun_continuous sigma Q F hQ hF)
+    (matBaxterPsiOuterFun_renewal sigma Q F hQ hF)
+
 /-! ### Matrix `F[K]=Ĉ` (`OZFIX.18` F-part) — per entry via the general-`c` shell identity
 
 The scalar `baxterK_cos_eq_radial_fourier` (`OZFIX.18` F-part) matches the Fourier transform of the

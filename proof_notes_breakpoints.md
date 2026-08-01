@@ -519,6 +519,15 @@ by `c_ij = c_ji`), the inner DCF `dcfOdd X i j = Wmix(x) − Wmix(−x)` (with t
 Together: **the only possible interior knot of `c^(1)_ij` on `(0, R_ij)` is `λ_ij`, for all `N`** — the
 numerically-observed "only λ_ij" knot, proved.
 
+> **⚠ This work also closed Group MRS.5 — record the cross-link (noted 2026-07-31).** IB.9 needed the
+> general-`N` closed form only as a *means* to `ContDiffOn`, but building it produced exactly what
+> **MRS.5** (`proof_notes_mixture_dcf.md`) was still listing as its four remaining items: `Wmix`
+> (the 4-term species double sum), `dcfOdd` (the odd part), `pbpConvG_eq` + `outerHalfG_eq` /
+> `alignedHalfG_eq` / `midHalfG_eq` / `neg_halfG_eq` (all four regions of `P⋆ℬ⋆P` at general
+> `(i m n j)`, each an explicit `Σ_q` of `poly·exp` with **no residual integral**). The MRS record
+> went un-updated for twelve days because the work landed under this banner and in this file. If a
+> future task lands DCF closed-form content here, **update MRS.5 too**.
+
 **⚠ Correction (2026-07-19) — NO aggregate cancellation is needed; general-N is a mechanical term-by-
 term extension.**  An intermediate worry that the mediated two-fold breakpoint `R_in − λ_jn` was an
 `n`-dependent interior knot requiring a Baxter-factorization cancellation was a **SIGN ERROR** (used
