@@ -1142,26 +1142,6 @@ theorem baxterPhi_lipschitzOnWith {eta sigma rho : ℝ} (heta0 : 0 < eta) (heta1
 
 /-! ### Self-map (`MapsTo`) lemma (Task `POLE.3`, Phase A.4) -/
 
-/-- **Generic self-map fact**: a `K`-Lipschitz map on `closedBall k1 r` whose center moves by
-at most `r(1-K)` maps the ball into itself — the standard sufficient condition for Banach's
-fixed-point theorem. Reusable, not specific to `baxterPhi`/`G_baxter`. -/
-theorem mapsTo_closedBall_of_lipschitzOnWith_of_dist_le (phi : ℂ → ℂ) (k1 : ℂ) (r : ℝ)
-    (hr : 0 ≤ r) (K : NNReal) (hLip : LipschitzOnWith K phi (Metric.closedBall k1 r))
-    (hstep : dist k1 (phi k1) ≤ r * (1 - K)) :
-    Set.MapsTo phi (Metric.closedBall k1 r) (Metric.closedBall k1 r) := by
-  intro k hk
-  rw [Metric.mem_closedBall] at hk ⊢
-  have hk1mem : k1 ∈ Metric.closedBall k1 r := Metric.mem_closedBall_self hr
-  have h1 : dist (phi k) (phi k1) ≤ K * dist k k1 :=
-    hLip.dist_le_mul k (Metric.mem_closedBall.mpr hk) k1 hk1mem
-  calc dist (phi k) k1 ≤ dist (phi k) (phi k1) + dist (phi k1) k1 := dist_triangle _ _ _
-    _ ≤ K * dist k k1 + dist k1 (phi k1) := by rw [dist_comm (phi k1) k1]; linarith [h1]
-    _ ≤ K * r + r * (1 - K) := by
-        apply add_le_add
-        · exact mul_le_mul_of_nonneg_left hk (by positivity)
-        · exact hstep
-    _ = r := by ring
-
 /-! ### Assembly (Task `POLE.3`, Phase A.5)
 
 `baxter_G_zero_exists_for_n` gets a genuine zero of `G_baxter` in `disk(k1,r)` for a single `n`,
@@ -1198,7 +1178,7 @@ theorem baxter_G_zero_exists_for_n (eta sigma rho : ℝ) (heta0 : 0 < eta) (heta
     ∃ k ∈ Metric.closedBall k1 r, G_baxter eta sigma rho k = 0 := by
   have hLip := baxterPhi_lipschitzOnWith heta0 heta1 hsigma hrho n k1 r M hM1 hMball hkN hkD
     hDball K hC
-  have hMapsTo := mapsTo_closedBall_of_lipschitzOnWith_of_dist_le (baxterPhi eta sigma rho n) k1 r
+  have hMapsTo := FMSA.BanachPoleFamily.mapsTo_closedBall_of_lipschitzOnWith_of_dist_le (baxterPhi eta sigma rho n) k1 r
     hr.le K hLip hstep
   apply G_baxter_pole_exists_of_bounds eta sigma rho k1 r hr K hK1 (baxterPhi eta sigma rho n)
     hMapsTo hLip

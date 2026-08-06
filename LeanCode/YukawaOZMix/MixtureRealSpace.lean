@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.YukawaWienerHopf
+import LeanCode.YukawaOZMix.YukawaWienerHopf
 import LeanCode.HSMixture.MixtureHSZeros
 import LeanCode.HSMixture.MatrixQ0
 import LeanCode.Analysis.MittagLeffler

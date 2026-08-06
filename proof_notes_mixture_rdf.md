@@ -106,7 +106,7 @@ topic-scoped tasks below. The target identity (N=2 unlike pair (0,1), r ∈ (0, 
                            [ (I)+(II)+(III) = true inner DCF                            MML.8 ]
 
 MML.4–MML.7 are **DONE (axiom-clean)**; MML.8 (the collapse) is scoped-only. Lean home:
-`YukawaDCF/MixtureMLSeries.lean` (MML.4/MML.5), `YukawaDCF/MixtureInnerDCF.lean` (MML.6/MML.7, and
+`YukawaOZMix/MixtureMLSeries.lean` (MML.4/MML.5), `YukawaOZMix/MixtureInnerDCF.lean` (MML.6/MML.7, and
 the eventual MML.8).
 
 ---
@@ -129,7 +129,7 @@ singly-vs-doubly-propagation modeling choice to MML.8 (see there), keeping MML.4
 already-proven MML.2 residue.
 
 **Depends on.** MML.2 (`b_k_residue`), Y1.1 (`Q0_mat_c`).
-**Lean (`YukawaDCF/MixtureMLSeries.lean`, namespace `FMSA.MixtureHSPoles`).**
+**Lean (`YukawaOZMix/MixtureMLSeries.lean`, namespace `FMSA.MixtureHSPoles`).**
 `mixHSterm`, `mixHS_series`; `yukawaCoupling K z nt s = Σ_{t<nt} K_t/(z_t²−s²)` with
 `yukawaCoupling_continuousAt` (continuous where `z_t²≠s_k²`, via `tendsto_finsetSum` + `ContinuousAt.div`);
 `b_k_residue_coupled` (`b_k_residue` × the continuous coupling via `Tendsto.mul` + a `ring` regrouping).
@@ -173,7 +173,7 @@ the concrete gate to exactly one obligation (see below).
 **The remaining MML.5-concrete gate — ✅ CLOSED 2026-07-17 (superseding the "deferred" text
 that follows).** The per-pole **magnitude bound** `‖B_k‖·e^{−r·Re s_k} ≤ C·‖s_k‖^p` (`p<−1`) was
 the last piece; it is now proved (`detF_family_magnitude_bound`) and fed into
-`mixHS_summable_of_growth` (`detF_mixHS_summable`, `YukawaDCF/MixtureMLBound.lean`), both
+`mixHS_summable_of_growth` (`detF_mixHS_summable`, `HSMixture/MixtureMLBound.lean`), both
 axiom-clean — see the "GATE PROVED" and "`Summable` WIRED end-to-end" notes at the top of the
 MZERO.5 section. *Original scoping text (kept for the technique record):* a POLE.5-analog —
 POLE.5's `Npoly/Dpoly` cubic-over-linear chain re-derived for the **two-frequency** exp-polynomial
@@ -245,7 +245,7 @@ degenerate for it (σ=[1,2]: `2σ₀ = σ₁`, branches coincide; σ=[1,1.5]: `2
 binds) — a reminder to sweep the *qualitative regimes*, not just several parameter values.
 
 **`Summable` corollary NOW WIRED (2026-07-17) — MML.5-concrete CLOSED end-to-end.**
-`detF_mixHS_summable` (`YukawaDCF/MixtureMLBound.lean`, new file importing both
+`detF_mixHS_summable` (`HSMixture/MixtureMLBound.lean`, new file importing both
 `MixtureChordFamily` and `MixtureMLSeries`; axiom-clean, no `sorry`, full build green): for
 `rdist > max(σ₀/2, (σ₁−σ₀)/2)`, `∃ g` injective `detC`-zero family with
 `Summable (mixHSterm (fun n => −q01(g n)/derivF(g n)) (fun n => −g n) rdist)`. The wiring is
@@ -300,7 +300,7 @@ MRS** (finite closed form). The `Q̂₀⁻¹`-count is the dividing line: **none
 `h₁`** — the "singly" reading corresponds to no object. See the MML.8 box.
 
 **Depends on.** Y1.5 (`spectralAmp`/`spectralAmp_residue`), Y1.1 (`Q0_mat_c`).
-**Lean (`YukawaDCF/MixtureInnerDCF.lean`).** `yukawaBaseAmp`, `yukawaBaseTerm`,
+**Lean (`YukawaOZMix/MixtureInnerDCF.lean`).** `yukawaBaseAmp`, `yukawaBaseTerm`,
 `yukawaBaseAmp_eq_spectralAmp_residue`.
 **Status.** ✓ DONE (2026-07-16), axiom-clean.
 
@@ -319,7 +319,7 @@ the bundled `E := base + hsum`. The Yukawa specialization fixes `base := eij` (i
 form. Extends Y1.7's `origin_constraint_eq76` (Yukawa-only) by folding the HS-pole sum into `E`.
 
 **Depends on.** P.2 (`origin_necessity`), P.1 (`eij`/`eij_at_origin`), Y1.7 (pattern).
-**Lean (`YukawaDCF/MixtureInnerDCF.lean`).** `origin_constant_mix`, `origin_constant_eij_mix`.
+**Lean (`YukawaOZMix/MixtureInnerDCF.lean`).** `origin_constant_mix`, `origin_constant_eij_mix`.
 The one deferred ingredient is `ContinuousAt (mixHS_series …) 0` (the HS-sum's continuity at 0, a
 tsum-continuity fact needing the same dominated-summability machinery as MML.5-concrete); MML.7 takes
 it as the hypothesis `hcSum`.
@@ -456,14 +456,14 @@ only** (`OZFIX.12`). For MML.8 this transfers as:
 **Prerequisite ordering — UPDATED 2026-07-17: all prerequisites now DONE.** MML.8 was gated behind
 MML.5-concrete (the interchange / `Summable`) and, for an *unconditional* statement, MZERO.1's full
 zero-family (then conditional on MZERO.5). **Both are now closed axiom-clean (2026-07-17):**
-MML.5-concrete = `detF_mixHS_summable` (`YukawaDCF/MixtureMLBound.lean`, `Summable` wired end-to-end
+MML.5-concrete = `detF_mixHS_summable` (`HSMixture/MixtureMLBound.lean`, `Summable` wired end-to-end
 from `detF_family_magnitude_bound`); MZERO.1 = `detC_zeros_infinite_unconditional`
 (`HSMixture/MixtureChordFamily.lean`, parameter-only hypotheses), with MZERO.5's `hbound`/`hstep`
 retired. So the "conditional MML.8 first, unconditional later" ordering is moot — an *unconditional*
 statement is no longer blocked by any prerequisite, and **the only remaining content is Crux #2, the
 collapse itself.**
 
-**Lean.** `YukawaDCF/MixtureInnerDCF.lean` — Crux #1 pole-order lemmas `doubly_prop_entry_eq`,
+**Lean.** `YukawaOZMix/MixtureInnerDCF.lean` — Crux #1 pole-order lemmas `doubly_prop_entry_eq`,
 `double_pole_leading_coeff`, `double_pole_leading_coeff_ne_zero` (all axiom-clean).
 **Term (II) + collapse reduction target now landed (2026-07-17, axiom-clean, build green):**
 - **Both Laurent coefficients of the double pole certified.** `double_pole_leading_coeff` (earlier)
@@ -667,7 +667,7 @@ made `double_pole_second_coeff` avoid the (ℂ-absent) L'Hôpital route.
 **Depends on.** MRS.2 `oz1_C1_eq` (the dual it mirrors), MRS.3 (★), MRS.6 factorization,
 MML.8 `double_pole_leading_coeff` / `double_pole_second_coeff`. Nothing new is assumed.
 
-**Lean.** New file `YukawaDCF/MixtureRDFStructureFactor.lean` (ns `FMSA.MixtureRDF`), all
+**Lean.** New file `YukawaOZMix/MixtureRDFStructureFactor.lean` (ns `FMSA.MixtureRDF`), all
 axiom-clean, full build green:
 `oz1_H1_eq`, `structureFactor_eq_inv` (`T₀⁻¹ = S₀` — no invertibility hypothesis needed,
 `Matrix.inv_eq_right_inv`), `rdf_eq_inv_conj`, `inv_conj_entry_eq` (the transpose-free sibling of
@@ -743,7 +743,7 @@ lesson is the same as MML.5's: re-check a stale blocker against what has landed 
 **Depends on.** MML.9 (`rdf_entry_double_pole`, `det_eq_of_wienerHopf_factorization`), MML.2's
 `residue_of_simple_pole` route, Y1.1's `inv_apply_eq_adj_div_det`, MRS.3 (★), MRS.6.
 
-**Lean.** `YukawaDCF/MixtureRDFStructureFactor.lean`, axiom-clean, full build green:
+**Lean.** `YukawaOZMix/MixtureRDFStructureFactor.lean`, axiom-clean, full build green:
 `hsResidueMatrix`, `num_div_det_sq_eq_sandwich`, `structureFactor_entry_residue`,
 `rdf_double_pole_coeff_sandwich`, `rdf_double_pole_coeff_star`, `hsResidue_annihilates`,
 `hsResidue_eq_mul_cmix`.
@@ -805,7 +805,7 @@ particular `B₁` is `double_pole_leading_coeff_ne_zero` at `Num(s_k) ≠ 0`, se
 **Depends on.** MML.5 (strengthened family), MML.10 (`hsResidueMatrix`), MML.2/MML.1, Y1.6
 (`Hhat1`), MML.8's `double_pole_leading_coeff`.
 
-**Lean.** New file `YukawaDCF/MixtureRDFPoleData.lean` (ns `FMSA.MixtureRDF`), axiom-clean, full
+**Lean.** New file `YukawaOZMix/MixtureRDFPoleData.lean` (ns `FMSA.MixtureRDF`), axiom-clean, full
 build green: `hhat1_entry_eq_num_div_det_sq`, `num_div_det_sq_eq_transpose_sandwich`,
 `triple_entry_transpose_eq`, `adjugate_entry_continuousAt`, `hhat1_double_pole`, `q0Mat`,
 `q0Mat_det` (`rfl`), `q0Residue`, `q0Residue_zero_one`, `rdfBeta`, `q0Mat_entry_continuousAt`,
@@ -866,7 +866,7 @@ same interval.
 **Depends on.** MML.5 (the threshold and its numerics), MML.11 (the concrete family), IB.4/MPOLY.5
 (the `λ₀₁` split), `Mix.lam`/`Mix.R` (`InnerDecomp.lean`).
 
-**Lean.** `YukawaDCF/MixtureRDFPoleData.lean`, axiom-clean, full build green: `rdfCollapseThreshold`,
+**Lean.** `YukawaOZMix/MixtureRDFPoleData.lean`, axiom-clean, full build green: `rdfCollapseThreshold`,
 `contactR01`, `lam01`, `lam01_le_threshold`, `lam01_lt_of_threshold_lt`, `threshold_lt_contact`,
 `threshold_pos`, `exists_mem_collapse_region`, `MixRDFInnerCollapseAnnulus`,
 `mixRDFInnerCollapseAnnulus_of_collapse` (the `(0,R)` form implies the annulus form; the converse
@@ -915,7 +915,7 @@ simple determinant zero at `s_k = 1` with `det′ = 1 ≠ 0`, and a constant `B�
 four hypotheses of `hhat1_double_pole_fin_one` (hence of `hhat1_double_pole`) simultaneously
 satisfied.
 
-**Lean.** `YukawaDCF/MixtureRDFPoleData.lean`, axiom-clean, full build green:
+**Lean.** `YukawaOZMix/MixtureRDFPoleData.lean`, axiom-clean, full build green:
 `hsResidueMatrix_fin_one`, `cmix_eq_one_fin_one`, `cmix_eq_one_fin_one_of_det`,
 `hhat1_fin_one_entry`, `hhat1_double_pole_fin_one`, + the non-vacuity `example`.
 Mathlib inputs: `Matrix.adjugate_fin_one` (`adj A = 1`), `Matrix.det_fin_one`, `Matrix.one_apply_eq`.
@@ -979,7 +979,7 @@ did for the *simple*-pole residue `B_k = −q01/det′` but not yet for the doub
 **Depends on.** `mixHSterm2` (MML.8), `mixHS_summable_of_growth` (MML.5 infra). Mathlib:
 `HasDerivAt.cexp`, `Complex.ofRealCLM.hasDerivAt`, `Complex.norm_exp`.
 
-**Lean.** New file `YukawaDCF/MixtureRDFAntideriv.lean` (ns `FMSA.MixtureRDF`), axiom-clean, full
+**Lean.** New file `YukawaOZMix/MixtureRDFAntideriv.lean` (ns `FMSA.MixtureRDF`), axiom-clean, full
 build green: `expLinTerm`, `mixHSterm2_eq_expLinTerm`, `expLinTerm_hasDerivAt`, `expLinTerm_deriv_eq`,
 `antiCoeff`, `expLinTerm_antideriv_hasDerivAt`, `mixHSAntideriv1`/`2` + their `hasDerivAt` chain,
 `expLinTerm_norm`, `expLinTerm_norm_le_of_re_nonneg`, `antiCoeff_snd_norm`, `antiCoeff_fst_norm_le`,
@@ -1068,10 +1068,10 @@ per-entry magnitude grind, not new structure.
 `Q0_det_c_tendsto_one`, `disk_facts` f3. Mathlib: `Real.rpow_sub`, `Real.rpow_two`, `div_le_div₀`,
 `pow_le_pow_left₀`, `Complex.norm_real` (⚠ → real `‖r‖`, then `Real.norm_eq_abs`).
 
-**Lean.** `YukawaDCF/MixtureRDFAntideriv.lean` (`mixHSAntideriv2Coeff_eq`,
+**Lean.** `YukawaOZMix/MixtureRDFAntideriv.lean` (`mixHSAntideriv2Coeff_eq`,
 `mixHSAntideriv2Coeff_norm_le`, `mixHSAntideriv2_summable_of_coeff_bounds`, `coeff_div_sq_norm_le`,
 `coeff_alpha_norm_le`, `mixHSAntideriv2_summable_of_component_bounds`);
-`YukawaDCF/SpectralAmplitude.lean` (`bMulti_norm_le`); `YukawaDCF/MixtureRDFPoleData.lean`
+`YukawaOZMix/SpectralAmplitude.lean` (`bMulti_norm_le`); `YukawaOZMix/MixtureRDFPoleData.lean`
 (`triple_transpose_entry_norm_le`, `tower_summable_of_matrix_bounds`) — all axiom-clean, full build green.
 
 **Lean pitfalls.** A binder `∀ n, … (n:ℝ) … sfam n …` makes Lean infer `n : ℝ` from the cast —
@@ -1124,7 +1124,7 @@ it does not supply them.
 `mixHSAntideriv2_hasDerivAt`). Mathlib: `integral_eq_sub_of_hasDerivAt`,
 `integral_mul_deriv_eq_deriv_mul`, `MeasureTheory.integral_tsum`.
 
-**Lean.** `YukawaDCF/MixtureRDFAntideriv.lean` (§ Rung 3): `expLinTerm_continuous`,
+**Lean.** `YukawaOZMix/MixtureRDFAntideriv.lean` (§ Rung 3): `expLinTerm_continuous`,
 `mixHSterm2_integral`, `mixHSAntideriv1_integral`, `mixHSterm2_weighted_ibp`,
 `mixHSterm2_integral_tsum` — all axiom-clean, full build green.
 
@@ -1175,7 +1175,7 @@ needs the matrix OZ★ real-space identity — the one input Rung 2 does not (an
 
 **Depends on.** MML.14 tower (`mixHSAntideriv1`/`2`, `mixHS_summable_of_growth`); Rung 1 summabilities.
 
-**Lean.** `YukawaDCF/MixtureRDFAntideriv.lean` (§ Rung 2): `mixHSAntideriv1Coeff`,
+**Lean.** `YukawaOZMix/MixtureRDFAntideriv.lean` (§ Rung 2): `mixHSAntideriv1Coeff`,
 `mixHSAntideriv1_eq_mixHSterm`, `mixHSAntideriv1Coeff_eq`, `mixHSAntideriv1Coeff_norm_le`,
 `mixHSAntideriv1_summable_of_coeff_bounds`, `MixCoreSeriesClosure`,
 `mixCoreSeriesClosure_summand_summable` — all axiom-clean, full build green.
@@ -1444,7 +1444,7 @@ form (`cHS_FMT`/`CHSKink`; Python `get_HS_FMT` in every route).  A real-space PY
 transform of `Cmix0` = the **Lebowitz/Wertheim** result, which `MixtureRealSpace.lean` explicitly **defers as
 MRS.8** ("`Ĉ₀` equals the physical HS DCF transform").  So gap #1's two halves collapse: defining `c_HS_ij`
 real-space **is** the Wertheim derivation, not a transcription — the project deliberately sidesteps it (FMT
-real-space + `Cmix0` momentum).  **✅ ADDRESSED 2026-07-31 (`YukawaDCF/MixtureHSDCF.lean`, axiom-clean):
+real-space + `Cmix0` momentum).  **✅ ADDRESSED 2026-07-31 (`YukawaOZMix/MixtureHSDCF.lean`, axiom-clean):
 zeroth-order HS DCF built REUSING the existing `q0MixEntry`/`pMixEntry`/`⋆` machinery.**  Key structural
 fact: `Cmix0 = I − Q̂₀(k)Q̂₀ᵀ(−k)` is **forward × reflected**, so `qpConv = qFwd ⋆ pMixEntry` (`qFwd` = the
 forward `2π√ρ·q0MixEntry`), support `[−Rᵢⱼ,Rᵢⱼ]` with `σₙ` cancelling (`λᵢₙ−Rⱼₙ=−Rᵢⱼ`, exactly like
@@ -2363,7 +2363,7 @@ whenever someone wants it.
 ### ⚠ Layering violation in `MixtureRDFUniqueness.lean` — found and repaired 2026-07-31
 
 Checking that layering claim turned up a real back-edge, present since `c8efdc4`:
-**`HSMixture/MixtureRDFUniqueness.lean` imported `YukawaDCF/MixtureRDFStructureFactor.lean`**, so
+**`HSMixture/MixtureRDFUniqueness.lean` imported `YukawaOZMix/MixtureRDFStructureFactor.lean`**, so
 `CONVENTIONS.md`'s first self-check grep had been non-empty. All three greps print nothing again.
 
 **The dependency was one declaration out of 26** — `det_eq_of_wienerHopf_factorization`, i.e.
@@ -2812,8 +2812,8 @@ rule (c) and the `BanachPoleFamily` / `radialShell_bounded_injective` precedents
 | `MatrixFin1.lean` | `HardSphere/MatrixN1` | `1×1` matrix mul/inv = scalar mul/div; unconditional (`D = 0` ⇒ both sides `0`) |
 | `ExpTaylorLimits.lean` | `HSMixture/MixtureHSCounting` | `remainder_div_tendsto_zero`, `expTaylor2/3`, `phi1/phi2_tendsto` — removable singularities at `s = 0` for arbitrary `σ ≠ 0` |
 | `BoundaryGrowth.lean` | same | `DetBoundaryGrowth`, `detBoundaryGrowth_of_linear`, `infinite_zeros_of_growth`, `finset_sum_le_finsum_of_nonneg` — abstract `f : ℂ → ℂ` |
-| `Taylor4Calculus.lean` | `YukawaDCF/MixtureLaurent` | the order-4 Taylor germ algebra: `taylor4_mul/sub/neg/recip`, `poly4_eq_zero_of_littleO`, `taylor4_coeff_unique` — arbitrary `f g : ℝ → ℝ` |
-| `PoleSeriesSummable.lean` | `YukawaDCF/MixtureMLSeries` | `mixHSterm`, `mixHS_summable`, `mixHS_summable_of_growth` — arbitrary `Bcoef sfam : ℕ → ℂ` |
+| `Taylor4Calculus.lean` | `HSMixture/MixtureLaurent` | the order-4 Taylor germ algebra: `taylor4_mul/sub/neg/recip`, `poly4_eq_zero_of_littleO`, `taylor4_coeff_unique` — arbitrary `f g : ℝ → ℝ` |
+| `PoleSeriesSummable.lean` | `YukawaOZMix/MixtureMLSeries` | `mixHSterm`, `mixHS_summable`, `mixHS_summable_of_growth` — arbitrary `Bcoef sfam : ℕ → ℂ` |
 
 **A 4th split was needed and was not in the plan.** `MixtureMLBound` was blocked by
 `MixtureMLSeries`, which I had classified as "genuinely Yukawa" from keyword counts. That was
@@ -2996,7 +2996,7 @@ the original has the two genuinely different reflected terms — while the notes
 discusses `Ĥ₁(−k)`**, betraying its descent from the original. The *conclusion* (Eq. 62/68) is
 unaffected, which is why nothing downstream broke. **Read the original, not the notes, for this step.**
 
-**Lean — DONE (2026-08-03, axiom-clean),** `LeanCode/YukawaDCF/ReflectedTermSupports.lean`
+**Lean — DONE (2026-08-03, axiom-clean),** `LeanCode/YukawaOZMix/ReflectedTermSupports.lean`
 (namespace `FMSA.ReflectedSupports`), wired into `LeanCode.lean`:
 
 * `support_comp_neg`, `reflected_support_Iic` — reflection reverses the support: `h₁` on `[R,∞)`
@@ -3081,7 +3081,7 @@ My `Cmix0 / Q̂₀ / swap_offdiag / det / q0_entry_c` objects match the paper's 
 
 The paper's chain (eq numbers are Tang & Lu's):
 
-* **(4) HS contact baseline (eq 25)** — `LeanCode/YukawaDCF/MixtureRDFContact.lean`,
+* **(4) HS contact baseline (eq 25)** — `LeanCode/YukawaOZMix/MixtureRDFContact.lean`,
   `FMSA.MatrixQ0.gHS_contact` + `gHS_contact_equalDiam` (reduces to `(1+η/2)/(1−η)²`). Axiom-clean.
 * **(1) closed-form inverse (Appendix, eq before 15)** — `LeanCode/HSMixture/MixtureQ0Inverse.lean`,
   `Q0_mat_phys_inv_closed_form` / `Q0_mat_phys_inv_eq`: `[Q̂₀]⁻¹ = I + U(I−VU)⁻¹V` via
@@ -3090,11 +3090,11 @@ The paper's chain (eq numbers are Tang & Lu's):
   i.e. the `Aᵢⱼ(t) = 2π(ρᵢρⱼ)^{1/2}Wᵢⱼ(t)/(Δ det(t))` amplitudes of eq (20). Axiom-clean.
 * **eq (15) assembly** — same file, `H1_eq_of_transformed` / `H1_eq_phys`:
   `Ĥ₁ = [Q̂₀ᵀ]⁻¹B₁[Q̂₀]⁻¹` from the transformed first-order OZ `Q̂₀ᵀĤ₁Q̂₀ = B₁`. Axiom-clean.
-* **(2)=(18) one-Yukawa `U₁` transform** — `LeanCode/YukawaDCF/MixtureYukawaTransform.lean`,
+* **(2)=(18) one-Yukawa `U₁` transform** — `LeanCode/YukawaOZ/MixtureYukawaTransform.lean`,
   `laplace_yukawa` + `yukawa_U1_entry`: `∫_R^∞ (βRε e^{−z(r−R)})e^{−sr}dr = βRε e^{−sR}/(s+z)`, i.e.
   `U₁ᵢⱼ = Kᵢⱼ e^{−ikRᵢⱼ}/(ik+zᵢⱼ)`, `Kᵢⱼ = 2π(ρᵢρⱼ)^{1/2}Rβε`. The `1/r` of the MSA tail cancels the
   radial `r` weight ⇒ a pure exponential integral. Axiom-clean.
-* **(3) residue extraction (eq 20→21)** — `LeanCode/YukawaDCF/MixtureYukawaResidue.lean` (NEW,
+* **(3) residue extraction (eq 20→21)** — `LeanCode/YukawaOZ/MixtureYukawaResidue.lean` (NEW,
   2026-08-04). Eq (19) turns `B₁(k)` into `−E(k) Res_{y(s)}(E(−y)[Q̂₀(−y)]⁻¹U₁(y)[Q̂₀ᵀ(−y)]⁻¹E(−y)/(y−k))E(k)`,
   the residue taken **at the Yukawa poles of `U₁`**. Substituting eq (18) + `[Q̂₀(−y)]⁻¹ = I + A(−iy)`
   makes every entry of the eq (20) integrand a finite sum of terms of the *one* shape
@@ -3140,7 +3140,7 @@ The paper's chain (eq numbers are Tang & Lu's):
   the contour upward encloses exactly the simple poles `y = i zᵢⱼ` of `U₁(y)`.  This is fed to the engine
   as `hc`/`hd` (holomorphy off the Yukawa balls).
 
-* **(3a, leading term hc/hd/harc) done** — `LeanCode/YukawaDCF/MixtureYukawaContourTerm.lean` (NEW,
+* **(3a, leading term hc/hd/harc) done** — `LeanCode/YukawaOZ/MixtureYukawaContourTerm.lean` (NEW,
   2026-08-04). Discharges the engine's *integrand-specific* inputs for the **leading eq (20) term** of a
   fixed RDF entry `{Ĥ₁(k)}ᵢⱼ` (the `[Q̂₀]⁻¹ ≈ I` contribution) — a complete, end-to-end contour sum with
   NO remaining hypotheses beyond state-point positivity.  **KEY: the leading term is exponential-free.**
@@ -3211,7 +3211,7 @@ The paper's chain (eq numbers are Tang & Lu's):
   and the entire representative agree, so these det statements transfer to the engine's representative matrix.
 
 * **(3a-rest-iii, `A(−iy)` arc bound — the reusable mechanism) done** —
-  `LeanCode/YukawaDCF/YukawaArcBound.lean` (NEW, 2026-08-05, namespace `FMSA.MixtureRDF`).
+  `LeanCode/YukawaOZ/YukawaArcBound.lean` (NEW, 2026-08-05, namespace `FMSA.MixtureRDF`).
   **`arc_integral_tendsto_zero`**: for ANY numerator `g` bounded by `M ≥ 0` on the upper arc, the arc
   integral of `g(y)/((y−k)(iy+z))` → 0 (integrand `O(M/R²)`, arc length `πR` ⇒ `O(M/R) → 0`; same
   `‖(iRe^{iθ})•·‖ = R·‖·‖ ≤ 4M/R` squeeze as the leading-term `harc`, now with a variable bounded `g`).
@@ -3257,7 +3257,7 @@ The paper's chain (eq numbers are Tang & Lu's):
   added to the closed-contour Yukawa residue sum reproduces the eq (14) principal value.
 
 * **(iii-core, cancellation-tamed numerator — the two analytic ingredients) done** —
-  `LeanCode/YukawaDCF/ArcAmplitudeBound.lean` (NEW, 2026-08-05, namespace `FMSA.MixtureRDF`).
+  `LeanCode/HSMixture/ArcAmplitudeBound.lean` (NEW, 2026-08-05, namespace `FMSA.MixtureRDF`).
   **CORRECTED the (iii) picture**: the eq (20) `A(−iy)` is NOT the raw inverse entry (which carries the
   growing `e^{iyλ}`, `λ<0` unlike pairs) — it is the **amplitude** `2π√(ρρ)W(−iy)/(Δ det(−iy))`, the
   exponential having been removed by the `E(−y)` wrapping. Two ingredients: **(A) the exponent
@@ -3277,7 +3277,7 @@ The paper's chain (eq numbers are Tang & Lu's):
   formulas are **not yet in the project** (whose Baxter machinery is Woodbury-based, `Q0_mat_phys_inv_eq`,
   rather than the `2π√W/det` Appendix form); introducing them is the one remaining piece.
 
-* **(iii-Appendix, explicit `W`/`det` formulas) done** — `LeanCode/YukawaDCF/AppendixWDet.lean` (NEW,
+* **(iii-Appendix, explicit `W`/`det` formulas) done** — `LeanCode/HSMixture/AppendixWDet.lean` (NEW,
   2026-08-05, namespace `FMSA.MixtureRDF`). Introduces Tang & Lu p. 95's explicit Appendix formulas (NOT
   previously in the project — its Baxter machinery is Woodbury-based, not the `2π√W/det` form). Defs
   (`s = ik = −iy`): **`phi1`** `=(1−sR−e^{−sR})/s²`, **`phi2`** `=(1−sR+(sR)²/2−e^{−sR})/s³`, **`xiMom`**
@@ -3311,7 +3311,7 @@ The paper's chain (eq numbers are Tang & Lu's):
   `unfold Wtl` rather than a hand-written `hsum`).  **So `‖W‖ ≤ Wb` and `‖det − 1‖ ≤ d` are both in
   place** — feeding `norm_ge_of_norm_sub_one_le` + `amplitude_norm_le` bounds the amplitude `A(−iy)`.
 
-* **(bridge, `N=1` Appendix bridge) done** — `LeanCode/YukawaDCF/AppendixBridgeN1.lean` (NEW,
+* **(bridge, `N=1` Appendix bridge) done** — `LeanCode/YukawaOZMix/AppendixBridgeN1.lean` (NEW,
   2026-08-05, namespace `FMSA.MixtureRDF`). The final connective piece — Tang & Lu's inverse formula
   `{[Q̂₀]⁻¹}ᵢⱼ = δᵢⱼ + 2π√(ρᵢρⱼ)Wᵢⱼ/(Δ det)·e^{−ikλᵢⱼ}` — proved at **`N=1`** (scalar: `det=q0`, `λ₀₀=0`),
   tying `Wtl`/`detTL` to the project's ACTUAL Baxter entry `q0_entry_c` (with the real PY coefficients).

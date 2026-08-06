@@ -3,22 +3,37 @@
 ## Directory layering — a strict one-way import order
 
 Source directories under `LeanCode/` are ordered by how *specific* their physics is, and imports
-may only ever point **leftward**:
+may only ever point **leftward** (restructured 2026-08-06):
 
 ```
-Analysis/  ←  HardSphere/  ←  HSMixture/  ←  YukawaDCF/
- general      single-        N-component     Yukawa-tail
- math         component HS    HS mixture     coupled
+Analysis/   ─┐  general math (Group MA)          two BASES — import nothing project-local
+FMSAPoly/   ─┘  FMSA polynomial inner core
+HardSphere/     ← Analysis                       single-component HS (the PY-HS solution)
+HSMixture/      ← Analysis, HardSphere           N-component PURE hard-sphere mixture
+YukawaOZ/       ← Analysis, HardSphere, HSMixture, FMSAPoly    single-component Yukawa OZ (c AND h)
+YukawaOZMix/    ← … + YukawaOZ                   N-component Yukawa mixture OZ
+FreeEnergy/     ← FMSAPoly, YukawaOZ*            application sink (free-energy integrals)
+Closures/       ← Analysis, HardSphere, YukawaOZ*    non-FMSA closures (PY/PYE/HNCB/MSA), sink
 ```
 
-*(`FMSAPoly/`, `FreeEnergy/` and the other application directories sit to the right of all four.)*
+* **`Analysis/` and `FMSAPoly/` are both bases** — each imports nothing from another `LeanCode/`
+  directory. (`FMSAPoly/` is FMSA-specific but foundational: it is imported *by* `YukawaOZ*/` and
+  `FreeEnergy/`, never the reverse — it is **not** "to the right of everything".)
+* **`YukawaDCF/` was split** into `YukawaOZ/` (single-component + generic-scalar base) and
+  `YukawaOZMix/` (N-component mixture), and renamed off "DCF" (the folder carries RDF/`Ĥ₁`/`g`/`h`
+  and closures too). The single→mixture cut is one-way: `YukawaOZMix/` builds on `YukawaOZ/`.
+* **Policy: pure hard-sphere mixture content lives in `HSMixture/`** — a file with no Yukawa tail
+  (species diameters/densities `Fin N → ℝ`, the Baxter `Q̂₀` matrix, its determinant/shell moments)
+  belongs there even if only Yukawa code consumes it. (This is why `AppendixWDet`/`ArcAmplitudeBound`
+  moved down from the Yukawa layer.)
 
-**Enforce mechanically** — each of these must print nothing:
+**Enforce mechanically** — each of these must print nothing (`YukawaOZ` matches `YukawaOZMix` too):
 
 ```
-grep -rn "^import LeanCode.YukawaDCF" LeanCode/HSMixture/ LeanCode/HardSphere/ LeanCode/Analysis/
-grep -rn "^import LeanCode.HSMixture"  LeanCode/HardSphere/ LeanCode/Analysis/
-grep -rn "^import LeanCode.HardSphere" LeanCode/Analysis/
+grep -rn "^import LeanCode.\(HardSphere\|HSMixture\|YukawaOZ\|FreeEnergy\|Closures\)" LeanCode/Analysis/ LeanCode/FMSAPoly/
+grep -rn "^import LeanCode.\(HSMixture\|YukawaOZ\|FreeEnergy\|Closures\)" LeanCode/HardSphere/
+grep -rn "^import LeanCode.\(YukawaOZ\|FreeEnergy\|Closures\)" LeanCode/HSMixture/
+grep -rn "^import LeanCode.YukawaOZMix" LeanCode/YukawaOZ/
 ```
 
 **Why it matters.** `Analysis/` is the home of Group MA — the general-purpose, project-independent
@@ -26,9 +41,12 @@ Mathlib vocabulary. Its value is that it is *citable without buying into the phy
 back-edge would destroy that. The same reasoning cascades: `HSMixture/` results must hold for a hard
 sphere mixture with no Yukawa tail attached.
 
-**⚠ Run the three greps — the invariant HAS been broken (caught and repaired 2026-07-31).**
-`HSMixture/MixtureRDFUniqueness.lean` imported `YukawaDCF/MixtureRDFStructureFactor.lean`, so the
-first grep was non-empty from commit `c8efdc4` until the repair. All three now print nothing again.
+**⚠ Run the greps — the invariant has been broken twice and re-repaired.** (1) 2026-07-31:
+`HSMixture/MixtureRDFUniqueness.lean` → `YukawaOZMix/MixtureRDFStructureFactor.lean` (commit `c8efdc4`).
+(2) 2026-08-06: two `HSMixture/ → YukawaDCF/` back-edges (`Q0ComplexDetMatch → AppendixWDet`,
+`MixtureRowSum → WHSupports`, commit `1dfae2a`), fixed in the restructure by moving `AppendixWDet`/
+`ArcAmplitudeBound` **down** to `HSMixture/` (pure-HS content) and `MixtureRowSum` **up** to the
+Yukawa layer (`Mix`-based). All greps now print nothing again.
 
 The instructive part is **how small the offending dependency was**: of the 26 declarations in that
 `YukawaDCF/` file, exactly **one** was used, and it was
@@ -57,7 +75,7 @@ tail, which is false. Verify afterwards that `#print axioms` on the affected cap
   Conversely `SingleCompReduction` is genuinely scalar despite having lived in `YukawaDCF/`.
 * Unlike radii `Ri ≠ Rj` is a **mixture-only** concept; a file assuming it is not scalar.
 * The `Mix N M` structure is **not** pure hard sphere — its `zp`/`cb` fields carry Yukawa pole
-  residues, so every `Mix`-based file belongs in `YukawaDCF/`. The pure-HS parameter pack is
+  residues, so every `Mix`-based file belongs in the Yukawa **mixture** layer `YukawaOZMix/`. The pure-HS parameter pack is
   `MixParams` (`sig0`/`sig1`/`rr`/`Qp`/`Qpp` only).
 
 A file that straddles the boundary should be **split**, not filed by majority vote: the general half

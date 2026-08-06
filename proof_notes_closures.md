@@ -60,9 +60,9 @@ between PYE.3/PYE.4 and the physical claim "the inner-core DCF is the first-orde
 | PYE.6 | the zeroth-order factor **is** the PY hard-sphere Baxter factor | ✓ DONE at `N = 1` (2026-08-03, from BAXTER.3 + MRS.0b); general `N` = **MRS.8**, open |
 | PYE.7 | density of finite Yukawa-tail fits ⇒ the residual → 0 on the outer window | ✓ DONE (2026-08-03, axiom-clean) — via Weierstrass after `t = e^{−r}`, **not** Stone-Weierstrass; ⚠ was called "PYE.5" in the 08-02 note |
 
-**Lean home.** All of Group PYE lives in **`LeanCode/YukawaDCF/FirstOrderClosures.lean`**
+**Lean home.** All of Group PYE lives in **`LeanCode/Closures/ClosureExpansions.lean`**
 (namespace `FMSA.FirstOrderClosure`), wired into `LeanCode.lean` after `ContactMatching`. Directory
-choice: the DP map is Yukawa-tail data, so `YukawaDCF/` (the closure algebra of PYE.1 alone would be
+choice: the DP map is Yukawa-tail data, so `Closures/DPClosureMap` (the closure algebra of PYE.1 alone would be
 `Analysis/`-general, but it is not worth splitting a dozen lines). Reuses Y1.5's `bMulti`
 (`SpectralAmplitude.lean`) and MRS.2/MRS.3's `star_of_first_order_oz` / `star_entry_eq`
 (`MixtureRealSpace.lean`). **No new axiom.**
@@ -126,7 +126,7 @@ introduced directly as `g_HS`). (MSA analogue: outer `c₁ = −βu`, i.e. `y₀
 
 **Depends on.** `g_HS` as an available object (HS reference; Group OZ / White-Bear).
 
-**DONE (2026-07-31, axiom-clean), `LeanCode/YukawaDCF/FirstOrderClosures.lean`.** The whole task is
+**DONE (2026-07-31, axiom-clean), `LeanCode/Closures/ClosureExpansions.lean`.** The whole task is
 one product rule at `s = 0`; the physics is in *which* factor survives.
 
 - `mayerF beta u s = exp(−β s u) − 1`, with `mayerF_zero` (`f(0) = 0`, i.e. `c₀(r>R) = 0`) and
@@ -166,7 +166,7 @@ linearity already present in Y1 rather than re-deriving.
 
 **Depends on.** Group Y1 (`bMulti` linearity, `Ĉ₁` assembly), Group MRS (the (★) `Ĉ₁` form).
 
-**DONE (2026-07-31, axiom-clean), `LeanCode/YukawaDCF/FirstOrderClosures.lean`.** The map is landed
+**DONE (2026-07-31, axiom-clean), `LeanCode/Closures/ClosureExpansions.lean`.** The map is landed
 stage by stage, each stage bundled as a genuine `→ₗ[ℂ]` so that PYE.3 is `map_sub`:
 
 | stage | object | Lean |
@@ -207,7 +207,7 @@ bound, and delivers the headline equivalence without PYE.4's function-space lift
 
 **Depends on.** PYE.2, Group MRS.5; new: `wh_solution_operator_bounded`.
 
-**DONE (2026-07-31, axiom-clean), `LeanCode/YukawaDCF/FirstOrderClosures.lean`.** Both halves:
+**DONE (2026-07-31, axiom-clean), `LeanCode/Closures/ClosureExpansions.lean`.** Both halves:
 
 - **the identity** — `dp_error_eq_dp_of_residual`: `DP[fit] − DP[exact] = DP[fit − exact]`, one
   `map_sub` on `dpTailsLinear` (PYE.2). This is the formal "the DP construction is exact; the sole
@@ -254,7 +254,7 @@ not a finite closed form).
 
 **Depends on.** PYE.1, PYE.2, PYE.3 (boundedness for the completion).
 
-**PARTIAL (2026-07-31, axiom-clean), `LeanCode/YukawaDCF/FirstOrderClosures.lean`.** The two halves
+**PARTIAL (2026-07-31, axiom-clean), `LeanCode/Closures/ClosureExpansions.lean`.** The two halves
 that do *not* need the lift are proved, and the lift is isolated as a hypothesis:
 
 - **exact-fit half** — `dp_eq_py_first_order_of_exact_fit`: a fit that is exact *in WH data*
@@ -289,7 +289,7 @@ remains and is the real content.
 
 ### Task PYE.4 (continued) — the function-space lift, built down to one classical input
 
-**Work of 2026-08-03**, `LeanCode/YukawaDCF/FirstOrderClosures.lean`, all axiom-clean.
+**Work of 2026-08-03**, `LeanCode/Closures/ClosureExpansions.lean`, all axiom-clean.
 
 **⚠ Finding 1 — the amplitude route is a DEAD END, and this is why the lift needs `L¹`.**  PYE.3
 bounds the error by `whOperatorBound·‖K^fit − K^exact‖`, an *amplitude* distance.  That cannot be
@@ -353,7 +353,7 @@ named classical theorem rather than an opaque convergence assumption.
 "the inner-core DCF of the construction is the first-order PY one" is about `c₁(r)` on `0 < r < R`.
 The bridge converts one into the other.
 
-**DONE (2026-08-03, axiom-clean), `LeanCode/YukawaDCF/FirstOrderClosures.lean`.**
+**DONE (2026-08-03, axiom-clean), `LeanCode/Closures/ClosureExpansions.lean`.**
 
 - `radial_fourier_injective` — two real radial functions with the same radial (sine) transform agree
   at every `r > 0` where both satisfy the inversion hypotheses. Built on the project's **own**
@@ -438,7 +438,7 @@ there, to any accuracy `ε`, by a finite Yukawa-tail sum `Σ_{t<n} A_t e^{−z_t
 positive, strictly increasing** rates. So PYE.3's residual — the quantity its bound multiplies — is
 not bounded away from zero.
 
-**DONE (2026-08-03, axiom-clean), `LeanCode/YukawaDCF/FirstOrderClosures.lean`.**
+**DONE (2026-08-03, axiom-clean), `LeanCode/Closures/ClosureExpansions.lean`.**
 
 - `exists_yukawa_tail_fit` — the density theorem;
 - `exists_yukawa_tail_fit_pyOuter` — the same for the target the `pullback_passes = 0` construction
@@ -495,7 +495,7 @@ RDF and is out of finite-closed-form scope (HNCB.4, record-only).
 
 ## Inventory — what Group HNCB actually has (audited 2026-08-02)
 
-**Everything below is in `LeanCode/YukawaDCF/FirstOrderClosures.lean` (ns `FMSA.FirstOrderClosure`).**
+**Everything below is in `LeanCode/Closures/ClosureExpansions.lean` (ns `FMSA.FirstOrderClosure`).**
 Results 1–4 landed as by-products of PYE.1 — proving PYE's γ₁-collapse *required* the HNCB expansion,
 so the HNCB half arrived first; results 5–9 were added by this audit (2026-08-02/03). **No `sorry` in
 the file, full build green, `#print axioms` = `[propext, Classical.choice, Quot.sound]` on every

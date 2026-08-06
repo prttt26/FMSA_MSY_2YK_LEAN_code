@@ -4,6 +4,7 @@ Copyright (c) 2026. All rights reserved.
 import LeanCode.HSMixture.MixtureDetHcont
 import LeanCode.HSMixture.MatrixDetPoleFree
 import LeanCode.HSMixture.MixtureNoSpinodal
+import LeanCode.HSMixture.ArcAmplitudeBound
 
 /-!
 # General-`N` matrix pole-freeness (`OZFIX.17`, generalising the `N=2` result)
@@ -188,16 +189,6 @@ theorem Q0_mat_c_phys_ofReal_N {N : ℕ} (z : ℝ) (sigma rho : Fin N → ℝ) :
     FMSA.Q0Complex.q0_entry_c, FMSA.MatrixQ0.q0_entry]
   split_ifs <;> push_cast [Complex.ofReal_exp] <;> ring
 
-/-- General-`N` `det ≥ 1` (compressibility positivity), via the rank-2 reduction + `moment_key`. -/
-theorem Q0_mat_phys_det_ge_one_N {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
-    (hz : 0 < z) (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i) (hsigma : ∀ i, 0 < sigma i) :
-    1 ≤ (Q0_mat_phys z sigma rho).det := by
-  rw [Q0_mat_phys_det_eq_two_by_two hz.ne' hvac.ne' hrho, Matrix.det_fin_two]
-  simp only [Matrix.sub_apply, Matrix.one_apply, Matrix.mul_apply]
-  have hkey := Q0_moment_det_ge_one hz hvac hrho hsigma
-  simp only [Matrix.mul_apply] at hkey
-  norm_num at hkey ⊢; linarith [hkey]
-
 /-- `det (Mdens t)` is continuous in `s` (the `ψ`-entries are entire). -/
 theorem detMdens_continuous {N : ℕ} {sigma rho : Fin N → ℝ} (hsig : ∀ i, 0 < sigma i) (t : ℝ) :
     Continuous (fun s => (Mdens sigma rho t s).det) := by
@@ -238,7 +229,7 @@ theorem detMdens_origin_ne_zero {N : ℕ} {sigma rho : Fin N → ℝ} (hsig : �
   have h1 : (1:ℝ) ≤ (g 0).re := by
     refine ge_of_tendsto hRe ?_
     filter_upwards [self_mem_nhdsWithin] with x hx
-    exact Q0_mat_phys_det_ge_one_N (Set.mem_Ioi.mp hx) hvac
+    exact FMSA.MatrixQ0.Q0_mat_phys_det_ge_one_N (Set.mem_Ioi.mp hx) hvac
       (fun i => by rw [Pi.smul_apply, smul_eq_mul]; exact (mul_pos ht0 (hrho i)).le) hsig
   intro hg0
   have hg0' : g 0 = 0 := hg0
@@ -350,46 +341,22 @@ theorem norm_exp_neg_le {σ : ℝ} (hσ : 0 ≤ σ) {s : ℂ} (hre : 0 ≤ s.re)
 
 theorem norm_phi1_le {σ : ℝ} (hσ : 0 ≤ σ) {s : ℂ} (hre : 0 ≤ s.re) (hs1 : 1 ≤ ‖s‖) :
     ‖(1 - s * (σ:ℂ) - Complex.exp (-(s * (σ:ℂ)))) / s ^ 2‖ ≤ (2 + σ) / ‖s‖ := by
-  have hs0 : (0:ℝ) < ‖s‖ := lt_of_lt_of_le one_pos hs1
-  have hnum : ‖1 - s * (σ:ℂ) - Complex.exp (-(s * (σ:ℂ)))‖ ≤ 2 + ‖s‖ * σ := by
-    calc ‖1 - s * (σ:ℂ) - Complex.exp (-(s * (σ:ℂ)))‖
-        ≤ ‖1 - s * (σ:ℂ)‖ + ‖Complex.exp (-(s * (σ:ℂ)))‖ := norm_sub_le _ _
-      _ ≤ (‖(1:ℂ)‖ + ‖s * (σ:ℂ)‖) + 1 :=
-          add_le_add (norm_sub_le _ _) (norm_exp_neg_le hσ hre)
-      _ = 2 + ‖s‖ * σ := by rw [norm_one, norm_mul, Complex.norm_real, Real.norm_of_nonneg hσ]; ring
-  rw [norm_div, norm_pow, show (2 + σ) / ‖s‖ = ((2 + σ) * ‖s‖) / ‖s‖ ^ 2 from by
-    field_simp, div_le_div_iff_of_pos_right (by positivity)]
-  calc ‖1 - s * (σ:ℂ) - Complex.exp (-(s * (σ:ℂ)))‖
-      ≤ 2 + ‖s‖ * σ := hnum
-    _ ≤ (2 + σ) * ‖s‖ := by nlinarith [hs1, hσ, hs0]
+  -- specialise the general complex-σ arc bound `normP2_arc_decay` (`ArcAmplitudeBound`) to real σ
+  have hre' : 0 ≤ (s * (σ : ℂ)).re := by
+    rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
+    exact mul_nonneg hre hσ
+  have h := FMSA.MixtureRDF.normP2_arc_decay (σ := (σ : ℂ)) hs1 hre'
+  rwa [Complex.norm_real, Real.norm_of_nonneg hσ] at h
 
 theorem norm_phi2_le {σ : ℝ} (hσ : 0 ≤ σ) {s : ℂ} (hre : 0 ≤ s.re) (hs1 : 1 ≤ ‖s‖) :
     ‖(1 - s * (σ:ℂ) + (s * (σ:ℂ)) ^ 2 / 2 - Complex.exp (-(s * (σ:ℂ)))) / s ^ 3‖
       ≤ (2 + σ + σ ^ 2 / 2) / ‖s‖ := by
-  have hs0 : (0:ℝ) < ‖s‖ := lt_of_lt_of_le one_pos hs1
-  have hsσ : ‖s * (σ:ℂ)‖ = ‖s‖ * σ := by
-    rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg hσ]
-  have hnum : ‖1 - s * (σ:ℂ) + (s * (σ:ℂ)) ^ 2 / 2 - Complex.exp (-(s * (σ:ℂ)))‖
-      ≤ 2 + ‖s‖ * σ + ‖s‖ ^ 2 * σ ^ 2 / 2 := by
-    calc ‖1 - s * (σ:ℂ) + (s * (σ:ℂ)) ^ 2 / 2 - Complex.exp (-(s * (σ:ℂ)))‖
-        ≤ ‖1 - s * (σ:ℂ) + (s * (σ:ℂ)) ^ 2 / 2‖ + ‖Complex.exp (-(s * (σ:ℂ)))‖ := norm_sub_le _ _
-      _ ≤ (‖1 - s * (σ:ℂ)‖ + ‖(s * (σ:ℂ)) ^ 2 / 2‖) + 1 :=
-          add_le_add (norm_add_le _ _) (norm_exp_neg_le hσ hre)
-      _ ≤ ((‖(1:ℂ)‖ + ‖s * (σ:ℂ)‖) + ‖(s * (σ:ℂ)) ^ 2 / 2‖) + 1 :=
-          by gcongr; exact norm_sub_le _ _
-      _ = 2 + ‖s‖ * σ + ‖s‖ ^ 2 * σ ^ 2 / 2 := by
-          have h2 : ‖(s * (σ:ℂ)) ^ 2 / 2‖ = ‖s‖ ^ 2 * σ ^ 2 / 2 := by
-            rw [norm_div, norm_pow, hsσ, show ‖(2:ℂ)‖ = 2 from by norm_num]; ring
-          rw [norm_one, hsσ, h2]; ring
-  rw [norm_div, norm_pow, show (2 + σ + σ ^ 2 / 2) / ‖s‖
-      = ((2 + σ + σ ^ 2 / 2) * ‖s‖ ^ 2) / ‖s‖ ^ 3 from by field_simp,
-    div_le_div_iff_of_pos_right (by positivity)]
-  calc ‖1 - s * (σ:ℂ) + (s * (σ:ℂ)) ^ 2 / 2 - Complex.exp (-(s * (σ:ℂ)))‖
-      ≤ 2 + ‖s‖ * σ + ‖s‖ ^ 2 * σ ^ 2 / 2 := hnum
-    _ ≤ (2 + σ + σ ^ 2 / 2) * ‖s‖ ^ 2 := by
-        nlinarith [hs1, hσ, hs0, sq_nonneg σ,
-          mul_nonneg (mul_nonneg hσ hs0.le) (by linarith [hs1] : (0:ℝ) ≤ ‖s‖ - 1),
-          mul_nonneg (mul_nonneg (mul_nonneg hσ hσ) hs0.le) hs0.le]
+  -- specialise the general complex-σ arc bound `normP3_arc_decay` (`ArcAmplitudeBound`) to real σ
+  have hre' : 0 ≤ (s * (σ : ℂ)).re := by
+    rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
+    exact mul_nonneg hre hσ
+  have h := FMSA.MixtureRDF.normP3_arc_decay (σ := (σ : ℂ)) hs1 hre'
+  rwa [Complex.norm_real, Real.norm_of_nonneg hσ] at h
 
 theorem linfty_opNorm_le_row {N : ℕ} (A : Matrix (Fin N) (Fin N) ℂ) {c : ℝ} (hc : 0 ≤ c)
     (h : ∀ i, ∑ j, ‖A i j‖ ≤ c) : ‖A‖ ≤ c := by

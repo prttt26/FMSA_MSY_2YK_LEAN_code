@@ -6,12 +6,12 @@ Authors: FMSA project
 
 -- Naming and notation conventions: see CONVENTIONS.md
 
-import LeanCode.YukawaDCF.ArcAmplitudeBound
+import LeanCode.HSMixture.ArcAmplitudeBound
 
 /-!
 # Tang & Lu explicit Appendix `W`/`det` formulas (the `A(−iy)` amplitude)
 
-The (iii) assembly logic (`YukawaDCF/ArcAmplitudeBound`) bounds the `A(−iy)` amplitude
+The (iii) assembly logic (`HSMixture/ArcAmplitudeBound`) bounds the `A(−iy)` amplitude
 `c·W/(Δ·det)` once concrete `‖W(−iy)‖ ≤ Wb` and `‖det(−iy) − 1‖ ≤ d` are supplied.  Those come from
 Tang & Lu's **explicit Appendix formulas** — introduced here (they were not previously in the
 project, whose Baxter machinery is Woodbury-based).  With `s = ik = −iy`:

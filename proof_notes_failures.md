@@ -503,7 +503,7 @@ M.10 (done), M.3/M.4. Done via a `Tendsto` layer over the M.4 rank-2 apparatus.
 
 **Status:** ✓ DONE (2026-07-15), fully axiom-clean. Two files:
 
-*Mechanism* (`LeanCode/YukawaDCF/OffDiagDecay.lean`): `g_mat_offdiag_decay'` (Tendsto form:
+*Mechanism* (`LeanCode/YukawaOZMix/OffDiagDecay.lean`): `g_mat_offdiag_decay'` (Tendsto form:
 `num→0` + `den→L≠0` ⟹ `num/den→0`, via `Tendsto.div`+`zero_div`) and `g_mat_offdiag_decay`
 (the exp-bound form, now a corollary via `squeeze_zero_norm`).
 

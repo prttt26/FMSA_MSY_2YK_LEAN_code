@@ -7,7 +7,6 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.WHSupports
 
 /-!
 # Task Y1.3b — support-orthogonality causal projection ([LN] §6.3, Eq. 61–62)

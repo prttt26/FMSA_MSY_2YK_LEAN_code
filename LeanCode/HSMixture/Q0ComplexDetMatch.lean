@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import LeanCode.HSMixture.Q0ComplexRankTwo
-import LeanCode.YukawaDCF.AppendixWDet
+import LeanCode.HSMixture.AppendixWDet
 
 /-!
 # Reduction of the Appendix denominator match `det Q̂₀(s) = detTL` to a scalar sum identity

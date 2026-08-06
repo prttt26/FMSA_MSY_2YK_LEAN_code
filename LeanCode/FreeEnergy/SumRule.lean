@@ -10,7 +10,7 @@ import Mathlib
 import LeanCode.FreeEnergy.OuterIntegral
 import LeanCode.FreeEnergy.InnerIntegral
 import LeanCode.FreeEnergy.LJIntegral
-import LeanCode.YukawaDCF.BijReduction
+import LeanCode.YukawaOZ.BijReduction
 
 /-!
 # Task F.4 — Compressibility Sum Rule

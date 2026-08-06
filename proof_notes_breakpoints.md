@@ -16,11 +16,11 @@ numerical passes `verify_mediated_breakpoints.py` / `verify_stepwise_breakpoints
 
 ## Task ID ↔ Lean identifier map
 
-**IB.1–IB.8 were formerly IB.1–IB.8.** The Lean identifiers in `YukawaDCF/InnerDecomp.lean` were
+**IB.1–IB.8 were formerly IB.1–IB.8.** The Lean identifiers in `YukawaOZMix/InnerDecomp.lean` were
 made **task-ID-free** (2026-07-15, e.g. `b11_…`→`terms_II_III_zero`), so IB.* can be renumbered
 without touching Lean source.
 
-| Task | (formerly) | Lean identifier(s) in `YukawaDCF/InnerDecomp.lean` | Status |
+| Task | (formerly) | Lean identifier(s) in `YukawaOZMix/InnerDecomp.lean` | Status |
 |------|-----------|-----------------------------------------------------|--------|
 | IB.1 | IB.1 | `terms_II_III_zero` | ✓ DONE |
 | IB.2 | IB.2 | `termIV_geometry_and_vanishing` | ✓ DONE |
@@ -447,7 +447,7 @@ Lebowitz/Baxter piecewise-cubic breakpoint set.
 **Status.** ✓ **FULLY CLOSED for GENERAL N (2026-07-19, axiom-clean, sorry-free):** support geometry
 (all N) + N=1 `innerDCF_N1_contDiffOn` + **general-N `dcfOdd_contDiffOn_upper`/`_lower`/`_like`** (only
 interior knot is `λ_ij`, every N, every pair — mechanical term-by-term, NO cancellation). —
-`LeanCode/YukawaDCF/MixtureConvolution.lean`
+`LeanCode/YukawaOZMix/MixtureConvolution.lean`
 (axiom-clean, sorry-free, ns `FMSA.MixtureConvolution`, imports only the stable `WHSupports`/`Mix`
 interfaces — **not** the actively-developed `MixtureRealSpace.lean`). Kernels `bMixEntry` (`ℬ_mn` on
 `[R_mn,∞)`) and `pMixEntry` (reflected `𝒬⁻` on `[−R_im,−λ_im]`) with `Function.support ⊆ …` lemmas;
@@ -471,7 +471,7 @@ breakpoints (not just the support start) shows `r*` is never among them — it c
 Pure support geometry closes IB.9, exactly as the original proof note asserted ("support geometry,
 *not* the hard cancellation it first looks like").
 
-**Analytic half — N=1 DCF smoothness FULLY CLOSED (2026-07-18), `LeanCode/YukawaDCF/MixtureDCFSmooth.lean`
+**Analytic half — N=1 DCF smoothness FULLY CLOSED (2026-07-18), `LeanCode/YukawaOZMix/MixtureDCFSmooth.lean`
 (axiom-clean, sorry-free).**  Headline `innerDCF_N1_contDiffOn`:
 
 > For the one-component fluid, `fun r ↦ −bConvP(r) − (P⋆ℬ)(r) + pbpConv(r) − pbpConv(−r)`
@@ -508,7 +508,7 @@ outer (`Σ_q outerPerPoleVal`, via `outer_perpole_integral`) + aligned (`Σ_q al
 `C¹`-vs-jump at `λ_ij` vs `C^∞` at `R_ij` is then the same closed form read at the edge (`q0MixEntry`
 jumps at `λ_ij`, vanishes at `R_ij` — `q0Mix_quad_at_R`).
 
-**General-N — FULLY CLOSED (2026-07-19), `LeanCode/YukawaDCF/MixtureDCFSmooth.lean` (axiom-clean).**
+**General-N — FULLY CLOSED (2026-07-19), `LeanCode/YukawaOZMix/MixtureDCFSmooth.lean` (axiom-clean).**
 The N=1 restriction was lifted: for **every** `N` and **every** species pair `(i,j)` (`0 ≤ λ_ij`, WLOG
 by `c_ij = c_ji`), the inner DCF `dcfOdd X i j = Wmix(x) − Wmix(−x)` (with the real-space matrix entry
 `Wmix X i j = ℬ_ij − Σ_n ℬ_in⋆P_jn − Σ_m P_im⋆ℬ_mj + Σ_{m,n} P_im⋆ℬ_mn⋆P_jn`) is:

@@ -64,17 +64,19 @@ fail (exp(14) ≈ 10⁶), motivating the G/A matrix approach proved here.
 ## Structure
 
 ```
-LeanCode/
-  HardSphere/    — PY DCF, Baxter factor + Wiener–Hopf factorization, OZ equation,
-                   Wiener–Hopf splitting, det(Q̂₀) positivity, White-Bear FMT (HS only)
-  YukawaDCF/     — I₁/I₂ integrals, G/A matrix, single-component reduction, inner-core
-                   mediated breakpoints, Wiener–Hopf spectral amplitude, N=2 mixture inner
-                   core, contact matching
-  FMSAPoly/      — Formula failure analysis (Groups chsY, P): (1+A)²≠1−g² disproof,
-                   polynomial-approximation impossibility
-  FreeEnergy/    — Sum rule, energy integrals, convergence
-  Analysis/      — Complex-analysis infrastructure (residue at a simple pole, Jordan's lemma,
-                   contour deformation, Banach pole-family) supporting the Baxter pole route
+LeanCode/                         (layering + policy: see CONVENTIONS.md; restructured 2026-08-06)
+  Analysis/      — general complex/functional-analysis infrastructure (Group MA): residues, Jordan's
+                   lemma, contour deformation, Banach pole-family, Wiener–Hopf, Volterra   [base]
+  FMSAPoly/      — FMSA polynomial inner core + formula-failure analysis (Groups chsY, P)  [base]
+  HardSphere/    — single-component HS: PY DCF, Baxter factor + Wiener–Hopf, OZ fixed point, poles
+  HSMixture/     — N-component PURE hard-sphere mixture: Baxter Q̂₀ matrix, det pole-freeness,
+                   no-spinodal, White-Bear FMT, mixture RDF
+  YukawaOZ/      — single-component Yukawa OZ: I₁/I₂ integrals, single-comp reduction, MSA outer DCF,
+                   inner-core, causal projection, contact matching  (+ the generic-scalar base)
+  YukawaOZMix/   — N-component Yukawa mixture OZ: real-space Baxter route, mixture DCF/RDF, ML series,
+                   Wiener–Hopf spectral amplitude, residues
+  FreeEnergy/    — sum rule, energy integrals, convergence  [sink]
+  Closures/      — non-FMSA closures (PY/PYE/HNCB/MSA): ClosureExpansions + DPClosureMap  [sink]
 
 Proof records — one file per related group cluster (see the todo_lean.md header for the
 authoritative group↔file map):

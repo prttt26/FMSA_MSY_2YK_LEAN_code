@@ -8,7 +8,7 @@ Authors: FMSA project
 
 import LeanCode.HardSphere.SingleCompReduction
 import LeanCode.HardSphere.SingleCompIdentity
-import LeanCode.YukawaDCF.I1I2Integrals
+import LeanCode.YukawaOZ.I1I2Integrals
 
 /-!
 # Task GAP.4 — FMSA_GA_matrix_mix origin BC is automatic: `lim_{r→0} r·c^(1)(r) = 0`

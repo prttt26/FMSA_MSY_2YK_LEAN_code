@@ -47,12 +47,12 @@ see Y1.4) and Y1.7's "the N=2 mixture groups remain *below*" (they were split in
 
 ## Already-proved pieces (reused across Y1)
 
-- `FMSA.YukawaPoleResidue.g_entry_eq_adj_div_det` (`YukawaDCF/YukawaPoleResidue.lean`) —
+- `FMSA.YukawaPoleResidue.g_entry_eq_adj_div_det` (`YukawaOZMix/YukawaPoleResidue.lean`) —
   `[Q̂₀⁻¹]_{ij} = adj(Q̂₀)_{ij}/det Q̂₀` (Mathlib `Matrix.inv_def`); the `G_{ij} = adj/det` core of Y1.1.
 - `FMSA.YukawaPoleResidue.c5_residue_eq_K_mul_Ginv` — residue assembly conditional on the Blum
   simple-pole shape (the C.5 conditional core; feeds Y1.6).
 - `FMSA.SpectralAmplitude.spectralAmp_residue` / `spectralAmp_residue_n1`
-  (`YukawaDCF/SpectralAmplitude.lean`) — the **single-tail** exact residue
+  (`YukawaOZMix/SpectralAmplitude.lean`) — the **single-tail** exact residue
   `Res_{s=−z} b_{ij}(s) = [Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij}` (Y1.5, single-tail case) and the `N=1` `K·G²` form
   (the correction to the numerical `K·G` shorthand).
 - `FMSA.HardSphere.residue_of_simple_pole` (`HardSphere/BaxterResidue.lean`) — general
@@ -102,7 +102,7 @@ e^{−z_{ij}(r−R_{ij})}/r` (`r > R_{ij}`), the outside-core Fourier/Laplace tr
 ```
 a simple pole at `k = i z_{ij}` (upper half-plane), i.e. `s = z_{ij}`.
 
-**Lean (`YukawaDCF/OuterDCF.lean`).** `integral_Ioi_cexp` — `∫_{Ioi R} e^{c·r} = −e^{c·R}/c` for
+**Lean (`YukawaOZ/OuterDCF.lean`).** `integral_Ioi_cexp` — `∫_{Ioi R} e^{c·r} = −e^{c·R}/c` for
 `Re c < 0` (FTC via `integral_Ioi_of_hasDerivAt_of_tendsto`; integrability via `integrableOn_exp_mul_Ioi`
 + `Integrable.mono'`, decay via `Real.tendsto_exp_atBot`); `outerDCF_transform` — Eq. 46
 `∫_{Ioi R} A e^{−z(r−R)} e^{−ikr} = A e^{−ikR}/(ik+z)` (`z>0`), the `U₁` form with pole at `ik=−z`.
@@ -145,7 +145,7 @@ innerCoreFun, innerCore_support_subset_Iic, T_S_eq_fourier_of_innerCore}` (`Spli
 `FMSA.InnerDecomp.Mix` real-space data (`R`, `lam`, `mediated`, `terms_II_III_zero`), and
 `residue_of_simple_pole` + this session's `matrix_conj_residue`.
 
-**Y1.3a — DONE (axiom-clean), `LeanCode/YukawaDCF/WHSupports.lean` (namespace `FMSA.WHSupports`).**
+**Y1.3a — DONE (axiom-clean), `LeanCode/YukawaOZMix/WHSupports.lean` (namespace `FMSA.WHSupports`).**
 - `q0_poly_support_subset` — repackages `q0_poly_outer` as `Function.support (q0_poly …) ⊆ Set.Iic σ`
   (the monodisperse Baxter-factor support anchor).
 - `q0MixEntry` / `q0MixEntry_support_subset` — the mixture real-space Baxter entry `{Q̂₀(r)}_{ij}`
@@ -157,7 +157,7 @@ innerCoreFun, innerCore_support_subset_Iic, T_S_eq_fourier_of_innerCore}` (`Spli
 - `fourier_Iic_eq_full` (anti-causal, inner `S₁`) / `fourier_Ici_eq_full` (causal, outer `h^{(1)}`) —
   the `Set.Iic`/`Set.Ici` Fourier analogues of `Splitting.lean`'s `[0,R]` `T_S_eq_fourier_of_innerCore`.
 
-**Y1.3c — DONE (axiom-clean), `LeanCode/YukawaDCF/YukawaCausalResidue.lean` (namespace `FMSA.YukawaWH`).**
+**Y1.3c — DONE (axiom-clean), `LeanCode/YukawaOZMix/YukawaCausalResidue.lean` (namespace `FMSA.YukawaWH`).**
 Support lemma `matrix_conj_residue_analytic` (in `YukawaWienerHopf.lean`) generalizes
 `matrix_conj_residue` to `s`-dependent conjugating factors analytic at the pole (`Lf → Lval`,
 `Rf → Rval`), so the inverse-Baxter factors of `T_U` enter only via their pole-values.
@@ -167,7 +167,7 @@ Support lemma `matrix_conj_residue_analytic` (in `YukawaWienerHopf.lean`) genera
 - `outer_residue_eq_spectralAmp_residue` — with `Lf → G = Q̂₀(z)⁻¹`, `Rf → Gᵀ`, the residue is the
   doubly-propagated `[G·K·Gᵀ]_{ij}`, **identical to** `spectralAmp_residue`: `Res T_U = Res b_{ij}`.
 
-**Y1.3b — DONE (axiom-clean), `LeanCode/YukawaDCF/YukawaCausalProjection.lean` (namespace `FMSA.YukawaWH`).**
+**Y1.3b — DONE (axiom-clean), `LeanCode/YukawaOZ/YukawaCausalProjection.lean` (namespace `FMSA.YukawaWH`).**
 The support-orthogonality projection, done in **real space** (where `{·}^{[R,∞)}` = `1_{[R,∞)}·`), so
 the [LN] Hilbert-transform / FT-injectivity machinery is unnecessary.
 - `causal_projection_real` — from the OZ split `L = T_U + T_S` with `support L ⊆ [R,∞)`,
@@ -191,7 +191,7 @@ B₁(k) = −E(k) [ Res_{y=iz_{mn}} {E(−y)[Q̂₀(−y)]⁻¹U₁(y)[Q̂₀ᵀ
 ```
 with `{B₁(k)}_{ij} = b_{ij}(ik) e^{−ikR_{ij}}` (Eq. 66).
 
-**Lean (`YukawaDCF/YukawaWienerHopf.lean`).** `triple_apply` — `(L·X·R)_{ij}` as a double sum;
+**Lean (`YukawaOZMix/YukawaWienerHopf.lean`).** `triple_apply` — `(L·X·R)_{ij}` as a double sum;
 `matrix_conj_residue` — **the residue-theorem step in matrix form**: if every entry of `bfun` has
 residue `Bres` at `s₀`, then `L·bfun·R` has residue `L·Bres·R` (entrywise `Tendsto` pushed through
 the two constant matrix factors). Self-contained (local, not importing the broken `BaxterResidue`).
@@ -230,7 +230,7 @@ with `A` evaluated at the fixed pole positions (Eq. 70). Its Yukawa-pole residue
 hard-sphere propagators; for a **single common tail** `b_{ij}(s) = [(I+A)K(I+A)ᵀ]_{ij}/(s+z) =
 [Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij}/(s+z)`.
 
-**Lean (`YukawaDCF/SpectralAmplitude.lean`).** `spectralAmp_residue` / `_n1` (single-tail exact
+**Lean (`YukawaOZMix/SpectralAmplitude.lean`).** `spectralAmp_residue` / `_n1` (single-tail exact
 residue `[Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij}`, the "`K·G` is a leading-order approximation" correction); `bMulti` —
 the multi-tail `Σ_{m,n}(I+A)_{im}K_{mn}(I+A)_{jn}/(s+z_{mn})` form (= Eq. 73's four terms);
 `simplePole_residue` — `Res_{s=−z}[c/(s+z)] = c`; `bMulti_single_eq` — common-`z` collapse to
@@ -254,7 +254,7 @@ distinct-`z` residue all proved.
 (Eq. 62/69). Corollary: the Yukawa-pole residue of the first-order amplitude, expressed through
 `Q̂₀⁻¹` — the exact form of the C.5 claim (`Q̂₀⁻¹·K·Q̂₀⁻ᵀ`, not `K·G`).
 
-**Lean (`YukawaDCF/YukawaWienerHopf.lean`).** `Hhat1` — the def `[Q̂₀ᵀ]⁻¹·B·[Q̂₀]⁻¹`; `Hhat1_spec` —
+**Lean (`YukawaOZMix/YukawaWienerHopf.lean`).** `Hhat1` — the def `[Q̂₀ᵀ]⁻¹·B·[Q̂₀]⁻¹`; `Hhat1_spec` —
 Eq. 68 ⟺ 69 (`Q̂₀ᵀ·Ĥ₁·Q̂₀ = B` for invertible `Q̂₀`, via `Matrix.mul_nonsing_inv`/`nonsing_inv_mul`
 + `det_transpose`); `Hhat1_residue` — `Res Ĥ₁ = [Q̂₀ᵀ]⁻¹·(Res B₁)·[Q̂₀]⁻¹` (via `matrix_conj_residue`).
 Combined with Y1.5's `bMulti_single_residue` (`Res B₁ = [Q̂₀⁻¹·K·Q̂₀⁻ᵀ]`) this is the **exact** [LN]
@@ -275,7 +275,7 @@ r < R_{ij}"*) shows is anti-causal (Proof 2: supported on `(−∞,R_{ij}]`); th
 anti-causal drop-out *is* Y1.3b (`causal_projection_fourier`) for the concrete inner core; Eq. 76 *is*
 the P.2 origin-regularity condition + `eij_at_origin`; §7 matching *is* Group 5.1.
 
-**Lean (`YukawaDCF/YukawaInnerCore.lean`, namespace `FMSA.YukawaWH`).** ✓ DONE, axiom-clean.
+**Lean (`YukawaOZ/YukawaInnerCore.lean`, namespace `FMSA.YukawaWH`).** ✓ DONE, axiom-clean.
 - `innerS1` / `innerS1_support_subset_Iio` — the inside-core amplitude `r c_{ij}(r)` on the strict
   core `[0,R)` (Eq. 45) and Proof 2 (`support ⊆ Set.Iio R`, anti-causal).
 - `b1_causal_eq_U1_fourier` — [LN] §9.3: from `b₁ = U₁ + S₁` (Eq. 43) with `b₁` causal

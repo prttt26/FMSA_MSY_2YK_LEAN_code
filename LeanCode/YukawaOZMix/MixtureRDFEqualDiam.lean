@@ -1,4 +1,4 @@
-import LeanCode.HSMixture.MixtureRowSum
+import LeanCode.YukawaOZMix.MixtureRowSum
 import LeanCode.HSMixture.MixtureRDFUniqueness
 import LeanCode.HardSphere.OzSymbolCoercive
 

@@ -7,8 +7,8 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.I1I2Integrals
-import LeanCode.YukawaDCF.MixturePolyCoeffs
+import LeanCode.YukawaOZ.I1I2Integrals
+import LeanCode.YukawaOZMix.MixturePolyCoeffs
 
 /-!
 # Tasks IB.1–IB.5 — Inner DCF Decomposition: Mediated Vanishing and Term IV Breakpoints

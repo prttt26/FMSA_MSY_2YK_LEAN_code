@@ -8,7 +8,7 @@ Authors: FMSA project
 
 import Mathlib
 import LeanCode.HardSphere.BaxterRealSpace
-import LeanCode.YukawaDCF.InnerDecomp
+import LeanCode.YukawaOZMix.InnerDecomp
 import LeanCode.HardSphere.Splitting
 
 /-!

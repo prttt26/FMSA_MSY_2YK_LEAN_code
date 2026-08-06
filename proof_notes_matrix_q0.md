@@ -8,10 +8,17 @@
 > re-ID of the old single-component tasks 4.2/B.2/B.3 into Group M as M.9/M.10/M.11 — recipe was
 > `todo/lean_move_groupM.md`, now executed).
 
-Status index: [todo_lean.md](todo_lean.md). Lean files: `LeanCode/Analysis/MatrixIdentity.lean`
-(M.1), `MatrixN1.lean` (M.2), `MatrixQ0.lean` (M.3), `Q0DetRankTwo.lean` (M.4–M.8),
-`SingleCompIdentity.lean` (M.9, M.11), `QhatDecomposition.lean` (M.10). Split from
-`proof_notes_yukawa_dcf.md` on 2026-07-15 (Group M outgrew it). Numerical analysis:
+Status index: [todo_lean.md](todo_lean.md). Lean files: `Analysis/MatrixIdentity.lean`
+(M.1), and — in **`HSMixture/`** (the Baxter `Q̂₀` matrix files moved there in the `MRS.9`
+reorganisation, *not* `HardSphere/` as the note above still says) — `MatrixQ0.lean` (M.3),
+`Q0DetRankTwo.lean` (M.4–M.8), `Q0DetLimit.lean`, plus `MatrixN1.lean`/`SingleCompIdentity.lean`
+(M.2, M.9, M.11) and `QhatDecomposition.lean` (M.10). **Roster extended (2026-08-06 restructure):**
+the later matrix-`Q̂₀` files are also Group-M content and live in `HSMixture/` — `Q0Complex.lean`,
+`Q0ComplexRepr.lean`, `Q0ComplexRankTwo.lean`, `Q0ComplexDetMatch.lean`,
+`Q0ComplexDetMatchClose.lean`, `Q0ComplexH1Assembly.lean`, `Q0DetContourOrientation.lean`,
+`Q0MomentGeOne.lean`, `MixtureDetGeneralN.lean`, `MixtureDetOrigin.lean` (they had been tracked only
+in `proof_notes_mixture_rdf.md`). Split from `proof_notes_yukawa_dcf.md` on 2026-07-15 (Group M
+outgrew it). Numerical analysis:
 `numerical_notes/{theory,results}/q0_det_positivity.md`, `q0_det_analysis.py`,
 `verify_q0_det_positivity.py`.
 

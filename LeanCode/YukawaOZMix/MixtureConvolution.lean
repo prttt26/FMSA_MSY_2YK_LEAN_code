@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.WHSupports
+import LeanCode.YukawaOZMix.WHSupports
 
 /-!
 # Group MRS (MRS.5 foundation) — real-space residue kernel `ℬ` and the convolution support geometry

@@ -75,7 +75,7 @@ delivers it* is proved in Lean with `#print axioms` = `[propext, Classical.choic
    the axiom is **MA.1**'s `halfDiskBoundary_eq_sum_of_small_circles`. "MA.3's half-disk axiom" was
    wrong on both counts.)*
 2. **MRS.5's "what remains" list was entirely closed on 2026-07-19**, at general `N`, in a file this
-   note never mentioned: **`YukawaDCF/MixtureDCFSmooth.lean`**. The work landed under the **IB.9**
+   note never mentioned: **`YukawaOZMix/MixtureDCFSmooth.lean`**. The work landed under the **IB.9**
    banner (`proof_notes_breakpoints.md`), so the MRS record was never updated. See MRS.5 below.
 
 **`N=2` in this file's title is now only historical.** The kernel structure `Mix N M`
@@ -103,7 +103,7 @@ matrix. The old note's "single remaining item — the explicit N=2 coefficient e
 `hpp`)" **is closed**, and it was closed at general `N`, not just `N=2`.
 
 **⚠ MRS.8 is being worked on right now — do not re-audit it as "absent" (observed 2026-07-31).**
-While this audit was running, `LeanCode/YukawaDCF/MixtureHSDCF.lean` appeared (untracked, already
+While this audit was running, `LeanCode/YukawaOZMix/MixtureHSDCF.lean` appeared (untracked, already
 wired into `LeanCode.lean:98`, builds clean). It is the **zeroth-order** backbone MRS.8 needs, built
 deliberately out of the MRS machinery rather than from scratch: `qFwd` (the *forward* Baxter window,
 the new piece), `qpConv = qFwd ⋆ pMixEntry`, and `cHSmixRaw = qFwd + pMixEntry − Σ_l qpConv` with
@@ -153,7 +153,7 @@ throwaway. See MRS.6/7/8.
 
 ### Task MRS.6 — WH factorization *frame* (ex-MRS.1a)
 
-**Done (2026-07-17), axiom-clean** — `YukawaDCF/MixtureRealSpace.lean` (ns `FMSA.MRS`). Take the
+**Done (2026-07-17), axiom-clean** — `YukawaOZMix/MixtureRealSpace.lean` (ns `FMSA.MRS`). Take the
 factorization as the *definition* of the zeroth-order DCF matrix and reduce the remaining symmetry
 obligation to a clean swap identity:
 - `Cmix0 Qfun k := 1 − Qfun k · (Qfun (−k))ᵀ` — the zeroth-order DCF matrix `Ĉ₀`.
@@ -268,7 +268,7 @@ of MRS.3.
 **Route.** Follows from the first-order OZ equation plus MRS.1's factorization. Check whether a
 usable form already falls out of Y1's chain before re-deriving from scratch.
 
-**Lean (`YukawaDCF/MixtureRealSpace.lean`, ns `FMSA.MRS`) — ◑ physical route to (★) DONE 2026-07-17, axiom-clean.**  Rather than assume (a), (★) is derived from the physical inputs:
+**Lean (`YukawaOZMix/MixtureRealSpace.lean`, ns `FMSA.MRS`) — ◑ physical route to (★) DONE 2026-07-17, axiom-clean.**  Rather than assume (a), (★) is derived from the physical inputs:
 - `oz1_C1_eq` — the first-order OZ step (pure algebra): `Ĥ₁·T₀ = S₀·Ĉ₁` + `T₀·S₀ = I` ⇒ `Ĉ₁ = T₀·Ĥ₁·T₀`
   (`T₀ := I−Ĉ₀`, `S₀ := I+Ĥ₀ = T₀⁻¹`; left-multiply by `T₀`, one line).
 - **`star_of_first_order_oz`** — the full (★) from five clean matrix-identity hypotheses: `hoz`
@@ -312,7 +312,7 @@ MML.8's premise (see the box there) and dissolves its blockers for the DCF.
 **Why it matters.** The pivot of the group: it converts the inner DCF from an
 (unprovable-without-circularity) infinite pole sum into a finite closed form.
 
-**Lean (`YukawaDCF/MixtureRealSpace.lean`, ns `FMSA.MRS`) — ✓ DONE 2026-07-17, axiom-clean.**
+**Lean (`YukawaOZMix/MixtureRealSpace.lean`, ns `FMSA.MRS`) — ✓ DONE 2026-07-17, axiom-clean.**
 - `star_of_oz1_baxter` — the algebra: `Qm⁻¹·C₁·(Qmᵀ)⁻¹ = B₁` with `IsUnit Qm.det` ⇒
   `C₁ = Qm·B₁·Qmᵀ`. (Instantiate `Qm := Q̂₀(−k)`.) Proof mirrors `Hhat1_spec`'s style:
   `Matrix.mul_nonsing_inv` / `nonsing_inv_mul` + one `mul_assoc` reassociation. `IsUnit (Qmᵀ).det`
@@ -409,7 +409,7 @@ directly beneath it.)*
 
 ---
 
-**Lean (`YukawaDCF/MixtureRealSpace.lean`, ns `FMSA.MRS`) — ◑ first piece DONE 2026-07-17, axiom-clean.**
+**Lean (`YukawaOZMix/MixtureRealSpace.lean`, ns `FMSA.MRS`) — ◑ first piece DONE 2026-07-17, axiom-clean.**
 The **delta amplitude is now proved**, with the concrete Lebowitz/Baxter PY coefficients
 (`Q0phys`/`Qppphys`, `HSMixture/MatrixQ0.lean` — they are concrete, not abstract `Mix` fields):
 - `lam_sub_R_eq` — `λᵢⱼ − Rᵢⱼ = −σᵢ` (the left endpoint offset; trivial but load-bearing).
@@ -570,7 +570,7 @@ per-piece checker.
 
 **This section previously listed four remaining items (i)–(iv) and said the assembly was
 "deliberately not ground out here; the arbitrary-N closed form is realized and certified in Python".
-All four were closed in Lean on 2026-07-18/19** — in **`YukawaDCF/MixtureDCFSmooth.lean`**
+All four were closed in Lean on 2026-07-18/19** — in **`YukawaOZMix/MixtureDCFSmooth.lean`**
 (ns `FMSA.MixtureDCFSmooth`, committed under `be70ac4` *"General N"*). The work was filed under the
 **IB.9** banner in `proof_notes_breakpoints.md`, so this record never learned about it. Item by item:
 
@@ -656,13 +656,13 @@ umbrella's premise that "`S_ij(s)` involves `Q̂₀(s)⁻¹`" and against MPOLY.
 `[Q̂₀⁻¹]₀₁ = −q₁₂/Δ_Q` route. The HS poles belong to the RDF `ĥ₁` only.
 
 **⚠ Every file path in the sections below is stale — MRS.9d moved this code on 2026-07-27.**
-`YukawaDCF/MixtureLaurent.lean` **no longer exists**. Current homes:
+`HSMixture/MixtureLaurent.lean` **no longer exists**. Current homes:
 
 | content | file (2026-07-31) | namespace |
 |---|---|---|
 | the whole order-4 Taylor **calculus** — `taylor4_recip`, `taylor4_mul`, `taylor4_sub`, `taylor4_neg`, `taylor4_tendsto_const`, `taylor4_deltaQ`, `taylor4_coeff_unique`, `poly4_eq_zero_of_littleO`, `p1/p2_{cubic,quartic}_coeff`, `p1/p2_limit`, `exp_neg_{cubic,quartic}_rem` | **`Analysis/Taylor4Calculus.lean`** | `FMSA.Taylor4` |
 | the two mixture-specific capstones — `q0_entry_taylor4`, `taylor4_inv_entry` | **`HSMixture/MixtureLaurent.lean`** | `FMSA.MixtureLaurent` |
-| GAP.8/9/10 — `poly_coeff_from_laurent`, `q0_entry_taylor3`, `dij_cubic_nonzero`, `poly_natDegree_*` | `YukawaDCF/MixturePolyCoeffs.lean` | **`FMSA.MixturePoly`** (not `MixturePolyCoeffs`) |
+| GAP.8/9/10 — `poly_coeff_from_laurent`, `q0_entry_taylor3`, `dij_cubic_nonzero`, `poly_natDegree_*` | `YukawaOZMix/MixturePolyCoeffs.lean` | **`FMSA.MixturePoly`** (not `MixturePolyCoeffs`) |
 
 **This move is the best thing that happened to MPOLY.** "What survives" is no longer a pile of
 mixture leftovers — it is a **general-purpose, project-independent `Analysis/` library**: order-4
@@ -719,7 +719,7 @@ overlaps the Y1.3/MML.8 inner-core-Laplace machinery. (Note: `[Q̂₀⁻¹]₀�
 `s=0` — `φ₁,φ₂` are finite there — so it is *not* `S_ij`; the `1/s⁵` pole lives in `S_ij` itself.)
 
 **Decomposition (2026-07-15) — MPOLY is the umbrella; the pipeline is split into independent tasks
-`MPOLY.1`–`MPOLY.5`** (then `YukawaDCF/MixtureLaurent.lean`; **see the disposition box for where the
+`MPOLY.1`–`MPOLY.5`** (then `HSMixture/MixtureLaurent.lean`; **see the disposition box for where the
 code lives now**), each with its own section below: **MPOLY.1** order-4
 Taylor of `q0_entry` (✓ DONE) → **MPOLY.2** reciprocal series `1/Δ_Q` (Eq 136–137) → **MPOLY.3** `Δ_Q` +
 inverse-entry series (Eq 130) → **MPOLY.4** Laurent→coeff machinery (Eq 105/120, the self-contained

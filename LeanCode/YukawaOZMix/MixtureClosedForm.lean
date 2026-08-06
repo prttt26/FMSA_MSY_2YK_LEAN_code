@@ -5,8 +5,8 @@ Authors: FMSA project
 -/
 
 import Mathlib
-import LeanCode.YukawaDCF.MixtureConvolution
-import LeanCode.YukawaDCF.MixtureRealSpace
+import LeanCode.YukawaOZMix.MixtureConvolution
+import LeanCode.YukawaOZMix.MixtureRealSpace
 
 /-!
 # Group MRS (MRS.5) — the convolution ⇄ interval-integral bridge and per-term closed forms

@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.MixtureInnerDCF
+import LeanCode.YukawaOZMix.MixtureInnerDCF
 import LeanCode.Analysis.PoleSeriesSummable
 
 /-!

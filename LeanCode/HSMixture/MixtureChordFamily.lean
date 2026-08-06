@@ -7,6 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
+import LeanCode.Analysis.ComplexDiskGeometry
 import LeanCode.HSMixture.MixtureHSZeros
 import LeanCode.HardSphere.BaxterChordFamily
 
@@ -2248,27 +2249,10 @@ theorem detF_hasDerivAt (P : MixParams) {s : ℂ} (hs : s ≠ 0) :
 def MixParams.KW (P : MixParams) : ℝ :=
   11 * (P.mu + P.K1) + 5 * P.K0 + 15 * P.K01 / P.mu
 
-/-- Every point of a closed disk has real part at least `Re(centre) − radius`. -/
-theorem mem_closedBall_re_ge' {c k : ℂ} {r : ℝ} (hk : k ∈ Metric.closedBall c r) :
-    c.re - r ≤ k.re := by
-  rw [Metric.mem_closedBall, dist_eq_norm] at hk
-  have h1 : |(k - c).re| ≤ ‖k - c‖ := Complex.abs_re_le_norm _
-  rw [Complex.sub_re] at h1
-  have h2 := abs_le.mp (le_trans h1 hk)
-  linarith [h2.1]
-
-/-- Every point of a closed disk has norm at most `‖centre‖ + radius`. -/
-theorem mem_closedBall_norm_le' {c k : ℂ} {r : ℝ} (hk : k ∈ Metric.closedBall c r) :
-    ‖k‖ ≤ ‖c‖ + r := by
-  rw [Metric.mem_closedBall, dist_eq_norm] at hk
-  calc ‖k‖ = ‖c + (k - c)‖ := by congr 1; ring
-    _ ≤ ‖c‖ + ‖k - c‖ := norm_add_le _ _
-    _ ≤ ‖c‖ + r := by linarith
-
 /-- Disk points inherit the norm cap `‖s‖ ≤ (11/10)Y`. -/
 theorem disk_norm_le {g s : ℂ} {Y rc : ℝ} (hY0 : 0 ≤ Y) (hg : ‖g‖ ≤ 21 / 20 * Y)
     (hrc : rc ≤ Y / 40) (hs : s ∈ Metric.closedBall g rc) : ‖s‖ ≤ 11 / 10 * Y := by
-  have h := mem_closedBall_norm_le' hs
+  have h := mem_closedBall_norm_le hs
   linarith
 
 /-- Disk points keep a large imaginary part: `s.im ≥ (39/40)Y`. -/
@@ -2301,7 +2285,7 @@ theorem disk_exp_norm_le {g s : ℂ} {rc c : ℝ} (hc : 0 ≤ c)
     ‖Complex.exp (-(s * (c : ℂ)))‖ ≤ Real.exp (-(g.re * c) + c * rc) := by
   rw [norm_exp_neg_mul]
   apply Real.exp_le_exp.mpr
-  have h := mem_closedBall_re_ge' hs
+  have h := mem_closedBall_re_ge hs
   nlinarith [h, hc]
 
 /-- Crude numeric bound: `e^x ≤ 3` for `x ≤ 1`. -/

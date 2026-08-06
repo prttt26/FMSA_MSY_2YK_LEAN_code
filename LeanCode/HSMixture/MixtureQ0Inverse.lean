@@ -22,7 +22,7 @@ theorem Q0_mat_phys_inv_closed_form {N : ℕ} {z : ℝ} {sigma rho : Fin N → �
     (Q0_mat_phys z sigma rho) *
       (1 + Umat z sigma rho * (1 - Vmat z sigma rho * Umat z sigma rho)⁻¹ * Vmat z sigma rho) = 1 := by
   have hge : 1 ≤ (Q0_mat_phys z sigma rho).det :=
-    FMSA.MixtureGenN.Q0_mat_phys_det_ge_one_N hz hvac hrho hsigma
+    FMSA.MatrixQ0.Q0_mat_phys_det_ge_one_N hz hvac hrho hsigma
   have heq : (Q0_mat_phys z sigma rho).det = (1 - Vmat z sigma rho * Umat z sigma rho).det :=
     Q0_mat_phys_det_eq_two_by_two hz.ne' hvac.ne' hrho
   have hdet : IsUnit (1 - Vmat z sigma rho * Umat z sigma rho).det :=
@@ -73,7 +73,7 @@ theorem H1_eq_phys {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
     H1 = ((Q0_mat_phys z sigma rho)ᵀ)⁻¹ * B1 * (Q0_mat_phys z sigma rho)⁻¹ := by
   have hdet : IsUnit (Q0_mat_phys z sigma rho).det :=
     isUnit_iff_ne_zero.mpr
-      (by linarith [FMSA.MixtureGenN.Q0_mat_phys_det_ge_one_N hz hvac hrho hsigma])
+      (by linarith [FMSA.MatrixQ0.Q0_mat_phys_det_ge_one_N hz hvac hrho hsigma])
   exact H1_eq_of_transformed _ H1 B1 hdet heq
 
 end FMSA.MatrixQ0

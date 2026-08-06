@@ -124,36 +124,13 @@ theorem gFun_tendsto_zero {N : ℕ} {rho sigma : Fin N → ℝ} (i : Fin N) (hsi
   unfold gFun
   have := hterm1.add hterm2; simpa using this
 
-/-- General `Vmat*Umat` entry (any `(k,l)`): `√ρ·√ρ = ρ` and the `exp` cancellation.
-Generalizes `VU_apply_00` from `Q0DetRankTwo.lean`. -/
-theorem VU_apply {N : ℕ} (z : ℝ) (sigma rho : Fin N → ℝ) (hrho : ∀ j, 0 ≤ rho j) (k l : Fin 2) :
-    (Vmat z sigma rho * Umat z sigma rho) k l =
-      ∑ j, rho j * (if k = 0 then 1 else sigma j) *
-        (if l = 0 then fFun rho sigma j z else gFun rho sigma j z) := by
-  simp only [Matrix.mul_apply, Umat, Vmat, Fin.isValue]
-  refine Finset.sum_congr rfl (fun j _ => ?_)
-  have hsq : Real.sqrt (rho j) * Real.sqrt (rho j) = rho j := Real.mul_self_sqrt (hrho j)
-  have hexp : Real.exp (-(z * sigma j / 2)) * Real.exp (z * sigma j / 2) = 1 := by
-    rw [← Real.exp_add]; norm_num
-  have hkey :
-      Real.sqrt (rho j) * Real.exp (-(z * sigma j / 2)) * (if k = 0 then 1 else sigma j) *
-        (Real.sqrt (rho j) * Real.exp (z * sigma j / 2) *
-          (if l = 0 then fFun rho sigma j z else gFun rho sigma j z)) =
-      Real.sqrt (rho j) * Real.sqrt (rho j) *
-        (Real.exp (-(z * sigma j / 2)) * Real.exp (z * sigma j / 2)) *
-        ((if k = 0 then 1 else sigma j) *
-          (if l = 0 then fFun rho sigma j z else gFun rho sigma j z)) := by ring
-  rw [hkey, hsq, hexp]
-  ring
-
-/-- Each `Vmat*Umat` entry → 0 as `z → ∞` (finite species-sum of `fFun`/`gFun`, all → 0). -/
 theorem VU_entry_tendsto_zero {N : ℕ} {sigma rho : Fin N → ℝ}
     (hrho : ∀ j, 0 ≤ rho j) (hsig : ∀ j, 0 < sigma j) (k l : Fin 2) :
     Tendsto (fun z : ℝ => (Vmat z sigma rho * Umat z sigma rho) k l) atTop (𝓝 0) := by
   have hfun : (fun z : ℝ => (Vmat z sigma rho * Umat z sigma rho) k l) =
       (fun z : ℝ => ∑ j, rho j * (if k = 0 then 1 else sigma j) *
         (if l = 0 then fFun rho sigma j z else gFun rho sigma j z)) :=
-    funext (fun z => VU_apply z sigma rho hrho k l)
+    funext (fun z => VU_apply' z sigma rho hrho k l)
   rw [hfun]
   have hsum : Tendsto (fun z : ℝ => ∑ j, rho j * (if k = 0 then 1 else sigma j) *
         (if l = 0 then fFun rho sigma j z else gFun rho sigma j z))

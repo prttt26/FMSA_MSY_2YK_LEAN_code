@@ -6,8 +6,8 @@ Authors: FMSA project
 
 -- Naming and notation conventions: see CONVENTIONS.md
 
-import LeanCode.YukawaDCF.MixtureConvolution
-import LeanCode.YukawaDCF.MixtureClosedForm
+import LeanCode.YukawaOZMix.MixtureConvolution
+import LeanCode.YukawaOZMix.MixtureClosedForm
 
 /-!
 # Zeroth-order (hard-sphere) mixture DCF — reusing the PY-Baxter convolution machinery

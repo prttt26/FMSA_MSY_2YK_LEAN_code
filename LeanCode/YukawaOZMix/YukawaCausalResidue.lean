@@ -7,8 +7,8 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.YukawaWienerHopf
-import LeanCode.YukawaDCF.SpectralAmplitude
+import LeanCode.YukawaOZMix.YukawaWienerHopf
+import LeanCode.YukawaOZMix.SpectralAmplitude
 
 /-!
 # Task Y1.3c — causal projection = Yukawa-pole residue extraction ([LN] §6.4.1, Eq. 63–66)

@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.MixtureClosedForm
+import LeanCode.YukawaOZMix.MixtureClosedForm
 
 /-!
 # IB.9 — the first-order inner DCF is smooth (no interior knot) on the open core

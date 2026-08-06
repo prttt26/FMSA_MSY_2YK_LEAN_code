@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import LeanCode.HSMixture.MixtureBaxterSeed
-import LeanCode.YukawaDCF.WHSupports
+import LeanCode.YukawaOZMix.WHSupports
 
 /-!
 # `hrow` for the concrete `q0MixEntry` — the equal-diameter row-sum collapse

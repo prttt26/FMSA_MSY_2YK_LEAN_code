@@ -23,7 +23,7 @@ with the limiting case `z → 0` giving `αℓ − ℓ²/2`.
 **Verification method:** `MeasureTheory.integral_comp_mul_right` + integration by parts
 (`MeasureTheory.integral_mul_deriv` or direct antiderivative differentiation via `deriv_eq`).
 
-**Status:** ✓ DONE — `I1_formula` proved in `LeanCode/YukawaDCF/I1I2Integrals.lean` (complete).
+**Status:** ✓ DONE — `I1_formula` proved in `LeanCode/YukawaOZ/I1I2Integrals.lean` (complete).
 
 ---
 
@@ -37,7 +37,7 @@ For `z ≠ 0` and `ℓ ≥ 0`:
 ```
 with the `z → 0` limit `α²ℓ − αℓ² + ℓ³/3`.
 
-**Status:** ✓ DONE — `I2_formula` proved in `LeanCode/YukawaDCF/I1I2Integrals.lean` (complete).
+**Status:** ✓ DONE — `I2_formula` proved in `LeanCode/YukawaOZ/I1I2Integrals.lean` (complete).
 
 ---
 
@@ -48,7 +48,7 @@ with the `z → 0` limit `α²ℓ − αℓ² + ℓ³/3`.
 **Why it matters:** Guarantees that Terms II and III in [chsY] Eq. 41 contribute nothing when
 `r = R_aj` exactly (no jump discontinuity from the step function).
 
-**Status:** ✓ DONE — `I1_at_zero` and `I2_at_zero` in `LeanCode/YukawaDCF/I1I2Integrals.lean` (complete):
+**Status:** ✓ DONE — `I1_at_zero` and `I2_at_zero` in `LeanCode/YukawaOZ/I1I2Integrals.lean` (complete):
   both are `integral_same` (one-liner; the interval `(0:ℝ)..(0:ℝ)` is empty, so the
   `intervalIntegral` evaluates to 0 for any integrand, with no hypothesis on `α` or `z`).
 
@@ -66,7 +66,7 @@ where `A(z)` is the single-component propagator evaluated at the Yukawa pole.
 
 **In Lean:** Expand the four-term sum in [chsY] Eq. 24 for N=1 (n=m=0) and simplify.
 
-**Status:** ✓ DONE — proved in `LeanCode/YukawaDCF/BijReduction.lean` (complete):
+**Status:** ✓ DONE — proved in `LeanCode/YukawaOZ/BijReduction.lean` (complete):
   - `b_general`: abstract N-species pole-residue double sum definition
     `b_ij(s) = Σ_{m n} K_{mn} · (1+A_{im}) · (1+A_{nj}) / (s+z)`
   - `b_n1_collapse`: for N=1, `Fin.sum_univ_one` collapses both sums to a single term:
@@ -193,7 +193,7 @@ give the complete Lean proof that FMSA_GA_matrix_mix is structurally superior at
 **Depends on:** Tasks 1.3 (`I1_at_zero`, `I2_at_zero`), Task M.9 (`g_add_a_mul_exp_eq_one`),
 M.11 (`coeff_identity`).
 
-**Status:** ✓ DONE — `LeanCode/YukawaDCF/InnerOriginBC.lean` (complete, namespace `FMSA.PathB`):
+**Status:** ✓ DONE — `LeanCode/YukawaOZ/InnerOriginBC.lean` (complete, namespace `FMSA.PathB`):
   - `origin_termI1_vanish_at_zero`, `origin_termI2_vanish_at_zero`: Terms II and III are 0 at r=0
     (via `FMSA.DCF.I1_at_zero`, `I2_at_zero` — Task 1.3; one-line delegates).
   - `origin_polynomial_constant`: `K*(1-g^2)*exp(z) - K*a^2*exp(-z) = 2*K*g*a` given
@@ -224,7 +224,7 @@ Determination of the Polynomial" and "Explicit Derivative Formulas for the Mixtu
 Coefficients" (lines 1319–1435).  Together they replace the code placeholder `[p0, p1, 0, 0]`
 with the algebraically exact five-coefficient expression for all pairs.
 
-**Lean file for GAP.5–GAP.9:** `LeanCode/YukawaDCF/MixturePolyCoeffs.lean` (created, `namespace FMSA.MixturePoly`).
+**Lean file for GAP.5–GAP.9:** `LeanCode/YukawaOZMix/MixturePolyCoeffs.lean` (created, `namespace FMSA.MixturePoly`).
 
 ---
 
@@ -749,7 +749,7 @@ Laplace-space formula for multicomponent Yukawa MSA (or an independent derivatio
 **Effort:** medium-high.
 
 **Status:** ◑ conditional core DONE (2026-07-15), axiom-clean —
-`LeanCode/YukawaDCF/YukawaPoleResidue.lean`:
+`LeanCode/YukawaOZMix/YukawaPoleResidue.lean`:
 - `g_entry_eq_adj_div_det` — the matrix-algebra identity `[Q̂₀⁻¹]_{ij} = adj(Q̂₀)_{ij}/det Q̂₀`
   (`Matrix.inv_def`), i.e. the `= K_t·G_{ij}(z_t)` simplification.
 - `c5_residue_eq_K_mul_Ginv` — the residue assembly: given the Blum simple-pole shape near `z_t`
@@ -793,7 +793,7 @@ b_{ij}(s) = [(I+A)·K·(I+A)ᵀ]_{ij}/(s+z) = [Q̂₀(z)⁻¹·K·Q̂₀(z)⁻�
 ```
 So the exact Yukawa-pole residue is the **doubly-propagated** `[Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij}` — `K` sandwiched
 by **two** inverse-Baxter factors — **not** the linear `K·G_{ij}` of the numerical shorthand. Proved
-axiom-clean in `LeanCode/YukawaDCF/SpectralAmplitude.lean`:
+axiom-clean in `LeanCode/YukawaOZMix/SpectralAmplitude.lean`:
 - `spectralAmp_residue` — `Res_{s=−z} b_{ij}(s) = [Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij}` (elementary rational-function
   residue: `(s+z)·[N/(s+z)] → N`);
 - `spectralAmp_residue_n1` — at `N=1` the residue is `K·G²`, making the "`K·G` vs exact" gap explicit.
@@ -856,7 +856,7 @@ the value at r = R_ij, and by [chsY] Eq. 34 this equals K_ij / R_ij.
 **Lean value:** Low — the discontinuous case (HSY) is physically correct and expected;
 the soft-core matching is a first-order identity that holds trivially if Tasks 1.3 and 4.4 pass.
 
-**Status:** ✓ DONE — `LeanCode/YukawaDCF/ContactMatching.lean` (complete):
+**Status:** ✓ DONE — `LeanCode/YukawaOZ/ContactMatching.lean` (complete):
   - `terms_II_III_vanish_at_contact`: I₁(0,α,z)=0 ∧ I₂(0,α,z)=0 via `I1_at_zero`/`I2_at_zero`
   - `inner_core_eij_at_contact`: `eij A z R R = Σ_k A_k` via `eij_at_contact`
   - `outer_core_at_contact`: `K·exp(−z·0)/R = K/R` via `sub_self` + `Real.exp_zero`

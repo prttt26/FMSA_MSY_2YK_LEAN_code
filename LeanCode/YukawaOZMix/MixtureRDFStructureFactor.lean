@@ -8,8 +8,8 @@ Authors: FMSA project
 
 import Mathlib
 import LeanCode.Analysis.MatrixIdentity
-import LeanCode.YukawaDCF.MixtureRealSpace
-import LeanCode.YukawaDCF.MixtureInnerDCF
+import LeanCode.YukawaOZMix.MixtureRealSpace
+import LeanCode.YukawaOZMix.MixtureInnerDCF
 
 /-!
 # The first-order mixture RDF as `Ĥ₁ = S₀·Ĉ₁·S₀` — localizing every HS pole in the structure factor

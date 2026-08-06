@@ -47,7 +47,7 @@ Effort: medium-high (requires Blum 1975 Laplace-space formula or independent der
 #### ⚠ CORRECTION (2026-07-15) — the exact residue is `Q̂₀⁻¹·K·Q̂₀⁻ᵀ`, not `K·G`
 
 Reading the **[LN] lecture notes** (Tang & Lu 1995, `pdf/lecture_notes_OZ_Yukawa_poly.pdf`) §6.4 to
-the end (Eq. 73) and formalizing it (`LeanCode/YukawaDCF/SpectralAmplitude.lean`,
+the end (Eq. 73) and formalizing it (`LeanCode/YukawaOZMix/SpectralAmplitude.lean`,
 `spectralAmp_residue` + `spectralAmp_residue_n1`, axiom-clean) shows the spectral amplitude — the
 residue-carrying object in `Ĥ₁ = [Q̂₀ᵀ]⁻¹ B₁ [Q̂₀]⁻¹` (Eq. 68) — is, for a single tail:
 
@@ -73,10 +73,10 @@ constraint + contact matching (Y1.7). See [proof_notes_yukawa_wh.md] (Group Y1).
 ### Y1.5 / Y1.6 (DONE, 2026-07-15): Lean-proved doubly-propagated amplitude
 
 **Lean results**:
-- `bMulti_residue_Qinv` (Y1.5, `YukawaDCF/SpectralAmplitude.lean`): for each Yukawa tail t and
+- `bMulti_residue_Qinv` (Y1.5, `YukawaOZMix/SpectralAmplitude.lean`): for each Yukawa tail t and
   pair (i,j), ties the spectral amplitude to Q̂₀⁻¹: b_{ij}(z_t) = [Q̂₀(z_t)⁻¹·K_t·Q̂₀(z_t)⁻ᵀ]_{ij}
   (general multi-tail, distinct-z case, axiom-clean).
-- `Hhat1_residue` (Y1.6, `YukawaDCF/YukawaWienerHopf.lean`): the first-order RDF
+- `Hhat1_residue` (Y1.6, `YukawaOZMix/YukawaWienerHopf.lean`): the first-order RDF
   Ĥ₁ = [Q̂₀ᵀ]⁻¹·B₁·[Q̂₀]⁻¹ (Eq. 68) has (i,j) residue at pole z_t equal to
   [Q̂₀(z_t)⁻¹·K_t·Q̂₀(z_t)⁻ᵀ]_{ij}.
 
@@ -103,7 +103,7 @@ OZ fit is circular and gives all-orders B_k, not first-order FMSA B_k).
 
 ### Y1.7 (DONE, 2026-07-15): Origin constraint validates `_precompute_p0`
 
-**Lean result**: `origin_constraint_eq76` (Y1.7, `YukawaDCF/YukawaInnerCore.lean`): the [LN]
+**Lean result**: `origin_constraint_eq76` (Y1.7, `YukawaOZ/YukawaInnerCore.lean`): the [LN]
 Eq. 76 origin constraint `p₀ = −E_{ij}(0)` is proved, where E_{ij}(0) is the Yukawa-base + HS-pole-sum
 evaluated at r=0 (reuses Group 5.1 `ContactMatching.lean` + `P.2` `OriginConstraint.lean`).
 

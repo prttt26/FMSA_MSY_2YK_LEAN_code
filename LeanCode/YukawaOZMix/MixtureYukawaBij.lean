@@ -6,7 +6,7 @@ Authors: FMSA project
 
 -- Naming and notation conventions: see CONVENTIONS.md
 
-import LeanCode.YukawaDCF.MixtureYukawaResidue
+import LeanCode.YukawaOZ.MixtureYukawaResidue
 
 /-!
 # The eq (23) residue coefficients `bᵢⱼ(s)` of `B₁` (Tang & Lu)

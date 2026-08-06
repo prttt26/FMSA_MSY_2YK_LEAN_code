@@ -7,6 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
+import LeanCode.Analysis.ComplexDiskGeometry
 import LeanCode.HardSphere.BaxterPoleGuess
 import LeanCode.HardSphere.HExplicitConcrete
 
@@ -48,36 +49,6 @@ transports the proofs across the privacy boundary (the `rfl`-bridge pattern of P
 namespace FMSA.HardSphere
 
 noncomputable section
-
-/-! ### Disk geometry helpers -/
-
-/-- Every point of a closed disk has real part at least `Re(centre) − radius`. -/
-theorem mem_closedBall_re_ge {c k : ℂ} {r : ℝ} (hk : k ∈ Metric.closedBall c r) :
-    c.re - r ≤ k.re := by
-  rw [Metric.mem_closedBall, dist_eq_norm] at hk
-  have h1 : |(k - c).re| ≤ ‖k - c‖ := Complex.abs_re_le_norm _
-  rw [Complex.sub_re] at h1
-  have h2 := abs_le.mp (le_trans h1 hk)
-  linarith [h2.1]
-
-/-- Every point of a closed disk has `|Im|` at most `|Im(centre)| + radius`. -/
-theorem mem_closedBall_abs_im_le {c k : ℂ} {r : ℝ} (hk : k ∈ Metric.closedBall c r) :
-    |k.im| ≤ |c.im| + r := by
-  rw [Metric.mem_closedBall, dist_eq_norm] at hk
-  have h1 : |(k - c).im| ≤ ‖k - c‖ := Complex.abs_im_le_norm _
-  rw [Complex.sub_im] at h1
-  have h2 : |k.im| ≤ |c.im| + |k.im - c.im| := by
-    calc |k.im| = |c.im + (k.im - c.im)| := by congr 1; ring
-      _ ≤ |c.im| + |k.im - c.im| := abs_add_le _ _
-  linarith
-
-/-- Every point of a closed disk has norm at most `‖centre‖ + radius`. -/
-theorem mem_closedBall_norm_le {c k : ℂ} {r : ℝ} (hk : k ∈ Metric.closedBall c r) :
-    ‖k‖ ≤ ‖c‖ + r := by
-  rw [Metric.mem_closedBall, dist_eq_norm] at hk
-  calc ‖k‖ = ‖c + (k - c)‖ := by congr 1; ring
-    _ ≤ ‖c‖ + ‖k - c‖ := norm_add_le _ _
-    _ ≤ ‖c‖ + r := by linarith
 
 /-! ### The `hMball` and `hDball` hypotheses for `k1_guess` -/
 

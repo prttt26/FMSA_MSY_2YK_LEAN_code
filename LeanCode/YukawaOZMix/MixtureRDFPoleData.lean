@@ -7,8 +7,8 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.MixtureRDFStructureFactor
-import LeanCode.YukawaDCF.MixtureRDFAntideriv
+import LeanCode.YukawaOZMix.MixtureRDFStructureFactor
+import LeanCode.YukawaOZMix.MixtureRDFAntideriv
 import LeanCode.HSMixture.MixtureMLBound
 
 /-!

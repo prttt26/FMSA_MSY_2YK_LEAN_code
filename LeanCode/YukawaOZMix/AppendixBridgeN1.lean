@@ -6,7 +6,7 @@ Authors: FMSA project
 
 -- Naming and notation conventions: see CONVENTIONS.md
 
-import LeanCode.YukawaDCF.AppendixWDet
+import LeanCode.HSMixture.AppendixWDet
 import LeanCode.HSMixture.Q0Complex
 import LeanCode.HSMixture.MatrixQ0
 

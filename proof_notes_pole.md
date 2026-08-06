@@ -340,7 +340,7 @@ correcting the pole/`G` target (as done) is sufficient. The `radial3d_conv` acce
   `residue_of_simple_pole` is fully general (any `N,D:ℂ→ℂ` with `D` having a simple zero),
   not tied to `G_baxter` specifics. **Relocated (2026-07-15) to its own stable file**
   `LeanCode/Analysis/ResidueAtSimplePole.lean` (imports only `Mathlib`), since it's a reuse
-  target for the mixture groups MML/MZERO (`HSMixture/MixtureHSPoles.lean`, `YukawaDCF/YukawaPoleResidue.lean`)
+  target for the mixture groups MML/MZERO (`HSMixture/MixtureHSPoles.lean`, `YukawaOZMix/YukawaPoleResidue.lean`)
   which should not need to rebuild alongside the actively-changing `BaxterResidue.lean`.
 - **`Chat_complex` — the complex-valued `Ĉ`: DONE.** `LeanCode/HardSphere/
   RadialFourierCHSComplex.lean` (new file), no `sorry`/`axiom`. `Ĉ(k) :=

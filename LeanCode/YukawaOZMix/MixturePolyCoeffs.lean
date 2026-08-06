@@ -9,8 +9,8 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.Analysis.Taylor4Calculus
 import LeanCode.HSMixture.MatrixQ0
-import LeanCode.YukawaDCF.InnerOriginBC
-import LeanCode.YukawaDCF.ContactMatching
+import LeanCode.YukawaOZ.InnerOriginBC
+import LeanCode.YukawaOZ.ContactMatching
 
 /-!
 # Tasks GAP.5–GAP.10 — Analytical Determination of P_{ij}(r) for the Mixture Case

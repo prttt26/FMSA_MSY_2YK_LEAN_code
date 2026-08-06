@@ -7,6 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
+import LeanCode.Analysis.Volterra
 
 /-!
 # Volterra integral equation of the second kind in a Banach normed ring
@@ -59,11 +60,6 @@ def volterraTE (hab : a ≤ b) (q g : ℝ → E) (hq : Continuous q) (hg : Conti
     (u : C(Icc a b, E)) (r : Icc a b) :
     volterraTE hab q g hq hg u r
       = g r + ∫ t in a..(r : ℝ), q ((r : ℝ) - t) * Set.IccExtend hab u t := rfl
-
-/-- `∫_a^r (t−a)^n dt = (r−a)^(n+1)/(n+1)`. -/
-lemma volterra_integral_sub_pow (a r : ℝ) (n : ℕ) :
-    (∫ t in a..r, (t - a) ^ n) = (r - a) ^ (n + 1) / (n + 1) := by
-  rw [intervalIntegral.integral_comp_sub_right (fun t => t ^ n) a, sub_self, integral_pow]; simp
 
 variable {M : ℝ}
 

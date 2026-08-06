@@ -7,79 +7,23 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.SpectralAmplitude
-import LeanCode.YukawaDCF.MixtureRealSpace
+import LeanCode.Closures.ClosureExpansions
+import LeanCode.YukawaOZMix.SpectralAmplitude
+import LeanCode.YukawaOZMix.MixtureRealSpace
 import LeanCode.Analysis.RadialFourierInversion
 import LeanCode.HardSphere.BaxterWienerHopfComplex
 import LeanCode.HardSphere.BaxterNoSpinodalEquiv
 
 /-!
-# Group PYE — the no-pull-back FMSA-DP construction **is** first-order PY
+# The DP first-order-closure solution map  (Group PYE.2–PYE.7)
 
-Proof record for **Group PYE** (`proof_notes_closures.md`): the `pullback_passes = 0` rung of the
-shipped YK-tail FMSA-DP construction (`HNCB_FMSA_dp.py`, `g_hs_ref='py'`) is the **first-order PY**
-DCF, and the *only* error against true first-order PY is the finite-Yukawa-tail re-approximation of
-the outer closure.
-
-## The three stages of the DP solution map, and why linearity is the whole story
-
-The construction is a composite of three stages, each of which is linear in the outer-closure data:
-
-1. **outer transform** ([LN] Eq. 46, Y1.2 `OuterDCF.outerDCF_transform`) — a Yukawa tail of
-   amplitude `K` becomes `U₁(k) = K·e^{−ikR}/(ik+z)`, linear in `K`;
-2. **Wiener-Hopf causal projection** (Y1.3, Y1.5) — `U₁ ↦ B₁`, whose value is the multi-tail
-   spectral amplitude `bMulti` (`SpectralAmplitude.lean`), manifestly linear in the coupling `K`;
-3. **the (★) assembly** (MRS.3, `MixtureRealSpace.lean`) — `Ĉ₁ = Q̂₀(−k)·B₁·Q̂₀ᵀ(−k)`, linear in
-   `B₁` and — the load-bearing point of (★) — carrying **no** `Q̂₀⁻¹`.
-
-So `DP : K ↦ Ĉ₁` is a **linear map on the (fixed-rate) tail amplitudes** (`dpDCFLinear`,
-`dpTailsLinear`), and PYE.3's headline is one application of `map_sub`:
-`DP[fit] − DP[exact] = DP[fit − exact]`.
-
-⚠ **Linearity needs the rates held FIXED.** With free rates the refit is nonlinear in the tail
-parameters and the map is not linear at all — the same fixed-rate discipline the numerics forced for
-a different reason (`hncb_first_order.md` §4(b): free rates collapse to near-degenerate pairs with
-cancelling amplitudes, and `e^{+z̃R}` shift factors then overflow the inner core).
-
-## Results
-
-**PYE.1 — the closure expansions** (`mayerF`, `hncbClosure`):
-* `py_first_order_outer` — PY `c = (e^{−βsu} − 1)·y` has first-order coefficient `y₀·(−βu)`;
-* `cavity_zero_coupling` — `y₀ = g_HS` (the cavity function at zero coupling is the HS RDF), so the
-  PY first-order outer is `g_HS·(−βu)`;
-* `hncb_first_order_outer` — HNCB `c = exp(−βsu + γ + B_HS) − 1 − γ` has first-order coefficient
-  `g_HS·(−βu) + h_HS·γ₁` with `h_HS = g_HS − 1`;
-* `hncb_outer_zeroth_order_eq_zero` — the expansion base point is consistent: `c₀(r>R) = 0`;
-* `pass_zero_eq_py_first_order` — **the Group-PYE identification**: at `γ₁ ≡ 0` (pass 0) the HNCB
-  first-order outer coefficient is *the same* `g_HS·(−βu)` as PY's.
-
-**PYE.2 — linearity of the DP solution map**:
-* `b1OfCouplingLinear` (stage 2), `starConjLinear` (stage 3), `dpDCFLinear` (the composite),
-  `dpTailsLinear` (fixed-rate multi-tail family), plus `outerTransform_add`/`_smul` for stage 1.
-
-**PYE.3 — the DCF error is the DP map of the fit residual**:
-* `dp_error_eq_dp_of_residual` — `DP[fit] − DP[exact] = DP[fit − exact]`;
-* `dpDCF_entry_norm_le` / `dpTails_entry_norm_le` — the **boundedness** input
-  (`wh_solution_operator_bounded` in the task plan) with an **explicit** constant
-  `whOperatorBound = T·N⁴·Qb²·Ab²/δ` (`Qb` bounds `Q̂₀(−k)`, `Ab` bounds `Q̂₀(z)⁻¹ = I + A`, `δ` the
-  distance from `s` to the Yukawa poles) — so it is a **theorem, not a new axiom**;
-* `dp_error_entry_norm_le` — the headline: `‖DCF error‖ ≤ whOperatorBound · ‖fit residual‖`, i.e.
-  *the only error source is the YK re-approximation*;
-* `dp_sub_py_first_order_eq_conj_residual` — the same statement against the **exact** first-order PY
-  DCF, using MRS.2's `star_of_first_order_oz` to characterize it: the difference is the (★) assembly
-  applied to the WH-datum residual `B₁^fit − B₁^PY`.
-
-**PYE.4 — abstract equivalence (partial)**:
-* `dp_eq_py_first_order_of_exact_fit` — a fit exact in WH data reproduces `(OZ+PY)₁` exactly;
-* `dpDCF_entry_tendsto` / `dp_tendsto_py_first_order` — if the finite-tail family converges in WH
-  data then the DP DCFs converge to `(OZ+PY)₁` entrywise.
-  The remaining genuinely-open half is the **function-space lift**: that the exact outer closure
-  `g_HS·(−βu)` (not a finite Yukawa sum) *has* such a WH projection `B₁^PY` and that it is the limit
-  of the finite-pole ones. It is isolated as the hypothesis `TailFitWHConvergent` — held as a
-  *hypothesis*, deliberately **not** an axiom (the `MixRDFInnerCollapse` template).
-
-Status: PYE.1 ✓, PYE.2 ✓, PYE.3 ✓ (boundedness proved, not assumed), PYE.4 ◑ (limit half proved;
-the function-space existence of `B₁^PY` remains, as an explicit hypothesis).
+The **core-bound half** of the non-FMSA closure development (split from the dependency-free
+closure definitions, `Closures/ClosureExpansions.lean`).  The doubly-propagated (DP) first-order
+solution map `Ĉ₁ = Q̂₀·B₁·Q̂₀ᵀ` is linear in the outer closure (PYE.2); the DCF error equals the
+DP map applied to the fit residual (PYE.3); the exact first-order-PY comparison and the `N=1`
+PY-Baxter identification (PYE.4); the `k → r` real-space bridge (PYE.5); the density of finite
+Yukawa-tail fits (PYE.7).  Builds on the closure definitions plus the FMSA core (`SpectralAmplitude`,
+`MixtureRealSpace`, radial Fourier inversion, Baxter Wiener–Hopf, no-spinodal).
 -/
 
 set_option linter.style.longLine false
@@ -88,217 +32,6 @@ open Filter Topology FourierTransform
 open scoped Matrix
 
 namespace FMSA.FirstOrderClosure
-
-/-! ## PYE.1 — the first-order closures
-
-The coupling parameter is `s` (the tail is `s·u`); `s = 0` is the pure hard-sphere system, where
-`g₀ = g_HS`, `γ₀ = h_HS` and `c₀(r>R) = 0`.  Everything here is one product/chain rule at `s = 0`.
--/
-
-/-- The Mayer factor of the `s`-scaled tail, `f(s) = e^{−β s u} − 1`.  (`u` is the outer pair
-potential at the radius under consideration; `β` the inverse temperature.) -/
-noncomputable def mayerF (beta u s : ℝ) : ℝ := Real.exp (-(beta * s * u)) - 1
-
-/-- At zero coupling the Mayer factor vanishes — the PY outer DCF has no zeroth-order part,
-`c₀(r>R) = 0`. -/
-theorem mayerF_zero (beta u : ℝ) : mayerF beta u 0 = 0 := by
-  simp [mayerF]
-
-/-- The `s`-linear exponent `−β s u` and its derivative `−βu` (the one calculus input of the whole
-closure expansion; kept as a named lemma because both closures need it). -/
-theorem hasDerivAt_couplingExponent (beta u : ℝ) :
-    HasDerivAt (fun s : ℝ => -(beta * s * u)) (-(beta * 1 * u)) 0 :=
-  (((hasDerivAt_id (0 : ℝ)).const_mul beta).mul_const u).neg
-
-/-- `d/ds e^{−β s u}|_{s=0} = −βu`: the Mayer factor is `−βu·s + O(s²)`. -/
-theorem hasDerivAt_mayerF (beta u : ℝ) : HasDerivAt (mayerF beta u) (-(beta * u)) 0 := by
-  have h2 : HasDerivAt (fun s : ℝ => Real.exp (-(beta * s * u)) - 1)
-      (Real.exp (-(beta * 0 * u)) * -(beta * 1 * u)) 0 :=
-    (hasDerivAt_couplingExponent beta u).exp.sub_const 1
-  have hval : Real.exp (-(beta * 0 * u)) * -(beta * 1 * u) = -(beta * u) := by simp
-  rw [hval] at h2
-  exact h2
-
-/-- **PYE.1 — the PY closure to first order in the coupling.**  The PY closure
-`c(s) = (e^{−β s u} − 1)·y(s)` has first-order coefficient `y₀·(−βu)`: the Mayer factor supplies the
-`−βu`, and the cavity function contributes only its zeroth-order value because the factor it
-multiplies vanishes at `s = 0`. -/
-theorem py_first_order_outer {beta u gHS y1 : ℝ} (y : ℝ → ℝ)
-    (hy : HasDerivAt y y1 0) (hy0 : y 0 = gHS) :
-    HasDerivAt (fun s => mayerF beta u s * y s) (gHS * -(beta * u)) 0 := by
-  have h := (hasDerivAt_mayerF beta u).mul hy
-  rw [mayerF_zero, hy0] at h
-  rw [show gHS * -(beta * u) = -(beta * u) * gHS + 0 * y1 from by ring]
-  exact h
-
-/-- **PYE.1 — `y₀ = g_HS`.**  The cavity function `y = g·e^{βsu}` at zero coupling is the RDF at zero
-coupling, i.e. the hard-sphere `g_HS`.  (This is what turns `py_first_order_outer`'s `y₀` into the
-`g_HS` of `c₁ = g_HS·(−βu)`.) -/
-theorem cavity_zero_coupling {beta u gHS : ℝ} (g y : ℝ → ℝ)
-    (hcav : ∀ s, y s = g s * Real.exp (beta * s * u)) (hg0 : g 0 = gHS) :
-    y 0 = gHS := by
-  rw [hcav 0]; simp [hg0]
-
-/-- **PYE.1 — first-order PY outer, assembled**: `c₁(r>R) = g_HS·(−βu)`, with `g_HS` reached through
-the cavity function (`cavity_zero_coupling`). -/
-theorem py_first_order_outer_cavity {beta u gHS y1 : ℝ} (g y : ℝ → ℝ)
-    (hy : HasDerivAt y y1 0) (hcav : ∀ s, y s = g s * Real.exp (beta * s * u)) (hg0 : g 0 = gHS) :
-    HasDerivAt (fun s => mayerF beta u s * y s) (gHS * -(beta * u)) 0 :=
-  py_first_order_outer y hy (cavity_zero_coupling g y hcav hg0)
-
-/-- **MSA/FMSA first order is the `y₀ ↦ 1` case**: the bare `−βu`, with no `g_HS` enhancement.  (The
-numerics' "FMSA badly undershoots" — `hncb_first_order.md` §3 — is exactly this missing factor.) -/
-theorem msa_first_order_outer (beta u : ℝ) :
-    HasDerivAt (fun s => mayerF beta u s * (1 : ℝ)) (1 * -(beta * u)) 0 :=
-  py_first_order_outer (fun _ => (1 : ℝ)) (hasDerivAt_const 0 1) rfl
-
-/-- The HNCB (Lado reference-HNC) closure at coupling `s`:
-`c(s) = exp(−β s u + γ(s) + B_HS) − 1 − γ(s)`, with a **coupling-independent** hard-sphere bridge
-`B_HS`. -/
-noncomputable def hncbClosure (beta u B : ℝ) (gamma : ℝ → ℝ) (s : ℝ) : ℝ :=
-  Real.exp (-(beta * s * u) + gamma s + B) - 1 - gamma s
-
-/-- **The expansion base point is consistent**: `c₀(r>R) = 0`.  At `s = 0` the system is pure hard
-sphere, `γ₀ = h_HS` and `exp(γ₀ + B_HS) = g_HS = 1 + h_HS` — which is exactly the hypothesis — so the
-zeroth-order outer HNCB DCF vanishes, matching PY's `mayerF_zero`. -/
-theorem hncb_outer_zeroth_order_eq_zero {beta u B : ℝ} (gamma : ℝ → ℝ)
-    (hbase : Real.exp (gamma 0 + B) = 1 + gamma 0) :
-    hncbClosure beta u B gamma 0 = 0 := by
-  simp only [hncbClosure, mul_zero, zero_mul, neg_zero, zero_add, hbase]
-  ring
-
-/-- **PYE.1 (HNCB side) — the bridge closure to first order.**  `c₁(r>R) = g_HS·(−βu) + h_HS·γ₁`
-with `g_HS = exp(γ₀ + B_HS)` and `h_HS = g_HS − 1`: the chain rule on the exponential gives
-`g_HS·(−βu + γ₁)` and the explicit `−γ(s)` subtracts one `γ₁`. -/
-theorem hncb_first_order_outer {beta u B gHS gamma1 : ℝ} (gamma : ℝ → ℝ)
-    (hg : HasDerivAt gamma gamma1 0) (hgHS : Real.exp (gamma 0 + B) = gHS) :
-    HasDerivAt (hncbClosure beta u B gamma) (gHS * -(beta * u) + (gHS - 1) * gamma1) 0 := by
-  have hlin : HasDerivAt (fun s : ℝ => -(beta * s * u) + gamma s + B)
-      (-(beta * 1 * u) + gamma1) 0 := ((hasDerivAt_couplingExponent beta u).add hg).add_const B
-  have hval : Real.exp (-(beta * 0 * u) + gamma 0 + B) = gHS := by
-    simpa using hgHS
-  have h : HasDerivAt (fun s => Real.exp (-(beta * s * u) + gamma s + B) - 1 - gamma s)
-      (Real.exp (-(beta * 0 * u) + gamma 0 + B) * (-(beta * 1 * u) + gamma1) - gamma1) 0 :=
-    ((hlin.exp).sub_const 1).sub hg
-  rw [hval] at h
-  have hd : gHS * (-(beta * 1 * u) + gamma1) - gamma1 = gHS * -(beta * u) + (gHS - 1) * gamma1 := by
-    ring
-  rw [hd] at h
-  exact h
-
-/-- **HNCB.1 — the base point, and why `h_HS` is the `γ₁` coefficient.**  The two hypotheses used
-above are *not* independent: `hncb_outer_zeroth_order_eq_zero` asks for `exp(γ₀+B) = 1+γ₀` (so that
-`c₀(r>R) = 0`) and `hncb_first_order_outer` asks for `exp(γ₀+B) = g_HS`.  Held together they force
-
-    γ₀ = g_HS − 1 = h_HS ,
-
-the physical statement that at zero coupling the indirect correlation *is* the hard-sphere `h_HS`
-(the outer `c₀` having vanished) — which is exactly why `hncb_first_order_outer`'s `γ₁` coefficient
-comes out as `g_HS − 1 = h_HS` rather than as some independent constant.
-
-Stated so the pair cannot be instantiated inconsistently: a caller supplying both hypotheses gets the
-base-point identity and the vanishing zeroth order together.  The `example` below certifies the pair
-is inhabited at a `g_HS ≠ 1` point, i.e. that this is not read at the ideal-gas degeneracy. -/
-theorem hncb_base_point_gamma_eq {beta u B gHS : ℝ} (gamma : ℝ → ℝ)
-    (hbase : Real.exp (gamma 0 + B) = 1 + gamma 0) (hgHS : Real.exp (gamma 0 + B) = gHS) :
-    gamma 0 = gHS - 1 ∧ hncbClosure beta u B gamma 0 = 0 :=
-  ⟨by rw [hgHS] at hbase; linarith, hncb_outer_zeroth_order_eq_zero gamma hbase⟩
-
-/-- **Non-vacuity of the HNCB base point.**  `γ ≡ 1`, `B_HS = log 2 − 1`, `g_HS = 2` satisfies
-`HasDerivAt γ 0 0`, `exp(γ₀+B) = g_HS` *and* `exp(γ₀+B) = 1 + γ₀`, with `g_HS ≠ 1`.  Recorded as an
-`example` because this repo has shipped true-but-empty statements before
-(`b4_origin_bc_abstract`, `b9_d_ij_nonzero_example`, GAP.8's `poly_coeff_from_laurent`), and the
-`g_HS ≠ 1` clause rules out the degenerate reading at the ideal-gas point. -/
-example : ∃ (B gHS : ℝ) (gamma : ℝ → ℝ),
-    HasDerivAt gamma 0 0 ∧ Real.exp (gamma 0 + B) = gHS ∧
-      Real.exp (gamma 0 + B) = 1 + gamma 0 ∧ gHS ≠ 1 := by
-  refine ⟨Real.log 2 - 1, 2, fun _ => (1 : ℝ), hasDerivAt_const (0 : ℝ) (1 : ℝ), ?_, ?_, by norm_num⟩
-  · change Real.exp ((1 : ℝ) + (Real.log 2 - 1)) = 2
-    rw [show (1 : ℝ) + (Real.log 2 - 1) = Real.log 2 from by ring, Real.exp_log (by norm_num)]
-  · change Real.exp ((1 : ℝ) + (Real.log 2 - 1)) = 1 + 1
-    rw [show (1 : ℝ) + (Real.log 2 - 1) = Real.log 2 from by ring, Real.exp_log (by norm_num)]
-    norm_num
-
-/-! ### HNCB.1 — the pivot to the contractive form `c₁ = −βu + B·h₁`
-
-`hncb_first_order_outer` gives the **`exp`-form** coefficient `g_HS·(−βu) + h_HS·γ₁`.  The form the
-predictor–corrector actually iterates is the algebraically equivalent
-
-    c₁ = −βu + B·h₁ ,      B := h_HS/g_HS = 1 − 1/g_HS ,
-
-reached by eliminating `γ₁` through the definition of the indirect correlation, `h = γ + c` (so
-`γ₁ = h₁ − c₁`), and dividing by `g_HS`.  The two inputs the pivot needs — and the only ones — are
-that OZ relation and `g_HS ≠ 0`.
-
-The pivot is not cosmetic: it is what makes the iteration converge.  The `exp` form's own feedback
-coefficient on `c₁` is `h_HS = g_HS − 1`, which **exceeds 1 for any moderately dense hard-sphere
-fluid** (`g_HS` at contact is ≳ 2), so Picard-iterating it diverges; `B = 1 − 1/g_HS` stays in `[0,1)`
-for every `g_HS ≥ 1`.  Both statements are proved below, so the choice of form is recorded as a fact
-rather than as a remark.
--/
-
-/-- The contractive bridge coefficient `B = h_HS/g_HS = 1 − 1/g_HS` of the HNCB outer closure. -/
-noncomputable def bridgeCoeff (gHS : ℝ) : ℝ := 1 - 1 / gHS
-
-/-- **HNCB.1 ⭐ — the pivot.**  Eliminating `γ₁` from the `exp`-form first-order coefficient
-`c₁ = g_HS·(−βu) + h_HS·γ₁` via the OZ relation `h = γ + c` (i.e. `γ₁ = h₁ − c₁`) and dividing by
-`g_HS ≠ 0` gives the contractive form `c₁ = −βu + B·h₁`, `B = 1 − 1/g_HS`.
-
-Note `h_HS = g_HS − 1` is *not* an extra hypothesis here: it is already the `γ₁` coefficient produced
-by `hncb_first_order_outer`, and `1 + h_HS = g_HS` is what collapses `c₁ + h_HS·c₁` to `g_HS·c₁`. -/
-theorem hncb_contractive_pivot {beta u gHS gamma1 h1 c1 : ℝ} (hgHS : gHS ≠ 0)
-    (hc1 : c1 = gHS * -(beta * u) + (gHS - 1) * gamma1)
-    (hOZ : h1 = gamma1 + c1) :
-    c1 = -(beta * u) + bridgeCoeff gHS * h1 := by
-  have hgam : gamma1 = h1 - c1 := by linarith
-  rw [hgam] at hc1
-  unfold bridgeCoeff
-  field_simp
-  linear_combination hc1
-
-/-- **HNCB.1 — the pivot at the derivative level.**  The HNCB closure's first-order outer
-coefficient, written contractively: `HasDerivAt (hncbClosure …) (−βu + B·h₁) 0`, given the OZ
-relation for the first-order coefficients and `g_HS ≠ 0`.  This is the form Groups HNCB.2/HNCB.3
-iterate. -/
-theorem hncb_first_order_outer_contractive {beta u B gHS gamma1 h1 : ℝ} (gamma : ℝ → ℝ)
-    (hg : HasDerivAt gamma gamma1 0) (hgHS : Real.exp (gamma 0 + B) = gHS) (hgne : gHS ≠ 0)
-    (hOZ : h1 = gamma1 + (gHS * -(beta * u) + (gHS - 1) * gamma1)) :
-    HasDerivAt (hncbClosure beta u B gamma) (-(beta * u) + bridgeCoeff gHS * h1) 0 := by
-  have h := hncb_first_order_outer (beta := beta) (u := u) gamma hg hgHS
-  rwa [hncb_contractive_pivot (beta := beta) (u := u) hgne rfl hOZ] at h
-
-/-- **Why the contractive form is the one to iterate (half 1).**  `B = 1 − 1/g_HS ∈ [0,1)` for every
-`g_HS ≥ 1`, so Picard iteration on `c₁ = −βu + B·h₁` contracts. -/
-theorem bridgeCoeff_mem_Ico {gHS : ℝ} (h : 1 ≤ gHS) : bridgeCoeff gHS ∈ Set.Ico (0 : ℝ) 1 := by
-  have hpos : 0 < gHS := lt_of_lt_of_le one_pos h
-  constructor
-  · unfold bridgeCoeff
-    have : 1 / gHS ≤ 1 := by rw [div_le_one hpos]; exact h
-    linarith
-  · unfold bridgeCoeff
-    have : 0 < 1 / gHS := by positivity
-    linarith
-
-/-- **Why the contractive form is the one to iterate (half 2).**  The `exp` form's own feedback
-coefficient on `c₁` is `h_HS = g_HS − 1`, which is `≥ 1` as soon as `g_HS ≥ 2` — and `g_HS` at
-contact exceeds 2 for any moderately dense hard-sphere fluid.  So iterating
-`c₁ = g_HS·(−βu) + h_HS·γ₁` directly is Picard-**unstable** exactly where the theory is used, which
-is the reason for the pivot above. -/
-theorem exp_form_feedback_ge_one {gHS : ℝ} (h : 2 ≤ gHS) : 1 ≤ gHS - 1 := by linarith
-
-/-- **PYE.1 ⭐ — the Group-PYE identification.**  Setting `γ₁ ≡ 0` (the `pullback_passes = 0` rung,
-which drops the indirect correlation) makes the HNCB first-order outer coefficient **equal to PY's**:
-both are `g_HS·(−βu)`.  This is the closure-level content of "the no-pull-back construction *is*
-first-order PY"; the solver-level content is PYE.3/PYE.4 below. -/
-theorem pass_zero_eq_py_first_order {beta u B gHS y1 : ℝ} (gamma y : ℝ → ℝ)
-    (hg : HasDerivAt gamma 0 0) (hgHS : Real.exp (gamma 0 + B) = gHS)
-    (hy : HasDerivAt y y1 0) (hy0 : y 0 = gHS) :
-    HasDerivAt (hncbClosure beta u B gamma) (gHS * -(beta * u)) 0 ∧
-      HasDerivAt (fun s => mayerF beta u s * y s) (gHS * -(beta * u)) 0 := by
-  refine ⟨?_, py_first_order_outer y hy hy0⟩
-  have h := hncb_first_order_outer (beta := beta) (u := u) gamma hg hgHS
-  rw [show gHS * -(beta * u) + (gHS - 1) * 0 = gHS * -(beta * u) from by ring] at h
-  exact h
 
 /-! ## PYE.2 — the DP first-order solution map is linear in the outer closure
 
@@ -1510,5 +1243,6 @@ theorem exists_tailFit_whConvergent {N : ℕ} {R a C : ℝ} (ha : 0 < a)
     MeasureTheory.setIntegral_congr_fun measurableSet_Ioi fun r _ => abs_sub_comm _ _
   rw [hcomm]
   exact hbound m
+
 
 end FMSA.FirstOrderClosure

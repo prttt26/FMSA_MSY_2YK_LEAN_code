@@ -7,8 +7,8 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaDCF.MixtureMLSeries
-import LeanCode.YukawaDCF.SpectralAmplitude
+import LeanCode.YukawaOZMix.MixtureMLSeries
+import LeanCode.YukawaOZMix.SpectralAmplitude
 import LeanCode.FMSAPoly.EijStructure
 import LeanCode.FMSAPoly.OriginConstraint
 

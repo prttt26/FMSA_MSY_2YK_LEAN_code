@@ -367,7 +367,7 @@ file), not axiomatized.  **Clause 6j (`ozExterior_conv_sin_integrable`) is a THE
 `Integrable.integral_prod_left` + Fubini (`integral_prod`) + the `radial3d_conv` unfold gives its
 integrability from 6h.  So this cluster is now **zero** axioms — 6g, 6h, 6j are all theorems.
 
-## The PHYSICS axiom (1, pre-placed 2026-07-19, `YukawaDCF/`) — mixture track only
+## The PHYSICS axiom (1, pre-placed 2026-07-19, `HSMixture/`) — mixture track only
 
 ### `pyhs_mixture_no_spinodal` (`HSMixture/MixtureNoSpinodal.lean`)
 `det (Q0_mat_c_phys (I·k) sigma rho) ≠ 0` for real `k ≠ 0`, given `0 < σᵢ`, `0 < ρᵢ`,
