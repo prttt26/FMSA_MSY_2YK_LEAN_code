@@ -279,18 +279,566 @@ theorem qpConv_N1_contDiffOn {M : ℕ} (X : Mix 1 M) :
   set Q := X.Q0 0 0 with hQ
   set P := X.Qpp 0 with hP
   set R := X.R 0 0 with hRdef
-  have hclosed : ∀ x ∈ Set.Ioo (0 : ℝ) R, qpConv X 0 0 0 x =
-      ((rr * (Q * (0 - R) + P * (0 - R) ^ 2 / 2 + 0)) *
-            (rr * (Q * (0 - x - R) + P * (0 - x - R) ^ 2 / 2 + 0)) * R
-          + ((rr * (Q * (0 - R) + P * (0 - R) ^ 2 / 2 + 0)) *
-                (rr * (Q * (1 - x - R) + P * (1 - x - R) ^ 2 / 2 + 1)) + 0) * 0
-          - 0) := by
+  set C0 := rr * (-Q * R + P * R ^ 2 / 2) with hC0
+  set C1 := rr * (Q - P * R) with hC1
+  set A2 := rr * (P / 2) with hA2
+  set D0 : ℝ → ℝ := fun x => rr * (-Q * (x + R) + P * (x + R) ^ 2 / 2) with hD0
+  set D1 : ℝ → ℝ := fun x => rr * (Q - P * (x + R)) with hD1
+  -- the resolved integral is ContDiff in x (it equals the poly⋆poly closed-form atom)
+  have hcd : ContDiff ℝ (⊤ : ℕ∞)
+      (fun x => ∫ t in x..R, (C0 + C1 * t + A2 * t ^ 2) * (D0 x + D1 x * t + A2 * t ^ 2)) := by
+    have hEq : (fun x => ∫ t in x..R, (C0 + C1 * t + A2 * t ^ 2) * (D0 x + D1 x * t + A2 * t ^ 2))
+        = fun x => _ := funext (fun x => integral_quad_mul_quad C0 C1 A2 (D0 x) (D1 x) A2 x R)
+    rw [hEq, hD0, hD1]
+    fun_prop
+  -- closed form on the core: qpConv = the resolved integral
+  have hclosed : ∀ x ∈ Set.Ioo (0 : ℝ) R, qpConv X 0 0 0 x
+      = ∫ t in x..R, (C0 + C1 * t + A2 * t ^ 2) * (D0 x + D1 x * t + A2 * t ^ 2) := by
     intro x hx
     obtain ⟨hx0, hxR⟩ := hx
     rw [qpConv_eq_intervalIntegral X 0 0 0 x (by rw [hlam0]; exact hRpos.le)
         (qpConv_integrand_intervalIntegrable X 0 0 0 x), hlam0]
-    sorry
-  sorry
+    have hint := qpConv_integrand_intervalIntegrable X 0 0 0 x
+    rw [hlam0] at hint
+    have hI0 := hint.mono_set (Set.uIcc_subset_uIcc
+      (Set.mem_uIcc.mpr (Or.inl ⟨le_refl 0, hRpos.le⟩))
+      (Set.mem_uIcc.mpr (Or.inl ⟨hx0.le, hxR.le⟩)) : Set.uIcc (0:ℝ) x ⊆ Set.uIcc 0 R)
+    have hIx := hint.mono_set (Set.uIcc_subset_uIcc
+      (Set.mem_uIcc.mpr (Or.inl ⟨hx0.le, hxR.le⟩))
+      (Set.mem_uIcc.mpr (Or.inl ⟨hRpos.le, le_refl R⟩)) : Set.uIcc x R ⊆ Set.uIcc 0 R)
+    rw [← intervalIntegral.integral_add_adjacent_intervals hI0 hIx]
+    have hvanish : (∫ t in (0:ℝ)..x, (rr * (Q * (t - R) + P * (t - R) ^ 2 / 2))
+        * pMixEntry X 0 0 (x - t)) = 0 := by
+      rw [intervalIntegral.integral_congr_ae ?_, intervalIntegral.integral_zero]
+      rw [Set.uIoc_of_le hx0.le]
+      have hne : ∀ᵐ (y : ℝ), y ≠ x := by rw [MeasureTheory.ae_iff]; simp
+      filter_upwards [hne] with t ht hmem
+      have htlt : t < x := lt_of_le_of_ne hmem.2 ht
+      have hpm0 : pMixEntry X 0 0 (x - t) = 0 := by
+        apply Function.notMem_support.mp
+        intro hs
+        have hh := pMixEntry_support_subset X 0 0 hs
+        rw [Set.mem_Icc, hlam0] at hh
+        linarith [hh.2]
+      simp only [hpm0, mul_zero]
+    rw [hvanish, zero_add]
+    refine intervalIntegral.integral_congr (fun t ht => ?_)
+    rw [Set.uIcc_of_le hxR.le] at ht
+    have hmem : x - t ∈ Set.Icc (-(X.R 0 0)) (-(X.lam 0 0)) := by
+      rw [Set.mem_Icc, hlam0]
+      exact ⟨by linarith [ht.2], by linarith [ht.1]⟩
+    rw [pMixEntry_eq_indicator_quad, Set.indicator_of_mem hmem]
+    simp only [hC0, hC1, hA2, hD0, hD1]
+    ring
+  exact (hcd.contDiffOn).congr hclosed
+
+/-- **N=1 HS DCF assembly is `ContDiffOn` the core `(0, R₀₀)`.**  `cHSmixRaw X 0 0 = qFwd + pMixEntry −
+qpConv` (the sum over the single species collapses); on `(0,R)` `qFwd` is the quadratic, `pMixEntry`
+vanishes (support in `[−R,0]`), and `qpConv` is `ContDiffOn` (`qpConv_N1_contDiffOn`). -/
+theorem cHSmixRaw_N1_contDiffOn {M : ℕ} (X : Mix 1 M) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (cHSmixRaw X 0 0) (Set.Ioo (0 : ℝ) (X.R 0 0)) := by
+  have hlam0 : X.lam 0 0 = 0 := by simp only [Mix.lam]; ring
+  have hcm : cHSmixRaw X 0 0
+      = fun x => qFwd X 0 0 x + pMixEntry X 0 0 x - qpConv X 0 0 0 x := by
+    funext x; simp only [cHSmixRaw, Fin.sum_univ_one]
+  have hqFwd : ContDiffOn ℝ (⊤ : ℕ∞) (qFwd X 0 0) (Set.Ioo (0 : ℝ) (X.R 0 0)) := by
+    refine (ContDiff.contDiffOn (f := fun u => 2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0)
+        * (X.Q0 0 0 * (u - X.R 0 0) + X.Qpp 0 * (u - X.R 0 0) ^ 2 / 2)) (by fun_prop)).congr ?_
+    intro x hx
+    rw [qFwd_eq_indicator_quad, Set.indicator_of_mem (Set.mem_Icc.mpr
+      ⟨by rw [hlam0]; exact hx.1.le, hx.2.le⟩)]
+  have hpMix : ContDiffOn ℝ (⊤ : ℕ∞) (pMixEntry X 0 0) (Set.Ioo (0 : ℝ) (X.R 0 0)) := by
+    refine (contDiff_const (c := (0 : ℝ))).contDiffOn.congr ?_
+    intro x hx
+    apply Function.notMem_support.mp
+    intro hs
+    have hh := pMixEntry_support_subset X 0 0 hs
+    rw [Set.mem_Icc, hlam0] at hh
+    linarith [hh.2, hx.1]
+  rw [hcm]
+  exact (hqFwd.add hpMix).sub (qpConv_N1_contDiffOn X)
+
+/-- **N=1 `qpConv` is `ContDiffOn` the reflected core `(−R₀₀, 0)`** — the mirror of
+`qpConv_N1_contDiffOn`, needed for the odd part `cHSodd`.  For `y ∈ (−R,0)` the overlap resolves to
+`[0, y+R]` (the `[y+R, R]` part vanishes: `pMixEntry(y−t)=0` for `t>y+R`). -/
+theorem qpConv_N1_contDiffOn_neg {M : ℕ} (X : Mix 1 M) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (qpConv X 0 0 0) (Set.Ioo (-(X.R 0 0)) (0 : ℝ)) := by
+  have hlam0 : X.lam 0 0 = 0 := by simp only [Mix.lam]; ring
+  have hRpos : (0 : ℝ) < X.R 0 0 := by have := X.hσ 0; simp only [Mix.R]; linarith
+  set rr := 2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) with hrr
+  set Q := X.Q0 0 0 with hQ
+  set P := X.Qpp 0 with hP
+  set R := X.R 0 0 with hRdef
+  set C0 := rr * (-Q * R + P * R ^ 2 / 2) with hC0
+  set C1 := rr * (Q - P * R) with hC1
+  set A2 := rr * (P / 2) with hA2
+  set D0 : ℝ → ℝ := fun x => rr * (-Q * (x + R) + P * (x + R) ^ 2 / 2) with hD0
+  set D1 : ℝ → ℝ := fun x => rr * (Q - P * (x + R)) with hD1
+  have hcd : ContDiff ℝ (⊤ : ℕ∞)
+      (fun x => ∫ t in (0:ℝ)..(x + R), (C0 + C1 * t + A2 * t ^ 2) * (D0 x + D1 x * t + A2 * t ^ 2)) := by
+    have hEq := funext (fun x => integral_quad_mul_quad C0 C1 A2 (D0 x) (D1 x) A2 0 (x + R))
+    rw [hEq, hD0, hD1]
+    fun_prop
+  have hclosed : ∀ x ∈ Set.Ioo (-R) (0 : ℝ), qpConv X 0 0 0 x
+      = ∫ t in (0:ℝ)..(x + R), (C0 + C1 * t + A2 * t ^ 2) * (D0 x + D1 x * t + A2 * t ^ 2) := by
+    intro x hx
+    obtain ⟨hxR, hx0⟩ := hx
+    rw [qpConv_eq_intervalIntegral X 0 0 0 x (by rw [hlam0]; exact hRpos.le)
+        (qpConv_integrand_intervalIntegrable X 0 0 0 x), hlam0]
+    have hint := qpConv_integrand_intervalIntegrable X 0 0 0 x
+    rw [hlam0] at hint
+    have hI0 := hint.mono_set (Set.uIcc_subset_uIcc
+      (Set.mem_uIcc.mpr (Or.inl ⟨le_refl 0, hRpos.le⟩))
+      (Set.mem_uIcc.mpr (Or.inl ⟨by linarith, by linarith⟩)) : Set.uIcc (0:ℝ) (x + R) ⊆ Set.uIcc 0 R)
+    have hIx := hint.mono_set (Set.uIcc_subset_uIcc
+      (Set.mem_uIcc.mpr (Or.inl ⟨by linarith, by linarith⟩))
+      (Set.mem_uIcc.mpr (Or.inl ⟨hRpos.le, le_refl R⟩)) : Set.uIcc (x + R) R ⊆ Set.uIcc 0 R)
+    rw [← intervalIntegral.integral_add_adjacent_intervals hI0 hIx]
+    have hvanish : (∫ t in (x + R)..R, (rr * (Q * (t - R) + P * (t - R) ^ 2 / 2))
+        * pMixEntry X 0 0 (x - t)) = 0 := by
+      rw [intervalIntegral.integral_congr_ae ?_, intervalIntegral.integral_zero]
+      rw [Set.uIoc_of_le (by linarith)]
+      have hne : ∀ᵐ (y : ℝ), y ≠ x + R := by rw [MeasureTheory.ae_iff]; simp
+      filter_upwards [hne] with t _ht hmem
+      have htgt : x + R < t := hmem.1
+      have hpm0 : pMixEntry X 0 0 (x - t) = 0 := by
+        apply Function.notMem_support.mp
+        intro hs
+        have hh := pMixEntry_support_subset X 0 0 hs
+        rw [Set.mem_Icc] at hh
+        linarith [hh.1]
+      simp only [hpm0, mul_zero]
+    rw [hvanish, add_zero]
+    refine intervalIntegral.integral_congr (fun t ht => ?_)
+    rw [Set.uIcc_of_le (by linarith)] at ht
+    have hmem : x - t ∈ Set.Icc (-(X.R 0 0)) (-(X.lam 0 0)) := by
+      rw [Set.mem_Icc, hlam0]
+      exact ⟨by linarith [ht.2], by linarith [ht.1]⟩
+    rw [pMixEntry_eq_indicator_quad, Set.indicator_of_mem hmem]
+    simp only [hC0, hC1, hA2, hD0, hD1]
+    ring
+  exact (hcd.contDiffOn).congr hclosed
+
+/-- `cHSmixRaw` is `ContDiffOn` the reflected core `(−R₀₀, 0)` (mirror of `cHSmixRaw_N1_contDiffOn`;
+here `qFwd` vanishes and `pMixEntry` is the quadratic). -/
+theorem cHSmixRaw_N1_contDiffOn_neg {M : ℕ} (X : Mix 1 M) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (cHSmixRaw X 0 0) (Set.Ioo (-(X.R 0 0)) (0 : ℝ)) := by
+  have hlam0 : X.lam 0 0 = 0 := by simp only [Mix.lam]; ring
+  have hcm : cHSmixRaw X 0 0
+      = fun x => qFwd X 0 0 x + pMixEntry X 0 0 x - qpConv X 0 0 0 x := by
+    funext x; simp only [cHSmixRaw, Fin.sum_univ_one]
+  have hqFwd : ContDiffOn ℝ (⊤ : ℕ∞) (qFwd X 0 0) (Set.Ioo (-(X.R 0 0)) (0 : ℝ)) := by
+    refine (contDiff_const (c := (0 : ℝ))).contDiffOn.congr ?_
+    intro x hx
+    apply Function.notMem_support.mp
+    intro hs
+    have hh := qFwd_support_subset X 0 0 hs
+    rw [Set.mem_Icc, hlam0] at hh
+    linarith [hh.1, hx.2]
+  have hpMix : ContDiffOn ℝ (⊤ : ℕ∞) (pMixEntry X 0 0) (Set.Ioo (-(X.R 0 0)) (0 : ℝ)) := by
+    refine (ContDiff.contDiffOn (f := fun u => 2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0)
+        * (X.Q0 0 0 * (-u - X.R 0 0) + X.Qpp 0 * (-u - X.R 0 0) ^ 2 / 2)) (by fun_prop)).congr ?_
+    intro x hx
+    rw [pMixEntry_eq_indicator_quad, Set.indicator_of_mem (Set.mem_Icc.mpr
+      ⟨hx.1.le, by rw [hlam0]; linarith [hx.2]⟩)]
+  rw [hcm]
+  exact (hqFwd.add hpMix).sub (qpConv_N1_contDiffOn_neg X)
+
+/-- **N=1 headline — the zeroth-order inner HS DCF `cHSodd` (`= 2π√ρ·r·c^HS`) is `ContDiffOn` the
+core `(0, R₀₀)`.**  The DCF-side completion of Steps 1–2 for one component: `cHSodd(x) = cHSmixRaw(x) −
+cHSmixRaw(−x)` is `ContDiffOn` because `cHSmixRaw` is `ContDiffOn` both `(0,R)` and (via `x ↦ −x`) the
+reflected core `(−R,0)`.  Zeroth-order analog of `MixtureDCFSmooth.innerDCF_N1_contDiffOn`. -/
+theorem cHSodd_N1_contDiffOn {M : ℕ} (X : Mix 1 M) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (cHSodd X 0 0) (Set.Ioo (0 : ℝ) (X.R 0 0)) := by
+  have hco : cHSodd X 0 0 = fun x => cHSmixRaw X 0 0 x - cHSmixRaw X 0 0 (-x) := rfl
+  rw [hco]
+  refine (cHSmixRaw_N1_contDiffOn X).sub ((cHSmixRaw_N1_contDiffOn_neg X).comp
+    contDiff_neg.contDiffOn (fun x hx => ?_))
+  simp only [Set.mem_Ioo] at hx ⊢
+  exact ⟨by linarith [hx.2], by linarith [hx.1]⟩
+
+/-! ### General-N: the two-piece knot smoothness (`λᵢⱼ` splits the core) -/
+
+/-- **General-N `qpConv X i k j` is `ContDiffOn` the upper core piece `(λᵢⱼ, Rᵢⱼ)`** (for `σⱼ ≥ σᵢ`,
+i.e. `λᵢⱼ ≥ 0`).  The convolution window `[λᵢₖ, Rᵢₖ]` splits at `x+λⱼₖ` (`= x` shifted): below it
+`pMixEntry(x−t)=0`, above it the integrand is `(fwd quad)·(pMixEntry quad)`, so by
+`integral_quad_mul_quad` the value is a polynomial in `x` (`ContDiff`).  The knot edge `λᵢⱼ` and the
+upper limit `Rᵢⱼ` are the k-free `Mix.lam`/`Mix.R` combinations (`λᵢₖ−λⱼₖ=λᵢⱼ`, `Rᵢₖ−λⱼₖ=Rᵢⱼ`), so
+this piece is uniform over the intermediate species `k`. -/
+theorem qpConv_contDiffOn_upper {N M : ℕ} (X : Mix N M) (i k j : Fin N) (hlam : 0 ≤ X.lam i j) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (qpConv X i k j) (Set.Ioo (X.lam i j) (X.R i j)) := by
+  have hkR : X.lam i k ≤ X.R i k := by have := X.hσ i; simp only [Mix.lam, Mix.R]; linarith
+  have hLid : X.lam i k - X.lam j k = X.lam i j := by simp only [Mix.lam]; ring
+  have hRid : X.R i k - X.lam j k = X.R i j := by simp only [Mix.R, Mix.lam]; ring
+  have hRRid : X.R i k - X.R j k = -(X.lam i j) := by simp only [Mix.R, Mix.lam]; ring
+  set rri := 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) with hrri
+  set rrj := 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) with hrrj
+  set Qi := X.Q0 i k with hQi
+  set Qj := X.Q0 j k with hQj
+  set Pk := X.Qpp k with hPk
+  set Rik := X.R i k with hRik
+  set Rjk := X.R j k with hRjk
+  set Ljk := X.lam j k with hLjk
+  set c0 := rri * (-Qi * Rik + Pk * Rik ^ 2 / 2) with hc0
+  set c1 := rri * (Qi - Pk * Rik) with hc1
+  set c2 := rri * (Pk / 2) with hc2
+  set D0 : ℝ → ℝ := fun x => rrj * (-Qj * (x + Rjk) + Pk * (x + Rjk) ^ 2 / 2) with hD0
+  set D1 : ℝ → ℝ := fun x => rrj * (Qj - Pk * (x + Rjk)) with hD1
+  set d2 := rrj * (Pk / 2) with hd2
+  have hcd : ContDiff ℝ (⊤ : ℕ∞) (fun x => ∫ t in (x + Ljk)..Rik,
+      (c0 + c1 * t + c2 * t ^ 2) * (D0 x + D1 x * t + d2 * t ^ 2)) := by
+    have hEq := funext (fun x =>
+      integral_quad_mul_quad c0 c1 c2 (D0 x) (D1 x) d2 (x + Ljk) Rik)
+    rw [hEq]; simp only [hD0, hD1]; fun_prop
+  have hclosed : ∀ x ∈ Set.Ioo (X.lam i j) (X.R i j), qpConv X i k j x
+      = ∫ t in (x + Ljk)..Rik, (c0 + c1 * t + c2 * t ^ 2) * (D0 x + D1 x * t + d2 * t ^ 2) := by
+    intro x hx
+    obtain ⟨hxlo, hxhi⟩ := hx
+    rw [qpConv_eq_intervalIntegral X i k j x hkR (qpConv_integrand_intervalIntegrable X i k j x)]
+    have hint := qpConv_integrand_intervalIntegrable X i k j x
+    have hlo : X.lam i k ≤ x + Ljk := by linarith [hLid]
+    have hhi : x + Ljk ≤ Rik := by linarith [hRid]
+    have hI0 := hint.mono_set (Set.uIcc_subset_uIcc
+      (Set.mem_uIcc.mpr (Or.inl ⟨le_refl _, hkR⟩))
+      (Set.mem_uIcc.mpr (Or.inl ⟨hlo, hhi⟩)) : Set.uIcc (X.lam i k) (x + Ljk) ⊆ Set.uIcc (X.lam i k) Rik)
+    have hIx := hint.mono_set (Set.uIcc_subset_uIcc
+      (Set.mem_uIcc.mpr (Or.inl ⟨hlo, hhi⟩))
+      (Set.mem_uIcc.mpr (Or.inl ⟨hkR, le_refl _⟩)) : Set.uIcc (x + Ljk) Rik ⊆ Set.uIcc (X.lam i k) Rik)
+    rw [← intervalIntegral.integral_add_adjacent_intervals hI0 hIx]
+    have hvanish : (∫ t in (X.lam i k)..(x + Ljk), (rri * (Qi * (t - Rik) + Pk * (t - Rik) ^ 2 / 2))
+        * pMixEntry X j k (x - t)) = 0 := by
+      rw [intervalIntegral.integral_congr_ae ?_, intervalIntegral.integral_zero]
+      rw [Set.uIoc_of_le hlo]
+      have hne : ∀ᵐ (y : ℝ), y ≠ x + Ljk := by rw [MeasureTheory.ae_iff]; simp
+      filter_upwards [hne] with t ht hmem
+      have htlt : t < x + Ljk := lt_of_le_of_ne hmem.2 ht
+      have hpm0 : pMixEntry X j k (x - t) = 0 := by
+        apply Function.notMem_support.mp
+        intro hs
+        have hh := pMixEntry_support_subset X j k hs
+        rw [Set.mem_Icc] at hh
+        simp only [← hLjk, ← hRjk] at hh
+        linarith [hh.2, htlt]
+      simp only [hpm0, mul_zero]
+    rw [hvanish, zero_add]
+    refine intervalIntegral.integral_congr (fun t ht => ?_)
+    rw [Set.uIcc_of_le hhi] at ht
+    have hmem : x - t ∈ Set.Icc (-(X.R j k)) (-(X.lam j k)) := by
+      rw [Set.mem_Icc]
+      refine ⟨?_, by simp only [← hLjk]; linarith [ht.1]⟩
+      simp only [← hRjk]; have : Rik - Rjk = -(X.lam i j) := hRRid; linarith [ht.2, this, hlam]
+    rw [pMixEntry_eq_indicator_quad, Set.indicator_of_mem hmem]
+    simp only [hc0, hc1, hc2, hD0, hD1, hd2, ← hQj, ← hPk, ← hRjk]
+    ring
+  exact (hcd.contDiffOn).congr hclosed
+
+/-- **General-N `qpConv X i k j` is `ContDiffOn` the lower core piece `(0, λᵢⱼ)`** (for `λᵢⱼ > 0`).
+Here the *whole* window `[λᵢₖ, Rᵢₖ]` lies in the `pMixEntry` support (no split), so the integrand is
+`(fwd quad)·(pMixEntry quad)` throughout and `qpConv` is the closed-form atom, a polynomial in `x`. -/
+theorem qpConv_contDiffOn_lower {N M : ℕ} (X : Mix N M) (i k j : Fin N) (_hlam : 0 ≤ X.lam i j) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (qpConv X i k j) (Set.Ioo (0 : ℝ) (X.lam i j)) := by
+  have hkR : X.lam i k ≤ X.R i k := by have := X.hσ i; simp only [Mix.lam, Mix.R]; linarith
+  have hLid : X.lam i k - X.lam j k = X.lam i j := by simp only [Mix.lam]; ring
+  have hRRid : X.R i k - X.R j k = -(X.lam i j) := by simp only [Mix.R, Mix.lam]; ring
+  set rri := 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) with hrri
+  set rrj := 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) with hrrj
+  set Qi := X.Q0 i k with hQi
+  set Qj := X.Q0 j k with hQj
+  set Pk := X.Qpp k with hPk
+  set Rik := X.R i k with hRik
+  set Rjk := X.R j k with hRjk
+  set Ljk := X.lam j k with hLjk
+  set c0 := rri * (-Qi * Rik + Pk * Rik ^ 2 / 2) with hc0
+  set c1 := rri * (Qi - Pk * Rik) with hc1
+  set c2 := rri * (Pk / 2) with hc2
+  set D0 : ℝ → ℝ := fun x => rrj * (-Qj * (x + Rjk) + Pk * (x + Rjk) ^ 2 / 2) with hD0
+  set D1 : ℝ → ℝ := fun x => rrj * (Qj - Pk * (x + Rjk)) with hD1
+  set d2 := rrj * (Pk / 2) with hd2
+  have hcd : ContDiff ℝ (⊤ : ℕ∞) (fun x => ∫ t in (X.lam i k)..Rik,
+      (c0 + c1 * t + c2 * t ^ 2) * (D0 x + D1 x * t + d2 * t ^ 2)) := by
+    have hEq := funext (fun x =>
+      integral_quad_mul_quad c0 c1 c2 (D0 x) (D1 x) d2 (X.lam i k) Rik)
+    rw [hEq]; simp only [hD0, hD1]; fun_prop
+  have hclosed : ∀ x ∈ Set.Ioo (0 : ℝ) (X.lam i j), qpConv X i k j x
+      = ∫ t in (X.lam i k)..Rik, (c0 + c1 * t + c2 * t ^ 2) * (D0 x + D1 x * t + d2 * t ^ 2) := by
+    intro x hx
+    obtain ⟨hx0, hxlam⟩ := hx
+    rw [qpConv_eq_intervalIntegral X i k j x hkR (qpConv_integrand_intervalIntegrable X i k j x)]
+    refine intervalIntegral.integral_congr (fun t ht => ?_)
+    rw [Set.uIcc_of_le hkR] at ht
+    have hmem : x - t ∈ Set.Icc (-(X.R j k)) (-(X.lam j k)) := by
+      rw [Set.mem_Icc]
+      refine ⟨?_, ?_⟩
+      · simp only [← hRjk]; linarith [ht.2, hx0, hRRid]
+      · simp only [← hLjk]; linarith [ht.1, hxlam, hLid]
+    rw [pMixEntry_eq_indicator_quad, Set.indicator_of_mem hmem]
+    simp only [hc0, hc1, hc2, hD0, hD1, hd2, ← hQj, ← hPk, ← hRjk]
+    ring
+  exact (hcd.contDiffOn).congr hclosed
+
+/-- **General-N HS DCF assembly `cHSmixRaw` is `ContDiffOn` the upper piece `(λᵢⱼ, Rᵢⱼ)`.**
+`cHSmixRaw = qFwd + pMixEntry − ∑ₖ qpConv`; on the upper piece `qFwd` is the quadratic, `pMixEntry`
+(the `(j,i)` reflected kernel, supported in `[−Rᵢⱼ, λᵢⱼ]`) vanishes, and each `qpConv` is `ContDiffOn`
+(`qpConv_contDiffOn_upper`) so the species sum is. -/
+theorem cHSmixRaw_contDiffOn_upper {N M : ℕ} (X : Mix N M) (i j : Fin N) (hlam : 0 ≤ X.lam i j) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (cHSmixRaw X i j) (Set.Ioo (X.lam i j) (X.R i j)) := by
+  have hqFwd : ContDiffOn ℝ (⊤ : ℕ∞) (qFwd X i j) (Set.Ioo (X.lam i j) (X.R i j)) := by
+    refine (ContDiff.contDiffOn (f := fun u => 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ j)
+        * (X.Q0 i j * (u - X.R i j) + X.Qpp j * (u - X.R i j) ^ 2 / 2)) (by fun_prop)).congr ?_
+    intro x hx
+    rw [qFwd_eq_indicator_quad, Set.indicator_of_mem (Set.mem_Icc.mpr ⟨hx.1.le, hx.2.le⟩)]
+  have hpMix : ContDiffOn ℝ (⊤ : ℕ∞) (pMixEntry X j i) (Set.Ioo (X.lam i j) (X.R i j)) := by
+    refine (contDiff_const (c := (0 : ℝ))).contDiffOn.congr ?_
+    intro x hx
+    apply Function.notMem_support.mp
+    intro hs
+    have hh := pMixEntry_support_subset X j i hs
+    rw [Set.mem_Icc] at hh
+    have hlji : -(X.lam j i) = X.lam i j := by simp only [Mix.lam]; ring
+    rw [hlji] at hh
+    linarith [hh.2, hx.1]
+  have hsum : ContDiffOn ℝ (⊤ : ℕ∞) (fun x => ∑ k, qpConv X i k j x)
+      (Set.Ioo (X.lam i j) (X.R i j)) :=
+    ContDiffOn.sum (fun k _ => qpConv_contDiffOn_upper X i k j hlam)
+  exact (hqFwd.add hpMix).sub hsum
+
+/-- **General-N HS DCF assembly `cHSmixRaw` is `ContDiffOn` the lower piece `(0, λᵢⱼ)`.**  Here `qFwd`
+vanishes (its support starts at `λᵢⱼ`), `pMixEntry` is the quadratic, and each `qpConv` is `ContDiffOn`
+(`qpConv_contDiffOn_lower`). -/
+theorem cHSmixRaw_contDiffOn_lower {N M : ℕ} (X : Mix N M) (i j : Fin N) (hlam : 0 ≤ X.lam i j) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (cHSmixRaw X i j) (Set.Ioo (0 : ℝ) (X.lam i j)) := by
+  have hqFwd : ContDiffOn ℝ (⊤ : ℕ∞) (qFwd X i j) (Set.Ioo (0 : ℝ) (X.lam i j)) := by
+    refine (contDiff_const (c := (0 : ℝ))).contDiffOn.congr ?_
+    intro x hx
+    apply Function.notMem_support.mp
+    intro hs
+    have hh := qFwd_support_subset X i j hs
+    rw [Set.mem_Icc] at hh
+    linarith [hh.1, hx.2]
+  have hpMix : ContDiffOn ℝ (⊤ : ℕ∞) (pMixEntry X j i) (Set.Ioo (0 : ℝ) (X.lam i j)) := by
+    refine (ContDiff.contDiffOn (f := fun u => 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ i)
+        * (X.Q0 j i * (-u - X.R j i) + X.Qpp i * (-u - X.R j i) ^ 2 / 2)) (by fun_prop)).congr ?_
+    intro x hx
+    have hmem : x ∈ Set.Icc (-(X.R j i)) (-(X.lam j i)) := by
+      rw [Set.mem_Icc]
+      refine ⟨?_, ?_⟩
+      · have : (0 : ℝ) < X.R j i := by have := X.hσ i; have := X.hσ j; simp only [Mix.R]; linarith
+        linarith [hx.1]
+      · have hlji : -(X.lam j i) = X.lam i j := by simp only [Mix.lam]; ring
+        rw [hlji]; exact hx.2.le
+    rw [pMixEntry_eq_indicator_quad, Set.indicator_of_mem hmem]
+  have hsum : ContDiffOn ℝ (⊤ : ℕ∞) (fun x => ∑ k, qpConv X i k j x) (Set.Ioo (0 : ℝ) (X.lam i j)) :=
+    ContDiffOn.sum (fun k _ => qpConv_contDiffOn_lower X i k j hlam)
+  exact (hqFwd.add hpMix).sub hsum
+
+/-! ### Reflected core: the two-piece smoothness on `(−Rᵢⱼ, 0)` (for the odd part `cHSodd`) -/
+
+/-- **Reflected upper piece** — `qpConv X i k j` is `ContDiffOn` `(−Rᵢⱼ, −λᵢⱼ)` (for `σⱼ ≥ σᵢ`, i.e.
+`λᵢⱼ ≥ 0`).  Mirror of `qpConv_contDiffOn_upper` with the split at the **top**: the window `[λᵢₖ, Rᵢₖ]`
+splits at `x+Rⱼₖ`, above which `pMixEntry(x−t)=0` (since `x−t < −Rⱼₖ`), so the value collapses to
+`∫_{λᵢₖ}^{x+Rⱼₖ}` of the `quad·quad` product — a polynomial in `x` (`ContDiff`).  The knot edges are the
+k-free combinations (`λᵢₖ−Rⱼₖ = −Rᵢⱼ`, `Rᵢₖ−Rⱼₖ = −λᵢⱼ`), so this piece is uniform over `k`. -/
+theorem qpConv_contDiffOn_upper_neg {N M : ℕ} (X : Mix N M) (i k j : Fin N) (hlam : 0 ≤ X.lam i j) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (qpConv X i k j) (Set.Ioo (-(X.R i j)) (-(X.lam i j))) := by
+  have hkR : X.lam i k ≤ X.R i k := by have := X.hσ i; simp only [Mix.lam, Mix.R]; linarith
+  have hLid : X.lam i k - X.lam j k = X.lam i j := by simp only [Mix.lam]; ring
+  have hLRid : X.lam i k - X.R j k = -(X.R i j) := by simp only [Mix.lam, Mix.R]; ring
+  have hRRid : X.R i k - X.R j k = -(X.lam i j) := by simp only [Mix.R, Mix.lam]; ring
+  set rri := 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) with hrri
+  set rrj := 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) with hrrj
+  set Qi := X.Q0 i k with hQi
+  set Qj := X.Q0 j k with hQj
+  set Pk := X.Qpp k with hPk
+  set Rik := X.R i k with hRik
+  set Rjk := X.R j k with hRjk
+  set Ljk := X.lam j k with hLjk
+  set c0 := rri * (-Qi * Rik + Pk * Rik ^ 2 / 2) with hc0
+  set c1 := rri * (Qi - Pk * Rik) with hc1
+  set c2 := rri * (Pk / 2) with hc2
+  set D0 : ℝ → ℝ := fun x => rrj * (-Qj * (x + Rjk) + Pk * (x + Rjk) ^ 2 / 2) with hD0
+  set D1 : ℝ → ℝ := fun x => rrj * (Qj - Pk * (x + Rjk)) with hD1
+  set d2 := rrj * (Pk / 2) with hd2
+  have hcd : ContDiff ℝ (⊤ : ℕ∞) (fun x => ∫ t in (X.lam i k)..(x + Rjk),
+      (c0 + c1 * t + c2 * t ^ 2) * (D0 x + D1 x * t + d2 * t ^ 2)) := by
+    have hEq := funext (fun x =>
+      integral_quad_mul_quad c0 c1 c2 (D0 x) (D1 x) d2 (X.lam i k) (x + Rjk))
+    rw [hEq]; simp only [hD0, hD1]; fun_prop
+  have hclosed : ∀ x ∈ Set.Ioo (-(X.R i j)) (-(X.lam i j)), qpConv X i k j x
+      = ∫ t in (X.lam i k)..(x + Rjk), (c0 + c1 * t + c2 * t ^ 2) * (D0 x + D1 x * t + d2 * t ^ 2) := by
+    intro x hx
+    obtain ⟨hxlo, hxhi⟩ := hx
+    rw [qpConv_eq_intervalIntegral X i k j x hkR (qpConv_integrand_intervalIntegrable X i k j x)]
+    have hint := qpConv_integrand_intervalIntegrable X i k j x
+    have hlo : X.lam i k ≤ x + Rjk := by linarith [hLRid]
+    have hhi : x + Rjk ≤ Rik := by linarith [hRRid]
+    have hI0 := hint.mono_set (Set.uIcc_subset_uIcc
+      (Set.mem_uIcc.mpr (Or.inl ⟨le_refl _, hkR⟩))
+      (Set.mem_uIcc.mpr (Or.inl ⟨hlo, hhi⟩)) :
+      Set.uIcc (X.lam i k) (x + Rjk) ⊆ Set.uIcc (X.lam i k) Rik)
+    have hIx := hint.mono_set (Set.uIcc_subset_uIcc
+      (Set.mem_uIcc.mpr (Or.inl ⟨hlo, hhi⟩))
+      (Set.mem_uIcc.mpr (Or.inl ⟨hkR, le_refl _⟩)) :
+      Set.uIcc (x + Rjk) Rik ⊆ Set.uIcc (X.lam i k) Rik)
+    rw [← intervalIntegral.integral_add_adjacent_intervals hI0 hIx]
+    have hvanish : (∫ t in (x + Rjk)..Rik, (rri * (Qi * (t - Rik) + Pk * (t - Rik) ^ 2 / 2))
+        * pMixEntry X j k (x - t)) = 0 := by
+      rw [intervalIntegral.integral_congr_ae ?_, intervalIntegral.integral_zero]
+      refine ae_of_all _ (fun t hmem => ?_)
+      rw [Set.uIoc_of_le hhi] at hmem
+      have htgt : x + Rjk < t := hmem.1
+      have hpm0 : pMixEntry X j k (x - t) = 0 := by
+        apply Function.notMem_support.mp
+        intro hs
+        have hh := pMixEntry_support_subset X j k hs
+        rw [Set.mem_Icc] at hh
+        simp only [← hRjk] at hh
+        linarith [hh.1, htgt]
+      simp only [hpm0, mul_zero]
+    rw [hvanish, add_zero]
+    refine intervalIntegral.integral_congr (fun t ht => ?_)
+    rw [Set.uIcc_of_le hlo] at ht
+    have hmem : x - t ∈ Set.Icc (-(X.R j k)) (-(X.lam j k)) := by
+      rw [Set.mem_Icc]
+      refine ⟨by simp only [← hRjk]; linarith [ht.2], ?_⟩
+      simp only [← hLjk]; linarith [ht.1, hLid, hxhi, hlam]
+    rw [pMixEntry_eq_indicator_quad, Set.indicator_of_mem hmem]
+    simp only [hc0, hc1, hc2, hD0, hD1, hd2, ← hQj, ← hPk, ← hRjk]
+    ring
+  exact (hcd.contDiffOn).congr hclosed
+
+/-- **Reflected lower piece** — `qpConv X i k j` is `ContDiffOn` `(−λᵢⱼ, 0)` (for `λᵢⱼ ≥ 0`).  Mirror
+of `qpConv_contDiffOn_lower`: the *whole* window `[λᵢₖ, Rᵢₖ]` still lies in the `pMixEntry` support (no
+split, since `x > −λᵢⱼ` keeps `x+Rⱼₖ > Rᵢₖ` and `x < 0 ≤ λᵢⱼ` keeps `x+λⱼₖ < λᵢₖ`), so the integrand is
+`quad·quad` throughout and `qpConv` is the closed-form atom, a polynomial in `x`. -/
+theorem qpConv_contDiffOn_lower_neg {N M : ℕ} (X : Mix N M) (i k j : Fin N) (_hlam : 0 ≤ X.lam i j) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (qpConv X i k j) (Set.Ioo (-(X.lam i j)) (0 : ℝ)) := by
+  have hkR : X.lam i k ≤ X.R i k := by have := X.hσ i; simp only [Mix.lam, Mix.R]; linarith
+  have hLid : X.lam i k - X.lam j k = X.lam i j := by simp only [Mix.lam]; ring
+  have hRRid : X.R i k - X.R j k = -(X.lam i j) := by simp only [Mix.R, Mix.lam]; ring
+  set rri := 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) with hrri
+  set rrj := 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) with hrrj
+  set Qi := X.Q0 i k with hQi
+  set Qj := X.Q0 j k with hQj
+  set Pk := X.Qpp k with hPk
+  set Rik := X.R i k with hRik
+  set Rjk := X.R j k with hRjk
+  set Ljk := X.lam j k with hLjk
+  set c0 := rri * (-Qi * Rik + Pk * Rik ^ 2 / 2) with hc0
+  set c1 := rri * (Qi - Pk * Rik) with hc1
+  set c2 := rri * (Pk / 2) with hc2
+  set D0 : ℝ → ℝ := fun x => rrj * (-Qj * (x + Rjk) + Pk * (x + Rjk) ^ 2 / 2) with hD0
+  set D1 : ℝ → ℝ := fun x => rrj * (Qj - Pk * (x + Rjk)) with hD1
+  set d2 := rrj * (Pk / 2) with hd2
+  have hcd : ContDiff ℝ (⊤ : ℕ∞) (fun x => ∫ t in (X.lam i k)..Rik,
+      (c0 + c1 * t + c2 * t ^ 2) * (D0 x + D1 x * t + d2 * t ^ 2)) := by
+    have hEq := funext (fun x =>
+      integral_quad_mul_quad c0 c1 c2 (D0 x) (D1 x) d2 (X.lam i k) Rik)
+    rw [hEq]; simp only [hD0, hD1]; fun_prop
+  have hclosed : ∀ x ∈ Set.Ioo (-(X.lam i j)) (0 : ℝ), qpConv X i k j x
+      = ∫ t in (X.lam i k)..Rik, (c0 + c1 * t + c2 * t ^ 2) * (D0 x + D1 x * t + d2 * t ^ 2) := by
+    intro x hx
+    obtain ⟨hxlo, hxhi⟩ := hx
+    rw [qpConv_eq_intervalIntegral X i k j x hkR (qpConv_integrand_intervalIntegrable X i k j x)]
+    refine intervalIntegral.integral_congr (fun t ht => ?_)
+    rw [Set.uIcc_of_le hkR] at ht
+    have hmem : x - t ∈ Set.Icc (-(X.R j k)) (-(X.lam j k)) := by
+      rw [Set.mem_Icc]
+      refine ⟨?_, ?_⟩
+      · simp only [← hRjk]; linarith [ht.2, hxlo, hRRid]
+      · simp only [← hLjk]; linarith [ht.1, hxhi, hxlo, hLid]
+    rw [pMixEntry_eq_indicator_quad, Set.indicator_of_mem hmem]
+    simp only [hc0, hc1, hc2, hD0, hD1, hd2, ← hQj, ← hPk, ← hRjk]
+    ring
+  exact (hcd.contDiffOn).congr hclosed
+
+/-- **Reflected HS DCF assembly** `cHSmixRaw` is `ContDiffOn` `(−Rᵢⱼ, −λᵢⱼ)`.  Here `qFwd_ij` vanishes
+(its support `[λᵢⱼ,Rᵢⱼ]` is disjoint from the reflected piece), `pMixEntry_ji` (supported on
+`[−Rᵢⱼ, λᵢⱼ]`) is the quadratic, and each `qpConv` is `ContDiffOn` (`qpConv_contDiffOn_upper_neg`). -/
+theorem cHSmixRaw_contDiffOn_upper_neg {N M : ℕ} (X : Mix N M) (i j : Fin N) (hlam : 0 ≤ X.lam i j) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (cHSmixRaw X i j) (Set.Ioo (-(X.R i j)) (-(X.lam i j))) := by
+  have hqFwd : ContDiffOn ℝ (⊤ : ℕ∞) (qFwd X i j) (Set.Ioo (-(X.R i j)) (-(X.lam i j))) := by
+    refine (contDiff_const (c := (0 : ℝ))).contDiffOn.congr ?_
+    intro x hx
+    apply Function.notMem_support.mp
+    intro hs
+    have hh := qFwd_support_subset X i j hs
+    rw [Set.mem_Icc] at hh
+    linarith [hh.1, hx.2, hlam]
+  have hpMix : ContDiffOn ℝ (⊤ : ℕ∞) (pMixEntry X j i) (Set.Ioo (-(X.R i j)) (-(X.lam i j))) := by
+    refine (ContDiff.contDiffOn (f := fun u => 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ i)
+        * (X.Q0 j i * (-u - X.R j i) + X.Qpp i * (-u - X.R j i) ^ 2 / 2)) (by fun_prop)).congr ?_
+    intro x hx
+    have hmem : x ∈ Set.Icc (-(X.R j i)) (-(X.lam j i)) := by
+      rw [Set.mem_Icc]
+      refine ⟨?_, ?_⟩
+      · have hRji : X.R j i = X.R i j := by simp only [Mix.R]; ring
+        rw [hRji]; exact hx.1.le
+      · have hlji : -(X.lam j i) = X.lam i j := by simp only [Mix.lam]; ring
+        rw [hlji]; linarith [hx.2, hlam]
+    rw [pMixEntry_eq_indicator_quad, Set.indicator_of_mem hmem]
+  have hsum : ContDiffOn ℝ (⊤ : ℕ∞) (fun x => ∑ k, qpConv X i k j x)
+      (Set.Ioo (-(X.R i j)) (-(X.lam i j))) :=
+    ContDiffOn.sum (fun k _ => qpConv_contDiffOn_upper_neg X i k j hlam)
+  exact (hqFwd.add hpMix).sub hsum
+
+/-- **Reflected HS DCF assembly** `cHSmixRaw` is `ContDiffOn` `(−λᵢⱼ, 0)`.  Same structure as the
+reflected upper piece: `qFwd_ij` vanishes, `pMixEntry_ji` is the quadratic, and each `qpConv` is
+`ContDiffOn` (`qpConv_contDiffOn_lower_neg`). -/
+theorem cHSmixRaw_contDiffOn_lower_neg {N M : ℕ} (X : Mix N M) (i j : Fin N) (hlam : 0 ≤ X.lam i j) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (cHSmixRaw X i j) (Set.Ioo (-(X.lam i j)) (0 : ℝ)) := by
+  have hqFwd : ContDiffOn ℝ (⊤ : ℕ∞) (qFwd X i j) (Set.Ioo (-(X.lam i j)) (0 : ℝ)) := by
+    refine (contDiff_const (c := (0 : ℝ))).contDiffOn.congr ?_
+    intro x hx
+    apply Function.notMem_support.mp
+    intro hs
+    have hh := qFwd_support_subset X i j hs
+    rw [Set.mem_Icc] at hh
+    linarith [hh.1, hx.2, hlam]
+  have hpMix : ContDiffOn ℝ (⊤ : ℕ∞) (pMixEntry X j i) (Set.Ioo (-(X.lam i j)) (0 : ℝ)) := by
+    refine (ContDiff.contDiffOn (f := fun u => 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ i)
+        * (X.Q0 j i * (-u - X.R j i) + X.Qpp i * (-u - X.R j i) ^ 2 / 2)) (by fun_prop)).congr ?_
+    intro x hx
+    have hmem : x ∈ Set.Icc (-(X.R j i)) (-(X.lam j i)) := by
+      rw [Set.mem_Icc]
+      refine ⟨?_, ?_⟩
+      · have hRji : X.R j i = X.R i j := by simp only [Mix.R]; ring
+        have hRge : X.lam i j ≤ X.R i j := by simp only [Mix.R, Mix.lam]; linarith [X.hσ i]
+        rw [hRji]; linarith [hx.1, hRge]
+      · have hlji : -(X.lam j i) = X.lam i j := by simp only [Mix.lam]; ring
+        rw [hlji]; linarith [hx.2, hlam]
+    rw [pMixEntry_eq_indicator_quad, Set.indicator_of_mem hmem]
+  have hsum : ContDiffOn ℝ (⊤ : ℕ∞) (fun x => ∑ k, qpConv X i k j x)
+      (Set.Ioo (-(X.lam i j)) (0 : ℝ)) :=
+    ContDiffOn.sum (fun k _ => qpConv_contDiffOn_lower_neg X i k j hlam)
+  exact (hqFwd.add hpMix).sub hsum
+
+/-! ### General-N odd inner HS DCF `cHSodd` — two-piece smoothness on the physical core -/
+
+/-- **General-N `cHSodd` is `ContDiffOn` the upper physical-core piece `(λᵢⱼ, Rᵢⱼ)`** (for `σⱼ ≥ σᵢ`).
+`cHSodd(x) = cHSmixRaw(x) − cHSmixRaw(−x)`: the first term is `ContDiffOn (λᵢⱼ,Rᵢⱼ)`
+(`cHSmixRaw_contDiffOn_upper`) and `x ↦ −x` maps `(λᵢⱼ,Rᵢⱼ)` into the reflected upper piece
+`(−Rᵢⱼ,−λᵢⱼ)` where `cHSmixRaw` is `ContDiffOn` (`cHSmixRaw_contDiffOn_upper_neg`).  General-N analog
+of `cHSodd_N1_contDiffOn`. -/
+theorem cHSodd_contDiffOn_upper {N M : ℕ} (X : Mix N M) (i j : Fin N) (hlam : 0 ≤ X.lam i j) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (cHSodd X i j) (Set.Ioo (X.lam i j) (X.R i j)) := by
+  have hco : cHSodd X i j = fun x => cHSmixRaw X i j x - cHSmixRaw X i j (-x) := rfl
+  rw [hco]
+  refine (cHSmixRaw_contDiffOn_upper X i j hlam).sub
+    ((cHSmixRaw_contDiffOn_upper_neg X i j hlam).comp contDiff_neg.contDiffOn (fun x hx => ?_))
+  simp only [Set.mem_Ioo] at hx ⊢
+  exact ⟨by linarith [hx.2], by linarith [hx.1]⟩
+
+/-- **General-N `cHSodd` is `ContDiffOn` the lower physical-core piece `(0, λᵢⱼ)`** (for `σⱼ ≥ σᵢ`).
+Same route with the lower pieces: `cHSmixRaw_contDiffOn_lower` on `(0,λᵢⱼ)` and, via `x ↦ −x` into
+`(−λᵢⱼ,0)`, `cHSmixRaw_contDiffOn_lower_neg`. -/
+theorem cHSodd_contDiffOn_lower {N M : ℕ} (X : Mix N M) (i j : Fin N) (hlam : 0 ≤ X.lam i j) :
+    ContDiffOn ℝ (⊤ : ℕ∞) (cHSodd X i j) (Set.Ioo (0 : ℝ) (X.lam i j)) := by
+  have hco : cHSodd X i j = fun x => cHSmixRaw X i j x - cHSmixRaw X i j (-x) := rfl
+  rw [hco]
+  refine (cHSmixRaw_contDiffOn_lower X i j hlam).sub
+    ((cHSmixRaw_contDiffOn_lower_neg X i j hlam).comp contDiff_neg.contDiffOn (fun x hx => ?_))
+  simp only [Set.mem_Ioo] at hx ⊢
+  exact ⟨by linarith [hx.2], by linarith [hx.1]⟩
 
 end
 end FMSA.MixtureHSDCF

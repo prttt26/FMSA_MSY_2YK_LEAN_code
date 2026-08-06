@@ -1452,6 +1452,17 @@ forward `2π√ρ·q0MixEntry`), support `[−Rᵢⱼ,Rᵢⱼ]` with `σₙ` can
 = the real-space non-delta part of `[Cmix0]_ij` (verified by the `Cmix0` expansion), supported on
 `[−Rᵢⱼ,Rᵢⱼ]`.  Remaining: the inverse-transform theorem `cHSmixRaw = [Cmix0]_ij` (parallel to `(★)`), the
 `2π√ρ·t` normalization + odd part, then `matBaxterUQm = r·c_HS`.
+**✅✅ Steps 1–2 (finite closed form + smoothness) COMPLETE for N=1 (2026-07-31, `MixtureHSDCF.lean`,
+axiom-clean, no sorries).**  Mirrors the first-order `innerDCF_N1_contDiffOn`.  `qpConv_N1_contDiffOn`
+(the self-conv is `ContDiffOn (0,R₀₀)`): on the core the overlap resolves (`∫_0^R = ∫_0^x[≡0] + ∫_x^R`,
+`pMixEntry → quad` on `[x,R]`), the integrand becomes `(quad)(quad)`, and the `∫` equals the closed-form
+atom `integral_quad_mul_quad` — got `ContDiff` **without writing the degree-5 polynomial** via
+`funext (fun x => integral_quad_mul_quad …) ⇒ (fun x => ∫…) = (fun x => ⟨atom RHS⟩)`, then `fun_prop`.
+Plus `qpConv_N1_contDiffOn_neg` (`(−R,0)`, overlap `[0,x+R]`), `cHSmixRaw_N1_contDiffOn`(`_neg`)
+(`= qFwd + pMixEntry − qpConv`), and the headline **`cHSodd_N1_contDiffOn`** (the DCF `2π√ρ·r·c^HS` is
+`ContDiffOn (0,R₀₀)`, via `cHSmixRaw(0,R) − cHSmixRaw∘neg`).  New reusable atoms: `pMixEntry_bounded`,
+`qpConv_integrand_intervalIntegrable`, `integral_quad_mul_quad`.  Remaining DCF-side: general-N (the
+`λᵢⱼ` knot ⇒ two pieces, like `dcfOdd_contDiffOn_upper/lower`); then the core-seed/Wertheim.
 **✅ `cHSodd` done + MML.8 trace (2026-07-31).**  The normalization/odd-part (#2) was **not a theorem but a
 def-pattern**: the first-order DCF is *defined* as the odd part `dcfOdd = fun x => Wmix x − Wmix (−x)`
 (`= 2π√ρ·r·c^(1)`); mirrored as `cHSodd = fun x => cHSmixRaw x − cHSmixRaw (−x)` (`= 2π√ρ·r·c^HS`, since
@@ -1463,6 +1474,520 @@ three `h₀`-dressed terms** ⇒ MML.8's residual is `h₀` (the zeroth-order HS
 non-circular route is `matOzStar_unique` (uniqueness, done, **abstract `Phi`**) + a **concrete
 `matBaxterPsi` existence** (= `hclaimA`, needs concrete `Phi = c_HS`).  So the single missing MML.8 input
 is `h₀ = matBaxterPsi` as a concrete `MatOZStar` solution — `c₁`/dressing/uniqueness are all done.
+
+**✅✅✅ DCF-side smoothness COMPLETE — general-N `cHSodd` two-piece (2026-07-31, axiom-clean, build 8717,
+30 defs/theorems in `MixtureHSDCF.lean`).**  For `σⱼ≥σᵢ` (`λᵢⱼ≥0`) the knot `λᵢⱼ` splits the physical
+core `(0,Rᵢⱼ)`; `cHSodd` needs `cHSmixRaw` on the reflected core `(−Rᵢⱼ,0)` too.  Reflected pieces
+mirror the forward ones with k-free edges: **`qpConv_contDiffOn_upper_neg`** on `(−Rᵢⱼ,−λᵢⱼ)` [window
+splits at the **top** `x+Rⱼₖ`, above which `pMixEntry(x−t)=0`; resolved `∫_{λᵢₖ}^{x+Rⱼₖ}`; new edge
+`λᵢₖ−Rⱼₖ=−Rᵢⱼ`; `hvanish` via `ae_of_all` — the `Ioc` left-open endpoint gives the strict `x+Rⱼₖ<t`
+for free, no `∀ᵐ y≠…` trick] + **`qpConv_contDiffOn_lower_neg`** on `(−λᵢⱼ,0)` [FULL window, no split;
+`hlam` **redundant→`_hlam`**: domain nonempty ⟹ `−λᵢⱼ<x<0` ⟹ `λᵢⱼ>0` for free].  Both reflected
+`cHSmixRaw` pieces (`cHSmixRaw_contDiffOn_upper_neg`/`_lower_neg`): `qFwd_ij=0`, `pMixEntry_ji`=quad ⇒
+`= pMixEntry − ∑ₖ qpConv`.  Then **`cHSodd_contDiffOn_upper`** `(λᵢⱼ,Rᵢⱼ)` + **`cHSodd_contDiffOn_lower`**
+`(0,λᵢⱼ)` via `cHSmixRaw(x)−cHSmixRaw(−x)`, `.comp contDiff_neg.contDiffOn` mapping each physical piece
+into its reflection (same shape as `cHSodd_N1_contDiffOn`).  ⇒ **`cHSodd = 2π√ρ·r·c^HS` is `ContDiffOn`
+the whole physical core for all N.**  The finite-closed-form/smoothness DCF side is now closed; what
+remains for MML.8 is the core-seed/Wertheim (`h₀=matBaxterPsi` concrete) + the `cHSmixRaw↔Cmix0`
+inverse-transform, NOT any further smoothness.
+
+**✅✅ SECOND-CONVOLUTION SEED CHAIN (2026-08-01, `MixtureBaxterSeed.lean`, axiom-clean, build 8717).**
+The MML.8 seed crux `h₀=matBaxterPsi` needs `Ψ⋆Q₊⋆Q₋ = r·c_HS` (scalar `baxter_psi_conv_eq_phi`).
+Claims (A) [`matBaxterU_outer`, u≡0 outer] and (B) [`matBaxterU_core`, u affine on core] were already
+done; I connected them to the full seed, isolating the ONE remaining gap to a pure moment identity.
+Five theorems mirroring the scalar `baxter_seed_at_psi`/`baxter_psi_conv_eq_phi`/`baxter_core_seed`:
+* **`matBaxterUQm_core_reduce`** — on `0<r<σ`, the 2nd-conv `∫₀^σ` collapses to `∫₀^{σ−r}`; the
+  `[σ−r,σ]` tail vanishes **exactly** (`r+t≥σ ⟹ uₖⱼ(r+t)=0` by claim A). Support + integrability only.
+* **`matBaxterUQm_eq_rPhi_of_seed`** — `matBaxterUQm = r·Φ` on ALL `r>0` from an abstract core-seed
+  hyp; core = reduce + seed, outer = `matBaxterUQm_zero_of_uOuter` (done) + `Φ` outer-vanishing.
+* **`matBaxterUQm_coreSeed_moment`** — substitutes claim (B) (a.e. — the endpoint `t=σ−r` samples
+  `r+t=σ`, outside the open core) to rewrite the seed LHS into the explicit **row-moment** form
+  `(r·(∑ₖM₀ᵢₖ−1)−∑ₖM₁ᵢₖ) − ∑ₖ∫₀^{σ−r}Qᵢₖ·((r+t)(∑ₗM₀ₖₗ−1)−∑ₗM₁ₖₗ)`, `M₀ᵢₖ=∫₀^σQᵢₖ`, `M₁ᵢₖ=∫₀^σtQᵢₖ`.
+* **`matBaxterUQm_eq_rPhi_of_momentSeed`** — the **MML.8-ready** form: `matBaxterUQm ≡ r·Φ` given ONLY
+  the pure moment identity `hMomentSeed`; ALL support/integrability/(A)/(B)-substitution/regime-split
+  discharged here. Supply `hMomentSeed` (equal-diameter, delta-free) ⇒ `matBaxterUQm ≡ r·c_HS`.
+* **`matBaxterUQm_momentSeed_fin_one_of_scalar`** — N=1 non-vacuity: `hMomentSeed` **is** the proved
+  scalar `baxter_core_seed` (`Fin.sum_univ_one` + `baxterM0_eq`/`baxterM1_eq`) ⇒ the hypothesis is
+  DISCHARGEABLE, the seed-side analog of `matOZStar_fin_one_of_scalar`.
+The remaining seed gap is now exactly the **general-N matrix Wertheim–Thiele moment identity** (row
+moments of the concrete `WHSupports.q0MixEntry` matched to `c_HS`), rigorous for **equal diameters**.
+
+**✅✅✅ GENERAL-N EQUAL-DIAMETER matrix `baxter_core_seed` PROVEN (2026-08-01, axiom-clean, build 8717).**
+The `hMomentSeed` gap is CLOSED for equal diameters at general `N`.  **Physics:** the Lebowitz PY
+coefficients `Q0phys i j`, `Qppphys j` (`MatrixQ0.lean`) depend on `σᵢ,σⱼ` only, so for a common
+diameter they are constant across species and the Baxter-factor **rows collapse** to the one-component
+scalar factor at the total density: `∑ₖ Qᵢₖ(u) = q0_poly η σ ρ(u)`, `ρ = ∑ₖρₖ`, `η = πρσ³/6`.  Two
+theorems:
+* **`matBaxterUQm_momentSeed_of_rowSum`** — under `hrow : ∀ i, ∀ u ∈ [0,σ], ∑ₖ Qᵢₖ u = q0_poly η σ ρ u`,
+  the matrix moment identity **is** the scalar `baxter_core_seed`.  Proof: `∑ₖM₀ᵢₖ = M₀`, `∑ₖM₁ᵢₖ = M₁`
+  (`integral_finsetSum` + `integral_congr`·`hrow` + `baxterM0_eq`/`baxterM1_eq`); the affine factor is
+  then `k`-independent (`simp only [hM0,hM1]`); the coupling `∑ₖ ∫ Qᵢₖ·A` pulls the row-sum inside
+  (`Finset.sum_mul`) to `∫ q0_poly·A`; `exact baxter_core_seed`.  `Φ = c_HS` is the SINGLE one-component
+  PY DCF (equal-diameter species = colour labels — the classical same-size-additive result).
+* **`matBaxterUQm_eq_rcHS_of_rowSum`** (capstone) — the full `matBaxterUQm = Ψ ⋆ Q₊ ⋆ Q₋ ≡ r·c_HS` on
+  ALL `r>0`, general-`N` equal-diameter, feeding the row-sum seed to `matBaxterUQm_eq_rPhi_of_momentSeed`
+  (Φ = `fun _ _ => c_HS`, outer-vanishing = `c_HS_outer`).  **The matrix OZFIX.15 seed at general N,
+  delta-free, is DONE** — no remaining hypothesis beyond `hrow` + claim-(A)/core-value regularity.
+Pitfalls: `integral_finsetSum` takes `s` **implicit** (no `_`); row-sum must be `Icc 0 σ`-restricted
+(q0_poly ≠ 0 off the support); unused `∀`-binder ⇒ `_j`.
+
+**✅ `hrow` DISCHARGED for the concrete `q0MixEntry` (2026-08-01, `MixtureRowSum.lean`, axiom-clean,
+build 8718).**  `q0MixEntry_rowSum_eq_q0_poly`: for a common diameter (`X.σ k = σ`) with the
+**non-symmetric density-weighted** PY coefficients `X.Q0 i k = ρₖ·q_prime_py η σ`,
+`X.Qpp k = ρₖ·q_doubleprime_py η` (the convention matching the seed's bare core value `Ψₖⱼ = −v`), the
+row-sum of the concrete kernel is `∑ₖ q0MixEntry X i k u = q0_poly η σ (∑ₖρₖ) u` on `[0,σ]`.  Since
+`λᵢₖ = 0`, `Rᵢₖ = σ`, each entry collapses to `ρₖ·(q'(u−σ)+q''(u−σ)²/2)`, and `Finset.sum_mul` +
+`q0_poly_inner` give the one-component factor at total density.  **Physics:** the density sits on the
+**column** `ρₖ` (not the symmetric `√(ρᵢρₖ)`, which would not collapse); this is consistent with
+`Q0phys` reducing to exactly `q_prime_py` at a single equal-diameter species.  It **plugs directly** as
+the `hrow` argument of `matBaxterUQm_momentSeed_of_rowSum` (verified), so with only
+`IntervalIntegrable (q0MixEntry X i k) 0 σ` the matrix core seed holds for the concrete kernel.
+Pitfall: apply `indicator_of_mem` **before** rewriting `R i k → σ` (else the indicator's *set* changes
+and `indicator_of_mem` no longer matches).
+
+**✅✅ CONCRETE `q0MixEntry` matrix core seed UNCONDITIONAL (2026-08-01, `MixtureRowSum.lean`, build 8718).**
+Added the two integrability lemmas — **`q0MixEntry_intervalIntegrable`** (bounded measurable
+indicator-quadratic ⇒ interval-integrable, via `Measurable.indicator` + `exists_bound_of_continuousOn`
++ `integrableOn_of_bounded`) and **`q0MixEntry_mul_id_intervalIntegrable`** (`t·q0MixEntry` via
+`.continuousOn_mul`) — and the capstone **`matBaxterUQm_momentSeed_q0MixEntry`**: the equal-diameter
+matrix Wertheim–Thiele moment identity `= r·c_HS` for `Q = q0MixEntry`, with **no integrability
+side-condition left**.  `matBaxterUQm_momentSeed_of_rowSum` is now fully discharged for the physical
+kernel — `hMomentSeed` is unconditionally proven for the concrete `q0MixEntry` at equal diameters.
+**Remaining for MML.8:** the Ψ-side hypotheses `hUouter` (claim A) / `hint` / `hcore` for the concrete
+`matBaxterPsi`, then the KDEF `hfact` and shell bridge `hbridge`, to feed `matOzStar_of_regular`.
+
+**✅ `hcore` + `hUouter` DONE for the constructed `matBaxterPsi` (2026-08-02, `MixtureRowSum.lean`,
+axiom-clean, build 8718).**  `matBaxterPsi_hcore`: `Ψcore = fun _ _ v => −v` ⇒ `matBaxterPsi … k j v = −v`
+on `(−σ,σ)` (one-liner off `matBaxterPsi_core`).  **`matBaxterPsi_hUouter`** (claim A): for **continuous**
+matrix Baxter data `Qm,Fm` (`Qm` vanishing above `σ`, `Fm` = core-convolution forcing), the glued
+`Ψ = matBaxterPsi (matBaxterPsiOuterFun σ Qm Fm) (fun _ _ v => −v) σ` satisfies `matBaxterUᵢⱼ(r) = 0` on
+`[σ,∞)`.  Wires `matBaxterU_outer` — `hQcont`/`hQsupp` entrywise, `hcore` = `matBaxterPsi_core`,
+`houter_cont` = `matBaxterPsiOuterFun_continuous` + `matBaxterPsi_outer` (`ContinuousOn.congr`), and
+`hrenewal` from `matBaxterPsiOuter_matRenewalEq` (Banach global Volterra) with `Ψouter → Ψ` rewritten by
+`matBaxterPsi_outer` on `[σ,r]`.  **Kernel note:** the renewal is built by Banach Volterra, which needs
+`Continuous Qm`, so the **seed kernel is the continuous `q0_poly`-matrix, not the truncated
+`q0MixEntry`** (which jumps at `0`).  They agree on `[0,σ]` — all that `matBaxterU`/`matBaxterUQm`
+sample — so the moment seed is identical; the **final assembly should use one continuous `Q`** (the
+density-weighted `q0_poly`-matrix) and re-derive `hrow`/`hMomentSeed`/integrability for it (same `[0,σ]`
+argument, integrability *easier* since continuous).
+
+**✅ `hint` DONE for the constructed `matBaxterPsi` (2026-08-02, `MixtureRowSum.lean`, axiom-clean,
+build 8718).**  Seven theorems — a genuine measure-theory chain.  `matBaxterPsi_hint` gives
+`IntervalIntegrable (fun t => (Qm t)ᵢₖ · matBaxterU Ψ Qₑ σ ₖⱼ(r+t)) 0 σ`.  Chain: `convWindow_measurable`
+(`x ↦ ∫₀^σ Q(t)·Psi(x−t)` measurable via `StronglyMeasurable.integral_prod_right` after rewriting the
+interval integral as an `Ioc`-indicator) → `matBaxterU_measurable` (`Psi − ∑ₗ` convWindow) →
+`matBaxterU_bddOn` on `Icc a b` (`|Psi| + ∑ₗ`conv-bounds, each via `norm_integral_le_of_norm_le_const`;
+`choose` + `abs_sum_le_sum_abs` + `gcongr`) → `matBaxterU_hint_of_regular` (general: `Q` continuous +
+`Psi` measurable + bddOn ⇒ hint, via `integrableOn_of_bounded` then `.continuousOn_mul`).  Glued-`Ψ`
+regularity: `matBaxterPsi_entry_measurable` (`Measurable.ite` on `Ici σ` / `Iic (−σ)`) +
+`matBaxterPsi_entry_bddOn` (three cases; `exists_bound_of_continuousOn` on the compact `uIcc`, reflected
+branch via `−x ∈ uIcc (−b) (−a)`).  The glued `Ψ` is only bounded-measurable (may jump at `±σ`) — fine
+for integrability.  **The Ψ-side is now complete: `hcore` + `hUouter` + `hint` all discharged.**
+
+**✅ KDEF `hfact` DONE for equal diameters (2026-08-02, `MixtureRowSum.lean`, axiom-clean, build 8718).**
+Key algebra: with `Qᵢₖ = wᵢₖ·q0_poly`, `Kᵢⱼ = wᵢⱼ·baxterK`, the matrix self-convolution factors as
+`matSelfConvᵢⱼ = (∑ₖ wᵢₖwⱼₖ)·(q0⋆q0)`, so `ρK = Q − matSelfConv` reduces to the scalar
+`rho_baxterK_eq_q0_self_conv` **iff `W` is idempotent** (`∑ₖ wᵢₖwⱼₖ = wᵢⱼ`).
+`matBaxterFactorization_of_idempotent` (general idempotent `W`) + `physWeight_idempotent` (the physical
+symmetric `wᵢⱼ = √(ρᵢρⱼ)/ρ` is idempotent, `ρ = ∑ₖρₖ`) + `matBaxterFactorization_equalDiam` (concrete
+`Q = √(ρᵢρⱼ)/ρ·q0_poly`, `K = √(ρᵢρⱼ)/ρ·baxterK`).
+
+**⚠️ Convention caveat (surfaced here).**  The KDEF wants `W` **idempotent** (the symmetric
+`√(ρᵢρⱼ)/ρ` qualifies), whereas the moment-seed `hrow` wants **row-sums 1** (`∑ₖ wᵢₖ = 1`).  Both hold
+for the same `Q` **only when `W = J/N`, i.e. equal densities** (`ρₖ = ρ/N` ⇒ `√(ρᵢρⱼ)/ρ = 1/N`).  The
+root cause is the abstract machinery's design — bare `hcore` (`Ψ = −v`, not `√`-weighted) and a single
+scalar `ρ` in `MatOZStar` (not per-species `ρₖ`) — which is physically consistent only for equal
+densities.  (My earlier `q0MixEntry` `hrow` used the column `X.Q0 = ρₖq'`; at equal densities that
+equals `q0/N`, so everything reconciles.)  **Net: full MML.8 closure via seed + KDEF + bridge is
+rigorous for equal diameters *and equal densities* (`W = J/N`); `hfact` itself holds for any idempotent
+`W`.**
+
+**✅ `hbridge` (matrix OZFIX.19) DONE for the weighted kernel (2026-08-02, `MixtureRowSum.lean`,
+axiom-clean, build 8718).**  `radial3d_conv_const_mul` (`radial3d_conv (c·f) g r = c·radial3d_conv f g r`,
+the constant pulls through both nested integrals) + `matBridge_weighted`: with `Φᵢₖ = wᵢₖ·c_HS`,
+`Kᵢₖ = wᵢₖ·baxterK` (the **same** weight as the KDEF), `r·matRadialConv Φ G = matShellConv K G` holds —
+via `matRadialConv_eq_matShellConv`, pulling `wᵢₖ` out of `radial3d_conv` and the shell integral, each
+per-entry identity being the scalar `radial3d_conv_eq_baxterK_shell` (taking the per-entry
+`hshell`/`hjoint` integrability, exactly as `matShellBridge_fin_one_of_scalar`).  **Remaining for full
+`matOzStar_of_regular`:** `hQ` (Q continuous — easy for the weighted `q0_poly` kernel), `hpm`/`hpb`
+(`oddExt(Ψ/x)` measurable + bounded — the analog of `matBaxterPsi_entry_measurable`/`_bddOn`), and
+**`hclaimA`** — the shell-form renewal `Ψ = rΦ + (Q-shell − selfConv-shell)`, the connective piece
+linking the seed `matBaxterUQm = r·Φ` to the shell form (the last substantial step).
+
+**✅✅✅ EQUAL-DIAMETER MATRIX OZ★ COMPLETE — direct reduction (2026-08-02, `MixtureRowSum.lean`,
+axiom-clean, build 8718).  This SUPERSEDES the `hclaimA`/seed/KDEF/bridge route for equal diameters.**
+Key insight: for the physical **symmetric** weight `wᵢⱼ = √(ρᵢρⱼ)/ρ`, the *whole* solution is
+`wᵢⱼ·(scalar)` — `Ψᵢⱼ = wᵢⱼ·baxterPsi`, `Φᵢⱼ = wᵢⱼ·c_HS` — so `MatOZStar` reduces **directly** to the
+proved (axiom-free) scalar `baxterPsi_ozstar`, with no seed/claimA/KDEF/bridge at all.
+* `radial3d_conv_const_mul_right` (linearity in the 2nd argument) — with `radial3d_conv_const_mul`
+  (1st argument, from `hbridge`), both weights pull out of `radial3d_conv`.
+* `matOzStar_equalDiam` — for a chained-idempotent `W` (`∑ₖ wᵢₖwₖⱼ = wᵢⱼ`): the `matRadialConv` species
+  sum collapses (`← Finset.sum_mul` + `W·W = W`), each entry `= wᵢⱼ·baxterPsi_ozstar`.
+* `physWeight_idempotent_chained` (the physical `√(ρᵢρⱼ)/ρ` is chained-idempotent) +
+  `matOzStar_equalDiam_phys` — the concrete `MatOZStar (√(ρᵢρⱼ)/ρ·baxterPsi) (√(ρᵢρⱼ)/ρ·c_HS) ρ`: **the
+  equal-diameter mixture Ornstein–Zernike identity, at *any* densities.**
+**Resolves the convention caveat:** the symmetric `Ψ = w·baxterPsi` has core `−wᵢⱼv` (not the bare
+`−v`), so it is the *symmetric-convention* physical solution — self-consistent for **unequal
+densities** (the bare-`hcore` seed route needed equal densities; the direct route needs neither).  The
+seed machinery (all six hypotheses discharged) remains the route for the general unequal-**diameter**
+case and for connecting `Ψ` to `matBaxterPsiOuterFun` via Volterra uniqueness.  **Equal-diameter MML.8
+core: DONE.**
+
+**Unequal-diameter direction — odd structure + shell→flat (2026-08-03, `MixtureRowSum.lean`,
+axiom-clean, build 8718).**  For unequal diameters the `wᵢⱼ·scalar` factorization *fails* (each pair
+`(i,j)` has its own `σ_ij`, `λ_ij`, DCF shape), so the coupled seed route is genuinely needed.  The
+*diameter-agnostic* building blocks of the shell form: `matBaxterPsi_odd` (the glued `Ψ` is odd when the
+core is odd — the reflection branch `−Ψouter(−v)` makes it so), `oddExt_div_self_of_odd`
+(`oddExt(ψ/·) = ψ` for odd `ψ`, `v ≠ 0`), and `shell_eq_flat_of_odd` (the OZ★/`hclaimA` shell integrand
+collapses a.e. to the flat renewal form).  **Genuine open obstructions for unequal diameters:** (a) the
+flat matrix Wertheim–Thiele seed `matBaxterUQm = r·c_HS,ij` with a *per-pair* DCF — the moment-seed
+`hrow` reduction needs a single `q0_poly` and fails; (b) the `matSelfConv` reindex inside `hclaimA`
+needs a **symmetric** `Q`, but the unequal-diameter Baxter factor is *not* symmetric
+(`λ_ij = −λ_ji`, different `Qpp`), which the equal-diameter symmetric weight sidesteps.  `hbridge` *is*
+unequal-diameter-ready (`matRadialConv_eq_matShellConv_of_shellKernel`, per-entry `c`-shapes).  These
+remaining pieces are research-scale.
+
+**Obstruction (b) pinned (2026-08-03, `matSelfConv_shift`, axiom-clean, build 8718) — a precise negative
+finding.**  The seed→`hclaimA` gap: `matBaxterUQm` uses `Q i k` (not the transpose `Q k i`) in its second
+convolution, so the double term expands to the *chained* `∑ₖ∑ₘ Qᵢₖ(t)Qₖₘ(s)Ψₘⱼ(r+t−s)` (`= Q·Q·Ψ`).
+Reindexing (`matDblConv_reindex`, which additionally needs `Q` symmetric to make both factors share the
+second index) yields `∑ₘ ∫ (matSelfConvᵢₘ·Ψₘⱼ(r+u) + matSelfConvₘᵢ·Ψₘⱼ(r−u))`.  But `hclaimA` weights
+*both* `r±u` terms by `matSelfConvᵢₖ`, so discharging it requires **`matSelfConv` symmetric**.
+`matSelfConv_shift` proves it is *not*: `matSelfConvᵢⱼ(u) = ∑ₖ ∫₀^{σ−u} Qᵢₖ(τ+u)Qⱼₖ(τ)` puts the `+u`
+shift on the `i`-factor, `(j,i)` on the `j`-factor — unequal for a non-symmetric `Q`.  For the
+equal-diameter symmetric factor it works; for the unequal-diameter one (`λ_ij = −λ_ji`, `Qpp_j ≠ Qpp_i`)
+it genuinely blocks.  **Resolution needs a symmetrised matrix seed (transpose `Q k i` in the second
+Baxter convolution, giving `Q·Qᵀ·Ψ = matSelfConv` correctly) or a new reindex — i.e. a real redefinition
+of the matrix seed for `N ≥ 2`, research-scale.**
+
+**Symmetrised seed prototyped (2026-08-03, `MixtureRowSum.lean`, axiom-clean, build 8718) — the
+constructive fix for (b).**  The transpose goes in the *inner* factor of the second convolution:
+`matBaxterUt i j r = Ψᵢⱼ(r) − ∑ₘ ∫ Qₘᵢ(s)·Ψₘⱼ(r−s)` (transpose `Qₘᵢ`), and
+`matBaxterUQmSym = matBaxterU − ∑ₖ ∫ Qᵢₖ(t)·matBaxterUt(k,j)(r+t)`.  `matBaxterUQmSym_unfold` (`rfl`)
+exhibits the double term `∑ₖ ∫ Qᵢₖ(t)·(Ψₖⱼ(r+t) − ∑ₘ ∫ Qₘₖ(s)·Ψₘⱼ(r+t−s))` — both `Qᵢₖ` and `Qₘₖ`
+carry the **second** index `k`, exactly the `matSelfConv` correlation shape (vs the current seed's
+chained `Qₖₘ`).  `matBaxterUQmSym_of_symm` proves it coincides with `matBaxterUQm` for symmetric `Q`
+(so it is a faithful generalization: identical at `N = 1` and for the equal-diameter factor, differing
+only in the asymmetric unequal-diameter case).  By hand, `matBaxterUQmSym`'s double term reindexes (via
+`matDblConv_reindex`) to `∑ₘ ∫ (matSelfConvᵢₘ·Ψₘⱼ(r+u) + matSelfConvₘᵢ·Ψₘⱼ(r−u))`.  **Full closure still
+needs restating `hclaimA`/`matShellConv` with this *asymmetric* `matSelfConv` split (`matSelfConv_shift`
+shows the symmetric form is wrong for `N ≥ 2`) and discharging the reindex's integrability — but the
+seed *object* is now correct for `N ≥ 2`.**
+
+**Asymmetric assembly refactored + reframing (2026-08-03, `MixtureRowSum.lean`, axiom-clean, build 8718).**
+`matShellConvAsym Kp Km G` (`Kp` on `r+u`, `Km` on `r−u`; `matShellConv` = the diagonal `Kp = Km`),
+`matShellConvAsym_kdef_split` (two-kernel KDEF `ρKp = Q − matSelfConv`, `ρKm = Q − matSelfConvᵀ`, splits
+into the `Q`-shell minus the *asymmetric* `matSelfConv`-shell), and `matShellConvAsym_diag`
+(`Kp = Km` collapses to `matShellConv`).  **Key reframing (`matSelfConv_shell_symm`):** `matSelfConv`
+symmetry `matSelfConvᵢₖ = matSelfConvₖᵢ` is a **physical** property — `Q̂(k)·Q̂ᵀ(−k) = I − Ĉ` is symmetric
+because the DCF `Ĉ` is (`cᵢⱼ = cⱼᵢ`), holding for *any* diameters, not an algebraic one (`matSelfConv_shift`
+shows it fails for arbitrary `Q`).  Under it, the corrected seed's asymmetric shell term equals the
+symmetric term the *current* `matOzStar_of_shellClaims` consumes.  **So the unequal-diameter route is
+now precise:** corrected seed (`matBaxterUQmSym`) + `matSelfConv` symmetry ⇒ symmetric `hclaimA` ⇒ the
+existing assembly, verbatim, all diameters.  Obstruction (b) reduces to a **single physical theorem**:
+`matSelfConv` symmetry for the physical Baxter factor (`∑ₗ ∫ Qᵢₗ(τ+u)Qₖₗ(τ) = ∑ₗ ∫ Qₖₗ(τ+u)Qᵢₗ(τ)`, from
+the WH factorization of the symmetric PY DCF) — no longer a mysterious block.  The asymmetric machinery
+is the fallback if that symmetry proves hard.
+
+**`matSelfConv` symmetry proven from the DCF-symmetry hypothesis (2026-08-03, `MixtureRowSum.lean`,
+axiom-clean, build 8718) — obstruction (b) reduced to one clean hypothesis.**  The DCF symmetry in
+real-space form is `hMsym : ∀ i k t s, ∑ₗ Qᵢₗ(t)Qₖₗ(s) = ∑ₗ Qᵢₗ(s)Qₖₗ(t)` (the two-time self-correlation
+kernel is symmetric in `(t, s)`; `= Q̂Q̂ᵀ(−k) = I − Ĉ` symmetric, not algebraic).
+`matSelfConv_symm_of_corrSymm`: `hMsym` + integrability ⇒ `matSelfConvᵢₖ = matSelfConvₖᵢ` (move the sum
+inside via `integral_finsetSum`, swap `(t, t−u)` with `hMsym`, `mul_comm`).
+`matSelfConv_shell_symm_of_corrSymm` (capstone): `hMsym` ⇒ the corrected seed's asymmetric shell term
+equals the symmetric term the existing assembly consumes.  **Full unequal-diameter chain:** corrected
+seed (`matBaxterUQmSym`, correlation double term) → reindex → asymmetric `matSelfConv` → `hMsym` →
+symmetric `hclaimA` → existing `matOzStar_of_shellClaims`.  **So obstruction (b) collapses entirely to
+`hMsym`** — a named, provable-in-principle physical hypothesis.  Remaining: prove `hMsym` for the
+concrete `q0MixEntry` (from the WH factorization of the symmetric PY DCF, or a direct computation),
+discharge the reindex integrability, and wire `matBaxterUQmSym` through the seed chain.
+
+**`hMsym` proven for the concrete `q0MixEntry`, separable / equal-diameter case (2026-08-03,
+`MixtureRowSum.lean`, axiom-clean, build 8718).**  `hMsym` holds for any **separable** factor
+`Qᵢₗ = wᵢₗ·q̂` (one common profile) — the two-time kernel `wᵢₗwₖₗ·q̂(t)q̂(s)` commutes term by term, no
+factorization needed (`hMsym_of_separable`).  `q0MixEntry_hMsym_equalDiam`: for a common diameter with
+the column-weighted coefficients (`X.Q0 i l = ρₗ·a`, `X.Qpp l = ρₗ·b` — the same hypotheses as
+`q0MixEntry_rowSum_eq_q0_poly`), every entry is `ρₗ·(indicator quadratic)`, separable, so `hMsym` holds.
+This **discharges `matSelfConv_symm_of_corrSymm`'s hypothesis for the concrete equal-diameter kernel**,
+making the whole seed → `hMsym` → assembly chain concrete at equal diameters.  **For *unequal* diameters
+`q0MixEntry` is not separable** (each pair has its own `σ_il`, `λ_il` profile), so `hMsym` there
+genuinely needs the WH factorization of the symmetric PY DCF — the last physical open step.  Net:
+equal-diameter is now closed by *two* independent routes (the direct `matOzStar_equalDiam_phys` and the
+seed → `hMsym` chain); the unequal-diameter case is gated solely on the non-separable `hMsym`.
+
+**Corrected route: `matSelfConv` symmetry from the WH factorization, not `hMsym` (2026-08-03,
+`MixtureRowSum.lean`, axiom-clean, build 8718).**  Attempting the non-separable `hMsym` revealed it is
+*stronger* than the WH factorization supplies: `hMsym`'s Fourier content is `∑ₗ Q̂ᵢₗ(ω)Q̂ₖₗ(ν)` symmetric
+in `ω ↔ ν` (two-variable), whereas the WH factorization only gives `Q̂(k)·Q̂ᵀ(−k) = I − Ĉ` symmetric
+(single-variable).  So for a non-separable (unequal-diameter) `Q`, `hMsym` need not hold — but
+`matSelfConv` symmetry (the object actually needed) still does, from the factorization.
+`matSelfConv_symm_of_dcf`: DCF symmetry (`hCsym`) + the WH factorization on the core (`hfact`:
+`matSelfConv = C`, the real-space content of `Cmix0 = I − Q̂₀Q̂₀ᵀ(−k)`, MRS.6) ⇒ `matSelfConv` symmetric.
+`matSelfConv_shell_symm_of_dcf`: same hypotheses ⇒ the asymmetric shell term equals the symmetric one
+(a.e. on the core).  **So obstruction (b) is discharged for *any* diameters, modulo casting the
+already-proven Fourier `Cmix0_factorization` to its real-space core form `matSelfConv = C`.**  The
+`hMsym` route stays valid for the separable / equal-diameter case; the `_of_dcf` route is the general
+one, and it grounds the last step in an *existing* codebase result rather than a new physical theorem.
+
+**Cast scoped (2026-08-03, `matSelfConv_symm_of_transform`, axiom-clean, build 8718).**  The
+`Cmix0_factorization → matSelfConv` cast factors into exactly two inputs:
+* **(A) momentum symmetry — already proved.**  `Tfun z = Q̂₀(z)Q̂₀ᵀ(−z)` is symmetric for the physical
+  N=2 factor: `MixtureRealSpace.swap_offdiag_of_keys` (MRS.7, from the two PY key relations
+  `Q0phys_key_relation`/`Qppphys_key_relation`) + `T0_isSymm_of_swap` + `fin2_transpose_eq_iff_offdiag`.
+  (`Cmix0_factorization` itself is *definitional*, `Cmix0 := 1 − Q̂Q̂ᵀ(−k)`.)
+* **(B) the transform bridge — the sole gap.**  `matSelfConvᵢₖ(·) = InvLaplace(z ↦ (Tfun z)ᵢₖ)`,
+  decomposing into: B1 `q̂ᵢₗ(z) = ∫ e^{−zt}q0MixEntry` (Baxter-factor Laplace = `q0_entry_c`); B2 the
+  product↔correlation theorem `q̂ᵢₗ(z)q̂ₖₗ(−z) = ∫ e^{−zu}(Qᵢₗ ⋆̃ Qₖₗ)(u) du`; B3 the `∑ₗ` and the causal
+  `∫ᵤ^σ` truncation (compact support of `q0MixEntry`); B4 transform injectivity.
+`matSelfConv_symm_of_transform` proves `A + B ⇒ matSelfConv` symmetry, hence — via
+`matSelfConv_symm_of_dcf` — obstruction (b) for any diameters.  **So the whole unequal-diameter program
+reduces to (B) alone**, the analysis of a *known* Laplace correspondence, with everything else (the
+corrected seed, the reindex, the asymmetric shell assembly, the momentum symmetry) already built and
+axiom-clean.  This is the endpoint of the unequal-diameter scoping.
+
+**B1 done — the Laplace transform of `q0MixEntry` (2026-08-03, `MixtureRowSum.lean`, axiom-clean,
+build 8718).**  `laplace_baxter_quad`: `∫_λ^{λ+σ} e^{−zr}(Q0(r−R)+Q''(r−R)²/2) dr =
+e^{−zλ}(Q0·p₁(σ,z)+Q''·p₂(σ,z))` with `p₁=(1−zσ−e^{−zσ})/z²`, `p₂=(1−zσ+(zσ)²/2−e^{−zσ})/z³`, by FTC
+against the explicit antiderivative (`integral_eq_sub_of_hasDerivAt` + `exp_add` for the endpoint).
+`q0MixEntry_laplace`: the indicator collapses on `[λᵢⱼ, Rᵢⱼ]` and `Rᵢⱼ = λᵢⱼ + σᵢ`, so
+`∫ e^{−zt} q0MixEntry X i j t = e^{−zλᵢⱼ}(Q0ᵢⱼ·p₁(σᵢ,z)+Q''ⱼ·p₂(σᵢ,z))`.  **`p₁`, `p₂` match the momentum
+`MatrixQ0.q0_entry`'s function part exactly** (`q0_entry = δ − rho_geo·e^{−λz}(Qp·p₁+Q''·p₂)`), so
+`Laplace(q0MixEntry) = −(q0_entry non-delta)/rho_geo` — the density-normalization convention.  So **B1,
+the real↔momentum Baxter-factor correspondence, is established.**
+Pitfall: `(hasDerivAt_id r).const_mul z |>.neg` hits an instance diamond — use `.const_mul (-z)` +
+`simpa [neg_mul]`.
+
+**B2 done — the Laplace product↔correlation theorem (2026-08-03, `MixtureRowSum.lean`, axiom-clean,
+build 8590).**  `laplace_product_eq_corr`:
+`(∫ f(t)e^{−zt} dt)·(∫ g(s)e^{zs} ds) = ∫ (∫ f(t)g(t−u) dt)·e^{−zu} du` — the product of the two
+one-sided Laplace transforms `q̂ᵢₗ(z)`, `q̂ₖₗ(−z)` equals the Laplace transform of the cross-correlation
+`(f ⋆̃ g)(u) = ∫ f(t)g(t−u) dt` (which is exactly the full-line `matSelfConv` summand).  Proof chain:
+product → double integral (`← integral_prod_mul`), `∫→∫∫` (`integral_prod hjoint1`), **per-`t` inner
+reflection** `s = t−u` (helper `integral_reflect_sub : ∫ s, H(t−s) = ∫ s, H s`, via
+`integral_neg_eq_self` + `integral_add_right_eq_self` — note `integral_comp_sub_left` exists only for
+interval integrals, not full-line), which turns `e^{−zt}e^{zs} = e^{−z(t−s)}` into `e^{−zu}`; then Fubini
+swap `∫∫→∫∫` (`integral_integral_swap hjoint2`) and pull out `e^{−zu}` (`integral_mul_const`).  Takes two
+joint-integrability hypotheses (`hjoint1` for the original product integrand, `hjoint2` for the reflected
+`(t,u) ↦ f(t)g(t−u)e^{−zu}`) — both hold for the compactly-supported `q0MixEntry` (bounded × compact
+support ⇒ `Integrable` on the product, to be discharged at the use site in B3).  With B1, this gives
+`q̂ᵢₗ(z)·q̂ₖₗ(−z) = Laplace((Qᵢₗ ⋆̃ Qₖₗ))`.
+
+**⚠⚠ B3 SCOPING — STRUCTURAL FINDING: the windowed `matSelfConv` is the WRONG (asymmetric) object; the
+FULL-LINE correlation `R` is the symmetric one (2026-08-03).**  Scoping B3's truncation exposed that
+`matSelfConv Q σ v i j = ∑ₖ ∫ᵥ^σ Qᵢₖ(t)Qⱼₖ(t−v) dt` does NOT equal the full-line correlation
+`Rᵢⱼ(v) = ∑ₖ ∫_ℝ Qᵢₖ(t)Qⱼₖ(t−v) dt` for unequal diameters.  Substituting `t = s+v` (checked in Lean,
+`intervalIntegral.integral_comp_add_right`) puts both orderings on the common window `[0,σ−v]`:
+`matSelfConv(i,j)(v) = ∑ₖ ∫₀^{σ−v} Qᵢₖ(s+v)Qⱼₖ(s) ds`, `matSelfConv(j,i)(v) = ∑ₖ ∫₀^{σ−v} Qᵢₖ(s)Qⱼₖ(s+v) ds`
+— differing only in the direction of the `+v` shift.  The upper cut `s>σ−v` contributes nothing (`σ ≥ Rᵢₖ`),
+but the lower cut `s<0` DROPS a genuine causal tail: `Qⱼₖ(s) ≠ 0` on `s ∈ [λⱼₖ, 0)` whenever `λⱼₖ=(σₖ−σⱼ)/2 < 0`
+(`σⱼ > σₖ`).  That dropped tail is governed by `λⱼₖ` for `(i,j)` but by `λᵢₖ` for `(j,i)` — **different tails ⇒
+the windowed `matSelfConv` is genuinely asymmetric** (consistent with the already-proved `matSelfConv_shift`
+non-symmetry).  The FULL-LINE `R` keeps both tails and IS symmetric: `𝓕(Rᵢⱼ)(k) = [Q̂(k)Q̂(−k)ᵀ]ᵢⱼ`
+(B2 summed over `l`), symmetric in `(i,j)` by `swap_offdiag_of_keys`/MRS.7 (`I−Ĉ` symmetric) ⇒ by Fourier
+injectivity `Rᵢⱼ = Rⱼᵢ`.  (Note `R` is additionally even, `Rᵢⱼ(v)=Rᵢⱼ(−v)`, since `Rⱼᵢ(v)=Rᵢⱼ(−v)`
+algebraically.)  **Consequence for the unequal-diameter seed:** the seed's second convolution must be the
+FULL-LINE correlation `R` (equivalently, a *pair-dependent* lower limit `v+λⱼₖ`, matching Baxter's actual
+mixture causal limits `∫_{v+λⱼₖ}^{…}`), NOT the uniform-lower-limit-`v` `matSelfConv`.  For EQUAL diameters
+`λ=0` there is no tail, `matSelfConv = R`, and both closed routes already hold — the uniform window was an
+equal-diameter simplification.  **So B3 done right = ∑ₗ of B2 into the full-line `R`** (trivial, no truncation
+subtlety); **B4 = Fourier injectivity, which Mathlib HAS** — `Continuous.fourierInv_fourier_eq`
+(`𝓕⁻(𝓕 f)=f` for continuous integrable `f` with integrable `𝓕 f`) ⇒ injectivity axiom-clean, **no new axiom**.
+The remaining engineering: (a) redo B1/B2 in the COMPLEX/Fourier convention `e^{−2πikt}` (mechanical — the
+B2 proof is character-agnostic; `swap_offdiag` is already Fourier-side and Fourier inversion needs the
+imaginary axis), (b) rebuild the KDEF `hfact` on the full-line correlation `R`, (c) discharge the
+integrability side-conditions (compact support ⇒ `Integrable f`, `Integrable 𝓕f` from the piecewise-poly
+decay).  **Net: the transform bridge closes obstruction (b) axiom-clean, but proving the FULL-LINE `R`
+symmetric — the seed must be re-based on `R`, not the windowed `matSelfConv`.**
+
+**B1/B2 complex (Fourier convention) DONE, axiom-clean (2026-08-03, `MixtureRowSum.lean`, build 8590).**
+The `_c` variants carry a complex transform variable `z : ℂ` (Fourier transform at `z = 2πi·w`), matching
+the imaginary-axis home of `swap_offdiag_of_keys` and enabling Mathlib Fourier inversion for B4:
+* `laplace_baxter_quad_c (z : ℂ) (lam sigma Q0 Qpp : ℝ) (hz : z ≠ 0)` — same FTC proof as the real B1, with
+  `Complex.exp`/`ofReal` casts.  Antiderivative deriv via `Complex.ofRealCLM.hasDerivAt` (deriv of `↑· : ℝ→ℂ`
+  is `1`) + `.cexp`; the same `.const_mul (-z)` + `simpa [neg_mul]` dodge for the diamond; endpoint via
+  `← Complex.exp_add` + `push_cast; ring_nf`; final `push_cast; field_simp; ring`.
+* `integral_reflect_sub_c` (ℂ-valued reflection) + `laplace_product_eq_corr_c (f g : ℝ → ℂ) (z : ℂ)` — the B2
+  proof is **character-agnostic**: identical Fubini chain (`integral_prod_mul`/`integral_prod`/
+  `integral_integral_swap`/`integral_mul_const` all fire for `𝕜=ℂ`), only `Real.exp→Complex.exp` and casts.
+* `q0MixEntry_laplace_c (X) (i j) (z : ℂ)` — the concrete entry's complex transform (indicator collapse +
+  `push_cast; ring` + `laplace_baxter_quad_c`); at `z=2πi·w` this is the momentum `Q̂ᵢⱼ(w)` of MRS.7.
+Remaining for `hbridge`: (B3) `∑ₗ` of `laplace_product_eq_corr_c` into the full-line correlation `R` +
+discharge the two `Integrable` product hyps (compact support); (B4) specialize `z=2πi·w`, identify with
+Mathlib `𝓕`, and apply `Continuous.fourierInv_fourier_eq` to `R(i,j)−R(j,i)` (transform `≡0` by MRS.7 ⇒
+`R` symmetric); then re-base the seed/KDEF on `R`.
+
+**B3 DONE — `∑ₗ` into the full-line correlation, fully UNCONDITIONAL (2026-08-03, `MixtureRowSum.lean`,
+axiom-clean, build 8590).**  `matCorr X i j v := ∑ₗ ∫_ℝ (q0MixEntry X i l t)·(q0MixEntry X j l (t−v))`
+(the symmetric full-line object) and `matCorr_laplace`:
+`∑ₗ Q̂ᵢₗ(z)·Q̂ⱼₗ(−z) = ∫_ℝ matCorrᵢⱼ(v)·e^{−zv} dv` for every `z : ℂ`, **all integrability discharged**.
+Structure:
+* `laplace_sum_eq_corr_c` — the ALGEBRA (generic `Finset`/families): per-index `laplace_product_eq_corr_c`
+  via `Finset.sum_congr`, then `← integral_finsetSum` (swap `∑`/`∫`), then `Finset.sum_mul` (pull `e^{−zv}`
+  out of the row sum).  Takes the three integrability families as hypotheses.
+* Integrability primitives for `q0MixEntry` (compact support `[λ,R]`, so bounded × finite-measure ⇒
+  `Integrable` via `integrableOn_iff_integrable_of_support_subset` + `Measure.integrableOn_of_bounded`):
+  `q0MixEntry_measurable`, `q0MixEntry_mul_exp_integrable` (1-D `(entry)·e^{wt}`, any `w:ℂ`),
+  `q0MixEntry_abs_le` (global `|entry|≤C`), `q0MixEntry_corr_exp_prod_integrable` (**h2**, the 2-D box
+  `Bt×ˢBu` bound: support in a box from both entries' cores, bounded by `Ci·Cj·E` with `E` bounding
+  `‖e^{−zu}‖` on the compact `u`-range).
+* Wiring in `matCorr_laplace`: **h1** = `Integrable.mul_prod` of two 1-D primitives (`w=−z`, `w=+z`;
+  `simpa [neg_mul]` to match `e^{−(z·)}`); **h2** = the box lemma; **h3** = `h2.integral_prod_right`
+  (integrate `t`, keep the lag `v`) `.congr` a pointwise `integral_mul_const` pulling `e^{−zv}` out.
+  Pitfalls: `integral_prod_left` keeps first/integrates second — need `integral_prod_right`;
+  `Complex.norm_ofReal` doesn't exist (use `Complex.norm_real`+`Real.norm_eq_abs`); disambiguate the
+  Bochner `MeasureTheory.integral_mul_const` from the interval one by giving `r` explicitly.
+**B4 DONE (up to 2 isolated inputs) — Fourier-inversion symmetry (2026-08-03, `MixtureRowSum.lean`,
+axiom-clean, build 8590).**  `matCorr_symm`: `matCorr X i j = matCorr X j i`, reduced to exactly two
+remaining inputs.  Pieces:
+* **Fourier injectivity core** (general `ℝ→ℂ`, reusable): `fourierInv_zero_real` (`𝓕⁻ 0 = 0` via
+  `Real.fourierInv_eq`+`simp`); `fourier_sub_real` (`𝓕(f−g)=𝓕f−𝓕g` via `Real.fourier_eq` inner-product
+  form + `integral_sub`, integrand integrability from `Real.fourierIntegral_convergent_iff`);
+  **`eq_zero_of_fourier_eq_zero`** — a continuous integrable `f` with `𝓕 f = 0` is `0` (the KEY economy:
+  `Integrable (𝓕 f)` is FREE since `𝓕 f = 0` is the integrable zero function ⇒ **no decay estimate on
+  `matCorr` needed**, only `Continuous.fourierInv_fourier_eq`); `eq_of_fourier_eq` (equal-transform
+  injectivity, via the zero form on `f−g`).
+* **`matCorr_integrable`** — `matCorr` integrable (`integrable_finsetSum` of the `z=0` case of h2 through
+  `integral_prod_right`).
+* **`zOfW w := 2πi·w`** + **`matCorr_fourier_eq`** — the CONVENTION BRIDGE `𝓕(matCorr i j) w = ∑ₗ Q̂ᵢₗ(z)·Q̂ⱼₗ(−z)`
+  at `z=zOfW w` (Mathlib `𝓕` via `Real.fourier_eq`/`Circle.smul_def`/`Real.fourierChar_apply`, matching
+  exponents with `Real.inner_apply` `⟪v,w⟫=v·w` + `push_cast; ring_nf`, then `matCorr_laplace`).
+* **`matCorr_symm`** — `eq_of_fourier_eq` (`matCorr_continuous` + `matCorr_integrable` + the bridge on
+  both sides) + the momentum symmetry `hmom`; now takes ONLY `hmom` (continuity discharged internally).
+
+**B4 input (1) `matCorr` CONTINUITY — DISCHARGED via the L² route (2026-08-03, axiom-clean, build 8718).**
+Dominated convergence does NOT apply (the integrand `v ↦ Qⱼₗ(t−v)` jumps at `λ` for every `t`); the
+continuity is L²-smoothing.  `cₗ(v) = ∫ Qᵢₗ(t)Qⱼₗ(t−v)dt = ⟪(Qᵢₗ)_L², τᵥ(Qⱼₗ)_L²⟫` and:
+* `q0MixEntry_memLp` — `(q0MixEntry:ℂ) ∈ Lᵖ` (bounded × compact support; `MemLp.mono'` vs
+  `memLp_indicator_const`).
+* `q0MixEntry_corr_continuous` — `v ↦ cₗ(v)` continuous: translation `T v = (·−v)` is a continuous
+  `C(ℝ,ℝ)`-family (`ContinuousMap.continuous_of_continuous_uncurry`) that is measure-preserving
+  (`measurePreserving_sub_right`); `v ↦ Lp.compMeasurePreserving (T v) gLp` is continuous
+  (`Lp.compMeasurePreserving_continuous`), the inner product `⟪fLp, ·⟫` is continuous, and
+  `⟪fLp, gv v⟫ = cₗ(v)` via `L2.inner_def` + `integral_congr_ae` with the two representative `ae`-eqs
+  (`MemLp.coeFn_toLp`, `Lp.coeFn_compMeasurePreserving` composed through
+  `MeasurePreserving.quasiMeasurePreserving.ae_eq_comp`; `Complex.conj_ofReal` kills the conjugate).
+* `matCorr_continuous` — finite sum (`continuous_finsetSum`).
+
+**⚠⚠ `hmom` is FALSE — `matCorr` is NOT the symmetric object (2026-08-03, numerically settled; corrects
+the B3-scoping/B4 claim).**  The intended input (2) was `hmom`: `∑ₗ Q̂ᵢₗ(z)Q̂ⱼₗ(−z) = ∑ₗ Q̂ⱼₗ(z)Q̂ᵢₗ(−z)` (the
+UNWEIGHTED function-part product = `matCorr`'s transform), to come from `swap_offdiag_of_keys`/MRS.7.  But
+MRS.7 proves the FULL momentum product `[Q̂₀(k)Q̂₀(−k)ᵀ]` symmetric, and `Q̂₀ᵢⱼ = δᵢⱼ − ρ_geoᵢⱼ·Q̂ᵢⱼ` carries
+the identity `δ` AND the `ρ_geo` weights.  **Test** (`scratchpad/hmom_test.py`, physical PY params satisfying
+the MRS.7 key relations): full product symmetric to **3e-16**; unweighted (=`matCorr`) product diff **0.024**;
+`ρ_geo`-weighted-but-no-identity product diff **1.6e-3** (so the `δ` terms are ESSENTIAL, not just the
+weights).  Real-space: `matCorr(j,i)(v)=matCorr(i,j)(−v)` (algebraic subst) ⇒ `matCorr` symmetric ⟺ each entry
+EVEN; the off-diagonal `matCorr(0,1)` is a cross-correlation of DIFFERENT functions, NOT even
+(`matCorr(0,1)(±0.3)` = 0.285 vs 0.400, diff 0.115).  **So `matCorr` is genuinely not symmetric, `hmom` cannot
+be discharged, and `matCorr_symm` (a valid implication) does NOT close obstruction (b).**  The physical
+symmetric object is the FULL `Q̂₀` self-product — real-space distributional (`δ(v)` at the origin), so plain
+function-space Fourier inversion does not apply.  **Redirect:** obstruction (b) must use the full Baxter factor
+(with identity δᵢⱼδ(r)), OR be discharged directly in MOMENTUM space via `swap_offdiag_of_keys` (proven N=2)
+without the real-space `matCorr` detour.  All B1–B4 machinery (`matCorr_fourier_eq`, injectivity lemmas,
+`matCorr_continuous`, `matCorr_integrable`, the `_c` transforms) is CORRECT and reusable — only the target
+object (`matCorr`) was the wrong one.
+
+**Obstruction (b) DISCHARGED in momentum space via `swap_offdiag` (2026-08-03, `MixtureRealSpace.lean`,
+axiom-clean, build 8719).**  The correct symmetric object is the momentum DCF `Cmix0 = I − Q̂₀(k)Q̂₀(−k)ᵀ`
+(NOT the function-part `matSelfConv`/`matCorr`).  Shipped in `FMSA.MRS`:
+* `Cmix0_symm_of_swap` — general: the swap identity `Q̂₀(−k)Q̂₀ᵀ(k) = Q̂₀(k)Q̂₀ᵀ(−k)` ⇒ `Ĉ₀ᵀ = Ĉ₀`
+  (one direction of `Cmix0_isSymm_iff`).
+* `Qphys_Cmix0_symm` — physical N=2: `Ĉ₀ᵀ = Ĉ₀` from `Qphys_T0_isSymm` (`transpose_mul`+`transpose_transpose`
+  turn T0-symmetry into the swap identity).
+* `Qphys_Cmix0_entry_symm` — the entrywise `Ĉ₀(k)ᵢⱼ = Ĉ₀(k)ⱼᵢ`, i.e. the exact `hCsym` (`cᵢⱼ = cⱼᵢ`)
+  input shape, for any physical density/diameter pair.
+**Why this is the right object, not `matSelfConv`:** `matSelfConv_symm_of_transform` is a VALID implication
+but UNSATISFIABLE for the bare `Q = q0MixEntry` — `hTsym` needs the FULL product `Q̂₀=I−ρ_geo·q̂` (identity +
+weights), `hbridge` needs the function-part product, and these two `Tfun` choices are different (numerically
+the function-part product's asymmetry is ~0.02).  The DCF `Ĉ₀` off-diagonal IS a genuine function (the `δ`
+sits only on the diagonal), so `Ĉ₀ᵢₖ = q̂ᵢₖ(z) + q̂ₖᵢ(−z) − matCorrᵢₖ(z)` (i≠k) is symmetric via
+`Qphys_Cmix0_entry_symm`.  **Momentum side now fully done; the remaining real-space work is the CORRECTED
+`hfact` — the seed must produce `Ĉ₀` (linear `q̂` terms included), NOT `matSelfConv` alone.**
+
+**Corrected `hfact` — `Ĉ₀ = linear − self-conv` (2026-08-04, axiom-clean, build 8719).**  The precise
+decomposition, in momentum space (`MixtureRealSpace.lean`, `FMSA.MRS`):
+* `Cmix0_linear_selfconv` — `Ĉ₀(k) = W(k) + W(−k)ᵀ − W(k)·W(−k)ᵀ` with `W = I − Q̂₀` (the weighted Baxter
+  function transform `ρ_geo·q̂`); pure matrix algebra `1−(1−A)(1−B)=A+B−AB` (`noncomm_ring`).  So the
+  seed's target `Ĉ₀` carries the **linear `q̂` terms** `W(k)+W(−k)ᵀ`; the bare self-conv `W(k)W(−k)ᵀ` (≈
+  `matCorr`) alone is not it.  With `Qphys_Cmix0_symm` this is the complete momentum-space discharge.
+* Real-space transform bridges (`MixtureRowSum.lean`): `fourier_eq_zOfW` (reusable — `𝓕 g w = ∫ g(v)e^{−(2πiw)v}`,
+  the general convention bridge, and `matCorr_fourier_eq` now factors through it), `q0MixEntry_fourier_eq`
+  (`𝓕(q0MixEntry i j) = q̂ᵢⱼ(z)` — a linear term), `q0MixEntry_refl_fourier_eq` (`𝓕(v↦q0MixEntry j i (−v)) = q̂ⱼᵢ(−z)`
+  — the reflected linear term, via `integral_neg_eq_self`).
+
+**⚠ Real-space `matDCF = q0(i,j) + q0(j,i)(−·) − ρ-weighted-matCorr` is DISCONTINUOUS** (the linear `q0`
+terms jump at `λ`, unlike the continuous `matCorr`), so real-space Fourier inversion (`eq_of_fourier_eq`,
+which needs continuity) gives only a.e. equality — the global-continuity route used for `matCorr` does NOT
+transfer to the DCF.  **This is WHY the discharge is cleanest in momentum space** (`Cmix0_linear_selfconv` +
+`Qphys_Cmix0_symm`, no continuity needed); a real-space `matDCF` symmetry would need the `ContinuousAt`/a.e.
+inversion (jump set is measure-zero) or Fourier a.e.-injectivity (absent in Mathlib).  Net: **momentum-space
+corrected `hfact` COMPLETE; the seed reformulation to consume `Ĉ₀` (momentum) rather than real-space
+`matSelfConv` is the remaining architectural step.**
+
+**Seed reformulated to consume `Ĉ₀` — the corrected assembly (2026-08-04, `MixtureRowSum.lean`, axiom-clean,
+build 8719).**  Key realization from the KDEF comment (`MixtureOzStar` L122): `ρK = Q − matSelfConv`, and the
+DCF kernel `K` **carries the linear `q̂` term `Q`** — so `K` (not `matSelfConv`) is the symmetric object.
+* `matBaxterK_symm_of_dcf` — `Kᵢₖ = Kₖᵢ` from the DCF symmetry `hCsym` (`Qᵢₖ−matSelfConvᵢₖ = Qₖᵢ−matSelfConvₖᵢ`,
+  the real-space content of `Cmix0` symmetric, `Qphys_Cmix0_entry_symm`), via `hfact` + `mul_left_cancel₀` —
+  **even though `matSelfConv` alone is NOT symmetric** (the linear `Q` compensates).
+* `matOzStar_of_shellClaims_K` — the UNSPLIT assembly: `Ψ = r·Φ + ρ·matShellConv K` (with the symmetric `K`)
+  + the shell-conv bridge `hbridge` ⇒ `MatOZStar`, in TWO lines (`rw [hclaimA, ← hbridge]`).  **No
+  `matSelfConv` symmetry, no KDEF split, no integrability** — the asymmetric function-part self-conv never
+  appears because the linear `q̂` terms live inside `K`.  Contrast the original `matOzStar_of_shellClaims`,
+  which splits `ρ·matShellConv K = ∑Q·shell − ∑matSelfConv·shell` and so needs the false symmetry.
+**Net:** the assembly now consumes `K = Ĉ₀/ρ` (symmetric via `swap_offdiag`, momentum), sidestepping the
+false `matSelfConv` symmetry entirely.
+
+**Seed → unsplit `K`-form `hclaimA` — the asymmetric-`K` closure (2026-08-04, `MixtureRowSum.lean`,
+axiom-clean, build 8719).**  The corrected seed produces `matShellConvAsym K Kᵀ`: `K(i,k)` on `r+u` (linear
+`q̂ᵢₖ(z)`) and the REFLECTED `K(k,i)` on `r−u` (linear `q̂ₖᵢ(−z)`) — the two linear `q̂` terms of `Ĉ₀`, with
+the reflected index `k,i` supplied by the transposed seed (`matBaxterUQmSym`).
+* `matShellConvAsym_symm_of_K` — `matShellConvAsym K Kᵀ = matShellConv K` given `K` symmetric (`Kᵀ = K`);
+  `Finset.sum_congr` + `integral_congr` + `rw [hKsym k i u]` + `ring`.  The correct analog of the (false)
+  `matSelfConv_shell_symm`.
+* `matOzStar_of_asymK` — **CLOSES obstruction (b) for ANY diameters**: seed's asymmetric-`K` `hclaimA` +
+  `K` symmetry (`hKsym`) + `hbridge` ⇒ `MatOZStar` (`matShellConvAsym_symm_of_K` then
+  `matOzStar_of_shellClaims_K`).  Uses ONLY the proven momentum-space DCF symmetry.
+**So the assembly is COMPLETE.**  Its three hypotheses: `hbridge` = `matRadialConv_eq_matShellConv` (exists);
+`hKsym` = `matBaxterK_symm_of_dcf` ⟸ `hCsym` (real-space DCF symmetry) ⟸ `Cmix0` symmetric (`Qphys_Cmix0_entry_symm`,
+proven, momentum) via the DCF transform bridge; `hclaimA` = the seed (`matBaxterUQmSym`) producing the
+asymmetric-`K` renewal.  Remaining to fully instantiate: (i) confirm `matBaxterUQmSym` outputs exactly
+`ρ·matShellConvAsym K Kᵀ` (the reflected `Q(k,i)` on `r−u`), and (ii) the real-space `hCsym` ⟸ momentum
+`Cmix0` transform bridge (a.e., given the `matDCF` discontinuity).  The obstruction-(b) LOGIC is now fully
+in place; only these two concrete instantiations remain.
+
+**⚠⚠ NEGATIVE FINDING (i): `matBaxterUQmSym` does NOT output `ρ·matShellConvAsym K Kᵀ` for unequal
+diameters (2026-08-04, `MixtureRowSum.lean`, axiom-clean, build 8719).**  Tracing `matBaxterUQmSym_unfold`
++ `matBaxterU`: BOTH linear terms carry the UN-reflected `Qᵢₖ` — `matBaxterU` gives `Qᵢₖ` on the `r−t` arm,
+the second convolution gives `Qᵢₖ` on `r+t`.  Via `matDblConv_reindex` the SELF-CONV part IS correctly
+reflected (`matSelfConvᵢₖ` on `r+u`, `matSelfConvₖᵢ` on `r−u`), so per-arm after the KDEF: `r+u` coeff =
+`Qᵢₖ − matSelfConvᵢₖ = ρK(i,k)` ✓, but `r−u` coeff = `Qᵢₖ − matSelfConvₖᵢ` — which is `ρKᵀ(i,k)` (=
+`Qₖᵢ − matSelfConvₖᵢ`) **iff `Qᵢₖ = Qₖᵢ`** (`seed_rMinus_eq_KKt_iff`, `sub_left_inj`) — equal diameters only.
+So for unequal diameters an uncompensated `(Qᵢₖ−Qₖᵢ)·Ψₖⱼ(r−u)` term survives, and `matOzStar_of_asymK`
+(which needs `K Kᵀ`) does NOT apply to the current seed.  **The self-conv reflection is right; the LINEAR
+reflection is missing.**  Fix = the transposed FIRST convolution (`Qₖᵢ` on `r−t`), but that changes the
+renewal (`matBaxterU_outer` fixes `Qᵢₖ` via `MatRenewalEq`) — so the reflected-linear seed needs a
+transposed renewal, a genuinely different construction.  This is the real remaining seed-level obstacle;
+the assembly (`matOzStar_of_asymK`), `K`-symmetry, momentum discharge, and `Ĉ₀` decomposition are all done.
+
+**⚠⚠⚠ DEEPER FINDING — `K` symmetry is ALSO FALSE; the transposed renewal is a DEAD END (2026-08-04,
+`scratchpad/k_symm_test.py`).**  Before building the transposed renewal, I tested whether `K = (Q −
+matSelfConv)/ρ` is even symmetric — **it is NOT**: `Q(i,k)−matSelfConv(i,k) ≠ Q(k,i)−matSelfConv(k,i)`,
+diff **~3e-3** at every `v`.  So `matBaxterK_symm_of_dcf`'s `hCsym` and `matOzStar_of_asymK`'s `hKsym` are
+**FALSE** (the same `hmom`/`matSelfConv` trap): `K` has only ONE linear term `Q` + the WINDOWED
+`matSelfConv` `[v,σ]`.  Even a reflected-linear seed producing `K Kᵀ` would NOT collapse
+(`matShellConvAsym_symm_of_K` needs `K` symmetric).  The genuinely symmetric object is the FULL-LINE DCF
+`matDCFᵢₖ(v) = q0(i,k)(v) + q0(k,i)(−v) − matCorrᵢₖ(v)` (TWO linear terms + full-line `matCorr`), tested
+symmetric to **1e-11..1e-15 A.E.** — but its symmetry diff **jumps to ~0.19 AT `v = ±λ`** (`λ(1,0)=0.2`,
+where `q0` jumps).  **So `matDCF` is symmetric A.E. and discontinuous exactly at `v=λ`.**  ROOT CAUSE
+(recurring ALL session): every windowed / single-linear object (`matSelfConv`, `K`) is asymmetric; only the
+full-line, two-linear-term `matDCF`/`Cmix0` is symmetric, and only A.E.  **The whole `K`-shell reformulation
+rests on a false premise; the correct route is the a.e. Fourier-inversion framework on the DISCONTINUOUS
+`matDCF` — a genuine research-scale obstacle, not a seed reindex.**  The momentum-space facts
+(`Cmix0_linear_selfconv`, `Qphys_Cmix0_symm`) remain correct and are the anchor; it is the real-space/a.e.
+transfer that is hard.  The `K`-shell lemmas stay as VALID implications (docstrings flag their false
+premises), like `matCorr_symm`/`hmom`.
+
 (2) **Matrix KDEF `hfact`** `ρK=Q−matSelfConv(Q)` for the concrete `q0MixEntry` — only N=1
 (`matBaxterFactorization_fin_one_of_scalar`); needs the matrix real-space self-convolution factorization.
 (3) **The `λᵢⱼ` jump/delta** — the physical factor is `q0MixEntry`(quadratic) + a `λᵢⱼ`-delta + `δᵢⱼ·δ(r)`;
@@ -2433,3 +2958,597 @@ Individual `Q̂₀` entries blow up as `Re s → ∞` (`e^{−λ_{ij}s}`, `λ_{i
 `[0,1]`), so `1 − A = Mgauge` is a unit (`isUnit_one_sub_of_norm_lt_one`) and `det ≠ 0` for `‖s‖ ≥ R`
 (`exists_uniform_escape`, axiom-clean).  This is **cleaner than the `N=2` monomial bridge** and needed
 no complex VU factorisation.  **`OZFIX.17` matrix pole↔decay is now RESOLVED for ALL `N`.**
+
+---
+
+### Task MML.16 — the RDF **parity partner** is annihilated exactly (the "even pseudo-trace" question)
+
+**Origin (2026-08-03).** A reading question: the first-order RDF is built from the **unilateral**
+transform `Ĥ₁`, while the physical object is the **sine** transform `H̃₁` (the transform of the *odd*
+extension of `r·h₁`). One-sided ≠ two-sided, so an *even-function pseudo-trace* could in principle
+contaminate `B₁`. Does Tang & Lu's derivation handle it — or does it merely happen to be small?
+
+**Checked against the original** (`pdf/sources_paywall/Analytical solution of the Ornstein-Zernike
+equation for mixtures.pdf` = Tang & Lu, *Mol. Phys.* **84**, 89–103 (1995)), journal pp. 91–94:
+
+* **p. 91 / p. 92 — both transforms are defined**, and the exact link is stated:
+  `H̃(k) = [Ĥ(−k) − Ĥ(k)]/(ik)`, `C̃(k) = [Ĉ(−k) − Ĉ(k)]/(ik)`. So `H̃` is (up to `1/(ik)`) the **odd
+  part** of `Ĥ`; Tang & Lu **never** identify the two.
+* **p. 92, Eq. (9) / p. 93, Eq. (10) — the parity partners are written explicitly**: substituting the
+  link produces `Q̂₀ᵀ(k)Ĥ₁(−k)Q̂₀(k)` (RDF partner) and `−[Q̂₀(−k)]⁻¹Ĉ₁(−k)[Q̂₀ᵀ(−k)]⁻¹` (DCF partner)
+  alongside the `U₁` and `S₁` terms.
+* **p. 93 — the space analysis** puts "the first, the third, and the fourth terms on the right-hand
+  side of equation (10)" in `[−∞,R]`; only `U₁` reaches `[R,∞)`.
+* **p. 94 — the Wiener-Hopf conclusion**: "The left-hand side … is in `[R,∞)` space, while the
+  right-hand side … belongs to `[−∞,R]` space. Both sides should vanish." ⇒ Eq. (14)/(15),
+  `Q̂₀ᵀ(k)Ĥ₁(k)Q̂₀(k) = {T_U}^{[R,∞)}`, `Ĥ₁ = [Q̂₀ᵀ]⁻¹B₁[Q̂₀]⁻¹`.
+
+**Answer.** The artifact is **confronted and annihilated exactly** — it is not small, it is
+*elsewhere*: it lives on the reflected half-line, which the causal projection discards. Nothing here
+is asymptotic.
+
+**⚠ [LN] deviates from the original at exactly this step — a transcription seam.**
+`pdf/lecture_notes_OZ_Yukawa.tex` writes, in the derivation of `eq:OZ1_Baxter`, "*note that the
+half-line transforms satisfy `H̃₁(k) = Ĥ₁(k)` (since `h^{(1)}(r)=0` for `r<0` …)*". In the notes' own
+normalization that is **false** (the tilde carries a `1/k` and is the odd part), and its stated reason
+is not the operative one. Consequently the notes' `eq:rearranged` has a vacuous `− L(k) + L(k)` where
+the original has the two genuinely different reflected terms — while the notes' **Proof 2 still
+discusses `Ĥ₁(−k)`**, betraying its descent from the original. The *conclusion* (Eq. 62/68) is
+unaffected, which is why nothing downstream broke. **Read the original, not the notes, for this step.**
+
+**Lean — DONE (2026-08-03, axiom-clean),** `LeanCode/YukawaDCF/ReflectedTermSupports.lean`
+(namespace `FMSA.ReflectedSupports`), wired into `LeanCode.lean`:
+
+* `support_comp_neg`, `reflected_support_Iic` — reflection reverses the support: `h₁` on `[R,∞)`
+  (the exact hard-core condition, every order) ⇒ the time-reversed `h₁` on `(−∞,−R]`;
+* `Icc_add_Iic_subset`, `Iic_add_Icc_subset`, `Iic_add_Iic_subset` — the Minkowski arithmetic that
+  `support_convolution_subset` reduces the space analysis to (mirrors `MixtureConvolution.lean`'s
+  `Ici`/`Icc` helpers, opposite orientation);
+* **`reflected_rdf_conj_support`** — *Proof 2, RDF half*: `Q̂₀ᵀ ⋆ h₁(−·) ⋆ Q̂₀` is supported on
+  `(−∞,−λ_ij]`;
+* **`antiCausal_triple_support`** — *Proof 2, conjugation half*: a triple convolution of anti-causal
+  factors stays anti-causal — covers the inner-core `S₁` term (`b := R`) **and** the DCF parity
+  partner (`b := 0`) in one lemma;
+* **`parity_partners_causal_projection_zero`** — the headline: the causal projection of a
+  `(−∞,R)`-supported term is **identically `0`**;
+* `causal_projection_with_reflection` (+ `_open`) — Y1.3b's `causal_projection_real` with the two
+  partners **present** in the equation: the conclusion `L = {T_U}^{[R,∞)}` is unchanged. The `_open`
+  form concludes on `(R,∞)` and needs no strictness, which matters because for **like pairs**
+  (`λ_ii = 0`) the `S₁` term's support bound is exactly `(−∞,R]` — Tang & Lu's two spaces are both
+  closed and overlap in the single point `r = R`;
+* closing `example` — non-vacuity **with `Wrefl ≠ 0`**: the annihilation is about *where* the partner
+  lives, not its size. (Contrast the DCF side, where the analogous reflected term is `O(1)`: the C++
+  port's `reflection` razor moves **107 %** when it is dropped, and MRS.5's `oddPart_reduction` keeps
+  `𝒲(r) − 𝒲(−r)` explicitly.)
+
+**Atomic supports — now discharged too (2026-08-03, same file).**  The first cut left "the concrete
+`Q̂₀`, `h₁`, `S₁` satisfy the atomic supports" to Y1.3a.  That gap is closed:
+
+* **`q0MixEntryRefl` / `q0MixEntryRefl_support_subset`** — the **transposed** Baxter factor
+  `{Q̂₀ᵀ}_{ij}` on `[−R_ij, −λ_ij]`.  This was the atom Y1.3a genuinely lacked (`WHSupports` has only
+  the untransposed `q0MixEntry`); transposition is `r → −r`, so it follows from Y1.3a + reflection.
+* **`support_subset_Ici_of_hardCore`**, **`support_subset_Icc_of_window`** — the physics ⇒ support
+  bridges: the exact hard-core condition `h^{(γ)}(r) = 0` for `r < R` (Tang & Lu p. 91, every order)
+  and the definitional `[0,R]` window of `S₁`.
+* **`reflected_rdf_edge_eq`** — the mixed-index edge identity `−λ_im + (−R_mn) + R_nj = R_ij − σ_m`:
+  the intermediate species `n` **cancels completely**, `m` survives only as a margin.  (Same
+  cancellation pattern as `MixtureConvolution.pbp_edge_eq`.)
+* **`reflected_rdf_conj_support_physical`** — hence `supp ⊆ (−∞, R_ij − σ_m]` **from physics only**,
+  and **`reflected_rdf_conj_eq_zero_of_contact_le`** — the partner vanishes on the **closed**
+  `[R_ij, ∞)`, endpoint included, because `σ_m > 0` (`Mix.hσ`, the structure's only physical axiom).
+  So for the parity partner the endpoint caveat above is **void**; only the inner-core `S₁` term
+  touches `r = R`.
+* **`convIter_support_subset`** — every Neumann term of `I + A + A⋆A + ⋯` is anti-causal with the
+  *same* bound when `A` is (`a ≤ 0` keeps the edge from moving right).
+
+**⚠ The fourth atom does NOT need MA.13 — finding of 2026-08-03.**  The Neumann series genuinely
+diverges in the physical regime (`‖q‖₁ > 1`, the very reason `wiener_causal_resolvent` is a kept
+axiom), so the series route stalls.  But **the support question is local**, and locally the renewal
+equation is unconditionally solvable:
+
+* `renewalResolvent` := `VolterraBanach.volterraGlobalE 0 q q` — the solution of `R = q + q ⋆ R`
+  supplied by **MA.10** (`Analysis/Volterra.lean` / `VolterraBanach.lean`, *proved, axiom-free*).
+  MA.10 gives existence **and uniqueness on every window** `[0,b]` with **no smallness hypothesis**:
+  the factorial iterate bound `Mⁿ(b−a)ⁿ/n!` beats any `‖q‖₁`, and `volterraGlobalE` glues the windows.
+* **`renewalResolvent_support`** — the resolvent is **causal by construction** (`volterraGlobalE` is
+  literally `0` off `[0,∞)`), with `renewalResolvent_spec` pinning it by its equation;
+  **`renewalResolventRefl_support`** mirrors it to the anti-causal orientation `[Q̂₀(−k)]⁻¹` has.
+* **`antiCausal_conj_delta_support`** — conjugation by `δ + (anti-causal)` preserves `(−∞,b]`: the
+  four-term expansion `(δ+A) ⋆ f ⋆ (δ+B)` stays anti-causal.
+* **`eq10_antiCausal_side`** — hence *both* remaining terms of Eq. (10) (the inner-core `S₁` term,
+  `b := R_ij`; the DCF parity partner, `b := 0`) are supported in `(−∞,R_ij]`.
+  `#print axioms` on all of these: the **standard three only** — MA.13 does not appear.
+
+**So MA.13 is off this path.**  What it *is* needed for is the **global `L¹`** resolvent — the decay
+and pole statements of POLE.11 — which is strictly stronger than "supported on a half-line".  The two
+questions were conflated; they are now separated.
+
+**What genuinely remains is a dictionary item, not analysis:** that the physical `[Q̂₀(−k)]⁻¹` *is*
+`δ + R` with `R` the renewal solution.  That is the real-space reading of `Q̂₀·Q̂₀⁻¹ = I` (algebra plus
+the transform correspondence), carried as the hypothesis shape of `antiCausal_conj_delta_support`.
+
+**Status.** ✓ DONE (axiom-clean), atomic supports included, **and free of MA.13**. Companion
+write-up: `FMSA_dp_output/md/rdf_parity_no_pseudotrace.md`.
+
+### Task MML.17 — Tang & Lu momentum-side first-order mixture RDF (the residue expansion)
+
+Reference: `pdf/sources_paywall/Analytical solution of the Ornstein-Zernike equation for mixtures.pdf`
+= **Tang & Lu, *Mol. Phys.* 84, 89–103 (1995)**, §2–3.  The mixture first-order RDF is solved in
+**momentum space** via the closed-form inverse `[Q̂₀]⁻¹`, *not* the real-space renewal seed of MML.15/16
+(that whole seed saga — `matBaxterUQm`, K-shell, `matShellConvAsym`, reflected-linear, transposed
+renewal — was the wrong method; its lemmas survive as valid implications with flagged-false premises).
+My `Cmix0 / Q̂₀ / swap_offdiag / det / q0_entry_c` objects match the paper's eqs (7)–(13) exactly.
+
+The paper's chain (eq numbers are Tang & Lu's):
+
+* **(4) HS contact baseline (eq 25)** — `LeanCode/YukawaDCF/MixtureRDFContact.lean`,
+  `FMSA.MatrixQ0.gHS_contact` + `gHS_contact_equalDiam` (reduces to `(1+η/2)/(1−η)²`). Axiom-clean.
+* **(1) closed-form inverse (Appendix, eq before 15)** — `LeanCode/HSMixture/MixtureQ0Inverse.lean`,
+  `Q0_mat_phys_inv_closed_form` / `Q0_mat_phys_inv_eq`: `[Q̂₀]⁻¹ = I + U(I−VU)⁻¹V` via
+  Sherman–Morrison–Woodbury on the existing rank-2 `Q̂₀ = I − UV` (`I−VU` is 2×2, `det = det Q̂₀ ≥ 1`).
+  This IS Tang & Lu's Appendix inverse `{[Q̂₀]⁻¹}ᵢⱼ = δᵢⱼ + 2π(ρᵢρⱼ)^{1/2}Wᵢⱼ(ik)/(Δ det(ik))·e^{−ikλᵢⱼ}`,
+  i.e. the `Aᵢⱼ(t) = 2π(ρᵢρⱼ)^{1/2}Wᵢⱼ(t)/(Δ det(t))` amplitudes of eq (20). Axiom-clean.
+* **eq (15) assembly** — same file, `H1_eq_of_transformed` / `H1_eq_phys`:
+  `Ĥ₁ = [Q̂₀ᵀ]⁻¹B₁[Q̂₀]⁻¹` from the transformed first-order OZ `Q̂₀ᵀĤ₁Q̂₀ = B₁`. Axiom-clean.
+* **(2)=(18) one-Yukawa `U₁` transform** — `LeanCode/YukawaDCF/MixtureYukawaTransform.lean`,
+  `laplace_yukawa` + `yukawa_U1_entry`: `∫_R^∞ (βRε e^{−z(r−R)})e^{−sr}dr = βRε e^{−sR}/(s+z)`, i.e.
+  `U₁ᵢⱼ = Kᵢⱼ e^{−ikRᵢⱼ}/(ik+zᵢⱼ)`, `Kᵢⱼ = 2π(ρᵢρⱼ)^{1/2}Rβε`. The `1/r` of the MSA tail cancels the
+  radial `r` weight ⇒ a pure exponential integral. Axiom-clean.
+* **(3) residue extraction (eq 20→21)** — `LeanCode/YukawaDCF/MixtureYukawaResidue.lean` (NEW,
+  2026-08-04). Eq (19) turns `B₁(k)` into `−E(k) Res_{y(s)}(E(−y)[Q̂₀(−y)]⁻¹U₁(y)[Q̂₀ᵀ(−y)]⁻¹E(−y)/(y−k))E(k)`,
+  the residue taken **at the Yukawa poles of `U₁`**. Substituting eq (18) + `[Q̂₀(−y)]⁻¹ = I + A(−iy)`
+  makes every entry of the eq (20) integrand a finite sum of terms of the *one* shape
+  `g(y)/((y−k)(iy+z))`, `g` analytic (products of `K` and `A(−iy)`), with a **simple** pole at `y = iz`
+  because `iy+z = i(y−iz)`. The single lemma
+  - **`residue_yukawa_pole_general`** : `Res_{y=iz}[g(y)/((y−k)(iy+z))] = −g(iz)/(ik+z)`
+    (proved as the punctured-limit `(y−iz)·f(y)`: on `𝓝[≠](iz)` the pole cancels to `g(y)/((y−k)i)`,
+    continuous at `iz`; value rewritten via `(iz−k)i = −(ik+z)`)
+
+  captures **all four** eq (20) term-types at once, supplying uniformly (i) the Yukawa denominator
+  `1/(ik+z_{αβ})` of eq (21), (ii) the argument evaluation `A(−iy)|_{y=iz} = A(z)` (`neg_I_mul_I_mul`:
+  `−i·(iz)=z`) that turns `A(−iy)` into `Aⱼₙ(zᵢₙ)`, `Aᵢₘ(zₘⱼ)`, `Aᵢₘ(zₘₙ)Aⱼₙ(zₘₙ)`, and (iii) the
+  `−E(k)…E(k)` sign flip. Corollaries `residue_yukawa_pole` (`g≡1 ⇒ −1/(ik+z)`) and
+  `residue_yukawa_first_term` (`−K·Res ⇒ +K/(ik+z)`, the diagonal `bᵢⱼ` leading term of eq 21).
+
+  **Sole hypothesis `iz ≠ k`** (physically `z=z_{ij}>0` real, `k` real ⇒ automatic), which by itself
+  already forces `ik+z ≠ 0` (since `(iz−k)i = −(ik+z)` and `iz−k ≠ 0`, `i ≠ 0`) — no separate
+  non-vanishing assumption on the Yukawa denominator. **No contour axiom**: a *single* simple pole's
+  residue is just a punctured limit, so this is ordinary `Tendsto` complex analysis. Axiom-clean
+  (`propext, Classical.choice, Quot.sound`).
+
+* **(3, contour-sum step) done** — `LeanCode/Analysis/ContourSumUpperHalfPlane.lean` (NEW,
+  2026-08-04, namespace `FMSA.MixtureRDF`). The other half of eq (19): the `∫dy/(y−k)` inversion
+  equals the finite **sum** of the per-pole residues. **`improper_integral_eq_sum_residues_upperHalfPlane`**
+  — the general engine: for any `f` with finitely many simple poles `c' i` strictly in the *open* UHP
+  (residue factor `g i`, `f = g i/(·−c' i)` near `c' i`), holomorphic on the rest of the closed UHP off
+  a countable `s`, with a vanishing upper-arc integral (`harc`, Jordan-type), `∫_{−R}^{R} f → Σᵢ 2πi·g i (c' i)`.
+  Proof mirrors `fourier_kernel_one_pole`'s tail: `∫ = Σ − arc(R)` eventually (from the half-disk residue
+  formula `halfDiskBoundary_eq_sum_two_pi_I_mul_of_simple_poles`, with the R-dependent
+  `hinside`/`hc`/`hd` discharged for `R` large via `eventually_gt_atTop` + `‖z‖≤‖z−c'i‖+‖c'i‖<R` +
+  `|z.im−(c'i).im|≤‖z−c'i‖<r'i<(c'i).im`), arc → 0, so `∫ → Σ`. **This GENERALIZES the project's
+  single-kernel `fourier_kernel_one_pole`/`fourier_kernel_finite_poles`** (which were fixed to
+  `e^{ixr}/(x−k)`) to an arbitrary integrand.  **`improper_integral_eq_sum_yukawa_residues`** — the
+  bridge: specializes `c' i = i·zᵢ` with the Yukawa factor shape `g i w = ĝ i w/((w−k)·i)` and rewrites
+  the conclusion into `Σᵢ 2πi·(−ĝᵢ(i zᵢ)/(i k + zᵢ))` — i.e. `2πi` times *exactly* the residue **value**
+  `residue_yukawa_pole_general` computes, via `(i zᵢ−k)·i = −(i k + zᵢ)`.  So the two halves of task
+  (3) — residue **value** + contour **sum** — are now explicitly composed.  **`#print axioms` on both =
+  `halfDiskBoundary_eq_sum_of_small_circles` + std-3** — only the ONE accepted contour axiom (the same
+  one `fourier_kernel_one_pole` and the argument principle already use), **no new axiom**.
+
+  **Why only the Yukawa poles are enclosed** (justifying eq 19's "residue w.r.t. each element of `U₁`"):
+  `[Q̂₀(−y)]⁻¹` is **pole-free in the UHP** — `mixtureDet_pole_free_N`, proved for all `N` — so closing
+  the contour upward encloses exactly the simple poles `y = i zᵢⱼ` of `U₁(y)`.  This is fed to the engine
+  as `hc`/`hd` (holomorphy off the Yukawa balls).
+
+* **(3a, leading term hc/hd/harc) done** — `LeanCode/YukawaDCF/MixtureYukawaContourTerm.lean` (NEW,
+  2026-08-04). Discharges the engine's *integrand-specific* inputs for the **leading eq (20) term** of a
+  fixed RDF entry `{Ĥ₁(k)}ᵢⱼ` (the `[Q̂₀]⁻¹ ≈ I` contribution) — a complete, end-to-end contour sum with
+  NO remaining hypotheses beyond state-point positivity.  **KEY: the leading term is exponential-free.**
+  With `E(−y)ₘₘ = e^{iyRₘ/2}`, `U₁(y)ᵢⱼ = Kᵢⱼ e^{−iyRᵢⱼ}/(iy+zᵢⱼ)`, and the **additive-diameter identity**
+  `Rᵢⱼ = Rᵢ/2 + Rⱼ/2`, the outer `E`'s cancel `U₁`'s exponential exactly:
+  `E(−y)ᵢᵢ·U₁ᵢⱼ·E(−y)ⱼⱼ = Kᵢⱼ/(iy+zᵢⱼ)` — a **single** simple Yukawa pole, **no exponential** ⇒ `O(1/y²)`
+  decay ⇒ the arc bound is elementary (arc length `πR` × `O(1/R²)` → 0), **no Jordan lemma needed**.
+  **`contourSum_leading_term`** (hyps `0<r0`, `r0 < Im(iz)`, `Im k < 0`) proves
+  `∫_{−R}^{R} K/((y−k)(iy+z)) dy → 2πi·(−K/(ik+z))` (= eq 21's leading `bᵢⱼ` term after the `−E(k)…E(k)`
+  sign) by discharging: **hc** (`ContinuousOn.div`, denom `≠0` since `iy+z = i(y−iz) ≠0` off the pole ball
+  and `y≠k` as `Im y ≥ 0 > Im k`), **hd** (`DifferentiableAt.div`, same), **harc** (`squeeze_zero_norm'`
+  by the `4‖K‖/R` bound: `‖(iR e^{iθ})•f‖ = R‖f‖ ≤ R·4‖K‖/R² = 4‖K‖/R`, using `‖w−k‖,‖iw+z‖ ≥ R/2` for
+  `R ≥ 2‖k‖,2‖z‖`), then feeds `improper_integral_eq_sum_yukawa_residues` at `ι = Fin 1`.  `#print axioms`
+  = `halfDiskBoundary_eq_sum_of_small_circles` + std-3 (`set_option maxHeartbeats 1200000` for the one
+  heavy engine application).  **`k` placed just below the axis (`Im k<0`)** ⇒ no on-contour pole (the
+  Plemelj lower boundary value), keeping the engine's open-UHP hypothesis clean.
+
+* **(3a-rest, holomorphy of `[Q̂₀]⁻¹` — the `A(−iy)`-term analytic core) done** —
+  `LeanCode/Analysis/MatrixInverseHolomorphic.lean` (NEW, 2026-08-04, namespace `FMSA.MatrixHolo`). The
+  remaining eq (20) terms carry `A(−iy) = 2π√(ρρ)W(−iy)/(Δ det(−iy))` = the entries of `[Q̂₀(−y)]⁻¹` (via
+  the closed-form inverse), so their `hc`/`hd` need the **UHP holomorphy of the matrix inverse**. Proved
+  **entirely generally** (no Baxter structure): if every entry `z ↦ (M z) a b` is `DifferentiableAt w` and
+  `det (M w) ≠ 0`, then every inverse entry `z ↦ (M z)⁻¹ i j` is `DifferentiableAt w`. Chain via `inv_def`
+  (`A⁻¹ = A.det⁻¹ʳ • A.adjugate`): **`differentiableAt_matrix_det`** (Leibniz `det_apply` — sum over perms
+  of entry products, `DifferentiableAt.sum`/`.finsetProd`/`.const_smul`), **`differentiableAt_matrix_adjugate`**
+  (`adjugate A i j = det (A.updateRow j (e i))`, a const-row update stays holomorphic), then
+  **`differentiableAt_matrix_inv`** (`Ring.inverse (det) = (det)⁻¹` via `Ring.inverse_eq_inv'`, holomorphic
+  where `det ≠ 0`, times the adjugate). Corollaries **`differentiableAt_matrix_inv_comp_neg`** (the exact
+  `[Q̂₀(−y)]⁻¹` shape, chain rule with `y ↦ −y`) and **`continuousAt_matrix_inv`** (for the engine's `hc`).
+  **`#print axioms` = std-3 only** — completely axiom-clean, no contour axiom (pure Mathlib calculus).
+
+  **What still remains to wire this to the physical `Q̂₀`** (concrete-`Q̂₀` assembly): (i) an analytic
+  representative of `q0_entry_c` at `s=0` — **DONE**, see next bullet; (ii) matching the **det-orientation**
+  of `mixtureDet_pole_free_N` (`det (Q0_mat_c_phys (I·z)) ≠ 0` for `Im z < 0`, i.e. `Re > 0`) to the contour
+  variable `−y` in the closed UHP; (iii) the **arc bound** for the `A(−iy)` terms, where the
+  additive-diameter cancellation must still beat the `W/det` growth.
+
+* **(3a-rest-i, `s=0` analytic representative) done** — `LeanCode/HSMixture/Q0ComplexRepr.lean` (NEW,
+  2026-08-05, namespace `FMSA.Q0Complex`). `q0_entry_c` carries `1/s²`, `1/s³` whose `s=0` singularity is
+  *removable* (numerators vanish to matching order) but the literal expression is undefined there — and the
+  contour crosses `y = 0`. **`q0_entry_c_repr`** = `Function.update (q0_entry_c ·) 0 (limUnder (𝓝[≠]0) …)`
+  (redefine at `0` to the removable limit), with **`q0_entry_c_repr_eq_of_ne`** (agrees with `q0_entry_c`
+  for `s≠0`, so all existing `q0_entry_c`/`Q0_mat_c` theorems transfer + the integral is unchanged, `{0}`
+  null) and **`differentiable_q0_entry_c_repr`** (entire — `DifferentiableAt` everywhere). Removable point
+  by Riemann via **boundedness** (`differentiableOn_update_limUnder_of_bddAbove`, so *no explicit limit
+  value needed*): on `‖s‖ < 1/(1+‖σ‖)` (⇒ `‖sσ‖<1`) the two pole pieces are bounded by `‖σ‖²`, `‖σ‖³`
+  from the `exp` Taylor remainders **`Complex.norm_exp_sub_one_sub_id_le`** (`‖eᶻ−1−z‖≤‖z‖²`) and
+  **`Complex.exp_bound`** (`n=3`, constant `4/18≤1`); off-`0` differentiability by `fun_prop` with
+  `s²,s³≠0`; the `s≠0` case of "entire" glued via `Function.update_of_ne` + `congr_of_eventuallyEq`.
+  **`#print axioms` = std-3** — fully axiom-clean. Reusable atoms: `normP2_le`, `normP3_le`,
+  `differentiableAt_q0_entry_c_of_ne`, `norm_q0_entry_c_le`.
+
+* **(3a-rest-ii, det orientation) done** — `LeanCode/HSMixture/Q0DetContourOrientation.lean` (NEW,
+  2026-08-05, namespace `FMSA.MixtureGenN`). Matches the project's two Baxter-det non-vanishing results
+  to the contour region (closed UHP). **Convention pinned:** `Q̂₀(k) = Q0_mat_c_phys (I·k)` (kernel
+  `e^{−ikσ}=e^{−sσ}`, `s=ik`; cf. `BaxterRenewalDecay`/`Splitting`, `z=ik`), so `[Q̂₀(−y)]⁻¹` has argument
+  `Q0_mat_c_phys (I·(−y))` with `Re(I·(−y)) = Im y`. **`det_Q0_contour_ne_zero_of_im_pos`** (open UHP
+  `Im y>0` ↦ `Re>0`): `mixtureDet_pole_free_N` at `z=−y` (`Im(−y)=−Im y<0`). **`det_Q0_contour_ne_zero`**
+  (closed UHP minus origin, `Im y≥0, y≠0`): open UHP as above + real axis `Im y=0, y≠0` (⇒ `y.re≠0`,
+  argument purely imaginary `I·(−y.re)`) via **`pyhs_mixture_no_spinodal`** (the no-spinodal physics
+  axiom, `det Q̂₀(I·k)≠0` real `k≠0`). Pole `y=iz` ⇒ argument `z>0` real, det≠0 (real axis) — consistent.
+  **`#print axioms` = std-3 + `zeroFree_lowerHalfPlane_of_homotopy` (math) + `pyhs_mixture_no_spinodal`
+  (physics)** — exactly the two axioms `mixtureDet_pole_free_N` already uses, **NO new axiom** (even the
+  open-UHP lemma inherits the physics axiom, since it is the real-axis boundary datum of the pole-free
+  proof). **Origin `y=0`** = the `k=0` compressibility (`det Q̂₀(0)`, removable value in
+  `Q0MomentGeOne`/`MixtureDetOrigin`) — the one remaining point, also where `q0_entry_c` is `s=0` junk
+  (handled by the `Q0ComplexRepr` representative). For `y≠0` the argument `I·(−y)≠0` ⇒ raw `Q0_mat_c_phys`
+  and the entire representative agree, so these det statements transfer to the engine's representative matrix.
+
+* **(3a-rest-iii, `A(−iy)` arc bound — the reusable mechanism) done** —
+  `LeanCode/YukawaDCF/YukawaArcBound.lean` (NEW, 2026-08-05, namespace `FMSA.MixtureRDF`).
+  **`arc_integral_tendsto_zero`**: for ANY numerator `g` bounded by `M ≥ 0` on the upper arc, the arc
+  integral of `g(y)/((y−k)(iy+z))` → 0 (integrand `O(M/R²)`, arc length `πR` ⇒ `O(M/R) → 0`; same
+  `‖(iRe^{iθ})•·‖ = R·‖·‖ ≤ 4M/R` squeeze as the leading-term `harc`, now with a variable bounded `g`).
+  **Fully axiom-clean (std-3).**  This **generalizes** the leading-term arc bound (`g ≡ K`, constant) to
+  any bounded numerator, and reduces the `A(−iy)`-term arc bound to ONE question: is the numerator
+  `K·A(−iy)` (resp. `K·A(−iy)·A(−iy)`) bounded on the arc?
+
+  **KEY finding — the numerator bound is NOT entrywise (the remaining concrete work).**  On the arc
+  `y = Re^{iθ}` the Baxter argument `s = I·(−y)` has `Re s = R sinθ ≥ 0`, so the diagonal kernels
+  `e^{−sσ}` decay — BUT the unlike-pair factor `e^{−λs}` with `λ = (σⱼ−σᵢ)/2 < 0` **grows** like
+  `e^{|λ|R sinθ}`.  So `q0_entry_c`, hence `A(−iy) = [Q̂₀(−y)]⁻¹ − I`, is **not** bounded entrywise on the
+  arc.  Boundedness holds only for the **full product** `E(−y)[Q̂₀(−y)]⁻¹U₁(y)[Q̂₀ᵀ(−y)]⁻¹E(−y)`, where
+  the additive-diameter cancellation `Rᵢⱼ = Rᵢ/2 + Rⱼ/2` kills the growing exponentials (exactly as it
+  collapses the leading term to the exponential-free `K/(iy+z)`).  So the concrete-`Q̂₀` step feeding this
+  lemma is that **cancellation-tamed numerator bound** — an intricate full-product estimate, not an
+  entrywise one; the arc-vanishing *mechanism* is what is proved here.
+
+* **(c, eq (21)/(22) assembly) done** — `LeanCode/HSMixture/MixtureH1Assembly.lean` (NEW, 2026-08-05,
+  namespace `FMSA.MatrixQ0`). The algebraic bookkeeping turning `Ĥ₁ = [Q̂₀ᵀ]⁻¹B₁[Q̂₀]⁻¹` (eq 15) into the
+  explicit eq (21)/(22) four-term form. **`H1_expand`** (generic): `(1+Aᵀ)·B·(1+A) = B + Aᵀ·B + B·A +
+  Aᵀ·B·A` (`noncomm_ring`). **`H1_assembly_phys`**: for the physical Baxter factor, `Ĥ₁ = B₁ + Aᵀ·B₁ +
+  B₁·A + Aᵀ·B₁·A` with `A = Amat := U(1−VU)⁻¹V` (the Woodbury off-identity part) — via `H1_eq_phys` +
+  `Q0_mat_phys_inv_eq` (`[Q̂₀]⁻¹ = 1+A`) + `[Q̂₀ᵀ]⁻¹ = ([Q̂₀]⁻¹)ᵀ = 1+Aᵀ` (`transpose_nonsing_inv`) +
+  `H1_expand`. **`H1_assembly_phys_apply`** (entrywise, = Tang & Lu eq (21) verbatim, verified the index
+  structure against the paper): `{H₁}ᵢⱼ = {B₁}ᵢⱼ + ∑ₘ Aₘᵢ{B₁}ₘⱼ + ∑ₙ {B₁}ᵢₙAₙⱼ + ∑ₙ∑ₘ Aₘᵢ{B₁}ₘₙAₙⱼ`
+  (single `simp only [add_apply, mul_apply, transpose_apply, sum_mul]`); with `{B₁}ᵢⱼ = bᵢⱼ·e^{−ikRᵢⱼ}`
+  carrying the residue `bᵢⱼ` of eq (23), built from the per-pole residue **values**
+  (`MixtureYukawaResidue`). **`#print axioms` = std-3** — fully axiom-clean pure matrix algebra.
+
+* **(b, `y=k` ½-Plemelj) done** — `LeanCode/Analysis/SokhotskiPlemeljLower.lean` (NEW, 2026-08-05).
+  The on-contour `y=k` real-axis pole. The half-disk axiom needs poles in the *open* UHP; the
+  leading-term work placed `k` in the open *lower* half-plane (`Im k<0`), so the physical real-`k` value
+  is the **lower** boundary limit `Im k→0⁻`. The project had only the upper axiom
+  (`sokhotski_plemelj_upper`, `P.V.+iπ·g(x₀)`); added the two pieces (b) needs, both DERIVED — **no new
+  axiom** (only `sokhotski_plemelj_upper` + std-3). **`sokhotski_plemelj_lower`** (`P.V.−iπ·g(x₀)`): by
+  **conjugation** — apply the upper axiom to `f := conj∘g`, then conjugate the whole `Tendsto`; `conj`
+  commutes with the integral (`integral_conj`), turns the lower kernel `1/(x−x₀+iε)` into the upper
+  `1/(x−x₀−iε)`, and flips `+iπ`→`−iπ` (the derivation the axiom docstring flags as intended).
+  Plumbing: `Integrable.conj` via `.norm.mono'`+`RCLike.norm_conj`; PV-conj via `←integral_conj`+
+  `setIntegral_congr_fun`; `Function.comp` mismatch closed by `Tendsto.congr`. **`sokhotski_plemelj_jump`**:
+  `[upper]−[lower] = 2πi·g(x₀)` (the full residue; each side carries the `±iπ` half) — the algebraic
+  content of eq (14)'s `½[Q̂₀(−k)]⁻¹U₁(k)[Q̂₀ᵀ(−k)]⁻¹` boundary term (the `½` of that full residue), which
+  added to the closed-contour Yukawa residue sum reproduces the eq (14) principal value.
+
+* **(iii-core, cancellation-tamed numerator — the two analytic ingredients) done** —
+  `LeanCode/YukawaDCF/ArcAmplitudeBound.lean` (NEW, 2026-08-05, namespace `FMSA.MixtureRDF`).
+  **CORRECTED the (iii) picture**: the eq (20) `A(−iy)` is NOT the raw inverse entry (which carries the
+  growing `e^{iyλ}`, `λ<0` unlike pairs) — it is the **amplitude** `2π√(ρρ)W(−iy)/(Δ det(−iy))`, the
+  exponential having been removed by the `E(−y)` wrapping. Two ingredients: **(A) the exponent
+  cancellation** — each eq (20) term's net `e^{iy·(…)}` exponent `σᵢ/2 + λᵢₘ − Rₘₙ + λⱼₙ + σⱼ/2`
+  (`Rₐᵦ=(σₐ+σᵦ)/2`, `λₐᵦ=(σᵦ−σₐ)/2`) **vanishes identically** — `expSum_{diag,left,right,both}_eq_zero`
+  (`by ring`, the additive-diameter cancellation, structural key; verified all four index patterns);
+  **(B) the far-region `φ` bounds** — `normP2_arc_le` (`‖(1−sσ−e^{−sσ})/s²‖ ≤ 2+‖σ‖`) and `normP3_arc_le`
+  (`‖(1−sσ+(sσ)²/2−e^{−sσ})/s³‖ ≤ 2+‖σ‖+‖σ‖²/2`) for `‖s‖≥1`, `Re(sσ)≥0` (the arc: `s=−iy`,
+  `Re s=R sinθ≥0` ⇒ `‖e^{−sσ}‖≤1`) — the **far-region duals** of `Q0ComplexRepr.normP2_le`/`normP3_le`
+  (which bound the same `φ` near `s=0`); `W`,`det` are built from these same `φ`. Plus the **decay**
+  versions `normP2_arc_decay`/`normP3_arc_decay` (`≤C/‖s‖ → 0`, needed for `det→1`). **(C) the assembly
+  logic**: `norm_ge_of_norm_sub_one_le` (`‖det−1‖≤d ⇒ ‖det‖≥1−d`, so `det→1 ⇒` bounded below) +
+  `amplitude_norm_le` (`‖c·W/(Δ·det)‖ ≤ ‖c‖Wb/(‖Δ‖D)` given `‖W‖≤Wb`, `Δ≠0`, `‖det‖≥D>0`) — turns
+  `W`-bounded + `det`-below into the numerator bound `arc_integral_tendsto_zero` consumes. **All
+  axiom-clean (std-3).** **Remaining for the FULL A-term arc bound**: supply the concrete `‖W(−iy)‖≤Wb`
+  and `‖det(−iy)−1‖≤d` by expanding Tang & Lu's explicit Appendix `W`/`det` — note these explicit
+  formulas are **not yet in the project** (whose Baxter machinery is Woodbury-based, `Q0_mat_phys_inv_eq`,
+  rather than the `2π√W/det` Appendix form); introducing them is the one remaining piece.
+
+* **(iii-Appendix, explicit `W`/`det` formulas) done** — `LeanCode/YukawaDCF/AppendixWDet.lean` (NEW,
+  2026-08-05, namespace `FMSA.MixtureRDF`). Introduces Tang & Lu p. 95's explicit Appendix formulas (NOT
+  previously in the project — its Baxter machinery is Woodbury-based, not the `2π√W/det` form). Defs
+  (`s = ik = −iy`): **`phi1`** `=(1−sR−e^{−sR})/s²`, **`phi2`** `=(1−sR+(sR)²/2−e^{−sR})/s³`, **`xiMom`**
+  `ξᵢ=∑ₘρₘRₘⁱ`, **`Delta`** `Δ=1−(π/6)ξ₃`, **`Wtl`** (the exact 4-term `Wᵢⱼ(ik)`), **`detTL`** (the exact
+  3-term `det(ik)`, the 2×2-reduced Baxter det). Bounds: **`norm_phi1_le`**/**`norm_phi2_le`** (arc decay
+  `≤(…)/‖s‖→0`, specialising `normP{2,3}_arc_decay` at `σ=R`, casts via `Complex.mul_re`+`ofReal_re/im`);
+  **`norm_weighted_phi1_sum_le`**/**`norm_weighted_phi2_sum_le`** — ANY finite `ρ`-weighted `φ`-sum (the
+  shape of every `W`/`det` term) is `≤(∑ₘ‖wₘ‖(…))/‖s‖ → 0` (`norm_sum_le`+`norm_mul`+the φ bound), the
+  reusable tool for `‖Wtl‖→0` and `‖detTL−1‖→0`. **All axiom-clean (std-3).**
+
+* **(iii-detbound, the `det → 1` bookkeeping bound) done** — same file, 2026-08-05.
+  **`norm_detTL_sub_one_le`**: `‖detTL s ρ R − 1‖ ≤ Cdet/‖s‖` (`Cdet` an explicit constant, for `‖s‖≥1`,
+  `0≤Re s`, `∀m 0≤R m`), so `det(−iy) → 1` on the arc (⇒ bounded below by `norm_ge_of_norm_sub_one_le`).
+  Reusable bookkeeping lemmas (all axiom-clean std-3): **`norm_sum_le_of_termwise`** (`∀m ‖fm‖≤gm/‖s‖ ⇒
+  ‖∑f‖≤(∑g)/‖s‖`), **`norm_phi1_le_const`** (crude `‖φ₁‖≤2+R`), **`norm_const_mul_le`** (pull a constant
+  coeff out, `(mul_div_assoc _ _ _).symm` to avoid it hitting the inner `2π/Δ`), **`norm_rhoWeighted_phi{1,2}_sum_le`**
+  (single `ρ`-weighted `φ`-sums with per-`m` coeff `κ`, via `sum_congr`-rearrange + the weighted helper),
+  **`norm_rhoRho_phi1_phi1_dsum_le`** (the double `φ₁·φ₁` sum, one crude + one decaying `φ₁`). The three
+  `detTL` terms map to these; the final glue is `norm_sub_le`×2 + `add_div`×2 + the three term bounds.
+  **Pitfalls fixed:** `ρ` implicit not pinned by `hs/hre/hR/κ` ⇒ pass `(ρ := ρ)`; a `-/` inside
+  `single-/double-` in a docstring closed the doc comment early.
+
+* **(iii-Wbound, the `‖Wtl‖ ≤ Wb` bookkeeping bound) done** — same file, 2026-08-05.
+  **`norm_Wtl_le`**: `‖Wtl s ρ R i j‖ ≤ Wb/‖s‖` (`→ 0`), the exact analogue of the det bound for the
+  4-term `Wtl`. New shapes vs det: **`norm_phi{1,2}_mul_le`** (`‖φ_k(R)·c‖ ≤ ‖c‖(…)/‖s‖`, a single `φ`
+  times a constant — `Wtl` terms 1, 2) and **`norm_c_phi1_mul_le`** (`‖c₀·φ₁(R₀)·X‖ ≤ ‖c₀‖(2+R₀)B/‖s‖`
+  from `‖X‖≤B/‖s‖` — `Wtl` term 3, a `φ₁` *outside* a `φ₁`-sum: crude + decaying); term 4 is a
+  `const·φ₂`-sum (`norm_const_mul_le`). Glue: `unfold Wtl` + `simp only [add_div]` + `norm_add_le`×3.
+  **All axiom-clean (std-3).** **Pitfall:** the def's `(R i + R j)/2` unfolds/elaborates to
+  `R i/2 + R j/2`, and `simp only [Wtl]` normalises the same way — the proof must use that form (and
+  `unfold Wtl` rather than a hand-written `hsum`).  **So `‖W‖ ≤ Wb` and `‖det − 1‖ ≤ d` are both in
+  place** — feeding `norm_ge_of_norm_sub_one_le` + `amplitude_norm_le` bounds the amplitude `A(−iy)`.
+
+* **(bridge, `N=1` Appendix bridge) done** — `LeanCode/YukawaDCF/AppendixBridgeN1.lean` (NEW,
+  2026-08-05, namespace `FMSA.MixtureRDF`). The final connective piece — Tang & Lu's inverse formula
+  `{[Q̂₀]⁻¹}ᵢⱼ = δᵢⱼ + 2π√(ρᵢρⱼ)Wᵢⱼ/(Δ det)·e^{−ikλᵢⱼ}` — proved at **`N=1`** (scalar: `det=q0`, `λ₀₀=0`),
+  tying `Wtl`/`detTL` to the project's ACTUAL Baxter entry `q0_entry_c` (with the real PY coefficients).
+  **`bridge_N1`**: `q0_entry_c s (σ0) 0 (Q0phys) (Qppphys) (rhoGeoPhys) 1 = 1 − 2π√(ρ₀ρ₀)·Wtl₀₀/vacMix`;
+  **`bridge_N1_inv`**: `q0⁻¹ = 1 + 2π√(ρρ)Wtl₀₀/(vacMix·q0)` (the actual bridge form, `det=q0`). **Key
+  facts:** `Delta ρ σ = vacMix ρ σ` (both `1−(π/6)∑ρσ³`, `norm_cast`); at `N=1` the two `∑ₘ` `Wtl` terms
+  vanish (`(σ₀−σ₀)=0`, `Fin.sum_univ_one`+`sub_self`); the physical PY coefficients are **exactly** Tang
+  & Lu's `W` coefficients (`ρ₀Q''phys = 2πρ₀(1+2η)/vac²`, `ρ₀Q'phys = 2πρ₀(σ₀+πξ₂σ₀²/4vac)/vac`). Proof
+  = unfold everything + `push_cast` (push `ofReal` inside so `field_simp` sees the `vac⁻¹`) + `field_simp`
+  (`s²`,`s³`,`vac`) + `ring` — `√(ρ₀²)` appears identically both sides (as `rho_geo` and `2π√(ρρ)`), so no
+  `ρ₀≥0` needed. **`#print axioms` = std-3** — fully axiom-clean.
+  **`detTL_eq_q0_N1`** (2026-08-05, denominator side): at `N=1`, `detTL s ρ σ = q0_entry_c … 1` = the
+  ACTUAL scalar determinant (`det = the single entry`). So the `N=1` bridge is now closed to the actual
+  objects on **both** sides — numerator via `bridge_N1`, denominator via this — giving
+  `[Q̂₀]⁻¹ = 1 + 2π√(ρρ)W₀₀/(Δ·detTL)` with `detTL = det Q̂₀`. Proof: same unfold + `push_cast` +
+  `field_simp` + `ring`, but now `√(ρ₀²)=ρ₀` is used explicitly (`hsqrt` via `Real.sqrt_mul_self hρ`,
+  needs `hρ : 0 ≤ ρ 0`) because `detTL`'s `∑ₘ` `W`-style terms carry a bare `ρ` while `q0_entry_c` carries
+  `rhoGeoPhys = √(ρρ)`. **`#print axioms` = std-3.**
+
+* **(origin) `y=0` compressibility point done — axiom-clean, NO physics axiom** —
+  `LeanCode/HSMixture/Q0DetContourOrientation.lean` (2026-08-05, build 8735). The last contour point:
+  `det_Q0_contour_ne_zero` covers the closed UHP **minus the origin** (`y≠0`, via the two pole-free
+  axioms); the origin `y=0` (`s=0`, where the `q0_entry_c` kernel is Lean junk) is closed by the
+  **removable value**. **`det_Q0_contour_origin_ne_zero`** (general `N`): if `det Q̂₀(s) → c` as
+  `s → 0` (`𝓝[≠] 0`), then `c ≠ 0` — in fact `Re c ≥ 1`, the `k=0` structure factor / isothermal
+  compressibility. **Key point: this needs NO physics axiom** — the `≥1` bound is *proved* algebra
+  (`Q0_mat_phys_det_ge_one_N` ⇐ `moment_key`), whereas the real-axis `y≠0` needs
+  `pyhs_mixture_no_spinodal` (which covers only `k≠0`). So the two together cover the **whole** closed
+  UHP: raw value ≠ 0 off the origin, removable value ≠ 0 at it. Supporting: **`Q0_mat_phys_det_ge_one_N`**
+  (new in `Q0MomentGeOne.lean`, general-`N` det ≥ 1 — the Woodbury reduction gives the *same* `2×2`
+  reduced matrix for every `N`, so `Q0_moment_det_ge_one`'s general-`N` bound lifts; the old `Fin 2`
+  `Q0_mat_phys_det_ge_one` now delegates to it) and **`Q0_mat_c_phys_ofReal`** (general-`N` cast
+  `Q̂₀(z:ℂ) = (Q0_mat_phys z).map ofReal`, the contour-namespace analogue of `MixtureDetOrigin`'s
+  `Fin 2` one). Proof mirrors `detF_Pdens_origin_ne_zero` but on `Q0_mat_c_phys` directly and general
+  `N`: `ofReal`-compose the limit onto `𝓝[>] 0`, `ge_of_tendsto` with the `≥1` bound, `Re c ≥ 1 > 0`.
+  **坑**: goal orientation is *flipped* vs `MixtureDetOrigin.detF_Pdens_ofReal`, so `RingHom.map_det`
+  is used **without** `.symm` (with `.symm` the matrix stays a metavar ⇒ `Fintype ?m` stuck); supply the
+  matrix explicitly. `simp` on `det` with `N` a variable gets `Fintype ?m`-stuck ⇒ apply `ge_of_tendsto`
+  to the composed `Complex.re ∘ …` and rewrite `Complex.ofReal_re` *inside* `filter_upwards`, not via a
+  `funext` det-equation. **`#print axioms` = std-3** for both. **What this closes / does NOT:** it closes
+  the *determinant* non-vanishing at the origin (⇒ `[Q̂₀]⁻¹` has no pole at `y=0`, the contour integrand
+  is regular there). It does not construct the representative *matrix* inverse at the origin — that would
+  reuse `Q0ComplexRepr`'s entry representative entrywise and is only needed if a downstream lemma wants
+  the actual `k=0` inverse value rather than pole-absence.
+
+* **(bridge, general `N` — complex rank-2 / Woodbury STRUCTURE done)** —
+  `LeanCode/HSMixture/Q0ComplexRankTwo.lean` (NEW, 2026-08-05, namespace `FMSA.ComplexRankTwo`,
+  build 8736). The complexification blocker of the general-`N` bridge is **resolved**: the complex-`s`
+  analogue of the project's real-`z` Woodbury machinery (`Q0DetRankTwo` + `MixtureQ0Inverse`). Each
+  object is the real one with `p1→φ1`, `p2→φ2`, `z→s` (verified: `fFun = (2π/Δ)(σᵢ/2·φ1+φ2)`,
+  `gFun = (2π/Δ)((½+πξ₂σᵢ/4Δ)φ1+(πξ₂/2Δ)φ2)`). Ships: **`fFunC`/`gFunC`** (complex Woodbury columns) +
+  **`fFunC_gFunC_eq`** (`field_simp; ring` over `ℂ`), **`UmatC`/`VmatC`** + **`UV_apply_C`**
+  (√ρ + exp merge via `Real.sqrt_mul`/`Complex.exp_add`), **`Q0_mat_c_phys_eq_one_sub_mul`**
+  (`Q̂₀(s) = I−UₒVₒ`, complex rank-2 — closes to `simp only` unfolding `q0_entry_c`),
+  **`det_Q0_mat_c_phys_eq_two_by_two`** (`det Q̂₀(s) = det(I−VₒUₒ)`, `Matrix.det_one_sub_mul_comm`), and
+  **`Q0_mat_c_phys_inv_closed_form`/`_inv_eq`** (`[Q̂₀(s)]⁻¹ = I + Uₒ(I−VₒUₒ)⁻¹Vₒ`, mirrors
+  `Q0_mat_phys_inv_closed_form`'s `expand`+`hVU`+`abel`, with invertibility of the `2×2` now a
+  **hypothesis** `IsUnit (det Q̂₀(s))` — the complex `2×2` is singular at HS poles, unlike real `z`
+  where `det ≥ 1`; `det_Q0_contour_ne_zero`/`_origin` supply it on the contour region). **All std-3.**
+  **This is Tang & Lu's "unique difficulty"** (inverse of an arbitrary `n×n` reduced to a fixed `2×2`)
+  for the complex contour argument.
+
+* **(bridge, general `N` — denominator match REDUCED to a scalar sum identity)** —
+  `LeanCode/HSMixture/Q0ComplexDetMatch.lean` (NEW, 2026-08-05, `FMSA.ComplexRankTwo`, build 8737).
+  Reduces the denominator bridge `detTL = det Q̂₀(s)` (combined with `det_Q0_mat_c_phys_eq_two_by_two`)
+  to the `2×2` scalar identity `det(I−VₒUₒ) = detTL`, and supplies the ingredients (all std-3):
+  **`p1c_eq_phi1`/`p2c_eq_phi2`** (the `Q0ComplexRankTwo` `p1c`/`p2c` = `AppendixWDet` `phi1`/`phi2`,
+  `rfl`), **`p2c_eq_p1c`** (the Tang & Lu simplifying identity **`φ2 = φ1/s + σ²/2s`** — the
+  term-shuffle engine; `det(I−VU)` and `detTL` are NOT equal as polynomials in independent `{φ1,φ2}`),
+  **`VU_C_apply`** + **`VU00`/`VU01`/`VU10`/`VU11`** (the four reduced entries `(VₒUₒ)_kl = Σρ(1|σ)
+  (fFunC|gFunC)`, exp/`√ρ` cancelled), and **`detVU_expand`** = Tang & Lu Appendix **A6**
+  (`det(I−VₒUₒ) = (1−Σρ fFunC)(1−Σρσ gFunC) − (Σρ gFunC)(Σρσ fFunC)`). The A6 = A7 (`= detTL`) target
+  is **verified numerically** (`9e-16`, random `N=3`, complex `s`), and the tractable closure route is
+  documented: the key cancellation `b_q = φ1_q/2 + (πξ₂/2Δ)a_q` ⟹ `fFunC_p gFunC_q − gFunC_p fFunC_q =
+  (2π²/Δ²)(a_p φ1_q − a_q φ1_p)` (the `ξ₂` cancels antisymmetrically), then substitute `φ2 = φ1/s +
+  σ²/2s`, expand `ξ₃ = Σρσ³`, and match after a `p↔q` reindex.
+
+* **(bridge, general `N` — A6 → A7 closure: math crux done, ingredients verified)** —
+  `LeanCode/HSMixture/Q0ComplexDetMatchClose.lean` (NEW, 2026-08-05, `FMSA.ComplexRankTwo`,
+  build 8738). The A6 (`detVU_expand`) and A7 (`detTL`) both reduce to a common canonical
+  `1 − (2π/Δ)Σρ·GS + (π²/Δ²)Σ∑ρρ·sd`, `GS(m)=σ_mφ1+φ2`, differing only in the double summand
+  (`A6sd` vs `detTLsd`). **All mathematically substantive ingredients verified (std-3):**
+  **`FG_antisym`** (the `ξ₂`-cancellation `fFunC_p gFunC_q − gFunC_p fFunC_q = (2π²/Δ²)(a_pφ1_q −
+  a_qφ1_p)`, pure `ring`), **`detVU_double`** (A6 products → double sum), **`fFunC_eq`/`gFunC_relation`**
+  (`fFunC=(2π/Δ)a`, `gFunC=(π/Δ)φ1+(πξ₂/2Δ)fFunC`), **`sum_distrib_prod`/`sum_distrib_prod2`** (pull a
+  `Σg` out of a single sum into a double sum), **`aFun`/`A6sd`/`detTLsd`** (canonical summands), and
+  **`sdMatch`** — THE crux: `Σ∑ρρ A6sd = Σ∑ρρ detTLsd` via `Finset.sum_comm` symmetrisation (the
+  summands are NOT equal pointwise, but `A6sd(m,n)+A6sd(n,m)=detTLsd(m,n)+detTLsd(n,m)` is a `ring`
+  identity after `p2c_eq_p1c` `φ2=φ1/s+σ²/2s`, and `ρ_mρ_n` is symmetric). Whole identity **numerically
+  confirmed** (A6=A7 to `9e-16`; symmetrised summands agree to `1e-16`, random `N=3/4`, complex `s`).
+
+* **(bridge, general `N` — A6 → A7 DENOMINATOR CLOSURE DONE)** — `Q0ComplexDetMatchClose.lean`
+  (2026-08-05, build 8738). **`det_eq_detTL`** (general `N`, complex `s`, axiom-clean std-3):
+  `det(I−VₒUₒ) = detTL`. Chain: `detVU_expand` (A6) ▸ **`A6toCanon`** ▸ `sdMatch` ▸ **`detTLtoCanon`**
+  (A7). Both A6 and A7 reduce to the canonical `1 − (2π/Δ)Σρ·GS + (π²/Δ²)Σ∑ρρ·sd`, `GS(m)=σ_mφ1+φ2`,
+  and `sdMatch` matches the two summands. **`detTLtoCanon`**: bridge phi/Δ/ξ, `sum_distrib_prod`/`_prod2`
+  on the `ξ₂`/`ξ₃`-products, combine (`hS` singles, `hDbl` doubles via a `neg_sum2` helper).
+  **`A6toCanon`**: `detVU_double`+`FG_antisym` for the product double, `fFunC_eq`/`gFunC_relation` +
+  `push_cast [hx2c]` to expose `ξ₂=Σρσ²`, `sum_distrib_prod2` on `SsG`'s product, combine (`hS`/`hDbl`).
+  With `det_Q0_mat_c_phys_eq_two_by_two` (`Q0ComplexRankTwo`) this is the general-`N` Appendix
+  **denominator** bridge `det Q̂₀(s) = detTL`, closed.
+
+* **(bridge, general `N` — NUMERATOR side, structural reduction done)** — `Q0ComplexDetMatchClose.lean`
+  (2026-08-05). The off-identity entry of `[Q̂₀]⁻¹ = I + Uₒ(I−VₒUₒ)⁻¹Vₒ` is
+  `√(ρᵢρⱼ)e^{−sλᵢⱼ}·B_ij/detTL`, `B_ij = fFunC_i(1−m₁₁) + gFunC_i·m₁₀ + σⱼ(fFunC_i·m₀₁ + gFunC_i(1−m₀₀))`
+  (the `2×2` `adj(I−VₒUₒ)`, `m_kl = (VₒUₒ)_kl`). **`Bsum_combine`** (NEW, std-3): the four `m_kl`-sum
+  terms of `B_ij` combine into the single sum `Σ_p ρ_p(σⱼ−σ_p)(fFunC_i gFunC_p − gFunC_i fFunC_p)`,
+  whose summand `FG_antisym` reduces to `(2π²/Δ²)(a_i φ1_p − a_p φ1_i)`. The scalar match
+  **`B_ij·Δ = 2π·Wtl_ij`** is numerically confirmed (`1e-15`, random `N`, complex `s`) and is
+  **single-sum, no symmetrisation** (unlike the det match): after `φ2 = φ1/s + σ²/2s` and `ξ₂`/`ξ₃`
+  expansion, the non-sum parts agree at `2π(φ2_i + (σ_i+σ_j)/2·φ1_i)` and the single sums match.
+  Verified the reduction chain in scratch through unfold+`p2c_eq_p1c`-subst+ξ-expansion; the final
+  scalar single-sum bookkeeping (analogous to `detTLtoCanon`) is the remaining piece.
+
+* **(bridge, general `N` — NUMERATOR scalar match DONE)** — `Q0ComplexDetMatchClose.lean`
+  (2026-08-06). **`numMatch`** (general `N`, axiom-clean std-3): `B_ij·Δ = 2π·Wtl_ij`, where
+  `B_ij = fFunC_i(1−m₁₁) + gFunC_i·m₁₀ + σⱼ(fFunC_i·m₀₁ + gFunC_i(1−m₀₀))` is the `2×2`
+  `adj(I−VₒUₒ)` entry (off-identity of `[Q̂₀]⁻¹ = I + Uₒ(I−VₒUₒ)⁻¹Vₒ` = `√(ρρ)e^{−sλ}·B_ij/detTL`).
+  Proved via **`hLHS`/`hRHS`**: both sides → `NS + Σ_p ρ_p·(summand)`, common non-sum
+  `NS = 2π(φ2_i + (σᵢ+σⱼ)/2·φ1_i)`, and the summands `L_p`, `R_p` agree pointwise after `φ2 = φ1/s +
+  σ²/2s` (`p2c_eq_p1c` + `field_simp; ring`). Single-sum, **no symmetrisation** (the numerator analogue
+  of `det_eq_detTL`). Key technique: each side's several `ξ`/`φ`-single-sums are combined into one
+  `Σ_p ρ_p·(...)` via a `show`-reshape (`Finset.mul_sum` + `← Finset.sum_add_distrib` + `sum_congr;
+  ring`), leaving `NS` to match by `ring`. `Bsum_combine` (the `B` four-`m_kl`-sum → one-sum step) +
+  `FG_antisym` feed `hLHS`.
+
+* **(bridge, general `N` — FULL ENTRYWISE BRIDGE DONE)** — `Q0ComplexDetMatchClose.lean` (2026-08-06).
+  **`Q0_inv_entry_bridge`** (general `N`, complex `s`, axiom-clean std-3) — the **complete general-`N`
+  Tang & Lu Appendix inverse bridge**: `{[Q̂₀(s)]⁻¹}_ij = δ_ij + 2π√(ρᵢρⱼ)·Wtl_ij·e^{−sλᵢⱼ}/(Δ·detTL)`
+  (hypothesis `IsUnit (det Q̂₀)`). Assembly: `Q0_mat_c_phys_inv_eq` (Woodbury `[Q̂₀]⁻¹ = I +
+  Uₒ(I−VₒUₒ)⁻¹Vₒ`) + `(I−VₒUₒ)⁻¹ = detTL⁻¹•adj` (`Matrix.inv_def` + `det_eq_detTL` +
+  `Ring.inverse_eq_inv`) + **`UadjV`** (`Uₒ·adj(I−VₒUₒ)·Vₒ` entrywise = `√(ρᵢρⱼ)e^{−sλ}·B_ij`, via
+  `Matrix.mul_apply`+`adjugate_fin_two`+`VU00`..`VU11`+√ρ/exp merge) + **`numMatch`** (`B_ij·Δ = 2π
+  Wtl_ij`); the final `eq_div_iff`+`field_simp`+`linear_combination √(ρρ)·numMatch` closes it (the
+  `e^{−sλ}` cancels). **Task MML.17 momentum side is now fully closed for general `N`.**
+
+* **(RDF `Ĥ₁ = [Q̂₀ᵀ]⁻¹B₁[Q̂₀]⁻¹` assembly, complex `s` — DONE)** — `Q0ComplexH1Assembly.lean`
+  (2026-08-06, `FMSA.ComplexRankTwo`, all std-3). The complex-`s` first-order mixture RDF assembly
+  (complex analogue of `MixtureH1Assembly`): **`Q0_mat_c_phys_H1_eq`** (eq 15: from `Q̂₀ᵀ·Ĥ₁·Q̂₀ = B₁`
+  and `IsUnit(det)`, `Ĥ₁ = [Q̂₀ᵀ]⁻¹·B₁·[Q̂₀]⁻¹`, via generic `H1_eq_of_transformed_c`),
+  **`H1_assembly_c`** (eq 21 four-term `Ĥ₁ = B₁ + AmatCᵀB₁ + B₁AmatC + AmatCᵀB₁AmatC`,
+  `AmatC = Uₒ(I−VₒUₒ)⁻¹Vₒ` = `[Q̂₀]⁻¹−I`, `noncomm_ring`), **`H1_assembly_c_apply`** (eq 21 entrywise
+  `{H₁}ᵢⱼ = {B₁}ᵢⱼ + ∑ₘ Aₘᵢ{B₁}ₘⱼ + ∑ₙ {B₁}ᵢₙAₙⱼ + ∑ₙ∑ₘ Aₘᵢ{B₁}ₘₙAₙⱼ`), and **`AmatC_entry`**
+  (the propagator entries resolved to the EXPLICIT amplitudes `Aᵢⱼ = 2π√(ρᵢρⱼ)Wtl_ij e^{−sλᵢⱼ}/(Δ
+  detTL)`, via `AmatC = [Q̂₀]⁻¹−I` + `Q0_inv_entry_bridge`). So `Ĥ₁` is fully explicit.
+
+* **(`B₁` eq(23) residue coefficients `bᵢⱼ` — DONE)** — `MixtureYukawaBij.lean` (2026-08-06,
+  `FMSA.MixtureRDF`, all std-3).  The residue *mechanism* was already in `MixtureYukawaResidue`
+  (`residue_yukawa_pole_general`: `Res_{y=iz}[g(y)/((y−k)(iy+z))] = −g(iz)/(ik+z)`); this file gives
+  the assembled coefficient.  **`bij_eq23`** — the general eq (23) form (pair-specific decays `z_{αβ}`,
+  four term-types `Kᵢⱼ`, `∑ Kᵢₙ Aⱼₙ(zᵢₙ)`, `∑ Kₘⱼ Aᵢₘ(zₘⱼ)`, `∑ₘₙ Kₘₙ Aᵢₘ(zₘₙ)Aⱼₙ(zₘₙ)`, each over
+  its own `s+z_{αβ}`).  **`bij_eqz`** — the equal-decay (single `z`, Tables 1–2) specialization, with
+  **`bij_eq23_const`** (`rfl`) identifying it as `bij_eq23` at constant `zmat`/propagator.
+  **`bij_eqz_matrix`** — the four equal-`z` sums collapse to `bᵢⱼ(s) = {(I+A)K(I+A)ᵀ}ᵢⱼ/(s+z)` (proof:
+  `simp_rw [← Finset.sum_div]` + `← add_div` combine, then matrix decomp `(1+A)K(1+A)ᵀ = K+K Aᵀ+A K+A K Aᵀ`
+  via `noncomm_ring`, entries `e1/e2/e3` matched by `mul_comm`/`sum_comm`).  **`bij_eqz_residue`** — the
+  **residue value** at the simple pole `s=−z`: `(s+z)·bᵢⱼ(s) = {(I+A)K(I+A)ᵀ}ᵢⱼ`.  **`bij_eq23_contact`**
+  / **`bij_eqz_contact`** — Tang & Lu **eq (24) contact value** `lim_{s→∞} s·bᵢⱼ(s) =
+  2π√(ρᵢρⱼ)Rᵢⱼ g¹ᵢⱼ(Rᵢⱼ)`: the real Laplace variable `s→∞` sends each `s/(s+z_{αβ})→1` (core
+  `tendsto_s_div_s_add` via `(1+z·s⁻¹)⁻¹→1`, `filter_upwards`+`inv₀`), so the limit is the sum of the four
+  eq (23) residue amplitudes (equal-`z`: exactly the benchmark `N = (I+A)K(I+A)ᵀ`).  **`g1Contact`** /
+  **`g1Contact_eqz`** — the **first-order contact RDF `g¹ᵢⱼ(Rᵢⱼ)`** itself: eq (24) solved through, the
+  contact value over `contactPre = 2π√(ρᵢρⱼ)Rᵢⱼ`; **`g1Contact_limit`** / **`g1Contact_eqz_limit`**
+  exhibit it as `lim_{s→∞} s·bᵢⱼ(s)/(2π√(ρρ)R)` (one-line `Tendsto.div_const`), and
+  **`g1Contact_eqz_spec`** is eq (24) as written `2π√(ρρ)R·g¹ = {(I+A)K(I+A)ᵀ}ᵢⱼ` (prefactor `≠0`,
+  `field_simp`).  `g1Contact_eqz` is `z`-independent (`A=A(z)` carries the decay).  `K`/`A` are the data
+  inputs (Yukawa residue amplitudes; propagator entries = `AmatC_entry`'s `2π√(ρρ)Wtl/(Δ detTL)`).
+
+* **(numerical alignment of `g1Contact_eqz` — DONE)** — `verify_g1_lean_alignment.py` (repo root,
+  2026-08-06).  Recomputes the propagator two disjoint ways at all 24 Table 1–2 state points and pushes
+  it through the Lean `g1Contact_eqz` formula.  Results (72 contact values): **(1)** Lean AppendixWDet
+  closed form `2π√ρρ·Wtl·e^{−zλ}/(Δ·detTL)` **==** black-box matrix inverse `[Q̂₀(z)]⁻¹−I` to **4.4e-16**
+  (numerical witness of `AmatC_entry`/`Q0_inv_entry_bridge` — two completely disjoint machineries);
+  **(3)** Lean `g1Contact_eqz` **==** benchmark `g1` to 4.2e-17; **(4)** eq (24) spec `2π√ρρR·g¹ = N` to
+  5.6e-17, `Im g¹ = 0` exactly; **(5)** `g0+g1_lean` vs paper column I max 2.2e-4 (OCR residual).  So the
+  formalised `g1Contact_eqz` IS the benchmark quantity and reproduces Tang & Lu's published column I.
+  A full state-point scan (`scan_g1_deviation.py`) adds: `g¹ ∝ β` exactly (1.1e-16), sign-indefinite per
+  pair, small-sphere-dominated under size asymmetry, first order undershoots the full MSA (94 %), and
+  `D = g¹/g0` predicts the true error (corr +0.83, worst on `g11` at low `T*`).
+
+**Done (general `N`, complex `s`, axiom-clean):** the ENTIRE Tang & Lu momentum-side first-order RDF
+programme — rank-2 + Woodbury inverse (`Q0ComplexRankTwo`), det `2×2` reduction (`Q0ComplexDetMatch`),
+denominator `det Q̂₀ = detTL` + numerator `B·Δ = 2π Wtl` + entrywise inverse bridge
+`{[Q̂₀]⁻¹}_ij = δ_ij + 2π√(ρρ)Wtl e^{−sλ}/(Δ detTL)` (`Q0ComplexDetMatchClose`), the RDF assembly
+`Ĥ₁ = [Q̂₀ᵀ]⁻¹B₁[Q̂₀]⁻¹` eq(15)/eq(21) with explicit propagator entries (`Q0ComplexH1Assembly`), AND
+`B₁`'s eq(23) residue coefficients `bᵢⱼ` (`MixtureYukawaBij`).  `N=1` (both sides) = `AppendixBridgeN1`;
+numerical benchmark closed in `benchmark_tanglu_contact.py`.  The momentum-side programme is complete —
+every object (`Q̂₀`, `[Q̂₀]⁻¹`, `Ĥ₁`, `B₁`'s `bᵢⱼ`) is formalised in closed form.
+The `y=0` compressibility point is now **done** (`det_Q0_contour_origin_ne_zero`, above).
+
+**Numerical benchmark (Tables 1–2) — DONE (2026-08-05).** `benchmark_tanglu_contact.py` (repo root)
+reproduces Tang & Lu Tables 1–2 (binary hard-core one-Yukawa, R₂₂/R₁₁ ∈ {1.5, 1.167}, single `z`
+with `zR₁₁=1.8`). The first-order contact `g_ij(R_ij) = g⁰_HS + g¹` with `g¹` numerator
+`N = (I+A)K(I+A)ᵀ`, `(I+A)_ij = [Q̂₀(z)]⁻¹_ij e^{zλ_ij}` — i.e. driven entirely by the HS Baxter
+inverse `[Q̂₀(z)]⁻¹` at the Yukawa decay, the very object this task formalises. **Reproduction of the
+paper's own first-order column I is EXACT** (max 2e-4, mean 1e-4 over 72 contact values; residual =
+OCR noise). First-order vs full MSA (column II): mean 4.3e-2, max 0.23, **systematic small-sphere
+`g11` / low-`T*` breakdown** (same signature as the project's MD (1,1) undershoot). Standalone script
+(the `fmsa_ga_matrix_mix` class's LJ/BH/2YK parametrisation does not fit the exact single-`z` model);
+Baxter conventions match `_build_Q0_Qpp`/`_build_Qhat`/`_compute_A_prop`. Write-up:
+`numerical_notes/results/tanglu_first_order_contact.md`.
+
+**Bookkeeping fix (2026-08-04):** the five newer momentum-side modules — `MixtureQ0Inverse`,
+`MixtureRDFEqualDiam`, `MixtureRDFContact`, `MixtureYukawaTransform`, `MixtureYukawaResidue` — were
+**never in the root aggregator `LeanCode.lean`** (they had only ever been built individually). Now
+registered after `MixtureRDFUniqueness`; full `lake build` green at **8724 jobs**.
+
+**Status.** (1)(2)(4)+eq(15) ✓, (3) per-pole residue **value** ✓, (3) **contour-sum step ✓** (general
+engine + Yukawa bridge), (3a) **leading-term hc/hd/harc ✓** (`contourSum_leading_term`, end-to-end),
+(3a-rest) **UHP holomorphy of `[Q̂₀]⁻¹` ✓** (`differentiableAt_matrix_inv` + comp-neg/continuousAt), (3a-rest-i)
+**`q0_entry_c` s=0 entire representative ✓** (`q0_entry_c_repr`, fully axiom-clean), (3a-rest-ii) **det
+orientation ✓** (`det_Q0_contour_ne_zero`, closed UHP minus origin, no new axiom), (3a-rest-iii) **`A(−iy)`
+arc-bound mechanism ✓** (`arc_integral_tendsto_zero`, bounded numerator ⇒ arc→0, axiom-clean),
+(c) **eq (21)/(22) assembly ✓** (`H1_assembly_phys` + entrywise, axiom-clean), (b) **`y=k` ½-Plemelj ✓**
+(`sokhotski_plemelj_lower` + `_jump`, no new axiom), (iii-core) **exponent cancellation + far-region `φ`
+bounds/decay + assembly logic ✓** (`expSum_*_eq_zero` + `normP{2,3}_arc_le`/`_decay` +
+`amplitude_norm_le` + `norm_ge_of_norm_sub_one_le`), (iii-Appendix) **explicit `W`/`det` formulas +
+`φ`-sum bound tools + BOTH `‖det−1‖≤d` and `‖W‖≤Wb` bookkeeping bounds ✓** (`Wtl`/`detTL`/`phi{1,2}` +
+`norm_detTL_sub_one_le` + `norm_Wtl_le`), (bridge) **`N=1` Appendix bridge ✓ — both sides**
+(`bridge_N1`/`_inv` numerator `q0 = 1−2π√W/Δ`; `detTL_eq_q0_N1` denominator `detTL = det Q̂₀`; axiom-clean),
+(origin) **`y=0` compressibility point ✓** (`det_Q0_contour_origin_ne_zero`, general `N`, removable value
+`Re c ≥ 1`, **no physics axiom**; closes the whole closed UHP with `det_Q0_contour_ne_zero`),
+(benchmark) **numerical Tables 1–2 ✓** (`benchmark_tanglu_contact.py`, first-order column I reproduced
+EXACTLY, max 2e-4; write-up `numerical_notes/results/tanglu_first_order_contact.md`),
+(bridge-genN-structure) **complex rank-2 + Woodbury inverse ✓** (`Q0ComplexRankTwo.lean`:
+`Q̂₀(s)=I−UₒVₒ`, `det=det(I−VₒUₒ)`, `[Q̂₀(s)]⁻¹=I+Uₒ(I−VₒUₒ)⁻¹Vₒ`, all std-3 — the real-`z`→`s`
+complexification, Tang & Lu's "unique difficulty"), (bridge-genN-det-reduction) **det match REDUCED
+to a scalar sum identity ✓** (`Q0ComplexDetMatch.lean`: `φ2=φ1/s+σ²/2s` identity + `VU` entries +
+`detVU_expand`=A6; A6=A7 numerically `9e-16`; std-3), (bridge-genN-A6A7) **A6→A7 DENOMINATOR CLOSURE ✓**
+(`Q0ComplexDetMatchClose.lean`: `det_eq_detTL` = `detVU_expand ▸ A6toCanon ▸ sdMatch ▸ detTLtoCanon`,
+general `N`, complex `s`, std-3 — `det Q̂₀(s) = detTL` closed),
+(bridge-genN-numerator) **NUMERATOR scalar match ✓**
+(`numMatch`: `B_ij·Δ = 2π Wtl_ij` via `hLHS`/`hRHS`, general `N`, std-3),
+(bridge-genN-ENTRYWISE) **FULL ENTRYWISE INVERSE BRIDGE ✓** (`Q0_inv_entry_bridge`:
+`{[Q̂₀]⁻¹}_ij = δ_ij + 2π√(ρρ)Wtl_ij e^{−sλ}/(Δ detTL)`, general `N`, std-3 — via `UadjV` + Woodbury +
+`det_eq_detTL` + `numMatch`), (RDF) **`Ĥ₁ = [Q̂₀ᵀ]⁻¹B₁[Q̂₀]⁻¹` assembly ✓** (`Q0ComplexH1Assembly`:
+eq15 `Q0_mat_c_phys_H1_eq`, eq21 `H1_assembly_c`/`_apply`, explicit propagator `AmatC_entry`, std-3),
+(`B₁`) **eq(23) residue coefficients `bᵢⱼ` ✓** (`MixtureYukawaBij`: general `bij_eq23`, equal-`z`
+`bij_eqz` = `{(I+A)K(I+A)ᵀ}ᵢⱼ/(s+z)` via `bij_eqz_matrix`, residue value `bij_eqz_residue`, std-3);
+**MML.17 momentum side FULLY CLOSED for general `N`, complex `s` — every object in closed form**.

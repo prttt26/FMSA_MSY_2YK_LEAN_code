@@ -211,5 +211,257 @@ theorem matBaxterU_core {N : ℕ} (sigma : ℝ) (hsigma : 0 < sigma)
   rw [Finset.sum_sub_distrib, ← Finset.mul_sum]
   ring
 
+/-! ### The second Baxter convolution on the core — reduction to the Wertheim–Thiele seed -/
+
+/-- **Matrix `(u ⋆ Q₋)` core truncation** — on `0 < r < σ` the second Baxter convolution's `[0,σ]`
+integral collapses to `[0,σ−r]`:
+
+  `matBaxterUQmᵢⱼ(r) = uᵢⱼ(r) − ∑ₖ ∫₀^{σ−r} Qᵢₖ(t)·uₖⱼ(r+t) dt`   (`u := matBaxterU`).
+
+The `[σ−r,σ]` tail vanishes **exactly** (not merely a.e.): for `t ≥ σ−r` the sample `r+t ≥ σ`, where
+`uₖⱼ` has switched to the outer branch and is `0` (matrix claim `(A)`, `matBaxterU_outer`), so every
+integrand is `Qᵢₖ(t)·0 = 0`.  This is the matrix analog of the `htail`/`hsplit` step inside the scalar
+`baxter_psi_conv_eq_phi`; it carries no moment content — only claim `(A)` + interval integrability. -/
+theorem matBaxterUQm_core_reduce {N : ℕ} (Psi Q : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ)
+    (hUouter : ∀ i j r, sigma ≤ r → matBaxterU Psi Q sigma i j r = 0)
+    (hint : ∀ (i j k : Fin N) (r : ℝ), IntervalIntegrable
+      (fun t => Q i k t * matBaxterU Psi Q sigma k j (r + t)) volume 0 sigma)
+    {r : ℝ} (hr : r ∈ Set.Ioo (0 : ℝ) sigma) (i j : Fin N) :
+    matBaxterUQm Psi Q sigma i j r
+      = matBaxterU Psi Q sigma i j r
+        - ∑ k, ∫ t in (0:ℝ)..(sigma - r), Q i k t * matBaxterU Psi Q sigma k j (r + t) := by
+  obtain ⟨hr0, hrlt⟩ := hr
+  have hsr : (0:ℝ) ≤ sigma - r := by linarith
+  unfold matBaxterUQm
+  congr 1
+  refine Finset.sum_congr rfl (fun k _ => ?_)
+  have hIa : IntervalIntegrable (fun t => Q i k t * matBaxterU Psi Q sigma k j (r + t))
+      volume 0 (sigma - r) :=
+    (hint i j k r).mono_set (Set.uIcc_subset_uIcc
+      (by rw [Set.mem_uIcc]; exact Or.inl ⟨le_refl 0, by linarith⟩)
+      (by rw [Set.mem_uIcc]; exact Or.inl ⟨hsr, by linarith⟩))
+  have hIb : IntervalIntegrable (fun t => Q i k t * matBaxterU Psi Q sigma k j (r + t))
+      volume (sigma - r) sigma :=
+    (hint i j k r).mono_set (Set.uIcc_subset_uIcc
+      (by rw [Set.mem_uIcc]; exact Or.inl ⟨hsr, by linarith⟩)
+      (by rw [Set.mem_uIcc]; exact Or.inl ⟨by linarith, le_refl sigma⟩))
+  have htail : (∫ t in (sigma - r)..sigma, Q i k t * matBaxterU Psi Q sigma k j (r + t)) = 0 := by
+    rw [intervalIntegral.integral_congr (g := fun _ => (0:ℝ)) ?_, intervalIntegral.integral_zero]
+    intro t ht
+    rw [Set.uIcc_of_le (by linarith : sigma - r ≤ sigma)] at ht
+    dsimp only []
+    rw [hUouter k j (r + t) (by linarith [ht.1]), mul_zero]
+  rw [← intervalIntegral.integral_add_adjacent_intervals hIa hIb, htail, add_zero]
+
+/-- **Matrix `OZFIX.15` seed, assembled from an abstract core seed — `Ψ ⋆ Q₊ ⋆ Q₋ = r·Φ` on `(0,∞)`.**
+With `u := matBaxterU` (`= Ψ ⋆ Q₊`) and the second convolution `matBaxterUQm` (`= (Ψ ⋆ Q₊) ⋆ Q₋`,
+parenthesised — no Fubini/associativity), the full seed holds on **all** `r > 0` given the single
+concrete **core-seed hypothesis** `hseed` (the matrix Wertheim–Thiele identity, the analog of the
+scalar `baxter_core_seed`) plus the already-proved plumbing:
+
+* `0 < r < σ`: `matBaxterUQm_core_reduce` collapses the `[0,σ]` integral to `[0,σ−r]`, then `hseed`.
+* `r ≥ σ`: `matBaxterUQm_zero_of_uOuter` gives `0`, and `Φ` (`= c_HS`, supported in `[0,σ]`) is `0` too.
+
+This mirrors the scalar `baxter_psi_conv_eq_phi`, isolating the **only** remaining seed gap to `hseed`:
+the pure moment/`Φ` identity on the core, with all support/integrability discharged here. -/
+theorem matBaxterUQm_eq_rPhi_of_seed {N : ℕ} (Psi Q Phi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ)
+    (hsigma : 0 < sigma)
+    (hUouter : ∀ i j r, sigma ≤ r → matBaxterU Psi Q sigma i j r = 0)
+    (hPhiOuter : ∀ i j r, sigma ≤ r → Phi i j r = 0)
+    (hint : ∀ (i j k : Fin N) (r : ℝ), IntervalIntegrable
+      (fun t => Q i k t * matBaxterU Psi Q sigma k j (r + t)) volume 0 sigma)
+    (hseed : ∀ (i j : Fin N), ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
+      matBaxterU Psi Q sigma i j r
+        - ∑ k, ∫ t in (0:ℝ)..(sigma - r), Q i k t * matBaxterU Psi Q sigma k j (r + t)
+      = r * Phi i j r)
+    {r : ℝ} (hr : 0 < r) (i j : Fin N) :
+    matBaxterUQm Psi Q sigma i j r = r * Phi i j r := by
+  rcases lt_or_ge r sigma with hrs | hrs
+  · rw [matBaxterUQm_core_reduce Psi Q sigma hUouter hint ⟨hr, hrs⟩ i j]
+    exact hseed i j r ⟨hr, hrs⟩
+  · rw [matBaxterUQm_zero_of_uOuter Psi Q sigma hsigma hUouter hrs i j,
+      hPhiOuter i j r hrs, mul_zero]
+
+/-! ### The core seed in explicit row-moment form (claim (B) substituted) -/
+
+/-- **The truncated second convolution, in explicit row-moment form.**  On `0 < r < σ`, substituting
+the affine core form of `u` (matrix claim `(B)`, `matBaxterU_core`) both for the leading `uᵢⱼ(r)` and
+for `uₖⱼ(r+t)` under the `[0,σ−r]` integral (a.e. — the endpoint `t = σ−r` samples `r+t = σ`, outside
+the open core), the seed's left-hand side becomes the fully explicit **row-moment** expression
+
+  `(r·(∑ₖM₀ᵢₖ − 1) − ∑ₖM₁ᵢₖ) − ∑ₖ ∫₀^{σ−r} Qᵢₖ(t)·((r+t)·(∑ₗM₀ₖₗ − 1) − ∑ₗM₁ₖₗ) dt`,
+
+with `M₀ᵢₖ = ∫₀^σ Qᵢₖ`, `M₁ᵢₖ = ∫₀^σ t·Qᵢₖ` the `[0,σ]` moments of the Baxter-factor row.  This is the
+matrix analog of the algebra inside the scalar `baxter_seed_at_psi`, and reduces the seed to a pure
+moment/`Φ` identity (the matrix `baxter_core_seed`).  The core value enters only through `hcore`
+(`Ψ = −v` on `(−σ,σ)`, the `h = −1` hard-core value). -/
+theorem matBaxterUQm_coreSeed_moment {N : ℕ} (Psi Q : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ)
+    (hsigma : 0 < sigma)
+    (hQ0 : ∀ i k, IntervalIntegrable (Q i k) volume 0 sigma)
+    (hQ1 : ∀ i k, IntervalIntegrable (fun t => t * Q i k t) volume 0 sigma)
+    (hcore : ∀ (k j : Fin N) (v : ℝ), v ∈ Set.Ioo (-sigma) sigma → Psi k j v = -v)
+    {r : ℝ} (hr : r ∈ Set.Ioo (0 : ℝ) sigma) (i j : Fin N) :
+    matBaxterU Psi Q sigma i j r
+        - ∑ k, ∫ t in (0:ℝ)..(sigma - r), Q i k t * matBaxterU Psi Q sigma k j (r + t)
+      = (r * ((∑ k, ∫ t in (0:ℝ)..sigma, Q i k t) - 1) - ∑ k, ∫ t in (0:ℝ)..sigma, t * Q i k t)
+        - ∑ k, ∫ t in (0:ℝ)..(sigma - r), Q i k t
+            * ((r + t) * ((∑ l, ∫ s in (0:ℝ)..sigma, Q k l s) - 1)
+               - ∑ l, ∫ s in (0:ℝ)..sigma, s * Q k l s) := by
+  obtain ⟨hr0, hrlt⟩ := hr
+  have hsr : (0:ℝ) ≤ sigma - r := by linarith
+  rw [matBaxterU_core sigma hsigma Psi Q hQ0 hQ1 hcore ⟨hr0, hrlt⟩ i j]
+  congr 1
+  refine Finset.sum_congr rfl (fun k _ => ?_)
+  refine intervalIntegral.integral_congr_ae ?_
+  rw [Set.uIoc_of_le hsr]
+  have hne : ∀ᵐ x : ℝ, x ≠ sigma - r := by rw [MeasureTheory.ae_iff]; simp
+  filter_upwards [hne] with t ht hmem
+  have hlt : t < sigma - r := lt_of_le_of_ne hmem.2 ht
+  rw [matBaxterU_core sigma hsigma Psi Q hQ0 hQ1 hcore
+    (r := r + t) ⟨by linarith [hmem.1], by linarith⟩ k j]
+
+/-- **Matrix `OZFIX.15` seed from the pure moment identity — the MML.8-ready form.**  The full second
+convolution `matBaxterUQm = Ψ ⋆ Q₊ ⋆ Q₋` equals `r·Φ` on all `r > 0`, given the plumbing (claim `(A)`
+outer vanishing, `Φ` outer vanishing, integrability) **and the concrete core value** `Ψ = −v` +
+moment-integrability (claim `(B)`), with the **only** genuine remaining input the pure moment identity
+`hMomentSeed` — the matrix Wertheim–Thiele `baxter_core_seed` (row moments of the concrete
+`WHSupports.q0MixEntry` matched against `Φ = c_HS`).  Everything else — supports, integrability, the
+`(A)`/`(B)` substitutions, the two-regime split — is discharged.  This is the exact shape MML.8 needs:
+supply `hMomentSeed` (equal-diameter, delta-free) and `matBaxterUQm ≡ r·c_HS` follows. -/
+theorem matBaxterUQm_eq_rPhi_of_momentSeed {N : ℕ}
+    (Psi Q Phi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsigma : 0 < sigma)
+    (hUouter : ∀ i j r, sigma ≤ r → matBaxterU Psi Q sigma i j r = 0)
+    (hPhiOuter : ∀ i j r, sigma ≤ r → Phi i j r = 0)
+    (hint : ∀ (i j k : Fin N) (r : ℝ), IntervalIntegrable
+      (fun t => Q i k t * matBaxterU Psi Q sigma k j (r + t)) volume 0 sigma)
+    (hQ0 : ∀ i k, IntervalIntegrable (Q i k) volume 0 sigma)
+    (hQ1 : ∀ i k, IntervalIntegrable (fun t => t * Q i k t) volume 0 sigma)
+    (hcore : ∀ (k j : Fin N) (v : ℝ), v ∈ Set.Ioo (-sigma) sigma → Psi k j v = -v)
+    (hMomentSeed : ∀ (i j : Fin N), ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
+      (r * ((∑ k, ∫ t in (0:ℝ)..sigma, Q i k t) - 1) - ∑ k, ∫ t in (0:ℝ)..sigma, t * Q i k t)
+        - ∑ k, ∫ t in (0:ℝ)..(sigma - r), Q i k t
+            * ((r + t) * ((∑ l, ∫ s in (0:ℝ)..sigma, Q k l s) - 1)
+               - ∑ l, ∫ s in (0:ℝ)..sigma, s * Q k l s)
+      = r * Phi i j r)
+    {r : ℝ} (hr : 0 < r) (i j : Fin N) :
+    matBaxterUQm Psi Q sigma i j r = r * Phi i j r := by
+  refine matBaxterUQm_eq_rPhi_of_seed Psi Q Phi sigma hsigma hUouter hPhiOuter hint ?_ hr i j
+  intro i' j' r' hr'
+  rw [matBaxterUQm_coreSeed_moment Psi Q sigma hsigma hQ0 hQ1 hcore hr' i' j']
+  exact hMomentSeed i' j' r' hr'
+
+open FMSA.HardSphere in
+/-- **N=1 non-vacuity — the moment seed `hMomentSeed` reduces to the proved scalar `baxter_core_seed`.**
+At one component (`Q = q0_poly`, `Φ = c_HS`), the matrix Wertheim–Thiele moment identity required by
+`matBaxterUQm_eq_rPhi_of_momentSeed` **is** the scalar `FMSA.HardSphere.baxter_core_seed` (`OZFIX.15`):
+the `Fin 1` sums collapse (`Fin.sum_univ_one`) and `baxterM0_eq`/`baxterM1_eq` fold the row integrals
+into the moments `M₀`, `M₁`.  This witnesses that the one genuinely-concrete seed hypothesis is
+**dischargeable** (not a vacuous `Prop`) — the seed-side analog of `matOZStar_fin_one_of_scalar`. -/
+theorem matBaxterUQm_momentSeed_fin_one_of_scalar {eta sigma rho : ℝ}
+    (hsigma : 0 < sigma) (heta : eta < 1) (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) :
+    ∀ (i j : Fin 1), ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
+      (r * ((∑ k : Fin 1, ∫ t in (0:ℝ)..sigma, (fun _ _ => q0_poly eta sigma rho) i k t) - 1)
+          - ∑ k : Fin 1, ∫ t in (0:ℝ)..sigma, t * (fun _ _ => q0_poly eta sigma rho) i k t)
+        - ∑ k : Fin 1, ∫ t in (0:ℝ)..(sigma - r), (fun _ _ => q0_poly eta sigma rho) i k t
+            * ((r + t) * ((∑ l : Fin 1, ∫ s in (0:ℝ)..sigma,
+                    (fun _ _ => q0_poly eta sigma rho) k l s) - 1)
+               - ∑ l : Fin 1, ∫ s in (0:ℝ)..sigma, s * (fun _ _ => q0_poly eta sigma rho) k l s)
+      = r * (fun _ _ => c_HS eta sigma) i j r := by
+  intro i j r hr
+  fin_cases i; fin_cases j
+  simp only [Fin.sum_univ_one, baxterM0_eq hsigma, baxterM1_eq hsigma]
+  exact baxter_core_seed hsigma heta heta_def r hr
+
+open FMSA.HardSphere in
+/-- **General-N EQUAL-DIAMETER matrix `baxter_core_seed` — the moment seed via row-sum collapse.**
+
+For a **common-diameter** mixture the physical Lebowitz PY coefficients `Q0phys`/`Qppphys` are
+constant across species (`Q0phys i j`, `Qppphys j` depend on `σᵢ = σⱼ = σ` only), so the Baxter-factor
+rows collapse: `∑ₖ Qᵢₖ(u) = q0_poly η σ ρ(u)`, the **one-component** scalar factor at the total density
+`ρ = ∑ₖρₖ` (with `η = πρσ³/6`, the total packing).  Under this row-sum hypothesis `hrow`, every matrix
+moment reduces to the scalar one — `∑ₖ M₀ᵢₖ = M₀`, `∑ₖ M₁ᵢₖ = M₁` (so the affine factor becomes
+`k`-independent), and the coupling `∑ₖ Qᵢₖ(t)·(…)` pulls the row-sum inside the integral to `q0_poly` —
+and the matrix moment identity **is** the proved scalar `baxter_core_seed` (`OZFIX.15`).  The `Φ = c_HS`
+is the single one-component PY DCF (equal-diameter species are colour labels), matching the classical
+result that same-size additive mixtures have a species-independent `c(r)`.  This **discharges**
+`matBaxterUQm_eq_rPhi_of_momentSeed`'s `hMomentSeed` for general `N` in the delta-free equal-diameter
+regime — the matrix Wertheim–Thiele seed. -/
+theorem matBaxterUQm_momentSeed_of_rowSum {N : ℕ} (Q : Matrix (Fin N) (Fin N) (ℝ → ℝ))
+    {eta sigma rho : ℝ} (hsigma : 0 < sigma) (heta : eta < 1)
+    (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6)
+    (hrow : ∀ (i : Fin N) (u : ℝ), u ∈ Set.Icc (0:ℝ) sigma → ∑ k, Q i k u = q0_poly eta sigma rho u)
+    (hQ0 : ∀ i k, IntervalIntegrable (Q i k) volume 0 sigma)
+    (hQ1 : ∀ i k, IntervalIntegrable (fun t => t * Q i k t) volume 0 sigma) :
+    ∀ (i _j : Fin N), ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
+      (r * ((∑ k, ∫ t in (0:ℝ)..sigma, Q i k t) - 1) - ∑ k, ∫ t in (0:ℝ)..sigma, t * Q i k t)
+        - ∑ k, ∫ t in (0:ℝ)..(sigma - r), Q i k t
+            * ((r + t) * ((∑ l, ∫ s in (0:ℝ)..sigma, Q k l s) - 1)
+               - ∑ l, ∫ s in (0:ℝ)..sigma, s * Q k l s)
+      = r * c_HS eta sigma r := by
+  have hIcc : Set.uIcc (0:ℝ) sigma = Set.Icc 0 sigma := Set.uIcc_of_le hsigma.le
+  -- row moments collapse to the scalar moments `M₀`, `M₁`
+  have hM0 : ∀ i : Fin N, (∑ k, ∫ t in (0:ℝ)..sigma, Q i k t) = baxterM0 eta sigma rho := by
+    intro i
+    rw [← intervalIntegral.integral_finsetSum (fun k _ => hQ0 i k),
+      intervalIntegral.integral_congr (g := q0_poly eta sigma rho)
+        (fun t ht => hrow i t (hIcc ▸ ht)), baxterM0_eq hsigma]
+  have hM1 : ∀ i : Fin N, (∑ k, ∫ t in (0:ℝ)..sigma, t * Q i k t) = baxterM1 eta sigma rho := by
+    intro i
+    rw [← intervalIntegral.integral_finsetSum (fun k _ => hQ1 i k),
+      intervalIntegral.integral_congr (g := fun t => t * q0_poly eta sigma rho t)
+        (fun t ht => (Finset.mul_sum Finset.univ (fun k => Q i k t) t).symm.trans
+          (congrArg (fun x => t * x) (hrow i t (hIcc ▸ ht)))), baxterM1_eq hsigma]
+  intro i _j r hr
+  obtain ⟨hr0, hrlt⟩ := hr
+  have hsr : (0:ℝ) ≤ sigma - r := by linarith
+  simp only [hM0, hM1]
+  -- the coupling term: pull the row-sum inside the truncated integral, giving the scalar integrand
+  have hAcont : Continuous
+      (fun t => (r + t) * (baxterM0 eta sigma rho - 1) - baxterM1 eta sigma rho) := by fun_prop
+  have hDbl : (∑ k, ∫ t in (0:ℝ)..(sigma - r), Q i k t
+        * ((r + t) * (baxterM0 eta sigma rho - 1) - baxterM1 eta sigma rho))
+      = ∫ t in (0:ℝ)..(sigma - r), q0_poly eta sigma rho t
+          * ((r + t) * (baxterM0 eta sigma rho - 1) - baxterM1 eta sigma rho) := by
+    have hintk : ∀ k ∈ (Finset.univ : Finset (Fin N)),
+        IntervalIntegrable (fun t => Q i k t
+          * ((r + t) * (baxterM0 eta sigma rho - 1) - baxterM1 eta sigma rho)) volume 0 (sigma - r) :=
+      fun k _ => ((hQ0 i k).mono_set (Set.uIcc_subset_uIcc
+        (by rw [Set.mem_uIcc]; exact Or.inl ⟨le_refl 0, hsigma.le⟩)
+        (by rw [Set.mem_uIcc]; exact Or.inl ⟨hsr, by linarith⟩))).mul_continuousOn hAcont.continuousOn
+    rw [← intervalIntegral.integral_finsetSum hintk]
+    refine intervalIntegral.integral_congr (fun t ht => ?_)
+    rw [Set.uIcc_of_le hsr] at ht
+    have hmem : t ∈ Set.Icc (0:ℝ) sigma := ⟨ht.1, by linarith [ht.2]⟩
+    exact (Finset.sum_mul Finset.univ (fun k => Q i k t)
+      ((r + t) * (baxterM0 eta sigma rho - 1) - baxterM1 eta sigma rho)).symm.trans
+      (congrArg (fun x => x * ((r + t) * (baxterM0 eta sigma rho - 1) - baxterM1 eta sigma rho))
+        (hrow i t hmem))
+  rw [hDbl]
+  exact baxter_core_seed hsigma heta heta_def r ⟨hr0, hrlt⟩
+
+open FMSA.HardSphere in
+/-- **General-N equal-diameter seed COMPLETE — `Ψ ⋆ Q₊ ⋆ Q₋ ≡ r·c_HS`.**  Combining the seed chain
+(`matBaxterUQm_eq_rPhi_of_momentSeed`) with the equal-diameter core seed
+(`matBaxterUQm_momentSeed_of_rowSum`), the second Baxter convolution equals `r·c_HS` on **all** `r > 0`
+for a general-`N` common-diameter mixture: `Φ = c_HS` (the single one-component PY DCF) is fixed, and
+its outer-vanishing is `c_HS_outer`.  This is the matrix `OZFIX.15` (`baxter_psi_conv_eq_phi`) at
+general `N`, delta-free — the load-bearing MML.8 seed input, now with **no remaining hypothesis beyond
+the equal-diameter row-sum collapse** `hrow` (and the standard claim-(A)/core-value regularity). -/
+theorem matBaxterUQm_eq_rcHS_of_rowSum {N : ℕ} (Psi Q : Matrix (Fin N) (Fin N) (ℝ → ℝ))
+    {eta sigma rho : ℝ} (hsigma : 0 < sigma) (heta : eta < 1)
+    (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6)
+    (hUouter : ∀ i j r, sigma ≤ r → matBaxterU Psi Q sigma i j r = 0)
+    (hint : ∀ (i j k : Fin N) (r : ℝ), IntervalIntegrable
+      (fun t => Q i k t * matBaxterU Psi Q sigma k j (r + t)) volume 0 sigma)
+    (hrow : ∀ (i : Fin N) (u : ℝ), u ∈ Set.Icc (0:ℝ) sigma → ∑ k, Q i k u = q0_poly eta sigma rho u)
+    (hQ0 : ∀ i k, IntervalIntegrable (Q i k) volume 0 sigma)
+    (hQ1 : ∀ i k, IntervalIntegrable (fun t => t * Q i k t) volume 0 sigma)
+    (hcore : ∀ (k j : Fin N) (v : ℝ), v ∈ Set.Ioo (-sigma) sigma → Psi k j v = -v)
+    {r : ℝ} (hr : 0 < r) (i j : Fin N) :
+    matBaxterUQm Psi Q sigma i j r = r * c_HS eta sigma r :=
+  matBaxterUQm_eq_rPhi_of_momentSeed Psi Q (fun _ _ => c_HS eta sigma) sigma hsigma
+    hUouter (fun _ _ _ hr' => c_HS_outer hr') hint hQ0 hQ1 hcore
+    (matBaxterUQm_momentSeed_of_rowSum Q hsigma heta heta_def hrow hQ0 hQ1) hr i j
+
 end
 end FMSA.MixtureOzStar

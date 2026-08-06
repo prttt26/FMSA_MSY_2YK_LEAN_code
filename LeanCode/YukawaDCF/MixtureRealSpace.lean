@@ -441,6 +441,55 @@ theorem Qphys_T0_isSymm (sigma rho : Fin 2 → ℝ) (k : ℂ)
     ((FMSA.MatrixQ0.rhoGeoPhys rho 0 0 : ℝ) : ℂ) ((FMSA.MatrixQ0.rhoGeoPhys rho 0 1 : ℝ) : ℂ)
     ((FMSA.MatrixQ0.rhoGeoPhys rho 1 1 : ℝ) : ℂ) k hk (hQpp 0) (hQpp 1) hξ2 hrgprod
 
+/-! ### MRS.7 — the momentum-space discharge of obstruction (b)
+
+The seed's real-space `matSelfConv` (of the function-part Baxter factor `q0MixEntry`) is **not** symmetric
+for unequal diameters (numerically settled — the identity `δ`/`ρ_geo` terms in `Q̂₀ = I − ρ_geo·q̂` carry the
+asymmetry).  The object that **is** symmetric is the FULL momentum DCF `Cmix0 = I − Q̂₀(k)·Q̂₀(−k)ᵀ`.  These
+lemmas discharge that directly from the swap identity `swap_offdiag_of_keys` (MRS.7), giving the correct
+`hCsym`-style input in momentum space (no false real-space `matSelfConv`-symmetry needed). -/
+
+/-- **`Cmix0` is symmetric given the swap identity** (one direction of `Cmix0_isSymm_iff`).  For any
+Baxter matrix whose swap identity `Q̂₀(−k)·Q̂₀ᵀ(k) = Q̂₀(k)·Q̂₀ᵀ(−k)` holds, the zeroth-order DCF is
+symmetric. -/
+theorem Cmix0_symm_of_swap {N : ℕ} (Qfun : ℂ → Matrix (Fin N) (Fin N) ℂ) (k : ℂ)
+    (hswap : Qfun (-k) * (Qfun k)ᵀ = Qfun k * (Qfun (-k))ᵀ) :
+    (Cmix0 Qfun k)ᵀ = Cmix0 Qfun k :=
+  (Cmix0_isSymm_iff Qfun k).mpr hswap
+
+/-- **The physical zeroth-order mixture DCF `Cmix0` is symmetric (N=2).**  The momentum-space discharge
+of obstruction (b): the DCF matrix `Ĉ₀(k) = I − Q̂₀(k)·Q̂₀(−k)ᵀ` is symmetric — `Ĉ₀ᵀ = Ĉ₀` — for the
+physical Lebowitz PY factor, straight from `Qphys_T0_isSymm`/`swap_offdiag_of_keys`.  This is the correct
+symmetric object (the function-part `matSelfConv` is not symmetric); `cᵢⱼ = cⱼᵢ` in real space. -/
+theorem Qphys_Cmix0_symm (sigma rho : Fin 2 → ℝ) (k : ℂ)
+    (hρ0 : 0 ≤ rho 0) (hρ1 : 0 ≤ rho 1) (hk : k ≠ 0)
+    (hvac : FMSA.MatrixQ0.vacMix rho sigma ≠ 0) :
+    (Cmix0 (Qphys sigma rho) k)ᵀ = Cmix0 (Qphys sigma rho) k := by
+  refine Cmix0_symm_of_swap (Qphys sigma rho) k ?_
+  have h := Qphys_T0_isSymm sigma rho k hρ0 hρ1 hk hvac
+  rwa [Matrix.transpose_mul, Matrix.transpose_transpose] at h
+
+/-- **`Ĉ₀ = linear − self-conv` (the corrected `hfact` decomposition, momentum space).**  With
+`W := I − Q̂₀` (the weighted real-space Baxter function transform `ρ_geo·q̂`), the zeroth-order DCF is
+`Ĉ₀(k) = W(k) + W(−k)ᵀ − W(k)·W(−k)ᵀ`.  So the object the seed must produce carries the **linear `q̂`
+terms** `W(k) + W(−k)ᵀ` — the bare self-convolution `W(k)W(−k)ᵀ` (≈ `matCorr`) alone is NOT it.  Pure
+matrix algebra: `1 − (1−A)(1−B) = A + B − AB` with `A = Q̂₀(k)`, `B = Q̂₀(−k)ᵀ`. -/
+theorem Cmix0_linear_selfconv {N : ℕ} (Qfun : ℂ → Matrix (Fin N) (Fin N) ℂ) (k : ℂ) :
+    Cmix0 Qfun k
+      = (1 - Qfun k) + (1 - (Qfun (-k))ᵀ) - (1 - Qfun k) * (1 - (Qfun (-k))ᵀ) := by
+  unfold Cmix0
+  noncomm_ring
+
+/-- **Entrywise form of the physical DCF symmetry** (N=2): `Ĉ₀(k)ᵢⱼ = Ĉ₀(k)ⱼᵢ`.  This is the exact
+`hCsym`-input shape (`cᵢⱼ = cⱼᵢ`) that the seed's `matSelfConv_symm_of_dcf` consumes — discharged in
+momentum space from `swap_offdiag_of_keys`, for any physical density/diameter pair. -/
+theorem Qphys_Cmix0_entry_symm (sigma rho : Fin 2 → ℝ) (k : ℂ)
+    (hρ0 : 0 ≤ rho 0) (hρ1 : 0 ≤ rho 1) (hk : k ≠ 0)
+    (hvac : FMSA.MatrixQ0.vacMix rho sigma ≠ 0) (i j : Fin 2) :
+    Cmix0 (Qphys sigma rho) k i j = Cmix0 (Qphys sigma rho) k j i := by
+  have h := congrFun (congrFun (Qphys_Cmix0_symm sigma rho k hρ0 hρ1 hk hvac) j) i
+  rwa [Matrix.transpose_apply] at h
+
 /-! ### MRS.2 — deriving (★) from the physics (first-order OZ + factorization)
 
 MRS.3 above takes [LN] eq:OZ1_Baxter **(a)** as a hypothesis. MRS.2 *derives* (★) from the

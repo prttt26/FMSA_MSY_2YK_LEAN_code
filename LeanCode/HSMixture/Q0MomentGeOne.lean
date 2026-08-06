@@ -72,8 +72,11 @@ theorem Q0_moment_det_ge_one {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
     rw [VU_apply' z sigma rho hrho]; simp
   rw [h00, h01, h10, h11]; nlinarith [moment_key hz hvac hrho hsigma]
 
-/-- `1 ≤ det Q0_mat_phys(z)` for `z > 0` (`N = 2`). -/
-theorem Q0_mat_phys_det_ge_one {z : ℝ} {sigma rho : Fin 2 → ℝ}
+/-- **`1 ≤ det Q0_mat_phys(z)` for `z > 0`, any `N`.**  The Woodbury reduction
+`det Q̂₀ = det(1 − VU)` (`Q0_mat_phys_det_eq_two_by_two`) has the *same* `2×2` reduced matrix for
+every `N`, so `Q0_moment_det_ge_one`'s general-`N` bound `1 ≤ (1−(VU)₀₀)(1−(VU)₁₁) − (VU)₀₁(VU)₁₀`
+gives `1 ≤ det Q̂₀`.  The margin survives `z → 0` (the `k=0` compressibility). -/
+theorem Q0_mat_phys_det_ge_one_N {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
     (hz : 0 < z) (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i) (hsigma : ∀ i, 0 < sigma i) :
     1 ≤ (Q0_mat_phys z sigma rho).det := by
   rw [Q0_mat_phys_det_eq_two_by_two hz.ne' hvac.ne' hrho, Matrix.det_fin_two]
@@ -81,6 +84,12 @@ theorem Q0_mat_phys_det_ge_one {z : ℝ} {sigma rho : Fin 2 → ℝ}
   have hkey := Q0_moment_det_ge_one hz hvac hrho hsigma
   simp only [Matrix.mul_apply] at hkey
   norm_num at hkey ⊢; linarith [hkey]
+
+/-- `1 ≤ det Q0_mat_phys(z)` for `z > 0` (`N = 2`, the `Fin 2`-specialised wrapper). -/
+theorem Q0_mat_phys_det_ge_one {z : ℝ} {sigma rho : Fin 2 → ℝ}
+    (hz : 0 < z) (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i) (hsigma : ∀ i, 0 < sigma i) :
+    1 ≤ (Q0_mat_phys z sigma rho).det :=
+  Q0_mat_phys_det_ge_one_N hz hvac hrho hsigma
 
 end
 end FMSA.MatrixQ0
