@@ -1,4 +1,4 @@
-# Proof Notes: First-Order PY / HNCB Closures of the YK-Tail FMSA-DP Construction (Groups PYE / HNCB)
+# Proof Notes: First-Order PY / HNCB Closures of the YK-Tail FMSA-DP Construction (Groups PYE / HNCB / FOEQ)
 
 Proof records for the **closure identity** of the shipped YK-tail FMSA-DP construction: at the
 zeroth pull-back rung it **is** the first-order PY DCF (**Group PYE**), and the full fixed-rate
@@ -668,3 +668,273 @@ DCF (MRS) from the RDF (MML/MZERO).
 
 **Depends on.** Conceptually on MML/MZERO (the RDF HS-pole series); nothing to prove here.
 **Status.** ☐ record-only (boundary marker, not a proof target).
+
+---
+
+# Group FOEQ — The Two Definitions of "First Order" Agree
+
+**Opened 2026-08-10.** Source: paper §IV (`FMSA_dp_output/tex/fmsa_dp_theory.tex`), working notes
+`FMSA_dp_output/md/theory_first_order_definitions.md`; numerical partner
+`numerical_notes/theory/waisman_msa_closed_form.md` §"The Blum–Høye arbitration".
+
+## The claim
+
+Two definitions of "first order in the coupling" are in circulation. They are **not the same
+statement**, and this project has always *claimed* the second while always *building* the first.
+
+| | **(D1)** truncation of the hierarchy | **(D2)** derivative of the exact solution |
+|---|---|---|
+| construction | post a formal power series in the coupling, substitute into OZ+MSA, collect order by order | scale the tail `U ↦ sU`, solve **exact** MSA at each `s`, differentiate the nonlinear family at `s=0` |
+| content, order `γ` | `H̃_γ(I−C̃₀) = (I+H̃₀)C̃_γ + ∑_{m=1}^{γ−1} H̃_m C̃_{γ−m}` | `c⁽ᵞ⁾ := (1/γ!)·d^γ/ds^γ[c_MSA(s·K)]│_{s=0}` |
+| at `γ=1` | `H̃₁(I−C̃₀) = (I+H̃₀)C̃₁` — what the WH construction (Groups Y1/MRS) builds | what a reader means by "the first-order term of MSA" |
+| precondition | **none** — each order is a linear problem, solvable whether or not the series converges anywhere | `s ↦ c_MSA(sK)` **`γ`-fold differentiable** at `s=0` |
+
+⚠ **The precondition row is where this is easy to get backwards.** (D2) needs *differentiability*,
+not convergence. An argument bounding the radius of convergence of the coupling series says nothing
+about whether the derivative exists — and this project once reasoned in exactly that wrong direction
+(the retracted `R_c ~ e^{−zR} ≈ 10⁻⁶` claim, which was an artifact of the singly-propagated
+`(1−G²)/A²` split and not of perturbation theory). Even demanding *every* order asks only for
+`C^∞`, which still does not imply analyticity.
+
+### ⭐⭐ It holds at every order — ✅ FORMALIZED (2026-08-10)
+
+FOEQ.6/7/8/9 all landed in `Closures/FirstOrderEquivalence.lean`, axiom-clean: `msaOuter_iteratedDeriv_terminates`
+(FOEQ.6), `oz_taylor_coeff_eq_cauchy_convolution` (FOEQ.7 ⭐ — the Leibniz convolution, via Mathlib's
+`iteratedDeriv_mul` on the constant OZ product), `oz_msa_taylor_eq_hierarchy` + the `γ=1` corollary
+`oz_deriv_eq_firstOrderLine_of_taylor` (FOEQ.8), `cauchy_convolution_middle_empty_iff` (FOEQ.9).
+
+The group was opened at `γ=1`; **nothing in the argument is first-order-specific**, and the
+generalisation is not harder. Facts 1–3 below go through verbatim with the product rule replaced by
+the general Leibniz rule, and `iteratedDeriv_mul` is already in Mathlib. Tasks **FOEQ.6–8** carry
+it; they are *additive* to the landed `γ=1` rows FOEQ.1/FOEQ.3, which stay as the instances the
+rest of the paper consumes.
+
+⭐ **The payoff is a sharper statement of what first order actually is.** The convolution
+`∑_{m=1}^{γ−1} H̃_m C̃_{γ−m}` is **empty at `γ=1` and nowhere else** (FOEQ.9). That emptiness — not
+anything about the expansion — is what makes the solution map linear (PYE.2) and the residue sum
+terminate. From `γ=2` the sum drags in `h⁽¹⁾`, which is built from `[Q̂₀]⁻¹` by construction, and
+that is exactly §XII's obstruction. So:
+
+> **The perturbation theory is equally well defined at every order; only its solvability in
+> finitely many polynomial × exponential pieces is special to `γ=1`.**
+
+Any reading in which higher orders are *ill-defined*, or in which first order is privileged by the
+expansion itself rather than by what the expansion can be solved in, is a reading this group
+excludes. Worth stating because the paper's §XII ("why second order forfeits the closed form")
+invites precisely that misreading.
+
+## Why a separate group
+
+**Not MSAEXACT.** MSAEXACT.5 `fmsa_eq_firstOrder_msa` is the *formal linearisation* — expand the
+self-consistency in `K`, recover FMSA-DP's HS-dressed amplitudes. It does not assert the derivative
+exists; it assumes it. That assumption is FOEQ.5. Filing FOEQ under MSAEXACT would also gate
+FOEQ.1–4 behind the degree-8 elimination (MSAEXACT.2) and the root-uniqueness theorem
+(MSAEXACT.3), and **FOEQ.1–4 are not gated on anything** — they are statements about the OZ
+hierarchy, provable with no Blum–Høye algebra at all. Only FOEQ.5 touches that track.
+
+**Not PYE.** PYE identifies *which closure* the construction solves (first-order **PY**, not MSA, at
+`pullback_passes=0`). FOEQ asks what "first order" means for any of them. PYE.1's
+`py_first_order_outer` is a **`HasDerivAt`** statement, i.e. PYE already works in (D2)'s language —
+which is why FOEQ.1 is small and why the closure layer is not the gap.
+
+## Status (2026-08-10) — `LeanCode/Closures/FirstOrderEquivalence.lean`, full tree build 8760 jobs
+
+| task | statement | status |
+|---|---|---|
+| FOEQ.1 | `msaOuter_hasDerivAt`, `msaOuter_eq_smul_deriv`, `mayerF_ne_msaOuter` | **✓ DONE** |
+| FOEQ.2 | supports are `s`-free | ✓ discharged by construction (record-only) |
+| FOEQ.3 ⭐ | `oz_deriv_eq_firstOrderLine` | **✓ DONE** |
+| FOEQ.4 | `firstOrder_dcf_of_oz_deriv` (algebraic) **+** `firstOrder_khat_unique` / `firstOrder_dcf_unique_on_core` (WH-uniqueness) | **✓ DONE 2026-08-10** — both halves; the `γ=1` line's real-space core solution is unique via PYE.5's `inner_core_dcf_eq_of_khat_eq` |
+| FOEQ.5 ⭐⭐ | existence of the derivative | ◑ **Jacobian condition ✓ AND IFT application ✓ (2026-08-10)**; only item (i), the Blum–Høye transcription, remains — see below |
+| MSAEXACT.5 ⭐ | `firstOrder_amplitude_eq_hardSphere_dressed` | **✓ DONE** (same file) |
+
+`#print axioms` = the standard three on **all** theorems, the FOEQ.4/5 additions included (verified
+2026-08-10). Raw `grep -rn "^axiom "` reads prose false positives (docstring lines beginning
+"axiom "); the real ledger is unchanged at **8 = 7 math + 1 physics**. ⚠ Quote the classified count,
+never the raw one.
+
+⚠ **The group is STILL NOT closed — but only by item (i).** FOEQ.1–4 are now fully done, and FOEQ.5's
+two *provable* halves (the block-triangular Jacobian condition and the IFT application) landed
+2026-08-10 as `bhJacobian_det` / `bhJacobianCLM_isInvertible` and
+`exists_hasDerivAt_root_of_bivariate_ift` / `msa_amplitude_differentiable_of_bh_system`. What remains
+is **item (i)**: that the abstract residual map `f` fed to the IFT engine *is* the Blum–Høye system,
+with `∂₂f(0,p₀)` the block-triangular Jacobian — the faithful transcription of `F, A, q′, γ, Q̂` in
+`(Dt, G)`. Until that is supplied (it is polynomials + `exp`, no analysis, but genuine algebra with
+three known print errors in the source), the group's headline stays the conditional "(D1)=(D2) as
+soon as the derivative exists", and §"What is *not* formalized" must keep saying so.
+
+### ⚠ A Lean trap worth the line: do not state FOEQ.3 at `Matrix`
+
+The natural statement is over `Matrix (Fin N) (Fin N) ℂ`, and it does not work. Matrices carry
+several competing normed structures, all **scoped on purpose**; the `HasDerivAt` hypotheses in the
+statement elaborate with the ambient (`Pi`-derived) topology while `HasDerivAt.mul` inside the proof
+supplies `Matrix.linftyOp*`, and the two are not defeq — two pages of instance mismatch about
+nothing, since no step of the argument is about matrices. **Stated over an abstract
+`[NormedRing 𝔸] [NormedAlgebra ℝ 𝔸]` it goes through immediately**, and matrices are recovered by
+`open scoped Matrix.Norms.Operator` (which turns on `linftyOpNormedRing` *and*
+`linftyOpNormedAlgebra` together) plus instantiation. The note's original Lean route was right about
+*which* instances exist and wrong about needing them.
+
+Two smaller ones: a doc comment `/-- … -/` cannot attach to `variable` (use `/-! … -/`); and
+`simpa [f]` will not unfold a partially-applied `f` in the goal — `rw` the function to its lambda
+first, or `show`.
+
+## The three structural facts (FOEQ.1–3) and the one analytic input (FOEQ.5)
+
+**FOEQ.1 — the MSA exterior is linear in the coupling to begin with.** For `r > R_ij` the closure
+reads `c_ij = −βs·U_ij`. Its `s`-derivative is `−βU_ij` at *every* `s`, second derivative zero. On
+the exterior (D1) and (D2) are not merely equal, they are the same expression.
+
+⚠ **`msa_first_order_outer` does not already say this.** It is
+`HasDerivAt (fun s => mayerF β u s * 1) (1 * −(βu)) 0` — the `y₀ ↦ 1` case of the **Mayer** factor
+`e^{−βsu}−1`. That agrees with MSA at first order but is *not* the MSA closure, and it carries an
+honest `O(s²)` tail that MSA does not have. The distinction is the whole point of FOEQ.1: it is
+where MSA is structurally simpler than PY/HNC, and for PY/HNC the exterior agreement is a theorem
+with content (which `py_first_order_outer` supplies) rather than an identity.
+
+**FOEQ.2 — the domains do not move with the coupling.** `h_ij(r) = −1` on `r < R_ij` is exact at
+every `s`, and `R_ij` is core data, not tail data, so the two supports on which the WH split acts
+are `s`-independent. **Discharged by construction** — every WH statement in the tree already has
+`s`-free supports, so there is nothing to prove. Recorded because it is exactly the hypothesis a
+*moving-boundary* perturbation problem violates, and there order-by-order solution and
+differentiation do not commute. Cf. HNCB.4: a named boundary is not padding, an unnamed one is a
+trap.
+
+**FOEQ.3 ⭐ — OZ is quadratic, so differentiating it is exact.** Differentiate `(I+H̃)(I−C̃) = I` at
+`s=0` with `H̃₀, C̃₀` the hard-sphere solution: the product rule returns the `γ=1` line term for
+term, with no truncation and no neglected remainder. The hierarchy's first line is not merely
+*consistent with* the derivative — it **is** the derivative equation.
+
+*Lean route (checked against the pinned Mathlib, not guessed).* `HasDerivAt.mul` needs
+`[NormedRing 𝔸] [NormedAlgebra 𝕜 𝔸]`, and `Matrix (Fin N) (Fin N) ℂ` gets both from
+`Mathlib/Analysis/Matrix/Normed.lean`: **`open scoped Matrix.Norms.Operator`** turns on
+`Matrix.linftyOpNormedRing` *and* `Matrix.linftyOpNormedAlgebra` (plus the additive/`NormedSpace`
+prerequisites) in one line. `Matrix.Norms.Frobenius` is the alternative and carries the same pair.
+⚠ These are **scoped, deliberately not global** — several natural matrix norms exist, so nothing
+fires without the `open scoped`. Everything else in FOEQ.3 is `HasDerivAt.sub` / `.const`. No new
+axiom, no analysis beyond the product rule. **This is the load-bearing task and it is available
+now.**
+
+**FOEQ.4 — the `γ=1` equation determines the answer. ✓ DONE 2026-08-10.** Two halves. The
+*algebraic* half `firstOrder_dcf_of_oz_deriv` (given a left inverse of `1+H̃₀`, the `γ=1` line pins
+`C̃₁` in `k` space) was already there. The **WH-uniqueness half** is now closed:
+`firstOrder_khat_unique` gives `k`-space uniqueness (two solutions of the *same* `γ=1` line with a
+common left inverse coincide — `Chat = Hinv·H̃₁(1−C̃₀)` both), and `firstOrder_dcf_unique_on_core`
+transports it to *real space on the open core* `(0,R)` by composing with PYE.5's
+`inner_core_dcf_eq_of_khat_eq` (transform injectivity + the `IsRadialEntry` dictionary). So (D1)'s
+construction output *is* the OZ derivative `C̃₁`, as pair functions `c_ij(r)`, not merely in `k`.
+⚠ The `γ=1` relation is taken as the hypothesis `hoz1`/`hoz2` — which is exactly what FOEQ.3
+produces — so no re-differentiation at `Matrix` is needed, keeping this off the scoped-norm trap.
+Uses FOEQ.2's `s`-free supports to invert on the *fixed* core.
+
+⇒ FOEQ.1–4 give **(D1) = (D2) as soon as the derivative exists**, and that exhausts what algebra can
+supply.
+
+**FOEQ.5 ⭐⭐ — existence of the derivative.** That `s ↦ c_MSA(sK)` is differentiable at the
+hard-sphere end point is a property of a solution never written down. Route: the implicit function
+theorem on the Blum–Høye algebraic system, with the Jacobian nonsingular at the PY point. MSAEXACT.4
+✓ already establishes that `K=0` *is* the PY point (the PY coefficients annihilate all three of
+Waisman's equations), so the base point is in hand. Mathlib has the IFT (`ImplicitFunctionData`,
+`HasStrictFDerivAt.implicitFunction`).
+
+### ✅ The Jacobian condition is discharged — in closed form (2026-08-10)
+
+Write the `N = 1`, `n`-tail Blum–Høye system unscaled, in the variables of
+`waisman_msa_closed_form.md` §7g (`Dt_t = D_t e^{−z_t}`, `G_t = ĝ(z_t)e^{z_t}`):
+
+    R1_u = Dt_u·F(z_u) − 2πK_u/z_u
+    R2_u = 2π G_u·F(z_u) − [A + z_u q′ + Σ_t (z_u²z_t/(z_u+z_t))·γ_t·Dt_t]/z_u²
+
+**At `K = 0` the base point has `Dt = 0`, and that kills every `G`-dependence at once**: `G` enters
+`M` and `N` only through the factor `Dt_t` (§7g), so `M = N = 0`, hence `A = A⁰`, `q′ = q⁰′`, the
+tail term of `Q̂` vanishes, and `F(z_u) = F₀(z_u) = 1 − ρ[φ₁(z_u)q⁰′ + φ₂(z_u)A⁰]` — the **hard
+sphere** Baxter factor, independent of `G`. Therefore
+
+    ∂R1_u/∂Dt_t = δ_ut F₀(z_u) + Dt_u·(∂F/∂Dt_t) = δ_ut F₀(z_u)
+    ∂R1_u/∂G_t  = Dt_u·(∂F/∂G_t)                 = 0
+    ∂R2_u/∂G_t  = 2π δ_ut F₀(z_u)
+
+so `J` is **block lower-triangular** and
+
+    ⭐  det J |_{K=0}  =  (2π)^n · ∏_u F₀(z_u)²
+
+**Verified numerically to 6e-11 … 9e-10** against a central-difference Jacobian, over
+`ξ ∈ {0.05, 0.20, 0.40, 0.49}` × `n ∈ {1, 2, 3}` (`z = [1.8]`, `[2.9637, 14.0167]`, `[1, 5, 14]`).
+
+⇒ **`det J ≠ 0` ⟺ `F₀(z_u) ≠ 0` at every tail rate**, and that is not a new obligation: it is
+`Q0_ne_zero_at_yukawa` in `HardSphere/BaxterFactor.lean`, **already proved**. The IFT's hypothesis
+is therefore in hand for every `n` and every physical `ξ`, with no new analysis and no new axiom.
+
+### ✅ The Jacobian condition and the IFT application are both FORMALIZED (2026-08-10)
+
+Both are now in `Closures/FirstOrderEquivalence.lean`, `#print axioms` = the standard three.
+
+* **The Jacobian, in Lean.** `bhJacobian F₀ c = !![F₀, 0; c, 2π F₀]` (the `N=1` single-tail block
+  above), `bhJacobian_det : det = 2π F₀²` (`Matrix.det_fin_two_of`, the off-diagonal `c` drops out),
+  `bhJacobian_nonsingular_iff : det ≠ 0 ↔ F₀ ≠ 0`. As the object the IFT actually consumes,
+  `bhJacobianCLM F₀ c : (ℝ×ℝ) →L[ℝ] (ℝ×ℝ)` with `bhJacobianCLM_isInvertible : F₀ ≠ 0 → IsInvertible`
+  (explicit inverse via `ContinuousLinearEquiv.equivOfInverse`). A worked `example` discharges the
+  `F₀ ≠ 0` premise from **`FMSA.HardSphere.Q0_ne_zero_at_yukawa`** on the *actual* HS Baxter
+  denominator — the IFT hypothesis is met, not assumed, for every physical `η ∈ (0,1)`, `z > 0`.
+* **The IFT application (item ii), in Lean.** `exists_hasDerivAt_root_of_bivariate_ift`: a `C¹`
+  bivariate residual system `f : ℝ → (ℝ×ℝ) → (ℝ×ℝ)` with `f 0 p₀ = 0` and `(∂₂f)(0,p₀)` invertible
+  has a *differentiable* implicit root `ψ` (`ψ 0 = p₀`, `f K (ψ K) = 0` near 0, `HasDerivAt ψ ψ' 0`),
+  via Mathlib's `hasStrictFDerivAt_implicitFunctionOfBivariate`. The capstone
+  `msa_amplitude_differentiable_of_bh_system` composes it with `bhJacobianCLM_isInvertible`: if
+  `∂₂f(0,p₀) = bhJacobianCLM F₀ c` and `F₀ ≠ 0`, the amplitude `K ↦ Dt(K)·e^z` is **differentiable at
+  `K = 0`** — the derivative FOEQ.1–4 and MSAEXACT.5 take as a hypothesis, here *produced*.
+
+⚠ It is **not** gated on MSAEXACT.2/3: the degree-8 elimination and root uniqueness are about *which*
+root is physical, while the IFT only needs *a* root with nonsingular Jacobian, and `K = 0` supplies it
+(MSAEXACT.4).
+
+**What remains is item (i) only:** that the abstract `f` fed to the engine *is* the Blum–Høye system,
+with `∂₂f(0,p₀)` the block-triangular Jacobian above. That is the faithful transcription of
+`F, A, q′, γ, Q̂` in `(Dt, G)` — polynomials and `exp`, no analysis, but genuine algebra with three
+known print errors in the source (`waisman_msa_closed_form.md` §7f–§7g). Do `N=1` first — the BH
+system there is **2×2**, not three quadratics, and in the variables `Dt = D e^{−z}`, `G = ĝ(z)e^{z}`
+every `e^{z}` cancels analytically (§7f; in the printed `(D, γ)` variables the system is numerically
+unusable, `D ~ 3e12` at Waisman's point). General `N` gated on MSAEMIX. Until item (i) lands, `f` and
+its Jacobian identification are the engine's hypotheses, and the group stays conditional.
+
+## Numerical witnesses — and what they do *not* establish
+
+| check | evaluates | agreement |
+|---|---|---|
+| central difference in `±s` of converged OZ+MSA | (D2), numerically | rel **5e-6**; estimator itself linear in `s` to 2e-5 between `s=1e-4` and `1e-5` |
+| ⭐ **BH exact MSA, linearised in the amplitudes** | (D2), **analytically**, from a non-perturbative closed form | **6.4e-7 … 2.8e-5** over 25 states, `η ∈ [0.05,0.40]`, `z ∈ [1.8,28.75]`, on `∂_K(∂βp/∂ρ)` at `N=1` |
+| `N=1` anchor vs Tang & Lu's single-component form | (D1), independent derivation | rel 7.7e-9 … 2.7e-8 |
+
+⚠ **Both (D2) rows presuppose the derivative rather than establishing it.** A central difference
+that converges, and a linearisation that matches, are consistent with differentiability; neither
+proves it. They are why FOEQ.5 is believed, not why it would be closed.
+
+⚠ **The BH row is not reproducible from the paper as printed** — three typographical errors in Blum
+& Høye, *J. Stat. Phys.* **19**, 317 (1978): (36) drops a power of `z` versus (21) (and the correct
+powers are **mixed**, `1/z` in `M` and `1/z²` in `N`, which is why a four-way scan could not reach
+it); (35) inverts `z` versus (27); (29) omits the `e^{zσ_ij}` that its own contact-normalised
+Eq. (3) forces. Each is fixed by the paper's internal consistency and confirmed dimensionally. Full
+derivations in `waisman_msa_closed_form.md`.
+
+## Constraints and boundaries
+
+* **No new axiom** — verified. FOEQ.1–4 and FOEQ.6–9 are calculus and finite linear algebra; FOEQ.5
+  is the IFT on an algebraic system over `ℝ` with `e^{−zσ}` a parameter. All landed theorems have
+  `#print axioms` = the standard three. Needing an axiom means a route was abandoned somewhere.
+* ⚠ **Do not mark the group closed on the algebraic tasks alone.** FOEQ.1–4 and FOEQ.6–9 give a
+  *conditional* headline — "(D1)=(D2) as soon as the derivatives exist" — which is not the claim the
+  paper makes. Until FOEQ.5's **item (i)** (the BH transcription) is discharged, the paper's
+  §"What is *not* formalized" must keep saying that the analytic half is measured rather than proved.
+* ✅ **The general-order statement is now formalized (2026-08-10).** What was previously unformalized
+  here — the *Leibniz sum* rather than the bare product rule — is now `oz_taylor_coeff_eq_cauchy_convolution`
+  (FOEQ.7) and `oz_msa_taylor_eq_hierarchy` (FOEQ.8, `∀ m ≥ 1`), so Theorem IV.1 is machine-checked at
+  **every** order, not just `γ = 1`. The `γ = 1` corollary `oz_deriv_eq_firstOrderLine_of_taylor`
+  reproduces FOEQ.3, confirming the general theorem subsumes the instance the rest of the paper uses.
+  The one thing still unformalized is the FOEQ.5 hypothesis (item i), not the order.
+* ⚠ **The numerical witnesses are `γ=1` only.** They say nothing about FOEQ.6–9 (which are now proved
+  outright, so need no witness), and the paper keeps them in Part III (with the assembly checks)
+  rather than in §IV, so that first-order measurements are not read as support for the derivative's
+  *existence* (FOEQ.5), which they do not establish.
+* **Scope boundary.** FOEQ says nothing about how *good* first order is. That is the truncation cost
+  (paper §XI: 20–37 % pointwise at full coupling, 8.4/1.3/1.4 % in `ĉ_ij(0)`, 15–20 % near a
+  spinodal) and it is a measurement, not a theorem target.

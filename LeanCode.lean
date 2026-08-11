@@ -179,3 +179,9 @@ import LeanCode.FreeEnergy.OuterIntegral
 import LeanCode.FreeEnergy.SumRule
 import LeanCode.Closures.ClosureExpansions
 import LeanCode.Closures.DPClosureMap
+
+-- Group MSAEXACT (single-component exact MSA) + FOEQ (first-order equivalence)
+import LeanCode.YukawaOZ.MSAClosedForm
+import LeanCode.YukawaOZ.MSAElimination
+import LeanCode.YukawaOZ.MSABaxterTransform
+import LeanCode.Closures.FirstOrderEquivalence
