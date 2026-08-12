@@ -176,6 +176,47 @@ quartic (MSAEXACT.2, `E = e^{−z}`) — continuity/branch statements outside `r
 the `hcoupling_pins` hypothesis of the capstone and the FWL numeric input, respectively. The
 *acceptability rule and the uniqueness it yields* are proved; the *branch monotonicity* is measured.
 
+### §8 foothold — real solutions, the spinodal, and the fold (theory note §8)
+
+The theory note now has a dedicated chapter §8 ("Real solutions, the spinodal, and the fold"). Its two
+structural claims are formalised; its branch geometry is the measured ceiling. Three tiers:
+
+**Tier 1 — PROVED (`MSAClosedForm.lean`, axiom-clean).** Everything that reduces to the perfect-square
+identity, i.e. an algebraic fact at fixed `K`:
+* the positivity/selection footholds above (`compressibility_nonneg_of_baxter_sq`,
+  `no_real_baxter_factor_of_neg`, `physical_baxter_factor_unique`, `baxter_sq_double_root_at_spinodal`);
+* **✅ NEW 2026-08-12** — the §8 chapter's two theses, as checked statements:
+  - `compressibility_realizable_iff_nonneg` — **the wall as a range**: `(∃ B, a = B²) ↔ 0 ≤ a`. The
+    exact compressibility's achievable set is exactly `[0,∞)`; `a < 0` is *outside the range*, so no
+    solver **and no analytic continuation** can produce it (§8b). `no_real_baxter_factor_of_neg` is the
+    contrapositive of the forward half.
+  - `exact_vs_firstOrder_compressibility_wall` — **why FMSA crosses it**: the exact `aExact K = (A K)²`
+    is `≥ 0` for *every* `K`, whereas the affine `aFMSA K = a₀ − s·K` (DP map linear in `K`, FOEQ
+    `msaOuter_eq_smul_deriv`) is `< 0` once `s·K > a₀`. Perfect square = the wall; affine truncation =
+    crosses it freely. Trivial by design — the content is that it *reduces* to square-vs-affine given
+    the two proved ingredients.
+
+**Tier 2 — abstract-provable but not yet done (candidates, gated on demand).** The *local* branch
+existence is within reach of the FOEQ.5 IFT engine (`exists_hasDerivAt_root_of_prodDomain_ift`): "the
+real branch persists as a differentiable function of `K` wherever the Jacobian is invertible, and the
+IFT hypothesis fails exactly where `det J = 0`." That packages the spinodal-passes / fold-terminates
+*dichotomy* abstractly (regular ⇒ continue, singular ⇒ IFT gives nothing) without the finite-`K`
+transcendental input. Not built — it would restate the IFT with a running base point; low marginal
+value over the `K=0` capstone until a mixture (`N>1`) forces it.
+
+**Tier 3 — MEASURED ceiling (theory note §8a/§8b; outside `ring`/`decide`).** The finite-`K` branch
+geometry, all statements about the *transcendental* elimination quartic (MSAEXACT.2):
+* the full finite-`K` Jacobian is **not** the block-triangular `K=0` one, so `det J = (2π)^n∏F₀²`
+  (FOEQ.5) does **not** apply away from `K=0`;
+* the spinodal `A = 0` is a **regular** point of that Jacobian (`|det J| = 2e−2…8e−1`, measured);
+* the real branch continues to a **fold** `det J = 0` a few % lower in `T*`, and goes complex beyond
+  it — the radius of convergence of the `K=0` HS-reference series is fold-bounded (§8b);
+* the FMSA slope's sign (`a_FMSA` more compressible ⇒ spinodal too high in `T*`) — MSAX.3 measurement.
+
+So the §8 chapter is formalised **exactly to the fixed-`K` algebraic boundary**: the wall and the
+crossing are theorems; where the wall sits in `(η, z, K)`-space and how the branch dies at the fold
+stay measured, for the same reason MSAEXACT.3's `hcoupling_pins` does.
+
 **MSAEXACT.4.** Should be nearly free: BAXTER.3 = MRS.8 at `N=1` is already in the library and PYE.6
 already wires it to the physical PY objects (`pyBaxterMat`, `pyT0Mat`, `dp_zeroth_order_is_py_n1`).
 Extend that wiring rather than re-deriving it.

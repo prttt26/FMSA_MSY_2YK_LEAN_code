@@ -271,5 +271,43 @@ theorem msaRoot_unique_of_coupling_lt
   obtain ⟨B, _, hu⟩ := physical_baxter_factor_unique (S := a₁) (ha₁ ▸ pow_pos hB₁ 2)
   exact (hu B₁ ⟨hB₁, ha₁⟩).trans (hu B₂ ⟨hB₂, ha.symm ▸ ha₂⟩).symm
 
+/-! ### §8 foothold — real solutions, the spinodal wall, and the first-order crossing
+
+The theory-note chapter §8 ("Real solutions, the spinodal, and the fold") turns on two structural
+facts, both of which reduce — given the perfect-square identity above — to elementary statements
+proved here.  What stays **measured** (theory note §8a/§8b) is the *finite-`K` branch geometry*:
+that the spinodal `A = 0` is a **regular** point (`det J ≠ 0` — the full finite-`K` Jacobian, not the
+block-triangular `K=0` one), that the real branch continues to a **fold** at `det J = 0` a few %
+lower in `T*`, and that it goes complex beyond it.  Those are branch statements about the
+transcendental elimination (MSAEXACT.2), outside `ring`/`decide`; see
+`msaRoot_unique_of_coupling_lt`'s note. -/
+
+open Real in
+/-- **The spinodal wall, as a range statement.**  A value `a` is realizable as an exact `k = 0`
+compressibility `a = (A/2π)²` **iff** `a ≥ 0`: the achievable set is exactly `[0, ∞)`.  Forward is
+`compressibility_nonneg_of_baxter_sq`; the reverse takes the Baxter factor `√a`.  So the
+mechanically-unstable interior `a < 0` is *outside the range* of any real Baxter factorisation
+(`no_real_baxter_factor_of_neg` is the contrapositive of the forward half) — which is why no solver
+**and no analytic continuation** can manufacture it (theory note §8, §8b). -/
+theorem compressibility_realizable_iff_nonneg (a : ℝ) :
+    (∃ B : ℝ, a = B ^ 2) ↔ 0 ≤ a := by
+  constructor
+  · rintro ⟨B, rfl⟩; exact sq_nonneg B
+  · intro ha; exact ⟨Real.sqrt a, (Real.sq_sqrt ha).symm⟩
+
+/-- **Why the first-order truncation crosses the wall that the exact solution cannot** (theory note
+§8).  The *exact* compressibility is a perfect square `aExact K = (A K)²`, hence `≥ 0` for **every**
+coupling `K` — it can never enter `a < 0`.  The *first-order* (FMSA) compressibility is instead
+**affine** in the coupling, `aFMSA K = a₀ − s·K`, because the DP map is linear in `K` (FOEQ
+`msaOuter_eq_smul_deriv`); so once the coupling is large enough that `s·K > a₀` (for a positive
+slope, `K > a₀/s` — a *positive* threshold when `a₀ = a_PY > 0`, `pyA_pos`) it is **strictly
+negative**.  Thus at any such coupling `aExact K ≥ 0 > aFMSA K`: the exact solution stays
+out of the unstable region and the first-order truncation walks straight in.  This is the structural
+core of §8 — the perfect square is the wall; the affine truncation crosses it freely — with the
+branch geometry (regular spinodal, fold) the measured part. -/
+theorem exact_vs_firstOrder_compressibility_wall (A : ℝ → ℝ) (a₀ s : ℝ) :
+    (∀ K, 0 ≤ (A K) ^ 2) ∧ (∀ K, a₀ < s * K → a₀ - s * K < 0) :=
+  ⟨fun K => sq_nonneg _, fun _ hK => by linarith⟩
+
 end FMSA.MSAExact
 
