@@ -745,7 +745,7 @@ which is why FOEQ.1 is small and why the closure layer is not the gap.
 | FOEQ.2 | supports are `s`-free | ✓ discharged by construction (record-only) |
 | FOEQ.3 ⭐ | `oz_deriv_eq_firstOrderLine` | **✓ DONE** |
 | FOEQ.4 | `firstOrder_dcf_of_oz_deriv` (algebraic) **+** `firstOrder_khat_unique` / `firstOrder_dcf_unique_on_core` / **`firstOrder_dcf_unique_on_core_of_oz`** (WH-uniqueness) | **✓ DONE** — both halves; real-space core uniqueness via PYE.5. **2026-08-11: the left inverse is no longer assumed** — `_of_oz` derives it from the zeroth-order OZ `(1+H̃₀)(1−C̃₀)=1` (`Matrix.mul_eq_one_comm`), so it rests only on OZ + the `γ=1` line + injectivity |
-| FOEQ.5 ⭐⭐ | existence of the derivative | ◑ **Jacobian condition ✓, IFT application ✓, and item (i)'s STRUCTURAL core ✓ (2026-08-11)** — `bhResidualShape_hasFDerivAt`; the residue of item (i) is now only the literal `F,P` transcription + the C¹ neighborhood upgrade for the IFT — see below |
+| FOEQ.5 ⭐⭐ | existence of the derivative | ◑ **Jacobian ✓, IFT ✓, item (i) structural core ✓, AND the C¹ upgrade ✓ (2026-08-11)** — `msa_amplitude_differentiable_of_bh_shape`: from `F,P` **`C¹`** + the vanishing-`G`-derivative structure + `F₀≠0` + the PY base equation, the amplitude is differentiable at `K=0`, **no abstract `f₂` hypothesis**. Item (i)'s residue is now **only (a)** the literal transcription of the BH `F,P` — see below |
 | MSAEXACT.5 ⭐ | `firstOrder_amplitude_eq_hardSphere_dressed` | **✓ DONE** (same file) |
 
 `#print axioms` = the standard three on **all** theorems, the FOEQ.4/5 additions included (verified
@@ -897,13 +897,22 @@ via `HasFDerivAt.mul`/`.prodMk` and `clm_apply_of_snd_zero` (a linear functional
 coordinate acts as `p.1·L(1,0)`), axiom-clean. So the ⭐ "`Dt=0` kills every `G`-dependence" insight
 is now a theorem, and it *supplies the `hJac` input* of `msa_amplitude_differentiable_of_bh_system`.
 
-**The residue of item (i)** is therefore only (a) the *literal* transcription of the BH `F, P` in
-`(Dt, G)` (`waisman_msa_closed_form.md` §7f–§7g — polynomials and `exp`, three known print errors, and
-the `2×2` `N=1` system where every `e^{z}` cancels) **plus** their vanishing-`G`-derivative property,
-and (b) the **C¹ upgrade** — `bhResidualShape_hasFDerivAt` is pointwise at `(0,p₀)`, whereas the IFT
-engine consumes the *eventual* `df₂` and continuity `cf₂` (a `ContDiff` statement on `F, P`, not a
-single-point one). Neither is analysis beyond calculus; both are bounded. General `N` gated on
-MSAEMIX. Until (a)+(b) land, `f` and its Jacobian identification are still the engine's hypotheses.
+**The C¹ upgrade (b) is now done (2026-08-11):** `msa_amplitude_differentiable_of_bh_shape`. Rather
+than feed the curried bivariate IFT its four partial-derivative hypotheses, it uses the **uncurried
+prod-domain IFT** (`exists_hasDerivAt_root_of_prodDomain_ift`, wrapping
+`HasStrictFDerivAt.implicitFunctionOfProdDomain`), which consumes a *single* strict derivative — and a
+`C¹` map supplies that. The coupling-scaled BH map `g(K,Dt,G) = (Dt·F − 2πK/z, 2π·G·F − P)` is `C¹`
+(`fun_prop` from `ContDiff F`, `ContDiff P`), its second-factor partial `∂₂g(0,p₀) = g' ∘L inr` at the
+PY point equals the block-triangular `bhResidualShape_hasFDerivAt` Jacobian (`HasFDerivAt.comp` with
+`inr`, then `HasFDerivAt.unique`), invertible from `F₀≠0`; the IFT gives the differentiable root. So
+the whole analytic half — strict differentiability, the eventual solve, continuity — is discharged.
+
+**The residue of item (i) is therefore only (a):** the *literal* transcription of the BH `F, P` in
+`(Dt, G)` (`waisman_msa_closed_form.md` §7f–§7g — polynomials and `exp`, three known print errors, the
+`2×2` `N=1` system where every `e^{z}` cancels) **plus** their `C¹`-ness and the two facts the capstone
+takes as hypotheses: the vanishing-`G`-derivative property (`fderiv F/P (0,G₀) (0,1)=0`) and the PY
+base equation `2π G₀ F₀ = P₀`. That is pure algebra/transcription, no analysis. General `N` gated on
+MSAEMIX. Until (a) lands, `F, P` and those two facts are still the capstone's hypotheses.
 
 ## Numerical witnesses — and what they do *not* establish
 

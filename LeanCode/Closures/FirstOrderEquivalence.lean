@@ -438,6 +438,60 @@ theorem exists_hasDerivAt_root_of_prodDomain_ift
   · have h := (dg.hasStrictFDerivAt_implicitFunctionOfProdDomain hinv).hasFDerivAt.hasDerivAt
     simpa using h
 
+/-- ⭐⭐ **FOEQ.5 — item (i) discharged for a `C¹` Blum–Høye system (the C¹ upgrade).**  Let
+`F, P : ℝ × ℝ → ℝ` be `C¹`, and suppose (theory note §7g):
+
+* `F` and `P` enter the unknown `G` **only through `Dt`** — `∂F/∂G` and `∂P/∂G` vanish at the base
+  point `(0, G₀)` (`hFG`, `hPG`);
+* the hard-sphere Baxter factor is nonzero, `F(0,G₀) ≠ 0` (`FMSA.HardSphere.Q0_ne_zero_at_yukawa`);
+* the Percus–Yevick point solves the second Blum–Høye equation, `2π·G₀·F(0,G₀) = P(0,G₀)` (`hbase`).
+
+Then the MSA tail amplitude `K ↦ Dt(K)·e^z` is **differentiable at `K = 0`** — with **no** abstract
+`f₂`/`df₂` hypothesis: the coupling-scaled Blum–Høye map
+`g(K, Dt, G) = (Dt·F − 2πK/z, 2π·G·F − P)` is `C¹` (so strictly differentiable), its second-factor
+partial at the PY point is the block-triangular `bhResidualShape_hasFDerivAt` Jacobian, invertible by
+`bhJacobianCLM_isInvertible`, and the prod-domain IFT produces the differentiable root.
+
+This is exactly `msa_amplitude_differentiable_of_bh_system` but with the Jacobian **derived** from the
+shape rather than assumed.  Item (i)'s residue is now only the *literal* transcription of the BH `F, P`
+(a) — everything analytic (b, the C¹ upgrade) is discharged here. -/
+theorem msa_amplitude_differentiable_of_bh_shape
+    {F P : (ℝ × ℝ) → ℝ} {G₀ z : ℝ}
+    (hF : ContDiff ℝ 1 F) (hP : ContDiff ℝ 1 P)
+    (hFG : fderiv ℝ F (0, G₀) (0, 1) = 0) (hPG : fderiv ℝ P (0, G₀) (0, 1) = 0)
+    (hFne : F (0, G₀) ≠ 0)
+    (hbase : 2 * π * (G₀ * F (0, G₀)) = P (0, G₀)) :
+    ∃ D : ℝ → ℝ, D 0 = 0 ∧ DifferentiableAt ℝ D 0 := by
+  set g : ℝ × (ℝ × ℝ) → (ℝ × ℝ) :=
+    fun Kp => (Kp.2.1 * F Kp.2 - 2 * π * Kp.1 / z, 2 * π * (Kp.2.2 * F Kp.2) - P Kp.2) with hgdef
+  have hFd : HasFDerivAt F (fderiv ℝ F (0, G₀)) (0, G₀) :=
+    (hF.differentiable (by norm_num)).differentiableAt.hasFDerivAt
+  have hPd : HasFDerivAt P (fderiv ℝ P (0, G₀)) (0, G₀) :=
+    (hP.differentiable (by norm_num)).differentiableAt.hasFDerivAt
+  have hg : ContDiff ℝ 1 g := by rw [hgdef]; fun_prop
+  have dg : HasStrictFDerivAt g (fderiv ℝ g (0, (0, G₀))) (0, (0, G₀)) :=
+    hg.contDiffAt.hasStrictFDerivAt one_ne_zero
+  have hbase0 : g (0, (0, G₀)) = 0 := by
+    have hgval : g (0, (0, G₀))
+        = (0 * F (0, G₀) - 2 * π * 0 / z, 2 * π * (G₀ * F (0, G₀)) - P (0, G₀)) := by rw [hgdef]
+    rw [hgval, Prod.mk_eq_zero]
+    exact ⟨by ring, sub_eq_zero.mpr hbase⟩
+  have hshape := bhResidualShape_hasFDerivAt (F := F) (P := P) (G₀ := G₀) (F₀ := F (0, G₀))
+    (kterm := 2 * π * 0 / z) hFd hPd hFG hPG rfl
+  have hpartial : HasFDerivAt (fun p => g (0, p))
+      ((fderiv ℝ g (0, (0, G₀))) ∘L ContinuousLinearMap.inr ℝ ℝ (ℝ × ℝ)) (0, G₀) :=
+    dg.hasFDerivAt.comp (0, G₀) (ContinuousLinearMap.inr ℝ ℝ (ℝ × ℝ)).hasFDerivAt
+  have hJac : (fderiv ℝ g (0, (0, G₀))) ∘L ContinuousLinearMap.inr ℝ ℝ (ℝ × ℝ)
+      = bhJacobianCLM (F (0, G₀))
+        (2 * π * G₀ * fderiv ℝ F (0, G₀) (1, 0) - fderiv ℝ P (0, G₀) (1, 0)) :=
+    hpartial.unique hshape
+  have hinv := hJac ▸ bhJacobianCLM_isInvertible hFne
+  obtain ⟨ψ, ψ', hψ0, _, hψ'⟩ := exists_hasDerivAt_root_of_prodDomain_ift dg hbase0 hinv
+  refine ⟨fun K => (ψ K).1 * exp z, by simp [hψ0], ?_⟩
+  have h1 : HasDerivAt (fun K => (ψ K).1) ψ'.1 0 :=
+    (ContinuousLinearMap.fst ℝ ℝ ℝ).hasFDerivAt.comp_hasDerivAt (0 : ℝ) hψ'
+  exact (h1.mul_const (exp z)).differentiableAt
+
 end FOEQ5
 
 /-! ### FOEQ.4 ⭐ — the `γ = 1` line determines the DCF in real space (the WH-uniqueness half)
@@ -650,4 +704,5 @@ theorem cauchy_convolution_middle_empty_iff {γ : ℕ} (hγ : 1 ≤ γ) :
 end FOEQAllOrders
 
 end FMSA.FirstOrderEquivalence
+
 
