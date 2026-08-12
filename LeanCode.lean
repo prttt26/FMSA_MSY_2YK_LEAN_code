@@ -185,3 +185,12 @@ import LeanCode.YukawaOZ.MSAClosedForm
 import LeanCode.YukawaOZ.MSAElimination
 import LeanCode.YukawaOZ.MSABaxterTransform
 import LeanCode.Closures.FirstOrderEquivalence
+
+-- The FMSA-DP paper's scope and axiom gate.  Imported last, and deliberately:
+-- it contains no mathematics, only #guard_msgs blocks asserting the axiom set of
+-- each result the paper cites.  `lake build` therefore FAILS if the paper's
+-- central verification claim stops being true, instead of that being discovered
+-- by re-auditing the ledger by hand.
+--
+-- If a guard here fails, the fix is normally the PAPER, not the guard.
+import LeanCode.FMSAProject
