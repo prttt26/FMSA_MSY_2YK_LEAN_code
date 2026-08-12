@@ -744,8 +744,8 @@ which is why FOEQ.1 is small and why the closure layer is not the gap.
 | FOEQ.1 | `msaOuter_hasDerivAt`, `msaOuter_eq_smul_deriv`, `mayerF_ne_msaOuter` | **✓ DONE** |
 | FOEQ.2 | supports are `s`-free | ✓ discharged by construction (record-only) |
 | FOEQ.3 ⭐ | `oz_deriv_eq_firstOrderLine` | **✓ DONE** |
-| FOEQ.4 | `firstOrder_dcf_of_oz_deriv` (algebraic) **+** `firstOrder_khat_unique` / `firstOrder_dcf_unique_on_core` (WH-uniqueness) | **✓ DONE 2026-08-10** — both halves; the `γ=1` line's real-space core solution is unique via PYE.5's `inner_core_dcf_eq_of_khat_eq` |
-| FOEQ.5 ⭐⭐ | existence of the derivative | ◑ **Jacobian condition ✓ AND IFT application ✓ (2026-08-10)**; only item (i), the Blum–Høye transcription, remains — see below |
+| FOEQ.4 | `firstOrder_dcf_of_oz_deriv` (algebraic) **+** `firstOrder_khat_unique` / `firstOrder_dcf_unique_on_core` / **`firstOrder_dcf_unique_on_core_of_oz`** (WH-uniqueness) | **✓ DONE** — both halves; real-space core uniqueness via PYE.5. **2026-08-11: the left inverse is no longer assumed** — `_of_oz` derives it from the zeroth-order OZ `(1+H̃₀)(1−C̃₀)=1` (`Matrix.mul_eq_one_comm`), so it rests only on OZ + the `γ=1` line + injectivity |
+| FOEQ.5 ⭐⭐ | existence of the derivative | ◑ **Jacobian condition ✓, IFT application ✓, and item (i)'s STRUCTURAL core ✓ (2026-08-11)** — `bhResidualShape_hasFDerivAt`; the residue of item (i) is now only the literal `F,P` transcription + the C¹ neighborhood upgrade for the IFT — see below |
 | MSAEXACT.5 ⭐ | `firstOrder_amplitude_eq_hardSphere_dressed` | **✓ DONE** (same file) |
 
 `#print axioms` = the standard three on **all** theorems, the FOEQ.4/5 additions included (verified
@@ -888,14 +888,22 @@ Both are now in `Closures/FirstOrderEquivalence.lean`, `#print axioms` = the sta
 root is physical, while the IFT only needs *a* root with nonsingular Jacobian, and `K = 0` supplies it
 (MSAEXACT.4).
 
-**What remains is item (i) only:** that the abstract `f` fed to the engine *is* the Blum–Høye system,
-with `∂₂f(0,p₀)` the block-triangular Jacobian above. That is the faithful transcription of
-`F, A, q′, γ, Q̂` in `(Dt, G)` — polynomials and `exp`, no analysis, but genuine algebra with three
-known print errors in the source (`waisman_msa_closed_form.md` §7f–§7g). Do `N=1` first — the BH
-system there is **2×2**, not three quadratics, and in the variables `Dt = D e^{−z}`, `G = ĝ(z)e^{z}`
-every `e^{z}` cancels analytically (§7f; in the printed `(D, γ)` variables the system is numerically
-unusable, `D ~ 3e12` at Waisman's point). General `N` gated on MSAEMIX. Until item (i) lands, `f` and
-its Jacobian identification are the engine's hypotheses, and the group stays conditional.
+**Item (i)'s STRUCTURAL core is now proved (2026-08-11):** `bhResidualShape_hasFDerivAt`. The
+block-triangular Jacobian is not an accident of the Blum–Høye algebra but a consequence of its
+*shape*: for a residual map `f(Dt,G) = (Dt·F − 2πK/z, 2πG·F − P/z²)`, IF `F` and `P` have vanishing
+`G`-directional derivative at the base point (`F'(0,1)=0`, `P'(0,1)=0` — precisely "`G` enters both
+only through `Dt`"), then `∂₂f(0,G₀) = bhJacobianCLM F₀ c` with `c = 2π G₀ F'(1,0) − P'(1,0)`. Proved
+via `HasFDerivAt.mul`/`.prodMk` and `clm_apply_of_snd_zero` (a linear functional killing the second
+coordinate acts as `p.1·L(1,0)`), axiom-clean. So the ⭐ "`Dt=0` kills every `G`-dependence" insight
+is now a theorem, and it *supplies the `hJac` input* of `msa_amplitude_differentiable_of_bh_system`.
+
+**The residue of item (i)** is therefore only (a) the *literal* transcription of the BH `F, P` in
+`(Dt, G)` (`waisman_msa_closed_form.md` §7f–§7g — polynomials and `exp`, three known print errors, and
+the `2×2` `N=1` system where every `e^{z}` cancels) **plus** their vanishing-`G`-derivative property,
+and (b) the **C¹ upgrade** — `bhResidualShape_hasFDerivAt` is pointwise at `(0,p₀)`, whereas the IFT
+engine consumes the *eventual* `df₂` and continuity `cf₂` (a `ContDiff` statement on `F, P`, not a
+single-point one). Neither is analysis beyond calculus; both are bounded. General `N` gated on
+MSAEMIX. Until (a)+(b) land, `f` and its Jacobian identification are still the engine's hypotheses.
 
 ## Numerical witnesses — and what they do *not* establish
 

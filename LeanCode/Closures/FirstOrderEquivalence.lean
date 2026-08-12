@@ -362,6 +362,58 @@ theorem msa_amplitude_differentiable_of_bh_system
     (ContinuousLinearMap.fst ℝ ℝ ℝ).hasFDerivAt.comp_hasDerivAt (0 : ℝ) hψ'
   exact (h1.mul_const (exp z)).differentiableAt
 
+/-! ### FOEQ.5 — item (i): the block-triangular Jacobian is a STRUCTURAL fact of the BH shape
+
+The one thing `msa_amplitude_differentiable_of_bh_system` assumes — that `∂₂f(0,p₀)` is the
+block-triangular `bhJacobianCLM F₀ c` — is not an accident of the Blum–Høye algebra but a consequence
+of its *shape*: at `K = 0` the base point has `Dt = 0`, and both `F` and the bracket `P` depend on the
+unknown `G` **only through `Dt`**, so their `G`-derivatives vanish there.  The lemma below proves the
+block-triangular Jacobian from exactly that structural input, reducing item (i) to the (pure,
+analysis-free) transcription of `F, P` and the vanishing-`G`-derivative property. -/
+
+/-- A real-linear functional on `ℝ × ℝ` that kills the second coordinate direction acts as
+`L p = p.1 · L(1,0)`. -/
+theorem clm_apply_of_snd_zero (L : (ℝ × ℝ) →L[ℝ] ℝ) (hL : L (0, 1) = 0) (p : ℝ × ℝ) :
+    L p = p.1 * L (1, 0) := by
+  conv_lhs => rw [show p = p.1 • ((1 : ℝ), (0 : ℝ)) + p.2 • ((0 : ℝ), (1 : ℝ)) by ext <;> simp]
+  rw [map_add, map_smul, map_smul, hL, smul_zero, add_zero, smul_eq_mul]
+
+/-- ⭐ **FOEQ.5, item (i) core — "`Dt = 0` kills every `G`-dependence" ⇒ block-triangular Jacobian.**
+For a residual map of the Blum–Høye shape
+
+    f (Dt, G) = ( Dt·F(Dt,G) − k ,  2π·G·F(Dt,G) − P(Dt,G) )
+
+at the base point `(0, G₀)` (where `Dt = 0`), if `F` and `P` are differentiable with `G`-directional
+derivative **zero** (`F'(0,1) = 0`, `P'(0,1) = 0` — the fact that `G` enters both only through the
+factor `Dt`), then the derivative in the unknowns is the block lower-triangular Jacobian
+`bhJacobianCLM F₀ c` with `F₀ = F(0,G₀)` and `c = 2π·G₀·F'(1,0) − P'(1,0)`.
+
+This is exactly the Jacobian `bhJacobianCLM_isInvertible` needs; item (i) is now only the transcription
+of the BH `F, P` (`waisman_msa_closed_form.md` §7g) plus their vanishing-`G`-derivative property. -/
+theorem bhResidualShape_hasFDerivAt {F P : (ℝ × ℝ) → ℝ} {G₀ F₀ kterm : ℝ}
+    {F' P' : (ℝ × ℝ) →L[ℝ] ℝ}
+    (hF : HasFDerivAt F F' (0, G₀)) (hP : HasFDerivAt P P' (0, G₀))
+    (hFG : F' (0, 1) = 0) (hPG : P' (0, 1) = 0) (hF0 : F (0, G₀) = F₀) :
+    HasFDerivAt (fun p : ℝ × ℝ => (p.1 * F p - kterm, 2 * π * (p.2 * F p) - P p))
+      (bhJacobianCLM F₀ (2 * π * G₀ * F' (1, 0) - P' (1, 0))) (0, G₀) := by
+  have hfst : HasFDerivAt (fun p : ℝ × ℝ => p.1) (ContinuousLinearMap.fst ℝ ℝ ℝ) (0, G₀) :=
+    (ContinuousLinearMap.fst ℝ ℝ ℝ).hasFDerivAt
+  have hsnd : HasFDerivAt (fun p : ℝ × ℝ => p.2) (ContinuousLinearMap.snd ℝ ℝ ℝ) (0, G₀) :=
+    (ContinuousLinearMap.snd ℝ ℝ ℝ).hasFDerivAt
+  have h1 := (hfst.mul hF).sub_const kterm
+  have h2 := ((hsnd.mul hF).const_mul (2 * π)).sub hP
+  refine (h1.prodMk h2).congr_fderiv
+    (ContinuousLinearMap.ext fun p => Prod.ext_iff.mpr ⟨?_, ?_⟩)
+  · simp only [ContinuousLinearMap.prod_apply, ContinuousLinearMap.add_apply,
+      ContinuousLinearMap.smul_apply, ContinuousLinearMap.coe_fst', smul_eq_mul, bhJacobianCLM_apply,
+      hF0]
+    ring
+  · simp only [ContinuousLinearMap.prod_apply, ContinuousLinearMap.sub_apply,
+      ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_snd',
+      smul_eq_mul, bhJacobianCLM_apply, hF0, clm_apply_of_snd_zero F' hFG p,
+      clm_apply_of_snd_zero P' hPG p]
+    ring
+
 end FOEQ5
 
 /-! ### FOEQ.4 ⭐ — the `γ = 1` line determines the DCF in real space (the WH-uniqueness half)
@@ -426,6 +478,32 @@ theorem firstOrder_dcf_unique_on_core {a : ℂ} (ha : a ≠ 0) {i j : Fin N} {Ri
       (hinv k) (hoz1 k) (hoz2 k)
   exact FMSA.FirstOrderClosure.inner_core_dcf_eq_of_khat_eq ha hc1def hc2def hEq
     hint1 hF1 hint2 hF2 hcc1 hcc2
+
+/-- ⭐ **FOEQ.4 — the left inverse is not assumed, it is the zeroth-order OZ.**  The same real-space
+core uniqueness as `firstOrder_dcf_unique_on_core`, but with the invertibility of `1+H̃₀` **derived**
+rather than hypothesised: the zeroth-order Ornstein–Zernike relation `(1+H̃₀)(1−C̃₀) = 1` makes
+`1−C̃₀` a right inverse, hence — square matrices — a left inverse (`Matrix.mul_eq_one_comm`).  So the
+first-order DCF's real-space value on the core rests only on OZ (zeroth order **and** the `γ = 1`
+line, both from FOEQ.3) together with PYE.5's transform injectivity — no ad-hoc inverse. -/
+theorem firstOrder_dcf_unique_on_core_of_oz {a : ℂ} (ha : a ≠ 0) {i j : Fin N} {Rij : ℝ}
+    (H0 C0 H1 : ℝ → Matrix (Fin N) (Fin N) ℂ)
+    (Chat1 Chat2 : ℝ → Matrix (Fin N) (Fin N) ℂ)
+    (hoz0 : ∀ k, (1 + H0 k) * (1 - C0 k) = 1)
+    (hoz1 : ∀ k, H1 k * (1 - C0 k) = (1 + H0 k) * Chat1 k)
+    (hoz2 : ∀ k, H1 k * (1 - C0 k) = (1 + H0 k) * Chat2 k)
+    {c1 c2 : ℝ → ℝ}
+    (hc1def : FMSA.FirstOrderClosure.IsRadialEntry Chat1 a i j c1)
+    (hc2def : FMSA.FirstOrderClosure.IsRadialEntry Chat2 a i j c2)
+    (hint1 : MeasureTheory.Integrable (fun v => ((v * c1 |v| : ℝ) : ℂ)))
+    (hF1 : MeasureTheory.Integrable (𝓕 (fun v => ((v * c1 |v| : ℝ) : ℂ))))
+    (hint2 : MeasureTheory.Integrable (fun v => ((v * c2 |v| : ℝ) : ℂ)))
+    (hF2 : MeasureTheory.Integrable (𝓕 (fun v => ((v * c2 |v| : ℝ) : ℂ))))
+    (hcc1 : ∀ r ∈ Set.Ioo (0 : ℝ) Rij, ContinuousAt (fun v => ((v * c1 |v| : ℝ) : ℂ)) r)
+    (hcc2 : ∀ r ∈ Set.Ioo (0 : ℝ) Rij, ContinuousAt (fun v => ((v * c2 |v| : ℝ) : ℂ)) r) :
+    ∀ r ∈ Set.Ioo (0 : ℝ) Rij, c1 r = c2 r :=
+  firstOrder_dcf_unique_on_core ha H0 C0 H1 (fun k => 1 - C0 k) Chat1 Chat2
+    (fun k => Matrix.mul_eq_one_comm.mp (hoz0 k)) hoz1 hoz2
+    hc1def hc2def hint1 hF1 hint2 hF2 hcc1 hcc2
 
 end FOEQ4
 
@@ -548,3 +626,4 @@ theorem cauchy_convolution_middle_empty_iff {γ : ℕ} (hγ : 1 ≤ γ) :
 end FOEQAllOrders
 
 end FMSA.FirstOrderEquivalence
+
