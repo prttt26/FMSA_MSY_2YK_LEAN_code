@@ -125,11 +125,19 @@ theorem cHSmixRaw_support_subset (X : Mix N M) (i j : Fin N) :
   show qFwd X i j t + pMixEntry X j i t - ∑ l, qpConv X i l j t = 0
   rw [e1, e2, e3]; ring
 
-/-- **Zeroth-order inner HS DCF (odd part)** `cHSodd_ij(x) = cHSmixRaw_ij(x) − cHSmixRaw_ij(−x)` — the
-odd extraction that isolates the physical DCF from the full real-space `[Cmix0]_ij`, mirroring the
-first-order `MixtureDCFSmooth.dcfOdd` (`= 𝒲_ij(x) − 𝒲_ij(−x)`).  Under the same normalization it **is**
-`2π√(ρᵢρⱼ)·r·c^HS_ij(r)` — the zeroth-order analog of `dcfOdd = 2π√ρ·r·c^(1)`.  (`r·c` is odd, so the
-odd part of the assembly is exactly the DCF times `2π√ρ·r`; the even part is the delta/contact data.) -/
+/-- **Odd part of the zeroth-order assembly** `cHSodd_ij(x) = cHSmixRaw_ij(x) − cHSmixRaw_ij(−x)`,
+mirroring the first-order `MixtureDCFSmooth.dcfOdd` (`= 𝒲_ij(x) − 𝒲_ij(−x)`).
+
+**⚠ CAUTION — this is DEGENERATE on the diagonal (`cHSodd_diag_eq_zero`).**  Unlike the first order,
+the zeroth-order (hard-sphere) assembly `cHSmixRaw X i i` is EVEN (`cHSmixRaw_diag_even`: the linear
+`qFwd/pMixEntry` combine to an even function and each `qpConv X i l i` is an autocorrelation), so
+its odd part vanishes identically.  The first-order `dcfOdd` is nonzero only because the Yukawa
+kernel `ℬ` breaks the even symmetry.  `c^HS` is itself EVEN, so the odd extraction is the WRONG
+one at zeroth order — the correct `r·c^HS` object is the Baxter *derivative* form
+(`HardSphere.baxter_factorization_inner`: `2πρ r c_HS = ∫_r^σ q0_poly(r'−r)·q0_poly'(r') −
+q0_poly'(r)`, the shell-kernel inverse of `cHSmixRaw`), which carries `q0_poly'` and a boundary
+term — neither
+present in the plain self-convolution here. -/
 noncomputable def cHSodd (X : Mix N M) (i j : Fin N) : ℝ → ℝ :=
   fun x => cHSmixRaw X i j x - cHSmixRaw X i j (-x)
 
@@ -155,6 +163,93 @@ theorem cHSodd_support_subset (X : Mix N M) (i j : Fin N) :
     exact hc (Set.mem_Icc.mpr ⟨by linarith [hmem.2], by linarith [hmem.1]⟩)
   change cHSmixRaw X i j x - cHSmixRaw X i j (-x) = 0
   rw [e1, e2]; ring
+
+/-- **Odd-part quotient** `c_HS_mix_ij(r) := cHSodd_ij(r)/(2π√(ρᵢρⱼ)·r)`.
+
+**⚠ DEGENERATE on the diagonal — `c_HS_mix X i i ≡ 0` (`c_HS_mix_diag_eq_zero`).**  It does NOT
+reduce
+to the (nonzero, even) scalar `c_HS` at N=1: `cHSodd` (its numerator) is the odd part of an EVEN
+assembly, hence `0` (see `cHSodd`).  The correct real-space mixture DCF is the shell-kernel inverse
+`cHSmixRaw` (the Baxter *derivative* form, `HardSphere.baxter_factorization_inner`), which recovers
+`c_HS` at N=1 (`MixtureHSDCFFin1.rcHS_physMixN_fin1`).  This quotient is retained only to record the
+failed odd-extraction route; do NOT use it as the DCF. -/
+noncomputable def c_HS_mix (X : Mix N M) (i j : Fin N) (r : ℝ) : ℝ :=
+  cHSodd X i j r / (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ j) * r)
+
+/-- The defining relation `cHSodd = 2π√(ρᵢρⱼ)·r·c^HS_mix` (`r ≠ 0`, densities positive). -/
+theorem cHSodd_eq_c_HS_mix (X : Mix N M) (i j : Fin N) {r : ℝ} (hr : r ≠ 0)
+    (hρi : 0 < X.ρ i) (hρj : 0 < X.ρ j) :
+    cHSodd X i j r = 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ j) * r * c_HS_mix X i j r := by
+  have hs : Real.sqrt (X.ρ i * X.ρ j) ≠ 0 := Real.sqrt_ne_zero'.mpr (by positivity)
+  simp only [c_HS_mix]
+  field_simp
+
+/-- `c^HS_mix` is supported inside the core `[−Rᵢⱼ, Rᵢⱼ]` (from `cHSodd`'s support). -/
+theorem c_HS_mix_eq_zero_of_R_lt_abs (X : Mix N M) (i j : Fin N) {r : ℝ} (hr : X.R i j < |r|) :
+    c_HS_mix X i j r = 0 := by
+  have hz : cHSodd X i j r = 0 := Function.notMem_support.mp (fun h => by
+    have hmem := cHSodd_support_subset X i j h
+    rw [Set.mem_Icc] at hmem
+    rcases abs_cases r with ⟨ha, _⟩ | ⟨ha, _⟩ <;> rw [ha] at hr <;> linarith [hmem.1, hmem.2])
+  simp only [c_HS_mix, hz, zero_div]
+
+/-! ### ⚠ Degeneracy of the odd extraction at zeroth order
+
+The odd part of the (even) hard-sphere assembly `cHSmixRaw X i i` is identically zero.  This proves
+`cHSodd`-based `c_HS_mix` does NOT reduce to the scalar `c_HS` at N=1; the correct object is the
+Baxter derivative form (`baxter_factorization_inner`), pursued in `MixtureHSDCFFin1`. -/
+
+/-- **Reflection relation** `pMixEntry X i l u = qFwd X i l (−u)` — the two kernels carry the same
+`2π√(ρᵢρₗ)` coefficient, so the reflected kernel is literally `qFwd` at `−u`. -/
+theorem pMixEntry_eq_qFwd_neg (X : Mix N M) (i l : Fin N) (u : ℝ) :
+    pMixEntry X i l u = qFwd X i l (-u) := by
+  simp only [pMixEntry, qFwd]
+
+/-- `qpConv X i l i x = ∫ s, qFwd(s)·qFwd(s−x)` — autocorrelation form (forward × reflection). -/
+theorem qpConv_diag_autocorr (X : Mix N M) (i l : Fin N) (x : ℝ) :
+    qpConv X i l i x = ∫ s, qFwd X i l s * qFwd X i l (s - x) := by
+  simp only [qpConv, convolution_def, ContinuousLinearMap.mul_apply', pMixEntry_eq_qFwd_neg]
+  refine integral_congr_ae (Filter.Eventually.of_forall fun s => ?_)
+  dsimp only
+  rw [neg_sub]
+
+/-- **`qpConv X i l i` is even** — autocorrelation of `qFwd X i l`, by translation invariance of
+`volume` (shift `s ↦ s − t`). -/
+theorem qpConv_diag_even (X : Mix N M) (i l : Fin N) (t : ℝ) :
+    qpConv X i l i (-t) = qpConv X i l i t := by
+  rw [qpConv_diag_autocorr, qpConv_diag_autocorr]
+  simp only [sub_neg_eq_add]
+  rw [← integral_sub_right_eq_self (fun s => qFwd X i l s * qFwd X i l (s + t)) t]
+  refine integral_congr_ae (Filter.Eventually.of_forall fun s => ?_)
+  dsimp only
+  have hs : s - t + t = s := by ring
+  rw [hs]; ring
+
+/-- **`cHSmixRaw X i i` is EVEN.**  The linear kernels `qFwd X i i(t)+pMixEntry X i i(t)` combine to
+an even function (each the other's reflection) and every `qpConv X i l i` is even. -/
+theorem cHSmixRaw_diag_even (X : Mix N M) (i : Fin N) (t : ℝ) :
+    cHSmixRaw X i i (-t) = cHSmixRaw X i i t := by
+  simp only [cHSmixRaw]
+  rw [Finset.sum_congr rfl (fun l _ => qpConv_diag_even X i l t)]
+  have h1 : qFwd X i i (-t) = pMixEntry X i i t := by simp only [qFwd, pMixEntry]
+  have h2 : pMixEntry X i i (-t) = qFwd X i i t := by simp only [qFwd, pMixEntry, neg_neg]
+  rw [h1, h2]; ring
+
+/-- **⚠ DEGENERACY — `cHSodd` vanishes identically on the diagonal.**  The zeroth-order assembly
+`cHSmixRaw X i i` is even (`cHSmixRaw_diag_even`), so its odd part is `0`.  (`dcfOdd`
+escapes this only because the Yukawa `ℬ` breaks the even symmetry.) -/
+theorem cHSodd_diag_eq_zero (X : Mix N M) (i : Fin N) (t : ℝ) :
+    cHSodd X i i t = 0 := by
+  simp only [cHSodd]
+  rw [cHSmixRaw_diag_even X i t]
+  ring
+
+/-- **⚠ The `cHSodd`-based `c_HS_mix` is identically `0` on the diagonal**, so it does NOT reduce to
+the (nonzero) scalar `c_HS`.  The odd extraction is the wrong one at zeroth order; the correct
+`r·c^HS` is the Baxter derivative form (`baxter_factorization_inner`, N=1 in `MixtureHSDCFFin1`). -/
+theorem c_HS_mix_diag_eq_zero (X : Mix N M) (i : Fin N) (r : ℝ) :
+    c_HS_mix X i i r = 0 := by
+  simp only [c_HS_mix, cHSodd_diag_eq_zero, zero_div]
 
 /-! ### Convolution → interval-integral bridge (prerequisite for the closed form / core-seed) -/
 

@@ -414,6 +414,30 @@ theorem bhResidualShape_hasFDerivAt {F P : (ℝ × ℝ) → ℝ} {G₀ F₀ kter
       clm_apply_of_snd_zero P' hPG p]
     ring
 
+/-! ### FOEQ.5 — item (i): the C¹ upgrade (the IFT engine + the concrete BH-shape capstone) -/
+
+/-- **The uncurried prod-domain IFT, as `HasDerivAt`.**  A map `g : ℝ × (ℝ×ℝ) → (ℝ×ℝ)` strictly
+differentiable at `(0, p₀)` with `g(0,p₀) = 0` and **invertible second-factor partial**
+`g' ∘L inr` has a differentiable implicit root `ψ` through it (`ψ 0 = p₀`, `g(K, ψ K) = 0` near `0`,
+`HasDerivAt ψ ψ' 0`).  This is `HasStrictFDerivAt.implicitFunctionOfProdDomain`; it consumes a *single*
+strict derivative — which a `C¹` map supplies — instead of the curried
+`exists_hasDerivAt_root_of_bivariate_ift`'s four partial-derivative hypotheses. -/
+theorem exists_hasDerivAt_root_of_prodDomain_ift
+    {g : ℝ × (ℝ × ℝ) → (ℝ × ℝ)} {p₀ : ℝ × ℝ} {g' : ℝ × (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)}
+    (dg : HasStrictFDerivAt g g' (0, p₀)) (hbase : g (0, p₀) = 0)
+    (hinv : (g' ∘L ContinuousLinearMap.inr ℝ ℝ (ℝ × ℝ)).IsInvertible) :
+    ∃ (ψ : ℝ → ℝ × ℝ) (ψ' : ℝ × ℝ),
+      ψ 0 = p₀ ∧ (∀ᶠ K in 𝓝 (0 : ℝ), g (K, ψ K) = 0) ∧ HasDerivAt ψ ψ' 0 := by
+  refine ⟨dg.implicitFunctionOfProdDomain hinv,
+    (-(g' ∘L ContinuousLinearMap.inr ℝ ℝ (ℝ × ℝ)).inverse ∘L
+      (g' ∘L ContinuousLinearMap.inl ℝ ℝ (ℝ × ℝ))) 1, ?_, ?_, ?_⟩
+  · have h := (dg.eventually_apply_eq_iff_implicitFunctionOfProdDomain hinv).self_of_nhds
+    simpa using h.mp rfl
+  · have h := dg.eventually_apply_implicitFunctionOfProdDomain hinv
+    simpa [hbase] using h
+  · have h := (dg.hasStrictFDerivAt_implicitFunctionOfProdDomain hinv).hasFDerivAt.hasDerivAt
+    simpa using h
+
 end FOEQ5
 
 /-! ### FOEQ.4 ⭐ — the `γ = 1` line determines the DCF in real space (the WH-uniqueness half)

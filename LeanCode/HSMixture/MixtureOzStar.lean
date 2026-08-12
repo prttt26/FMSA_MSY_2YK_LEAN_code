@@ -680,6 +680,112 @@ theorem matOzStar_of_shellClaims {N : ℕ} (Psi Phi Kmat Q : Matrix (Fin N) (Fin
     matShellConv_kdef_split Kmat Q (fun k l => fun x => Psi k l x / x) hsigma i j hfact
       (hQint i j r hr) (hSint i j r hr)]
 
+/-! ### Renewal read-out — the numerical-algebra primitives on `matBaxterPsiOuter`
+
+`matBaxterPsiOuterFun` is the constructed Banach–Volterra outer solution and satisfies
+`MatRenewalEq` (`matBaxterPsiOuter_matRenewalEq`).  These lemmas make its algebraic content explicit
+— the primitives on which the classical Wertheim–Thiele mixture-Baxter evaluation is built: the
+renewal **convolution reads out** as `Ψ − F`, and `Ψ` **meets the forcing at contact** `r = σ`.  So
+the renewal integral is never a fresh unknown downstream: it is `Ψouter − F` read off the built
+solution.  (The unequal-diameter intermediate renewal-form of `convolution_split_renewal_core`
+samples `Q` on its sub-zero tail with shifted argument `Q(v−w)` vs the read-out's `Q(r−w)`; the two
+coincide in the aligned/equal-diameter case, and the sub-zero shift is the residual computation.) -/
+
+/-- **The renewal convolution reads out as `Ψ − F`.**  Rearranging `MatRenewalEq`: on `[σ,∞)` the
+species-summed renewal integral `∑ₖ ∫_σ^r Qᵢₖ(r−t)·Ψₖⱼ(t) dt` equals `Ψouterᵢⱼ(r) − Fᵢⱼ(r)` — this
+convolution term is not an independent unknown but read off the solution and the forcing. -/
+theorem matRenewalConv_eq_sub {N : ℕ} {Psiouter Fmat Q : Matrix (Fin N) (Fin N) (ℝ → ℝ)}
+    {sigma : ℝ} (h : MatRenewalEq Psiouter Fmat Q sigma) (i j : Fin N) {r : ℝ} (hr : sigma ≤ r) :
+    ∑ k, ∫ t in sigma..r, Q i k (r - t) * Psiouter k j t = Psiouter i j r - Fmat i j r := by
+  have hh := h i j r hr
+  linarith [hh]
+
+/-- **Contact value** — `Ψouter(σ) = F(σ)`.  At `r = σ` the renewal integral `∫_σ^σ` vanishes, so
+the outer solution meets the forcing at contact. -/
+theorem matRenewal_contact {N : ℕ} {Psiouter Fmat Q : Matrix (Fin N) (Fin N) (ℝ → ℝ)}
+    {sigma : ℝ} (h : MatRenewalEq Psiouter Fmat Q sigma) (i j : Fin N) :
+    Psiouter i j sigma = Fmat i j sigma := by
+  have hh := h i j sigma le_rfl
+  simp only [intervalIntegral.integral_same, Finset.sum_const_zero, add_zero] at hh
+  exact hh
+
+/-- **Read-out for the CONSTRUCTED outer solution.**  `matRenewalConv_eq_sub` instantiated at
+`matBaxterPsiOuterFun` (whose `MatRenewalEq` is `matBaxterPsiOuter_matRenewalEq`): the renewal
+convolution of the Banach-built solution equals `Ψouter − F`, no remaining fixed-point content. -/
+theorem matBaxterPsiOuter_renewalConv_eq_sub {N : ℕ} (sigma : ℝ)
+    (Q F : ℝ → Matrix (Fin N) (Fin N) ℝ) (hQ : Continuous Q) (hF : Continuous F)
+    (i j : Fin N) {r : ℝ} (hr : sigma ≤ r) :
+    ∑ k, ∫ t in sigma..r, (Q (r - t)) i k * (matBaxterPsiOuterFun sigma Q F hQ hF t) k j
+      = (matBaxterPsiOuterFun sigma Q F hQ hF r) i j - (F r) i j :=
+  matRenewalConv_eq_sub (matBaxterPsiOuter_matRenewalEq sigma Q F hQ hF) i j hr
+
+/-- **Contact value for the CONSTRUCTED outer solution** — `matBaxterPsiOuterFun(σ) = F(σ)`. -/
+theorem matBaxterPsiOuter_contact {N : ℕ} (sigma : ℝ)
+    (Q F : ℝ → Matrix (Fin N) (Fin N) ℝ) (hQ : Continuous Q) (hF : Continuous F) (i j : Fin N) :
+    (matBaxterPsiOuterFun sigma Q F hQ hF sigma) i j = (F sigma) i j :=
+  matRenewal_contact (matBaxterPsiOuter_matRenewalEq sigma Q F hQ hF) i j
+
+/-! ### Sub-zero-tail shift alignment — aligning the renewal-form to the read-out
+
+The unequal-diameter intermediate renewal-form of `convolution_split_renewal_core` is
+`∫_σ^{v−λ} Q(v−w)·Ψ(w) dw`: its `Q`-argument origin is `v` but its upper limit is `v−λ ≠ v`, so it
+is NOT the read-out shape (`∫_σ^r Q(r−w)·Ψ(w)`, origin = upper limit `r`).  These lemmas align them:
+peel the interval `[v, v−λ]` off, leaving the read-out-shaped part `∫_σ^v` (origin = upper limit
+`v`) plus an explicit tail.  The tail equals `∫_λ^0 Q(s)·Ψ(v−s) ds` — `Q` over its SUB-ZERO support
+`[λ,0]`, the unequal-diameter piece the equal-diameter (`λ=0`) renewal never carries.  Then the
+matrix read-out `matRenewalConv_eq_sub` evaluates the aligned part as `Ψ − F`, so on `[σ,∞)` the
+whole renewal-form is `(Ψouter − F) +` (an explicit sub-zero-tail integral). -/
+
+/-- **Peel the sub-zero tail off the renewal-form.**  Interval additivity at `v`: the renewal-form
+(upper limit `v−λ`) is the read-out-aligned part `∫_σ^v Q(v−w)·Ψ(w)` (origin = upper limit `v`) plus
+the tail `∫_v^{v−λ} Q(v−w)·Ψ(w)` (the shifted piece, `Q`-argument `v−w ∈ [λ,0]`). -/
+theorem renewalForm_peel_subzero_tail (Q Psi : ℝ → ℝ) (lam sigma v : ℝ)
+    (h1 : IntervalIntegrable (fun w => Q (v - w) * Psi w) MeasureTheory.volume sigma v)
+    (h2 : IntervalIntegrable (fun w => Q (v - w) * Psi w) MeasureTheory.volume v (v - lam)) :
+    (∫ w in sigma..(v - lam), Q (v - w) * Psi w)
+      = (∫ w in sigma..v, Q (v - w) * Psi w)
+        + ∫ w in v..(v - lam), Q (v - w) * Psi w :=
+  (intervalIntegral.integral_add_adjacent_intervals h1 h2).symm
+
+/-- **The tail IS `Q` over its sub-zero support.**  Substituting `s = v−w`, the tail
+`∫_v^{v−λ} Q(v−w)·Ψ(w) dw = ∫_λ^0 Q(s)·Ψ(v−s) ds` — `Q` over `[λ,0]`, its sub-zero part.
+This makes "sub-zero tail" literal: it is exactly the support the equal-diameter kernel lacks. -/
+theorem subzero_tail_eq (Q Psi : ℝ → ℝ) (lam v : ℝ) :
+    (∫ w in v..(v - lam), Q (v - w) * Psi w)
+      = ∫ s in lam..0, Q s * Psi (v - s) := by
+  have key := intervalIntegral.integral_comp_sub_left (a := v) (b := v - lam)
+    (fun x => Q x * Psi (v - x)) v
+  simp only [sub_sub_cancel, sub_self] at key
+  exact key
+
+/-- **At equal diameters the tail vanishes.**  For `λ = 0` the sub-zero support `[λ,0] = [0,0]` is a
+point, so the tail is `0` and the alignment is exact (`matRenewalConv_eq_sub` alone). -/
+theorem subzero_tail_eq_zero_of_equalDiam (Q Psi : ℝ → ℝ) (v : ℝ) :
+    (∫ w in v..(v - 0), Q (v - w) * Psi w) = 0 := by
+  rw [subzero_tail_eq Q Psi 0 v, intervalIntegral.integral_same]
+
+/-- **Renewal-form = read-out `(Ψ − F)` + sub-zero tail (matrix).**  Combining the peel with the
+species-summed read-out: for `v ≥ σ`, `∑ₖ ∫_σ^{v−λ} Qᵢₖ(v−w)·Ψₖⱼ(w) = (Ψouterᵢⱼ(v) − Fᵢⱼ(v))
++ ∑ₖ ∫_v^{v−λ} Qᵢₖ(v−w)·Ψₖⱼ(w)`.  The aligned part is read off the solution; the residual is
+the explicit sub-zero-tail integral (`= 0` at equal diameters).  This is the exact content of the
+unequal-diameter correction — no implicit fixed point remains. -/
+theorem matRenewalForm_readout_add_tail {N : ℕ}
+    {Psiouter Fmat Q : Matrix (Fin N) (Fin N) (ℝ → ℝ)} {sigma lam : ℝ}
+    (h : MatRenewalEq Psiouter Fmat Q sigma) (i j : Fin N) {v : ℝ} (hv : sigma ≤ v)
+    (h1 : ∀ k, IntervalIntegrable (fun w => Q i k (v - w) * Psiouter k j w)
+      MeasureTheory.volume sigma v)
+    (h2 : ∀ k, IntervalIntegrable (fun w => Q i k (v - w) * Psiouter k j w)
+      MeasureTheory.volume v (v - lam)) :
+    (∑ k, ∫ w in sigma..(v - lam), Q i k (v - w) * Psiouter k j w)
+      = (Psiouter i j v - Fmat i j v)
+        + ∑ k, ∫ w in v..(v - lam), Q i k (v - w) * Psiouter k j w := by
+  have hsplit : ∀ k, (∫ w in sigma..(v - lam), Q i k (v - w) * Psiouter k j w)
+      = (∫ w in sigma..v, Q i k (v - w) * Psiouter k j w)
+        + ∫ w in v..(v - lam), Q i k (v - w) * Psiouter k j w :=
+    fun k => (intervalIntegral.integral_add_adjacent_intervals (h1 k) (h2 k)).symm
+  simp_rw [hsplit]
+  rw [Finset.sum_add_distrib, matRenewalConv_eq_sub h i j hv]
+
 end
 
 end FMSA.MixtureOzStar

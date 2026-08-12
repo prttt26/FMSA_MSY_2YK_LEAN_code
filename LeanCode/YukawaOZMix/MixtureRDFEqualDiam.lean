@@ -91,7 +91,8 @@ theorem matOzStar_equalDiam_unique {N : ℕ} (rhof : Fin N → ℝ) (hnonneg : �
           (fun k l => fun x => ((Real.sqrt (rhof k * rhof l) / rho) * baxterPsi eta sigma rho x) / x) r i j
         = matRadialConv (fun i j r => (Real.sqrt (rhof i * rhof j) / rho) * c_HS eta sigma r)
           (fun k l => fun x =>
-            (Psi' k l x - (Real.sqrt (rhof k * rhof l) / rho) * baxterPsi eta sigma rho x) / x) r i j)
+            (Psi' k l x - (Real.sqrt (rhof k * rhof l) / rho) * baxterPsi eta sigma rho x) / x)
+          r i j)
     (hbdd : ∀ i j, ∃ M : ℝ, ∀ r : ℝ,
       |Psi' i j r - (Real.sqrt (rhof i * rhof j) / rho) * baxterPsi eta sigma rho r| ≤ M)
     (hcont : ∀ i j, ContinuousOn

@@ -381,6 +381,85 @@ theorem swap_offdiag_of_keys (σ0 σ1 c ξ2 Qpp0 Qpp1 rg00 rg01 rg11 k : ℂ) (h
   field_simp
   ring
 
+/-- **MRS.7 — the coefficient-free structural swap, GENERAL `N`** (the general-`N` analog of
+`swap_offdiag_of_keys`).  For unequal diameters the `N`-species swap `Cmix0ᵢⱼ = Cmix0ⱼᵢ` is an
+AGGREGATE identity, but the physical coefficients are **rank-2 separable**
+(`Tᵢⱼ(k) = P(σᵢ,k)·Qppⱼ + Q(σᵢ,k)·c·σⱼ`, KEY 1), so the whole `∑ₗ` collapses into three moment
+constants — and only `ξ₂ = ∑ρσ²` matters (`mu0 = ∑ρQpp²`, `mu1 = ∑ρσQpp` appear but CANCEL, so they
+are left FREE here).  With `Ei = e^{σᵢk/2}`, `Ej = e^{σⱼk/2}` (exp atoms), `P`/`Q` the Baxter
+polynomial factors (`A = p₁`, `B = p₂` of `q0_entry_c`; primed = at `−k`), `Qpp = 2c + c²ξ₂σ`
+(KEY 2), `Sᵢⱼ = ∑ₗρₗTᵢₗ(k)Tⱼₗ(−k)` in moment form, the per-pair swap `(Ei/Ej)·(...) = (Ej/Ei)·(...)`
+(i.e. `Cmix0ᵢⱼ = Cmix0ⱼᵢ`, the common `rgᵢⱼ` factored) holds by `field_simp; ring`.  The species-sum
+is absorbed into `mu0, mu1, xi2` (via `rhoGeoPhys_mul_eq` + the `e^{±σₗk/2}` cancellation); this is
+the fixed-size algebraic heart that the general-`N` swap reduces to. -/
+theorem swap_pair_core (Ei Ej k si sj c mu0 mu1 xi2 : ℂ)
+    (hEi : Ei ≠ 0) (hEj : Ej ≠ 0) (hk : k ≠ 0) :
+    let A  := fun (E s : ℂ) => (1 - k*s - 1/E^2)/k^2
+    let B  := fun (E s : ℂ) => (1 - k*s + (k*s)^2/2 - 1/E^2)/k^3
+    let A' := fun (E s : ℂ) => (1 + k*s - E^2)/k^2
+    let B' := fun (E s : ℂ) => (1 + k*s + (k*s)^2/2 - E^2)/(-k)^3
+    let P  := fun (E s : ℂ) => s/2*A E s + B E s
+    let Q  := fun (E s : ℂ) => A E s
+    let P' := fun (E s : ℂ) => s/2*A' E s + B' E s
+    let Q' := fun (E s : ℂ) => A' E s
+    let Qpp := fun (s : ℂ) => 2*c + c^2*xi2*s
+    let Tijk  := P Ei si * Qpp sj + Q Ei si * c * sj
+    let Tjimk := P' Ej sj * Qpp si + Q' Ej sj * c * si
+    let Tjik  := P Ej sj * Qpp si + Q Ej sj * c * si
+    let Tijmk := P' Ei si * Qpp sj + Q' Ei si * c * sj
+    let Sij := mu0 * (P Ei si * P' Ej sj)
+             + c*mu1 * (P Ei si * Q' Ej sj + Q Ei si * P' Ej sj)
+             + c^2*xi2 * (Q Ei si * Q' Ej sj)
+    let Sji := mu0 * (P Ej sj * P' Ei si)
+             + c*mu1 * (P Ej sj * Q' Ei si + Q Ej sj * P' Ei si)
+             + c^2*xi2 * (Q Ej sj * Q' Ei si)
+    (Ei/Ej) * (Tijk + Tjimk - Sij) = (Ej/Ei) * (Tjik + Tijmk - Sji) := by
+  intro A B A' B' P Q P' Q' Qpp Tijk Tjimk Tjik Tijmk Sij Sji
+  simp only [A, B, A', B', P, Q, P', Q', Qpp, Tijk, Tjimk, Tjik, Tijmk, Sij, Sji]
+  field_simp
+  ring
+
+/-- **MRS.7 — the sum→moment collapse** (the general-`N` species-sum reduction).  With the rank-2
+separated Baxter factor `Tᵢₗ(s) = Pᵢ·Qppₗ + Qᵢ·c·σₗ` (KEY 1), the `ℓ`-sum
+`∑ₗ ρₗ·Tᵢₗ(k)·Tⱼₗ(−k)` collapses into THREE moment constants — `∑ρQpp²`, `∑ρσQpp`, `∑ρσ²` — with the
+`(i,j)`-data `Pᵢ,Qᵢ,Pⱼ,Qⱼ` (constant in `ℓ`) pulled out.  This turns the general-`N` aggregate
+swap into the fixed-size `swap_pair_core` (`mu0 = ∑ρQpp²`, `mu1 = ∑ρσQpp`, `xi2 = ∑ρσ²`). -/
+theorem sum_to_moment {N : ℕ} (rho Qpp sig : Fin N → ℂ) (Pi Qi Pj Qj c : ℂ) :
+    ∑ l, rho l * ((Pi * Qpp l + Qi * c * sig l) * (Pj * Qpp l + Qj * c * sig l))
+      = Pi * Pj * (∑ l, rho l * Qpp l ^ 2)
+        + c * (∑ l, rho l * (sig l * Qpp l)) * (Pi * Qj + Qi * Pj)
+        + c ^ 2 * (∑ l, rho l * sig l ^ 2) * (Qi * Qj) := by
+  simp only [Finset.mul_sum, Finset.sum_mul]
+  rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+  refine Finset.sum_congr rfl (fun l _ => ?_)
+  ring
+
+/-- **MRS.7 — the full quadratic-term reduction** (`Cmix0_entry_of_id_sub`'s `∑ₗ` →
+`swap_pair_core`'s `Sᵢⱼ`).  The density factor `ρgᵢₗ·ρgⱼₗ = ρₗ·rg` (`rhoGeoPhys_mul_eq`) and the
+bracket product
+`B(k)ᵢₗ·B(−k)ⱼₗ = W·Tᵢₗ(k)·Tⱼₗ(−k)` (`W = e^{−λᵢⱼk}`, the `e^{±σₗk/2}` cancellation via
+`exp_lambda_cancel`) factor out, so the quadratic sum equals `rg·W·Sᵢⱼ` in moment form. -/
+theorem sum_reduction {N : ℕ} (rho Qpp sig : Fin N → ℂ) (Pi Qi Pj Qj c rg W : ℂ)
+    (rgg BB : Fin N → ℂ) (hrgg : ∀ l, rgg l = rho l * rg)
+    (hBB : ∀ l, BB l
+      = W * ((Pi * Qpp l + Qi * c * sig l) * (Pj * Qpp l + Qj * c * sig l))) :
+    ∑ l, rgg l * BB l
+      = rg * W * (Pi * Pj * (∑ l, rho l * Qpp l ^ 2)
+          + c * (∑ l, rho l * (sig l * Qpp l)) * (Pi * Qj + Qi * Pj)
+          + c ^ 2 * (∑ l, rho l * sig l ^ 2) * (Qi * Qj)) := by
+  simp only [hrgg, hBB]
+  rw [← sum_to_moment rho Qpp sig Pi Qi Pj Qj c, Finset.mul_sum]
+  refine Finset.sum_congr rfl (fun l _ => ?_)
+  ring
+
+/-- **MRS.7 — the `λ` exp cancellation.**  `B(k)ᵢₗ` carries `e^{−λᵢₗk}` and `B(−k)ⱼₗ` carries
+`e^{−λⱼₗ·(−k)} = e^{λⱼₗk}`; since `λⱼₗ − λᵢₗ = −λᵢⱼ` is `ℓ`-independent (`λ_ab = (σ_b−σ_a)/2`), the
+product is `e^{−λᵢⱼk}` — the `ℓ`-independent factor `W` of `sum_reduction`. -/
+theorem exp_lambda_cancel (si sj sl k : ℂ) :
+    Complex.exp (-((sl - si) / 2 * k)) * Complex.exp (-((sl - sj) / 2 * (-k)))
+      = Complex.exp (-((sj - si) / 2 * k)) := by
+  rw [← Complex.exp_add]; ring_nf
+
 /-- The physical (Lebowitz PY) complex Baxter matrix `Q̂₀(s)` for the N=2 mixture — `Q0_mat_c` with
 the concrete `rhoGeoPhys`/`Q0phys`/`Qppphys` coefficients (cast to `ℂ`). -/
 noncomputable def Qphys (sigma rho : Fin 2 → ℝ) (s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
@@ -646,5 +725,86 @@ theorem q0Mix_jump_amplitude_symm {N : ℕ} (rho sigma : Fin N → ℝ) (i j : F
         + FMSA.MatrixQ0.Qppphys rho sigma j i * (-sigma j) ^ 2 / 2 := by
   rw [q0Mix_jump_amplitude rho sigma i j hvac, q0Mix_jump_amplitude rho sigma j i hvac]
   ring
+
+variable {N : ℕ}
+
+/-! ### MRS.7 — physical instantiation of the general-`N` swap (connecting `q0_entry_c` to
+`swap_pair_core`).  With the bare Baxter bracket `Bbra = (δ − Q̂₀)/ρ_geo` and its KEY-1 rank-2
+separation, the physical quadratic sum `∑ₗ ρgᵢₗρgⱼₗ·B(k)ᵢₗ·B(−k)ⱼₗ` collapses (via `sum_reduction` +
+`Bbra_prod` + `rhoGeoPhys_mul_eq`) to `rgᵢⱼ·e^{−λᵢⱼk}·Sᵢⱼ` in moment form — exactly the `Sᵢⱼ` of
+`swap_pair_core`.  The physical swap `Cmix0ᵢⱼ = Cmix0ⱼᵢ` then follows from `Cmix0_entry_of_id_sub`
+(general `N`) + `phys_sum` + `swap_pair_core` (with `Ei = exp(σᵢk/2)`), a mechanical match. -/
+
+/-- Baxter polynomial factor `P(σ,k) = (σ/2)·p₁ + p₂` (`p₁,p₂` the `q0_entry_c` polynomials). -/
+noncomputable def pP (sigma k : ℂ) : ℂ :=
+  sigma / 2 * ((1 - k * sigma - Complex.exp (-(k * sigma))) / k ^ 2)
+    + (1 - k * sigma + (k * sigma) ^ 2 / 2 - Complex.exp (-(k * sigma))) / k ^ 3
+/-- Baxter polynomial factor `Q(σ,k) = p₁`. -/
+noncomputable def pQ (sigma k : ℂ) : ℂ := (1 - k * sigma - Complex.exp (-(k * sigma))) / k ^ 2
+
+/-- The bare Baxter bracket `Bbra = (δᵢⱼ − Q̂₀ᵢⱼ)/ρ_geoᵢⱼ` (`Q0_mat_c` minus the identity). -/
+noncomputable def Bbra (sigma : Fin N → ℂ) (Q0 Qpp : Fin N → Fin N → ℂ) (s : ℂ) (a b : Fin N) : ℂ :=
+  Complex.exp (-(((sigma b - sigma a) / 2) * s)) *
+    (Q0 a b * ((1 - s * sigma a - Complex.exp (-(s * sigma a))) / s ^ 2) +
+     Qpp a b * ((1 - s * sigma a + (s * sigma a) ^ 2 / 2 - Complex.exp (-(s * sigma a))) / s ^ 3))
+
+/-- **`hQ` for `Q0_mat_c`.**  `Q̂₀ᵢⱼ = δᵢⱼ − ρ_geoᵢⱼ·Bbraᵢⱼ` — the `Cmix0_entry_of_id_sub` shape. -/
+theorem Q0_mat_c_eq_id_sub (sigma : Fin N → ℂ) (rho_geo Q0 Qpp : Fin N → Fin N → ℂ) (s : ℂ)
+    (a b : Fin N) :
+    FMSA.Q0Complex.Q0_mat_c s sigma rho_geo Q0 Qpp a b
+      = (if a = b then (1:ℂ) else 0) - rho_geo a b * Bbra sigma Q0 Qpp s a b := by
+  simp only [FMSA.Q0Complex.Q0_mat_c, FMSA.Q0Complex.q0_entry_c, Bbra]; ring
+
+/-- **Rank-2 separation of the bracket** (KEY 1): `Bbraᵢⱼ = e^{−λᵢⱼs}·(P·Qppᵢⱼ + Q·c·σⱼ)`. -/
+theorem Bbra_sep (sigma : Fin N → ℂ) (Q0 Qpp : Fin N → Fin N → ℂ) (c s : ℂ) (a b : Fin N)
+    (hK1 : Q0 a b = sigma a / 2 * Qpp a b + c * sigma b) :
+    Bbra sigma Q0 Qpp s a b
+      = Complex.exp (-(((sigma b - sigma a) / 2) * s))
+        * (pP (sigma a) s * Qpp a b + pQ (sigma a) s * c * sigma b) := by
+  simp only [Bbra, pP, pQ, hK1]; ring
+
+/-- **Bracket product** (`sum_reduction`'s `hBB`).  `B(k)ᵢₗ·B(−k)ⱼₗ = e^{−λᵢⱼk}·Tᵢₗ(k)·Tⱼₗ(−k)` via
+`Bbra_sep` (both) + `exp_lambda_cancel`; `Qpp` is single-index (`Qppᵢₗ = Qppⱼₗ = Qpp1 l`). -/
+theorem Bbra_prod (sigma Qpp1 : Fin N → ℂ) (Q0 Qpp : Fin N → Fin N → ℂ) (c k : ℂ) (i j l : Fin N)
+    (hK1i : Q0 i l = sigma i / 2 * Qpp i l + c * sigma l)
+    (hK1j : Q0 j l = sigma j / 2 * Qpp j l + c * sigma l)
+    (hQi : Qpp i l = Qpp1 l) (hQj : Qpp j l = Qpp1 l) :
+    Bbra sigma Q0 Qpp k i l * Bbra sigma Q0 Qpp (-k) j l
+      = Complex.exp (-(((sigma j - sigma i) / 2) * k))
+        * ((pP (sigma i) k * Qpp1 l + pQ (sigma i) k * c * sigma l)
+           * (pP (sigma j) (-k) * Qpp1 l + pQ (sigma j) (-k) * c * sigma l)) := by
+  rw [Bbra_sep sigma Q0 Qpp c k i l hK1i, Bbra_sep sigma Q0 Qpp c (-k) j l hK1j, hQi, hQj]
+  rw [show Complex.exp (-(((sigma l - sigma i) / 2) * k))
+        * (pP (sigma i) k * Qpp1 l + pQ (sigma i) k * c * sigma l)
+      * (Complex.exp (-(((sigma l - sigma j) / 2) * (-k)))
+        * (pP (sigma j) (-k) * Qpp1 l + pQ (sigma j) (-k) * c * sigma l))
+      = (Complex.exp (-(((sigma l - sigma i) / 2) * k))
+         * Complex.exp (-(((sigma l - sigma j) / 2) * (-k))))
+        * ((pP (sigma i) k * Qpp1 l + pQ (sigma i) k * c * sigma l)
+           * (pP (sigma j) (-k) * Qpp1 l + pQ (sigma j) (-k) * c * sigma l)) from by ring,
+     exp_lambda_cancel (sigma i) (sigma j) (sigma l) k]
+
+/-- **Physical quadratic-sum reduction.**  For the physical bracket, `∑ₗ ρgᵢₗρgⱼₗ·B(k)ᵢₗ·B(−k)ⱼₗ =
+rgᵢⱼ·e^{−λᵢⱼk}·Sᵢⱼ` in moment form — the `Cmix0_entry_of_id_sub` `∑ₗ` term as the `Sᵢⱼ` of
+`swap_pair_core`.
+Discharges `sum_reduction`'s `hrgg` (`rhoGeoPhys_mul_eq`) and `hBB` (`Bbra_prod`). -/
+theorem phys_sum (sigma rho Qpp1 : Fin N → ℂ) (Q0 Qpp rho_geo : Fin N → Fin N → ℂ) (c k : ℂ)
+    (i j : Fin N)
+    (hK1 : ∀ a b, Q0 a b = sigma a / 2 * Qpp a b + c * sigma b)
+    (hQI : ∀ a b, Qpp a b = Qpp1 b)
+    (hrgprod : ∀ a b l, rho_geo a l * rho_geo b l = rho l * rho_geo a b) :
+    ∑ l, (rho_geo i l * rho_geo j l) * (Bbra sigma Q0 Qpp k i l * Bbra sigma Q0 Qpp (-k) j l)
+      = rho_geo i j * Complex.exp (-(((sigma j - sigma i) / 2) * k))
+        * (pP (sigma i) k * pP (sigma j) (-k) * (∑ l, rho l * Qpp1 l ^ 2)
+          + c * (∑ l, rho l * (sigma l * Qpp1 l))
+              * (pP (sigma i) k * pQ (sigma j) (-k) + pQ (sigma i) k * pP (sigma j) (-k))
+          + c ^ 2 * (∑ l, rho l * sigma l ^ 2) * (pQ (sigma i) k * pQ (sigma j) (-k))) :=
+  sum_reduction rho Qpp1 sigma (pP (sigma i) k) (pQ (sigma i) k) (pP (sigma j) (-k))
+    (pQ (sigma j) (-k)) c (rho_geo i j) (Complex.exp (-(((sigma j - sigma i) / 2) * k)))
+    (fun l => rho_geo i l * rho_geo j l)
+    (fun l => Bbra sigma Q0 Qpp k i l * Bbra sigma Q0 Qpp (-k) j l)
+    (fun l => hrgprod i j l)
+    (fun l => Bbra_prod sigma Qpp1 Q0 Qpp c k i j l (hK1 i l) (hK1 j l) (hQI i l) (hQI j l))
+
 
 end FMSA.MRS

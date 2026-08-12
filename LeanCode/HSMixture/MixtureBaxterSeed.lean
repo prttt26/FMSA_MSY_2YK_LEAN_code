@@ -350,6 +350,49 @@ theorem matBaxterUQm_eq_rPhi_of_momentSeed {N : ℕ}
   rw [matBaxterUQm_coreSeed_moment Psi Q sigma hsigma hQ0 hQ1 hcore hr' i' j']
   exact hMomentSeed i' j' r' hr'
 
+/-- **The general-`N` mixture DCF — the moment expression divided by `r`.**  The explicit-in-moments
+inner DCF `c_ij(r)`: `matBaxterUQm = r · cMixMomentDCF` (the grand assembly below).  On the core
+`(0,σ)` it is the Wertheim–Thiele moment expression over `r`; `0` outside.  Every `∫₀^σ` /
+`∫₀^{σ−r}` in it is a closed form (`baxterQuad`/moment lemmas) — at unequal diameters the assembled
+polynomial is piecewise (breakpoints `r = σ − Rᵢₖ`); at equal diameters the row-sum collapses it to
+the scalar
+`c_HS`.  (This is the WINDOWED-seed DCF; the loss-free object is the extended
+`matBaxterUQmSymFullExt`.) -/
+noncomputable def cMixMomentDCF (Q : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ)
+    (i j : Fin N) (r : ℝ) : ℝ :=
+  if r ∈ Set.Ioo (0:ℝ) sigma then
+    ((r * ((∑ k, ∫ t in (0:ℝ)..sigma, Q i k t) - 1) - ∑ k, ∫ t in (0:ℝ)..sigma, t * Q i k t)
+      - ∑ k, ∫ t in (0:ℝ)..(sigma - r), Q i k t
+          * ((r + t) * ((∑ l, ∫ s in (0:ℝ)..sigma, Q k l s) - 1)
+             - ∑ l, ∫ s in (0:ℝ)..sigma, s * Q k l s)) / r
+  else 0
+
+/-- **⭐⭐ General-`N` grand assembly — `matBaxterUQm = r · c_ij`, no equal-diameter row-collapse.**
+For ANY renewal `Ψ` (core value `−v`, outer-vanishing `matBaxterU = 0` on `[σ,∞)`) and Baxter factor
+`Q`, the second Baxter convolution equals `r` times the explicit mixture DCF `cMixMomentDCF Q σ`.
+This is the general-`N` analog of the equal-diameter `matBaxterUQm_eq_rcHS_of_rowSum` (where `hrow`
+collapses `c_ij` to the scalar `c_HS`) — here `c_ij` stays the explicit-in-moments expression, valid
+at unequal diameters.  Composes `matBaxterUQm_eq_rPhi_of_momentSeed` with the tautological moment
+seed `moment_expr = r · (moment_expr / r)` (`r > 0`). -/
+theorem matBaxterUQm_eq_rcMixMomentDCF (Psi Q : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ)
+    (hsigma : 0 < sigma)
+    (hUouter : ∀ i j r, sigma ≤ r → matBaxterU Psi Q sigma i j r = 0)
+    (hint : ∀ (i j k : Fin N) (r : ℝ), IntervalIntegrable
+      (fun t => Q i k t * matBaxterU Psi Q sigma k j (r + t)) volume 0 sigma)
+    (hQ0 : ∀ i k, IntervalIntegrable (Q i k) volume 0 sigma)
+    (hQ1 : ∀ i k, IntervalIntegrable (fun t => t * Q i k t) volume 0 sigma)
+    (hcore : ∀ (k j : Fin N) (v : ℝ), v ∈ Set.Ioo (-sigma) sigma → Psi k j v = -v)
+    {r : ℝ} (hr : 0 < r) (i j : Fin N) :
+    matBaxterUQm Psi Q sigma i j r = r * cMixMomentDCF Q sigma i j r := by
+  refine matBaxterUQm_eq_rPhi_of_momentSeed Psi Q (cMixMomentDCF Q sigma) sigma hsigma hUouter
+    ?_ hint hQ0 hQ1 hcore ?_ hr i j
+  · intro i' j' r' hr'
+    simp only [cMixMomentDCF, if_neg (fun hm => absurd (Set.mem_Ioo.mp hm).2 (not_lt.mpr hr'))]
+  · intro i' j' r' hr'
+    have hrne : r' ≠ 0 := ne_of_gt (Set.mem_Ioo.mp hr').1
+    simp only [cMixMomentDCF, if_pos hr']
+    field_simp
+
 open FMSA.HardSphere in
 /-- **N=1 non-vacuity — the moment seed `hMomentSeed` reduces to the proved scalar `baxter_core_seed`.**
 At one component (`Q = q0_poly`, `Φ = c_HS`), the matrix Wertheim–Thiele moment identity required by

@@ -9,6 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.YukawaOZ.I1I2Integrals
 import LeanCode.YukawaOZMix.MixturePolyCoeffs
+import LeanCode.HSMixture.HSMix
 
 /-!
 # Tasks IB.1–IB.5 — Inner DCF Decomposition: Mediated Vanishing and Term IV Breakpoints
@@ -156,23 +157,15 @@ Everything `_compute_mediated` reads off the converged FMSA solution: `M` is the
 Yukawa poles carried by each `b_grow[a][b]` residue expansion.
 -/
 
-/-- The converged-solution data consumed by `_compute_mediated`. -/
-structure Mix (N M : ℕ) where
-  /-- BH-corrected hard-sphere diameters. -/
-  σ   : Fin N → ℝ
-  /-- Number densities. -/
-  ρ   : Fin N → ℝ
+/-- The converged-solution data consumed by `_compute_mediated`.  The hard-sphere core
+(`σ`/`ρ`/`Q0`/`Qpp`/`hσ`) is the pure-HS `FMSA.HSMix N`; `Mix` **extends** it with the `M`
+Yukawa-tail residue data `zp`/`cb`.  So the pure-HS projection is the auto-generated parent
+projection `Mix.toHSMix` (`M = 0` = pure hard sphere), and every hard-sphere field is inherited. -/
+structure Mix (N M : ℕ) extends FMSA.HSMix N where
   /-- `b_grow[a][b].poles`. -/
   zp  : Fin N → Fin N → Fin M → ℝ
   /-- `b_grow[a][b].coeffs`. -/
   cb  : Fin N → Fin N → Fin M → ℝ
-  /-- Baxter `Q₀` matrix. -/
-  Q0  : Fin N → Fin N → ℝ
-  /-- Baxter `Q''` diagonal. -/
-  Qpp : Fin N → ℝ
-  /-- Diameters are strictly positive.  This is the *only* physical input the vanishing
-  theorems IB.1–IB.3 need. -/
-  hσ  : ∀ k, 0 < σ k
 
 namespace Mix
 

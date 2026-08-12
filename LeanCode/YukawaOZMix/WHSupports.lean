@@ -10,6 +10,7 @@ import Mathlib
 import LeanCode.HardSphere.BaxterRealSpace
 import LeanCode.YukawaOZMix.InnerDecomp
 import LeanCode.HardSphere.Splitting
+import LeanCode.HSMixture.HSMix
 
 /-!
 # Task Y1.3a — Wiener–Hopf support lemmas ([LN] §6.3.2, Eq. 55–57)
@@ -83,6 +84,24 @@ theorem q0MixEntry_support_subset (X : Mix N M) (i j : Fin N) :
   rw [Function.mem_support] at hx
   by_contra hns
   exact hx (Set.indicator_of_notMem hns _)
+
+/-! ### The pure-HS projection `Mix → HSMix` — the M=0 bridge (Yukawa layer connects here)
+
+The `M`-independent Baxter/DCF content is defined Yukawa-free on `HSMix` (`HSMixture/HSMix.lean`);
+`Mix N M` **extends** `HSMix N` (`InnerDecomp.lean`), so the pure-HS projection is the
+auto-generated parent projection `Mix.toHSMix` (forgetting the tail fields `zp`/`cb`); the bridges
+below are `rfl` for any `M`. -/
+
+/-- **The Baxter-entry bridge — `rfl`.**  `Mix`'s `q0MixEntry` IS the pure-HS `HSMix.q0MixEntry` at
+the projection, for ANY `M` (`M=0` = pure hard sphere); geometry and coefficients agree
+definitionally. -/
+theorem q0MixEntry_eq_toHSMix (X : Mix N M) (i j : Fin N) (r : ℝ) :
+    q0MixEntry X i j r = (X.toHSMix).q0MixEntry i j r := rfl
+
+/-- Geometry bridges are `rfl` too. -/
+theorem Mix_R_eq_toHSMix (X : Mix N M) (i j : Fin N) : X.R i j = (X.toHSMix).R i j := rfl
+
+theorem Mix_lam_eq_toHSMix (X : Mix N M) (i j : Fin N) : X.lam i j = (X.toHSMix).lam i j := rfl
 
 /-! ### 2. Half-line ⇄ full-line integral bridges (reuse of `Splitting.lean`'s method) -/
 

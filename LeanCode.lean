@@ -10,6 +10,7 @@ import LeanCode.Analysis.ContourHomotopy
 import LeanCode.Analysis.ContourSumUpperHalfPlane
 import LeanCode.Analysis.ConvolutionLeibniz
 import LeanCode.Analysis.ExpTaylorLimits
+import LeanCode.Analysis.FourierAEInjective
 import LeanCode.Analysis.HalfDiskArgumentPrinciple
 import LeanCode.Analysis.HomotopyInvariance
 import LeanCode.Analysis.IntervalIntegralSwap
@@ -82,6 +83,7 @@ import LeanCode.HardSphere.QhatDeriv
 import LeanCode.HardSphere.RadialFourier
 import LeanCode.HardSphere.RadialFourierCHS
 import LeanCode.HardSphere.RadialFourierCHSComplex
+import LeanCode.HardSphere.RadialFourierInjective
 import LeanCode.HardSphere.RadialLaplace
 import LeanCode.HardSphere.ShellKernel
 import LeanCode.HardSphere.SingleCompIdentity
@@ -97,6 +99,7 @@ import LeanCode.HSMixture.CHSKinkWB
 import LeanCode.HSMixture.MatrixDetPoleFree
 import LeanCode.HSMixture.MatrixQ0
 import LeanCode.HSMixture.MixtureBaxterSeed
+import LeanCode.HSMixture.PhysHSMixRhoWeight
 import LeanCode.HSMixture.MixtureChordFamily
 import LeanCode.HSMixture.MixtureDetEntire
 import LeanCode.HSMixture.MixtureDetEscape
@@ -126,6 +129,8 @@ import LeanCode.HSMixture.Q0ComplexH1Assembly
 import LeanCode.HSMixture.Q0ComplexRankTwo
 import LeanCode.HSMixture.Q0ComplexRepr
 import LeanCode.HSMixture.Q0DetContourOrientation
+import LeanCode.HSMixture.Q0OriginFactor
+import LeanCode.HSMixture.Q0HermitianAxis
 import LeanCode.HSMixture.Q0DetLimit
 import LeanCode.HSMixture.Q0DetRankTwo
 import LeanCode.HSMixture.Q0MomentGeOne
@@ -136,6 +141,9 @@ import LeanCode.YukawaOZ.BijReduction
 import LeanCode.YukawaOZ.ContactMatching
 import LeanCode.YukawaOZ.I1I2Integrals
 import LeanCode.YukawaOZ.InnerOriginBC
+import LeanCode.YukawaOZ.MSAClosedForm
+import LeanCode.YukawaOZ.MSAElimination
+import LeanCode.YukawaOZ.MSABaxterTransform
 import LeanCode.YukawaOZ.MixtureYukawaContourTerm
 import LeanCode.YukawaOZ.MixtureYukawaResidue
 import LeanCode.YukawaOZ.MixtureYukawaTransform
@@ -151,16 +159,30 @@ import LeanCode.YukawaOZMix.MixtureClosedForm
 import LeanCode.YukawaOZMix.MixtureConvolution
 import LeanCode.YukawaOZMix.MixtureDCFSmooth
 import LeanCode.YukawaOZMix.MixtureHSDCF
+import LeanCode.YukawaOZMix.RadialFourierQFwd
+import LeanCode.YukawaOZMix.RadialFourierQFwdOffdiag
+import LeanCode.YukawaOZMix.RadialFourierPMix
 import LeanCode.YukawaOZMix.MixtureInnerDCF
 import LeanCode.YukawaOZMix.MixtureMLSeries
 import LeanCode.YukawaOZMix.MixturePolyCoeffs
 import LeanCode.YukawaOZMix.MixtureRDFAntideriv
 import LeanCode.YukawaOZMix.MixtureRDFContact
 import LeanCode.YukawaOZMix.MixtureRDFEqualDiam
+import LeanCode.HSMixture.MixtureCoercivityReduction
+import LeanCode.HSMixture.MixtureSymbolBridge
+import LeanCode.HSMixture.MatrixGramWienerHopf
+import LeanCode.HSMixture.MixtureWienerHopfN1
+import LeanCode.HSMixture.MatrixBaxterFourierWH
+import LeanCode.HSMixture.MatrixWienerKhinchin
 import LeanCode.YukawaOZMix.MixtureRDFPoleData
 import LeanCode.YukawaOZMix.MixtureRDFStructureFactor
 import LeanCode.YukawaOZMix.MixtureRealSpace
 import LeanCode.YukawaOZMix.MixtureRowSum
+import LeanCode.YukawaOZMix.PhysMixRhoWeightRenewal
+import LeanCode.YukawaOZMix.MixtureCorrectedSeed
+import LeanCode.YukawaOZMix.ExtendedSeedRhoWeight
+import LeanCode.YukawaOZMix.MixturePoleExhaustion
+import LeanCode.YukawaOZMix.MixtureDCFAEInjective
 import LeanCode.YukawaOZMix.MixtureYukawaBij
 import LeanCode.YukawaOZMix.OffDiagDecay
 import LeanCode.YukawaOZMix.ReflectedTermSupports
@@ -179,11 +201,6 @@ import LeanCode.FreeEnergy.OuterIntegral
 import LeanCode.FreeEnergy.SumRule
 import LeanCode.Closures.ClosureExpansions
 import LeanCode.Closures.DPClosureMap
-
--- Group MSAEXACT (single-component exact MSA) + FOEQ (first-order equivalence)
-import LeanCode.YukawaOZ.MSAClosedForm
-import LeanCode.YukawaOZ.MSAElimination
-import LeanCode.YukawaOZ.MSABaxterTransform
 import LeanCode.Closures.FirstOrderEquivalence
 
 -- The FMSA-DP paper's scope and axiom gate.  Imported last, and deliberately:

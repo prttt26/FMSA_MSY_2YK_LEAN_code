@@ -181,5 +181,43 @@ theorem matOzStar_unique {N : ℕ} {Psi1 Psi2 Phi : Matrix (Fin N) (Fin N) (ℝ 
   intro i j r hr
   have hz := hD i j r hr
   linarith [hz]
+/-! ## The non-circular value route to MML.8 — end-to-end status
+
+This route discharges the mixture RDF identity (MML.8) WITHOUT the seed and WITHOUT any pole
+enumeration, via **uniqueness of the matrix OZ★ fixed point** — the matrix analog of the scalar
+`OZFIX.22` retirement of `oz_core_closure`.
+
+**Assembled (unconditional given the symbol).**  `matOzStar_unique` — two `MatOZStar` solutions with
+the same DCF forcing `Φ` coincide, given the coercive symbol `MatSymbolCoercive Φ ρ` and the
+solutions' routine regularity.  It rests ONLY on the committed matrix Wiener–Hopf axiom
+`matRadialShell_bounded_injective` (= MA.15, the multicomponent analog of the scalar kept
+`radialShell_bounded_injective`; the unformalized Wiener tauberian `L∞` bound).
+
+**Equal diameters — FULLY CLOSED.**  `matOzStar_equalDiam_unique` (`MixtureRDFEqualDiam.lean`): the
+equal-diameter mixture RDF is EXACTLY the density-weighted single-component `baxterPsi`.  Existence
+is the constructed `matOzStar_equalDiam_phys`; the coercive symbol is `matSymbolCoercive_equalDiam`
+— the rank-1 reduction `Φᵢⱼ = uᵢuⱼ·c_HS` (`uᵢ = √ρᵢ/√ρ`, `∑ uᵢ² = 1`) of the matrix coercivity to
+the PROVED scalar `one_sub_rho_radial_fourier_c_HS_coercive`.  No physics beyond `pyhs_no_spinodal`.
+
+**General N / unequal diameters — ONE analytic input remaining.**  The sole missing piece is
+`MatSymbolCoercive Φ ρ` for the general mixture DCF: the UNIFORM positive-definiteness of the
+structure factor, `I − ρ·Ĉ(k) ⪰ εI` with a single `ε > 0`.  Its POINTWISE part is already
+`det Q̂₀ ≠ 0`: the Baxter factorization `Cmix0_factorization` gives `I − ρĈ = T₀ = Q̂₀(k)·Q̂₀(−k)ᵀ`,
+and `matStructureFactor_isUnit_of_det_ne_zero` turns `det Q̂₀ ≠ 0` — supplied unconditionally for
+every `N` by `mixtureDet_pole_free_N` (LHP) + `pyhs_mixture_no_spinodal` (real axis) — into `T₀(k)`
+invertible for each `k`.  The uniform `ε` GLUING is now DISCHARGED: `matSymbolCoercive_of_regions`
+(`MixtureCoercivityReduction.lean`) proves the `k`-compactness argument abstractly (middle
+compact-min via `IsCompact.exists_isMinOn` + `matSymbolCoercive_of_sphere` homogeneity), reducing
+`MatSymbolCoercive` to the three CONCRETE symbol facts — near-`0` sign, middle continuity + pointwise
+`det Q̂₀ ≠ 0` positivity, tail `Ĉ → 0` decay — the matrix analogs of the scalar proof's three regions.
+
+**Independence + net.**  This route uses NO seed, NO Wertheim–Thiele identity, NO pole-exhaustion.
+So MML.8 has two complementary routes — the real-space **seed** route (`MixtureCorrectedSeed.lean`,
+fully explicit; WT terminus proved equal-diameter and numerically confirmed unequal) and this
+**value** route (uniqueness; fully closed equal-diameter, reduced to one uniform-coercivity input
+general-N) — and the literal pole-series route is provably BLOCKED (`even_subfamily_not_exhaustive`,
+`MixturePoleExhaustion.lean`).  The value route's only axioms are MA.15 (Wiener tauberian) and the
+physics no-spinodal — the same footing as the scalar `oz_fixed_pt_unique`. -/
+
 end
 end FMSA.MixtureOzStar

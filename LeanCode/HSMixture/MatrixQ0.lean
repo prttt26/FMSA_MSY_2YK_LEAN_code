@@ -221,6 +221,20 @@ noncomputable def Qppphys {N : ℕ} (rho sigma : Fin N → ℝ) (_i j : Fin N) :
 noncomputable def rhoGeoPhys {N : ℕ} (rho : Fin N → ℝ) (i j : Fin N) : ℝ :=
   Real.sqrt (rho i * rho j)
 
+/-- **General-`N` ρ-geo product relation** `rgᵢₗ·rgⱼₗ = ρₗ·rgᵢⱼ`
+(`√(ρᵢρₗ)·√(ρⱼρₗ) = ρₗ√(ρᵢρⱼ)`).  The general-`N` analog of the `N = 2` `hrgprod`
+(`rg₀₀·rg₁₁ = rg₀₁²`) used in `swap_offdiag_of_keys`.  It is what makes the physical swap identity
+`∑ₗ Q̂₀ᵢₗ(k)Q̂₀ⱼₗ(−k) = ∑ₗ Q̂₀ⱼₗ(k)Q̂₀ᵢₗ(−k)` reduce to a per-pair `ρ`-weighted species sum: with
+`λⱼₗ − λᵢₗ = −λᵢⱼ` (independent of `ℓ`) this collapses the quadratic term to
+`rgᵢⱼ·e^{−λᵢⱼk}·∑ₗ ρₗ Tᵢₗ(k)Tⱼₗ(−k)`. -/
+theorem rhoGeoPhys_mul_eq {N : ℕ} (rho : Fin N → ℝ) (hrho : ∀ i, 0 ≤ rho i) (i j l : Fin N) :
+    rhoGeoPhys rho i l * rhoGeoPhys rho j l = rho l * rhoGeoPhys rho i j := by
+  simp only [rhoGeoPhys]
+  rw [← Real.sqrt_mul (mul_nonneg (hrho i) (hrho l)),
+      show rho l * Real.sqrt (rho i * rho j) = Real.sqrt (rho l ^ 2 * (rho i * rho j)) from by
+        rw [Real.sqrt_mul (sq_nonneg (rho l)), Real.sqrt_sq (hrho l)]]
+  congr 1; ring
+
 /-- The physical (Lebowitz/Baxter) multicomponent Q̂₀(z) matrix, with `Qp`/`Qpp`/`rho_geo`
 substituted by their concrete PY-mixture formulas instead of left as free parameters. -/
 noncomputable def Q0_mat_phys {N : ℕ} (z : ℝ) (sigma rho : Fin N → ℝ) :

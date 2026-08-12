@@ -8,6 +8,8 @@ Authors: FMSA project
 
 import LeanCode.HSMixture.MixtureBaxterSeed
 import LeanCode.YukawaOZMix.WHSupports
+import LeanCode.HSMixture.HSMixBaxterFactor
+import LeanCode.HSMixture.MixtureSeedExtended
 
 /-!
 # `hrow` for the concrete `q0MixEntry` — the equal-diameter row-sum collapse
@@ -81,37 +83,18 @@ theorem q0MixEntry_rowSum_eq_q0_poly {N M : ℕ} (X : Mix N M) {sigma eta rho : 
 
 /-! ### Integrability of the concrete kernel — the seed's remaining side-conditions -/
 
-/-- **`q0MixEntry X i k` is interval-integrable on any `[a,b]`.**  It is the measurable indicator of a
-continuous quadratic on the compact core `[λᵢₖ, Rᵢₖ]`, hence bounded and measurable, so integrable on
-any finite interval.  Discharges the `hQ0` side-condition of `matBaxterUQm_momentSeed_of_rowSum`. -/
+/-- **`q0MixEntry X i k` is interval-integrable on any `[a,b]`.**  Discharges the `hQ0`
+side-condition of `matBaxterUQm_momentSeed_of_rowSum`.  Delegates to the pure-HS-layer
+`FMSA.HSMix.q0MixEntry_intervalIntegrable` through the `toHSMix` bridge (functions `rfl`-equal). -/
 theorem q0MixEntry_intervalIntegrable {N M : ℕ} (X : Mix N M) (i k : Fin N) (a b : ℝ) :
-    IntervalIntegrable (q0MixEntry X i k) volume a b := by
-  have hmeas : Measurable (q0MixEntry X i k) := by
-    unfold q0MixEntry
-    exact Measurable.indicator (by fun_prop) measurableSet_Icc
-  obtain ⟨C, hC⟩ := (isCompact_Icc (a := X.lam i k) (b := X.R i k)).exists_bound_of_continuousOn
-    (f := fun r => X.Q0 i k * (r - X.R i k) + X.Qpp k * (r - X.R i k) ^ 2 / 2)
-    (Continuous.continuousOn (by fun_prop))
-  rw [intervalIntegrable_iff]
-  have hfin : volume (Set.uIoc a b) ≠ ⊤ :=
-    ne_top_of_le_ne_top isCompact_uIcc.measure_ne_top (measure_mono Set.uIoc_subset_uIcc)
-  refine Measure.integrableOn_of_bounded (M := max C 0) hfin hmeas.aestronglyMeasurable ?_
-  filter_upwards with u
-  rw [Real.norm_eq_abs]
-  unfold q0MixEntry
-  by_cases h : u ∈ Set.Icc (X.lam i k) (X.R i k)
-  · rw [Set.indicator_of_mem h]
-    have hb := hC u h
-    rw [Real.norm_eq_abs] at hb
-    exact le_trans hb (le_max_left _ _)
-  · rw [Set.indicator_of_notMem h, abs_zero]; exact le_max_right _ _
+    IntervalIntegrable (q0MixEntry X i k) volume a b :=
+  FMSA.HSMix.q0MixEntry_intervalIntegrable X.toHSMix i k a b
 
-/-- **`t ↦ t · q0MixEntry X i k t` is interval-integrable on any `[a,b]`** (product of the bounded
-measurable factor and the continuous `t`).  Discharges the `hQ1` side-condition. -/
+/-- **`t ↦ t · q0MixEntry X i k t` is interval-integrable on any `[a,b]`.**  Discharges the `hQ1`
+side-condition.  Delegates to the pure-HS layer through the `toHSMix` bridge. -/
 theorem q0MixEntry_mul_id_intervalIntegrable {N M : ℕ} (X : Mix N M) (i k : Fin N) (a b : ℝ) :
     IntervalIntegrable (fun t => t * q0MixEntry X i k t) volume a b :=
-  (q0MixEntry_intervalIntegrable X i k a b).continuousOn_mul (g := fun t => t)
-    continuous_id.continuousOn
+  FMSA.HSMix.q0MixEntry_mul_id_intervalIntegrable X.toHSMix i k a b
 
 /-- **UNCONDITIONAL concrete matrix core seed — the equal-diameter `q0MixEntry` moment identity.**
 Combining the concrete row-sum (`q0MixEntry_rowSum_eq_q0_poly`) with the `q0MixEntry` interval
@@ -297,48 +280,9 @@ theorem matBaxterU_hint_of_regular {N : ℕ} (sigma : ℝ) (hσ : 0 ≤ sigma)
     exact hC (r + t) (Set.mem_Icc.mpr ⟨by linarith [ht.1], by linarith [ht.2]⟩)
   exact hcompInt.continuousOn_mul (hQcont i k).continuousOn
 
-/-- The glued `matBaxterPsi` entry is measurable (piecewise of measurable branches). -/
-theorem matBaxterPsi_entry_measurable {N : ℕ} (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ)
-    (hPo : ∀ k j, Measurable (Po k j)) (hPc : ∀ k j, Measurable (Pc k j)) (k j : Fin N) :
-    Measurable (matBaxterPsi Po Pc sigma k j) := by
-  unfold matBaxterPsi
-  refine Measurable.ite measurableSet_Ici (hPo k j) ?_
-  exact Measurable.ite measurableSet_Iic (((hPo k j).comp measurable_neg).neg) (hPc k j)
-
-/-- The glued `matBaxterPsi` entry is bounded on every `uIcc a b` (continuous branches). -/
-theorem matBaxterPsi_entry_bddOn {N : ℕ} (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ)
-    (hPo : ∀ k j, Continuous (Po k j)) (hPc : ∀ k j, Continuous (Pc k j)) (k j : Fin N) (a b : ℝ) :
-    ∃ C, ∀ x ∈ Set.uIcc a b, |matBaxterPsi Po Pc sigma k j x| ≤ C := by
-  obtain ⟨Cpo, hCpo⟩ := (isCompact_uIcc (a := a) (b := b)).exists_bound_of_continuousOn
-    (hPo k j).continuousOn
-  obtain ⟨Cpo', hCpo'⟩ := (isCompact_uIcc (a := -b) (b := -a)).exists_bound_of_continuousOn
-    (hPo k j).continuousOn
-  obtain ⟨Cpc, hCpc⟩ := (isCompact_uIcc (a := a) (b := b)).exists_bound_of_continuousOn
-    (hPc k j).continuousOn
-  refine ⟨max Cpo 0 + max Cpo' 0 + max Cpc 0, fun x hx => ?_⟩
-  have hn2 : (0:ℝ) ≤ max Cpo' 0 := le_max_right _ _
-  have hn3 : (0:ℝ) ≤ max Cpc 0 := le_max_right _ _
-  have hn1 : (0:ℝ) ≤ max Cpo 0 := le_max_right _ _
-  unfold matBaxterPsi
-  by_cases h1 : sigma ≤ x
-  · rw [if_pos h1]
-    have hb := hCpo x hx; rw [Real.norm_eq_abs] at hb
-    have : |Po k j x| ≤ max Cpo 0 := le_trans hb (le_max_left _ _)
-    linarith
-  · rw [if_neg h1]
-    by_cases h2 : x ≤ -sigma
-    · rw [if_pos h2, abs_neg]
-      have hneg : -x ∈ Set.uIcc (-b) (-a) := by
-        rcases Set.mem_uIcc.mp hx with ⟨h, h'⟩ | ⟨h, h'⟩
-        · exact Set.mem_uIcc.mpr (Or.inl ⟨by linarith, by linarith⟩)
-        · exact Set.mem_uIcc.mpr (Or.inr ⟨by linarith, by linarith⟩)
-      have hb := hCpo' (-x) hneg; rw [Real.norm_eq_abs] at hb
-      have : |Po k j (-x)| ≤ max Cpo' 0 := le_trans hb (le_max_left _ _)
-      linarith
-    · rw [if_neg h2]
-      have hb := hCpc x hx; rw [Real.norm_eq_abs] at hb
-      have : |Pc k j x| ≤ max Cpc 0 := le_trans hb (le_max_left _ _)
-      linarith
+-- `matBaxterPsi_entry_measurable` / `matBaxterPsi_entry_bddOn` are generic Matrix machinery about the
+-- glued `matBaxterPsi`; moved to the HSMixture layer (`HSMixture/MixtureSeedExtended.lean`, same
+-- `FMSA.MixtureOzStar` namespace), re-used here by import.
 
 /-- **`hint` for the constructed `matBaxterPsi`.**  Interval-integrability of
 `(Qm t)ᵢₖ · matBaxterU Ψ Qₑ σ ₖⱼ(r+t)` on `[0,σ]`, for continuous matrix Baxter data `Qm, Fm` and the
@@ -654,12 +598,9 @@ their **second** index, landing on the correlation `matSelfConv` structure for *
 lemmas prototype the corrected seed and prove it is a faithful generalization (it coincides with the
 current seed exactly on symmetric `Q`, hence at `N = 1` and for the equal-diameter factor). -/
 
-/-- **Transposed first Baxter convolution `Ψ ⋆ Qᵀ`** — inner factor `Qₘᵢ` (transpose of `matBaxterU`'s
-`Qᵢₘ`).  As the second factor in the seed product this makes both `Q`-factors carry the **second**
-index, i.e. the `matSelfConv` (`Q⋆Qᵀ`) structure. -/
-def matBaxterUt {N : ℕ} (Psi Q : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (i j : Fin N) (r : ℝ) :
-    ℝ :=
-  Psi i j r - ∑ m, ∫ s in (0:ℝ)..sigma, Q m i s * Psi m j (r - s)
+-- `matBaxterUt` (the transposed first Baxter convolution `Ψ ⋆ Qᵀ`) is generic Matrix machinery;
+-- it has been moved to the HSMixture layer (`HSMixture/MixtureSeedExtended.lean`, same
+-- `FMSA.MixtureOzStar` namespace) and is re-used here by import.
 
 /-- **Symmetrised matrix second Baxter convolution** — `matBaxterU` with the transposed `matBaxterUt`
 as the inner second factor. -/
@@ -1298,53 +1239,23 @@ theorem laplace_sum_eq_corr_c {ι : Type*} (s : Finset ι) (F G : ι → ℝ →
   refine integral_congr_ae (Filter.Eventually.of_forall (fun v => ?_))
   simp only [Finset.sum_mul]
 
-/-- Global measurability of the mixture Baxter entry (indicator of a continuous quadratic). -/
+/-- Global measurability of the mixture Baxter entry (indicator of a continuous quadratic).
+Delegates to the pure-HS layer through the `toHSMix` bridge. -/
 theorem q0MixEntry_measurable {N M : ℕ} (X : Mix N M) (i k : Fin N) :
-    Measurable (q0MixEntry X i k) := by
-  unfold q0MixEntry
-  exact Measurable.indicator (by fun_prop) measurableSet_Icc
+    Measurable (q0MixEntry X i k) :=
+  FMSA.HSMix.q0MixEntry_measurable X.toHSMix i k
 
 /-- **Full-line integrability of `(q0MixEntry)·exp(w·t)` for any `w : ℂ`.**  Compactly supported on
-`[λᵢₖ,Rᵢₖ]` where it agrees with the continuous `(quadratic)·e^{w·t}`, hence bounded there; integrable. -/
+`[λᵢₖ,Rᵢₖ]`, bounded there.  Delegates to the pure-HS layer through the `toHSMix` bridge. -/
 theorem q0MixEntry_mul_exp_integrable {N M : ℕ} (X : Mix N M) (i k : Fin N) (w : ℂ) :
-    Integrable (fun t => (q0MixEntry X i k t : ℂ) * Complex.exp (w * t)) := by
-  have hmeas : Measurable (fun t => (q0MixEntry X i k t : ℂ) * Complex.exp (w * t)) :=
-    (Complex.measurable_ofReal.comp (q0MixEntry_measurable X i k)).mul (by fun_prop)
-  have hsupp : Function.support (fun t => (q0MixEntry X i k t : ℂ) * Complex.exp (w * t))
-      ⊆ Set.Icc (X.lam i k) (X.R i k) := by
-    intro t ht
-    rw [Function.mem_support] at ht
-    by_contra hns
-    have h0 : q0MixEntry X i k t = 0 := by
-      by_contra hq
-      exact hns (q0MixEntry_support_subset X i k (Function.mem_support.mpr hq))
-    exact ht (by rw [h0]; simp)
-  rw [← integrableOn_iff_integrable_of_support_subset hsupp]
-  obtain ⟨C, hC⟩ := (isCompact_Icc (a := X.lam i k) (b := X.R i k)).exists_bound_of_continuousOn
-    (f := fun t => ((X.Q0 i k * (t - X.R i k) + X.Qpp k * (t - X.R i k) ^ 2 / 2 : ℝ) : ℂ)
-      * Complex.exp (w * t))
-    (Continuous.continuousOn (by fun_prop))
-  refine Measure.integrableOn_of_bounded (M := C) measure_Icc_lt_top.ne hmeas.aestronglyMeasurable ?_
-  filter_upwards [ae_restrict_mem measurableSet_Icc] with u hu
-  have hval : (q0MixEntry X i k u : ℂ) * Complex.exp (w * u)
-      = ((X.Q0 i k * (u - X.R i k) + X.Qpp k * (u - X.R i k) ^ 2 / 2 : ℝ) : ℂ)
-        * Complex.exp (w * u) := by
-    unfold q0MixEntry; rw [Set.indicator_of_mem hu]
-  rw [hval]; exact hC u hu
+    Integrable (fun t => (q0MixEntry X i k t : ℂ) * Complex.exp (w * t)) :=
+  FMSA.HSMix.q0MixEntry_mul_exp_integrable X.toHSMix i k w
 
-/-- Global bound on `|q0MixEntry|` (bounded on the compact core, zero elsewhere). -/
+/-- Global bound on `|q0MixEntry|` (bounded on the compact core, zero elsewhere).
+Delegates to the pure-HS layer through the `toHSMix` bridge. -/
 theorem q0MixEntry_abs_le {N M : ℕ} (X : Mix N M) (i k : Fin N) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ t, |q0MixEntry X i k t| ≤ C := by
-  obtain ⟨C, hC⟩ := (isCompact_Icc (a := X.lam i k) (b := X.R i k)).exists_bound_of_continuousOn
-    (f := fun r => X.Q0 i k * (r - X.R i k) + X.Qpp k * (r - X.R i k) ^ 2 / 2)
-    (Continuous.continuousOn (by fun_prop))
-  refine ⟨max C 0, le_max_right _ _, fun t => ?_⟩
-  unfold q0MixEntry
-  by_cases h : t ∈ Set.Icc (X.lam i k) (X.R i k)
-  · rw [Set.indicator_of_mem h]
-    have hb := hC t h; rw [Real.norm_eq_abs] at hb
-    exact le_trans hb (le_max_left _ _)
-  · rw [Set.indicator_of_notMem h, abs_zero]; exact le_max_right _ _
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ t, |q0MixEntry X i k t| ≤ C :=
+  FMSA.HSMix.q0MixEntry_abs_le X.toHSMix i k
 
 /-- **h2 — joint integrability of `Qᵢₗ(t)·Qⱼₗ(t−u)·e^{−zu}` on `ℝ²`.**  Compactly supported on a box
 (both entries have compact core support), bounded there (global entry bounds × `e^{−zu}` bounded on the
