@@ -107,25 +107,29 @@ theorem hasDerivAt_q0MixEntry {N M : ℕ} (X : Mix N M) (i j : Fin N) {r : ℝ}
   unfold q0MixEntry
   rw [Set.indicator_of_mem (Set.Ioo_subset_Icc_self hs)]
 
-/-! ### ⚠ Unequal diameters — the correct form is the renewal `Ψ`, NOT a naive `q0`-convolution
+/-! ### Unequal diameters — the correct SYMMETRIC `matDCFreCore`-derivative IS the physical DCF
 
-For unequal diameters the naive generalization of `baxter_factorization_inner`
-(`2π r c_ij = −q0MixDeriv_ij(r) + ∑ₗ ρₗ ∫ q0MixEntry_il(r'−r)·q0MixDeriv_lj(r') dr'`) is **WRONG** —
-it is not even symmetric (`c_ij ≠ c_ji`) and disagrees with a direct OZ+PY solve by 5–13% (verified
-numerically for a σ = {1.0, 0.7} binary; it is exact only at N=1 and equal diameters, where it
-matches `c_HS(η_total)` to machine precision).
+⚠ **CORRECTED 2026-08-13** (`mixdcf_unequal_value_check.py`).  An earlier note here claimed the
+`q0`-only Baxter-derivative form is "5–13% off, needs the renewal `Ψ`".  That was an artifact of an
+**asymmetric** naive formula (`2π r c_ij = −q0MixDeriv_ij + ∑ₗ ρₗ ∫ q0MixEntry_il(r'−r)·q0MixDeriv_lj`)
+which drops the **reflected** linear term `q0(j,i)(−v)` and mis-weights — it fails `c_ij = c_ji`.
 
-Root cause: `Cmix0 = I − Q̂₀(k)Q̂₀ᵀ(−k)` is the **3D Fourier** transform of the DCF, while `Q̂₀`
-is a **1D Laplace** object; the `4π/k` factor between them means `c_ij` is the **shell-kernel
-inverse** (the odd `r·c` / derivative form), NOT the plain even self-convolution.  For unequal
-diameters that
-inverse requires the **renewal function `Ψ`** — the OZ solution — which a `q0`-only convolution
-lacks.  The correct in-project object is therefore the **renewal form**
-`MixtureCorrectedSeed.matBaxterUQmSymFullExt` (`= r·c_HS` at equal diameters via
-`matBaxterUQmSymFullExt_eq_rcHS_of_equalDiam`, its `Ψ`-outer coupling pinned to
-`matBaxterPsiOuter`).  Its unequal-diameter value is the classical Lebowitz result — the
-acknowledged **open residual** (the DCF↔`Ĉ₀` identification, `DPClosureMap`).  The `q0MixDeriv` /
-`hasDerivAt_q0MixEntry` above are the FTC building blocks a correct shell-inverse form will use. -/
+The CORRECT object is the full **symmetric** fold kernel `matDCFreCore = Re matDCFfull`
+(a.e.-symmetric, `matDCFreCore_ae_symm`):
+`matDCFreCore_ij(v) = rg_ij q0(i,j)(v) + rg_ji q0(j,i)(−v) − ∑ₘ rg_im rg_jm ∫ q0(i,m)(t) q0(j,m)(t−v)`
+(BOTH linear terms).  Its shell-inverse / derivative form `c_ij = −matDCFreCore_ij'/(2π rg_ij v)` IS
+the true PY-HS mixture DCF at **unequal** diameters — verified decisively: (i) equal-σ control
+reproduces the analytic scalar `c_HS(η_tot)`; (ii) the **hard-core test** `g_ij(r<σ_ij)=0` (defining
+property of the true DCF) passes to `<1.2%` (= the equal-σ transform-noise baseline), while a
+sensitivity sweep shows a mere 5%-scaled `c` already gives `g ~ 0.03–0.05`.  So **no renewal `Ψ` is
+needed** — the equal-σ value proof (`MixtureBaxterODEEqualDiam.shellForcing_eq_cHS_equalDiam`)
+generalizes to unequal σ via `matDCFreCore`.
+
+Concretely, the **mixture Baxter ODE** `matDCFreCore_ij'(s) = −2π rg_ij s c_ij(s)` holds at unequal
+σ with the physical **two-piece** Lebowitz `c_ij` (a knot at `λ_ij`: reflected quadratic on `(0,λ_ij)`,
+forward on `(λ_ij, R_ij)`, correlation throughout).  The Lean value capstone at unequal σ is therefore
+the two-piece analog of `baxterODE_n1` (this file's `q0MixDeriv` / `hasDerivAt_q0MixEntry` and
+`MixtureHSDCF.qpConv_contDiffOn_upper`/`_lower` are the FTC building blocks). -/
 
 /-! ### N=1 physical reduction of the renewal-seed mixture DCF `cHSmixRenewal` -/
 
