@@ -183,6 +183,7 @@ import LeanCode.YukawaOZMix.MixtureCorrectedSeed
 import LeanCode.YukawaOZMix.ExtendedSeedRhoWeight
 import LeanCode.YukawaOZMix.MixturePoleExhaustion
 import LeanCode.YukawaOZMix.MixtureDCFAEInjective
+import LeanCode.YukawaOZMix.MixtureBaxterODEEqualDiam
 import LeanCode.YukawaOZMix.MixtureYukawaBij
 import LeanCode.YukawaOZMix.OffDiagDecay
 import LeanCode.YukawaOZMix.ReflectedTermSupports

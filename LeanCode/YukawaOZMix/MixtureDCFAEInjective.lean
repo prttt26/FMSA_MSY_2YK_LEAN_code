@@ -193,6 +193,28 @@ theorem Cmix0_Qphys_eq (rho sigma : Fin 2 → ℝ) (k : ℂ) (i j : Fin 2) :
   Cmix0_entry_of_id_sub (Qphys sigma rho) (BbarePhys rho sigma)
     (fun a b => ((rhoGeoPhys rho a b : ℝ) : ℂ)) k i j (Qphys_id_sub rho sigma)
 
+open FMSA.MRS FMSA.Q0Complex FMSA.MatrixQ0 in
+/-- **Hermitian reality of the bare Baxter bracket** — `BbarePhys(s̄)ᵢⱼ = conj(BbarePhys(s)ᵢⱼ)`.
+The coefficients `Q0phys`/`Qppphys`/`σ` are all real, and complex conjugation commutes with `exp`
+and the `s`-powers, so it commutes with `BbarePhys`.  On the imaginary axis (`s = i·k`) this is
+the Baxter factor's Hermitian reality — the ingredient that turns `Q̂₀(k)·Q̂₀(−k)ᵀ` into the Gram
+sum-of-squares of `MatSymbolCoercive` (MRS.8 sub-fact 2). -/
+theorem BbarePhys_conj (rho sigma : Fin 2 → ℝ) (s : ℂ) (i j : Fin 2) :
+    BbarePhys rho sigma (starRingEnd ℂ s) i j = starRingEnd ℂ (BbarePhys rho sigma s i j) := by
+  simp only [BbarePhys, map_mul, map_add, map_sub, map_div₀, map_pow, map_one, map_neg,
+    map_ofNat, Complex.conj_ofReal, ← Complex.exp_conj]
+
+open FMSA.MRS FMSA.Q0Complex FMSA.MatrixQ0 in
+/-- **Hermitian reality of the Baxter factor** — `Qphys(s̄)ᵢⱼ = conj(Qphys(s)ᵢⱼ)`.  From the
+`id-sub` `Qphys = δ − ρ_geo·BbarePhys` (`Qphys_id_sub`) with `δ`/`ρ_geo` real and `BbarePhys_conj`.
+On `s = i·k` this gives `Q̂₀(−k) = conj(Q̂₀(k))`, so `vᵀ·Q̂₀(k)·Q̂₀(−k)ᵀ·v = ∑ₗ |(Q̂₀(k)ᵀ·v)ₗ|²` —
+the Gram positivity the coercivity middle/origin need (MRS.8 sub-fact 2). -/
+theorem Qphys_conj (rho sigma : Fin 2 → ℝ) (s : ℂ) (i j : Fin 2) :
+    Qphys sigma rho (starRingEnd ℂ s) i j = starRingEnd ℂ (Qphys sigma rho s i j) := by
+  rw [Qphys_id_sub rho sigma (starRingEnd ℂ s) i j, BbarePhys_conj,
+    Qphys_id_sub rho sigma s i j]
+  simp only [map_sub, map_mul, Complex.conj_ofReal, apply_ite (starRingEnd ℂ), map_one, map_zero]
+
 open FMSA.InnerDecomp FMSA.MatrixQ0 in
 /-- Physical `Mix 2 0` — the HS Baxter data (`σ`/`ρ`/`Q0phys`/`Qppphys`) as a `Mix`, no Yukawa tails
 (`M = 0`).  `q0MixEntry (physMix …)` is the physical real-space Baxter kernel whose transform is
@@ -579,6 +601,163 @@ theorem matDCF_ae_symm (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
     (matDCFfull_integrable rho sigma hsig i j) (matDCFfull_integrable rho sigma hsig j i)
     (matDCFfull_ae_continuous rho sigma hsig i j) (matDCFfull_ae_continuous rho sigma hsig j i)
     (fun _ hw => matDCFfull_transform_offdiag rho sigma hsig hρ0 hρ1 hvac i j hw)
+
+open FMSA.InnerDecomp FMSA.WHSupports in
+/-- **Reflection-swap of the weighted correlation** — `matCorrW i j (−v) = matCorrW j i v`.  The
+double product `∑ₗ ∫ (ρ q0(i,l))(t)·(ρ q0(j,l))(t−(−v))` translation-substitutes `t ↦ t+v` into
+`∑ₗ ∫ (ρ q0(j,l))(t)·(ρ q0(i,l))(t−v)` (Lebesgue translation invariance + commute). -/
+theorem matCorrW_reflect_swap {M : ℕ} (X : Mix 2 M) (ρg : Fin 2 → Fin 2 → ℝ) (i j : Fin 2) (v : ℝ) :
+    matCorrW X ρg i j (-v) = matCorrW X ρg j i v := by
+  simp only [matCorrW]
+  refine Finset.sum_congr rfl (fun l _ => ?_)
+  rw [← MeasureTheory.integral_add_right_eq_self
+    (fun t => ((ρg j l : ℂ) * (q0MixEntry X j l t : ℂ))
+      * ((ρg i l : ℂ) * (q0MixEntry X i l (t - v) : ℂ))) v]
+  refine MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall (fun t => ?_))
+  simp only [sub_neg_eq_add, add_sub_cancel_right]
+  ring
+
+open FMSA.MatrixQ0 in
+/-- **Reflection-swap of the full-line DCF** — `matDCFfull i j (−v) = matDCFfull j i v`.  The two
+`q0` linear terms swap (`ρ_geo` symmetric, `−(−v)=v`) and the correlation term is
+`matCorrW_reflect_swap`.  This is the reflection the transform fold `∫_ℝ = ∫₀^∞ + reflect` needs to
+route `Cmix0` onto the half-line/shell side (MRS.8 sub-fact 1). -/
+theorem matDCFfull_reflect_swap (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) (i j : Fin 2)
+    (v : ℝ) :
+    matDCFfull rho sigma hsig i j (-v) = matDCFfull rho sigma hsig j i v := by
+  simp only [matDCFfull, neg_neg]
+  rw [matCorrW_reflect_swap (physMix rho sigma hsig) (rhoGeoPhys rho) i j v]
+  ring
+
+open FMSA.MatrixQ0 FMSA.MRS MeasureTheory in
+/-- **⭐ Transform fold — `Cmix0` onto the half-line.**  On the imaginary axis `z = i·k` (`k ≠ 0`) the
+full-line DCF transform folds to two half-line (`Ioi 0`) integrals:
+`Cmix0(i·k)ᵢⱼ = ∫₀^∞ matDCFfullᵢⱼ·e^{−ikv} + ∫₀^∞ matDCFfullⱼᵢ·e^{ikv}`.  Route:
+`matDCFfull_laplace`
+(`∫_ℝ = Cmix0`), `integral_add_compl` (split `∫_ℝ = ∫_{Ioi 0} + ∫_{Iic 0}`, integrability from
+`matDCFfull_integrable` × `‖e^{−ikv}‖ = 1`), `integral_comp_neg_Iic` (reflect the `Iic 0` half) and
+**`matDCFfull_reflect_swap`** (`matDCFfullᵢⱼ(−v) = matDCFfullⱼᵢ(v)`).  This routes the definitional
+`Cmix0` onto the half-line/shell side the coercivity symbol needs (MRS.8 sub-fact 1). -/
+theorem Cmix0_physMix_fold (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (k : ℝ) (hk : k ≠ 0) (i j : Fin 2) :
+    Cmix0 (Qphys sigma rho) (Complex.I * (k : ℂ)) i j
+      = (∫ v in Set.Ioi (0 : ℝ),
+          matDCFfull rho sigma hsig i j v * Complex.exp (-(Complex.I * (k : ℂ) * v)))
+        + ∫ v in Set.Ioi (0 : ℝ),
+          matDCFfull rho sigma hsig j i v * Complex.exp (Complex.I * (k : ℂ) * v) := by
+  have hz : Complex.I * (k : ℂ) ≠ 0 := mul_ne_zero Complex.I_ne_zero (by exact_mod_cast hk)
+  have hbound : ∀ w : ℝ, ‖Complex.exp (-(Complex.I * (k : ℂ) * (w : ℂ)))‖ ≤ 1 := fun w => by
+    rw [Complex.norm_exp]
+    have hre : (-(Complex.I * (k : ℂ) * (w : ℂ))).re = 0 := by
+      simp [Complex.mul_re, Complex.mul_im]
+    rw [hre, Real.exp_zero]
+  have hint : Integrable (fun v => matDCFfull rho sigma hsig i j v
+      * Complex.exp (-(Complex.I * (k : ℂ) * v))) :=
+    (matDCFfull_integrable rho sigma hsig i j).mul_bdd
+      (Complex.continuous_exp.comp (by fun_prop)).aestronglyMeasurable
+      (Filter.Eventually.of_forall hbound)
+  rw [← matDCFfull_laplace rho sigma hsig (Complex.I * (k : ℂ)) hz i j,
+    ← integral_add_compl measurableSet_Ioi hint, Set.compl_Ioi]
+  congr 1
+  rw [show (∫ v in Set.Iic (0 : ℝ), matDCFfull rho sigma hsig i j v
+        * Complex.exp (-(Complex.I * (k : ℂ) * v)))
+      = ∫ v in Set.Ioi (0 : ℝ), matDCFfull rho sigma hsig i j (-v)
+          * Complex.exp (-(Complex.I * (k : ℂ) * ((-v : ℝ) : ℂ))) from by
+    have h := integral_comp_neg_Iic (0 : ℝ) (fun y : ℝ => matDCFfull rho sigma hsig i j (-y)
+      * Complex.exp (-(Complex.I * (k : ℂ) * ((-y : ℝ) : ℂ))))
+    simpa using h]
+  refine setIntegral_congr_fun measurableSet_Ioi (fun v _ => ?_)
+  rw [matDCFfull_reflect_swap rho sigma hsig i j v]
+  push_cast
+  ring_nf
+
+open FMSA.MatrixQ0 FMSA.MRS MeasureTheory in
+/-- **Integrable-on-`Ioi 0` for `matDCFfull·(bounded)`** — helper for the cosine reduction. -/
+theorem matDCFfull_mul_integrableOn_Ioi (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (i j : Fin 2) (g : ℝ → ℂ) (hg : Continuous g) (c : ℝ) (hgb : ∀ v, ‖g v‖ ≤ c) :
+    IntegrableOn (fun v => matDCFfull rho sigma hsig i j v * g v) (Set.Ioi 0) :=
+  ((matDCFfull_integrable rho sigma hsig i j).mul_bdd hg.aestronglyMeasurable
+    (Filter.Eventually.of_forall hgb)).integrableOn
+
+open FMSA.MatrixQ0 FMSA.MRS MeasureTheory in
+/-- **⭐⭐ Quadratic-form cosine reduction of `Cmix0`.**  The coercivity uses the symmetric quadratic
+form `∑ᵢⱼ Cmix0(i·k)ᵢⱼ uᵢuⱼ`; the fold + index-swap collapse its two half-line integrals into a
+  single
+cosine integral: `∑ᵢⱼ Cmix0(i·k)ᵢⱼ uᵢuⱼ = ∫₀^∞ (∑ᵢⱼ matDCFfullᵢⱼ uᵢuⱼ)·2cos(kv) dv`.  This is the
+  form
+directly comparable to `matRadialSymbol Φ = 2∫₀^σ shellKernel(Φ)·cos` — so MRS.8 now reduces to the
+single real-space identity `∑ᵢⱼ matDCFfullᵢⱼ uᵢuⱼ = ρ·∑ᵢⱼ shellKernel(Φᵢⱼ) uᵢuⱼ` (the shell↔q-conv
+Baxter identity). -/
+theorem Cmix0_quadForm_cos (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) (k : ℝ) (hk : k ≠ 0)
+    (u : Fin 2 → ℝ) :
+    (∑ i, ∑ j, Cmix0 (Qphys sigma rho) (Complex.I * (k : ℂ)) i j * (u i : ℂ) * (u j : ℂ))
+      = ∫ v in Set.Ioi (0 : ℝ),
+          (∑ i, ∑ j, matDCFfull rho sigma hsig i j v * (u i : ℂ) * (u j : ℂ))
+            * (2 * Complex.cos ((k : ℂ) * v)) := by
+  have hbm : ∀ v : ℝ, ‖Complex.exp (-(Complex.I * (k : ℂ) * (v : ℂ)))‖ ≤ 1 := fun v => by
+    rw [Complex.norm_exp]
+    have : (-(Complex.I * (k : ℂ) * (v : ℂ))).re = 0 := by simp [Complex.mul_re, Complex.mul_im]
+    rw [this, Real.exp_zero]
+  have hbp : ∀ v : ℝ, ‖Complex.exp (Complex.I * (k : ℂ) * (v : ℂ))‖ ≤ 1 := fun v => by
+    rw [Complex.norm_exp]
+    have : (Complex.I * (k : ℂ) * (v : ℂ)).re = 0 := by simp [Complex.mul_re, Complex.mul_im]
+    rw [this, Real.exp_zero]
+  have hcem : Continuous (fun v : ℝ => Complex.exp (-(Complex.I * (k : ℂ) * (v : ℂ)))) := by
+    fun_prop
+  have hcep : Continuous (fun v : ℝ => Complex.exp (Complex.I * (k : ℂ) * (v : ℂ))) := by fun_prop
+  -- RHS: split 2cos = e^{-ikv}+e^{ikv}, distribute, pull sums out
+  have hcos : ∀ v : ℝ, (2 : ℂ) * Complex.cos ((k : ℂ) * v)
+      = Complex.exp (-(Complex.I * (k : ℂ) * v)) + Complex.exp (Complex.I * (k : ℂ) * v) := by
+    intro v; rw [Complex.cos]; ring_nf
+  -- integrability of each per-entry integrand on `Ioi 0`, scaled by `u i * u j`
+  have hc2 : Continuous (fun v : ℝ => (2 : ℂ) * Complex.cos ((k : ℂ) * v)) := by fun_prop
+  have hc2b : ∀ v : ℝ, ‖(2 : ℂ) * Complex.cos ((k : ℂ) * v)‖ ≤ 2 := fun v => by
+    rw [hcos v]; refine (norm_add_le _ _).trans ?_
+    have := add_le_add (hbm v) (hbp v); linarith
+  have iM : ∀ i j : Fin 2, IntegrableOn (fun v => matDCFfull rho sigma hsig i j v
+      * (2 * Complex.cos ((k : ℂ) * v)) * (u i : ℂ) * (u j : ℂ)) (Set.Ioi 0) := fun i j =>
+    ((matDCFfull_mul_integrableOn_Ioi rho sigma hsig i j _ hc2 2 hc2b).mul_const
+      (u i : ℂ)).mul_const (u j : ℂ)
+  calc (∑ i, ∑ j, Cmix0 (Qphys sigma rho) (Complex.I * (k : ℂ)) i j * (u i : ℂ) * (u j : ℂ))
+      = ∑ i, ∑ j, ((∫ v in Set.Ioi (0 : ℝ),
+              matDCFfull rho sigma hsig i j v * Complex.exp (-(Complex.I * (k : ℂ) * v))) * u i *
+                u j
+            + (∫ v in Set.Ioi (0 : ℝ),
+              matDCFfull rho sigma hsig j i v * Complex.exp (Complex.I * (k : ℂ) * v)) * u i * u
+                j) := by
+        refine Finset.sum_congr rfl (fun i _ => Finset.sum_congr rfl (fun j _ => ?_))
+        rw [Cmix0_physMix_fold rho sigma hsig k hk i j]; ring
+    _ = ∑ i, ∑ j, ((∫ v in Set.Ioi (0 : ℝ),
+              matDCFfull rho sigma hsig i j v * Complex.exp (-(Complex.I * (k : ℂ) * v))) * u i *
+                u j
+            + (∫ v in Set.Ioi (0 : ℝ),
+              matDCFfull rho sigma hsig i j v * Complex.exp (Complex.I * (k : ℂ) * v)) * u i * u
+                j) := by
+        simp only [Finset.sum_add_distrib]
+        congr 1
+        rw [Finset.sum_comm]
+        exact Finset.sum_congr rfl (fun x _ => Finset.sum_congr rfl (fun y _ => by ring))
+    _ = ∑ i, ∑ j, (∫ v in Set.Ioi (0 : ℝ),
+              matDCFfull rho sigma hsig i j v * (2 * Complex.cos ((k : ℂ) * v))) * u i * u j := by
+        refine Finset.sum_congr rfl (fun i _ => Finset.sum_congr rfl (fun j _ => ?_))
+        rw [← add_mul, ← add_mul, ← MeasureTheory.integral_add
+          (matDCFfull_mul_integrableOn_Ioi rho sigma hsig i j _ hcem 1 hbm)
+          (matDCFfull_mul_integrableOn_Ioi rho sigma hsig i j _ hcep 1 hbp)]
+        congr 2
+        refine setIntegral_congr_fun measurableSet_Ioi (fun v _ => ?_)
+        rw [hcos v]; ring
+    _ = ∫ v in Set.Ioi (0 : ℝ),
+          (∑ i, ∑ j, matDCFfull rho sigma hsig i j v * (u i : ℂ) * (u j : ℂ))
+            * (2 * Complex.cos ((k : ℂ) * v)) := by
+        simp only [← MeasureTheory.integral_mul_const]
+        rw [Finset.sum_congr rfl (fun i (_ : i ∈ Finset.univ) =>
+              (integral_finset_sum (Finset.univ) (fun j _ => iM i j)).symm),
+          ← integral_finset_sum _ (fun i _ => integrable_finset_sum _ (fun j _ => iM i j))]
+        refine setIntegral_congr_fun measurableSet_Ioi (fun v _ => ?_)
+        rw [Finset.sum_mul]
+        refine Finset.sum_congr rfl (fun i' _ => ?_)
+        rw [Finset.sum_mul]
+        exact Finset.sum_congr rfl (fun j' _ => by ring)
 
 /-! ### The a.e.-consuming shell assembly + the corrected `hfact` (MML.8 unequal-diameter).
 `matShellConvAsym_symm_of_K_ae`/`matOzStar_of_asymK_ae` are the a.e. variants of the shell-symmetry
@@ -2608,3 +2787,9 @@ theorem hclaimA_qWeighted_to_shellForcing (rhoV sigmaV : Fin 2 → ℝ) (hsig : 
 end PhysicalIdentification
 
 end FMSA.MixtureOzStar
+
+
+
+
+
+
