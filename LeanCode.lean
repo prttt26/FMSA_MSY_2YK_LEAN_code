@@ -160,6 +160,7 @@ import LeanCode.YukawaOZMix.MixtureConvolution
 import LeanCode.YukawaOZMix.MixtureDCFSmooth
 import LeanCode.YukawaOZMix.MixtureHSDCF
 import LeanCode.YukawaOZMix.MixtureCorrelationDeriv
+import LeanCode.YukawaOZMix.MixtureCorrelationDerivUpper
 import LeanCode.YukawaOZMix.RadialFourierQFwd
 import LeanCode.YukawaOZMix.RadialFourierQFwdOffdiag
 import LeanCode.YukawaOZMix.RadialFourierPMix
