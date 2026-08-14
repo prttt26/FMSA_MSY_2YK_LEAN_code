@@ -389,4 +389,182 @@ theorem shellForcing_upper_eqN {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀
     (matDCFreCoreN_hasDerivAt_upper_cUpper rho sigma hsig hrho hvac i k (by linarith [hlt]) hv
       hv0.ne')
 
+
+/-! ### The LOWER piece + full two-piece gluing (general `N`)
+
+The lower piece mirrors the upper (`hasDerivAt_qpConv_lower` is already general-`N`, fixed limits),
+with the reflected forward term `qWeightedN k i(−·)`.  The per-species lower DCF pieces carry a
+`1/v` term each; they aggregate (over `∑ₗ` + leading) to the physical constant, but that
+`constant`-form is a separate `∑ₗ`-moment identity (`ξ₁/ξ₃`, per-species continuity FALSE at the
+knot).  The **value capstone** below needs no such aggregation. -/
+
+/-- **Lower-piece Lebowitz DCF coefficients (general `N`)** — leading `(i,k)` + per-species
+`(i,l,k)` contributions, each `= (A + B/v)/(768·vac⁴)` (no `C₂, E`: `Il_low'` is linear in `v`).
+Derived + validated against the binary constant `cLowerPiece` (`genN_lower.py`). -/
+noncomputable def cLowerLeadANumN {N : ℕ} (rho sigma : Fin N → ℝ) (i k : Fin N) : ℝ :=
+  -768 * vacMix rho sigma^3 - 384 * vacMix rho sigma^2 * Real.pi * sigma i * xi2 rho sigma
+
+noncomputable def cLowerLeadBNumN {N : ℕ} (rho sigma : Fin N → ℝ) (i k : Fin N) : ℝ :=
+  -192 * vacMix rho sigma^2 * Real.pi * sigma i^2 * xi2 rho sigma
+
+noncomputable def cLowerCorrANumN {N : ℕ} (rho sigma : Fin N → ℝ) (i l k : Fin N) : ℝ :=
+  -128 * vacMix rho sigma^2 * Real.pi * rho l * sigma i^3
+    - 384 * vacMix rho sigma^2 * Real.pi * rho l * sigma i^2 * sigma l
+    - 128 * vacMix rho sigma * Real.pi^2 * rho l * sigma i^3 * sigma l * xi2 rho sigma
+    - 192 * vacMix rho sigma * Real.pi^2 * rho l * sigma i^2 * sigma l^2 * xi2 rho sigma
+    - 32 * Real.pi^3 * rho l * sigma i^3 * sigma l^2 * xi2 rho sigma^2
+
+noncomputable def cLowerCorrBNumN {N : ℕ} (rho sigma : Fin N → ℝ) (i l k : Fin N) : ℝ :=
+  192 * vacMix rho sigma^2 * Real.pi * rho l * sigma i^2 * sigma l^2
+
+
+/-- Per-species lower DCF contribution `= (A + B/v)/(768·vac⁴)`. -/
+noncomputable def cLowerCorrPieceN {N : ℕ} (rho sigma : Fin N → ℝ) (i l k : Fin N) (v : ℝ) : ℝ :=
+  (cLowerCorrANumN rho sigma i l k + cLowerCorrBNumN rho sigma i l k / v)
+    / (768 * vacMix rho sigma ^ 4)
+
+/-- Leading `(i,k)` lower DCF contribution (the reflected forward slope). -/
+noncomputable def cLowerLeadPieceN {N : ℕ} (rho sigma : Fin N → ℝ) (i k : Fin N) (v : ℝ) : ℝ :=
+  (cLowerLeadANumN rho sigma i k + cLowerLeadBNumN rho sigma i k / v)
+    / (768 * vacMix rho sigma ^ 4)
+
+/-- **The general-`N` lower-piece Lebowitz mixture DCF** `= cLowerLeadPieceN + ∑ₗ cLowerCorrPieceN`
+(aggregates to the physical constant; at `N = 2` reduces to `cLowerPiece`). -/
+noncomputable def cLowerPieceN {N : ℕ} (rho sigma : Fin N → ℝ) (i k : Fin N) (v : ℝ) : ℝ :=
+  cLowerLeadPieceN rho sigma i k v + ∑ l, cLowerCorrPieceN rho sigma i l k v
+
+open FMSA.MixtureHSDCF in
+set_option maxHeartbeats 2000000 in
+/-- **Per-species lower-`qpConv`-derivative identity** — `qpConvLowerDeriv(physMixN)ᵢₗₖ(v)/(2π)² =
+2π·rgᵢₖ·v·cLowerCorrPieceN`, the fixed-limit analog of `qpConvUpperDeriv_per_l`
+(same `√`-collapse). -/
+theorem qpConvLowerDeriv_per_l {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (hrho : ∀ n, 0 ≤ rho n) (hvac : vacMix rho sigma ≠ 0) (i l k : Fin N) {v : ℝ} (hv0 : v ≠ 0) :
+    qpConvLowerDeriv (physMixN rho sigma hsig) i l k v / (2 * Real.pi) ^ 2
+      = 2 * Real.pi * rhoGeoPhys rho i k * v * cLowerCorrPieceN rho sigma i l k v := by
+  have hab : Real.sqrt (rho i * rho l) * Real.sqrt (rho k * rho l)
+      = rho l * Real.sqrt (rho i * rho k) := by
+    have h := rhoGeoPhys_mul_eq rho hrho i k l
+    simpa only [rhoGeoPhys] using h
+  have hfac : qpConvLowerDeriv (physMixN rho sigma hsig) i l k v
+      = (2 * Real.pi) ^ 2 * (Real.sqrt (rho i * rho l) * Real.sqrt (rho k * rho l))
+        * (
+        -Real.pi^2 * sigma i^3 * v/(3 * vacMix rho sigma^2)
+        + Real.pi^2 * sigma i^2 * sigma l^2/(2 * vacMix rho sigma^2)
+        - Real.pi^2 * sigma i^2 * sigma l * v/vacMix rho sigma^2
+        - Real.pi^3 * sigma i^3 * sigma l * v * xi2 rho sigma/(3 * vacMix rho sigma^3)
+        - Real.pi^3 * sigma i^2 * sigma l^2 * v * xi2 rho sigma/(2 * vacMix rho sigma^3)
+        - Real.pi^4 * sigma i^3 * sigma l^2 * v * xi2 rho sigma^2/(12 * vacMix rho sigma^4)
+        ) := by
+    rw [qpConvLowerDeriv, intervalIntegral_quad, intervalIntegral_quad_mul_id]
+    simp only [physMixN, Q0phys, Qppphys, Mix.R, Mix.lam]
+    field_simp
+    ring
+  rw [hfac, hab]
+  simp only [rhoGeoPhys, cLowerCorrPieceN, cLowerCorrANumN, cLowerCorrBNumN]
+  field_simp
+  ring
+
+open FMSA.MixtureHSDCFFin1 in
+set_option maxHeartbeats 2000000 in
+/-- **Reflected leading identity (lower).**  `rgₖᵢ·q0MixDeriv(physMixN) k i(−v) = 2π·rgᵢₖ·v·
+cLowerLeadPieceN` (`rgₖᵢ = rgᵢₖ` by `mul_comm` under the `√`). -/
+theorem matDCFreCoreN_lead_lower {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (hvac : vacMix rho sigma ≠ 0) (i k : Fin N) {v : ℝ} (hv0 : v ≠ 0) :
+    rhoGeoPhys rho k i * q0MixDeriv (physMixN rho sigma hsig) k i (-v)
+      = 2 * Real.pi * rhoGeoPhys rho i k * v * cLowerLeadPieceN rho sigma i k v := by
+  simp only [q0MixDeriv, physMixN, Q0phys, Qppphys, Mix.R, rhoGeoPhys, cLowerLeadPieceN,
+    cLowerLeadANumN, cLowerLeadBNumN, mul_comm (rho k) (rho i)]
+  field_simp
+  ring
+
+open FMSA.MixtureHSDCF FMSA.MixtureHSDCFFin1 in
+/-- **Mixture Baxter ODE LHS on the LOWER piece (general `N`)** — the reflected forward chain rule
+minus the species sum of lower-`qpConv` derivatives (fixed limits; no boundary term). -/
+theorem matDCFreCoreN_hasDerivAt_lower {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (i k : Fin N) (hlam : 0 ≤ (sigma k - sigma i) / 2)
+    {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) ((sigma k - sigma i) / 2)) :
+    HasDerivAt (matDCFreCoreN rho sigma hsig i k)
+      (-(rhoGeoPhys rho k i * q0MixDeriv (physMixN rho sigma hsig) k i (-v))
+        - ∑ l, qpConvLowerDeriv (physMixN rho sigma hsig) i l k v / (2 * Real.pi) ^ 2) v := by
+  have hmem : -v ∈ Set.Ioo ((physMixN rho sigma hsig).lam k i)
+      ((physMixN rho sigma hsig).R k i) := by
+    simp only [physMixN, Mix.lam, Mix.R]
+    exact ⟨by linarith [hv.2], by linarith [hv.1, hsig i, hsig k]⟩
+  have hcomp := (hasDerivAt_q0MixEntry (physMixN rho sigma hsig) k i hmem).comp v
+    ((hasDerivAt_id v).neg)
+  have hrefl : HasDerivAt (fun w => qWeightedN rho sigma hsig k i (-w))
+      (rhoGeoPhys rho k i * (q0MixDeriv (physMixN rho sigma hsig) k i (-v) * -1)) v := by
+    have heq : (fun w => qWeightedN rho sigma hsig k i (-w))
+        = fun w => rhoGeoPhys rho k i * q0MixEntry (physMixN rho sigma hsig) k i (-w) := by
+      funext w; simp only [qWeightedN]
+    rw [heq]; exact hcomp.const_mul (rhoGeoPhys rho k i)
+  have hcorr : HasDerivAt (fun w => matCorrFull (qWeightedN rho sigma hsig) i k w)
+      (∑ l, qpConvLowerDeriv (physMixN rho sigma hsig) i l k v / (2 * Real.pi) ^ 2) v := by
+    have heq : (fun w => matCorrFull (qWeightedN rho sigma hsig) i k w)
+        = fun w => ∑ l, qpConv (physMixN rho sigma hsig) i l k w / (2 * Real.pi) ^ 2 :=
+      funext (fun w => matCorrFull_eq_qpConvN rho sigma hsig i k w)
+    rw [heq]
+    refine HasDerivAt.fun_sum (fun l _ => ?_)
+    have hlam' : (0 : ℝ) ≤ (physMixN rho sigma hsig).lam i k := by
+      simp only [physMixN, Mix.lam]; exact hlam
+    have hv' : v ∈ Set.Ioo (0 : ℝ) ((physMixN rho sigma hsig).lam i k) := by
+      simp only [physMixN, Mix.lam]; exact hv
+    exact (hasDerivAt_qpConv_lower (physMixN rho sigma hsig) i l k hlam' hv').div_const _
+  have hEq : matDCFreCoreN rho sigma hsig i k
+      =ᶠ[nhds v] (fun w => qWeightedN rho sigma hsig k i (-w)
+        - matCorrFull (qWeightedN rho sigma hsig) i k w) := by
+    filter_upwards [isOpen_Ioo.mem_nhds hv] with w hw
+    exact matDCFreCoreN_lower_eq rho sigma hsig i k hw.2
+  exact ((hrefl.sub hcorr).congr_deriv (by ring)).congr_of_eventuallyEq hEq
+
+open FMSA.MixtureHSDCF FMSA.MixtureHSDCFFin1 in
+/-- **⭐⭐ General-`N` lower mixture Baxter ODE** — `matDCFreCoreN'(v) = −2π·rgᵢₖ·v·cLowerPieceN(v)`
+on `(0, λᵢₖ)` (reflected-leading identity + per-species identity under the species sum). -/
+theorem matDCFreCoreN_hasDerivAt_lower_cLower {N : ℕ} (rho sigma : Fin N → ℝ)
+    (hsig : ∀ k, 0 < sigma k) (hrho : ∀ n, 0 ≤ rho n) (hvac : vacMix rho sigma ≠ 0) (i k : Fin N)
+    (hlam : 0 ≤ (sigma k - sigma i) / 2)
+    {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) ((sigma k - sigma i) / 2)) (hv0 : v ≠ 0) :
+    HasDerivAt (matDCFreCoreN rho sigma hsig i k)
+      (-(2 * Real.pi * rhoGeoPhys rho i k * v * cLowerPieceN rho sigma i k v)) v := by
+  refine (matDCFreCoreN_hasDerivAt_lower rho sigma hsig i k hlam hv).congr_deriv ?_
+  have hsum : (∑ l, qpConvLowerDeriv (physMixN rho sigma hsig) i l k v / (2 * Real.pi) ^ 2)
+      = ∑ l, 2 * Real.pi * rhoGeoPhys rho i k * v * cLowerCorrPieceN rho sigma i l k v :=
+    Finset.sum_congr rfl (fun l _ =>
+      qpConvLowerDeriv_per_l rho sigma hsig hrho hvac i l k hv0)
+  rw [hsum, matDCFreCoreN_lead_lower rho sigma hsig hvac i k hv0, cLowerPieceN, mul_add,
+    Finset.mul_sum]
+  ring
+
+/-- **⭐⭐ General-`N` lower-piece value capstone** — `shellForcingN rgᵢₖ i k v = cLowerPieceN` on
+`(0, λᵢₖ)`. -/
+theorem shellForcing_lower_eqN {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (hrho : ∀ n, 0 ≤ rho n) (hvac : vacMix rho sigma ≠ 0) (i k : Fin N)
+    (hlam : 0 ≤ (sigma k - sigma i) / 2) (hrg : rhoGeoPhys rho i k ≠ 0)
+    {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) ((sigma k - sigma i) / 2)) :
+    shellForcingN rho sigma hsig (rhoGeoPhys rho i k) i k v = cLowerPieceN rho sigma i k v :=
+  shellForcing_eq_of_baxterODEN rho sigma hsig i k hrg hv.1
+    (matDCFreCoreN_hasDerivAt_lower_cLower rho sigma hsig hrho hvac i k hlam hv hv.1.ne')
+
+/-- **The general-`N` two-piece Lebowitz mixture DCF** — `cLowerPieceN` on `(0, λᵢₖ)`,
+`cUpperPieceN` on `[λᵢₖ, Rᵢₖ)` (σᵢ < σₖ). -/
+noncomputable def cMixDCFN {N : ℕ} (rho sigma : Fin N → ℝ) (i k : Fin N) (v : ℝ) : ℝ :=
+  if v < (sigma k - sigma i) / 2 then cLowerPieceN rho sigma i k v
+    else cUpperPieceN rho sigma i k v
+
+/-- **⭐⭐⭐ General-`N` unequal-σ mixture DCF value — FULLY GLUED.**  For the ordered pair
+`σᵢ < σₖ`, on all of `(0, Rᵢₖ)` off the knot, the OZ★ shell-inverse forcing IS the explicit
+`N`-species-summed two-piece Lebowitz DCF: `shellForcingN rgᵢₖ i k v = cMixDCFN v`.  Combines the
+lower and upper capstones (`shellForcing_lower_eqN` / `shellForcing_upper_eqN`). -/
+theorem shellForcing_eq_cMixDCFN {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (hrho : ∀ n, 0 ≤ rho n) (hvac : vacMix rho sigma ≠ 0) (i k : Fin N) (hlt : sigma i < sigma k)
+    (hrg : rhoGeoPhys rho i k ≠ 0) {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) ((sigma i + sigma k) / 2))
+    (hne : v ≠ (sigma k - sigma i) / 2) :
+    shellForcingN rho sigma hsig (rhoGeoPhys rho i k) i k v = cMixDCFN rho sigma i k v := by
+  rcases lt_or_gt_of_ne hne with hlow | hup
+  · rw [cMixDCFN, if_pos hlow]
+    exact shellForcing_lower_eqN rho sigma hsig hrho hvac i k (by linarith [hlt]) hrg ⟨hv.1, hlow⟩
+  · rw [cMixDCFN, if_neg (not_lt.mpr hup.le)]
+    exact shellForcing_upper_eqN rho sigma hsig hrho hvac i k hlt hrg ⟨hup, hv.2⟩
+
 end FMSA.MixtureOzStar
