@@ -163,25 +163,32 @@ theorem hasDerivAt_fixedConv_quadParam {F : ℝ → ℝ} (hF : Continuous F) {A 
   simp_rw [hsplit]
   exact ((hA.mul_const _).add (hB.mul_const _)).add_const _
 
+/-- **The explicit lower-piece `qpConv` derivative value** `qpConvLowerDeriv X i k j x` — the value
+`(qpConv X i k j)'(x)` takes on `(0, λᵢⱼ)` (see `hasDerivAt_qpConv_lower`): the two `pMixEntry`
+coeff derivatives `rrⱼ(−Qⱼ+Pₖ(x+Rⱼₖ))`, `rrⱼ(−Pₖ)` against the constant forward-quadratic moments
+`∫Fwd`, `∫Fwd·t`.  Named so the species sum `∑ₗ qpConvLowerDeriv/(2π)²` (= `matCorrFull'`) is
+stateable. -/
+noncomputable def qpConvLowerDeriv (X : Mix N M) (i k j : Fin N) (x : ℝ) : ℝ :=
+  2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Q0 j k + X.Qpp k * (x + X.R j k))
+      * (∫ t in (X.lam i k)..(X.R i k), 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+          * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
+        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
+        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2)
+    + 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Qpp k)
+      * (∫ t in (X.lam i k)..(X.R i k), (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+          * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
+        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
+        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2) * t)
+
 /-- **Correlation derivative on the lower piece.**  On `(0, λᵢⱼ)` the fixed-limit lower closed form
 `qpConv X i k j x = ∫ Fwd(t)·(D0 x + D1 x·t + d2 t²) dt` differentiates by the parameter-Leibniz
 rule alone (no boundary term, `hasDerivAt_fixedConv_quadParam`): only the `pMixEntry` coefficients
-`D0 x, D1 x` depend on `x`, so `(qpConv)'(x) = D0'(x)·∫Fwd + D1'(x)·∫Fwd·t` with
-`D0'(x) = rrⱼ(−Qⱼ+Pₖ(x+Rⱼₖ))`, `D1'(x) = rrⱼ(−Pₖ)`.  This is the unequal-σ mixture correlation
-derivative on the lower piece — the analog of the scalar `hasDerivAt_corrM`. -/
+`D0 x, D1 x` depend on `x`, so `(qpConv)'(x) = qpConvLowerDeriv = D0'(x)·∫Fwd + D1'(x)·∫Fwd·t` with
+`D0'(x) = rrⱼ(−Qⱼ+Pₖ(x+Rⱼₖ))`, `D1'(x) = rrⱼ(−Pₖ)`.  The unequal-σ analog of `hasDerivAt_corrM`. -/
 theorem hasDerivAt_qpConv_lower (X : Mix N M) (i k j : Fin N) (hlam : 0 ≤ X.lam i j)
     {x : ℝ} (hx : x ∈ Set.Ioo (0 : ℝ) (X.lam i j)) :
-    HasDerivAt (qpConv X i k j)
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Q0 j k + X.Qpp k * (x + X.R j k))
-          * (∫ t in (X.lam i k)..(X.R i k), 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
-              * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
-            + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
-            + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2)
-        + 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Qpp k)
-          * (∫ t in (X.lam i k)..(X.R i k), (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
-              * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
-            + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
-            + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2) * t)) x := by
+    HasDerivAt (qpConv X i k j) (qpConvLowerDeriv X i k j x) x := by
+  rw [qpConvLowerDeriv]
   -- the explicit forward quadratic `F` and the `x`-dependent `pMixEntry` coefficients `D0, D1`
   set F : ℝ → ℝ := fun t => 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
       * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)

@@ -9,6 +9,8 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.YukawaOZMix.MixtureDCFAEInjective
 import LeanCode.YukawaOZMix.MixtureBaxterODEEqualDiam
+import LeanCode.YukawaOZMix.MixtureCorrelationDeriv
+import LeanCode.YukawaOZMix.MixtureHSDCFFin1
 
 /-!
 # The mixture Baxter ODE at UNEQUAL diameters — foundations (MIXCHS.7)
@@ -104,5 +106,57 @@ theorem matDCFreCore_lower_eq (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sig
   rw [← matDCFfoldKernel_qWeighted_eq_matDCFreCore]
   simp only [matDCFfoldKernel]
   rw [qWeighted_forward_eq_zero_of_lt_lam rho sigma hsig i k hv]; ring
+
+open FMSA.MixtureHSDCF in
+/-- **Correlation derivative on the lower piece (physical mixture).**  `matCorrFull(qWeighted)ᵢₖ =
+∑ₗ qpConv(physMix)ᵢₗₖ/(2π)²` (`matCorrFull_eq_qpConv`), so on `(0, λᵢₖ)` its derivative is the
+species sum of the per-`l` lower-piece `qpConv` derivatives (via `hasDerivAt_qpConv_lower`):
+`matCorrFull'(v) = ∑ₗ qpConvLowerDeriv(physMix)ᵢₗₖ(v)/(2π)²`.  This is the correlation half of the
+lower-piece mixture Baxter ODE's LHS. -/
+theorem matCorrFull_hasDerivAt_lower (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) (i k : Fin 2)
+    (hlam : 0 ≤ (sigma k - sigma i) / 2)
+    {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) ((sigma k - sigma i) / 2)) :
+    HasDerivAt (fun w => matCorrFull (qWeighted rho sigma hsig) i k w)
+      (∑ l, qpConvLowerDeriv (physMix rho sigma hsig) i l k v / (2 * Real.pi) ^ 2) v := by
+  have heq : (fun w => matCorrFull (qWeighted rho sigma hsig) i k w)
+      = fun w => ∑ l, qpConv (physMix rho sigma hsig) i l k w / (2 * Real.pi) ^ 2 :=
+    funext (fun w => matCorrFull_eq_qpConv rho sigma hsig i k w)
+  rw [heq]
+  refine HasDerivAt.fun_sum (fun l _ => ?_)
+  have hlam' : (0 : ℝ) ≤ (physMix rho sigma hsig).lam i k := by
+    simp only [physMix, Mix.lam]; linarith [hlam]
+  have hv' : v ∈ Set.Ioo (0 : ℝ) ((physMix rho sigma hsig).lam i k) := by
+    simp only [physMix, Mix.lam]; exact hv
+  exact (hasDerivAt_qpConv_lower (physMix rho sigma hsig) i l k hlam' hv').div_const _
+
+open FMSA.MixtureHSDCF FMSA.MixtureHSDCFFin1 in
+/-- **⭐ Mixture Baxter ODE LHS on the lower piece.**  On `(0, λᵢₖ)` (σᵢ < σₖ) the DCF core is
+`matDCFreCore i k = qWeighted k i(−·) − matCorrFull i k` (`matDCFreCore_lower_eq`, forward term
+off), so its derivative is the reflected-quadratic chain rule minus the correlation sum:
+`matDCFreCore'(v) = −rgₖᵢ·q0MixDeriv(physMix) k i(−v) − ∑ₗ qpConvLowerDeriv(physMix)ᵢₗₖ(v)/(2π)²`.
+Both parts are explicit (reflected via `hasDerivAt_q0MixEntry`, correlation via
+`matCorrFull_hasDerivAt_lower`); matching this to `−2π·rgᵢₖ·v·c_ij(v)` is the lower-piece mixture
+Baxter factorization (the remaining polynomial identity for the value capstone). -/
+theorem matDCFreCore_hasDerivAt_lower (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (i k : Fin 2) (hlam : 0 ≤ (sigma k - sigma i) / 2)
+    {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) ((sigma k - sigma i) / 2)) :
+    HasDerivAt (matDCFreCore rho sigma hsig i k)
+      (-(rhoGeoPhys rho k i * q0MixDeriv (physMix rho sigma hsig) k i (-v))
+        - ∑ l, qpConvLowerDeriv (physMix rho sigma hsig) i l k v / (2 * Real.pi) ^ 2) v := by
+  have hmem : -v ∈ Set.Ioo ((physMix rho sigma hsig).lam k i) ((physMix rho sigma hsig).R k i) := by
+    simp only [physMix, Mix.lam, Mix.R]
+    exact ⟨by linarith [hv.2], by linarith [hv.1, hsig i, hsig k]⟩
+  have hcomp := (hasDerivAt_q0MixEntry (physMix rho sigma hsig) k i hmem).comp v
+    ((hasDerivAt_id v).neg)
+  have hrefl : HasDerivAt (fun w => qWeighted rho sigma hsig k i (-w))
+      (rhoGeoPhys rho k i * (q0MixDeriv (physMix rho sigma hsig) k i (-v) * -1)) v := by
+    have heq : (fun w => qWeighted rho sigma hsig k i (-w))
+        = fun w => rhoGeoPhys rho k i * q0MixEntry (physMix rho sigma hsig) k i (-w) := by
+      funext w; simp only [qWeighted]
+    rw [heq]; exact hcomp.const_mul (rhoGeoPhys rho k i)
+  have hcorr := matCorrFull_hasDerivAt_lower rho sigma hsig i k hlam hv
+  refine ((hrefl.sub hcorr).congr_deriv (by ring)).congr_of_eventuallyEq ?_
+  filter_upwards [isOpen_Ioo.mem_nhds hv] with w hw
+  exact matDCFreCore_lower_eq rho sigma hsig i k hw.2
 
 end FMSA.MixtureOzStar
