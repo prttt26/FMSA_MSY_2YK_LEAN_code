@@ -107,6 +107,48 @@ theorem matDCFreCore_lower_eq (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sig
   simp only [matDCFfoldKernel]
   rw [qWeighted_forward_eq_zero_of_lt_lam rho sigma hsig i k hv]; ring
 
+/-- FTC for a bare quadratic over an interval. -/
+theorem intervalIntegral_quad (A B C a b : ℝ) :
+    (∫ t in a..b, A + B * t + C * t ^ 2)
+      = A * b + B * b ^ 2 / 2 + C * b ^ 3 / 3 - (A * a + B * a ^ 2 / 2 + C * a ^ 3 / 3) := by
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt
+      (f := fun t => A * t + B * t ^ 2 / 2 + C * t ^ 3 / 3)
+      (fun x _ => by
+        have h1 : HasDerivAt (fun t : ℝ => A * t) A x := by
+          simpa using (hasDerivAt_id x).const_mul A
+        have h2 : HasDerivAt (fun t : ℝ => B * t ^ 2 / 2) (B * x) x :=
+          (((hasDerivAt_pow 2 x).const_mul B).div_const 2).congr_deriv (by ring)
+        have h3 : HasDerivAt (fun t : ℝ => C * t ^ 3 / 3) (C * x ^ 2) x :=
+          (((hasDerivAt_pow 3 x).const_mul C).div_const 3).congr_deriv (by ring)
+        exact ((h1.add h2).add h3).congr_deriv (by ring))
+      ((by fun_prop : Continuous fun t : ℝ => A + B * t + C * t ^ 2).intervalIntegrable a b)]
+
+/-- FTC for a bare quadratic times `t` over an interval. -/
+theorem intervalIntegral_quad_mul_id (A B C a b : ℝ) :
+    (∫ t in a..b, (A + B * t + C * t ^ 2) * t)
+      = A * b ^ 2 / 2 + B * b ^ 3 / 3 + C * b ^ 4 / 4
+        - (A * a ^ 2 / 2 + B * a ^ 3 / 3 + C * a ^ 4 / 4) := by
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt
+      (f := fun t => A * t ^ 2 / 2 + B * t ^ 3 / 3 + C * t ^ 4 / 4)
+      (fun x _ => by
+        have h1 : HasDerivAt (fun t : ℝ => A * t ^ 2 / 2) (A * x) x :=
+          (((hasDerivAt_pow 2 x).const_mul A).div_const 2).congr_deriv (by ring)
+        have h2 : HasDerivAt (fun t : ℝ => B * t ^ 3 / 3) (B * x ^ 2) x :=
+          (((hasDerivAt_pow 3 x).const_mul B).div_const 3).congr_deriv (by ring)
+        have h3 : HasDerivAt (fun t : ℝ => C * t ^ 4 / 4) (C * x ^ 3) x :=
+          (((hasDerivAt_pow 4 x).const_mul C).div_const 4).congr_deriv (by ring)
+        exact ((h1.add h2).add h3).congr_deriv (by ring))
+      ((by fun_prop : Continuous fun t : ℝ => (A + B * t + C * t ^ 2) * t).intervalIntegrable a b)]
+
+/-- `√(ρₖρₗ)·√(ρᵢρₗ) = ρₗ·√(ρᵢρₖ)` — the ρ-geo product used to cancel the sqrt factors in the
+lower-piece correlation derivative. -/
+theorem sqrt_rho_prod (rho : Fin 2 → ℝ) (hrho : ∀ n, 0 ≤ rho n) (i k l : Fin 2) :
+    Real.sqrt (rho k * rho l) * Real.sqrt (rho i * rho l)
+      = rho l * Real.sqrt (rho i * rho k) := by
+  rw [← Real.sqrt_mul (mul_nonneg (hrho k) (hrho l)),
+    show rho k * rho l * (rho i * rho l) = rho l ^ 2 * (rho i * rho k) from by ring,
+    Real.sqrt_mul (sq_nonneg _), Real.sqrt_sq (hrho l)]
+
 open FMSA.MixtureHSDCF in
 /-- **Correlation derivative on the lower piece (physical mixture).**  `matCorrFull(qWeighted)ᵢₖ =
 ∑ₗ qpConv(physMix)ᵢₗₖ/(2π)²` (`matCorrFull_eq_qpConv`), so on `(0, λᵢₖ)` its derivative is the
@@ -158,5 +200,80 @@ theorem matDCFreCore_hasDerivAt_lower (rho sigma : Fin 2 → ℝ) (hsig : ∀ k,
   refine ((hrefl.sub hcorr).congr_deriv (by ring)).congr_of_eventuallyEq ?_
   filter_upwards [isOpen_Ioo.mem_nhds hv] with w hw
   exact matDCFreCore_lower_eq rho sigma hsig i k hw.2
+
+/-- **The explicit Lebowitz mixture DCF on the lower piece — a CONSTANT.**  For the pair `(i,k)`
+with `σᵢ < σₖ`, on `(0, λᵢₖ)` the physical PY-HS mixture DCF `c_ij` is the explicit constant
+`cLowerPiece` in `vac = 1−η` and the pair diameters/densities (derived symbolically from
+`matDCFreCore_hasDerivAt_lower` and triple-verified, `mixdcf_lebowitz_cij.py`; the `v⁰` term of
+`−matDCFreCore'/(2πv)` vanishes by the `ξ₂` identity ⇒ no `1/v` pole).  Reduces to the scalar
+`c_HS(η)` at equal diameters. -/
+noncomputable def cLowerPiece (rho sigma : Fin 2 → ℝ) (i k : Fin 2) : ℝ :=
+  -(24 * vacMix rho sigma ^ 3
+      + Real.pi * vacMix rho sigma ^ 2
+        * (28 * rho i * sigma i ^ 3 + 4 * rho k * sigma i ^ 3
+          + 12 * rho k * sigma i ^ 2 * sigma k + 12 * rho k * sigma i * sigma k ^ 2)
+      + Real.pi ^ 2 * vacMix rho sigma
+        * (10 * rho i ^ 2 * sigma i ^ 6 + 4 * rho i * rho k * sigma i ^ 5 * sigma k
+          + 16 * rho i * rho k * sigma i ^ 4 * sigma k ^ 2
+          + 4 * rho k ^ 2 * sigma i ^ 3 * sigma k ^ 3
+          + 6 * rho k ^ 2 * sigma i ^ 2 * sigma k ^ 4)
+      + Real.pi ^ 3
+        * (rho i ^ 3 * sigma i ^ 9 + 3 * rho i ^ 2 * rho k * sigma i ^ 7 * sigma k ^ 2
+          + 3 * rho i * rho k ^ 2 * sigma i ^ 5 * sigma k ^ 4
+          + rho k ^ 3 * sigma i ^ 3 * sigma k ^ 6))
+    / (24 * vacMix rho sigma ^ 4)
+
+open FMSA.MixtureHSDCF FMSA.MixtureHSDCFFin1 in
+/-- **⭐ The lower-piece mixture Baxter ODE — DISCHARGED.**
+`matDCFreCore'(v) = −2π·rgᵢₖ·v·cLowerPiece` on `(0, λᵢₖ)`.  From `matDCFreCore_hasDerivAt_lower`,
+evaluate the moment integrals
+(`intervalIntegral_quad`/`_mul_id`); `fin_cases` on the pair collapses the diagonal `√(ρₗρₗ)=ρₗ`
+leaving a single `√(ρ₀ρ₁)` factor, and the sqrt-free polynomial identity (with the `ξ₂` v⁰
+cancellation) closes by `field_simp; ring`.  The lower-piece mixture Baxter factorization. -/
+theorem matDCFreCore_hasDerivAt_lower_cLower (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (hrho : ∀ n, 0 ≤ rho n) (hvac : vacMix rho sigma ≠ 0) (i k : Fin 2)
+    (hlam : 0 ≤ (sigma k - sigma i) / 2)
+    {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) ((sigma k - sigma i) / 2)) :
+    HasDerivAt (fun w => matDCFreCore rho sigma hsig i k w)
+      (-(2 * Real.pi * rhoGeoPhys rho i k * v * cLowerPiece rho sigma i k)) v := by
+  refine (matDCFreCore_hasDerivAt_lower rho sigma hsig i k hlam hv).congr_deriv ?_
+  fin_cases i <;> fin_cases k <;> simp only [Fin.isValue, Fin.reduceFinMk] <;>
+    first
+    | (exfalso; simp only [Fin.isValue, sub_self, zero_div, Set.mem_Ioo] at hv;
+       exact absurd hv.2 (not_lt.mpr hv.1.le))
+    | (simp only [Fin.isValue, qpConvLowerDeriv, Fin.sum_univ_two, intervalIntegral_quad,
+         intervalIntegral_quad_mul_id, q0MixDeriv, physMix, Q0phys, Qppphys, Mix.R, Mix.lam,
+         rhoGeoPhys, cLowerPiece, xi2, Real.sqrt_mul_self (hrho 0), Real.sqrt_mul_self (hrho 1),
+         show rho 1 * rho 0 = rho 0 * rho 1 from mul_comm _ _]
+       field_simp
+       ring)
+
+/-- **Lower-piece value capstone (conditional on the lower-piece Baxter ODE).**  Given the mixture
+Baxter factorization on the lower piece — `matDCFreCore'(v) = −2π·rgᵢₖ·v·cLowerPiece` for `0 < v` —
+the shell-inverse forcing IS the explicit constant DCF: `shellForcing rgᵢₖ i k v = cLowerPiece`.
+Immediate from `shellForcing = −matDCFreCore'/(rgᵢₖ·2πv)` (no shell integral needed — `shellForcing`
+is defined pointwise via `deriv`).  The ODE hypothesis is discharged from
+`matDCFreCore_hasDerivAt_lower` by the moment-evaluated value identity. -/
+theorem shellForcing_lower_eq_of_baxterODE (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (i k : Fin 2) (hrg : rhoGeoPhys rho i k ≠ 0) {v : ℝ} (hv : 0 < v)
+    (hODE : HasDerivAt (fun w => matDCFreCore rho sigma hsig i k w)
+      (-(2 * Real.pi * rhoGeoPhys rho i k * v * cLowerPiece rho sigma i k)) v) :
+    shellForcing rho sigma hsig (rhoGeoPhys rho i k) i k v = cLowerPiece rho sigma i k := by
+  have hpi : Real.pi ≠ 0 := Real.pi_ne_zero
+  simp only [shellForcing, hODE.deriv]
+  field_simp
+
+/-- **⭐⭐ Lower-piece value capstone — UNCONDITIONAL.**  At unequal diameters (`σᵢ < σₖ`), on the
+lower piece `(0, λᵢₖ)` the OZ★ shell-inverse forcing IS the explicit constant physical mixture DCF:
+`shellForcing rgᵢₖ i k v = cLowerPiece`.  Combines the discharged lower-piece mixture Baxter ODE
+(`matDCFreCore_hasDerivAt_lower_cLower`) with `shellForcing_lower_eq_of_baxterODE`.  The first piece
+of the unequal-σ value route, std-3. -/
+theorem shellForcing_lower_eq (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (hrho : ∀ n, 0 ≤ rho n) (hvac : vacMix rho sigma ≠ 0) (i k : Fin 2)
+    (hrg : rhoGeoPhys rho i k ≠ 0) (hlam : 0 ≤ (sigma k - sigma i) / 2)
+    {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) ((sigma k - sigma i) / 2)) :
+    shellForcing rho sigma hsig (rhoGeoPhys rho i k) i k v = cLowerPiece rho sigma i k :=
+  shellForcing_lower_eq_of_baxterODE rho sigma hsig i k hrg hv.1
+    (matDCFreCore_hasDerivAt_lower_cLower rho sigma hsig hrho hvac i k hlam hv)
 
 end FMSA.MixtureOzStar
