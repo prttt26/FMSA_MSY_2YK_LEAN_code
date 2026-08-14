@@ -567,4 +567,67 @@ theorem shellForcing_eq_cMixDCFN {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : �
   · rw [cMixDCFN, if_neg (not_lt.mpr hup.le)]
     exact shellForcing_upper_eqN rho sigma hsig hrho hvac i k hlt hrg ⟨hup, hv.2⟩
 
+
+/-! ### Knot continuity at general `N` — the `∑ₗ` closes via `xi2` alone
+
+Per-species continuity is FALSE, but the per-species difference
+`cCorrPieceN(l)(λ) − cLowerCorrPieceN(l)(λ) = cKnotSlopeN·ρₗ·σₗ²` is **purely `σₗ²`** (the `σₗ⁰,σₗ¹`
+parts cancel), so `∑ₗ` of it is `cKnotSlopeN·∑ₗρₗσₗ² = cKnotSlopeN·xi2` — only `xi2 = ξ₂` is
+needed (no `ξ₀/ξ₁/ξ₃/ξ₄`).  The leading difference is `−cKnotSlopeN·xi2`, so they cancel. -/
+
+/-- The knot-continuity slope `π·σᵢσₖ/(vac²·(σᵢ−σₖ))` — the common factor of both the per-species
+`σₗ²` continuity defect and the (negated) leading defect. -/
+noncomputable def cKnotSlopeN {N : ℕ} (rho sigma : Fin N → ℝ) (i k : Fin N) : ℝ :=
+  Real.pi * sigma i * sigma k / (vacMix rho sigma ^ 2 * (sigma i - sigma k))
+
+set_option maxHeartbeats 2000000 in
+/-- **Per-species knot defect is purely `σₗ²`** — `cCorrPieceN(l)(λ) − cLowerCorrPieceN(l)(λ) =
+cKnotSlopeN·(ρₗ·σₗ²)` at the knot `λ = (σₖ−σᵢ)/2`.  The `σₗ⁰,σₗ¹` parts of the per-species C¹ break
+cancel, leaving only `σₗ²` (⇒ the species sum needs only `xi2`).  A √-free `field_simp; ring`. -/
+theorem cCorrPieceN_sub_knot {N : ℕ} (rho sigma : Fin N → ℝ) (hvac : vacMix rho sigma ≠ 0)
+    (i l k : Fin N) (hlt : sigma i < sigma k) :
+    cCorrPieceN rho sigma i l k ((sigma k - sigma i) / 2)
+        - cLowerCorrPieceN rho sigma i l k ((sigma k - sigma i) / 2)
+      = cKnotSlopeN rho sigma i k * (rho l * sigma l ^ 2) := by
+  have hsub : sigma i - sigma k ≠ 0 := sub_ne_zero_of_ne (ne_of_lt hlt)
+  have hsub' : sigma k - sigma i ≠ 0 := sub_ne_zero_of_ne (ne_of_gt hlt)
+  simp only [cCorrPieceN, cLowerCorrPieceN, cCorrANumN, cCorrBNumN, cCorrC2NumN, cCorrENumN,
+    cLowerCorrANumN, cLowerCorrBNumN, cKnotSlopeN]
+  field_simp
+  ring
+
+set_option maxHeartbeats 2000000 in
+/-- **Leading knot defect** — `cLeadPieceN(λ) − cLowerLeadPieceN(λ) = −(cKnotSlopeN·xi2)`, exactly
+the negative of the aggregated per-species defect. -/
+theorem cLeadPieceN_sub_knot {N : ℕ} (rho sigma : Fin N → ℝ) (hvac : vacMix rho sigma ≠ 0)
+    (i k : Fin N) (hlt : sigma i < sigma k) :
+    cLeadPieceN rho sigma i k ((sigma k - sigma i) / 2)
+        - cLowerLeadPieceN rho sigma i k ((sigma k - sigma i) / 2)
+      = -(cKnotSlopeN rho sigma i k * xi2 rho sigma) := by
+  have hsub : sigma i - sigma k ≠ 0 := sub_ne_zero_of_ne (ne_of_lt hlt)
+  have hsub' : sigma k - sigma i ≠ 0 := sub_ne_zero_of_ne (ne_of_gt hlt)
+  simp only [cLeadPieceN, cLowerLeadPieceN, cLeadANumN, cLeadBNumN, cLowerLeadANumN,
+    cLowerLeadBNumN, cKnotSlopeN, xi2]
+  field_simp
+  ring
+
+/-- **⭐⭐⭐ General-`N` mixture DCF is C⁰ across the knot** — `cLowerPieceN(λ) = cUpperPieceN(λ)`
+for `σᵢ < σₖ`.  The species sum of the per-species `σₗ²` defects is `cKnotSlopeN·xi2`
+(`∑ₗρₗσₗ² = xi2`, `Finset.mul_sum`), which the leading defect `−cKnotSlopeN·xi2` cancels.  So
+`cMixDCFN` is continuous — the general-`N` analog of `cLowerPiece_eq_cUpperPiece_knot`, but here the
+per-species continuity is FALSE and the closure is a genuine `∑ₗ`-moment identity in `xi2`. -/
+theorem cLowerPiece_eq_cUpperPiece_knotN {N : ℕ} (rho sigma : Fin N → ℝ)
+    (hvac : vacMix rho sigma ≠ 0) (i k : Fin N) (hlt : sigma i < sigma k) :
+    cLowerPieceN rho sigma i k ((sigma k - sigma i) / 2)
+      = cUpperPieceN rho sigma i k ((sigma k - sigma i) / 2) := by
+  rw [cUpperPieceN, cLowerPieceN]
+  have hsum : (∑ l, cCorrPieceN rho sigma i l k ((sigma k - sigma i) / 2))
+      - (∑ l, cLowerCorrPieceN rho sigma i l k ((sigma k - sigma i) / 2))
+      = cKnotSlopeN rho sigma i k * xi2 rho sigma := by
+    rw [← Finset.sum_sub_distrib,
+      Finset.sum_congr rfl (fun l _ => cCorrPieceN_sub_knot rho sigma hvac i l k hlt),
+      ← Finset.mul_sum, xi2]
+  have hlead := cLeadPieceN_sub_knot rho sigma hvac i k hlt
+  linarith [hsum, hlead]
+
 end FMSA.MixtureOzStar
