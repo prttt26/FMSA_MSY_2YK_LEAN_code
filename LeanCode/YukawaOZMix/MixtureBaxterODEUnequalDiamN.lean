@@ -10,6 +10,8 @@ import Mathlib
 import LeanCode.YukawaOZMix.MixtureDCFAEInjective
 import LeanCode.YukawaOZMix.MixtureBaxterODEUnequalDiam
 import LeanCode.YukawaOZMix.MixtureCorrelationDeriv
+import LeanCode.YukawaOZMix.MixtureCorrelationDerivUpper
+import LeanCode.YukawaOZMix.MixtureHSDCFFin1
 
 /-!
 # The mixture Baxter ODE at UNEQUAL diameters — GENERAL `N` (MIXCHS.7-N)
@@ -127,5 +129,43 @@ theorem matDCFreCoreN_lower_eq {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀
       = qWeightedN rho sigma hsig k i (-v) - matCorrFull (qWeightedN rho sigma hsig) i k v := by
   simp only [matDCFreCoreN]
   rw [qWeightedN_forward_eq_zero_of_lt_lam rho sigma hsig i k hv]; ring
+
+open FMSA.MixtureHSDCF FMSA.MixtureHSDCFFin1 in
+/-- **⭐ Mixture Baxter ODE LHS on the UPPER piece (general `N`).**  On `(λᵢₖ, Rᵢₖ)` the DCF core is
+`matDCFreCoreN i k = qWeightedN i k − matCorrFull i k` (`matDCFreCoreN_upper_eq`, reflected off), so
+its derivative is the forward-quadratic chain rule minus the species sum of upper-`qpConv`
+derivatives: `matDCFreCoreN'(v) = rgᵢₖ·q0MixDeriv(physMixN) i k v
+− ∑ₗ qpConvUpperDeriv(physMixN)ᵢₗₖ(v)/(2π)²` (forward via `hasDerivAt_q0MixEntry`, correlation via
+`hasDerivAt_qpConv_upper` under the species sum).  The general-`N` upper analog of
+`matDCFreCore_hasDerivAt_lower`; matching to `−2π·rgᵢₖ·v·c_ij(v)` is the upper-piece factorization
+(with the `√`-collapse `rhoGeoPhys_mul_eq` firing per `l`). -/
+theorem matDCFreCoreN_hasDerivAt_upper {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (i k : Fin N) (hlam : 0 ≤ (sigma k - sigma i) / 2)
+    {v : ℝ} (hv : v ∈ Set.Ioo ((sigma k - sigma i) / 2) ((sigma i + sigma k) / 2)) :
+    HasDerivAt (matDCFreCoreN rho sigma hsig i k)
+      (rhoGeoPhys rho i k * q0MixDeriv (physMixN rho sigma hsig) i k v
+        - ∑ l, qpConvUpperDeriv (physMixN rho sigma hsig) i l k v / (2 * Real.pi) ^ 2) v := by
+  have hlam' : (0 : ℝ) ≤ (physMixN rho sigma hsig).lam i k := by
+    simp only [physMixN, Mix.lam]; exact hlam
+  have hv' : v ∈ Set.Ioo ((physMixN rho sigma hsig).lam i k)
+      ((physMixN rho sigma hsig).R i k) := by
+    simp only [physMixN, Mix.lam, Mix.R]; exact hv
+  have hqw : HasDerivAt (fun w => qWeightedN rho sigma hsig i k w)
+      (rhoGeoPhys rho i k * q0MixDeriv (physMixN rho sigma hsig) i k v) v :=
+    (hasDerivAt_q0MixEntry (physMixN rho sigma hsig) i k hv').const_mul (rhoGeoPhys rho i k)
+  have hcorr : HasDerivAt (fun w => matCorrFull (qWeightedN rho sigma hsig) i k w)
+      (∑ l, qpConvUpperDeriv (physMixN rho sigma hsig) i l k v / (2 * Real.pi) ^ 2) v := by
+    have heq : (fun w => matCorrFull (qWeightedN rho sigma hsig) i k w)
+        = fun w => ∑ l, qpConv (physMixN rho sigma hsig) i l k w / (2 * Real.pi) ^ 2 :=
+      funext (fun w => matCorrFull_eq_qpConvN rho sigma hsig i k w)
+    rw [heq]
+    refine HasDerivAt.fun_sum (fun l _ => ?_)
+    exact (hasDerivAt_qpConv_upper (physMixN rho sigma hsig) i l k hlam' hv').div_const _
+  have hEq : matDCFreCoreN rho sigma hsig i k
+      =ᶠ[nhds v] (fun w => qWeightedN rho sigma hsig i k w
+        - matCorrFull (qWeightedN rho sigma hsig) i k w) := by
+    filter_upwards [isOpen_Ioo.mem_nhds hv] with w hw
+    exact matDCFreCoreN_upper_eq rho sigma hsig i k hw.1
+  exact (hqw.sub hcorr).congr_of_eventuallyEq hEq
 
 end FMSA.MixtureOzStar
