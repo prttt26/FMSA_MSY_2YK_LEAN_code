@@ -168,4 +168,225 @@ theorem matDCFreCoreN_hasDerivAt_upper {N : ℕ} (rho sigma : Fin N → ℝ) (hs
     exact matDCFreCoreN_upper_eq rho sigma hsig i k hw.1
   exact (hqw.sub hcorr).congr_of_eventuallyEq hEq
 
+
+/-- **Upper-piece Lebowitz DCF coefficients (general `N`), as leading + per-species pieces.**
+Derived + validated (`genN_coeffs.py`): the `(i,k)` LEADING term contributes only to `A,B`
+(`cLeadANumN`, `cLeadBNumN`), and each species `l` contributes the four `cCorr*NumN(i,l,k)`
+(each **linear in `ρₗ`**).  With `vacMix`/`xi2` kept opaque; at `N = 2`, `cLead + ∑_{l∈{i,k}}`
+reproduces the binary `cUpperANum/BNum/C2Num/ENum`. -/
+noncomputable def cLeadANumN {N : ℕ} (rho sigma : Fin N → ℝ) (i k : Fin N) : ℝ :=
+  -768 * vacMix rho sigma^3 - 384 * vacMix rho sigma^2 * Real.pi * sigma k * xi2 rho sigma
+
+noncomputable def cLeadBNumN {N : ℕ} (rho sigma : Fin N → ℝ) (i k : Fin N) : ℝ :=
+  192 * vacMix rho sigma^2 * Real.pi * sigma k^2 * xi2 rho sigma
+
+noncomputable def cCorrANumN {N : ℕ} (rho sigma : Fin N → ℝ) (i l k : Fin N) : ℝ :=
+  -64 * vacMix rho sigma^2 * Real.pi * rho l * sigma i^3
+    - 192 * vacMix rho sigma^2 * Real.pi * rho l * sigma i^2 * sigma l
+    - 192 * vacMix rho sigma^2 * Real.pi * rho l * sigma i * sigma l^2
+    - 64 * vacMix rho sigma^2 * Real.pi * rho l * sigma k^3
+    - 192 * vacMix rho sigma^2 * Real.pi * rho l * sigma k^2 * sigma l
+    + 192 * vacMix rho sigma^2 * Real.pi * rho l * sigma k * sigma l^2
+    - 64 * vacMix rho sigma * Real.pi^2 * rho l * sigma i^3 * sigma l * xi2 rho sigma
+    - 96 * vacMix rho sigma * Real.pi^2 * rho l * sigma i^2 * sigma l^2 * xi2 rho sigma
+    - 64 * vacMix rho sigma * Real.pi^2 * rho l * sigma k^3 * sigma l * xi2 rho sigma
+    - 96 * vacMix rho sigma * Real.pi^2 * rho l * sigma k^2 * sigma l^2 * xi2 rho sigma
+    - 16 * Real.pi^3 * rho l * sigma i^3 * sigma l^2 * xi2 rho sigma^2
+    - 16 * Real.pi^3 * rho l * sigma k^3 * sigma l^2 * xi2 rho sigma^2
+
+noncomputable def cCorrBNumN {N : ℕ} (rho sigma : Fin N → ℝ) (i l k : Fin N) : ℝ :=
+  12 * vacMix rho sigma^2 * Real.pi * rho l * sigma i^4
+    + 48 * vacMix rho sigma^2 * Real.pi * rho l * sigma i^3 * sigma l
+    - 24 * vacMix rho sigma^2 * Real.pi * rho l * sigma i^2 * sigma k^2
+    - 48 * vacMix rho sigma^2 * Real.pi * rho l * sigma i^2 * sigma k * sigma l
+    + 48 * vacMix rho sigma^2 * Real.pi * rho l * sigma i^2 * sigma l^2
+    - 48 * vacMix rho sigma^2 * Real.pi * rho l * sigma i * sigma k^2 * sigma l
+    - 96 * vacMix rho sigma^2 * Real.pi * rho l * sigma i * sigma k * sigma l^2
+    + 12 * vacMix rho sigma^2 * Real.pi * rho l * sigma k^4
+    + 48 * vacMix rho sigma^2 * Real.pi * rho l * sigma k^3 * sigma l
+    - 144 * vacMix rho sigma^2 * Real.pi * rho l * sigma k^2 * sigma l^2
+    + 12 * vacMix rho sigma * Real.pi^2 * rho l * sigma i^4 * sigma l * xi2 rho sigma
+    + 24 * vacMix rho sigma * Real.pi^2 * rho l * sigma i^3 * sigma l^2 * xi2 rho sigma
+    - 24 * vacMix rho sigma * Real.pi^2 * rho l * sigma i^2 * sigma k^2 * sigma l * xi2 rho sigma
+    - 24 * vacMix rho sigma * Real.pi^2 * rho l * sigma i^2 * sigma k * sigma l^2 * xi2 rho sigma
+    - 24 * vacMix rho sigma * Real.pi^2 * rho l * sigma i * sigma k^2 * sigma l^2 * xi2 rho sigma
+    + 12 * vacMix rho sigma * Real.pi^2 * rho l * sigma k^4 * sigma l * xi2 rho sigma
+    + 24 * vacMix rho sigma * Real.pi^2 * rho l * sigma k^3 * sigma l^2 * xi2 rho sigma
+    + 3 * Real.pi^3 * rho l * sigma i^4 * sigma l^2 * xi2 rho sigma^2
+    - 6 * Real.pi^3 * rho l * sigma i^2 * sigma k^2 * sigma l^2 * xi2 rho sigma^2
+    + 3 * Real.pi^3 * rho l * sigma k^4 * sigma l^2 * xi2 rho sigma^2
+
+noncomputable def cCorrC2NumN {N : ℕ} (rho sigma : Fin N → ℝ) (i l k : Fin N) : ℝ :=
+  96 * vacMix rho sigma^2 * Real.pi * rho l * sigma i^2
+    + 192 * vacMix rho sigma^2 * Real.pi * rho l * sigma i * sigma l
+    + 96 * vacMix rho sigma^2 * Real.pi * rho l * sigma k^2
+    + 192 * vacMix rho sigma^2 * Real.pi * rho l * sigma k * sigma l
+    + 192 * vacMix rho sigma^2 * Real.pi * rho l * sigma l^2
+    + 96 * vacMix rho sigma * Real.pi^2 * rho l * sigma i^2 * sigma l * xi2 rho sigma
+    + 96 * vacMix rho sigma * Real.pi^2 * rho l * sigma i * sigma l^2 * xi2 rho sigma
+    + 96 * vacMix rho sigma * Real.pi^2 * rho l * sigma k^2 * sigma l * xi2 rho sigma
+    + 96 * vacMix rho sigma * Real.pi^2 * rho l * sigma k * sigma l^2 * xi2 rho sigma
+    + 24 * Real.pi^3 * rho l * sigma i^2 * sigma l^2 * xi2 rho sigma^2
+    + 24 * Real.pi^3 * rho l * sigma k^2 * sigma l^2 * xi2 rho sigma^2
+
+noncomputable def cCorrENumN {N : ℕ} (rho sigma : Fin N → ℝ) (i l k : Fin N) : ℝ :=
+  -64 * vacMix rho sigma^2 * Real.pi * rho l
+    - 64 * vacMix rho sigma * Real.pi^2 * rho l * sigma l * xi2 rho sigma
+    - 16 * Real.pi^3 * rho l * sigma l^2 * xi2 rho sigma^2
+
+
+/-- Per-species contribution to the upper DCF `= (A + B/v + C₂v + E·v³)/(768·vac⁴)`. -/
+noncomputable def cCorrPieceN {N : ℕ} (rho sigma : Fin N → ℝ) (i l k : Fin N) (v : ℝ) : ℝ :=
+  (cCorrANumN rho sigma i l k + cCorrBNumN rho sigma i l k / v
+      + cCorrC2NumN rho sigma i l k * v + cCorrENumN rho sigma i l k * v ^ 3)
+    / (768 * vacMix rho sigma ^ 4)
+
+/-- Leading `(i,k)` contribution to the upper DCF `= (A + B/v)/(768·vac⁴)`. -/
+noncomputable def cLeadPieceN {N : ℕ} (rho sigma : Fin N → ℝ) (i k : Fin N) (v : ℝ) : ℝ :=
+  (cLeadANumN rho sigma i k + cLeadBNumN rho sigma i k / v) / (768 * vacMix rho sigma ^ 4)
+
+/-- **The general-`N` upper-piece Lebowitz mixture DCF** `c_ij(v) = cLeadPieceN + ∑ₗ cCorrPieceN`
+— the two-piece DCF's outer branch with the full species sum (at `N = 2` it collapses to
+`cUpperPiece`). -/
+noncomputable def cUpperPieceN {N : ℕ} (rho sigma : Fin N → ℝ) (i k : Fin N) (v : ℝ) : ℝ :=
+  cLeadPieceN rho sigma i k v + ∑ l, cCorrPieceN rho sigma i l k v
+
+open FMSA.MixtureHSDCF in
+set_option maxHeartbeats 2000000 in
+/-- **⭐ Per-species upper-`qpConv`-derivative identity (the `√`-collapse).**  For each species `l`,
+`qpConvUpperDeriv(physMixN)ᵢₗₖ(v)/(2π)² = 2π·rgᵢₖ·v·cCorrPieceN(i,l,k,v)`.  Key step:
+`qpConvUpperDeriv = (2π)²·(√(ρᵢρₗ)·√(ρₖρₗ))·Il'(v)` with the `√` product a single subterm, which
+`rhoGeoPhys_mul_eq` collapses to `ρₗ·√(ρᵢρₖ)` for **every** `l` (no `fin_cases`); the residue is a
+`√`-free `field_simp; ring`.  `Il'` is the bare (`√`-free) moment-integral derivative. -/
+theorem qpConvUpperDeriv_per_l {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (hrho : ∀ n, 0 ≤ rho n) (hvac : vacMix rho sigma ≠ 0) (i l k : Fin N) {v : ℝ} (hv0 : v ≠ 0) :
+    qpConvUpperDeriv (physMixN rho sigma hsig) i l k v / (2 * Real.pi) ^ 2
+      = 2 * Real.pi * rhoGeoPhys rho i k * v * cCorrPieceN rho sigma i l k v := by
+  have hab : Real.sqrt (rho i * rho l) * Real.sqrt (rho k * rho l)
+      = rho l * Real.sqrt (rho i * rho k) := by
+    have h := rhoGeoPhys_mul_eq rho hrho i k l
+    simpa only [rhoGeoPhys] using h
+  have hfac : qpConvUpperDeriv (physMixN rho sigma hsig) i l k v
+      = (2 * Real.pi) ^ 2 * (Real.sqrt (rho i * rho l) * Real.sqrt (rho k * rho l))
+        * (
+        Real.pi^2 * sigma i^4/(32 * vacMix rho sigma^2)
+        + Real.pi^2 * sigma i^3 * sigma l/(8 * vacMix rho sigma^2)
+        - Real.pi^2 * sigma i^3 * v/(6 * vacMix rho sigma^2)
+        - Real.pi^2 * sigma i^2 * sigma k^2/(16 * vacMix rho sigma^2)
+        - Real.pi^2 * sigma i^2 * sigma k * sigma l/(8 * vacMix rho sigma^2)
+        + Real.pi^2 * sigma i^2 * sigma l^2/(8 * vacMix rho sigma^2)
+        - Real.pi^2 * sigma i^2 * sigma l * v/(2 * vacMix rho sigma^2)
+        + Real.pi^2 * sigma i^2 * v^2/(4 * vacMix rho sigma^2)
+        - Real.pi^2 * sigma i * sigma k^2 * sigma l/(8 * vacMix rho sigma^2)
+        - Real.pi^2 * sigma i * sigma k * sigma l^2/(4 * vacMix rho sigma^2)
+        - Real.pi^2 * sigma i * sigma l^2 * v/(2 * vacMix rho sigma^2)
+        + Real.pi^2 * sigma i * sigma l * v^2/(2 * vacMix rho sigma^2)
+        + Real.pi^2 * sigma k^4/(32 * vacMix rho sigma^2)
+        + Real.pi^2 * sigma k^3 * sigma l/(8 * vacMix rho sigma^2)
+        - Real.pi^2 * sigma k^3 * v/(6 * vacMix rho sigma^2)
+        - 3 * Real.pi^2 * sigma k^2 * sigma l^2/(8 * vacMix rho sigma^2)
+        - Real.pi^2 * sigma k^2 * sigma l * v/(2 * vacMix rho sigma^2)
+        + Real.pi^2 * sigma k^2 * v^2/(4 * vacMix rho sigma^2)
+        + Real.pi^2 * sigma k * sigma l^2 * v/(2 * vacMix rho sigma^2)
+        + Real.pi^2 * sigma k * sigma l * v^2/(2 * vacMix rho sigma^2)
+        + Real.pi^2 * sigma l^2 * v^2/(2 * vacMix rho sigma^2)
+        - Real.pi^2 * v^4/(6 * vacMix rho sigma^2)
+        + Real.pi^3 * sigma i^4 * sigma l * xi2 rho sigma/(32 * vacMix rho sigma^3)
+        + Real.pi^3 * sigma i^3 * sigma l^2 * xi2 rho sigma/(16 * vacMix rho sigma^3)
+        - Real.pi^3 * sigma i^3 * sigma l * v * xi2 rho sigma/(6 * vacMix rho sigma^3)
+        - Real.pi^3 * sigma i^2 * sigma k^2 * sigma l * xi2 rho sigma/(16 * vacMix rho sigma^3)
+        - Real.pi^3 * sigma i^2 * sigma k * sigma l^2 * xi2 rho sigma/(16 * vacMix rho sigma^3)
+        - Real.pi^3 * sigma i^2 * sigma l^2 * v * xi2 rho sigma/(4 * vacMix rho sigma^3)
+        + Real.pi^3 * sigma i^2 * sigma l * v^2 * xi2 rho sigma/(4 * vacMix rho sigma^3)
+        - Real.pi^3 * sigma i * sigma k^2 * sigma l^2 * xi2 rho sigma/(16 * vacMix rho sigma^3)
+        + Real.pi^3 * sigma i * sigma l^2 * v^2 * xi2 rho sigma/(4 * vacMix rho sigma^3)
+        + Real.pi^3 * sigma k^4 * sigma l * xi2 rho sigma/(32 * vacMix rho sigma^3)
+        + Real.pi^3 * sigma k^3 * sigma l^2 * xi2 rho sigma/(16 * vacMix rho sigma^3)
+        - Real.pi^3 * sigma k^3 * sigma l * v * xi2 rho sigma/(6 * vacMix rho sigma^3)
+        - Real.pi^3 * sigma k^2 * sigma l^2 * v * xi2 rho sigma/(4 * vacMix rho sigma^3)
+        + Real.pi^3 * sigma k^2 * sigma l * v^2 * xi2 rho sigma/(4 * vacMix rho sigma^3)
+        + Real.pi^3 * sigma k * sigma l^2 * v^2 * xi2 rho sigma/(4 * vacMix rho sigma^3)
+        - Real.pi^3 * sigma l * v^4 * xi2 rho sigma/(6 * vacMix rho sigma^3)
+        + Real.pi^4 * sigma i^4 * sigma l^2 * xi2 rho sigma^2/(128 * vacMix rho sigma^4)
+        - Real.pi^4 * sigma i^3 * sigma l^2 * v * xi2 rho sigma^2/(24 * vacMix rho sigma^4)
+        - Real.pi^4 * sigma i^2 * sigma k^2 * sigma l^2 * xi2 rho sigma^2/(64 * vacMix rho sigma^4)
+        + Real.pi^4 * sigma i^2 * sigma l^2 * v^2 * xi2 rho sigma^2/(16 * vacMix rho sigma^4)
+        + Real.pi^4 * sigma k^4 * sigma l^2 * xi2 rho sigma^2/(128 * vacMix rho sigma^4)
+        - Real.pi^4 * sigma k^3 * sigma l^2 * v * xi2 rho sigma^2/(24 * vacMix rho sigma^4)
+        + Real.pi^4 * sigma k^2 * sigma l^2 * v^2 * xi2 rho sigma^2/(16 * vacMix rho sigma^4)
+        - Real.pi^4 * sigma l^2 * v^4 * xi2 rho sigma^2/(24 * vacMix rho sigma^4)
+        ) := by
+    rw [qpConvUpperDeriv, intervalIntegral_quad, intervalIntegral_quad_mul_id]
+    simp only [physMixN, Q0phys, Qppphys, Mix.R, Mix.lam]
+    field_simp
+    ring
+  rw [hfac, hab]
+  simp only [rhoGeoPhys, cCorrPieceN, cCorrANumN, cCorrBNumN, cCorrC2NumN, cCorrENumN]
+  field_simp
+  ring
+
+open FMSA.MixtureHSDCFFin1 in
+set_option maxHeartbeats 2000000 in
+/-- **Leading identity.**  `rgᵢₖ·q0MixDeriv(physMixN) i k v = −2π·rgᵢₖ·v·cLeadPieceN` — the forward
+quadratic's slope IS the leading part of the upper Baxter forcing (√-free once `rgᵢₖ` is common). -/
+theorem matDCFreCoreN_lead {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (hvac : vacMix rho sigma ≠ 0) (i k : Fin N) {v : ℝ} (hv0 : v ≠ 0) :
+    rhoGeoPhys rho i k * q0MixDeriv (physMixN rho sigma hsig) i k v
+      = -(2 * Real.pi * rhoGeoPhys rho i k * v * cLeadPieceN rho sigma i k v) := by
+  simp only [q0MixDeriv, physMixN, Q0phys, Qppphys, Mix.R, rhoGeoPhys, cLeadPieceN,
+    cLeadANumN, cLeadBNumN]
+  field_simp
+  ring
+
+open FMSA.MixtureHSDCF FMSA.MixtureHSDCFFin1 in
+/-- **⭐⭐ General-`N` upper mixture Baxter ODE.**  `matDCFreCoreN'(v) = −2π·rgᵢₖ·v·cUpperPieceN(v)`
+on `(λᵢₖ, Rᵢₖ)`.  Assembles `matDCFreCoreN_hasDerivAt_upper` (structural derivative) with the
+leading identity and the per-species identity under the species sum (`Finset.sum_congr` +
+`Finset.mul_sum`).  The general-`N` upper analog of `matDCFreCore_hasDerivAt_upper_cUpper`. -/
+theorem matDCFreCoreN_hasDerivAt_upper_cUpper {N : ℕ} (rho sigma : Fin N → ℝ)
+    (hsig : ∀ k, 0 < sigma k) (hrho : ∀ n, 0 ≤ rho n) (hvac : vacMix rho sigma ≠ 0) (i k : Fin N)
+    (hlam : 0 ≤ (sigma k - sigma i) / 2)
+    {v : ℝ} (hv : v ∈ Set.Ioo ((sigma k - sigma i) / 2) ((sigma i + sigma k) / 2)) (hv0 : v ≠ 0) :
+    HasDerivAt (matDCFreCoreN rho sigma hsig i k)
+      (-(2 * Real.pi * rhoGeoPhys rho i k * v * cUpperPieceN rho sigma i k v)) v := by
+  refine (matDCFreCoreN_hasDerivAt_upper rho sigma hsig i k hlam hv).congr_deriv ?_
+  have hsum : (∑ l, qpConvUpperDeriv (physMixN rho sigma hsig) i l k v / (2 * Real.pi) ^ 2)
+      = ∑ l, 2 * Real.pi * rhoGeoPhys rho i k * v * cCorrPieceN rho sigma i l k v :=
+    Finset.sum_congr rfl (fun l _ =>
+      qpConvUpperDeriv_per_l rho sigma hsig hrho hvac i l k hv0)
+  rw [hsum, matDCFreCoreN_lead rho sigma hsig hvac i k hv0, cUpperPieceN, mul_add,
+    Finset.mul_sum]
+  ring
+
+/-- **The constructed shell-forcing at general `N`** — `Φᶜᵢₖ(s) = −matDCFreCoreN'(i,k)(s)/(rg·2πs)`
+(the shellKernel-inverse; the `N`-ary `shellForcing`). -/
+noncomputable def shellForcingN {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (rg : ℝ) : Matrix (Fin N) (Fin N) (ℝ → ℝ) :=
+  fun i k => fun s =>
+    -(deriv (fun w => matDCFreCoreN rho sigma hsig i k w) s) / (rg * (2 * Real.pi * s))
+
+/-- **Shell-inverse forcing FROM the Baxter ODE (general `N`).**  If `matDCFreCoreN'(v) =
+−2π·rgᵢₖ·v·c` at `v > 0`, then `shellForcingN rgᵢₖ i k v = c` (pointwise, from the `deriv`). -/
+theorem shellForcing_eq_of_baxterODEN {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (i k : Fin N) (hrg : rhoGeoPhys rho i k ≠ 0) {v : ℝ} (hv : 0 < v) {c : ℝ}
+    (hODE : HasDerivAt (fun w => matDCFreCoreN rho sigma hsig i k w)
+      (-(2 * Real.pi * rhoGeoPhys rho i k * v * c)) v) :
+    shellForcingN rho sigma hsig (rhoGeoPhys rho i k) i k v = c := by
+  have hpi : Real.pi ≠ 0 := Real.pi_ne_zero
+  simp only [shellForcingN, hODE.deriv]
+  field_simp
+
+/-- **⭐⭐⭐ General-`N` upper-piece value capstone.**  For the ordered pair `σᵢ < σₖ`, on
+`(λᵢₖ, Rᵢₖ)` the OZ★ shell-inverse forcing IS the explicit `N`-species-summed upper Lebowitz DCF:
+`shellForcingN rgᵢₖ i k v = cUpperPieceN`.  The general-`N` analog of `shellForcing_upper_eq`. -/
+theorem shellForcing_upper_eqN {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (hrho : ∀ n, 0 ≤ rho n) (hvac : vacMix rho sigma ≠ 0) (i k : Fin N) (hlt : sigma i < sigma k)
+    (hrg : rhoGeoPhys rho i k ≠ 0)
+    {v : ℝ} (hv : v ∈ Set.Ioo ((sigma k - sigma i) / 2) ((sigma i + sigma k) / 2)) :
+    shellForcingN rho sigma hsig (rhoGeoPhys rho i k) i k v = cUpperPieceN rho sigma i k v :=
+  have hv0 : 0 < v := lt_trans (by linarith [hlt]) hv.1
+  shellForcing_eq_of_baxterODEN rho sigma hsig i k hrg hv0
+    (matDCFreCoreN_hasDerivAt_upper_cUpper rho sigma hsig hrho hvac i k (by linarith [hlt]) hv
+      hv0.ne')
+
 end FMSA.MixtureOzStar
