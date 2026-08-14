@@ -491,4 +491,39 @@ theorem shellForcing_upper_eq (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sig
   shellForcing_eq_of_baxterODE rho sigma hsig i k hrg hv0
     (matDCFreCore_hasDerivAt_upper_cUpper rho sigma hsig hrho hvac i k hlt hv hv0)
 
+set_option maxHeartbeats 1600000 in
+/-- **⭐ The mixture DCF is CONTINUOUS across the knot** — `cLowerPiece = cUpperPiece(λᵢₖ)`.  The
+lower-piece constant equals the upper cubic evaluated at the knot `λᵢₖ = (σₖ−σᵢ)/2`, so the
+two-piece Lebowitz DCF glues into a single C⁰ function (the C¹ break is the physical kink).  An
+explicit polynomial identity (`field_simp; ring`, `vacMix` and `σₖ−σᵢ` nonzero). -/
+theorem cLowerPiece_eq_cUpperPiece_knot (rho sigma : Fin 2 → ℝ) (hvac : vacMix rho sigma ≠ 0)
+    (i k : Fin 2) (hlt : sigma i < sigma k) :
+    cLowerPiece rho sigma i k = cUpperPiece rho sigma i k ((sigma k - sigma i) / 2) := by
+  have hsub : sigma k - sigma i ≠ 0 := sub_ne_zero_of_ne (ne_of_lt hlt).symm
+  simp only [cLowerPiece, cUpperPiece, cUpperANum, cUpperBNum, cUpperC2Num, cUpperENum]
+  field_simp
+  ring
+
+/-- **The explicit two-piece Lebowitz mixture DCF** `c_ij(v)` (for `σᵢ < σₖ`): the constant
+`cLowerPiece` on `(0, λᵢₖ)`, the cubic `cUpperPiece = a+b/v+c₂v+e·v³` on `[λᵢₖ, Rᵢₖ)`.  Continuous
+at the knot (`cLowerPiece_eq_cUpperPiece_knot`). -/
+noncomputable def cMixDCF (rho sigma : Fin 2 → ℝ) (i k : Fin 2) (v : ℝ) : ℝ :=
+  if v < (sigma k - sigma i) / 2 then cLowerPiece rho sigma i k else cUpperPiece rho sigma i k v
+
+/-- **⭐⭐⭐ Unequal-σ mixture DCF value — FULLY GLUED.**  For the ordered pair `σᵢ < σₖ`, on the whole
+core `(0, Rᵢₖ)` off the knot, the OZ★ shell-inverse forcing IS the explicit two-piece Lebowitz DCF:
+`shellForcing rgᵢₖ i k v = cMixDCF v`.  Combines `shellForcing_lower_eq` (`v < λᵢₖ`) and
+`shellForcing_upper_eq` (`v > λᵢₖ`); `cMixDCF` is C⁰ across the knot by
+`cLowerPiece_eq_cUpperPiece_knot`.  The complete unequal-σ value route (equal σ = MIXCHS.6). -/
+theorem shellForcing_eq_cMixDCF (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (hrho : ∀ n, 0 ≤ rho n) (hvac : vacMix rho sigma ≠ 0) (i k : Fin 2) (hlt : sigma i < sigma k)
+    (hrg : rhoGeoPhys rho i k ≠ 0) {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) ((sigma i + sigma k) / 2))
+    (hne : v ≠ (sigma k - sigma i) / 2) :
+    shellForcing rho sigma hsig (rhoGeoPhys rho i k) i k v = cMixDCF rho sigma i k v := by
+  rcases lt_or_gt_of_ne hne with hlow | hup
+  · rw [cMixDCF, if_pos hlow]
+    exact shellForcing_lower_eq rho sigma hsig hrho hvac i k hrg (by linarith [hlt]) ⟨hv.1, hlow⟩
+  · rw [cMixDCF, if_neg (not_lt.mpr hup.le)]
+    exact shellForcing_upper_eq rho sigma hsig hrho hvac i k hlt hrg ⟨hup, hv.2⟩
+
 end FMSA.MixtureOzStar
