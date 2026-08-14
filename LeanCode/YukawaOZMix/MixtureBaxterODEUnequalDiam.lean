@@ -248,20 +248,29 @@ theorem matDCFreCore_hasDerivAt_lower_cLower (rho sigma : Fin 2 → ℝ) (hsig :
        field_simp
        ring)
 
-/-- **Lower-piece value capstone (conditional on the lower-piece Baxter ODE).**  Given the mixture
-Baxter factorization on the lower piece — `matDCFreCore'(v) = −2π·rgᵢₖ·v·cLowerPiece` for `0 < v` —
-the shell-inverse forcing IS the explicit constant DCF: `shellForcing rgᵢₖ i k v = cLowerPiece`.
-Immediate from `shellForcing = −matDCFreCore'/(rgᵢₖ·2πv)` (no shell integral needed — `shellForcing`
-is defined pointwise via `deriv`).  The ODE hypothesis is discharged from
-`matDCFreCore_hasDerivAt_lower` by the moment-evaluated value identity. -/
+/-- **Shell-inverse forcing FROM the Baxter ODE (any piece, any forcing value `c`).**  If
+`matDCFreCore'(v) = −2π·rgᵢₖ·v·c` at `v > 0` (the mixture Baxter factorization with forcing value
+`c`), then `shellForcing rgᵢₖ i k v = c`.  Immediate from `shellForcing = −matDCFreCore'/(rgᵢₖ·2πv)`
+(no shell integral needed — `shellForcing` is defined pointwise via `deriv`).  Both the lower-piece
+capstone (`c = cLowerPiece`, discharged) and the upper piece (`c = cUpperPiece v`, the remaining
+degree-5 discharge) plug into this single tool. -/
+theorem shellForcing_eq_of_baxterODE (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (i k : Fin 2) (hrg : rhoGeoPhys rho i k ≠ 0) {v : ℝ} (hv : 0 < v) {c : ℝ}
+    (hODE : HasDerivAt (fun w => matDCFreCore rho sigma hsig i k w)
+      (-(2 * Real.pi * rhoGeoPhys rho i k * v * c)) v) :
+    shellForcing rho sigma hsig (rhoGeoPhys rho i k) i k v = c := by
+  have hpi : Real.pi ≠ 0 := Real.pi_ne_zero
+  simp only [shellForcing, hODE.deriv]
+  field_simp
+
+/-- **Lower-piece value capstone (conditional on the lower-piece Baxter ODE).**  Specialization of
+`shellForcing_eq_of_baxterODE` to the discharged lower-piece ODE (`c = cLowerPiece`). -/
 theorem shellForcing_lower_eq_of_baxterODE (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
     (i k : Fin 2) (hrg : rhoGeoPhys rho i k ≠ 0) {v : ℝ} (hv : 0 < v)
     (hODE : HasDerivAt (fun w => matDCFreCore rho sigma hsig i k w)
       (-(2 * Real.pi * rhoGeoPhys rho i k * v * cLowerPiece rho sigma i k)) v) :
-    shellForcing rho sigma hsig (rhoGeoPhys rho i k) i k v = cLowerPiece rho sigma i k := by
-  have hpi : Real.pi ≠ 0 := Real.pi_ne_zero
-  simp only [shellForcing, hODE.deriv]
-  field_simp
+    shellForcing rho sigma hsig (rhoGeoPhys rho i k) i k v = cLowerPiece rho sigma i k :=
+  shellForcing_eq_of_baxterODE rho sigma hsig i k hrg hv hODE
 
 /-- **⭐⭐ Lower-piece value capstone — UNCONDITIONAL.**  At unequal diameters (`σᵢ < σₖ`), on the
 lower piece `(0, λᵢₖ)` the OZ★ shell-inverse forcing IS the explicit constant physical mixture DCF:
