@@ -35,6 +35,7 @@ form, not the odd extraction.
 
 open MeasureTheory Set
 open FMSA.InnerDecomp FMSA.WHSupports FMSA.MatrixQ0 FMSA.HardSphere FMSA.MixtureOzStar
+open FMSA.MixtureBaxter
 open FMSA.MixtureNoSpinodalN1
 
 namespace FMSA.MixtureHSDCFFin1

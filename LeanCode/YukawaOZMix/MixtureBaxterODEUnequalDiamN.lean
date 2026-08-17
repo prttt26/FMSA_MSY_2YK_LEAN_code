@@ -36,7 +36,8 @@ This foundations layer generalizes the `Fin 2` objects to `Fin N`:
 
 open MeasureTheory Set
 
-namespace FMSA.MixtureOzStar
+namespace FMSA.MixtureBaxter
+open FMSA.MixtureOzStar
 
 open FMSA.HardSphere FMSA.MatrixQ0 FMSA.WHSupports FMSA.InnerDecomp
 open FMSA.MixtureHSDCF FMSA.MixtureConvolution
@@ -630,4 +631,4 @@ theorem cLowerPiece_eq_cUpperPiece_knotN {N : ℕ} (rho sigma : Fin N → ℝ)
   have hlead := cLeadPieceN_sub_knot rho sigma hvac i k hlt
   linarith [hsum, hlead]
 
-end FMSA.MixtureOzStar
+end FMSA.MixtureBaxter

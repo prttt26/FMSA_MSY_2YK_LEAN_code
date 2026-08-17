@@ -38,7 +38,8 @@ diameters (`shellForcing_eq_cHS_equalDiam`) — the open Baxter–WH input of MR
 
 open MeasureTheory Set
 
-namespace FMSA.HardSphere
+namespace FMSA.MixtureBaxter
+open FMSA.HardSphere
 
 /-- `q0_poly` is linear in the density amplitude `ρ`: `q0_poly η σ ρ r = ρ·q0_poly η σ 1 r`. -/
 theorem q0_poly_eq_rho_smul (eta sigma rho r : ℝ) :
@@ -114,9 +115,10 @@ theorem q0_poly_indicator_conv {eta sigma : ℝ} (hs0 : 0 < sigma) {v : ℝ}
         rw [hz, add_zero] at hadj
         exact hadj
 
-end FMSA.HardSphere
+end FMSA.MixtureBaxter
 
-namespace FMSA.MixtureOzStar
+namespace FMSA.MixtureBaxter
+open FMSA.MixtureOzStar
 
 open FMSA.HardSphere FMSA.HSMix FMSA.MatrixQ0 FMSA.WHSupports FMSA.InnerDecomp MeasureTheory Set
 
@@ -276,4 +278,4 @@ theorem shellForcing_eq_cHS_equalDiam {rho sigma : Fin 2 → ℝ} {s : ℝ}
   rw [hval] at hd2
   exact hd2
 
-end FMSA.MixtureOzStar
+end FMSA.MixtureBaxter

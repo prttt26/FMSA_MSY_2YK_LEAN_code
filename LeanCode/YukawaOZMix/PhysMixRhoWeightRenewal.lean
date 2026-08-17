@@ -25,7 +25,8 @@ the Banach–Volterra renewal and the generic `matBaxterPsi_hUouter` need contin
 from `q0MixEntry` to `q0MixPoly` (they coincide on the core at equal diameters).
 -/
 
-namespace FMSA.HSMix
+namespace FMSA.MixtureBaxter
+open FMSA.HSMix
 
 open MeasureTheory FMSA.MatrixQ0 FMSA.HardSphere FMSA.MixtureOzStar
 
@@ -127,5 +128,5 @@ theorem matBaxterUQm_physHSMixRhoWeight_eq_rcHS {rho sigma : Fin N → ℝ} {s :
   · intro k j' v hv
     exact matBaxterPsi_core _ _ k j' hv
 
-end FMSA.HSMix
+end FMSA.MixtureBaxter
 

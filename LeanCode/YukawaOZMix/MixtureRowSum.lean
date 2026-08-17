@@ -42,7 +42,8 @@ Status: ✓ axiom-clean.
 -/
 
 open MeasureTheory Set
-namespace FMSA.MixtureOzStar
+namespace FMSA.MixtureBaxter
+open FMSA.MixtureOzStar
 open FMSA.InnerDecomp FMSA.WHSupports FMSA.HardSphere
 
 noncomputable section
@@ -1521,4 +1522,4 @@ theorem matCorr_symm {N M : ℕ} (X : Mix N M) (i j : Fin N)
   rw [matCorr_fourier_eq, matCorr_fourier_eq, hmom w]
 
 end
-end FMSA.MixtureOzStar
+end FMSA.MixtureBaxter

@@ -38,7 +38,8 @@ feeding `Qphys_Cmix0_symm`.  Axiom-clean (`propext`, `Classical.choice`, `Quot.s
 open MeasureTheory Complex
 open scoped FourierTransform
 
-namespace FMSA.MixtureOzStar
+namespace FMSA.MixtureBaxter
+open FMSA.MixtureOzStar
 
 /-- **a.e.-injectivity of the `zOfW` (1-D real-space) transform.**  Two integrable, a.e.-continuous
 functions with equal `∫ ·(v)·e^{−(2πi w)v} dv` transforms for every `w` agree a.e.  The a.e.-cont.
@@ -2786,7 +2787,7 @@ theorem hclaimA_qWeighted_to_shellForcing (rhoV sigmaV : Fin 2 → ℝ) (hsig : 
 
 end PhysicalIdentification
 
-end FMSA.MixtureOzStar
+end FMSA.MixtureBaxter
 
 
 

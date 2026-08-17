@@ -129,7 +129,7 @@ theorem radial_fourier_qFwd_offdiag (X : Mix N M) (i m : Fin N)
       (fun r => r * qFwd X i m r * Real.sin (k * r)) volume a b := by
     intro a b
     have hq : IntervalIntegrable (qFwd X i m) volume a b :=
-      (FMSA.MixtureOzStar.q0MixEntry_intervalIntegrable X i m a b).const_mul
+      (FMSA.MixtureBaxter.q0MixEntry_intervalIntegrable X i m a b).const_mul
         (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m))
     exact (hq.mul_continuousOn (g := fun r => r * Real.sin (k * r))
       ((continuous_id.mul (Real.continuous_sin.comp

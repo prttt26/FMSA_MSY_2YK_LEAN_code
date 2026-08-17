@@ -47,7 +47,8 @@ whose target is numerically confirmed physical). -/
 
 open MeasureTheory Set
 
-namespace FMSA.MixtureOzStar
+namespace FMSA.MixtureBaxter
+open FMSA.MixtureOzStar
 
 open FMSA.HardSphere FMSA.MatrixQ0 FMSA.WHSupports FMSA.InnerDecomp
 
@@ -526,4 +527,4 @@ theorem shellForcing_eq_cMixDCF (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < s
   · rw [cMixDCF, if_neg (not_lt.mpr hup.le)]
     exact shellForcing_upper_eq rho sigma hsig hrho hvac i k hlt hrg ⟨hup, hv.2⟩
 
-end FMSA.MixtureOzStar
+end FMSA.MixtureBaxter

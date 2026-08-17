@@ -29,7 +29,8 @@ bridge** `matBaxterUt_rowScale_eq_matBaxterU_colScale_of_symm` (the `ρ`-analog 
 holds at UNEQUAL diameters.
 -/
 
-namespace FMSA.MixtureOzStar
+namespace FMSA.MixtureBaxter
+open FMSA.MixtureOzStar
 
 open MeasureTheory
 
@@ -146,9 +147,10 @@ theorem matBaxterU_core_congr (Psi K1 K2 : Matrix (Fin N) (Fin N) (ℝ → ℝ))
   rw [Set.uIcc_of_le hsigma] at ht
   rw [h i k t ht]
 
-end FMSA.MixtureOzStar
+end FMSA.MixtureBaxter
 
-namespace FMSA.HSMix
+namespace FMSA.MixtureBaxter
+open FMSA.HSMix
 
 open MeasureTheory FMSA.MatrixQ0 FMSA.HardSphere FMSA.MixtureOzStar
 
@@ -272,5 +274,5 @@ theorem matBaxterUQmSymFullExtRho_physHSMix_eq_rcHS {rho sigma : Fin N → ℝ} 
     intro k j' v hv
     exact matBaxterPsi_core _ _ k j' hv
 
-end FMSA.HSMix
+end FMSA.MixtureBaxter
 

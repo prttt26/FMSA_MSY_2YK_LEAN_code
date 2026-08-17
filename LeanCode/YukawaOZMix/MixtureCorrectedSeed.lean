@@ -34,7 +34,8 @@ Status: ✓ axiom-clean.
 
 open MeasureTheory Set
 
-namespace FMSA.MixtureOzStar
+namespace FMSA.MixtureBaxter
+open FMSA.MixtureOzStar
 
 variable {N : ℕ}
 
@@ -1725,4 +1726,4 @@ collapse needs, so `MixRDFInnerCollapse` stays a `Prop`.
 unequal-diameter WT identity is numerically confirmed and its `Ψouter` coupling pinned to a
 constructed object; and MML.8 is discharged by the axiom-free `matOzStar_unique` regardless. -/
 
-end FMSA.MixtureOzStar
+end FMSA.MixtureBaxter

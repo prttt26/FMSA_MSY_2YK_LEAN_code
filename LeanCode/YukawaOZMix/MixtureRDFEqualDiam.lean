@@ -14,7 +14,8 @@ density-weighted single-component `baxterPsi`.
 -/
 
 open MeasureTheory Set
-namespace FMSA.MixtureOzStar
+namespace FMSA.MixtureBaxter
+open FMSA.MixtureOzStar
 open FMSA.HardSphere
 
 /-- **Equal-diameter matrix symbol coercivity, from the scalar coercivity.**  For `Φᵢⱼ = wᵢⱼ·c_HS` with
@@ -109,4 +110,4 @@ theorem matOzStar_equalDiam_unique {N : ℕ} (rhof : Fin N → ℝ) (hnonneg : �
     (matOzStar_equalDiam_phys rhof hnonneg hsigma heta hrho hpos heta_def)
     hlin hbdd hcont hcore
 
-end FMSA.MixtureOzStar
+end FMSA.MixtureBaxter
