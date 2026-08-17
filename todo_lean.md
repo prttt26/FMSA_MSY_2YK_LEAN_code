@@ -13,6 +13,35 @@ This file is the **status index** for all Lean 4 + Mathlib proofs in `LeanCode/`
 > names are directory-independent, so the tables below are unchanged; only *file paths* in prose that
 > say `YukawaDCF/…` should be read as `YukawaOZ*/…`.
 
+> **⚠ Layer/namespace coherence refactor (2026-08-17).** Every declaration now sits in its
+> content-correct layer, and **each namespace lives in exactly one layer** (verified: no
+> `namespace FMSA.X` is declared across >1 directory-layer). Relocations: `Splitting.lean`
+> (Yukawa-kernel algebra `B₁+D₁=T_U`, not HS) `HardSphere/ → YukawaOZ/`; the four mixture-RDF files
+> `MixtureYukawa{ContourTerm,Residue,Transform}` + `YukawaArcBound` `YukawaOZ/ → YukawaOZMix/`
+> (single → mixture). Pure-math lemmas re-homed to `FMSA.Analysis`. Namespace splits (higher-layer
+> decls → new ns; lower layer keeps the old name): new **L4** `FMSA.MixtureBaxter` (the mixture
+> Baxter/OZ★ DCF-value route — 9 files, was `FMSA.MixtureOzStar`/`FMSA.HSMix`), `FMSA.MixtureMLSeries`
+> (was L4 `FMSA.MixtureHSPoles`), `FMSA.MixtureYukawaWH` (was L4 `FMSA.YukawaWH`), `FMSA.MixtureRDFContact`
+> (was L4 `FMSA.MatrixQ0`), `FMSA.MixtureHSDCF` (`RadialFourierQFwd` psi3 block, was `FMSA.HardSphere`);
+> new **L2** `FMSA.MixtureArcBound` (was L2 `FMSA.MixtureRDF`), `FMSA.WhiteBear` (was L2 `FMSA.HardSphere`);
+> **L3** `FMSA.InnerOriginBC` (was L4-shared `FMSA.MixturePoly`). See memory `project_layer_refactor`.
+
+### Layer map — directory · namespaces · proof_notes · task groups
+
+| Layer | Directory | Primary namespaces | proof_notes | Groups (dominant) |
+|---|---|---|---|---|
+| **L0** pure math | `Analysis/`, `FMSAPoly/` | `FMSA.Analysis`, `FMSA.<perfile>` | (MATH_AXIOMS.md) | MA |
+| **L1** HS · single | `HardSphere/` | `FMSA.HardSphere` | hard_sphere, baxter, pole, ozfix, contact | 2, OZ, BAXTER, POLE, OZFIX, CONTACT |
+| **L2** HS · mixture | `HSMixture/` | `FMSA.MixtureOzStar`, `MixtureHSPoles`, `MatrixQ0`, `HSMix`, `MixtureArcBound`, `WhiteBear` | matrix_q0, hs_mixture, mixture_rdf(MZERO), free_energy(FW) | M, MZERO, MIXCHS, FW |
+| **L3** Yukawa · single | `YukawaOZ/` | `FMSA.YukawaWH`, `MSAExact`, `InnerOriginBC` | yukawa_dcf, yukawa_wh(Grp 3), msa_exact | 1, 3, 4, 5, GAP, C, MSAEXACT |
+| **L4** Yukawa · mixture | `YukawaOZMix/` | `FMSA.MixtureBaxter`, `MixtureRDF`, `MRS`, `MML`, `MixtureMLSeries`, `MixtureYukawaWH`, `MixtureHSDCF` | mixture_dcf, mixture_rdf, breakpoints | Y1, MML, MRS, MPOLY, MIXCHS(value), IB |
+| **L5** applications | `FreeEnergy/`, `Closures/` | `FMSA.FreeEnergy`, `FirstOrderClosure`, `FirstOrderEquivalence` | closures, free_energy | FOEQ, PYE, HNCB, F |
+| *cross-cutting* | (method-failure analysis) | — | failures | chsY, P, GA |
+
+Groups whose derivation legitimately touches two layers (e.g. **Y1**/WH: single-component base in
+L3 `FMSA.YukawaWH` + matrix mixture form in L4 `FMSA.MixtureYukawaWH`; **MIXCHS**: HS-mixture `c_HS`
+in L2 + Baxter-WH value route in L4) are listed under their *capstone* layer.
+
 Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) are in:
 
 - [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) — Groups 2, 3, OZ (pure HS foundations)
@@ -232,8 +261,8 @@ the Axioms table above.*
 
 | Task | Title | Status | Lean file |
 |------|-------|--------|-----------|
-| 3.1 | B₁+D₁ = T_U identity | ✓ DONE | `HardSphere/Splitting.lean` |
-| 3.2 | Support of T_S on (−∞, R_ij] | ✓ DONE | `HardSphere/Splitting.lean` |
+| 3.1 | B₁+D₁ = T_U identity | ✓ DONE | `YukawaOZ/Splitting.lean` |
+| 3.2 | Support of T_S on (−∞, R_ij] | ✓ DONE | `YukawaOZ/Splitting.lean` |
 
 ### Group chsY — FMSA_chsY Formula Failure *(failures)*
 

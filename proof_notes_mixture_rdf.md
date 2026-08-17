@@ -4883,11 +4883,11 @@ The paper's chain (eq numbers are Tang & Lu's):
   i.e. the `Aᵢⱼ(t) = 2π(ρᵢρⱼ)^{1/2}Wᵢⱼ(t)/(Δ det(t))` amplitudes of eq (20). Axiom-clean.
 * **eq (15) assembly** — same file, `H1_eq_of_transformed` / `H1_eq_phys`:
   `Ĥ₁ = [Q̂₀ᵀ]⁻¹B₁[Q̂₀]⁻¹` from the transformed first-order OZ `Q̂₀ᵀĤ₁Q̂₀ = B₁`. Axiom-clean.
-* **(2)=(18) one-Yukawa `U₁` transform** — `LeanCode/YukawaOZ/MixtureYukawaTransform.lean`,
+* **(2)=(18) one-Yukawa `U₁` transform** — `LeanCode/YukawaOZMix/MixtureYukawaTransform.lean`,
   `laplace_yukawa` + `yukawa_U1_entry`: `∫_R^∞ (βRε e^{−z(r−R)})e^{−sr}dr = βRε e^{−sR}/(s+z)`, i.e.
   `U₁ᵢⱼ = Kᵢⱼ e^{−ikRᵢⱼ}/(ik+zᵢⱼ)`, `Kᵢⱼ = 2π(ρᵢρⱼ)^{1/2}Rβε`. The `1/r` of the MSA tail cancels the
   radial `r` weight ⇒ a pure exponential integral. Axiom-clean.
-* **(3) residue extraction (eq 20→21)** — `LeanCode/YukawaOZ/MixtureYukawaResidue.lean` (NEW,
+* **(3) residue extraction (eq 20→21)** — `LeanCode/YukawaOZMix/MixtureYukawaResidue.lean` (NEW,
   2026-08-04). Eq (19) turns `B₁(k)` into `−E(k) Res_{y(s)}(E(−y)[Q̂₀(−y)]⁻¹U₁(y)[Q̂₀ᵀ(−y)]⁻¹E(−y)/(y−k))E(k)`,
   the residue taken **at the Yukawa poles of `U₁`**. Substituting eq (18) + `[Q̂₀(−y)]⁻¹ = I + A(−iy)`
   makes every entry of the eq (20) integrand a finite sum of terms of the *one* shape
@@ -4933,7 +4933,7 @@ The paper's chain (eq numbers are Tang & Lu's):
   the contour upward encloses exactly the simple poles `y = i zᵢⱼ` of `U₁(y)`.  This is fed to the engine
   as `hc`/`hd` (holomorphy off the Yukawa balls).
 
-* **(3a, leading term hc/hd/harc) done** — `LeanCode/YukawaOZ/MixtureYukawaContourTerm.lean` (NEW,
+* **(3a, leading term hc/hd/harc) done** — `LeanCode/YukawaOZMix/MixtureYukawaContourTerm.lean` (NEW,
   2026-08-04). Discharges the engine's *integrand-specific* inputs for the **leading eq (20) term** of a
   fixed RDF entry `{Ĥ₁(k)}ᵢⱼ` (the `[Q̂₀]⁻¹ ≈ I` contribution) — a complete, end-to-end contour sum with
   NO remaining hypotheses beyond state-point positivity.  **KEY: the leading term is exponential-free.**
@@ -5004,7 +5004,7 @@ The paper's chain (eq numbers are Tang & Lu's):
   and the entire representative agree, so these det statements transfer to the engine's representative matrix.
 
 * **(3a-rest-iii, `A(−iy)` arc bound — the reusable mechanism) done** —
-  `LeanCode/YukawaOZ/YukawaArcBound.lean` (NEW, 2026-08-05, namespace `FMSA.MixtureRDF`).
+  `LeanCode/YukawaOZMix/YukawaArcBound.lean` (NEW, 2026-08-05, namespace `FMSA.MixtureRDF`).
   **`arc_integral_tendsto_zero`**: for ANY numerator `g` bounded by `M ≥ 0` on the upper arc, the arc
   integral of `g(y)/((y−k)(iy+z))` → 0 (integrand `O(M/R²)`, arc length `πR` ⇒ `O(M/R) → 0`; same
   `‖(iRe^{iθ})•·‖ = R·‖·‖ ≤ 4M/R` squeeze as the leading-term `harc`, now with a variable bounded `g`).

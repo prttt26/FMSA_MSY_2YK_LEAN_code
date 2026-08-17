@@ -120,7 +120,7 @@ first-order OZ equation.
 **Re-routed off the Hilbert transform.** [LN] §6.3 states the split via the Hilbert transform /
 Cauchy P.V. / Sokhotski–Plemelj (Eq. 47–51). **Do not follow that literally**: Mathlib has no
 Hilbert-transform / P.V.-integral / distributional-FT support, and the codebase deliberately avoids
-it — Group 3 `HardSphere/Splitting.lean` already does the WH split algebraically
+it — Group 3 `YukawaOZ/Splitting.lean` already does the WH split algebraically
 (`yukawa_kernel_split`, `1/(ik+z)+1/(−ik+z)=2z/(z²+k²)` via `Complex.I_sq`) + indicator→FT-support
 lemmas, and Group BAXTER did the zeroth-order split via Baxter factorization + residue series. The
 two routes give the same `B₁`; only the tooling differs. So Y1.3 = **algebraic split + support
