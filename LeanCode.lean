@@ -29,6 +29,7 @@ import LeanCode.Analysis.ResidueAtSimplePole
 import LeanCode.Analysis.SokhotskiPlemelj
 import LeanCode.Analysis.SokhotskiPlemeljLower
 import LeanCode.Analysis.Taylor4Calculus
+import LeanCode.Analysis.TrigDeriv
 import LeanCode.Analysis.VanDerCorput
 import LeanCode.Analysis.Volterra
 import LeanCode.Analysis.VolterraBanach

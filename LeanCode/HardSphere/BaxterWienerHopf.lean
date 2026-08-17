@@ -9,6 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.HardSphere.BaxterRealSpace
 import LeanCode.HardSphere.RadialFourierCHS
+import LeanCode.Analysis.TrigDeriv
 
 /-!
 # Task BAXTER.3 — Baxter's Wiener–Hopf factorization *(formerly Task OZ.12)*
@@ -50,21 +51,11 @@ namespace FMSA.HardSphere
 
 /-! ### Local sin/cos derivative helpers (mirrors `RadialFourierCHS.lean`'s private helpers) -/
 
-private lemma hasDerivAt_sin_mul_wh {k r : ℝ} :
-    HasDerivAt (fun x => Real.sin (k * x)) (Real.cos (k * r) * k) r := by
-  have h : HasDerivAt (fun x => k * x) k r := by simpa using (hasDerivAt_id r).const_mul k
-  exact h.sin
-
-private lemma hasDerivAt_cos_mul_wh {k r : ℝ} :
-    HasDerivAt (fun x => Real.cos (k * x)) (-Real.sin (k * r) * k) r := by
-  have h : HasDerivAt (fun x => k * x) k r := by simpa using (hasDerivAt_id r).const_mul k
-  exact h.cos
-
 /-! ### χ0, ψ0 — degree-0 cosine/sine moments -/
 
 private lemma chi0_hasDerivAt {k : ℝ} (hk : k ≠ 0) (r : ℝ) :
     HasDerivAt (fun r => Real.sin (k * r) / k) (Real.cos (k * r)) r := by
-  have h := (hasDerivAt_sin_mul_wh (k := k) (r := r)).div_const k
+  have h := (FMSA.Analysis.hasDerivAt_sin_mul (k := k) (r := r)).div_const k
   exact h.congr_deriv (by field_simp)
 
 /-- `∫0^sigma cos(k·r) dr = sin(k·sigma)/k`. -/
@@ -77,7 +68,7 @@ theorem chi0_formula {k : ℝ} (hk : k ≠ 0) (sigma : ℝ) :
 
 private lemma psi0_hasDerivAt {k : ℝ} (hk : k ≠ 0) (r : ℝ) :
     HasDerivAt (fun r => -Real.cos (k * r) / k) (Real.sin (k * r)) r := by
-  have h := (hasDerivAt_cos_mul_wh (k := k) (r := r)).neg.div_const k
+  have h := (FMSA.Analysis.hasDerivAt_cos_mul (k := k) (r := r)).neg.div_const k
   exact h.congr_deriv (by field_simp)
 
 /-- `∫0^sigma sin(k·r) dr = (1 - cos(k·sigma))/k`. -/
@@ -95,10 +86,10 @@ private lemma chi1_hasDerivAt {k : ℝ} (hk : k ≠ 0) (r : ℝ) :
     HasDerivAt (fun r => Real.cos (k * r) / k ^ 2 + r * Real.sin (k * r) / k)
                (r * Real.cos (k * r)) r := by
   have hT1 : HasDerivAt (fun x => Real.cos (k * x) / k ^ 2) (-Real.sin (k * r) * k / k ^ 2) r :=
-    hasDerivAt_cos_mul_wh.div_const (k ^ 2)
+    FMSA.Analysis.hasDerivAt_cos_mul.div_const (k ^ 2)
   have hT2 : HasDerivAt (fun x => x * Real.sin (k * x) / k)
       ((1 * Real.sin (k * r) + r * (Real.cos (k * r) * k)) / k) r :=
-    ((hasDerivAt_id r).mul hasDerivAt_sin_mul_wh).div_const k
+    ((hasDerivAt_id r).mul FMSA.Analysis.hasDerivAt_sin_mul).div_const k
   exact (hT1.add hT2).congr_deriv (by field_simp; ring)
 
 /-- **χ1 formula:** `∫0^sigma r·cos(k·r) dr = cos(k·sigma)/k² + sigma·sin(k·sigma)/k - 1/k²`. -/
@@ -129,10 +120,10 @@ private lemma chi2_hasDerivAt {k : ℝ} (hk : k ≠ 0) (r : ℝ) :
     exact h.congr_deriv (by ring)
   have hT1 : HasDerivAt (fun x => (2 * x / k ^ 2) * Real.cos (k * x))
       ((2 / k ^ 2) * Real.cos (k * r) + (2 * r / k ^ 2) * (-Real.sin (k * r) * k)) r :=
-    hA.mul hasDerivAt_cos_mul_wh
+    hA.mul FMSA.Analysis.hasDerivAt_cos_mul
   have hT2 : HasDerivAt (fun x => (x ^ 2 / k - 2 / k ^ 3) * Real.sin (k * x))
       ((2 * r / k) * Real.sin (k * r) + (r ^ 2 / k - 2 / k ^ 3) * (Real.cos (k * r) * k)) r :=
-    hB.mul hasDerivAt_sin_mul_wh
+    hB.mul FMSA.Analysis.hasDerivAt_sin_mul
   exact (hT1.add hT2).congr_deriv (by field_simp [hk]; ring)
 
 /-- **χ2 formula:**

@@ -8,6 +8,7 @@ Authors: FMSA project
 
 import LeanCode.HardSphere.RadialFourierCHS
 import LeanCode.YukawaOZMix.MixtureHSDCF
+import LeanCode.Analysis.TrigDeriv
 
 /-!
 # Radial Fourier transform of the forward Baxter factor `qFwd` (MRS.8 sub-fact 1, first atom)
@@ -40,16 +41,6 @@ Companion transforms: the off-diagonal `qFwd_im` (`RadialFourierQFwdOffdiag.lean
 open MeasureTheory Set
 namespace FMSA.MixtureHSDCF
 
-private lemma hasDerivAt_sin_mul_q {k r : ℝ} :
-    HasDerivAt (fun x => Real.sin (k * x)) (Real.cos (k * r) * k) r := by
-  have h : HasDerivAt (fun x => k * x) k r := by simpa using (hasDerivAt_id r).const_mul k
-  exact h.sin
-
-private lemma hasDerivAt_cos_mul_q {k r : ℝ} :
-    HasDerivAt (fun x => Real.cos (k * x)) (-Real.sin (k * r) * k) r := by
-  have h : HasDerivAt (fun x => k * x) k r := by simpa using (hasDerivAt_id r).const_mul k
-  exact h.cos
-
 private lemma psi3_hasDerivAt {k : ℝ} (hk : k ≠ 0) (r : ℝ) :
     HasDerivAt (fun r => (-r ^ 3 / k + 6 * r / k ^ 3) * Real.cos (k * r)
         + (3 * r ^ 2 / k ^ 2 - 6 / k ^ 4) * Real.sin (k * r))
@@ -67,11 +58,11 @@ private lemma psi3_hasDerivAt {k : ℝ} (hk : k ≠ 0) (r : ℝ) :
   have hT1 : HasDerivAt (fun x => (-x ^ 3 / k + 6 * x / k ^ 3) * Real.cos (k * x))
       ((-3 * r ^ 2 / k + 6 / k ^ 3) * Real.cos (k * r)
         + (-r ^ 3 / k + 6 * r / k ^ 3) * (-Real.sin (k * r) * k)) r :=
-    hA.mul hasDerivAt_cos_mul_q
+    hA.mul FMSA.Analysis.hasDerivAt_cos_mul
   have hT2 : HasDerivAt (fun x => (3 * x ^ 2 / k ^ 2 - 6 / k ^ 4) * Real.sin (k * x))
       ((6 * r / k ^ 2) * Real.sin (k * r)
         + (3 * r ^ 2 / k ^ 2 - 6 / k ^ 4) * (Real.cos (k * r) * k)) r :=
-    hB.mul hasDerivAt_sin_mul_q
+    hB.mul FMSA.Analysis.hasDerivAt_sin_mul
   exact (hT1.add hT2).congr_deriv (by field_simp; ring)
 
 /-- **ψ3 formula:** `∫0^sigma r³·sin(k·r) dr = (-σ³/k + 6σ/k³)cos(kσ) + (3σ²/k² − 6/k⁴)sin(kσ)`.

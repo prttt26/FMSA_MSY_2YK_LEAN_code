@@ -9,6 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.HardSphere.RadialFourier
 import LeanCode.HardSphere.PYOZ
+import LeanCode.Analysis.TrigDeriv
 
 /-!
 # Task OZ.8 — closed-form sine-transform of `c_HS` + bridge to `C_HS_laplace`/`S0`
@@ -69,16 +70,6 @@ integration-by-parts antiderivative, verify it via `HasDerivAt` + the product ru
 `intervalIntegral.integral_eq_sub_of_hasDerivAt`. Antiderivatives numerically verified via
 `sympy` before formalizing (residual `F'(r) - r^n·sin(k·r) = 0` for symbolic `r,k`). -/
 
-private lemma hasDerivAt_sin_mul {k r : ℝ} :
-    HasDerivAt (fun x => Real.sin (k * x)) (Real.cos (k * r) * k) r := by
-  have h : HasDerivAt (fun x => k * x) k r := by simpa using (hasDerivAt_id r).const_mul k
-  exact h.sin
-
-private lemma hasDerivAt_cos_mul {k r : ℝ} :
-    HasDerivAt (fun x => Real.cos (k * x)) (-Real.sin (k * r) * k) r := by
-  have h : HasDerivAt (fun x => k * x) k r := by simpa using (hasDerivAt_id r).const_mul k
-  exact h.cos
-
 /-! #### ψ1 -/
 
 /-- Antiderivative of `r·sin(k·r)` is `sin(k·r)/k² - r·cos(k·r)/k`. -/
@@ -86,10 +77,10 @@ private lemma psi1_hasDerivAt {k : ℝ} (hk : k ≠ 0) (r : ℝ) :
     HasDerivAt (fun r => Real.sin (k * r) / k ^ 2 - r * Real.cos (k * r) / k)
                (r * Real.sin (k * r)) r := by
   have hT1 : HasDerivAt (fun x => Real.sin (k * x) / k ^ 2) (Real.cos (k * r) * k / k ^ 2) r :=
-    hasDerivAt_sin_mul.div_const (k ^ 2)
+    FMSA.Analysis.hasDerivAt_sin_mul.div_const (k ^ 2)
   have hT2 : HasDerivAt (fun x => x * Real.cos (k * x) / k)
       ((1 * Real.cos (k * r) + r * (-Real.sin (k * r) * k)) / k) r :=
-    ((hasDerivAt_id r).mul hasDerivAt_cos_mul).div_const k
+    ((hasDerivAt_id r).mul FMSA.Analysis.hasDerivAt_cos_mul).div_const k
   exact (hT1.sub hT2).congr_deriv (by field_simp; ring)
 
 /-- **ψ1 formula:** `∫0^sigma r·sin(k·r) dr = (sin(k·sigma) - k·sigma·cos(k·sigma)) / k²`. -/
@@ -119,10 +110,10 @@ private lemma psi2_hasDerivAt {k : ℝ} (hk : k ≠ 0) (r : ℝ) :
     exact h.congr_deriv (by ring)
   have hT1 : HasDerivAt (fun x => (2 / k ^ 3 - x ^ 2 / k) * Real.cos (k * x))
       (-(2 * r / k) * Real.cos (k * r) + (2 / k ^ 3 - r ^ 2 / k) * (-Real.sin (k * r) * k)) r :=
-    hA.mul hasDerivAt_cos_mul
+    hA.mul FMSA.Analysis.hasDerivAt_cos_mul
   have hT2 : HasDerivAt (fun x => (2 * x / k ^ 2) * Real.sin (k * x))
       ((2 / k ^ 2) * Real.sin (k * r) + (2 * r / k ^ 2) * (Real.cos (k * r) * k)) r :=
-    hB.mul hasDerivAt_sin_mul
+    hB.mul FMSA.Analysis.hasDerivAt_sin_mul
   exact (hT1.add hT2).congr_deriv (by field_simp [hk]; ring)
 
 /-- **ψ2 formula:**
@@ -172,11 +163,11 @@ private lemma psi4_hasDerivAt {k : ℝ} (hk : k ≠ 0) (r : ℝ) :
   have hT1 : HasDerivAt (fun x => (-24 / k ^ 5 + 12 * x ^ 2 / k ^ 3 - x ^ 4 / k) * Real.cos (k * x))
       ((12 * (2 * r) / k ^ 3 - 4 * r ^ 3 / k) * Real.cos (k * r) +
         (-24 / k ^ 5 + 12 * r ^ 2 / k ^ 3 - r ^ 4 / k) * (-Real.sin (k * r) * k)) r :=
-    hA.mul hasDerivAt_cos_mul
+    hA.mul FMSA.Analysis.hasDerivAt_cos_mul
   have hT2 : HasDerivAt (fun x => (-24 * x / k ^ 4 + 4 * x ^ 3 / k ^ 2) * Real.sin (k * x))
       ((-24 / k ^ 4 + 4 * (3 * r ^ 2) / k ^ 2) * Real.sin (k * r) +
         (-24 * r / k ^ 4 + 4 * r ^ 3 / k ^ 2) * (Real.cos (k * r) * k)) r :=
-    hB.mul hasDerivAt_sin_mul
+    hB.mul FMSA.Analysis.hasDerivAt_sin_mul
   exact (hT1.add hT2).congr_deriv (by field_simp [hk]; ring)
 
 /-- **ψ4 formula:** `∫0^sigma r⁴·sin(k·r) dr =`
