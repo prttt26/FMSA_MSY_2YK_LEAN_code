@@ -33,7 +33,7 @@ open Complex Matrix
 
 namespace FMSA.ComplexRankTwo
 
-open FMSA.MatrixQ0 FMSA.Q0Complex FMSA.MixtureNoSpinodal FMSA.MixtureRDF
+open FMSA.MatrixQ0 FMSA.Q0Complex FMSA.MixtureNoSpinodal FMSA.MixtureArcBound
 
 /-- **Tang & Lu eq (15) over ℂ** — `Q̂₀ᵀ·Ĥ₁·Q̂₀ = B₁` (`det ≠ 0`) ⟹ `Ĥ₁ = [Q̂₀ᵀ]⁻¹·B₁·[Q̂₀]⁻¹`. -/
 theorem H1_eq_of_transformed_c {N : ℕ} (Q0 H1 B1 : Matrix (Fin N) (Fin N) ℂ)

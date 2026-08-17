@@ -269,7 +269,7 @@ theorem rdf_entry_double_pole (T0f C1f : ℂ → Matrix (Fin 2) (Fin 2) ℂ) (s_
       (fun z => ((T0f z).adjugate * C1f z * (T0f z).adjugate) i j) s_k) :
     Tendsto (fun z => (z - s_k) ^ 2 * (((T0f z)⁻¹ * C1f z * (T0f z)⁻¹) i j)) (𝓝[≠] s_k)
       (𝓝 (((T0f s_k).adjugate * C1f s_k * (T0f s_k).adjugate) i j / Dprime ^ 2)) := by
-  have hbase := FMSA.MixtureHSPoles.double_pole_leading_coeff
+  have hbase := FMSA.MixtureMLSeries.double_pole_leading_coeff
     (fun z => ((T0f z).adjugate * C1f z * (T0f z).adjugate) i j)
     (fun z => (T0f z).det) Dprime s_k hD hD0 hDp hNum
   refine hbase.congr (fun z => ?_)
@@ -363,7 +363,7 @@ theorem double_pole_second_coeff_deriv_form (N D E E' : ℂ → ℂ) (Nprime Dpr
   have hEderiv : 2 * E' s_k = Dpp :=
     (factor_second_hasDerivAt D E E' s_k hfact hE hE'c).unique hD2
   have hEs : E s_k ≠ 0 := by rw [hEval]; exact hDprime
-  have hbase := FMSA.MixtureHSPoles.double_pole_second_coeff N D E Nprime (E' s_k) s_k
+  have hbase := FMSA.MixtureMLSeries.double_pole_second_coeff N D E Nprime (E' s_k) s_k
     (Filter.Eventually.of_forall hfact) hN (hE s_k) hEs
   rw [hEval] at hbase
   have hlim : Nprime / Dprime ^ 2 - 2 * N s_k * E' s_k / Dprime ^ 3

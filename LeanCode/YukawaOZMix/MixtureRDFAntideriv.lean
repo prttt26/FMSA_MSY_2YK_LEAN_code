@@ -63,7 +63,7 @@ def expLinTerm (a b s : ℂ) (r : ℝ) : ℂ := (a + b * (r : ℂ)) * Complex.ex
 
 /-- The mixture term (II) summand is `expLinTerm` at the pole's `(α, β, s)`. -/
 theorem mixHSterm2_eq_expLinTerm (alpha beta sfam : ℕ → ℂ) (r : ℝ) (n : ℕ) :
-    FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam r n
+    FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam r n
       = expLinTerm (alpha n) (beta n) (sfam n) r := rfl
 
 /-- **Derivative of `expLinTerm` in `r`.**  `d/dr[(a + b·r)·e^{−s·r}] = (b − s·a − s·b·r)·e^{−s·r}`.
@@ -136,7 +136,7 @@ def mixHSAntideriv2 (alpha beta sfam : ℕ → ℂ) (n : ℕ) (r : ℝ) : ℂ :=
 theorem mixHSAntideriv1_hasDerivAt (alpha beta sfam : ℕ → ℂ) (hs : ∀ n, sfam n ≠ 0)
     (n : ℕ) (r : ℝ) :
     HasDerivAt (fun x : ℝ => mixHSAntideriv1 alpha beta sfam n x)
-      (FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam r n) r := by
+      (FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam r n) r := by
   rw [mixHSterm2_eq_expLinTerm]
   exact expLinTerm_antideriv_hasDerivAt (alpha n) (beta n) (sfam n) (hs n) r
 
@@ -458,10 +458,10 @@ theorem expLinTerm_continuous (a b s : ℂ) : Continuous (fun r : ℝ => expLinT
 /-- **Rung 3 — per-pole FTC, rung 1.**  `∫_a^b mixHSterm2 α β s u du = mixHSAntideriv1(b) −
 mixHSAntideriv1(a)` (`mixHSterm2 = mixHSAntideriv1′`, `integral_eq_sub_of_hasDerivAt`). -/
 theorem mixHSterm2_integral (alpha beta sfam : ℕ → ℂ) (hs : ∀ n, sfam n ≠ 0) (n : ℕ) (a b : ℝ) :
-    ∫ u in a..b, FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam u n
+    ∫ u in a..b, FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam u n
       = mixHSAntideriv1 alpha beta sfam n b - mixHSAntideriv1 alpha beta sfam n a := by
-  have hcont : Continuous (fun u : ℝ => FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam u n) := by
-    have hrw : (fun u : ℝ => FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam u n)
+  have hcont : Continuous (fun u : ℝ => FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam u n) := by
+    have hrw : (fun u : ℝ => FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam u n)
         = fun u => expLinTerm (alpha n) (beta n) (sfam n) u := by
       funext u; rw [mixHSterm2_eq_expLinTerm]
     rw [hrw]; exact expLinTerm_continuous _ _ _
@@ -485,11 +485,11 @@ integrand's `r`-order — the core of the collapse's outer-integral reduction. -
 theorem mixHSterm2_weighted_ibp (alpha beta sfam : ℕ → ℂ) (hs : ∀ n, sfam n ≠ 0) (n : ℕ)
     (w w' : ℝ → ℂ) (a b : ℝ) (hw : ∀ x ∈ uIcc a b, HasDerivAt w (w' x) x)
     (hw'int : IntervalIntegrable w' volume a b) :
-    ∫ u in a..b, w u * FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam u n
+    ∫ u in a..b, w u * FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam u n
       = w b * mixHSAntideriv1 alpha beta sfam n b - w a * mixHSAntideriv1 alpha beta sfam n a
         - ∫ u in a..b, w' u * mixHSAntideriv1 alpha beta sfam n u := by
-  have hcont : Continuous (fun u : ℝ => FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam u n) := by
-    have hrw : (fun u : ℝ => FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam u n)
+  have hcont : Continuous (fun u : ℝ => FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam u n) := by
+    have hrw : (fun u : ℝ => FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam u n)
         = fun u => expLinTerm (alpha n) (beta n) (sfam n) u := by
       funext u; rw [mixHSterm2_eq_expLinTerm]
     rw [hrw]; exact expLinTerm_continuous _ _ _
@@ -504,15 +504,15 @@ annulus, where the term series is summable (MML.5).  This is what lets the colla
 `r·h₁ = r·(∑ …)` to a per-pole endpoint sum. -/
 theorem mixHSterm2_integral_tsum (alpha beta sfam : ℕ → ℂ) (hs : ∀ n, sfam n ≠ 0) (a b : ℝ)
     (hab : a ≤ b)
-    (hL1 : ∑' n, ∫⁻ u in Ioc a b, ‖FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam u n‖ₑ ≠ ∞) :
-    ∫ u in a..b, (∑' n, FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam u n)
+    (hL1 : ∑' n, ∫⁻ u in Ioc a b, ‖FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam u n‖ₑ ≠ ∞) :
+    ∫ u in a..b, (∑' n, FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam u n)
       = ∑' n, (mixHSAntideriv1 alpha beta sfam n b - mixHSAntideriv1 alpha beta sfam n a) := by
   rw [intervalIntegral.integral_of_le hab]
   have hmeas : ∀ n, AEStronglyMeasurable
-      (fun u => FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam u n) (volume.restrict (Ioc a b)) := by
+      (fun u => FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam u n) (volume.restrict (Ioc a b)) := by
     intro n
-    have hcont : Continuous (fun u : ℝ => FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam u n) := by
-      have hrw : (fun u : ℝ => FMSA.MixtureHSPoles.mixHSterm2 alpha beta sfam u n)
+    have hcont : Continuous (fun u : ℝ => FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam u n) := by
+      have hrw : (fun u : ℝ => FMSA.MixtureMLSeries.mixHSterm2 alpha beta sfam u n)
           = fun u => expLinTerm (alpha n) (beta n) (sfam n) u := by
         funext u; rw [mixHSterm2_eq_expLinTerm]
       rw [hrw]; exact expLinTerm_continuous _ _ _

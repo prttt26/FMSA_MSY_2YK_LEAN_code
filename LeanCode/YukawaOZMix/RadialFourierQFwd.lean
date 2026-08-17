@@ -38,7 +38,7 @@ Companion transforms: the off-diagonal `qFwd_im` (`RadialFourierQFwdOffdiag.lean
 -/
 
 open MeasureTheory Set
-namespace FMSA.HardSphere
+namespace FMSA.MixtureHSDCF
 
 private lemma hasDerivAt_sin_mul_q {k r : ℝ} :
     HasDerivAt (fun x => Real.sin (k * x)) (Real.cos (k * r) * k) r := by
@@ -88,7 +88,7 @@ theorem psi3_formula {k : ℝ} (hk : k ≠ 0) (sigma : ℝ) :
     OfNat.ofNat_ne_zero, not_false_eq_true, add_zero]
   ring
 
-end FMSA.HardSphere
+end FMSA.MixtureHSDCF
 
 namespace FMSA.MixtureHSDCF
 open FMSA.HardSphere FMSA.InnerDecomp FMSA.WHSupports

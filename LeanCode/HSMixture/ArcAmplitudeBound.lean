@@ -53,7 +53,7 @@ bounds/decay, and the assembly logic (this file) are all in place.
 
 open Complex
 
-namespace FMSA.MixtureRDF
+namespace FMSA.MixtureArcBound
 
 /-- **Additive-diameter cancellation, leading term** (`m = i`, `n = j`): the net exponent
 `σᵢ/2 − Rᵢⱼ + σⱼ/2` of `E(−y)ᵢᵢ·U₁(y)ᵢⱼ·E(−y)ⱼⱼ` vanishes. -/
@@ -176,4 +176,4 @@ theorem amplitude_norm_le {c : ℝ} {W Δ dt : ℂ} {Wb D : ℝ}
   have hWb : 0 ≤ Wb := (norm_nonneg W).trans hW
   gcongr
 
-end FMSA.MixtureRDF
+end FMSA.MixtureArcBound

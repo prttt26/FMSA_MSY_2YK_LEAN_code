@@ -54,7 +54,8 @@ open scoped Matrix
 
 open FMSA.PoleSeries
 
-namespace FMSA.MixtureHSPoles
+namespace FMSA.MixtureMLSeries
+open FMSA.MixtureHSPoles
 
 /-! ### MML.4 — the per-pole HS Mittag-Leffler term -/
 
@@ -103,4 +104,4 @@ theorem b_k_residue_coupled (s_k : ℂ) (sigma : Fin 2 → ℂ) (rho_geo Qp Qpp 
 
 /-! ### MML.5 — convergence of the HS-pole series (abstract) -/
 
-end FMSA.MixtureHSPoles
+end FMSA.MixtureMLSeries

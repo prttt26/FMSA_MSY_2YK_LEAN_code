@@ -91,7 +91,8 @@ open scoped Matrix
 
 open FMSA.PoleSeries
 
-namespace FMSA.MixtureHSPoles
+namespace FMSA.MixtureMLSeries
+open FMSA.MixtureHSPoles
 
 /-! ### MML.6 — the Yukawa doubly-propagated base term -/
 
@@ -369,4 +370,4 @@ def MixRDFInnerCollapse
     (base : ℝ → ℝ) (alpha beta sfam : ℕ → ℂ) (p0 Rij : ℝ) (h1true : ℝ → ℝ) : Prop :=
   ∀ r, 0 < r → r < Rij → mixRDFInnerAssembly base alpha beta sfam p0 r = r * h1true r
 
-end FMSA.MixtureHSPoles
+end FMSA.MixtureMLSeries

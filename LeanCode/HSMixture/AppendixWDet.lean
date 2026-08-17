@@ -36,7 +36,7 @@ derivation that ties `Wtl`/`detTL` to the actual `[Q̂₀]⁻¹`.
 
 open Complex
 
-namespace FMSA.MixtureRDF
+namespace FMSA.MixtureArcBound
 
 /-- Tang & Lu Appendix `φ₁(R) = (1 − sR − e^{−sR})/s²` (`s = ik`). -/
 noncomputable def phi1 (s : ℂ) (R : ℝ) : ℂ := (1 - s * R - Complex.exp (-(s * R))) / s ^ 2
@@ -283,4 +283,4 @@ theorem norm_Wtl_le {N : ℕ} {s : ℂ} {ρ R : Fin N → ℝ} (i j : Fin N)
   refine (norm_add_le _ _).trans (add_le_add ((norm_add_le _ _).trans
     (add_le_add ((norm_add_le _ _).trans (add_le_add h1 h2)) h3)) h4)
 
-end FMSA.MixtureRDF
+end FMSA.MixtureArcBound

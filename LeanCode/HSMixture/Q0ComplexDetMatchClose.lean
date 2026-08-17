@@ -58,7 +58,7 @@ open Complex Matrix
 
 namespace FMSA.ComplexRankTwo
 
-open FMSA.MatrixQ0 FMSA.Q0Complex FMSA.MixtureNoSpinodal FMSA.MixtureRDF
+open FMSA.MatrixQ0 FMSA.Q0Complex FMSA.MixtureNoSpinodal FMSA.MixtureArcBound
 
 /-- **Key ξ₂-cancellation** `fFunC_p gFunC_q − gFunC_p fFunC_q = (2π²/Δ²)(a_p φ1_q − a_q φ1_p)`,
 `a_p = σ_p/2·φ1_p + φ2_p`.  Pure `ring` — the `ξ₂` terms cancel antisymmetrically. -/

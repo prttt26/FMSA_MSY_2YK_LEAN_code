@@ -45,7 +45,8 @@ therefore closes MML.8 by the **non-circular** value route `matOzStar_unique`
 alternative route stays a hypothesis.
 -/
 
-namespace FMSA.MixtureHSPoles
+namespace FMSA.MixtureMLSeries
+open FMSA.MixtureHSPoles
 
 open Complex
 
@@ -108,4 +109,4 @@ theorem even_subfamily_not_exhaustive {detF : ℂ → ℂ} {kfam : ℕ → ℂ}
     omega
   · exact hmf 1 (2 * n) hn
 
-end FMSA.MixtureHSPoles
+end FMSA.MixtureMLSeries

@@ -39,7 +39,7 @@ factorization; BMCSL reduces at N=1 to the *different* Carnahan-Starling value
 
 open Finset
 
-namespace FMSA.HardSphere
+namespace FMSA.WhiteBear
 
 /-! ### Weighted densities (Task FW.1) -/
 
@@ -388,4 +388,4 @@ theorem bmcsl_virial_eq_fmt_pressure {N : ℕ} (rho d : Fin N → ℝ) (hd : ∀
   field_simp
   ring
 
-end FMSA.HardSphere
+end FMSA.WhiteBear

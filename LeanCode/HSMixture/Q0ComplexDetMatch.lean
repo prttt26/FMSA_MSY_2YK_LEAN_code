@@ -44,7 +44,7 @@ open Complex Matrix
 
 namespace FMSA.ComplexRankTwo
 
-open FMSA.MatrixQ0 FMSA.Q0Complex FMSA.MixtureNoSpinodal FMSA.MixtureRDF
+open FMSA.MatrixQ0 FMSA.Q0Complex FMSA.MixtureNoSpinodal FMSA.MixtureArcBound
 
 /-- `p1c` (`Q0ComplexRankTwo`) = `phi1` (`AppendixWDet`) at a real diameter. -/
 theorem p1c_eq_phi1 (s : ℂ) (R : ℝ) : p1c s (R : ℂ) = phi1 s R := rfl

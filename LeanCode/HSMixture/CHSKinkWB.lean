@@ -176,9 +176,9 @@ theorem cHS_FMT_kink_WB (χ0 χ1 χ2 χ3 : ℝ) {n2 η Ri Rj : ℝ}
 weighted densities `n₂ = wbN2 ρ d`, `η = wbN3 ρ d` — the "FMT Lean entry". Physical hypotheses:
 positive surface density `0 < wbN2`, packing fraction `0 < η < 1`, and unlike radii. -/
 theorem cHS_FMT_kink_WB_fmt {N : ℕ} (rho d : Fin N → ℝ) (χ0 χ1 χ2 χ3 : ℝ) {Ri Rj : ℝ}
-    (hn2 : 0 < FMSA.HardSphere.wbN2 rho d) (h0 : 0 < FMSA.HardSphere.wbN3 rho d) (h1 : FMSA.HardSphere.wbN3 rho d < 1) (hne : Ri ≠ Rj) :
+    (hn2 : 0 < FMSA.WhiteBear.wbN2 rho d) (h0 : 0 < FMSA.WhiteBear.wbN3 rho d) (h1 : FMSA.WhiteBear.wbN3 rho d < 1) (hne : Ri ≠ Rj) :
     ¬ DifferentiableAt ℝ
-      (cHS_FMT χ0 χ1 χ2 χ3 (E_WB (FMSA.HardSphere.wbN2 rho d) (FMSA.HardSphere.wbN3 rho d) + χ1 / (4 * Real.pi)) Ri Rj)
+      (cHS_FMT χ0 χ1 χ2 χ3 (E_WB (FMSA.WhiteBear.wbN2 rho d) (FMSA.WhiteBear.wbN3 rho d) + χ1 / (4 * Real.pi)) Ri Rj)
       |Ri - Rj| :=
   cHS_FMT_kink_WB χ0 χ1 χ2 χ3 hn2 h0 h1 hne
 

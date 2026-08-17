@@ -345,7 +345,7 @@ theorem norm_phi1_le {σ : ℝ} (hσ : 0 ≤ σ) {s : ℂ} (hre : 0 ≤ s.re) (h
   have hre' : 0 ≤ (s * (σ : ℂ)).re := by
     rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
     exact mul_nonneg hre hσ
-  have h := FMSA.MixtureRDF.normP2_arc_decay (σ := (σ : ℂ)) hs1 hre'
+  have h := FMSA.MixtureArcBound.normP2_arc_decay (σ := (σ : ℂ)) hs1 hre'
   rwa [Complex.norm_real, Real.norm_of_nonneg hσ] at h
 
 theorem norm_phi2_le {σ : ℝ} (hσ : 0 ≤ σ) {s : ℂ} (hre : 0 ≤ s.re) (hs1 : 1 ≤ ‖s‖) :
@@ -355,7 +355,7 @@ theorem norm_phi2_le {σ : ℝ} (hσ : 0 ≤ σ) {s : ℂ} (hre : 0 ≤ s.re) (h
   have hre' : 0 ≤ (s * (σ : ℂ)).re := by
     rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
     exact mul_nonneg hre hσ
-  have h := FMSA.MixtureRDF.normP3_arc_decay (σ := (σ : ℂ)) hs1 hre'
+  have h := FMSA.MixtureArcBound.normP3_arc_decay (σ := (σ : ℂ)) hs1 hre'
   rwa [Complex.norm_real, Real.norm_of_nonneg hσ] at h
 
 theorem linfty_opNorm_le_row {N : ℕ} (A : Matrix (Fin N) (Fin N) ℂ) {c : ℝ} (hc : 0 ≤ c)

@@ -43,7 +43,7 @@ open Complex
 
 namespace FMSA.MixtureRDF
 
-open FMSA.MatrixQ0 FMSA.Q0Complex
+open FMSA.MatrixQ0 FMSA.Q0Complex FMSA.MixtureArcBound
 
 /-- **Appendix bridge, `N = 1` (Baxter-factor form).**  The scalar Baxter factor `q0` equals
 `1 − 2π√(ρ₀ρ₀)·W₀₀/Δ` — the `N = 1` case of Tang & Lu's inverse formula (the physical PY

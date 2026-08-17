@@ -132,7 +132,7 @@ theorem hhat1_double_pole {N : ℕ} (Mf B1f : ℂ → Matrix (Fin N) (Fin N) ℂ
     Tendsto (fun z => (z - s_k) ^ 2 * (FMSA.MixtureYukawaWH.Hhat1 (Mf z) (B1f z) i j)) (𝓝[≠] s_k)
       (𝓝 (((hsResidueMatrix (Mf s_k) Dprime)ᵀ * B1f s_k
             * hsResidueMatrix (Mf s_k) Dprime) i j)) := by
-  have hbase := FMSA.MixtureHSPoles.double_pole_leading_coeff
+  have hbase := FMSA.MixtureMLSeries.double_pole_leading_coeff
     (fun z => (((Mf z).adjugate)ᵀ * B1f z * (Mf z).adjugate) i j)
     (fun z => (Mf z).det) Dprime s_k hD hD0 hDp hNum
   rw [num_div_det_sq_eq_transpose_sandwich (Mf s_k) (B1f s_k) Dprime i j] at hbase
@@ -307,14 +307,14 @@ threshold.  `threshold_lt_contact` / `exists_mem_collapse_region` show the regio
 def MixRDFInnerCollapseAnnulus (P : MixParams) (base : ℝ → ℝ) (alpha beta sfam : ℕ → ℂ)
     (p0 : ℝ) (h1true : ℝ → ℝ) : Prop :=
   ∀ r, rdfCollapseThreshold P < r → r < contactR01 P →
-    FMSA.MixtureHSPoles.mixRDFInnerAssembly base alpha beta sfam p0 r = r * h1true r
+    FMSA.MixtureMLSeries.mixRDFInnerAssembly base alpha beta sfam p0 r = r * h1true r
 
 /-- The original `(0, R_ij)` predicate implies the annulus one (the annulus is a sub-interval).  The
 converse fails, and the difference is exactly the junk-valued region flagged above — which is why
 the annulus form is the one to aim at. -/
 theorem mixRDFInnerCollapseAnnulus_of_collapse (P : MixParams) (base : ℝ → ℝ)
     (alpha beta sfam : ℕ → ℂ) (p0 : ℝ) (h1true : ℝ → ℝ) (hP : P.Phys)
-    (h : FMSA.MixtureHSPoles.MixRDFInnerCollapse base alpha beta sfam p0 (contactR01 P) h1true) :
+    (h : FMSA.MixtureMLSeries.MixRDFInnerCollapse base alpha beta sfam p0 (contactR01 P) h1true) :
     MixRDFInnerCollapseAnnulus P base alpha beta sfam p0 h1true := by
   intro r hlo hhi
   exact h r (lt_trans (threshold_pos P hP) hlo) hhi
