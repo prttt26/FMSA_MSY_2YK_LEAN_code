@@ -62,7 +62,7 @@ No separate normalization step is required or permitted.
 
 open Real intervalIntegral
 
-namespace FMSA.MixturePoly
+namespace FMSA.InnerOriginBC
 
 /-! ### Terms II and III vanish at r = 0 -/
 
@@ -145,4 +145,4 @@ theorem origin_bc_baxter (S M z K : ℝ)
   apply origin_bc_concrete
   field_simp [hD]
 
-end FMSA.MixturePoly
+end FMSA.InnerOriginBC

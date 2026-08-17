@@ -12,7 +12,8 @@ This is the `γ = 0` (hard-sphere) baseline of the first-order mixture RDF; the 
 comes from the residue expansion (eqs 21–24), which builds on the closed-form `[Q̂₀]⁻¹`.
 -/
 
-namespace FMSA.MatrixQ0
+namespace FMSA.MixtureRDFContact
+open FMSA.MatrixQ0
 
 /-- **Tang & Lu eq (25) — the hard-sphere mixture RDF contact value** `g⁰ᵢⱼ(Rᵢⱼ)`.
 `g⁰ᵢⱼ(Rᵢⱼ) = (1/(Rᵢⱼ·Δ))·(Rᵢⱼ + π·σᵢ·σⱼ·ξ₂/(4Δ))`, with `Rᵢⱼ = (σᵢ+σⱼ)/2`, `Δ = vacMix = 1−η`,
@@ -40,4 +41,4 @@ theorem gHS_contact_equalDiam {N : ℕ} (rho sigma : Fin N → ℝ) {s : ℝ} (h
   field_simp
   ring
 
-end FMSA.MatrixQ0
+end FMSA.MixtureRDFContact
