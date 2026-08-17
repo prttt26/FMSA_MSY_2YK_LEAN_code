@@ -68,22 +68,13 @@ theorem q0_poly_support_subset (eta sigma rho : ℝ) :
   by_contra hns
   exact hx (FMSA.HardSphere.q0_poly_outer (not_le.mp hns))
 
-/-- Real-space mixture Baxter entry `{Q̂₀(r)}_{ij}` ([LN] Eq. 10): the Baxter polynomial
-`Q'_{ij}(r−R_{ij}) + Q''_j(r−R_{ij})²/2` windowed on the core `[λ_{ij}, R_{ij}]`, built from the
-converged-solution `Mix` data.  (Coefficients enter only as amplitudes; the support statement below
-is independent of their values.) -/
-noncomputable def q0MixEntry (X : Mix N M) (i j : Fin N) (r : ℝ) : ℝ :=
-  Set.indicator (Set.Icc (X.lam i j) (X.R i j))
-    (fun r => X.Q0 i j * (r - X.R i j) + X.Qpp j * (r - X.R i j) ^ 2 / 2) r
+/-! ### The mixture real-space Baxter entry — inherited from `HSMix`
 
-/-- **[LN] Eq. 56 (mixture).**  The mixture real-space Baxter entry is compactly supported inside the
-core: `Function.support (q0MixEntry X i j) ⊆ Set.Icc λ_{ij} R_{ij}`. -/
-theorem q0MixEntry_support_subset (X : Mix N M) (i j : Fin N) :
-    Function.support (q0MixEntry X i j) ⊆ Set.Icc (X.lam i j) (X.R i j) := by
-  intro x hx
-  rw [Function.mem_support] at hx
-  by_contra hns
-  exact hx (Set.indicator_of_notMem hns _)
+`Mix N M` **extends** `HSMix N` (`InnerDecomp.lean`), so the real-space Baxter entry and its
+support lemma are the pure-HS `HSMix.q0MixEntry` / `HSMix.q0MixEntry_support_subset`
+(`HSMixture/HSMix.lean`), used here through the method form `X.q0MixEntry` for `X : Mix`.  They
+were previously duplicated here as free functions; that copy was removed (`X.q0MixEntry X i j r`
+is definitionally the pure-HS entry for any `M`). -/
 
 /-! ### The pure-HS projection `Mix → HSMix` — the M=0 bridge (Yukawa layer connects here)
 
@@ -91,12 +82,6 @@ The `M`-independent Baxter/DCF content is defined Yukawa-free on `HSMix` (`HSMix
 `Mix N M` **extends** `HSMix N` (`InnerDecomp.lean`), so the pure-HS projection is the
 auto-generated parent projection `Mix.toHSMix` (forgetting the tail fields `zp`/`cb`); the bridges
 below are `rfl` for any `M`. -/
-
-/-- **The Baxter-entry bridge — `rfl`.**  `Mix`'s `q0MixEntry` IS the pure-HS `HSMix.q0MixEntry` at
-the projection, for ANY `M` (`M=0` = pure hard sphere); geometry and coefficients agree
-definitionally. -/
-theorem q0MixEntry_eq_toHSMix (X : Mix N M) (i j : Fin N) (r : ℝ) :
-    q0MixEntry X i j r = (X.toHSMix).q0MixEntry i j r := rfl
 
 /-- Geometry bridges are `rfl` too. -/
 theorem Mix_R_eq_toHSMix (X : Mix N M) (i j : Fin N) : X.R i j = (X.toHSMix).R i j := rfl

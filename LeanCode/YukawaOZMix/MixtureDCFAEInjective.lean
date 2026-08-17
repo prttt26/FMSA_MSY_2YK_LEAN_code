@@ -240,11 +240,11 @@ terms to the momentum closed form `Cmix0_Qphys_eq`. -/
 theorem q0MixEntry_physMix_laplace (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
     (s : ℂ) (hs : s ≠ 0) (i j : Fin 2) :
     (∫ t in ((physMix rho sigma hsig).lam i j)..((physMix rho sigma hsig).R i j),
-        Complex.exp (-(s * (t : ℂ))) * ((q0MixEntry (physMix rho sigma hsig) i j t : ℝ) : ℂ))
+        Complex.exp (-(s * (t : ℂ))) * (((physMix rho sigma hsig).q0MixEntry i j t : ℝ) : ℂ))
       = BbarePhys rho sigma s i j := by
   have hexparg : -(s * ((physMix rho sigma hsig).lam i j : ℂ))
       = -(((sigma j : ℂ) - (sigma i : ℂ)) / 2 * s) := by
-    simp only [physMix, Mix.lam]; push_cast; ring
+    simp only [physMix, HSMix.lam]; push_cast; ring
   rw [q0MixEntry_laplace_c (physMix rho sigma hsig) i j s hs, hexparg]
   simp only [physMix, BbarePhys]
   rw [show (Qppphys rho sigma 0 j : ℝ) = Qppphys rho sigma i j from by fin_cases i <;> rfl]
@@ -255,23 +255,23 @@ open FMSA.InnerDecomp FMSA.WHSupports in
 (`setIntegral_eq_integral_of_forall_compl_eq_zero` + `integral_Icc_eq_integral_Ioc`). -/
 theorem q0MixEntry_physMix_fullline (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
     (s : ℂ) (hs : s ≠ 0) (i j : Fin 2) :
-    (∫ t, (q0MixEntry (physMix rho sigma hsig) i j t : ℂ) * Complex.exp (-(s * t)))
+    (∫ t, ((physMix rho sigma hsig).q0MixEntry i j t : ℂ) * Complex.exp (-(s * t)))
       = BbarePhys rho sigma s i j := by
   set X := physMix rho sigma hsig with hX
   have hle : X.lam i j ≤ X.R i j := by
     have := hsig i
-    simp only [hX, physMix, Mix.lam, Mix.R]; linarith
+    simp only [hX, physMix, HSMix.lam, HSMix.R]; linarith
   have hg0 : ∀ t, t ∉ Set.Icc (X.lam i j) (X.R i j) →
-      (q0MixEntry X i j t : ℂ) * Complex.exp (-(s * t)) = 0 := by
+      (X.q0MixEntry i j t : ℂ) * Complex.exp (-(s * t)) = 0 := by
     intro t ht
-    have hq : q0MixEntry X i j t = 0 := by
+    have hq : X.q0MixEntry i j t = 0 := by
       by_contra h
-      exact ht (q0MixEntry_support_subset X i j (Function.mem_support.mpr h))
+      exact ht (X.q0MixEntry_support_subset i j (Function.mem_support.mpr h))
     rw [hq]; push_cast; ring
   rw [← MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero hg0,
     MeasureTheory.integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le hle]
   rw [intervalIntegral.integral_congr (g := fun t => Complex.exp (-(s * t))
-      * ((q0MixEntry X i j t : ℝ) : ℂ)) (fun t _ => by ring)]
+      * ((X.q0MixEntry i j t : ℝ) : ℂ)) (fun t _ => by ring)]
   exact q0MixEntry_physMix_laplace rho sigma hsig s hs i j
 
 open FMSA.InnerDecomp FMSA.WHSupports in
@@ -279,8 +279,8 @@ open FMSA.InnerDecomp FMSA.WHSupports in
 `∑ₗ ∫ (ρᵢₗ·q0(i,l)(t))·(ρⱼₗ·q0(j,l)(t−v)) dt` — the double-product part of the real-space DCF. -/
 noncomputable def matCorrW {M : ℕ} (X : Mix 2 M) (rhoCg : Fin 2 → Fin 2 → ℝ) (i j : Fin 2) (v : ℝ) :
     ℂ :=
-  ∑ l, ∫ t, ((rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ))
-              * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ))
+  ∑ l, ∫ t, ((rhoCg i l : ℂ) * (X.q0MixEntry i l t : ℂ))
+              * ((rhoCg j l : ℂ) * (X.q0MixEntry j l (t - v) : ℂ))
 
 open FMSA.InnerDecomp FMSA.WHSupports in
 /-- **Step (iii) — weighted correlation Laplace transform.**  `∫ matCorrW·e^{−zv} =
@@ -291,15 +291,15 @@ constants, then the constants factored out.  Its RHS is the `Cmix0_Qphys_eq` dou
 theorem matCorrW_laplace {M : ℕ} (X : Mix 2 M) (rhoCg : Fin 2 → Fin 2 → ℝ) (i j : Fin 2) (z : ℂ) :
     (∫ v, matCorrW X rhoCg i j v * Complex.exp (-(z * v)))
       = ∑ l, (rhoCg i l : ℂ) * (rhoCg j l : ℂ)
-          * (∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(z * t)))
-          * (∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (z * s)) := by
-  set F : Fin 2 → ℝ → ℂ := fun l t => (rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ) with hF
-  set G : Fin 2 → ℝ → ℂ := fun l t => (rhoCg j l : ℂ) * (q0MixEntry X j l t : ℂ) with hG
+          * (∫ t, (X.q0MixEntry i l t : ℂ) * Complex.exp (-(z * t)))
+          * (∫ s, (X.q0MixEntry j l s : ℂ) * Complex.exp (z * s)) := by
+  set F : Fin 2 → ℝ → ℂ := fun l t => (rhoCg i l : ℂ) * (X.q0MixEntry i l t : ℂ) with hF
+  set G : Fin 2 → ℝ → ℂ := fun l t => (rhoCg j l : ℂ) * (X.q0MixEntry j l t : ℂ) with hG
   have h3 : ∀ l : Fin 2, Integrable
       (fun v => (∫ t, F l t * G l (t - v)) * Complex.exp (-(z * v))) := by
     intro l
     have hUnw : Integrable
-        (fun v => (∫ t, (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ))
+        (fun v => (∫ t, (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ))
           * Complex.exp (-(z * v))) := by
       refine (q0MixEntry_corr_exp_prod_integrable X i j l z).integral_prod_right.congr
         (Filter.Eventually.of_forall (fun v => ?_))
@@ -308,10 +308,10 @@ theorem matCorrW_laplace {M : ℕ} (X : Mix 2 M) (rhoCg : Fin 2 → Fin 2 → �
     refine (hUnw.const_mul ((rhoCg i l : ℂ) * (rhoCg j l : ℂ))).congr
       (Filter.Eventually.of_forall (fun v => ?_))
     simp only [hF, hG]
-    rw [show (fun t => (rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ)
-            * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
+    rw [show (fun t => (rhoCg i l : ℂ) * (X.q0MixEntry i l t : ℂ)
+            * ((rhoCg j l : ℂ) * (X.q0MixEntry j l (t - v) : ℂ)))
           = (fun t => ((rhoCg i l : ℂ) * (rhoCg j l : ℂ))
-              * ((q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ))) from by
+              * ((X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ))) from by
         funext t; ring, MeasureTheory.integral_const_mul]
     ring
   have key := laplace_sum_eq_corr_c (ι := Fin 2) Finset.univ F G z
@@ -331,11 +331,11 @@ theorem matCorrW_laplace {M : ℕ} (X : Mix 2 M) (rhoCg : Fin 2 → Fin 2 → �
   rw [hmc, ← key]
   refine Finset.sum_congr rfl (fun l _ => ?_)
   rw [show (∫ t, F l t * Complex.exp (-(z * t)))
-        = (rhoCg i l : ℂ) * ∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(z * t)) from by
+        = (rhoCg i l : ℂ) * ∫ t, (X.q0MixEntry i l t : ℂ) * Complex.exp (-(z * t)) from by
       rw [← MeasureTheory.integral_const_mul]; refine integral_congr_ae
         (Filter.Eventually.of_forall (fun t => ?_)); simp only [hF]; ring,
     show (∫ s, G l s * Complex.exp (z * s))
-        = (rhoCg j l : ℂ) * ∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (z * s) from by
+        = (rhoCg j l : ℂ) * ∫ s, (X.q0MixEntry j l s : ℂ) * Complex.exp (z * s) from by
       rw [← MeasureTheory.integral_const_mul]; refine integral_congr_ae
         (Filter.Eventually.of_forall (fun s => ?_)); simp only [hG]; ring]
   ring
@@ -346,8 +346,8 @@ open FMSA.InnerDecomp FMSA.WHSupports FMSA.MatrixQ0 in
 linear terms jump at `v=λ`, so it is a.e.-continuous but not continuous.) -/
 noncomputable def matDCFfull (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) (i j : Fin 2)
     (v : ℝ) : ℂ :=
-  (rhoGeoPhys rho i j : ℂ) * (q0MixEntry (physMix rho sigma hsig) i j v : ℂ)
-    + (rhoGeoPhys rho j i : ℂ) * (q0MixEntry (physMix rho sigma hsig) j i (-v) : ℂ)
+  (rhoGeoPhys rho i j : ℂ) * ((physMix rho sigma hsig).q0MixEntry i j v : ℂ)
+    + (rhoGeoPhys rho j i : ℂ) * ((physMix rho sigma hsig).q0MixEntry j i (-v) : ℂ)
     - matCorrW (physMix rho sigma hsig) (rhoGeoPhys rho) i j v
 
 open FMSA.InnerDecomp FMSA.WHSupports FMSA.MatrixQ0 FMSA.MRS in
@@ -361,11 +361,11 @@ theorem matDCFfull_laplace (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma 
       = Cmix0 (Qphys sigma rho) z i j := by
   set X := physMix rho sigma hsig with hX
   have hnz : -z ≠ 0 := neg_ne_zero.mpr hz
-  have iA : Integrable (fun v => (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j v : ℂ)
+  have iA : Integrable (fun v => (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j v : ℂ)
       * Complex.exp (-(z * v))) :=
     ((q0MixEntry_mul_exp_integrable X i j (-z)).const_mul (rhoGeoPhys rho i j : ℂ)).congr
       (Filter.Eventually.of_forall (fun v => by simp only [neg_mul]; ring))
-  have iB : Integrable (fun v => (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-v) : ℂ)
+  have iB : Integrable (fun v => (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-v) : ℂ)
       * Complex.exp (-(z * v))) :=
     (((q0MixEntry_mul_exp_integrable X j i z).comp_neg).const_mul (rhoGeoPhys rho j i : ℂ)).congr
       (Filter.Eventually.of_forall (fun v => by
@@ -374,8 +374,8 @@ theorem matDCFfull_laplace (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma 
   have iC : Integrable (fun v => matCorrW X (rhoGeoPhys rho) i j v * Complex.exp (-(z * v))) := by
     simp only [matCorrW, Finset.sum_mul]
     refine integrable_finsetSum _ (fun l _ => ?_)
-    have hUnw : Integrable (fun v => (∫ t, (q0MixEntry X i l t : ℂ)
-        * (q0MixEntry X j l (t - v) : ℂ)) * Complex.exp (-(z * v))) := by
+    have hUnw : Integrable (fun v => (∫ t, (X.q0MixEntry i l t : ℂ)
+        * (X.q0MixEntry j l (t - v) : ℂ)) * Complex.exp (-(z * v))) := by
       refine (q0MixEntry_corr_exp_prod_integrable X i j l z).integral_prod_right.congr
         (Filter.Eventually.of_forall (fun v => ?_))
       simp only [Function.uncurry]
@@ -383,43 +383,43 @@ theorem matDCFfull_laplace (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma 
     refine (hUnw.const_mul ((rhoGeoPhys rho i l : ℂ) * (rhoGeoPhys rho j l : ℂ))).congr
       (Filter.Eventually.of_forall (fun v => ?_))
     dsimp only
-    have hfac : (∫ t, (rhoGeoPhys rho i l : ℂ) * (q0MixEntry X i l t : ℂ)
-          * ((rhoGeoPhys rho j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
+    have hfac : (∫ t, (rhoGeoPhys rho i l : ℂ) * (X.q0MixEntry i l t : ℂ)
+          * ((rhoGeoPhys rho j l : ℂ) * (X.q0MixEntry j l (t - v) : ℂ)))
         = (rhoGeoPhys rho i l : ℂ) * (rhoGeoPhys rho j l : ℂ)
-          * ∫ t, (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ) := by
+          * ∫ t, (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ) := by
       rw [← MeasureTheory.integral_const_mul]
       exact integral_congr_ae (Filter.Eventually.of_forall (fun t => by ring))
     rw [hfac]; ring
   have hdist : ∀ v, matDCFfull rho sigma hsig i j v * Complex.exp (-(z * v))
-      = (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j v : ℂ) * Complex.exp (-(z * v))
-        + (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-v) : ℂ) * Complex.exp (-(z * v))
+      = (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j v : ℂ) * Complex.exp (-(z * v))
+        + (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-v) : ℂ) * Complex.exp (-(z * v))
         - matCorrW X (rhoGeoPhys rho) i j v * Complex.exp (-(z * v)) := fun v => by
     simp only [matDCFfull, hX]; ring
   rw [integral_congr_ae (Filter.Eventually.of_forall hdist)]
   rw [integral_sub (μ := volume)
-      (f := fun a => (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j a : ℂ) * Complex.exp (-(z * a))
-          + (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-a) : ℂ) * Complex.exp (-(z * a)))
+      (f := fun a => (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j a : ℂ) * Complex.exp (-(z * a))
+          + (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-a) : ℂ) * Complex.exp (-(z * a)))
       (g := fun a => matCorrW X (rhoGeoPhys rho) i j a * Complex.exp (-(z * a)))
       (iA.add iB) iC,
     integral_add iA iB]
-  have t1 : (∫ v, (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j v : ℂ) * Complex.exp (-(z * v)))
+  have t1 : (∫ v, (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j v : ℂ) * Complex.exp (-(z * v)))
       = (rhoGeoPhys rho i j : ℂ) * BbarePhys rho sigma z i j := by
     rw [← q0MixEntry_physMix_fullline rho sigma hsig z hz i j, ← MeasureTheory.integral_const_mul]
     exact integral_congr_ae (Filter.Eventually.of_forall (fun v => by ring))
-  have hstep : ∀ b : Fin 2, (∫ v, (q0MixEntry X j b (-v) : ℂ) * Complex.exp (-(z * v)))
+  have hstep : ∀ b : Fin 2, (∫ v, (X.q0MixEntry j b (-v) : ℂ) * Complex.exp (-(z * v)))
       = BbarePhys rho sigma (-z) j b := by
     intro b
     rw [← q0MixEntry_physMix_fullline rho sigma hsig (-z) hnz j b]
     rw [← integral_neg_eq_self
-      (fun t => (q0MixEntry X j b t : ℂ) * Complex.exp (-((-z) * t))) volume]
+      (fun t => (X.q0MixEntry j b t : ℂ) * Complex.exp (-((-z) * t))) volume]
     refine integral_congr_ae (Filter.Eventually.of_forall (fun v => ?_))
     dsimp only
     rw [show -((-z) * ((-v : ℝ) : ℂ)) = -(z * (v : ℂ)) from by push_cast; ring]
-  have t2 : (∫ v, (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-v) : ℂ) * Complex.exp (-(z * v)))
+  have t2 : (∫ v, (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-v) : ℂ) * Complex.exp (-(z * v)))
       = (rhoGeoPhys rho j i : ℂ) * BbarePhys rho sigma (-z) j i := by
     rw [← hstep i, ← MeasureTheory.integral_const_mul]
     exact integral_congr_ae (Filter.Eventually.of_forall (fun v => by ring))
-  have hrefl : ∀ b : Fin 2, (∫ s, (q0MixEntry X j b s : ℂ) * Complex.exp (z * s))
+  have hrefl : ∀ b : Fin 2, (∫ s, (X.q0MixEntry j b s : ℂ) * Complex.exp (z * s))
       = BbarePhys rho sigma (-z) j b := by
     intro b
     rw [← q0MixEntry_physMix_fullline rho sigma hsig (-z) hnz j b]
@@ -447,8 +447,8 @@ open Set FMSA.InnerDecomp FMSA.WHSupports
 /-- `q0MixEntry` (cast to ℂ) is continuous away from the two support endpoints `λᵢⱼ`, `Rᵢⱼ`. -/
 theorem q0MixEntry_continuousAt (X : Mix 2 M) (i j : Fin 2) {v : ℝ}
     (hlam : v ≠ X.lam i j) (hR : v ≠ X.R i j) :
-    ContinuousAt (fun t => (q0MixEntry X i j t : ℂ)) v := by
-  have hreal : ContinuousAt (fun t => q0MixEntry X i j t) v := by
+    ContinuousAt (fun t => (X.q0MixEntry i j t : ℂ)) v := by
+  have hreal : ContinuousAt (fun t => X.q0MixEntry i j t) v := by
     have hpc : ContinuousAt
         (fun r => X.Q0 i j * (r - X.R i j) + X.Qpp j * (r - X.R i j) ^ 2 / 2) v := by fun_prop
     have hzero : ContinuousAt (fun _ : ℝ => (0 : ℝ)) v := continuousAt_const
@@ -457,18 +457,18 @@ theorem q0MixEntry_continuousAt (X : Mix 2 M) (i j : Fin 2) {v : ℝ}
       filter_upwards [Iio_mem_nhds hlt] with t ht
       have hnm : t ∉ Set.Icc (X.lam i j) (X.R i j) :=
         fun h => absurd (Set.mem_Iio.mp ht) (not_lt.mpr h.1)
-      rw [q0MixEntry, Set.indicator_of_notMem hnm]
+      rw [FMSA.HSMix.q0MixEntry, Set.indicator_of_notMem hnm]
     · exact absurd heq hlam
     · rcases lt_trichotomy v (X.R i j) with h2 | h2 | h2
       · refine hpc.congr ?_
         filter_upwards [Ioo_mem_nhds hgt h2] with t ht
-        rw [q0MixEntry, Set.indicator_of_mem (Set.mem_Icc.mpr ⟨le_of_lt ht.1, le_of_lt ht.2⟩)]
+        rw [FMSA.HSMix.q0MixEntry, Set.indicator_of_mem (Set.mem_Icc.mpr ⟨le_of_lt ht.1, le_of_lt ht.2⟩)]
       · exact absurd h2 hR
       · refine hzero.congr ?_
         filter_upwards [Ioi_mem_nhds h2] with t ht
         have hnm : t ∉ Set.Icc (X.lam i j) (X.R i j) :=
           fun h => absurd (Set.mem_Ioi.mp ht) (not_lt.mpr h.2)
-        rw [q0MixEntry, Set.indicator_of_notMem hnm]
+        rw [FMSA.HSMix.q0MixEntry, Set.indicator_of_notMem hnm]
   exact Complex.continuous_ofReal.continuousAt.comp hreal
 
 open FMSA.MatrixQ0 in
@@ -477,10 +477,10 @@ theorem matCorrW_continuous (X : Mix 2 M) (rhoCg : Fin 2 → Fin 2 → ℝ) (i j
     Continuous (fun v => matCorrW X rhoCg i j v) := by
   simp only [matCorrW]
   refine continuous_finsetSum _ (fun l _ => ?_)
-  have heq : (fun v => ∫ t, ((rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ))
-        * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
+  have heq : (fun v => ∫ t, ((rhoCg i l : ℂ) * (X.q0MixEntry i l t : ℂ))
+        * ((rhoCg j l : ℂ) * (X.q0MixEntry j l (t - v) : ℂ)))
       = (fun v => (rhoCg i l : ℂ) * (rhoCg j l : ℂ)
-          * ∫ t, (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ)) := by
+          * ∫ t, (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ)) := by
     funext v; rw [← MeasureTheory.integral_const_mul]
     exact integral_congr_ae (Filter.Eventually.of_forall (fun t => by ring))
   rw [heq]
@@ -491,9 +491,9 @@ open FMSA.MatrixQ0 in
 theorem matDCFfull_integrable (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) (i j : Fin 2) :
     Integrable (fun v => matDCFfull rho sigma hsig i j v) := by
   set X := physMix rho sigma hsig with hX
-  have h1 : Integrable (fun v => (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j v : ℂ)) :=
+  have h1 : Integrable (fun v => (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j v : ℂ)) :=
     ((memLp_one_iff_integrable.mp (q0MixEntry_memLp X i j 1))).const_mul _
-  have h2 : Integrable (fun v => (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-v) : ℂ)) :=
+  have h2 : Integrable (fun v => (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-v) : ℂ)) :=
     (((memLp_one_iff_integrable.mp (q0MixEntry_memLp X j i 1)).comp_neg)).const_mul _
   have h3 : Integrable (fun v => matCorrW X (rhoGeoPhys rho) i j v) := by
     simp only [matCorrW]
@@ -521,9 +521,9 @@ theorem matDCFfull_ae_continuous (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < 
     apply hv
     show ContinuousAt (fun v => matDCFfull rho sigma hsig i j v) v
     simp only [matDCFfull]
-    have c1 : ContinuousAt (fun v => (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j v : ℂ)) v :=
+    have c1 : ContinuousAt (fun v => (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j v : ℂ)) v :=
       continuousAt_const.mul (q0MixEntry_continuousAt X i j hne1 hne2)
-    have c2 : ContinuousAt (fun v => (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-v) : ℂ)) v := by
+    have c2 : ContinuousAt (fun v => (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-v) : ℂ)) v := by
       refine continuousAt_const.mul ?_
       have hnv1 : -v ≠ X.lam j i := fun h => hne3 (by linarith)
       have hnv2 : -v ≠ X.R j i := fun h => hne4 (by linarith)
@@ -614,8 +614,8 @@ theorem matCorrW_reflect_swap {M : ℕ} (X : Mix 2 M) (rhoCg : Fin 2 → Fin 2 �
   simp only [matCorrW]
   refine Finset.sum_congr rfl (fun l _ => ?_)
   rw [← MeasureTheory.integral_add_right_eq_self
-    (fun t => ((rhoCg j l : ℂ) * (q0MixEntry X j l t : ℂ))
-      * ((rhoCg i l : ℂ) * (q0MixEntry X i l (t - v) : ℂ))) v]
+    (fun t => ((rhoCg j l : ℂ) * (X.q0MixEntry j l t : ℂ))
+      * ((rhoCg i l : ℂ) * (X.q0MixEntry i l (t - v) : ℂ))) v]
   refine MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall (fun t => ?_))
   simp only [sub_neg_eq_add, add_sub_cancel_right]
   ring
@@ -1055,11 +1055,11 @@ theorem physMix_toHSMix (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) 
 theorem q0MixEntry_physMixN_laplace (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
     (s : ℂ) (hs : s ≠ 0) (i j : Fin N) :
     (∫ t in ((physMixN rho sigma hsig).lam i j)..((physMixN rho sigma hsig).R i j),
-        Complex.exp (-(s * (t : ℂ))) * ((q0MixEntry (physMixN rho sigma hsig) i j t : ℝ) : ℂ))
+        Complex.exp (-(s * (t : ℂ))) * (((physMixN rho sigma hsig).q0MixEntry i j t : ℝ) : ℂ))
       = Bbra (fun a => (sigma a : ℂ)) (fun a b => (Q0phys rho sigma a b : ℂ))
           (fun a b => (Qppphys rho sigma a b : ℂ)) s i j := by
   rw [q0MixEntry_laplace_c (physMixN rho sigma hsig) i j s hs]
-  simp only [physMixN, Mix.lam, Bbra]
+  simp only [physMixN, HSMix.lam, Bbra]
   rw [show (Qppphys rho sigma j j : ℝ) = Qppphys rho sigma i j from rfl]
   congr 1
   congr 1
@@ -1068,42 +1068,42 @@ theorem q0MixEntry_physMixN_laplace (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0
 /-- General-N kernel full-line Laplace transform = Bbra. -/
 theorem q0MixEntry_physMixN_fullline (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
     (s : ℂ) (hs : s ≠ 0) (i j : Fin N) :
-    (∫ t, (q0MixEntry (physMixN rho sigma hsig) i j t : ℂ) * Complex.exp (-(s * t)))
+    (∫ t, ((physMixN rho sigma hsig).q0MixEntry i j t : ℂ) * Complex.exp (-(s * t)))
       = Bbra (fun a => (sigma a : ℂ)) (fun a b => (Q0phys rho sigma a b : ℂ))
           (fun a b => (Qppphys rho sigma a b : ℂ)) s i j := by
   set X := physMixN rho sigma hsig with hX
   have hle : X.lam i j ≤ X.R i j := by
-    have := hsig i; simp only [hX, physMixN, Mix.lam, Mix.R]; linarith
+    have := hsig i; simp only [hX, physMixN, HSMix.lam, HSMix.R]; linarith
   have hg0 : ∀ t, t ∉ Set.Icc (X.lam i j) (X.R i j) →
-      (q0MixEntry X i j t : ℂ) * Complex.exp (-(s * t)) = 0 := by
+      (X.q0MixEntry i j t : ℂ) * Complex.exp (-(s * t)) = 0 := by
     intro t ht
-    have hq : q0MixEntry X i j t = 0 := by
-      by_contra h; exact ht (q0MixEntry_support_subset X i j (Function.mem_support.mpr h))
+    have hq : X.q0MixEntry i j t = 0 := by
+      by_contra h; exact ht (X.q0MixEntry_support_subset i j (Function.mem_support.mpr h))
     rw [hq]; push_cast; ring
   rw [← MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero hg0,
     MeasureTheory.integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le hle]
   rw [intervalIntegral.integral_congr (g := fun t => Complex.exp (-(s * t))
-      * ((q0MixEntry X i j t : ℝ) : ℂ)) (fun t _ => by ring)]
+      * ((X.q0MixEntry i j t : ℝ) : ℂ)) (fun t _ => by ring)]
   exact q0MixEntry_physMixN_laplace rho sigma hsig s hs i j
 
 
 noncomputable def matCorrWN {M : ℕ} (X : Mix N M) (rhoCg : Fin N → Fin N → ℝ) (i j : Fin N)
     (v : ℝ) : ℂ :=
-  ∑ l, ∫ t, ((rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ))
-              * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ))
+  ∑ l, ∫ t, ((rhoCg i l : ℂ) * (X.q0MixEntry i l t : ℂ))
+              * ((rhoCg j l : ℂ) * (X.q0MixEntry j l (t - v) : ℂ))
 
 theorem matCorrWN_laplace {M : ℕ} (X : Mix N M) (rhoCg : Fin N → Fin N → ℝ) (i j : Fin N) (z : ℂ) :
     (∫ v, matCorrWN X rhoCg i j v * Complex.exp (-(z * v)))
       = ∑ l, (rhoCg i l : ℂ) * (rhoCg j l : ℂ)
-          * (∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(z * t)))
-          * (∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (z * s)) := by
-  set F : Fin N → ℝ → ℂ := fun l t => (rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ) with hF
-  set G : Fin N → ℝ → ℂ := fun l t => (rhoCg j l : ℂ) * (q0MixEntry X j l t : ℂ) with hG
+          * (∫ t, (X.q0MixEntry i l t : ℂ) * Complex.exp (-(z * t)))
+          * (∫ s, (X.q0MixEntry j l s : ℂ) * Complex.exp (z * s)) := by
+  set F : Fin N → ℝ → ℂ := fun l t => (rhoCg i l : ℂ) * (X.q0MixEntry i l t : ℂ) with hF
+  set G : Fin N → ℝ → ℂ := fun l t => (rhoCg j l : ℂ) * (X.q0MixEntry j l t : ℂ) with hG
   have h3 : ∀ l : Fin N, Integrable
       (fun v => (∫ t, F l t * G l (t - v)) * Complex.exp (-(z * v))) := by
     intro l
     have hUnw : Integrable
-        (fun v => (∫ t, (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ))
+        (fun v => (∫ t, (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ))
           * Complex.exp (-(z * v))) := by
       refine (q0MixEntry_corr_exp_prod_integrable X i j l z).integral_prod_right.congr
         (Filter.Eventually.of_forall (fun v => ?_))
@@ -1112,10 +1112,10 @@ theorem matCorrWN_laplace {M : ℕ} (X : Mix N M) (rhoCg : Fin N → Fin N → �
     refine (hUnw.const_mul ((rhoCg i l : ℂ) * (rhoCg j l : ℂ))).congr
       (Filter.Eventually.of_forall (fun v => ?_))
     simp only [hF, hG]
-    rw [show (fun t => (rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ)
-            * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
+    rw [show (fun t => (rhoCg i l : ℂ) * (X.q0MixEntry i l t : ℂ)
+            * ((rhoCg j l : ℂ) * (X.q0MixEntry j l (t - v) : ℂ)))
           = (fun t => ((rhoCg i l : ℂ) * (rhoCg j l : ℂ))
-              * ((q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ))) from by
+              * ((X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ))) from by
         funext t; ring, MeasureTheory.integral_const_mul]
     ring
   have key := laplace_sum_eq_corr_c (ι := Fin N) Finset.univ F G z
@@ -1135,11 +1135,11 @@ theorem matCorrWN_laplace {M : ℕ} (X : Mix N M) (rhoCg : Fin N → Fin N → �
   rw [hmc, ← key]
   refine Finset.sum_congr rfl (fun l _ => ?_)
   rw [show (∫ t, F l t * Complex.exp (-(z * t)))
-        = (rhoCg i l : ℂ) * ∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(z * t)) from by
+        = (rhoCg i l : ℂ) * ∫ t, (X.q0MixEntry i l t : ℂ) * Complex.exp (-(z * t)) from by
       rw [← MeasureTheory.integral_const_mul]; refine integral_congr_ae
         (Filter.Eventually.of_forall (fun t => ?_)); simp only [hF]; ring,
     show (∫ s, G l s * Complex.exp (z * s))
-        = (rhoCg j l : ℂ) * ∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (z * s) from by
+        = (rhoCg j l : ℂ) * ∫ s, (X.q0MixEntry j l s : ℂ) * Complex.exp (z * s) from by
       rw [← MeasureTheory.integral_const_mul]; refine integral_congr_ae
         (Filter.Eventually.of_forall (fun s => ?_)); simp only [hG]; ring]
   ring
@@ -1154,8 +1154,8 @@ noncomputable def QphysN (rho sigma : Fin N → ℝ) (s : ℂ) : Matrix (Fin N) 
 /-- General-N real-space full-line DCF. -/
 noncomputable def matDCFfullN (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k) (i j : Fin N)
     (v : ℝ) : ℂ :=
-  (rhoGeoPhys rho i j : ℂ) * (q0MixEntry (physMixN rho sigma hsig) i j v : ℂ)
-    + (rhoGeoPhys rho j i : ℂ) * (q0MixEntry (physMixN rho sigma hsig) j i (-v) : ℂ)
+  (rhoGeoPhys rho i j : ℂ) * ((physMixN rho sigma hsig).q0MixEntry i j v : ℂ)
+    + (rhoGeoPhys rho j i : ℂ) * ((physMixN rho sigma hsig).q0MixEntry j i (-v) : ℂ)
     - matCorrWN (physMixN rho sigma hsig) (rhoGeoPhys rho) i j v
 
 theorem matDCFfullN_laplace (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
@@ -1164,11 +1164,11 @@ theorem matDCFfullN_laplace (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma
       = Cmix0 (QphysN rho sigma) z i j := by
   set X := physMixN rho sigma hsig with hX
   have hnz : -z ≠ 0 := neg_ne_zero.mpr hz
-  have iA : Integrable (fun v => (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j v : ℂ)
+  have iA : Integrable (fun v => (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j v : ℂ)
       * Complex.exp (-(z * v))) :=
     ((q0MixEntry_mul_exp_integrable X i j (-z)).const_mul (rhoGeoPhys rho i j : ℂ)).congr
       (Filter.Eventually.of_forall (fun v => by simp only [neg_mul]; ring))
-  have iB : Integrable (fun v => (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-v) : ℂ)
+  have iB : Integrable (fun v => (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-v) : ℂ)
       * Complex.exp (-(z * v))) :=
     (((q0MixEntry_mul_exp_integrable X j i z).comp_neg).const_mul (rhoGeoPhys rho j i : ℂ)).congr
       (Filter.Eventually.of_forall (fun v => by
@@ -1177,8 +1177,8 @@ theorem matDCFfullN_laplace (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma
   have iC : Integrable (fun v => matCorrWN X (rhoGeoPhys rho) i j v * Complex.exp (-(z * v))) := by
     simp only [matCorrWN, Finset.sum_mul]
     refine integrable_finsetSum _ (fun l _ => ?_)
-    have hUnw : Integrable (fun v => (∫ t, (q0MixEntry X i l t : ℂ)
-        * (q0MixEntry X j l (t - v) : ℂ)) * Complex.exp (-(z * v))) := by
+    have hUnw : Integrable (fun v => (∫ t, (X.q0MixEntry i l t : ℂ)
+        * (X.q0MixEntry j l (t - v) : ℂ)) * Complex.exp (-(z * v))) := by
       refine (q0MixEntry_corr_exp_prod_integrable X i j l z).integral_prod_right.congr
         (Filter.Eventually.of_forall (fun v => ?_))
       simp only [Function.uncurry]
@@ -1186,48 +1186,48 @@ theorem matDCFfullN_laplace (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma
     refine (hUnw.const_mul ((rhoGeoPhys rho i l : ℂ) * (rhoGeoPhys rho j l : ℂ))).congr
       (Filter.Eventually.of_forall (fun v => ?_))
     dsimp only
-    have hfac : (∫ t, (rhoGeoPhys rho i l : ℂ) * (q0MixEntry X i l t : ℂ)
-          * ((rhoGeoPhys rho j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
+    have hfac : (∫ t, (rhoGeoPhys rho i l : ℂ) * (X.q0MixEntry i l t : ℂ)
+          * ((rhoGeoPhys rho j l : ℂ) * (X.q0MixEntry j l (t - v) : ℂ)))
         = (rhoGeoPhys rho i l : ℂ) * (rhoGeoPhys rho j l : ℂ)
-          * ∫ t, (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ) := by
+          * ∫ t, (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ) := by
       rw [← MeasureTheory.integral_const_mul]
       exact integral_congr_ae (Filter.Eventually.of_forall (fun t => by ring))
     rw [hfac]; ring
   have hdist : ∀ v, matDCFfullN rho sigma hsig i j v * Complex.exp (-(z * v))
-      = (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j v : ℂ) * Complex.exp (-(z * v))
-        + (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-v) : ℂ) * Complex.exp (-(z * v))
+      = (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j v : ℂ) * Complex.exp (-(z * v))
+        + (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-v) : ℂ) * Complex.exp (-(z * v))
         - matCorrWN X (rhoGeoPhys rho) i j v * Complex.exp (-(z * v)) := fun v => by
     simp only [matDCFfullN, hX]; ring
   rw [integral_congr_ae (Filter.Eventually.of_forall hdist)]
   rw [integral_sub (μ := volume)
-      (f := fun a => (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j a : ℂ) * Complex.exp (-(z * a))
-          + (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-a) : ℂ) * Complex.exp (-(z * a)))
+      (f := fun a => (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j a : ℂ) * Complex.exp (-(z * a))
+          + (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-a) : ℂ) * Complex.exp (-(z * a)))
       (g := fun a => matCorrWN X (rhoGeoPhys rho) i j a * Complex.exp (-(z * a)))
       (iA.add iB) iC,
     integral_add iA iB]
-  have t1 : (∫ v, (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j v : ℂ) * Complex.exp (-(z * v)))
+  have t1 : (∫ v, (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j v : ℂ) * Complex.exp (-(z * v)))
       = (rhoGeoPhys rho i j : ℂ) * Bbra (fun a => (sigma a : ℂ))
           (fun a b => (Q0phys rho sigma a b : ℂ)) (fun a b => (Qppphys rho sigma a b : ℂ))
           z i j := by
     rw [← q0MixEntry_physMixN_fullline rho sigma hsig z hz i j, ← MeasureTheory.integral_const_mul]
     exact integral_congr_ae (Filter.Eventually.of_forall (fun v => by ring))
-  have hstep : ∀ b : Fin N, (∫ v, (q0MixEntry X j b (-v) : ℂ) * Complex.exp (-(z * v)))
+  have hstep : ∀ b : Fin N, (∫ v, (X.q0MixEntry j b (-v) : ℂ) * Complex.exp (-(z * v)))
       = Bbra (fun a => (sigma a : ℂ)) (fun a b => (Q0phys rho sigma a b : ℂ))
           (fun a b => (Qppphys rho sigma a b : ℂ)) (-z) j b := by
     intro b
     rw [← q0MixEntry_physMixN_fullline rho sigma hsig (-z) hnz j b]
     rw [← integral_neg_eq_self
-      (fun t => (q0MixEntry X j b t : ℂ) * Complex.exp (-((-z) * t))) volume]
+      (fun t => (X.q0MixEntry j b t : ℂ) * Complex.exp (-((-z) * t))) volume]
     refine integral_congr_ae (Filter.Eventually.of_forall (fun v => ?_))
     dsimp only
     rw [show -((-z) * ((-v : ℝ) : ℂ)) = -(z * (v : ℂ)) from by push_cast; ring]
-  have t2 : (∫ v, (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-v) : ℂ) * Complex.exp (-(z * v)))
+  have t2 : (∫ v, (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-v) : ℂ) * Complex.exp (-(z * v)))
       = (rhoGeoPhys rho j i : ℂ) * Bbra (fun a => (sigma a : ℂ))
           (fun a b => (Q0phys rho sigma a b : ℂ)) (fun a b => (Qppphys rho sigma a b : ℂ))
           (-z) j i := by
     rw [← hstep i, ← MeasureTheory.integral_const_mul]
     exact integral_congr_ae (Filter.Eventually.of_forall (fun v => by ring))
-  have hrefl : ∀ b : Fin N, (∫ s, (q0MixEntry X j b s : ℂ) * Complex.exp (z * s))
+  have hrefl : ∀ b : Fin N, (∫ s, (X.q0MixEntry j b s : ℂ) * Complex.exp (z * s))
       = Bbra (fun a => (sigma a : ℂ)) (fun a b => (Q0phys rho sigma a b : ℂ))
           (fun a b => (Qppphys rho sigma a b : ℂ)) (-z) j b := by
     intro b
@@ -1256,8 +1256,8 @@ theorem matDCFfullN_laplace (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma
 
 theorem q0MixEntry_continuousAt_N {M : ℕ} (X : Mix N M) (i j : Fin N) {v : ℝ}
     (hlam : v ≠ X.lam i j) (hR : v ≠ X.R i j) :
-    ContinuousAt (fun t => (q0MixEntry X i j t : ℂ)) v := by
-  have hreal : ContinuousAt (fun t => q0MixEntry X i j t) v := by
+    ContinuousAt (fun t => (X.q0MixEntry i j t : ℂ)) v := by
+  have hreal : ContinuousAt (fun t => X.q0MixEntry i j t) v := by
     have hpc : ContinuousAt
         (fun r => X.Q0 i j * (r - X.R i j) + X.Qpp j * (r - X.R i j) ^ 2 / 2) v := by fun_prop
     have hzero : ContinuousAt (fun _ : ℝ => (0 : ℝ)) v := continuousAt_const
@@ -1266,28 +1266,28 @@ theorem q0MixEntry_continuousAt_N {M : ℕ} (X : Mix N M) (i j : Fin N) {v : ℝ
       filter_upwards [Iio_mem_nhds hlt] with t ht
       have hnm : t ∉ Set.Icc (X.lam i j) (X.R i j) :=
         fun h => absurd (Set.mem_Iio.mp ht) (not_lt.mpr h.1)
-      rw [q0MixEntry, Set.indicator_of_notMem hnm]
+      rw [FMSA.HSMix.q0MixEntry, Set.indicator_of_notMem hnm]
     · exact absurd heq hlam
     · rcases lt_trichotomy v (X.R i j) with h2 | h2 | h2
       · refine hpc.congr ?_
         filter_upwards [Ioo_mem_nhds hgt h2] with t ht
-        rw [q0MixEntry, Set.indicator_of_mem (Set.mem_Icc.mpr ⟨le_of_lt ht.1, le_of_lt ht.2⟩)]
+        rw [FMSA.HSMix.q0MixEntry, Set.indicator_of_mem (Set.mem_Icc.mpr ⟨le_of_lt ht.1, le_of_lt ht.2⟩)]
       · exact absurd h2 hR
       · refine hzero.congr ?_
         filter_upwards [Ioi_mem_nhds h2] with t ht
         have hnm : t ∉ Set.Icc (X.lam i j) (X.R i j) :=
           fun h => absurd (Set.mem_Ioi.mp ht) (not_lt.mpr h.2)
-        rw [q0MixEntry, Set.indicator_of_notMem hnm]
+        rw [FMSA.HSMix.q0MixEntry, Set.indicator_of_notMem hnm]
   exact Complex.continuous_ofReal.continuousAt.comp hreal
 
 theorem matCorrWN_continuous {M : ℕ} (X : Mix N M) (rhoCg : Fin N → Fin N → ℝ) (i j : Fin N) :
     Continuous (fun v => matCorrWN X rhoCg i j v) := by
   simp only [matCorrWN]
   refine continuous_finsetSum _ (fun l _ => ?_)
-  have heq : (fun v => ∫ t, ((rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ))
-        * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
+  have heq : (fun v => ∫ t, ((rhoCg i l : ℂ) * (X.q0MixEntry i l t : ℂ))
+        * ((rhoCg j l : ℂ) * (X.q0MixEntry j l (t - v) : ℂ)))
       = (fun v => (rhoCg i l : ℂ) * (rhoCg j l : ℂ)
-          * ∫ t, (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ)) := by
+          * ∫ t, (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ)) := by
     funext v; rw [← MeasureTheory.integral_const_mul]
     exact integral_congr_ae (Filter.Eventually.of_forall (fun t => by ring))
   rw [heq]
@@ -1296,9 +1296,9 @@ theorem matCorrWN_continuous {M : ℕ} (X : Mix N M) (rhoCg : Fin N → Fin N �
 theorem matDCFfullN_integrable (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k) (i j : Fin N) :
     Integrable (fun v => matDCFfullN rho sigma hsig i j v) := by
   set X := physMixN rho sigma hsig with hX
-  have h1 : Integrable (fun v => (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j v : ℂ)) :=
+  have h1 : Integrable (fun v => (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j v : ℂ)) :=
     ((memLp_one_iff_integrable.mp (q0MixEntry_memLp X i j 1))).const_mul _
-  have h2 : Integrable (fun v => (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-v) : ℂ)) :=
+  have h2 : Integrable (fun v => (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-v) : ℂ)) :=
     (((memLp_one_iff_integrable.mp (q0MixEntry_memLp X j i 1)).comp_neg)).const_mul _
   have h3 : Integrable (fun v => matCorrWN X (rhoGeoPhys rho) i j v) := by
     simp only [matCorrWN]
@@ -1324,9 +1324,9 @@ theorem matDCFfullN_ae_continuous (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 <
     apply hv
     show ContinuousAt (fun v => matDCFfullN rho sigma hsig i j v) v
     simp only [matDCFfullN]
-    have c1 : ContinuousAt (fun v => (rhoGeoPhys rho i j : ℂ) * (q0MixEntry X i j v : ℂ)) v :=
+    have c1 : ContinuousAt (fun v => (rhoGeoPhys rho i j : ℂ) * (X.q0MixEntry i j v : ℂ)) v :=
       continuousAt_const.mul (q0MixEntry_continuousAt_N X i j hne1 hne2)
-    have c2 : ContinuousAt (fun v => (rhoGeoPhys rho j i : ℂ) * (q0MixEntry X j i (-v) : ℂ)) v := by
+    have c2 : ContinuousAt (fun v => (rhoGeoPhys rho j i : ℂ) * (X.q0MixEntry j i (-v) : ℂ)) v := by
       refine continuousAt_const.mul ?_
       have hnv1 : -v ≠ X.lam j i := fun h => hne3 (by linarith)
       have hnv2 : -v ≠ X.R j i := fun h => hne4 (by linarith)
@@ -1393,7 +1393,7 @@ open FMSA.WHSupports FMSA.InnerDecomp FMSA.MatrixQ0
 concrete `Q` for which the abstract fold kernel `matDCFfoldKernel Qw` is the physical DCF core. -/
 noncomputable def qWeighted (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) :
     Matrix (Fin 2) (Fin 2) (ℝ → ℝ) :=
-  fun i k => fun v => rhoGeoPhys rho i k * q0MixEntry (physMix rho sigma hsig) i k v
+  fun i k => fun v => rhoGeoPhys rho i k * (physMix rho sigma hsig).q0MixEntry i k v
 
 /-- **Physical identification** — the abstract full-line DCF fold kernel at the weighted Baxter
 factor `qWeighted` IS the physical DCF core `matDCFreCore` (= `Re(matDCFfull)`). -/
@@ -1408,11 +1408,11 @@ theorem matDCFfoldKernel_qWeighted_eq_matDCFreCore (rho sigma : Fin 2 → ℝ)
     refine integral_congr_ae (Filter.Eventually.of_forall (fun t => ?_))
     simp only [qWeighted]; push_cast; ring
   rw [matDCFreCore, matDCFfull, hcorr]
-  rw [show ((rhoGeoPhys rho i k : ℂ) * (q0MixEntry (physMix rho sigma hsig) i k v : ℂ)
-        + (rhoGeoPhys rho k i : ℂ) * (q0MixEntry (physMix rho sigma hsig) k i (-v) : ℂ)
+  rw [show ((rhoGeoPhys rho i k : ℂ) * ((physMix rho sigma hsig).q0MixEntry i k v : ℂ)
+        + (rhoGeoPhys rho k i : ℂ) * ((physMix rho sigma hsig).q0MixEntry k i (-v) : ℂ)
         - ((matCorrFull (qWeighted rho sigma hsig) i k v : ℝ) : ℂ))
-      = (((rhoGeoPhys rho i k * q0MixEntry (physMix rho sigma hsig) i k v
-          + rhoGeoPhys rho k i * q0MixEntry (physMix rho sigma hsig) k i (-v)
+      = (((rhoGeoPhys rho i k * (physMix rho sigma hsig).q0MixEntry i k v
+          + rhoGeoPhys rho k i * (physMix rho sigma hsig).q0MixEntry k i (-v)
           - matCorrFull (qWeighted rho sigma hsig) i k v : ℝ)) : ℂ) from by push_cast; ring,
     Complex.ofReal_re]
   simp only [matDCFfoldKernel, qWeighted]
@@ -1454,10 +1454,10 @@ still need `Ψ`-regularity and are left to the wiring.) -/
 /-- `q0MixEntry(physMix)` vanishes off its support `[(σⱼ−σᵢ)/2, (σᵢ+σⱼ)/2]`. -/
 theorem q0_physMix_eq_zero_of_notMem (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
     (i j : Fin 2) {t : ℝ} (ht : t ∉ Set.Icc ((sigma j - sigma i) / 2) ((sigma i + sigma j) / 2)) :
-    q0MixEntry (physMix rho sigma hsig) i j t = 0 := by
+    (physMix rho sigma hsig).q0MixEntry i j t = 0 := by
   by_contra h
-  have hmem := q0MixEntry_support_subset (physMix rho sigma hsig) i j (Function.mem_support.mpr h)
-  simp only [Mix.lam, Mix.R, physMix] at hmem
+  have hmem := (physMix rho sigma hsig).q0MixEntry_support_subset i j (Function.mem_support.mpr h)
+  simp only [HSMix.lam, HSMix.R, physMix] at hmem
   exact ht hmem
 
 /-- The full-line correlation `matCorrFull(qWeighted)ᵢₖ` vanishes for `|v| > Rᵢₖ = (σᵢ+σₖ)/2` — the
@@ -1561,24 +1561,24 @@ theorem qWeighted_abs_le (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
     ∃ C, ∀ t, |qWeighted rho sigma hsig i k t| ≤ C := by
   obtain ⟨C, _, hC⟩ := q0MixEntry_abs_le (physMix rho sigma hsig) i k
   refine ⟨|rhoGeoPhys rho i k| * C, fun t => ?_⟩
-  show |rhoGeoPhys rho i k * q0MixEntry (physMix rho sigma hsig) i k t| ≤ |rhoGeoPhys rho i k| * C
+  show |rhoGeoPhys rho i k * (physMix rho sigma hsig).q0MixEntry i k t| ≤ |rhoGeoPhys rho i k| * C
   rw [abs_mul]
   exact mul_le_mul_of_nonneg_left (hC t) (abs_nonneg _)
 
 theorem qWeighted_measurable (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) (i k : Fin 2) :
     Measurable (qWeighted rho sigma hsig i k) := by
-  show Measurable (fun v => rhoGeoPhys rho i k * q0MixEntry (physMix rho sigma hsig) i k v)
+  show Measurable (fun v => rhoGeoPhys rho i k * (physMix rho sigma hsig).q0MixEntry i k v)
   exact (q0MixEntry_measurable (physMix rho sigma hsig) i k).const_mul _
 
 /-- The real cross-correlation `v ↦ ∫ q0ᵢₗ(t)·q0ⱼₗ(t−v)` is continuous (real part of the proven
 `ℂ`-valued `q0MixEntry_corr_continuous`). -/
 theorem q0_corr_real_continuous {N M : ℕ} (X : Mix N M) (i j l : Fin N) :
-    Continuous (fun v => ∫ t, q0MixEntry X i l t * q0MixEntry X j l (t - v)) := by
-  have heq : (fun v => ∫ t, q0MixEntry X i l t * q0MixEntry X j l (t - v))
-      = fun v => (∫ t, (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ)).re := by
+    Continuous (fun v => ∫ t, X.q0MixEntry i l t * X.q0MixEntry j l (t - v)) := by
+  have heq : (fun v => ∫ t, X.q0MixEntry i l t * X.q0MixEntry j l (t - v))
+      = fun v => (∫ t, (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ)).re := by
     funext v
-    rw [show (fun t => (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ))
-        = fun t => ((q0MixEntry X i l t * q0MixEntry X j l (t - v) : ℝ) : ℂ) from by
+    rw [show (fun t => (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ))
+        = fun t => ((X.q0MixEntry i l t * X.q0MixEntry j l (t - v) : ℝ) : ℂ) from by
           funext t; push_cast; ring, integral_complex_ofReal, Complex.ofReal_re]
   rw [heq]
   exact Complex.continuous_re.comp (q0MixEntry_corr_continuous X i j l)
@@ -1590,16 +1590,16 @@ theorem matCorrFull_qWeighted_continuous (rho sigma : Fin 2 → ℝ) (hsig : ∀
   refine continuous_finset_sum _ (fun m _ => ?_)
   have heq : (fun v => ∫ t, qWeighted rho sigma hsig i m t * qWeighted rho sigma hsig k m (t - v))
       = fun v => (rhoGeoPhys rho i m * rhoGeoPhys rho k m)
-          * ∫ t, q0MixEntry (physMix rho sigma hsig) i m t
-              * q0MixEntry (physMix rho sigma hsig) k m (t - v) := by
+          * ∫ t, (physMix rho sigma hsig).q0MixEntry i m t
+              * (physMix rho sigma hsig).q0MixEntry k m (t - v) := by
     funext v
     rw [← integral_const_mul]
     refine integral_congr_ae (Filter.Eventually.of_forall (fun t => ?_))
-    show rhoGeoPhys rho i m * q0MixEntry (physMix rho sigma hsig) i m t
-        * (rhoGeoPhys rho k m * q0MixEntry (physMix rho sigma hsig) k m (t - v))
+    show rhoGeoPhys rho i m * (physMix rho sigma hsig).q0MixEntry i m t
+        * (rhoGeoPhys rho k m * (physMix rho sigma hsig).q0MixEntry k m (t - v))
       = rhoGeoPhys rho i m * rhoGeoPhys rho k m
-          * (q0MixEntry (physMix rho sigma hsig) i m t
-              * q0MixEntry (physMix rho sigma hsig) k m (t - v))
+          * ((physMix rho sigma hsig).q0MixEntry i m t
+              * (physMix rho sigma hsig).q0MixEntry k m (t - v))
     ring
   rw [heq]
   exact continuous_const.mul (q0_corr_real_continuous (physMix rho sigma hsig) i k m)
@@ -1752,16 +1752,16 @@ theorem qWeighted_corr_continuous (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 <
       (fun v => ∫ t, qWeighted rho sigma hsig a l t * qWeighted rho sigma hsig b l (t - v)) := by
   have heq : (fun v => ∫ t, qWeighted rho sigma hsig a l t * qWeighted rho sigma hsig b l (t - v))
       = fun v => (rhoGeoPhys rho a l * rhoGeoPhys rho b l)
-          * ∫ t, q0MixEntry (physMix rho sigma hsig) a l t
-              * q0MixEntry (physMix rho sigma hsig) b l (t - v) := by
+          * ∫ t, (physMix rho sigma hsig).q0MixEntry a l t
+              * (physMix rho sigma hsig).q0MixEntry b l (t - v) := by
     funext v
     rw [← integral_const_mul]
     refine integral_congr_ae (Filter.Eventually.of_forall (fun t => ?_))
-    show rhoGeoPhys rho a l * q0MixEntry (physMix rho sigma hsig) a l t
-        * (rhoGeoPhys rho b l * q0MixEntry (physMix rho sigma hsig) b l (t - v))
+    show rhoGeoPhys rho a l * (physMix rho sigma hsig).q0MixEntry a l t
+        * (rhoGeoPhys rho b l * (physMix rho sigma hsig).q0MixEntry b l (t - v))
       = rhoGeoPhys rho a l * rhoGeoPhys rho b l
-          * (q0MixEntry (physMix rho sigma hsig) a l t
-              * q0MixEntry (physMix rho sigma hsig) b l (t - v))
+          * ((physMix rho sigma hsig).q0MixEntry a l t
+              * (physMix rho sigma hsig).q0MixEntry b l (t - v))
     ring
   rw [heq]
   exact continuous_const.mul (q0_corr_real_continuous (physMix rho sigma hsig) a b l)
@@ -2170,8 +2170,8 @@ theorem qWeighted_contDiffOn (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigm
          + (physMix rho sigma hsig).Qpp k * (r - (physMix rho sigma hsig).R i k) ^ 2 / 2))
       (by fun_prop)).congr ?_
   intro x hx
-  show rhoGeoPhys rho i k * q0MixEntry (physMix rho sigma hsig) i k x = _
-  rw [q0MixEntry, Set.indicator_of_mem (show x ∈ Set.Icc ((physMix rho sigma hsig).lam i k)
+  show rhoGeoPhys rho i k * (physMix rho sigma hsig).q0MixEntry i k x = _
+  rw [FMSA.HSMix.q0MixEntry, Set.indicator_of_mem (show x ∈ Set.Icc ((physMix rho sigma hsig).lam i k)
     ((physMix rho sigma hsig).R i k) from Set.mem_Icc.mpr ⟨hx.1.le, hx.2.le⟩)]
 
 /-- **`matDCFreCore` C¹ regularity reduced to the correlation.**  Via the physical identification
@@ -2343,13 +2343,13 @@ theorem matCorrFull_continuous (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < si
   refine continuous_finsetSum Finset.univ (fun m _ => ?_)
   have hcong : (fun v => ∫ t, qWeighted rho sigma hsig i m t * qWeighted rho sigma hsig k m (t - v))
       = fun v => rhoGeoPhys rho i m * rhoGeoPhys rho k m
-          * (∫ t, (q0MixEntry (physMix rho sigma hsig) i m t : ℂ)
-                * (q0MixEntry (physMix rho sigma hsig) k m (t - v) : ℂ)).re := by
+          * (∫ t, ((physMix rho sigma hsig).q0MixEntry i m t : ℂ)
+                * ((physMix rho sigma hsig).q0MixEntry k m (t - v) : ℂ)).re := by
     funext v
-    have hre : (∫ t, (q0MixEntry (physMix rho sigma hsig) i m t : ℂ)
-            * (q0MixEntry (physMix rho sigma hsig) k m (t - v) : ℂ)).re
-          = ∫ t, q0MixEntry (physMix rho sigma hsig) i m t
-                * q0MixEntry (physMix rho sigma hsig) k m (t - v) := by
+    have hre : (∫ t, ((physMix rho sigma hsig).q0MixEntry i m t : ℂ)
+            * ((physMix rho sigma hsig).q0MixEntry k m (t - v) : ℂ)).re
+          = ∫ t, (physMix rho sigma hsig).q0MixEntry i m t
+                * (physMix rho sigma hsig).q0MixEntry k m (t - v) := by
       simp_rw [← Complex.ofReal_mul]
       rw [integral_complex_ofReal, Complex.ofReal_re]
     rw [hre, ← integral_const_mul]
@@ -2366,8 +2366,8 @@ open FMSA.MatrixQ0 in
 theorem matDCFreCore_continuousOn_Icc (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
     {sigC : ℝ} (hED : ∀ n, sigma n = sigC) (i k : Fin 2) {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) sigC) :
     ContinuousOn (fun w => matDCFreCore rho sigma hsig i k w) (Set.Icc v sigC) := by
-  have hlam : (physMix rho sigma hsig).lam i k = 0 := by simp only [physMix, Mix.lam, hED]; ring
-  have hR : (physMix rho sigma hsig).R i k = sigC := by simp only [physMix, Mix.R, hED]; ring
+  have hlam : (physMix rho sigma hsig).lam i k = 0 := by simp only [physMix, HSMix.lam, hED]; ring
+  have hR : (physMix rho sigma hsig).R i k = sigC := by simp only [physMix, HSMix.R, hED]; ring
   have hfold : (fun w => matDCFreCore rho sigma hsig i k w)
       = fun w => qWeighted rho sigma hsig i k w + qWeighted rho sigma hsig k i (-w)
           - matCorrFull (qWeighted rho sigma hsig) i k w := by
@@ -2382,7 +2382,7 @@ theorem matDCFreCore_continuousOn_Icc (rho sigma : Fin 2 → ℝ) (hsig : ∀ k,
     simp only [qWeighted]
     rw [Set.mem_Icc] at hw
     congr 1
-    unfold q0MixEntry
+    unfold FMSA.HSMix.q0MixEntry
     rw [Set.indicator_of_mem (by rw [Set.mem_Icc, hlam, hR]; exact ⟨le_trans hv.1.le hw.1, hw.2⟩)]
   · refine (continuousOn_const (c := (0 : ℝ))).congr (fun w hw => ?_)
     rw [Set.mem_Icc] at hw
@@ -2402,12 +2402,12 @@ theorem matDCFreCore_boundary (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sig
     matDCFreCore rho sigma hsig i k sigC = 0 := by
   have hsigC0 : 0 < sigC := by rw [← hED 0]; exact hsig 0
   have hlam : ∀ a b : Fin 2, (physMix rho sigma hsig).lam a b = 0 := by
-    intro a b; simp only [physMix, Mix.lam, hED]; ring
+    intro a b; simp only [physMix, HSMix.lam, hED]; ring
   have hR : ∀ a b : Fin 2, (physMix rho sigma hsig).R a b = sigC := by
-    intro a b; simp only [physMix, Mix.R, hED]; ring
-  have hq0sigC : ∀ a b : Fin 2, q0MixEntry (physMix rho sigma hsig) a b sigC = 0 := by
+    intro a b; simp only [physMix, HSMix.R, hED]; ring
+  have hq0sigC : ∀ a b : Fin 2, (physMix rho sigma hsig).q0MixEntry a b sigC = 0 := by
     intro a b
-    unfold q0MixEntry
+    unfold FMSA.HSMix.q0MixEntry
     rw [Set.indicator_of_mem (by rw [Set.mem_Icc, hlam, hR]; exact ⟨hsigC0.le, le_refl _⟩), hR]
     ring
   rw [← matDCFfoldKernel_qWeighted_eq_matDCFreCore]
@@ -2454,15 +2454,15 @@ theorem qWeighted_lipschitzOnWith (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 <
     {sigC : ℝ} (hED : ∀ n, sigma n = sigC) (i m : Fin 2) :
     ∃ K : NNReal, LipschitzOnWith K (fun x => qWeighted rho sigma hsig i m x) (Set.Ici 0) := by
   set X := physMix rho sigma hsig with hX
-  have hR : X.R i m = sigC := by simp only [hX, physMix, Mix.R, hED]; ring
-  have hlam : X.lam i m = 0 := by simp only [hX, physMix, Mix.lam, hED]; ring
+  have hR : X.R i m = sigC := by simp only [hX, physMix, HSMix.R, hED]; ring
+  have hlam : X.lam i m = 0 := by simp only [hX, physMix, HSMix.lam, hED]; ring
   have hsigC0 : 0 < sigC := by rw [← hED 0]; exact hsig 0
   set a := X.Q0 i m with ha
   set b := X.Qpp m with hb
-  have hq0 : ∀ x : ℝ, 0 ≤ x → q0MixEntry X i m x
+  have hq0 : ∀ x : ℝ, 0 ≤ x → X.q0MixEntry i m x
       = a * (min x sigC - sigC) + b * (min x sigC - sigC) ^ 2 / 2 := by
     intro x hx
-    simp only [q0MixEntry, hlam, hR, ← ha, ← hb]
+    simp only [FMSA.HSMix.q0MixEntry, hlam, hR, ← ha, ← hb]
     by_cases hxsigC : x ≤ sigC
     · rw [Set.indicator_of_mem (by rw [Set.mem_Icc]; exact ⟨hx, hxsigC⟩), min_eq_left hxsigC]
     · rw [Set.indicator_of_notMem (by rw [Set.mem_Icc, not_and_or]; exact Or.inr (by
@@ -2473,7 +2473,7 @@ theorem qWeighted_lipschitzOnWith (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 <
   intro x hx y hy
   rw [Set.mem_Ici] at hx hy
   simp only [Real.dist_eq]
-  have hqW : ∀ z : ℝ, qWeighted rho sigma hsig i m z = rhoGeoPhys rho i m * q0MixEntry X i m z :=
+  have hqW : ∀ z : ℝ, qWeighted rho sigma hsig i m z = rhoGeoPhys rho i m * X.q0MixEntry i m z :=
     fun z => by simp only [qWeighted, hX]
   rw [hqW x, hqW y, hq0 x hx, hq0 y hy]
   set u := min x sigC with hu

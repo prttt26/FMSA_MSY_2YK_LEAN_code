@@ -60,14 +60,14 @@ makes the forward jump of `qWeighted i k` at `λᵢₖ` cancel the reflected jum
 so `matDCFreCore` has matching one-sided limits across the knot. -/
 theorem q0MixEntry_physMix_leftEdge (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
     (i k : Fin 2) :
-    q0MixEntry (physMix rho sigma hsig) i k ((sigma k - sigma i) / 2)
+    (physMix rho sigma hsig).q0MixEntry i k ((sigma k - sigma i) / 2)
       = -(Real.pi * sigma i * sigma k) / vacMix rho sigma := by
   have hmem : (sigma k - sigma i) / 2 ∈ Set.Icc ((physMix rho sigma hsig).lam i k)
       ((physMix rho sigma hsig).R i k) := by
-    simp only [physMix, Mix.lam, Mix.R]
+    simp only [physMix, HSMix.lam, HSMix.R]
     rw [Set.mem_Icc]; constructor <;> [rfl; linarith [hsig i]]
-  rw [FMSA.WHSupports.q0MixEntry, Set.indicator_of_mem hmem]
-  simp only [physMix, Mix.R, Q0phys, Qppphys, vacMix]
+  rw [FMSA.HSMix.q0MixEntry, Set.indicator_of_mem hmem]
+  simp only [physMix, HSMix.R, Q0phys, Qppphys, vacMix]
   field_simp
   ring
 
@@ -167,9 +167,9 @@ theorem matCorrFull_hasDerivAt_lower (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 
   rw [heq]
   refine HasDerivAt.fun_sum (fun l _ => ?_)
   have hlam' : (0 : ℝ) ≤ (physMix rho sigma hsig).lam i k := by
-    simp only [physMix, Mix.lam]; linarith [hlam]
+    simp only [physMix, HSMix.lam]; linarith [hlam]
   have hv' : v ∈ Set.Ioo (0 : ℝ) ((physMix rho sigma hsig).lam i k) := by
-    simp only [physMix, Mix.lam]; exact hv
+    simp only [physMix, HSMix.lam]; exact hv
   exact (hasDerivAt_qpConv_lower (physMix rho sigma hsig) i l k hlam' hv').div_const _
 
 open FMSA.MixtureHSDCF FMSA.MixtureHSDCFFin1 in
@@ -187,14 +187,14 @@ theorem matDCFreCore_hasDerivAt_lower (rho sigma : Fin 2 → ℝ) (hsig : ∀ k,
       (-(rhoGeoPhys rho k i * q0MixDeriv (physMix rho sigma hsig) k i (-v))
         - ∑ l, qpConvLowerDeriv (physMix rho sigma hsig) i l k v / (2 * Real.pi) ^ 2) v := by
   have hmem : -v ∈ Set.Ioo ((physMix rho sigma hsig).lam k i) ((physMix rho sigma hsig).R k i) := by
-    simp only [physMix, Mix.lam, Mix.R]
+    simp only [physMix, HSMix.lam, HSMix.R]
     exact ⟨by linarith [hv.2], by linarith [hv.1, hsig i, hsig k]⟩
   have hcomp := (hasDerivAt_q0MixEntry (physMix rho sigma hsig) k i hmem).comp v
     ((hasDerivAt_id v).neg)
   have hrefl : HasDerivAt (fun w => qWeighted rho sigma hsig k i (-w))
       (rhoGeoPhys rho k i * (q0MixDeriv (physMix rho sigma hsig) k i (-v) * -1)) v := by
     have heq : (fun w => qWeighted rho sigma hsig k i (-w))
-        = fun w => rhoGeoPhys rho k i * q0MixEntry (physMix rho sigma hsig) k i (-w) := by
+        = fun w => rhoGeoPhys rho k i * (physMix rho sigma hsig).q0MixEntry k i (-w) := by
       funext w; simp only [qWeighted]
     rw [heq]; exact hcomp.const_mul (rhoGeoPhys rho k i)
   have hcorr := matCorrFull_hasDerivAt_lower rho sigma hsig i k hlam hv
@@ -243,7 +243,7 @@ theorem matDCFreCore_hasDerivAt_lower_cLower (rho sigma : Fin 2 → ℝ) (hsig :
     | (exfalso; simp only [Fin.isValue, sub_self, zero_div, Set.mem_Ioo] at hv;
        exact absurd hv.2 (not_lt.mpr hv.1.le))
     | (simp only [Fin.isValue, qpConvLowerDeriv, Fin.sum_univ_two, intervalIntegral_quad,
-         intervalIntegral_quad_mul_id, q0MixDeriv, physMix, Q0phys, Qppphys, Mix.R, Mix.lam,
+         intervalIntegral_quad_mul_id, q0MixDeriv, physMix, Q0phys, Qppphys, HSMix.R, HSMix.lam,
          rhoGeoPhys, cLowerPiece, xi2, Real.sqrt_mul_self (hrho 0), Real.sqrt_mul_self (hrho 1),
          show rho 1 * rho 0 = rho 0 * rho 1 from mul_comm _ _]
        field_simp
@@ -412,9 +412,9 @@ theorem matDCFreCore_upper_shellForm (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 
     matDCFreCore rho sigma hsig i k v
       = 2 * Real.pi * rhoGeoPhys rho i k * shellUpperAnti rho sigma i k v := by
   have hlam' : (0 : ℝ) ≤ (physMix rho sigma hsig).lam i k := by
-    simp only [physMix, Mix.lam]; linarith [hlt]
+    simp only [physMix, HSMix.lam]; linarith [hlt]
   have hv' : v ∈ Set.Ioo ((physMix rho sigma hsig).lam i k) ((physMix rho sigma hsig).R i k) := by
-    simpa only [physMix, Mix.lam, Mix.R] using hv
+    simpa only [physMix, HSMix.lam, HSMix.R] using hv
   have hvcore : v ∈ Set.Icc ((physMix rho sigma hsig).lam i k) ((physMix rho sigma hsig).R i k) :=
     Set.Ioo_subset_Icc_self hv'
   rw [matDCFreCore_upper_eq rho sigma hsig i k hv.1, matCorrFull_eq_qpConv rho sigma hsig i k v,
@@ -422,8 +422,8 @@ theorem matDCFreCore_upper_shellForm (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 
     FMSA.MixtureHSDCF.qpConv_upper_intervalForm (physMix rho sigma hsig) i 0 k hlam' hv',
     FMSA.MixtureHSDCF.qpConv_upper_intervalForm (physMix rho sigma hsig) i 1 k hlam' hv',
     FMSA.MixtureHSDCF.integral_quad_mul_quad, FMSA.MixtureHSDCF.integral_quad_mul_quad]
-  simp only [qWeighted, FMSA.WHSupports.q0MixEntry, Set.indicator_of_mem hvcore]
-  simp only [physMix, Q0phys, Qppphys, Mix.R, Mix.lam, rhoGeoPhys, shellUpperAnti,
+  simp only [qWeighted, FMSA.HSMix.q0MixEntry, Set.indicator_of_mem hvcore]
+  simp only [physMix, Q0phys, Qppphys, HSMix.R, HSMix.lam, rhoGeoPhys, shellUpperAnti,
     cUpperANum, cUpperBNum, cUpperC2Num, cUpperENum, xi2, Fin.sum_univ_two]
   fin_cases i <;> fin_cases k <;>
     first

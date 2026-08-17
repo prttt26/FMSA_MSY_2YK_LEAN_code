@@ -41,7 +41,7 @@ theorem q0MixEntry_subZeroTail_zero (X : FMSA.HSMix N) (i k : Fin N) (f : ℝ �
     simp only [MeasureTheory.ae_iff, not_not]; simpa using MeasureTheory.measure_singleton (0:ℝ)
   filter_upwards [h0] with t htne htmem
   have hq : X.q0MixEntry i k t = 0 :=
-    Function.notMem_support.mp (fun hs => absurd (q0MixEntry_support_subset X i k hs).1
+    Function.notMem_support.mp (fun hs => absurd (X.q0MixEntry_support_subset i k hs).1
       (not_le.mpr (lt_of_lt_of_le (lt_of_le_of_ne htmem htne) hlam)))
   rw [hq, zero_mul]
 
@@ -57,7 +57,7 @@ theorem q0MixEntry_intSplit (X : FMSA.HSMix N) (i k : Fin N) (g : ℝ → ℝ) (
   rw [Set.compl_Iic] at hcompl
   have hzero : (∫ t in Set.Ioi sigma, X.q0MixEntry i k t * g t) = 0 :=
     MeasureTheory.setIntegral_eq_zero_of_forall_eq_zero (fun t ht => by
-      rw [Function.notMem_support.mp (fun hs => absurd (q0MixEntry_support_subset X i k hs).2
+      rw [Function.notMem_support.mp (fun hs => absurd (X.q0MixEntry_support_subset i k hs).2
         (not_le.mpr (lt_of_le_of_lt hRsigma (Set.mem_Ioi.mp ht)))), zero_mul])
   have hIoi : (∫ t in Set.Ioi (0:ℝ), X.q0MixEntry i k t * g t)
       = ∫ t in (0:ℝ)..sigma, X.q0MixEntry i k t * g t := by
@@ -77,7 +77,7 @@ theorem q0MixEntry_intIic_lam_eq_zero (X : FMSA.HSMix N) (i k : Fin N) (g : ℝ 
     simpa using MeasureTheory.measure_singleton (X.lam i k)
   filter_upwards [h0] with t htne htmem
   have hq : X.q0MixEntry i k t = 0 :=
-    Function.notMem_support.mp (fun hs => absurd (q0MixEntry_support_subset X i k hs).1
+    Function.notMem_support.mp (fun hs => absurd (X.q0MixEntry_support_subset i k hs).1
       (not_le.mpr (lt_of_le_of_ne htmem htne)))
   rw [hq, zero_mul]
 
@@ -97,7 +97,7 @@ theorem q0MixEntry_inner_expand (X : FMSA.HSMix N) (i k : Fin N) {t : ℝ}
     (ht : t ∈ Set.Icc (X.lam i k) (X.R i k)) :
     X.q0MixEntry i k t
       = X.Q0 i k * (t - X.R i k) + X.Qpp k * (t - X.R i k) ^ 2 / 2 := by
-  rw [q0MixEntry, Set.indicator_of_mem ht]
+  rw [FMSA.HSMix.q0MixEntry, Set.indicator_of_mem ht]
 
 /-- **Larger-species windowing loss made EXPLICIT.**  For `λᵢₖ ≤ 0`, the sub-zero tail equals the
 concrete polynomial moment `∫_{λᵢₖ}^0 (Q0ᵢₖ·(t−Rᵢₖ) + Qppₖ·(t−Rᵢₖ)²/2)·g(t) dt` — the Lebowitz

@@ -32,7 +32,7 @@ variable {N : ℕ}
 /-- Global measurability of the mixture Baxter entry (indicator of a continuous quadratic). -/
 theorem q0MixEntry_measurable (X : FMSA.HSMix N) (i k : Fin N) :
     Measurable (X.q0MixEntry i k) := by
-  unfold q0MixEntry
+  unfold FMSA.HSMix.q0MixEntry
   exact Measurable.indicator (by fun_prop) measurableSet_Icc
 
 /-- **`q0MixEntry X i k` is interval-integrable on any `[a,b]`.**  It is the measurable indicator
@@ -50,7 +50,7 @@ theorem q0MixEntry_intervalIntegrable (X : FMSA.HSMix N) (i k : Fin N) (a b : �
   refine Measure.integrableOn_of_bounded (M := max C 0) hfin hmeas.aestronglyMeasurable ?_
   filter_upwards with u
   rw [Real.norm_eq_abs]
-  unfold q0MixEntry
+  unfold FMSA.HSMix.q0MixEntry
   by_cases h : u ∈ Set.Icc (X.lam i k) (X.R i k)
   · rw [Set.indicator_of_mem h]
     have hb := hC u h
@@ -72,7 +72,7 @@ theorem q0MixEntry_abs_le (X : FMSA.HSMix N) (i k : Fin N) :
     (f := fun r => X.Q0 i k * (r - X.R i k) + X.Qpp k * (r - X.R i k) ^ 2 / 2)
     (Continuous.continuousOn (by fun_prop))
   refine ⟨max C 0, le_max_right _ _, fun t => ?_⟩
-  unfold q0MixEntry
+  unfold FMSA.HSMix.q0MixEntry
   by_cases h : t ∈ Set.Icc (X.lam i k) (X.R i k)
   · rw [Set.indicator_of_mem h]
     have hb := hC t h; rw [Real.norm_eq_abs] at hb
@@ -92,7 +92,7 @@ theorem q0MixEntry_mul_exp_integrable (X : FMSA.HSMix N) (i k : Fin N) (w : ℂ)
     by_contra hns
     have h0 : X.q0MixEntry i k t = 0 := by
       by_contra hq
-      exact hns (q0MixEntry_support_subset X i k (Function.mem_support.mpr hq))
+      exact hns (X.q0MixEntry_support_subset i k (Function.mem_support.mpr hq))
     exact ht (by rw [h0]; simp)
   rw [← integrableOn_iff_integrable_of_support_subset hsupp]
   obtain ⟨C, hC⟩ := (isCompact_Icc (a := X.lam i k) (b := X.R i k)).exists_bound_of_continuousOn
@@ -105,7 +105,7 @@ theorem q0MixEntry_mul_exp_integrable (X : FMSA.HSMix N) (i k : Fin N) (w : ℂ)
   have hval : (X.q0MixEntry i k u : ℂ) * Complex.exp (w * u)
       = ((X.Q0 i k * (u - X.R i k) + X.Qpp k * (u - X.R i k) ^ 2 / 2 : ℝ) : ℂ)
         * Complex.exp (w * u) := by
-    unfold q0MixEntry; rw [Set.indicator_of_mem hu]
+    unfold FMSA.HSMix.q0MixEntry; rw [Set.indicator_of_mem hu]
   rw [hval]; exact hC u hu
 
 end FMSA.HSMix

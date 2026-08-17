@@ -171,12 +171,9 @@ namespace Mix
 
 variable {N M : ℕ} (X : Mix N M)
 
-/-- Contact distance `R[i,j] = (σᵢ + σⱼ)/2`. -/
-noncomputable def R (i j : Fin N) : ℝ := (X.sigma i + X.sigma j) / 2
-
-/-- Size-asymmetry parameter `lambda_ij[k,l] = (σ[l] − σ[k])/2` (`fmsa_ga_matrix_mix.py:162`).
-Note the order: **second index minus first**. -/
-noncomputable def lam (k l : Fin N) : ℝ := (X.sigma l - X.sigma k) / 2
+/-! Contact distance `R` and size-asymmetry `lam` are inherited from `HSMix`
+(`HSMixture/HSMix.lean`); `Mix N M` **extends** `HSMix N`, so `X.R` / `X.lam` are the pure-HS
+definitions (they were byte-identical here and are no longer redefined). -/
 
 /-- Size-asymmetry lower cutoff `σ_min(i,j) = min(σᵢ, σⱼ)`. -/
 noncomputable def sigMin (i j : Fin N) : ℝ := min (X.sigma i) (X.sigma j)
@@ -184,7 +181,7 @@ noncomputable def sigMin (i j : Fin N) : ℝ := min (X.sigma i) (X.sigma j)
 theorem R_pos (i j : Fin N) : 0 < X.R i j := by
   have hi := X.hsigma i
   have hj := X.hsigma j
-  unfold R
+  unfold HSMix.R
   linarith
 
 /-!
@@ -209,13 +206,13 @@ noncomputable def alphaIII (r : ℝ) (i j b : Fin N) : ℝ :=
 `alpha = r − σ[a] − R[i,j]`.  Everything in IB.1 follows from this. -/
 theorem alphaII_eq (r : ℝ) (i j a : Fin N) :
     X.alphaII r i j a = r - X.sigma a - X.R i j := by
-  unfold alphaII ellII lam R
+  unfold alphaII ellII HSMix.lam HSMix.R
   ring
 
 /-- Term III's activation variable collapses to `alpha = r − σ[b] − R[i,j]`. -/
 theorem alphaIII_eq (r : ℝ) (i j b : Fin N) :
     X.alphaIII r i j b = r - X.sigma b - X.R i j := by
-  unfold alphaIII ellIII lam R
+  unfold alphaIII ellIII HSMix.lam HSMix.R
   ring
 
 /-- Term II: `Σ_a √(ρₐρᵢ) · Σ_k Rst_k · [Q₀[a,i]·I1 + ½·Q''[i]·I2]`
@@ -411,7 +408,7 @@ theorem termIV_geometry_and_vanishing {N M : ℕ} (X : Mix N M) (i j a b : Fin N
       ∧ ∀ r ≤ X.R a b + X.R i a, X.termIVsub r i j a b = 0 := by
   -- The driving identity: `Δ_ai = (σₐ−σᵢ)/2 − σₐ = −(σᵢ+σₐ)/2 = −R[i,a]`.
   have hDelta : X.DeltaAi i a = -X.R i a := by
-    unfold Mix.DeltaAi Mix.lam Mix.R; ring
+    unfold Mix.DeltaAi HSMix.lam HSMix.R; ring
   have hRia : 0 < X.R i a := X.R_pos i a
   have hcexp : X.cexp i a b = X.R a b + X.R i a := by
     unfold Mix.cexp; rw [hDelta, neg_neg, max_eq_right (le_of_lt hRia)]
@@ -479,14 +476,14 @@ theorem mediated_zero_of_no_active_pair {N M : ℕ} (X : Mix N M) (i j : Fin N)
     · -- (A) fails: `σⱼ ≤ 2σₐ + σ_b`, so `r < R[i,j] ≤ r*`; IB.2's vanishing applies.
       simp only [Mix.ActiveA, not_lt] at hnA
       have hle : r ≤ X.R a b + X.R i a := by
-        have hRle : X.R i j ≤ X.R a b + X.R i a := by simp only [Mix.R]; linarith
+        have hRle : X.R i j ≤ X.R a b + X.R i a := by simp only [HSMix.R]; linarith
         linarith
       exact (termIV_geometry_and_vanishing X i j a b).2.2.2.2 r hle
     · -- (B) fails: `3σ_b ≤ σⱼ`, so `u_lo_bj ≥ r ≥ u_hi_eff`; the window is empty.
       simp only [Mix.ActiveB, not_lt] at hnB
       have hcond : X.uHiEff r j b ≤ X.uLoEff r i j a b := by
         have h1 : X.uHiEff r j b ≤ r := by unfold Mix.uHiEff; exact min_le_left _ _
-        have h2 : r ≤ X.uLo r j b := by unfold Mix.uLo Mix.lam; linarith
+        have h2 : r ≤ X.uLo r j b := by unfold Mix.uLo HSMix.lam; linarith
         have h3 : X.uLo r j b ≤ X.uLoEff r i j a b := by
           unfold Mix.uLoEff; exact le_max_right _ _
         linarith
@@ -633,7 +630,7 @@ This is the Tern148 block of `verify_mediated_breakpoints.py`, where mediated is
 nonzero for pairs (0,2), (1,2), (2,2). -/
 theorem ternary_148_active {M : ℕ} (X : Mix 3 M) (hsigma : X.sigma = ![1, 4, 8]) :
     X.ActiveA 2 0 1 ∧ X.ActiveB 2 1 ∧ X.R 0 1 + X.R 0 0 < X.R 0 2 := by
-  refine ⟨?_, ?_, ?_⟩ <;> simp [Mix.ActiveA, Mix.ActiveB, Mix.R, hsigma] <;> norm_num
+  refine ⟨?_, ?_, ?_⟩ <;> simp [Mix.ActiveA, Mix.ActiveB, HSMix.R, hsigma] <;> norm_num
 
 /-!
 ## IB.7 — The second knot `r**` is interior iff Condition C; and `C ∧ B ⟹ A`
@@ -645,7 +642,7 @@ exactly when Condition C holds:
 Substituting the `R`'s reduces both directions to `2σ_a + 4σ_b < 2σ_j` — pure diameter arithmetic. -/
 theorem rstarstar_interior_iff_C {N M : ℕ} (X : Mix N M) (i j a b : Fin N) :
     X.rstarstar i j a b < X.R i j ↔ X.CondC j a b := by
-  unfold Mix.rstarstar Mix.R Mix.CondC
+  unfold Mix.rstarstar HSMix.R Mix.CondC
   constructor <;> intro h <;> linarith
 
 /-- **Task IB.7 (corollary).**  Condition C together with activation B forces activation A:
@@ -669,7 +666,7 @@ Only the *lower* limit `u_lo_eff` can move, so the `(a,b)` sub-term changes anal
 where the lower limit switches — at `r*` and (if C) `r**`, and nowhere else. -/
 theorem uHiEff_eq_r {N M : ℕ} (X : Mix N M) (r : ℝ) (j b : Fin N) (h : X.sigma b < X.sigma j) :
     X.uHiEff r j b = r := by
-  unfold Mix.uHiEff Mix.uHi Mix.lam
+  unfold Mix.uHiEff Mix.uHi HSMix.lam
   exact min_eq_left (by linarith)
 
 /-- **Task IB.8 (activated form).**  Under both activation conditions the size chain gives

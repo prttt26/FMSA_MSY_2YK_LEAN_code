@@ -64,10 +64,10 @@ theorem qpConv_upper_intervalForm (X : Mix N M) (i k j : Fin N) (hlam : 0 ≤ X.
               * (-X.Q0 j k * (x + X.R j k) + X.Qpp k * (x + X.R j k) ^ 2 / 2)
             + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Q0 j k - X.Qpp k * (x + X.R j k)) * t
             + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Qpp k / 2) * t ^ 2) := by
-  have hkR : X.lam i k ≤ X.R i k := by have := X.hsigma i; simp only [Mix.lam, Mix.R]; linarith
-  have hLid : X.lam i k - X.lam j k = X.lam i j := by simp only [Mix.lam]; ring
-  have hRid : X.R i k - X.lam j k = X.R i j := by simp only [Mix.R, Mix.lam]; ring
-  have hRRid : X.R i k - X.R j k = -(X.lam i j) := by simp only [Mix.R, Mix.lam]; ring
+  have hkR : X.lam i k ≤ X.R i k := by have := X.hsigma i; simp only [HSMix.lam, HSMix.R]; linarith
+  have hLid : X.lam i k - X.lam j k = X.lam i j := by simp only [HSMix.lam]; ring
+  have hRid : X.R i k - X.lam j k = X.R i j := by simp only [HSMix.R, HSMix.lam]; ring
+  have hRRid : X.R i k - X.R j k = -(X.lam i j) := by simp only [HSMix.R, HSMix.lam]; ring
   obtain ⟨hxlo, hxhi⟩ := hx
   rw [qpConv_eq_intervalIntegral X i k j x hkR (qpConv_integrand_intervalIntegrable X i k j x)]
   have hint := qpConv_integrand_intervalIntegrable X i k j x
@@ -125,9 +125,9 @@ theorem qpConv_lower_intervalForm (X : Mix N M) (i k j : Fin N) (hlam : 0 ≤ X.
               * (-X.Q0 j k * (x + X.R j k) + X.Qpp k * (x + X.R j k) ^ 2 / 2)
             + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Q0 j k - X.Qpp k * (x + X.R j k)) * t
             + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Qpp k / 2) * t ^ 2) := by
-  have hkR : X.lam i k ≤ X.R i k := by have := X.hsigma i; simp only [Mix.lam, Mix.R]; linarith
-  have hLid : X.lam i k - X.lam j k = X.lam i j := by simp only [Mix.lam]; ring
-  have hRRid : X.R i k - X.R j k = -(X.lam i j) := by simp only [Mix.R, Mix.lam]; ring
+  have hkR : X.lam i k ≤ X.R i k := by have := X.hsigma i; simp only [HSMix.lam, HSMix.R]; linarith
+  have hLid : X.lam i k - X.lam j k = X.lam i j := by simp only [HSMix.lam]; ring
+  have hRRid : X.R i k - X.R j k = -(X.lam i j) := by simp only [HSMix.R, HSMix.lam]; ring
   obtain ⟨hx0, hxlam⟩ := hx
   rw [qpConv_eq_intervalIntegral X i k j x hkR (qpConv_integrand_intervalIntegrable X i k j x)]
   refine intervalIntegral.integral_congr (fun t ht => ?_)

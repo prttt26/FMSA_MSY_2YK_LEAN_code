@@ -40,7 +40,7 @@ variable {N M : ℕ}
 /-- The forward factor vanishes at/beyond contact `R_im` (any pair). -/
 theorem qFwd_outer (X : Mix N M) (i m : Fin N) {r : ℝ} (hr : X.R i m ≤ r) :
     qFwd X i m r = 0 := by
-  unfold qFwd q0MixEntry
+  unfold qFwd FMSA.HSMix.q0MixEntry
   by_cases hmem : r ∈ Set.Icc (X.lam i m) (X.R i m)
   · rw [Set.indicator_of_mem hmem]
     have hrR : r = X.R i m := le_antisymm hmem.2 hr
@@ -50,7 +50,7 @@ theorem qFwd_outer (X : Mix N M) (i m : Fin N) {r : ℝ} (hr : X.R i m ≤ r) :
 /-- The forward factor vanishes below the lower window edge `λ_im`. -/
 theorem qFwd_lower (X : Mix N M) (i m : Fin N) {r : ℝ} (hr : r < X.lam i m) :
     qFwd X i m r = 0 := by
-  unfold qFwd q0MixEntry
+  unfold qFwd FMSA.HSMix.q0MixEntry
   rw [Set.indicator_of_notMem (fun h => absurd h.1 (not_le.mpr hr))]; ring
 
 /-- **General interval reduction** — `radial_fourier(qFwd_im)` over the core `[0, R_im]` (only the
@@ -124,7 +124,7 @@ theorem radial_fourier_qFwd_offdiag (X : Mix N M) (i m : Fin N)
             + (X.Qpp m / 2)
               * ((-(X.lam i m) ^ 3 / k + 6 * X.lam i m / k ^ 3) * Real.cos (k * X.lam i m)
                 + (3 * (X.lam i m) ^ 2 / k ^ 2 - 6 / k ^ 4) * Real.sin (k * X.lam i m)))) := by
-  have hLR : X.lam i m ≤ X.R i m := by simp only [Mix.lam, Mix.R]; linarith [X.hsigma i]
+  have hLR : X.lam i m ≤ X.R i m := by simp only [HSMix.lam, HSMix.R]; linarith [X.hsigma i]
   have hqII : ∀ a b, IntervalIntegrable
       (fun r => r * qFwd X i m r * Real.sin (k * r)) volume a b := by
     intro a b
@@ -160,7 +160,7 @@ theorem radial_fourier_qFwd_offdiag (X : Mix N M) (i m : Fin N)
     have hmem : r ∈ Set.Icc (X.lam i m) (X.R i m) := Set.mem_Icc.mpr ⟨hr.1.le, hr.2.le⟩
     have hq : qFwd X i m r = 2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
         * (X.Q0 i m * (r - X.R i m) + X.Qpp m * (r - X.R i m) ^ 2 / 2) := by
-      unfold qFwd q0MixEntry; rw [Set.indicator_of_mem hmem]
+      unfold qFwd FMSA.HSMix.q0MixEntry; rw [Set.indicator_of_mem hmem]
     dsimp only; rw [hq]; ring
   rw [intervalIntegral.integral_congr_uIoo hpoly, intervalIntegral.integral_const_mul]
   congr 1

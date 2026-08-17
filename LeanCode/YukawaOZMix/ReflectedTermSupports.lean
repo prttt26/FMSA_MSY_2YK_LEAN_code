@@ -317,15 +317,15 @@ open FMSA.InnerDecomp FMSA.WHSupports
 transposition corresponds to `r → −r` in real space").  This is the atom Y1.3a did **not** have —
 `WHSupports` supplies only the untransposed `q0MixEntry`. -/
 noncomputable def q0MixEntryRefl {N M : ℕ} (X : Mix N M) (i j : Fin N) (r : ℝ) : ℝ :=
-  q0MixEntry X i j (-r)
+  X.q0MixEntry i j (-r)
 
 /-- **[LN] Proof 1 / Tang & Lu p. 93, transposed atom.**  `{Q̂₀ᵀ}_{ij}` is supported on
 `[−R_ij, −λ_ij]` — the reflection of `q0MixEntry`'s `[λ_ij, R_ij]`. -/
 theorem q0MixEntryRefl_support_subset {N M : ℕ} (X : Mix N M) (i j : Fin N) :
     Function.support (q0MixEntryRefl X i j) ⊆ Set.Icc (-(X.R i j)) (-(X.lam i j)) := by
   intro x hx
-  have hx' : q0MixEntry X i j (-x) ≠ 0 := hx
-  have hmem := q0MixEntry_support_subset X i j hx'
+  have hx' : X.q0MixEntry i j (-x) ≠ 0 := hx
+  have hmem := X.q0MixEntry_support_subset i j hx'
   rw [Set.mem_Icc] at hmem
   rw [Set.mem_Icc]
   constructor <;> linarith [hmem.1, hmem.2]
@@ -363,7 +363,7 @@ combine as `−λ_im + (−R_mn) + R_nj = R_ij − σ_m`: the intermediate speci
 `λ_ab = (σ_b−σ_a)/2` — the same cancellation pattern as `MixtureConvolution.pbp_edge_eq`.) -/
 theorem reflected_rdf_edge_eq {N M : ℕ} (X : Mix N M) (i m n j : Fin N) :
     -(X.lam i m) + -(X.R m n) + X.R n j = X.R i j - X.sigma m := by
-  simp only [Mix.R, Mix.lam]
+  simp only [HSMix.R, HSMix.lam]
   ring
 
 /-- **Y1.3a discharged — the RDF parity partner, from physics only.**  For the index chain
@@ -378,7 +378,7 @@ theorem reflected_rdf_conj_support_physical {N M : ℕ} (X : Mix N M) (i m n j :
     (hhard : ∀ r, r < X.R m n → h1 r = 0) :
     Function.support
         ((q0MixEntryRefl X i m ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (fun r => h1 (-r)))
-          ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (q0MixEntry X n j))
+          ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (X.q0MixEntry n j))
       ⊆ Set.Iic (X.R i j - X.sigma m) := by
   have hinner : Function.support
       (q0MixEntryRefl X i m ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (fun r => h1 (-r)))
@@ -388,7 +388,7 @@ theorem reflected_rdf_conj_support_physical {N M : ℕ} (X : Mix N M) (i m n j :
       (reflected_support_Iic (support_subset_Ici_of_hardCore hhard))).trans
       (Icc_add_Iic_subset (-(X.R i m)) (-(X.lam i m)) (-(X.R m n)))
   refine (support_convolution_subset (ContinuousLinearMap.mul ℝ ℝ)).trans ?_
-  refine (Set.add_subset_add hinner (q0MixEntry_support_subset X n j)).trans ?_
+  refine (Set.add_subset_add hinner (X.q0MixEntry_support_subset n j)).trans ?_
   refine (Iic_add_Icc_subset (-(X.lam i m) + -(X.R m n)) (X.lam n j) (X.R n j)).trans ?_
   rw [reflected_rdf_edge_eq X i m n j]
 
@@ -399,7 +399,7 @@ nothing to `B₁` — with room to spare, from physics inputs only. -/
 theorem reflected_rdf_conj_eq_zero_of_contact_le {N M : ℕ} (X : Mix N M) (i m n j : Fin N)
     (h1 : ℝ → ℝ) (hhard : ∀ r, r < X.R m n → h1 r = 0) {x : ℝ} (hx : X.R i j ≤ x) :
     ((q0MixEntryRefl X i m ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (fun r => h1 (-r)))
-      ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (q0MixEntry X n j)) x = 0 := by
+      ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (X.q0MixEntry n j)) x = 0 := by
   by_contra hne
   have hmem := reflected_rdf_conj_support_physical X i m n j h1 hhard hne
   rw [Set.mem_Iic] at hmem

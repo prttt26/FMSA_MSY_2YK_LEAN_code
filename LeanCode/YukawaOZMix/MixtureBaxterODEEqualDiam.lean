@@ -130,14 +130,14 @@ open FMSA.HardSphere FMSA.HSMix FMSA.MatrixQ0 FMSA.WHSupports FMSA.InnerDecomp M
 theorem q0MixEntry_physMix_eq_indicator {rho sigma : Fin 2 → ℝ} {s : ℝ}
     (hsig : ∀ k, 0 < sigma k) (hs : ∀ k, sigma k = s) (hs0 : 0 < s)
     (hvac : vacMix rho sigma ≠ 0) (a b : Fin 2) :
-    q0MixEntry (physMix rho sigma hsig) a b
+    (physMix rho sigma hsig).q0MixEntry a b
       = Set.indicator (Set.Icc (0 : ℝ) s) (q0_poly (etaMix rho sigma) s 1) := by
   funext v
   have hR : (physMix rho sigma hsig).R a b = s := by
-    simp only [physMix, Mix.R, hs a, hs b]; ring
+    simp only [physMix, HSMix.R, hs a, hs b]; ring
   have hlam : (physMix rho sigma hsig).lam a b = 0 := by
-    simp only [physMix, Mix.lam, hs a, hs b]; ring
-  rw [FMSA.WHSupports.q0MixEntry, hR, hlam]
+    simp only [physMix, HSMix.lam, hs a, hs b]; ring
+  rw [FMSA.HSMix.q0MixEntry, hR, hlam]
   by_cases hv : v ∈ Set.Icc (0 : ℝ) s
   · rw [Set.indicator_of_mem hv, Set.indicator_of_mem hv]
     have hvs : v ≤ s := hv.2
@@ -158,7 +158,7 @@ theorem matCorrFull_qWeighted_equalDiam {rho sigma : Fin 2 → ℝ} {s : ℝ}
       = rhoGeoPhys rho i k * (∑ l, rho l)
         * ∫ t in (0 : ℝ)..s, q0_poly (etaMix rho sigma) s 1 (t + v)
             * q0_poly (etaMix rho sigma) s 1 t := by
-  have hL1 : ∀ a b, q0MixEntry (physMix rho sigma hsig) a b
+  have hL1 : ∀ a b, (physMix rho sigma hsig).q0MixEntry a b
       = Set.indicator (Set.Icc (0 : ℝ) s) (q0_poly (etaMix rho sigma) s 1) :=
     fun a b => q0MixEntry_physMix_eq_indicator hsig hs hs0 hvac a b
   have hCval : (∫ t, Set.indicator (Set.Icc (0 : ℝ) s) (q0_poly (etaMix rho sigma) s 1) t

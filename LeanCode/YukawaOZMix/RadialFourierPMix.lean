@@ -37,7 +37,7 @@ variable {N M : ℕ}
 /-- The reflected factor vanishes strictly above its upper edge `−λ_im` (on the positive axis). -/
 theorem pMixEntry_upper (X : Mix N M) (i m : Fin N) {r : ℝ} (hr : -(X.lam i m) < r) :
     pMixEntry X i m r = 0 := by
-  unfold pMixEntry q0MixEntry
+  unfold pMixEntry FMSA.HSMix.q0MixEntry
   rw [Set.indicator_of_notMem (fun hmem => absurd hmem.1 (by
     simp only [not_le]; linarith))]
   ring
@@ -104,7 +104,7 @@ theorem radial_fourier_pMixEntry_lower (X : Mix N M) (i m : Fin N)
       rw [Set.mem_Icc]; exact ⟨by linarith [hr.2], by linarith [hr.1, X.R_pos i m]⟩
     have hq : pMixEntry X i m r = 2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
         * (X.Q0 i m * (-r - X.R i m) + X.Qpp m * (-r - X.R i m) ^ 2 / 2) := by
-      unfold pMixEntry q0MixEntry; rw [Set.indicator_of_mem hmem]
+      unfold pMixEntry FMSA.HSMix.q0MixEntry; rw [Set.indicator_of_mem hmem]
     dsimp only; rw [hq]; ring
   rw [intervalIntegral.integral_congr_uIoo hexpand, intervalIntegral.integral_const_mul]
   congr 1

@@ -67,7 +67,7 @@ theorem q0MixEntry_mul_integrable (X : FMSA.HSMix N) (i k : Fin N) (g : ℝ → 
   obtain ⟨C, hC0, hC⟩ := q0MixEntry_abs_le X i k
   have hsupp : Function.support (fun t => X.q0MixEntry i k t * g t)
       ⊆ Set.Icc (X.lam i k) (X.R i k) := fun t ht =>
-    q0MixEntry_support_subset X i k
+    X.q0MixEntry_support_subset i k
       (Function.mem_support.mpr (left_ne_zero_of_mul (Function.mem_support.mp ht)))
   rw [← integrableOn_iff_integrable_of_support_subset hsupp]
   refine Measure.integrableOn_of_bounded (M := C * max D 0) measure_Icc_lt_top.ne
@@ -475,7 +475,7 @@ theorem q0MixEntry_fullLine_mul (X : FMSA.HSMix N) (i k : Fin N) (g : ℝ → �
   refine (MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero (fun t ht => ?_)).symm
   have hq : X.q0MixEntry i k t = 0 := by
     by_contra hqne
-    exact ht (q0MixEntry_support_subset X i k (Function.mem_support.mpr hqne))
+    exact ht (X.q0MixEntry_support_subset i k (Function.mem_support.mpr hqne))
   rw [hq, zero_mul]
 
 /-- **Windowed / deep-core-truncated integral = full support − sub-zero tail** (any upper bound
@@ -522,7 +522,7 @@ theorem q0MixEntry_truncIntegral_poly_smallest (X : FMSA.HSMix N) (i k : Fin N) 
     have hlt : t < X.lam i k := lt_of_le_of_ne htmem.2 htne
     have hq : X.q0MixEntry i k t = 0 := by
       by_contra hqe
-      exact absurd (q0MixEntry_support_subset X i k (Function.mem_support.mpr hqe)).1
+      exact absurd (X.q0MixEntry_support_subset i k (Function.mem_support.mpr hqe)).1
         (not_le.mpr hlt)
     simp [hq]
   have hcut := intervalIntegral.integral_add_adjacent_intervals

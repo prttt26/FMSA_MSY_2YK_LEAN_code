@@ -48,17 +48,17 @@ physical Lebowitz coefficients collapse to the scalar PY `q_prime_py`/`q_doublep
 not (`Q0phys` at one component is `q_prime_py`, *without* a `ρ₀` factor). -/
 theorem q0MixEntry_physMixN_fin1_core (rho sigma : Fin 1 → ℝ) (hsig : ∀ k, 0 < sigma k)
     (heta : etaMix rho sigma ≠ 1) {u : ℝ} (hu : u ∈ Set.Icc (0 : ℝ) (sigma 0)) :
-    rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 u
+    rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 u
       = q0_poly (etaMix rho sigma) (sigma 0) (rho 0) u := by
   obtain ⟨hu0, husigC⟩ := hu
   set X := physMixN rho sigma hsig with hX
-  have hR : X.R 0 0 = sigma 0 := by simp only [hX, physMixN, Mix.R]; ring
-  have hlam : X.lam 0 0 = 0 := by simp only [hX, physMixN, Mix.lam]; ring
+  have hR : X.R 0 0 = sigma 0 := by simp only [hX, physMixN, HSMix.R]; ring
+  have hlam : X.lam 0 0 = 0 := by simp only [hX, physMixN, HSMix.lam]; ring
   have hmem : u ∈ Set.Icc (X.lam 0 0) (X.R 0 0) := by
     rw [hlam, hR]; exact Set.mem_Icc.mpr ⟨hu0, husigC⟩
   have hQ0 : X.Q0 0 0 = q_prime_py (etaMix rho sigma) (sigma 0) := Q0phys_n1 (hsig 0) heta
   have hQpp : X.Qpp 0 = q_doubleprime_py (etaMix rho sigma) := Qppphys_n1 (hsig 0) heta
-  unfold q0MixEntry
+  unfold FMSA.HSMix.q0MixEntry
   rw [Set.indicator_of_mem hmem, hR, hQ0, hQpp, q0_poly_inner husigC]
   ring
 
@@ -92,7 +92,7 @@ derivative `q0MixDeriv` (the indicator is `= 1` on the open core, so the derivat
 quadratic's derivative `Q0ᵢⱼ + Qppⱼ·(r − Rᵢⱼ)`). -/
 theorem hasDerivAt_q0MixEntry {N M : ℕ} (X : Mix N M) (i j : Fin N) {r : ℝ}
     (hr : r ∈ Set.Ioo (X.lam i j) (X.R i j)) :
-    HasDerivAt (q0MixEntry X i j) (q0MixDeriv X i j r) r := by
+    HasDerivAt (X.q0MixEntry i j) (q0MixDeriv X i j r) r := by
   have hsub : HasDerivAt (fun s => s - X.R i j) (1 : ℝ) r := (hasDerivAt_id r).sub_const _
   have h1 : HasDerivAt (fun s => X.Q0 i j * (s - X.R i j)) (X.Q0 i j * 1) r :=
     hsub.const_mul (X.Q0 i j)
@@ -107,7 +107,7 @@ theorem hasDerivAt_q0MixEntry {N M : ℕ} (X : Mix N M) (i j : Fin N) {r : ℝ}
     rwa [heq] at hd
   refine hpoly.congr_of_eventuallyEq ?_
   filter_upwards [isOpen_Ioo.mem_nhds hr] with s hs
-  unfold q0MixEntry
+  unfold FMSA.HSMix.q0MixEntry
   rw [Set.indicator_of_mem (Set.Ioo_subset_Icc_self hs)]
 
 /-! ### Unequal diameters — the correct SYMMETRIC `matDCFreCore`-derivative IS the physical DCF
@@ -147,22 +147,22 @@ theorem cHSmixRenewal_physMixN_fin1 (rho sigma : Fin 1 → ℝ) (hsig : ∀ k, 0
     (heta1 : etaMix rho sigma < 1)
     (Psi : Matrix (Fin 1) (Fin 1) (ℝ → ℝ))
     (hUouter : ∀ i j r, sigma 0 ≤ r →
-      matBaxterU Psi (fun _ _ u => rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 u)
+      matBaxterU Psi (fun _ _ u => rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 u)
         (sigma 0) i j r = 0)
     (hint : ∀ (i j k : Fin 1) (r : ℝ), IntervalIntegrable
-      (fun t => (rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 t)
-        * matBaxterU Psi (fun _ _ u => rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 u)
+      (fun t => (rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 t)
+        * matBaxterU Psi (fun _ _ u => rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 u)
             (sigma 0) k j (r + t)) volume 0 (sigma 0))
     (hcore : ∀ (k j : Fin 1) (v : ℝ), v ∈ Set.Ioo (-(sigma 0)) (sigma 0) → Psi k j v = -v)
     {r : ℝ} (hr : 0 < r) (i j : Fin 1) :
-    cHSmixRenewal Psi (fun _ _ u => rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 u) i j r
+    cHSmixRenewal Psi (fun _ _ u => rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 u) i j r
       = c_HS (etaMix rho sigma) (sigma 0) r := by
   set X := physMixN rho sigma hsig with hX
   set Q : Matrix (Fin 1) (Fin 1) (ℝ → ℝ) :=
-    fun _ _ u => rho 0 * q0MixEntry X 0 0 u with hQ
+    fun _ _ u => rho 0 * X.q0MixEntry 0 0 u with hQ
   have heta_ne : etaMix rho sigma ≠ 1 := ne_of_lt heta1
-  have hlam : X.lam 0 0 = 0 := by simp only [hX, physMixN, Mix.lam]; ring
-  have hR : X.R 0 0 = sigma 0 := by simp only [hX, physMixN, Mix.R]; ring
+  have hlam : X.lam 0 0 = 0 := by simp only [hX, physMixN, HSMix.lam]; ring
+  have hR : X.R 0 0 = sigma 0 := by simp only [hX, physMixN, HSMix.R]; ring
   refine cHSmixRenewal_eq_cHS_of_equalDiam Psi Q (eta := etaMix rho sigma) (sigma := sigma 0)
     (rho := rho 0) (hsig 0) heta1 (etaMix_n1 rho sigma) ?_ ?_ hUouter hint ?_ ?_ ?_ hcore hr i j
   · intro a k t ht
@@ -174,7 +174,7 @@ theorem cHSmixRenewal_physMixN_fin1 (rho sigma : Fin 1 → ℝ) (hsig : ∀ k, 0
       rcases ht with h | h
       · exact absurd hc.1 (not_le.mpr h)
       · exact absurd hc.2 (not_le.mpr h)
-    rw [Function.notMem_support.mp (fun hs => hnm (q0MixEntry_support_subset X 0 0 hs)),
+    rw [Function.notMem_support.mp (fun hs => hnm (X.q0MixEntry_support_subset 0 0 hs)),
       mul_zero]
   · intro a b; rfl
   · intro a u hu
@@ -197,15 +197,15 @@ theorem cHSmixRenewal_physMixN_fin1_ofOuter (rho sigma : Fin 1 → ℝ) (hsig : 
     (Psiouter : Matrix (Fin 1) (Fin 1) (ℝ → ℝ))
     (hUouter : ∀ i j r, sigma 0 ≤ r →
       matBaxterU (matBaxterPsi Psiouter (fun _ _ v => -v) (sigma 0))
-        (fun _ _ u => rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 u) (sigma 0) i j r = 0)
+        (fun _ _ u => rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 u) (sigma 0) i j r = 0)
     (hint : ∀ (i j k : Fin 1) (r : ℝ), IntervalIntegrable
-      (fun t => (rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 t)
+      (fun t => (rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 t)
         * matBaxterU (matBaxterPsi Psiouter (fun _ _ v => -v) (sigma 0))
-            (fun _ _ u => rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 u)
+            (fun _ _ u => rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 u)
             (sigma 0) k j (r + t)) volume 0 (sigma 0))
     {r : ℝ} (hr : 0 < r) (i j : Fin 1) :
     cHSmixRenewal (matBaxterPsi Psiouter (fun _ _ v => -v) (sigma 0))
-        (fun _ _ u => rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 u) i j r
+        (fun _ _ u => rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 u) i j r
       = c_HS (etaMix rho sigma) (sigma 0) r := by
   refine cHSmixRenewal_physMixN_fin1 rho sigma hsig heta1
     (matBaxterPsi Psiouter (fun _ _ v => -v) (sigma 0)) hUouter hint ?_ hr i j
@@ -247,7 +247,7 @@ theorem physN1_hUouter (rho sigma : Fin 1 → ℝ) (hsig : ∀ k, 0 < sigma k)
           (physN1Fm rho sigma) (physN1Qm_continuous rho sigma)
           (physN1Fm_continuous rho sigma) r) a b)
         (fun _ _ v => -v) (sigma 0))
-      (fun _ _ u => rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 u) (sigma 0) i j r = 0 := by
+      (fun _ _ u => rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 u) (sigma 0) i j r = 0 := by
   have heta_ne : etaMix rho sigma ≠ 1 := ne_of_lt heta1
   have hkey := matBaxterPsi_hUouter (sigma 0) (hsig 0) (physN1Qm rho sigma) (physN1Fm rho sigma)
     (physN1Qm_continuous rho sigma) (physN1Fm_continuous rho sigma)
@@ -283,16 +283,16 @@ q0_poly` on `[0,σ₀]` carries it to the truncated `ρ₀·q0MixEntry`. -/
 theorem physN1_hint (rho sigma : Fin 1 → ℝ) (hsig : ∀ k, 0 < sigma k)
     (heta1 : etaMix rho sigma < 1) (i k j : Fin 1) (r : ℝ) :
     IntervalIntegrable
-      (fun t => (rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 t)
+      (fun t => (rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 t)
         * matBaxterU (matBaxterPsi (fun a b r => (matBaxterPsiOuterFun (sigma 0)
               (physN1Qm rho sigma) (physN1Fm rho sigma) (physN1Qm_continuous rho sigma)
               (physN1Fm_continuous rho sigma) r) a b)
             (fun _ _ v => -v) (sigma 0))
-          (fun _ _ u => rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 u)
+          (fun _ _ u => rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 u)
           (sigma 0) k j (r + t)) volume 0 (sigma 0) := by
   have heta_ne : etaMix rho sigma ≠ 1 := ne_of_lt heta1
   have hbridge : ∀ (a b : Fin 1) (t : ℝ), t ∈ Set.uIcc (0:ℝ) (sigma 0) →
-      (fun _ _ u => rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 u : Matrix _ _ _) a b t
+      (fun _ _ u => rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 u : Matrix _ _ _) a b t
         = (fun a b s => (physN1Qm rho sigma s) a b : Matrix _ _ _) a b t := by
     intro a b t ht
     rw [Set.uIcc_of_le (le_of_lt (hsig 0))] at ht
@@ -317,7 +317,7 @@ theorem cHSmixRenewal_physMixN_fin1_uncond (rho sigma : Fin 1 → ℝ) (hsig : �
             (physN1Fm rho sigma) (physN1Qm_continuous rho sigma)
             (physN1Fm_continuous rho sigma) r) a b)
           (fun _ _ v => -v) (sigma 0))
-        (fun _ _ u => rho 0 * q0MixEntry (physMixN rho sigma hsig) 0 0 u) i j r
+        (fun _ _ u => rho 0 * (physMixN rho sigma hsig).q0MixEntry 0 0 u) i j r
       = c_HS (etaMix rho sigma) (sigma 0) r :=
   cHSmixRenewal_physMixN_fin1_ofOuter rho sigma hsig heta1
     (fun a b r => (matBaxterPsiOuterFun (sigma 0) (physN1Qm rho sigma) (physN1Fm rho sigma)
@@ -411,7 +411,7 @@ theorem physMix_hUouter (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
   refine q0MixPoly_hUouter (physMix rho sigma hsig) (max (sigma 0) (sigma 1))
     (lt_of_lt_of_le (hsig 0) (le_max_left _ _)) ?_ i j hr
   intro a b
-  simp only [physMix, Mix.R]
+  simp only [physMix, HSMix.R]
   have ha : sigma a ≤ max (sigma 0) (sigma 1) := by
     fin_cases a <;> simp [le_max_left, le_max_right]
   have hb : sigma b ≤ max (sigma 0) (sigma 1) := by
@@ -440,17 +440,17 @@ theorem physMix_hint (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) (i 
 for `λᵢₖ ≥ 0` it vanishes at `t < 0`; the sub-zero tail `∫_{≤0} q0MixEntry·f = 0` (`{0}` null). -/
 theorem q0MixEntry_subZeroTail_zero {N M : ℕ} (X : Mix N M) (i k : Fin N) (f : ℝ → ℝ)
     (hlam : 0 ≤ X.lam i k) :
-    (∫ t in Set.Iic (0:ℝ), q0MixEntry X i k t * f t) = 0 :=
+    (∫ t in Set.Iic (0:ℝ), X.q0MixEntry i k t * f t) = 0 :=
   FMSA.HSMix.q0MixEntry_subZeroTail_zero X.toHSMix i k f hlam
 
 /-- **Full-line ⇄ windowed split for the compactly-supported `q0MixEntry`.**  `∫_ℝ q0MixEntry·g =
 ∫₀^σ + ∫_{≤0}` — the `(σ,∞)` piece vanishes (`q0MixEntry = 0` past `Rᵢₖ ≤ σ`). -/
 theorem q0MixEntry_intSplit {N M : ℕ} (X : Mix N M) (i k : Fin N) (g : ℝ → ℝ) (sigma : ℝ)
     (hsig0 : 0 ≤ sigma) (hRsigC : X.R i k ≤ sigma)
-    (hint : Integrable (fun t => q0MixEntry X i k t * g t)) :
-    (∫ t, q0MixEntry X i k t * g t)
-      = (∫ t in (0:ℝ)..sigma, q0MixEntry X i k t * g t)
-        + ∫ t in Set.Iic (0:ℝ), q0MixEntry X i k t * g t :=
+    (hint : Integrable (fun t => X.q0MixEntry i k t * g t)) :
+    (∫ t, X.q0MixEntry i k t * g t)
+      = (∫ t in (0:ℝ)..sigma, X.q0MixEntry i k t * g t)
+        + ∫ t in Set.Iic (0:ℝ), X.q0MixEntry i k t * g t :=
   FMSA.HSMix.q0MixEntry_intSplit X.toHSMix i k g sigma hsig0 hRsigC hint
 
 /-- **⭐ Windowing-loss bridge — extended = windowed for the smallest species.**  On a row `i` whose
@@ -461,30 +461,30 @@ seed's raison d'être.)  Rests only on interval-integrability of each `q0MixEntr
 theorem matBaxterUExt_eq_matBaxterU_of_row_lam_nonneg {N M : ℕ} (X : Mix N M)
     (Psi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma) (i j : Fin N) (r : ℝ)
     (hlam : ∀ k, 0 ≤ X.lam i k) (hRsigC : ∀ k, X.R i k ≤ sigma)
-    (hint : ∀ k, Integrable (fun t => q0MixEntry X i k t * Psi k j (r - t))) :
-    matBaxterUExt Psi (fun a b => q0MixEntry X a b) i j r
-      = matBaxterU Psi (fun a b => q0MixEntry X a b) sigma i j r :=
+    (hint : ∀ k, Integrable (fun t => X.q0MixEntry i k t * Psi k j (r - t))) :
+    matBaxterUExt Psi (fun a b => X.q0MixEntry a b) i j r
+      = matBaxterU Psi (fun a b => X.q0MixEntry a b) sigma i j r :=
   FMSA.HSMix.matBaxterUExt_eq_matBaxterU_of_row_lam_nonneg X.toHSMix Psi sigma hsig0 i j r
     hlam hRsigC hint
 
 /-- `q0MixEntry X i k` integrates to `0` over `(-∞, λᵢₖ]` (below its support; `{λᵢₖ}` is null). -/
 theorem q0MixEntry_intIic_lam_eq_zero {N M : ℕ} (X : Mix N M) (i k : Fin N) (g : ℝ → ℝ) :
-    (∫ t in Set.Iic (X.lam i k), q0MixEntry X i k t * g t) = 0 :=
+    (∫ t in Set.Iic (X.lam i k), X.q0MixEntry i k t * g t) = 0 :=
   FMSA.HSMix.q0MixEntry_intIic_lam_eq_zero X.toHSMix i k g
 
 /-- **⭐ Larger-species sub-zero tail, compact form.**  For `λᵢₖ ≤ 0` (species `i` bigger than `k`,
 `σᵢ > σₖ`) the windowing-loss tail collapses to the COMPACT interval integral over `[λᵢₖ, 0]` — the
 `(-∞,λᵢₖ]` piece is below the support and vanishes (`q0MixEntry_intIic_lam_eq_zero`). -/
 theorem q0MixEntry_subZeroTail_compact {N M : ℕ} (X : Mix N M) (i k : Fin N) (g : ℝ → ℝ)
-    (hlam : X.lam i k ≤ 0) (hint : Integrable (fun t => q0MixEntry X i k t * g t)) :
-    (∫ t in Set.Iic (0:ℝ), q0MixEntry X i k t * g t)
-      = ∫ t in (X.lam i k)..(0:ℝ), q0MixEntry X i k t * g t :=
+    (hlam : X.lam i k ≤ 0) (hint : Integrable (fun t => X.q0MixEntry i k t * g t)) :
+    (∫ t in Set.Iic (0:ℝ), X.q0MixEntry i k t * g t)
+      = ∫ t in (X.lam i k)..(0:ℝ), X.q0MixEntry i k t * g t :=
   FMSA.HSMix.q0MixEntry_subZeroTail_compact X.toHSMix i k g hlam hint
 
 /-- `q0MixEntry` on its support `[λᵢₖ, Rᵢₖ]` is the explicit Lebowitz quadratic. -/
 theorem q0MixEntry_inner_expand {N M : ℕ} (X : Mix N M) (i k : Fin N) {t : ℝ}
     (ht : t ∈ Set.Icc (X.lam i k) (X.R i k)) :
-    q0MixEntry X i k t
+    X.q0MixEntry i k t
       = X.Q0 i k * (t - X.R i k) + X.Qpp k * (t - X.R i k) ^ 2 / 2 :=
   FMSA.HSMix.q0MixEntry_inner_expand X.toHSMix i k ht
 
@@ -492,8 +492,8 @@ theorem q0MixEntry_inner_expand {N M : ℕ} (X : Mix N M) (i k : Fin N) {t : ℝ
 concrete polynomial moment `∫_{λᵢₖ}^0 (Q0ᵢₖ·(t−Rᵢₖ) + Qppₖ·(t−Rᵢₖ)²/2)·g(t) dt` — the Lebowitz
 Baxter quadratic against `g` over `[λᵢₖ, 0]` (there the kernel is the bare polynomial). -/
 theorem q0MixEntry_subZeroTail_poly {N M : ℕ} (X : Mix N M) (i k : Fin N) (g : ℝ → ℝ)
-    (hlam : X.lam i k ≤ 0) (hint : Integrable (fun t => q0MixEntry X i k t * g t)) :
-    (∫ t in Set.Iic (0:ℝ), q0MixEntry X i k t * g t)
+    (hlam : X.lam i k ≤ 0) (hint : Integrable (fun t => X.q0MixEntry i k t * g t)) :
+    (∫ t in Set.Iic (0:ℝ), X.q0MixEntry i k t * g t)
       = ∫ t in (X.lam i k)..(0:ℝ),
           (X.Q0 i k * (t - X.R i k) + X.Qpp k * (t - X.R i k) ^ 2 / 2) * g t :=
   FMSA.HSMix.q0MixEntry_subZeroTail_poly X.toHSMix i k g hlam hint
@@ -506,9 +506,9 @@ windowed convolutions differ by the concrete sum of Lebowitz polynomial moments 
 theorem matBaxterUExt_eq_matBaxterU_sub_polyTail {N M : ℕ} (X : Mix N M)
     (Psi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma) (i j : Fin N) (r : ℝ)
     (hlam : ∀ k, X.lam i k ≤ 0) (hRsigC : ∀ k, X.R i k ≤ sigma)
-    (hint : ∀ k, Integrable (fun t => q0MixEntry X i k t * Psi k j (r - t))) :
-    matBaxterUExt Psi (fun a b => q0MixEntry X a b) i j r
-      = matBaxterU Psi (fun a b => q0MixEntry X a b) sigma i j r
+    (hint : ∀ k, Integrable (fun t => X.q0MixEntry i k t * Psi k j (r - t))) :
+    matBaxterUExt Psi (fun a b => X.q0MixEntry a b) i j r
+      = matBaxterU Psi (fun a b => X.q0MixEntry a b) sigma i j r
         - ∑ k, ∫ t in (X.lam i k)..(0:ℝ),
             (X.Q0 i k * (t - X.R i k) + X.Qpp k * (t - X.R i k) ^ 2 / 2) * Psi k j (r - t) :=
   FMSA.HSMix.matBaxterUExt_eq_matBaxterU_sub_polyTail X.toHSMix Psi sigma hsig0 i j r
@@ -521,11 +521,11 @@ theorem matBaxterUExt_eq_matBaxterU_sub_polyTail {N M : ℕ} (X : Mix N M)
 that support is integrable over `ℝ` (bounded × finite-measure support). -/
 theorem q0MixEntry_mul_integrable {N M : ℕ} (X : Mix N M) (i k : Fin N) (g : ℝ → ℝ)
     (hg : Measurable g) {D : ℝ} (hgbdd : ∀ t ∈ Set.Icc (X.lam i k) (X.R i k), |g t| ≤ D) :
-    Integrable (fun t => q0MixEntry X i k t * g t) := by
+    Integrable (fun t => X.q0MixEntry i k t * g t) := by
   obtain ⟨C, hC0, hC⟩ := q0MixEntry_abs_le X i k
-  have hsupp : Function.support (fun t => q0MixEntry X i k t * g t)
+  have hsupp : Function.support (fun t => X.q0MixEntry i k t * g t)
       ⊆ Set.Icc (X.lam i k) (X.R i k) := fun t ht =>
-    q0MixEntry_support_subset X i k
+    X.q0MixEntry_support_subset i k
       (Function.mem_support.mpr (left_ne_zero_of_mul (Function.mem_support.mp ht)))
   rw [← integrableOn_iff_integrable_of_support_subset hsupp]
   refine Measure.integrableOn_of_bounded (M := C * max D 0) measure_Icc_lt_top.ne
@@ -542,7 +542,7 @@ theorem q0MixEntry_matBaxterPsi_integrable {N M : ℕ} (X : Mix N M)
     (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ)
     (hPo : ∀ a b, Continuous (Po a b)) (hPc : ∀ a b, Continuous (Pc a b))
     (i k j : Fin N) (r : ℝ) :
-    Integrable (fun t => q0MixEntry X i k t * matBaxterPsi Po Pc sigma k j (r - t)) :=
+    Integrable (fun t => X.q0MixEntry i k t * matBaxterPsi Po Pc sigma k j (r - t)) :=
   FMSA.HSMix.q0MixEntry_matBaxterPsi_integrable X.toHSMix Po Pc sigma hPo hPc i k j r
 
 /-- **⭐⭐ Windowing-loss bridge, hint-free (smallest species, constructed renewal).**  With `Ψ =
@@ -553,8 +553,8 @@ theorem matBaxterUExt_eq_matBaxterU_smallest_of_cont {N M : ℕ} (X : Mix N M)
     (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma)
     (hPo : ∀ a b, Continuous (Po a b)) (hPc : ∀ a b, Continuous (Pc a b))
     (i j : Fin N) (r : ℝ) (hlam : ∀ k, 0 ≤ X.lam i k) (hRsigC : ∀ k, X.R i k ≤ sigma) :
-    matBaxterUExt (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) i j r
-      = matBaxterU (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) sigma i j r :=
+    matBaxterUExt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) i j r
+      = matBaxterU (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) sigma i j r :=
   FMSA.HSMix.matBaxterUExt_eq_matBaxterU_smallest_of_cont X.toHSMix Po Pc sigma hsig0 hPo hPc
     i j r hlam hRsigC
 
@@ -565,8 +565,8 @@ theorem matBaxterUExt_sub_polyTail_of_cont {N M : ℕ} (X : Mix N M)
     (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma)
     (hPo : ∀ a b, Continuous (Po a b)) (hPc : ∀ a b, Continuous (Pc a b))
     (i j : Fin N) (r : ℝ) (hlam : ∀ k, X.lam i k ≤ 0) (hRsigC : ∀ k, X.R i k ≤ sigma) :
-    matBaxterUExt (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) i j r
-      = matBaxterU (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) sigma i j r
+    matBaxterUExt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) i j r
+      = matBaxterU (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) sigma i j r
         - ∑ k, ∫ t in (X.lam i k)..(0:ℝ),
             (X.Q0 i k * (t - X.R i k) + X.Qpp k * (t - X.R i k) ^ 2 / 2)
               * matBaxterPsi Po Pc sigma k j (r - t) :=
@@ -628,10 +628,10 @@ theorem physMix_windowing_smallest (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 
     (i j : Fin 2) (r : ℝ) (hsmall : ∀ k, sigma i ≤ sigma k) :
     matBaxterUExt (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
         (max (sigma 0) (sigma 1)))
-        (fun a b => q0MixEntry (physMix rho sigma hsig) a b) i j r
+        (fun a b => (physMix rho sigma hsig).q0MixEntry a b) i j r
       = matBaxterU (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
         (max (sigma 0) (sigma 1)))
-        (fun a b => q0MixEntry (physMix rho sigma hsig) a b) (max (sigma 0) (sigma 1)) i j r := by
+        (fun a b => (physMix rho sigma hsig).q0MixEntry a b) (max (sigma 0) (sigma 1)) i j r := by
   exact FMSA.HSMix.physHSMix_windowing_smallest rho sigma hsig i j r hsmall
 
 /-- **⭐⭐⭐ N=2 physical windowing-loss — largest species (σ = max diameter).**  On the row `i` of
@@ -641,10 +641,10 @@ theorem physMix_windowing_largest (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 <
     (i j : Fin 2) (r : ℝ) (hlarge : ∀ k, sigma k ≤ sigma i) :
     matBaxterUExt (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
         (max (sigma 0) (sigma 1)))
-        (fun a b => q0MixEntry (physMix rho sigma hsig) a b) i j r
+        (fun a b => (physMix rho sigma hsig).q0MixEntry a b) i j r
       = matBaxterU (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
         (max (sigma 0) (sigma 1)))
-        (fun a b => q0MixEntry (physMix rho sigma hsig) a b) (max (sigma 0) (sigma 1)) i j r
+        (fun a b => (physMix rho sigma hsig).q0MixEntry a b) (max (sigma 0) (sigma 1)) i j r
         - ∑ k, ∫ t in ((physMix rho sigma hsig).lam i k)..(0:ℝ),
             ((physMix rho sigma hsig).Q0 i k * (t - (physMix rho sigma hsig).R i k)
               + (physMix rho sigma hsig).Qpp k * (t - (physMix rho sigma hsig).R i k) ^ 2 / 2)
@@ -662,9 +662,9 @@ this is the un-transposed bridge at the transposed kernel `Qᵀ`. -/
 theorem matBaxterUtExt_eq_matBaxterUt_of_row {N M : ℕ} (X : Mix N M)
     (Psi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma) (i j : Fin N) (r : ℝ)
     (hlam : ∀ k, 0 ≤ X.lam k i) (hRsigC : ∀ k, X.R k i ≤ sigma)
-    (hint : ∀ k, Integrable (fun t => q0MixEntry X k i t * Psi k j (r - t))) :
-    matBaxterUtExt Psi (fun a b => q0MixEntry X a b) i j r
-      = matBaxterUt Psi (fun a b => q0MixEntry X a b) sigma i j r :=
+    (hint : ∀ k, Integrable (fun t => X.q0MixEntry k i t * Psi k j (r - t))) :
+    matBaxterUtExt Psi (fun a b => X.q0MixEntry a b) i j r
+      = matBaxterUt Psi (fun a b => X.q0MixEntry a b) sigma i j r :=
   FMSA.HSMix.matBaxterUtExt_eq_matBaxterUt_of_row X.toHSMix Psi sigma hsig0 i j r
     hlam hRsigC hint
 
@@ -676,9 +676,9 @@ verified value object.) -/
 theorem matBaxterUtExt_eq_matBaxterUt_sub_polyTail {N M : ℕ} (X : Mix N M)
     (Psi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma) (i j : Fin N) (r : ℝ)
     (hlam : ∀ k, X.lam k i ≤ 0) (hRsigC : ∀ k, X.R k i ≤ sigma)
-    (hint : ∀ k, Integrable (fun t => q0MixEntry X k i t * Psi k j (r - t))) :
-    matBaxterUtExt Psi (fun a b => q0MixEntry X a b) i j r
-      = matBaxterUt Psi (fun a b => q0MixEntry X a b) sigma i j r
+    (hint : ∀ k, Integrable (fun t => X.q0MixEntry k i t * Psi k j (r - t))) :
+    matBaxterUtExt Psi (fun a b => X.q0MixEntry a b) i j r
+      = matBaxterUt Psi (fun a b => X.q0MixEntry a b) sigma i j r
         - ∑ k, ∫ t in (X.lam k i)..(0:ℝ),
             (X.Q0 k i * (t - X.R k i) + X.Qpp i * (t - X.R k i) ^ 2 / 2) * Psi k j (r - t) :=
   FMSA.HSMix.matBaxterUtExt_eq_matBaxterUt_sub_polyTail X.toHSMix Psi sigma hsig0 i j r
@@ -692,7 +692,7 @@ theorem q0MixEntry_matBaxterPsi_integrable_gen {N M : ℕ} (X : Mix N M)
     (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ)
     (hPo : ∀ a b, Continuous (Po a b)) (hPc : ∀ a b, Continuous (Pc a b))
     (a b p q : Fin N) (r : ℝ) :
-    Integrable (fun t => q0MixEntry X a b t * matBaxterPsi Po Pc sigma p q (r - t)) :=
+    Integrable (fun t => X.q0MixEntry a b t * matBaxterPsi Po Pc sigma p q (r - t)) :=
   FMSA.HSMix.q0MixEntry_matBaxterPsi_integrable_gen X.toHSMix Po Pc sigma hPo hPc a b p q r
 
 /-- **⭐⭐ Transposed arm, hint-free (largest species, constructed renewal): NO loss.** -/
@@ -700,8 +700,8 @@ theorem matBaxterUtExt_eq_matBaxterUt_of_cont {N M : ℕ} (X : Mix N M)
     (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma)
     (hPo : ∀ a b, Continuous (Po a b)) (hPc : ∀ a b, Continuous (Pc a b))
     (i j : Fin N) (r : ℝ) (hlam : ∀ k, 0 ≤ X.lam k i) (hRsigC : ∀ k, X.R k i ≤ sigma) :
-    matBaxterUtExt (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) i j r
-      = matBaxterUt (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) sigma i j r :=
+    matBaxterUtExt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) i j r
+      = matBaxterUt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) sigma i j r :=
   FMSA.HSMix.matBaxterUtExt_eq_matBaxterUt_of_cont X.toHSMix Po Pc sigma hsig0 hPo hPc
     i j r hlam hRsigC
 
@@ -710,8 +710,8 @@ theorem matBaxterUtExt_sub_polyTail_of_cont {N M : ℕ} (X : Mix N M)
     (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma)
     (hPo : ∀ a b, Continuous (Po a b)) (hPc : ∀ a b, Continuous (Pc a b))
     (i j : Fin N) (r : ℝ) (hlam : ∀ k, X.lam k i ≤ 0) (hRsigC : ∀ k, X.R k i ≤ sigma) :
-    matBaxterUtExt (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) i j r
-      = matBaxterUt (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) sigma i j r
+    matBaxterUtExt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) i j r
+      = matBaxterUt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) sigma i j r
         - ∑ k, ∫ t in (X.lam k i)..(0:ℝ),
             (X.Q0 k i * (t - X.R k i) + X.Qpp i * (t - X.R k i) ^ 2 / 2)
               * matBaxterPsi Po Pc sigma k j (r - t) :=
@@ -726,10 +726,10 @@ theorem physMix_windowing_t_largest (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0
     (i j : Fin 2) (r : ℝ) (hlarge : ∀ k, sigma k ≤ sigma i) :
     matBaxterUtExt (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
         (max (sigma 0) (sigma 1)))
-        (fun a b => q0MixEntry (physMix rho sigma hsig) a b) i j r
+        (fun a b => (physMix rho sigma hsig).q0MixEntry a b) i j r
       = matBaxterUt (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
         (max (sigma 0) (sigma 1)))
-        (fun a b => q0MixEntry (physMix rho sigma hsig) a b) (max (sigma 0) (sigma 1)) i j r := by
+        (fun a b => (physMix rho sigma hsig).q0MixEntry a b) (max (sigma 0) (sigma 1)) i j r := by
   exact FMSA.HSMix.physHSMix_windowing_t_largest rho sigma hsig i j r hlarge
 
 /-- **⭐⭐⭐ N=2 physical transposed-arm windowing loss — smallest species: EXPLICIT loss.**  DUAL to
@@ -739,10 +739,10 @@ theorem physMix_windowing_t_smallest (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 
     (i j : Fin 2) (r : ℝ) (hsmall : ∀ k, sigma i ≤ sigma k) :
     matBaxterUtExt (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
         (max (sigma 0) (sigma 1)))
-        (fun a b => q0MixEntry (physMix rho sigma hsig) a b) i j r
+        (fun a b => (physMix rho sigma hsig).q0MixEntry a b) i j r
       = matBaxterUt (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
         (max (sigma 0) (sigma 1)))
-        (fun a b => q0MixEntry (physMix rho sigma hsig) a b) (max (sigma 0) (sigma 1)) i j r
+        (fun a b => (physMix rho sigma hsig).q0MixEntry a b) (max (sigma 0) (sigma 1)) i j r
         - ∑ k, ∫ t in ((physMix rho sigma hsig).lam k i)..(0:ℝ),
             ((physMix rho sigma hsig).Q0 k i * (t - (physMix rho sigma hsig).R k i)
               + (physMix rho sigma hsig).Qpp i * (t - (physMix rho sigma hsig).R k i) ^ 2 / 2)
@@ -763,14 +763,14 @@ transposed on the smaller, together covering every `k`. -/
 theorem windowing_loss_sum_eq_symTail {N M : ℕ} (X : Mix N M)
     (Psi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma) (i j : Fin N) (r : ℝ)
     (hRun : ∀ k, X.R i k ≤ sigma) (hRt : ∀ k, X.R k i ≤ sigma)
-    (hint_un : ∀ k, Integrable (fun t => q0MixEntry X i k t * Psi k j (r - t)))
-    (hint_t : ∀ k, Integrable (fun t => q0MixEntry X k i t * Psi k j (r - t))) :
-    (matBaxterU Psi (fun a b => q0MixEntry X a b) sigma i j r
-       - matBaxterUExt Psi (fun a b => q0MixEntry X a b) i j r)
-    + (matBaxterUt Psi (fun a b => q0MixEntry X a b) sigma i j r
-       - matBaxterUtExt Psi (fun a b => q0MixEntry X a b) i j r)
+    (hint_un : ∀ k, Integrable (fun t => X.q0MixEntry i k t * Psi k j (r - t)))
+    (hint_t : ∀ k, Integrable (fun t => X.q0MixEntry k i t * Psi k j (r - t))) :
+    (matBaxterU Psi (fun a b => X.q0MixEntry a b) sigma i j r
+       - matBaxterUExt Psi (fun a b => X.q0MixEntry a b) i j r)
+    + (matBaxterUt Psi (fun a b => X.q0MixEntry a b) sigma i j r
+       - matBaxterUtExt Psi (fun a b => X.q0MixEntry a b) i j r)
     = ∑ k, ∫ t in Set.Iic (0:ℝ),
-        (q0MixEntry X i k t + q0MixEntry X k i t) * Psi k j (r - t) :=
+        (X.q0MixEntry i k t + X.q0MixEntry k i t) * Psi k j (r - t) :=
   FMSA.HSMix.windowing_loss_sum_eq_symTail X.toHSMix Psi sigma hsig0 i j r hRun hRt hint_un hint_t
 
 
@@ -780,12 +780,12 @@ theorem windowing_loss_sum_eq_symTail_of_cont {N M : ℕ} (X : Mix N M)
     (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma)
     (hPo : ∀ a b, Continuous (Po a b)) (hPc : ∀ a b, Continuous (Pc a b))
     (i j : Fin N) (r : ℝ) (hRun : ∀ k, X.R i k ≤ sigma) (hRt : ∀ k, X.R k i ≤ sigma) :
-    (matBaxterU (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) sigma i j r
-       - matBaxterUExt (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) i j r)
-    + (matBaxterUt (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) sigma i j r
-       - matBaxterUtExt (matBaxterPsi Po Pc sigma) (fun a b => q0MixEntry X a b) i j r)
+    (matBaxterU (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) sigma i j r
+       - matBaxterUExt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) i j r)
+    + (matBaxterUt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) sigma i j r
+       - matBaxterUtExt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) i j r)
     = ∑ k, ∫ t in Set.Iic (0:ℝ),
-        (q0MixEntry X i k t + q0MixEntry X k i t) * matBaxterPsi Po Pc sigma k j (r - t) :=
+        (X.q0MixEntry i k t + X.q0MixEntry k i t) * matBaxterPsi Po Pc sigma k j (r - t) :=
   FMSA.HSMix.windowing_loss_sum_eq_symTail_of_cont X.toHSMix Po Pc sigma hsig0 hPo hPc
     i j r hRun hRt
 
@@ -795,17 +795,17 @@ fold-kernel `Ĉ₀` windowing loss the symmetric Lebowitz DCF is built from. -/
 theorem physMix_windowing_sum (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) (i j : Fin 2)
     (r : ℝ) :
     (matBaxterU (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
-        (max (sigma 0) (sigma 1))) (fun a b => q0MixEntry (physMix rho sigma hsig) a b)
+        (max (sigma 0) (sigma 1))) (fun a b => (physMix rho sigma hsig).q0MixEntry a b)
         (max (sigma 0) (sigma 1)) i j r
        - matBaxterUExt (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
-        (max (sigma 0) (sigma 1))) (fun a b => q0MixEntry (physMix rho sigma hsig) a b) i j r)
+        (max (sigma 0) (sigma 1))) (fun a b => (physMix rho sigma hsig).q0MixEntry a b) i j r)
     + (matBaxterUt (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
-        (max (sigma 0) (sigma 1))) (fun a b => q0MixEntry (physMix rho sigma hsig) a b)
+        (max (sigma 0) (sigma 1))) (fun a b => (physMix rho sigma hsig).q0MixEntry a b)
         (max (sigma 0) (sigma 1)) i j r
        - matBaxterUtExt (matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
-        (max (sigma 0) (sigma 1))) (fun a b => q0MixEntry (physMix rho sigma hsig) a b) i j r)
+        (max (sigma 0) (sigma 1))) (fun a b => (physMix rho sigma hsig).q0MixEntry a b) i j r)
     = ∑ k, ∫ t in Set.Iic (0:ℝ),
-        (q0MixEntry (physMix rho sigma hsig) i k t + q0MixEntry (physMix rho sigma hsig) k i t)
+        ((physMix rho sigma hsig).q0MixEntry i k t + (physMix rho sigma hsig).q0MixEntry k i t)
           * matBaxterPsi (physMixPsiouter rho sigma hsig) (fun _ _ v => -v)
               (max (sigma 0) (sigma 1)) k j (r - t) :=
   FMSA.HSMix.physHSMix_windowing_sum rho sigma hsig i j r
@@ -838,17 +838,17 @@ sub-zero tail — the fold-kernel `Ĉ₀` windowing loss.  General-N form of `ph
 theorem physMixN_windowing_sum {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
     (sigmax : ℝ) (hpos : 0 ≤ sigmax) (hsigmax : ∀ k, sigma k ≤ sigmax) (i j : Fin N) (r : ℝ) :
     (matBaxterU (matBaxterPsi (physMixNPsiouter rho sigma hsig sigmax) (fun _ _ v => -v) sigmax)
-        (fun a b => q0MixEntry (physMixN rho sigma hsig) a b) sigmax i j r
+        (fun a b => (physMixN rho sigma hsig).q0MixEntry a b) sigmax i j r
        - matBaxterUExt (matBaxterPsi (physMixNPsiouter rho sigma hsig sigmax)
         (fun _ _ v => -v) sigmax)
-        (fun a b => q0MixEntry (physMixN rho sigma hsig) a b) i j r)
+        (fun a b => (physMixN rho sigma hsig).q0MixEntry a b) i j r)
     + (matBaxterUt (matBaxterPsi (physMixNPsiouter rho sigma hsig sigmax) (fun _ _ v => -v) sigmax)
-        (fun a b => q0MixEntry (physMixN rho sigma hsig) a b) sigmax i j r
+        (fun a b => (physMixN rho sigma hsig).q0MixEntry a b) sigmax i j r
        - matBaxterUtExt (matBaxterPsi (physMixNPsiouter rho sigma hsig sigmax)
         (fun _ _ v => -v) sigmax)
-        (fun a b => q0MixEntry (physMixN rho sigma hsig) a b) i j r)
+        (fun a b => (physMixN rho sigma hsig).q0MixEntry a b) i j r)
     = ∑ k, ∫ t in Set.Iic (0:ℝ),
-        (q0MixEntry (physMixN rho sigma hsig) i k t + q0MixEntry (physMixN rho sigma hsig) k i t)
+        ((physMixN rho sigma hsig).q0MixEntry i k t + (physMixN rho sigma hsig).q0MixEntry k i t)
           * matBaxterPsi (physMixNPsiouter rho sigma hsig sigmax) (fun _ _ v => -v) sigmax
               k j (r - t) :=
   FMSA.HSMix.physHSMixN_windowing_sum rho sigma hsig sigmax hpos hsigmax i j r

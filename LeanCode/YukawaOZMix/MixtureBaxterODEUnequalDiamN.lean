@@ -46,7 +46,7 @@ open FMSA.MixtureHSDCF FMSA.MixtureConvolution
 (`physMixN` = the general-`N` physical `Mix N 0`, `MixtureDCFAEInjective.lean`.) -/
 noncomputable def qWeightedN {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k) :
     Matrix (Fin N) (Fin N) (ℝ → ℝ) :=
-  fun i k => fun v => rhoGeoPhys rho i k * q0MixEntry (physMixN rho sigma hsig) i k v
+  fun i k => fun v => rhoGeoPhys rho i k * (physMixN rho sigma hsig).q0MixEntry i k v
 
 /-- **The DCF core at general `N`** — `matDCFreCoreN i k v = qWeightedN i k v + qWeightedN k i(−v)
 − matCorrFull(qWeightedN) i k v`.  This is the structural form of `Re(matDCFfull)` (the two `√ρ`
@@ -64,10 +64,10 @@ theorem qWeightedN_eq_zero_of_notMem {N : ℕ} (rho sigma : Fin N → ℝ) (hsig
       ((sigma i + sigma k) / 2)) :
     qWeightedN rho sigma hsig i k v = 0 := by
   simp only [qWeightedN]
-  have hsupp : v ∉ Function.support (q0MixEntry (physMixN rho sigma hsig) i k) := by
+  have hsupp : v ∉ Function.support ((physMixN rho sigma hsig).q0MixEntry i k) := by
     intro hs
-    have hmem := q0MixEntry_support_subset (physMixN rho sigma hsig) i k hs
-    simp only [physMixN, Mix.lam, Mix.R] at hmem
+    have hmem := (physMixN rho sigma hsig).q0MixEntry_support_subset i k hs
+    simp only [physMixN, HSMix.lam, HSMix.R] at hmem
     exact hv hmem
   rw [Function.notMem_support.mp hsupp, mul_zero]
 
@@ -147,10 +147,10 @@ theorem matDCFreCoreN_hasDerivAt_upper {N : ℕ} (rho sigma : Fin N → ℝ) (hs
       (rhoGeoPhys rho i k * q0MixDeriv (physMixN rho sigma hsig) i k v
         - ∑ l, qpConvUpperDeriv (physMixN rho sigma hsig) i l k v / (2 * Real.pi) ^ 2) v := by
   have hlam' : (0 : ℝ) ≤ (physMixN rho sigma hsig).lam i k := by
-    simp only [physMixN, Mix.lam]; exact hlam
+    simp only [physMixN, HSMix.lam]; exact hlam
   have hv' : v ∈ Set.Ioo ((physMixN rho sigma hsig).lam i k)
       ((physMixN rho sigma hsig).R i k) := by
-    simp only [physMixN, Mix.lam, Mix.R]; exact hv
+    simp only [physMixN, HSMix.lam, HSMix.R]; exact hv
   have hqw : HasDerivAt (fun w => qWeightedN rho sigma hsig i k w)
       (rhoGeoPhys rho i k * q0MixDeriv (physMixN rho sigma hsig) i k v) v :=
     (hasDerivAt_q0MixEntry (physMixN rho sigma hsig) i k hv').const_mul (rhoGeoPhys rho i k)
@@ -318,7 +318,7 @@ theorem qpConvUpperDeriv_per_l {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀
         - Real.pi^4 * sigma l^2 * v^4 * xi2 rho sigma^2/(24 * vacMix rho sigma^4)
         ) := by
     rw [qpConvUpperDeriv, intervalIntegral_quad, intervalIntegral_quad_mul_id]
-    simp only [physMixN, Q0phys, Qppphys, Mix.R, Mix.lam]
+    simp only [physMixN, Q0phys, Qppphys, HSMix.R, HSMix.lam]
     field_simp
     ring
   rw [hfac, hab]
@@ -334,7 +334,7 @@ theorem matDCFreCoreN_lead {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀ k, 
     (hvac : vacMix rho sigma ≠ 0) (i k : Fin N) {v : ℝ} (hv0 : v ≠ 0) :
     rhoGeoPhys rho i k * q0MixDeriv (physMixN rho sigma hsig) i k v
       = -(2 * Real.pi * rhoGeoPhys rho i k * v * cLeadPieceN rho sigma i k v) := by
-  simp only [q0MixDeriv, physMixN, Q0phys, Qppphys, Mix.R, rhoGeoPhys, cLeadPieceN,
+  simp only [q0MixDeriv, physMixN, Q0phys, Qppphys, HSMix.R, rhoGeoPhys, cLeadPieceN,
     cLeadANumN, cLeadBNumN]
   field_simp
   ring
@@ -458,7 +458,7 @@ theorem qpConvLowerDeriv_per_l {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : ∀
         - Real.pi^4 * sigma i^3 * sigma l^2 * v * xi2 rho sigma^2/(12 * vacMix rho sigma^4)
         ) := by
     rw [qpConvLowerDeriv, intervalIntegral_quad, intervalIntegral_quad_mul_id]
-    simp only [physMixN, Q0phys, Qppphys, Mix.R, Mix.lam]
+    simp only [physMixN, Q0phys, Qppphys, HSMix.R, HSMix.lam]
     field_simp
     ring
   rw [hfac, hab]
@@ -474,7 +474,7 @@ theorem matDCFreCoreN_lead_lower {N : ℕ} (rho sigma : Fin N → ℝ) (hsig : �
     (hvac : vacMix rho sigma ≠ 0) (i k : Fin N) {v : ℝ} (hv0 : v ≠ 0) :
     rhoGeoPhys rho k i * q0MixDeriv (physMixN rho sigma hsig) k i (-v)
       = 2 * Real.pi * rhoGeoPhys rho i k * v * cLowerLeadPieceN rho sigma i k v := by
-  simp only [q0MixDeriv, physMixN, Q0phys, Qppphys, Mix.R, rhoGeoPhys, cLowerLeadPieceN,
+  simp only [q0MixDeriv, physMixN, Q0phys, Qppphys, HSMix.R, rhoGeoPhys, cLowerLeadPieceN,
     cLowerLeadANumN, cLowerLeadBNumN, mul_comm (rho k) (rho i)]
   field_simp
   ring
@@ -490,14 +490,14 @@ theorem matDCFreCoreN_hasDerivAt_lower {N : ℕ} (rho sigma : Fin N → ℝ) (hs
         - ∑ l, qpConvLowerDeriv (physMixN rho sigma hsig) i l k v / (2 * Real.pi) ^ 2) v := by
   have hmem : -v ∈ Set.Ioo ((physMixN rho sigma hsig).lam k i)
       ((physMixN rho sigma hsig).R k i) := by
-    simp only [physMixN, Mix.lam, Mix.R]
+    simp only [physMixN, HSMix.lam, HSMix.R]
     exact ⟨by linarith [hv.2], by linarith [hv.1, hsig i, hsig k]⟩
   have hcomp := (hasDerivAt_q0MixEntry (physMixN rho sigma hsig) k i hmem).comp v
     ((hasDerivAt_id v).neg)
   have hrefl : HasDerivAt (fun w => qWeightedN rho sigma hsig k i (-w))
       (rhoGeoPhys rho k i * (q0MixDeriv (physMixN rho sigma hsig) k i (-v) * -1)) v := by
     have heq : (fun w => qWeightedN rho sigma hsig k i (-w))
-        = fun w => rhoGeoPhys rho k i * q0MixEntry (physMixN rho sigma hsig) k i (-w) := by
+        = fun w => rhoGeoPhys rho k i * (physMixN rho sigma hsig).q0MixEntry k i (-w) := by
       funext w; simp only [qWeightedN]
     rw [heq]; exact hcomp.const_mul (rhoGeoPhys rho k i)
   have hcorr : HasDerivAt (fun w => matCorrFull (qWeightedN rho sigma hsig) i k w)
@@ -508,9 +508,9 @@ theorem matDCFreCoreN_hasDerivAt_lower {N : ℕ} (rho sigma : Fin N → ℝ) (hs
     rw [heq]
     refine HasDerivAt.fun_sum (fun l _ => ?_)
     have hlam' : (0 : ℝ) ≤ (physMixN rho sigma hsig).lam i k := by
-      simp only [physMixN, Mix.lam]; exact hlam
+      simp only [physMixN, HSMix.lam]; exact hlam
     have hv' : v ∈ Set.Ioo (0 : ℝ) ((physMixN rho sigma hsig).lam i k) := by
-      simp only [physMixN, Mix.lam]; exact hv
+      simp only [physMixN, HSMix.lam]; exact hv
     exact (hasDerivAt_qpConv_lower (physMixN rho sigma hsig) i l k hlam' hv').div_const _
   have hEq : matDCFreCoreN rho sigma hsig i k
       =ᶠ[nhds v] (fun w => qWeightedN rho sigma hsig k i (-w)

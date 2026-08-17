@@ -88,7 +88,7 @@ variable {N M : ℕ}
 /-- The diagonal forward factor vanishes at and beyond contact `R_ii`. -/
 theorem qFwd_diag_outer (X : Mix N M) (i : Fin N) {r : ℝ} (hr : X.R i i ≤ r) :
     qFwd X i i r = 0 := by
-  unfold qFwd q0MixEntry
+  unfold qFwd FMSA.HSMix.q0MixEntry
   by_cases hmem : r ∈ Set.Icc (X.lam i i) (X.R i i)
   · rw [Set.indicator_of_mem hmem]
     have hrR : r = X.R i i := le_antisymm hmem.2 hr
@@ -133,7 +133,7 @@ theorem radial_fourier_qFwd_diag (X : Mix N M) (i : Fin N) {k : ℝ} (hk : k ≠
           + (X.Qpp i / 2)
             * ((-(X.R i i) ^ 3 / k + 6 * X.R i i / k ^ 3) * Real.cos (k * X.R i i)
               + (3 * (X.R i i) ^ 2 / k ^ 2 - 6 / k ^ 4) * Real.sin (k * X.R i i))) := by
-  have hlam : X.lam i i = 0 := by simp [Mix.lam]
+  have hlam : X.lam i i = 0 := by simp [HSMix.lam]
   have hexpand : Set.EqOn (fun r => r * qFwd X i i r * Real.sin (k * r))
       (fun r => (2 * Real.pi * Real.sqrt (X.rho i * X.rho i)) *
           ((-(X.Q0 i i) * X.R i i + X.Qpp i * (X.R i i) ^ 2 / 2) * (r * Real.sin (k * r))
@@ -146,7 +146,7 @@ theorem radial_fourier_qFwd_diag (X : Mix N M) (i : Fin N) {k : ℝ} (hk : k ≠
       rw [hlam, Set.mem_Icc]; exact ⟨hr.1.le, hr.2.le⟩
     have hq : qFwd X i i r = 2 * Real.pi * Real.sqrt (X.rho i * X.rho i)
         * (X.Q0 i i * (r - X.R i i) + X.Qpp i * (r - X.R i i) ^ 2 / 2) := by
-      unfold qFwd q0MixEntry; rw [Set.indicator_of_mem hmem]
+      unfold qFwd FMSA.HSMix.q0MixEntry; rw [Set.indicator_of_mem hmem]
     dsimp only
     rw [hq]; ring
   have hi1 : IntervalIntegrable (fun r => r * Real.sin (k * r)) volume 0 (X.R i i) :=

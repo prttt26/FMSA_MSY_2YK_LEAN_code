@@ -324,7 +324,7 @@ theorem pMixEntry_eq_indicator_quad {N M : ℕ} (X : Mix N M) (i m : Fin N) :
       (fun u => 2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
         * (X.Q0 i m * (-u - X.R i m) + X.Qpp m * (-u - X.R i m) ^ 2 / 2)) := by
   funext u
-  unfold pMixEntry q0MixEntry
+  unfold pMixEntry FMSA.HSMix.q0MixEntry
   by_cases hu : u ∈ Set.Icc (-(X.R i m)) (-(X.lam i m))
   · have hneg : -u ∈ Set.Icc (X.lam i m) (X.R i m) := by
       rw [Set.mem_Icc] at hu ⊢; constructor <;> linarith [hu.1, hu.2]

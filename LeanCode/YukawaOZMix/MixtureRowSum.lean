@@ -66,18 +66,18 @@ theorem q0MixEntry_rowSum_eq_q0_poly {N M : ℕ} (X : Mix N M) {sigma eta rho : 
     (hQ0 : ∀ i k, X.Q0 i k = X.rho k * q_prime_py eta sigma)
     (hQpp : ∀ k, X.Qpp k = X.rho k * q_doubleprime_py eta)
     (i : Fin N) (u : ℝ) (hu : u ∈ Set.Icc (0:ℝ) sigma) :
-    ∑ k, q0MixEntry X i k u = q0_poly eta sigma rho u := by
+    ∑ k, X.q0MixEntry i k u = q0_poly eta sigma rho u := by
   obtain ⟨hu0, husigma⟩ := hu
   -- each entry collapses to `ρₖ·(per-density quadratic)` on the equal-diameter core `[0,σ]`
-  have hentry : ∀ k : Fin N, q0MixEntry X i k u
+  have hentry : ∀ k : Fin N, X.q0MixEntry i k u
       = X.rho k * (q_prime_py eta sigma * (u - sigma)
                   + q_doubleprime_py eta * (u - sigma) ^ 2 / 2) := by
     intro k
-    have hlam : X.lam i k = 0 := by simp only [Mix.lam, hsig]; ring
-    have hR : X.R i k = sigma := by simp only [Mix.R, hsig]; ring
+    have hlam : X.lam i k = 0 := by simp only [HSMix.lam, hsig]; ring
+    have hR : X.R i k = sigma := by simp only [HSMix.R, hsig]; ring
     have hmem : u ∈ Set.Icc (X.lam i k) (X.R i k) := by
       rw [hlam, hR]; exact Set.mem_Icc.mpr ⟨hu0, husigma⟩
-    unfold q0MixEntry
+    unfold FMSA.HSMix.q0MixEntry
     rw [Set.indicator_of_mem hmem]
     simp only [hR, hQ0 i k, hQpp k]
     ring
@@ -90,13 +90,13 @@ theorem q0MixEntry_rowSum_eq_q0_poly {N M : ℕ} (X : Mix N M) {sigma eta rho : 
 side-condition of `matBaxterUQm_momentSeed_of_rowSum`.  Delegates to the pure-HS-layer
 `FMSA.HSMix.q0MixEntry_intervalIntegrable` through the `toHSMix` bridge (functions `rfl`-equal). -/
 theorem q0MixEntry_intervalIntegrable {N M : ℕ} (X : Mix N M) (i k : Fin N) (a b : ℝ) :
-    IntervalIntegrable (q0MixEntry X i k) volume a b :=
+    IntervalIntegrable (X.q0MixEntry i k) volume a b :=
   FMSA.HSMix.q0MixEntry_intervalIntegrable X.toHSMix i k a b
 
 /-- **`t ↦ t · q0MixEntry X i k t` is interval-integrable on any `[a,b]`.**  Discharges the `hQ1`
 side-condition.  Delegates to the pure-HS layer through the `toHSMix` bridge. -/
 theorem q0MixEntry_mul_id_intervalIntegrable {N M : ℕ} (X : Mix N M) (i k : Fin N) (a b : ℝ) :
-    IntervalIntegrable (fun t => t * q0MixEntry X i k t) volume a b :=
+    IntervalIntegrable (fun t => t * X.q0MixEntry i k t) volume a b :=
   FMSA.HSMix.q0MixEntry_mul_id_intervalIntegrable X.toHSMix i k a b
 
 /-- **UNCONDITIONAL concrete matrix core seed — the equal-diameter `q0MixEntry` moment identity.**
@@ -111,13 +111,13 @@ theorem matBaxterUQm_momentSeed_q0MixEntry {N M : ℕ} (X : Mix N M) {sigma eta 
     (hQ0 : ∀ i k, X.Q0 i k = X.rho k * q_prime_py eta sigma)
     (hQpp : ∀ k, X.Qpp k = X.rho k * q_doubleprime_py eta) :
     ∀ (i _j : Fin N), ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
-      (r * ((∑ k, ∫ t in (0:ℝ)..sigma, q0MixEntry X i k t) - 1)
-          - ∑ k, ∫ t in (0:ℝ)..sigma, t * q0MixEntry X i k t)
-        - ∑ k, ∫ t in (0:ℝ)..(sigma - r), q0MixEntry X i k t
-            * ((r + t) * ((∑ l, ∫ s in (0:ℝ)..sigma, q0MixEntry X k l s) - 1)
-               - ∑ l, ∫ s in (0:ℝ)..sigma, s * q0MixEntry X k l s)
+      (r * ((∑ k, ∫ t in (0:ℝ)..sigma, X.q0MixEntry i k t) - 1)
+          - ∑ k, ∫ t in (0:ℝ)..sigma, t * X.q0MixEntry i k t)
+        - ∑ k, ∫ t in (0:ℝ)..(sigma - r), X.q0MixEntry i k t
+            * ((r + t) * ((∑ l, ∫ s in (0:ℝ)..sigma, X.q0MixEntry k l s) - 1)
+               - ∑ l, ∫ s in (0:ℝ)..sigma, s * X.q0MixEntry k l s)
       = r * c_HS eta sigma r :=
-  matBaxterUQm_momentSeed_of_rowSum (fun i k => q0MixEntry X i k) hsigma heta heta_def
+  matBaxterUQm_momentSeed_of_rowSum (fun i k => X.q0MixEntry i k) hsigma heta heta_def
     (fun i u hu => q0MixEntry_rowSum_eq_q0_poly X hsig hrho hQ0 hQpp i u hu)
     (fun i k => q0MixEntry_intervalIntegrable X i k 0 sigma)
     (fun i k => q0MixEntry_mul_id_intervalIntegrable X i k 0 sigma)
@@ -788,15 +788,15 @@ factorization of the symmetric PY DCF.) -/
 theorem q0MixEntry_hMsym_equalDiam {N M : ℕ} (X : Mix N M) {sigma : ℝ} (hsig : ∀ k, X.sigma k = sigma)
     {a b : ℝ} (hQ0 : ∀ i l, X.Q0 i l = X.rho l * a) (hQpp : ∀ l, X.Qpp l = X.rho l * b)
     (i k : Fin N) (t s : ℝ) :
-    ∑ l, q0MixEntry X i l t * q0MixEntry X k l s
-      = ∑ l, q0MixEntry X i l s * q0MixEntry X k l t := by
-  have hsep : ∀ (m l : Fin N) (u : ℝ), q0MixEntry X m l u
+    ∑ l, X.q0MixEntry i l t * X.q0MixEntry k l s
+      = ∑ l, X.q0MixEntry i l s * X.q0MixEntry k l t := by
+  have hsep : ∀ (m l : Fin N) (u : ℝ), X.q0MixEntry m l u
       = X.rho l * Set.indicator (Set.Icc (0:ℝ) sigma)
           (fun u => a * (u - sigma) + b * (u - sigma) ^ 2 / 2) u := by
     intro m l u
-    have hlam : X.lam m l = 0 := by simp only [Mix.lam, hsig]; ring
-    have hR : X.R m l = sigma := by simp only [Mix.R, hsig]; ring
-    unfold q0MixEntry
+    have hlam : X.lam m l = 0 := by simp only [HSMix.lam, hsig]; ring
+    have hR : X.R m l = sigma := by simp only [HSMix.R, hsig]; ring
+    unfold FMSA.HSMix.q0MixEntry
     simp only [hlam, hR, hQ0, hQpp]
     by_cases h : u ∈ Set.Icc (0:ℝ) sigma
     · rw [Set.indicator_of_mem h, Set.indicator_of_mem h]; ring
@@ -1030,18 +1030,18 @@ theorem laplace_baxter_quad (z lam sigma Q0 Qpp : ℝ) (hz : z ≠ 0) :
 `q0_entry`.  This is B1 of the transform bridge; B2 (`q̂ᵢₗ(z)·q̂ₖₗ(−z) = Laplace of the correlation`) and
 B4 (injectivity) remain to complete `hbridge`. -/
 theorem q0MixEntry_laplace {N M : ℕ} (X : Mix N M) (i j : Fin N) (z : ℝ) (hz : z ≠ 0) :
-    (∫ t in (X.lam i j)..(X.R i j), Real.exp (-(z * t)) * q0MixEntry X i j t)
+    (∫ t in (X.lam i j)..(X.R i j), Real.exp (-(z * t)) * X.q0MixEntry i j t)
       = Real.exp (-(z * X.lam i j))
         * (X.Q0 i j * ((1 - z * X.sigma i - Real.exp (-(z * X.sigma i))) / z ^ 2)
           + X.Qpp j * ((1 - z * X.sigma i + (z * X.sigma i) ^ 2 / 2 - Real.exp (-(z * X.sigma i))) / z ^ 3)) := by
-  have hRlam : X.R i j = X.lam i j + X.sigma i := by simp only [Mix.R, Mix.lam]; ring
+  have hRlam : X.R i j = X.lam i j + X.sigma i := by simp only [HSMix.R, HSMix.lam]; ring
   have hle : X.lam i j ≤ X.R i j := by rw [hRlam]; linarith [X.hsigma i]
-  have hcongr : (∫ t in (X.lam i j)..(X.R i j), Real.exp (-(z * t)) * q0MixEntry X i j t)
+  have hcongr : (∫ t in (X.lam i j)..(X.R i j), Real.exp (-(z * t)) * X.q0MixEntry i j t)
       = ∫ t in (X.lam i j)..(X.R i j), Real.exp (-(z * t))
           * (X.Q0 i j * (t - X.R i j) + X.Qpp j * (t - X.R i j) ^ 2 / 2) := by
     refine intervalIntegral.integral_congr (fun t ht => ?_)
     rw [Set.uIcc_of_le hle] at ht
-    unfold q0MixEntry
+    unfold FMSA.HSMix.q0MixEntry
     rw [Set.indicator_of_mem ht]
   rw [hcongr, hRlam]
   exact laplace_baxter_quad z (X.lam i j) (X.sigma i) (X.Q0 i j) (X.Qpp j) hz
@@ -1195,21 +1195,21 @@ theorem laplace_product_eq_corr_c (f g : ℝ → ℂ) (z : ℂ)
 `e^{−zλᵢⱼ}(Q0ᵢⱼ·p₁(σᵢ,z) + Q''ⱼ·p₂(σᵢ,z))`.  At `z = 2πi·w` this is the Fourier-side momentum entry
 `Q̂ᵢⱼ(w)` — the object entering `swap_offdiag_of_keys`. -/
 theorem q0MixEntry_laplace_c {M : ℕ} (X : Mix N M) (i j : Fin N) (z : ℂ) (hz : z ≠ 0) :
-    (∫ t in (X.lam i j)..(X.R i j), Complex.exp (-(z * (t : ℂ))) * ((q0MixEntry X i j t : ℝ) : ℂ))
+    (∫ t in (X.lam i j)..(X.R i j), Complex.exp (-(z * (t : ℂ))) * ((X.q0MixEntry i j t : ℝ) : ℂ))
       = Complex.exp (-(z * (X.lam i j : ℂ)))
         * ((X.Q0 i j : ℂ) * ((1 - z * X.sigma i - Complex.exp (-(z * X.sigma i))) / z ^ 2)
           + (X.Qpp j : ℂ)
             * ((1 - z * X.sigma i + (z * X.sigma i) ^ 2 / 2 - Complex.exp (-(z * X.sigma i))) / z ^ 3)) := by
-  have hRlam : X.R i j = X.lam i j + X.sigma i := by simp only [Mix.R, Mix.lam]; ring
+  have hRlam : X.R i j = X.lam i j + X.sigma i := by simp only [HSMix.R, HSMix.lam]; ring
   have hle : X.lam i j ≤ X.R i j := by rw [hRlam]; linarith [X.hsigma i]
   have hcongr :
-      (∫ t in (X.lam i j)..(X.R i j), Complex.exp (-(z * (t : ℂ))) * ((q0MixEntry X i j t : ℝ) : ℂ))
+      (∫ t in (X.lam i j)..(X.R i j), Complex.exp (-(z * (t : ℂ))) * ((X.q0MixEntry i j t : ℝ) : ℂ))
       = ∫ t in (X.lam i j)..(X.R i j), Complex.exp (-(z * (t : ℂ)))
           * ((X.Q0 i j : ℂ) * ((t : ℂ) - ((X.R i j : ℝ) : ℂ))
             + (X.Qpp j : ℂ) * ((t : ℂ) - ((X.R i j : ℝ) : ℂ)) ^ 2 / 2) := by
     refine intervalIntegral.integral_congr (fun t ht => ?_)
     rw [Set.uIcc_of_le hle] at ht
-    unfold q0MixEntry
+    unfold FMSA.HSMix.q0MixEntry
     rw [Set.indicator_of_mem ht]
     push_cast
     ring
@@ -1245,19 +1245,19 @@ theorem laplace_sum_eq_corr_c {ι : Type*} (s : Finset ι) (F G : ι → ℝ →
 /-- Global measurability of the mixture Baxter entry (indicator of a continuous quadratic).
 Delegates to the pure-HS layer through the `toHSMix` bridge. -/
 theorem q0MixEntry_measurable {N M : ℕ} (X : Mix N M) (i k : Fin N) :
-    Measurable (q0MixEntry X i k) :=
+    Measurable (X.q0MixEntry i k) :=
   FMSA.HSMix.q0MixEntry_measurable X.toHSMix i k
 
 /-- **Full-line integrability of `(q0MixEntry)·exp(w·t)` for any `w : ℂ`.**  Compactly supported on
 `[λᵢₖ,Rᵢₖ]`, bounded there.  Delegates to the pure-HS layer through the `toHSMix` bridge. -/
 theorem q0MixEntry_mul_exp_integrable {N M : ℕ} (X : Mix N M) (i k : Fin N) (w : ℂ) :
-    Integrable (fun t => (q0MixEntry X i k t : ℂ) * Complex.exp (w * t)) :=
+    Integrable (fun t => (X.q0MixEntry i k t : ℂ) * Complex.exp (w * t)) :=
   FMSA.HSMix.q0MixEntry_mul_exp_integrable X.toHSMix i k w
 
 /-- Global bound on `|q0MixEntry|` (bounded on the compact core, zero elsewhere).
 Delegates to the pure-HS layer through the `toHSMix` bridge. -/
 theorem q0MixEntry_abs_le {N M : ℕ} (X : Mix N M) (i k : Fin N) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ t, |q0MixEntry X i k t| ≤ C :=
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ t, |X.q0MixEntry i k t| ≤ C :=
   FMSA.HSMix.q0MixEntry_abs_le X.toHSMix i k
 
 /-- **h2 — joint integrability of `Qᵢₗ(t)·Qⱼₗ(t−u)·e^{−zu}` on `ℝ²`.**  Compactly supported on a box
@@ -1265,31 +1265,31 @@ theorem q0MixEntry_abs_le {N M : ℕ} (X : Mix N M) (i k : Fin N) :
 compact `u`-range); integrable via `integrableOn_of_bounded`. -/
 theorem q0MixEntry_corr_exp_prod_integrable {N M : ℕ} (X : Mix N M) (i j l : Fin N) (z : ℂ) :
     Integrable (Function.uncurry fun t u =>
-      (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - u) : ℂ) * Complex.exp (-(z * u)))
+      (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - u) : ℂ) * Complex.exp (-(z * u)))
       (volume.prod volume) := by
   set Bt := Set.Icc (X.lam i l) (X.R i l) with hBt
   set Bu := Set.Icc (X.lam i l - X.R j l) (X.R i l - X.lam j l) with hBu
   have hmeas : Measurable (Function.uncurry fun t u =>
-      (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - u) : ℂ) * Complex.exp (-(z * u))) := by
-    change Measurable (fun p : ℝ × ℝ => (q0MixEntry X i l p.1 : ℂ)
-      * (q0MixEntry X j l (p.1 - p.2) : ℂ) * Complex.exp (-(z * p.2)))
+      (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - u) : ℂ) * Complex.exp (-(z * u))) := by
+    change Measurable (fun p : ℝ × ℝ => (X.q0MixEntry i l p.1 : ℂ)
+      * (X.q0MixEntry j l (p.1 - p.2) : ℂ) * Complex.exp (-(z * p.2)))
     refine (Measurable.mul (Measurable.mul ?_ ?_) ?_)
     · exact (Complex.measurable_ofReal.comp (q0MixEntry_measurable X i l)).comp measurable_fst
     · exact Complex.measurable_ofReal.comp
         ((q0MixEntry_measurable X j l).comp (measurable_fst.sub measurable_snd))
     · exact (by fun_prop : Measurable (fun p : ℝ × ℝ => Complex.exp (-(z * p.2))))
   have hsupp : Function.support (Function.uncurry fun t u =>
-      (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - u) : ℂ) * Complex.exp (-(z * u)))
+      (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - u) : ℂ) * Complex.exp (-(z * u)))
       ⊆ Bt ×ˢ Bu := by
     intro p hp
     rw [Function.mem_support] at hp
     simp only [Function.uncurry] at hp
-    have hi : q0MixEntry X i l p.1 ≠ 0 := by
+    have hi : X.q0MixEntry i l p.1 ≠ 0 := by
       rintro h; exact hp (by rw [h]; push_cast; ring)
-    have hj : q0MixEntry X j l (p.1 - p.2) ≠ 0 := by
+    have hj : X.q0MixEntry j l (p.1 - p.2) ≠ 0 := by
       rintro h; exact hp (by rw [h]; push_cast; ring)
-    have hmemi := q0MixEntry_support_subset X i l (Function.mem_support.mpr hi)
-    have hmemj := q0MixEntry_support_subset X j l (Function.mem_support.mpr hj)
+    have hmemi := X.q0MixEntry_support_subset i l (Function.mem_support.mpr hi)
+    have hmemj := X.q0MixEntry_support_subset j l (Function.mem_support.mpr hj)
     rw [Set.mem_Icc] at hmemi hmemj
     refine Set.mem_prod.mpr ⟨Set.mem_Icc.mpr hmemi, Set.mem_Icc.mpr ⟨?_, ?_⟩⟩
     · linarith [hmemi.1, hmemj.2]
@@ -1314,18 +1314,18 @@ theorem q0MixEntry_corr_exp_prod_integrable {N M : ℕ} (X : Mix N M) (i j l : F
 /-- **The full-line matrix correlation `Rᵢⱼ(v) = ∑ₗ ∫_ℝ Qᵢₗ(t)·Qⱼₗ(t−v) dt`** — the SYMMETRIC object
 (unlike the windowed `matSelfConv`, which drops a causal tail when `λ<0`). -/
 def matCorr {N M : ℕ} (X : Mix N M) (i j : Fin N) (v : ℝ) : ℂ :=
-  ∑ l, ∫ t, (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ)
+  ∑ l, ∫ t, (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ)
 
 /-- **B3 (concrete) — `∑ₗ Q̂ᵢₗ(z)·Q̂ⱼₗ(−z) = Laplace(Rᵢⱼ)`.**  The row-summed product of the complex
 transforms equals the transform of the full-line correlation `matCorr`.  All three integrability side
 conditions discharged from the compact support of `q0MixEntry` (h1 = `mul_prod` of the 1-D primitive,
 h2 = the 2-D box bound, h3 = `integral_prod_right` of h2 with `e^{−zv}` pulled out). -/
 theorem matCorr_laplace {N M : ℕ} (X : Mix N M) (i j : Fin N) (z : ℂ) :
-    (∑ l, (∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(z * t)))
-        * (∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (z * s)))
+    (∑ l, (∫ t, (X.q0MixEntry i l t : ℂ) * Complex.exp (-(z * t)))
+        * (∫ s, (X.q0MixEntry j l s : ℂ) * Complex.exp (z * s)))
       = ∫ v, matCorr X i j v * Complex.exp (-(z * v)) := by
   have key := laplace_sum_eq_corr_c (ι := Fin N) Finset.univ
-    (fun l => fun t => (q0MixEntry X i l t : ℂ)) (fun l => fun t => (q0MixEntry X j l t : ℂ)) z
+    (fun l => fun t => (X.q0MixEntry i l t : ℂ)) (fun l => fun t => (X.q0MixEntry j l t : ℂ)) z
     (fun l _ => by
       simpa only [neg_mul] using
         (q0MixEntry_mul_exp_integrable X i l (-z)).mul_prod (q0MixEntry_mul_exp_integrable X j l z))
@@ -1421,36 +1421,36 @@ theorem fourier_eq_zOfW (g : ℝ → ℂ) (w : ℝ) :
 Fourier transform of `matCorr` (B3) with the row-summed transform product. -/
 theorem matCorr_fourier_eq {N M : ℕ} (X : Mix N M) (i j : Fin N) (w : ℝ) :
     𝓕 (matCorr X i j) w
-      = ∑ l, (∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(zOfW w * t)))
-          * (∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (zOfW w * s)) := by
+      = ∑ l, (∫ t, (X.q0MixEntry i l t : ℂ) * Complex.exp (-(zOfW w * t)))
+          * (∫ s, (X.q0MixEntry j l s : ℂ) * Complex.exp (zOfW w * s)) := by
   rw [fourier_eq_zOfW, matCorr_laplace X i j (zOfW w)]
 
 /-- **Transform of a single (cast) `q0MixEntry`:** `𝓕 (q0MixEntry i j) w = Q̂ᵢⱼ(z)`, `z = zOfW w` — the
 linear `q̂` term of the corrected DCF `Ĉ₀ᵢⱼ = q̂ᵢⱼ(z) + q̂ⱼᵢ(−z) − matCorrᵢⱼ(z)`. -/
 theorem q0MixEntry_fourier_eq {N M : ℕ} (X : Mix N M) (i j : Fin N) (w : ℝ) :
-    𝓕 (fun t => (q0MixEntry X i j t : ℂ)) w
-      = ∫ t, (q0MixEntry X i j t : ℂ) * Complex.exp (-(zOfW w * t)) :=
+    𝓕 (fun t => (X.q0MixEntry i j t : ℂ)) w
+      = ∫ t, (X.q0MixEntry i j t : ℂ) * Complex.exp (-(zOfW w * t)) :=
   fourier_eq_zOfW _ w
 
 /-- **Transform of the reflected `q0MixEntry`:** `𝓕 (v ↦ q0MixEntry j i (−v)) w = Q̂ⱼᵢ(−z)` — the second
 linear `q̂` term of `Ĉ₀`. -/
 theorem q0MixEntry_refl_fourier_eq {N M : ℕ} (X : Mix N M) (i j : Fin N) (w : ℝ) :
-    𝓕 (fun v => (q0MixEntry X j i (-v) : ℂ)) w
-      = ∫ s, (q0MixEntry X j i s : ℂ) * Complex.exp (zOfW w * s) := by
+    𝓕 (fun v => (X.q0MixEntry j i (-v) : ℂ)) w
+      = ∫ s, (X.q0MixEntry j i s : ℂ) * Complex.exp (zOfW w * s) := by
   rw [fourier_eq_zOfW]
-  rw [show (fun v => (q0MixEntry X j i (-v) : ℂ) * Complex.exp (-(zOfW w * (v : ℂ))))
-      = (fun v => (fun s => (q0MixEntry X j i s : ℂ) * Complex.exp (zOfW w * (s : ℂ))) (-v)) from by
+  rw [show (fun v => (X.q0MixEntry j i (-v) : ℂ) * Complex.exp (-(zOfW w * (v : ℂ))))
+      = (fun v => (fun s => (X.q0MixEntry j i s : ℂ) * Complex.exp (zOfW w * (s : ℂ))) (-v)) from by
         funext v
         congr 1
         rw [show -(zOfW w * (v : ℂ)) = zOfW w * ((-v : ℝ) : ℂ) from by push_cast; ring]]
   exact integral_neg_eq_self
-    (fun s => (q0MixEntry X j i s : ℂ) * Complex.exp (zOfW w * (s : ℂ))) volume
+    (fun s => (X.q0MixEntry j i s : ℂ) * Complex.exp (zOfW w * (s : ℂ))) volume
 
 /-- `q0MixEntry` (cast to `ℂ`) is in every `Lᵖ` (bounded on the compact core, zero elsewhere). -/
 theorem q0MixEntry_memLp {N M : ℕ} (X : Mix N M) (i k : Fin N) (p : ENNReal) :
-    MemLp (fun t => (q0MixEntry X i k t : ℂ)) p volume := by
+    MemLp (fun t => (X.q0MixEntry i k t : ℂ)) p volume := by
   obtain ⟨C, hC0, hC⟩ := q0MixEntry_abs_le X i k
-  have hmeas : AEStronglyMeasurable (fun t => (q0MixEntry X i k t : ℂ)) volume :=
+  have hmeas : AEStronglyMeasurable (fun t => (X.q0MixEntry i k t : ℂ)) volume :=
     (Complex.measurable_ofReal.comp (q0MixEntry_measurable X i k)).aestronglyMeasurable
   have hg : MemLp (Set.indicator (Set.Icc (X.lam i k) (X.R i k)) (fun _ => C)) p volume :=
     memLp_indicator_const p measurableSet_Icc C (Or.inr measure_Icc_lt_top.ne)
@@ -1459,8 +1459,8 @@ theorem q0MixEntry_memLp {N M : ℕ} (X : Mix N M) (i k : Fin N) (p : ENNReal) :
   by_cases h : t ∈ Set.Icc (X.lam i k) (X.R i k)
   · rw [Set.indicator_of_mem h]; exact hC t
   · rw [Set.indicator_of_notMem h]
-    have hz : q0MixEntry X i k t = 0 := by
-      by_contra hq; exact h (q0MixEntry_support_subset X i k (Function.mem_support.mpr hq))
+    have hz : X.q0MixEntry i k t = 0 := by
+      by_contra hq; exact h (X.q0MixEntry_support_subset i k (Function.mem_support.mpr hq))
     rw [hz]; simp
 
 /-- Continuity of one correlation summand `v ↦ ∫ Qᵢₗ(t)·Qⱼₗ(t−v) dt` via the **L² route** (translation
@@ -1468,7 +1468,7 @@ is strongly continuous on `L²`): `cₗ(v) = ⟪(Qᵢₗ)_L², τᵥ(Qⱼₗ)_L�
 `Lp.compMeasurePreserving_continuous` and the inner product continuous.  Dominated convergence does NOT
 apply — the integrand `v ↦ Qⱼₗ(t−v)` jumps at `λ`; the continuity comes from L² smoothing. -/
 theorem q0MixEntry_corr_continuous {N M : ℕ} (X : Mix N M) (i j l : Fin N) :
-    Continuous (fun v => ∫ t, (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ)) := by
+    Continuous (fun v => ∫ t, (X.q0MixEntry i l t : ℂ) * (X.q0MixEntry j l (t - v) : ℂ)) := by
   have hfmem := q0MixEntry_memLp X i l 2
   have hgmem := q0MixEntry_memLp X j l 2
   set fLp := hfmem.toLp with hfLp
@@ -1491,10 +1491,10 @@ theorem q0MixEntry_corr_continuous {N M : ℕ} (X : Mix N M) (i j l : Fin N) :
   refine hcont.congr (fun v => ?_)
   rw [L2.inner_def]
   refine integral_congr_ae ?_
-  have hf_ae : fLp =ᵐ[volume] (fun t => (q0MixEntry X i l t : ℂ)) := hfmem.coeFn_toLp
-  have hgv_ae : gv v =ᵐ[volume] (fun x => (q0MixEntry X j l (x - v) : ℂ)) := by
+  have hf_ae : fLp =ᵐ[volume] (fun t => (X.q0MixEntry i l t : ℂ)) := hfmem.coeFn_toLp
+  have hgv_ae : gv v =ᵐ[volume] (fun x => (X.q0MixEntry j l (x - v) : ℂ)) := by
     have h1 : gv v =ᵐ[volume] (gLp ∘ ⇑(T v)) := Lp.coeFn_compMeasurePreserving gLp (hMP v)
-    have h2 : (gLp : ℝ → ℂ) =ᵐ[volume] (fun t => (q0MixEntry X j l t : ℂ)) := hgmem.coeFn_toLp
+    have h2 : (gLp : ℝ → ℂ) =ᵐ[volume] (fun t => (X.q0MixEntry j l t : ℂ)) := hgmem.coeFn_toLp
     exact h1.trans ((hMP v).quasiMeasurePreserving.ae_eq_comp h2)
   filter_upwards [hf_ae, hgv_ae] with t ht1 ht2
   rw [ht1, ht2, RCLike.inner_apply, Complex.conj_ofReal]; ring
@@ -1513,10 +1513,10 @@ weights) and is numerically false (~0.02).  Kept only to record the reduction; i
 obstruction (b).  The symmetric object is the full `Q̂₀` self-product (distributional in real space). -/
 theorem matCorr_symm {N M : ℕ} (X : Mix N M) (i j : Fin N)
     (hmom : ∀ w : ℝ,
-      (∑ l, (∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(zOfW w * t)))
-          * (∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (zOfW w * s)))
-        = ∑ l, (∫ t, (q0MixEntry X j l t : ℂ) * Complex.exp (-(zOfW w * t)))
-          * (∫ s, (q0MixEntry X i l s : ℂ) * Complex.exp (zOfW w * s))) :
+      (∑ l, (∫ t, (X.q0MixEntry i l t : ℂ) * Complex.exp (-(zOfW w * t)))
+          * (∫ s, (X.q0MixEntry j l s : ℂ) * Complex.exp (zOfW w * s)))
+        = ∑ l, (∫ t, (X.q0MixEntry j l t : ℂ) * Complex.exp (-(zOfW w * t)))
+          * (∫ s, (X.q0MixEntry i l s : ℂ) * Complex.exp (zOfW w * s))) :
     matCorr X i j = matCorr X j i := by
   refine eq_of_fourier_eq (matCorr_continuous X i j) (matCorr_continuous X j i)
     (matCorr_integrable X i j) (matCorr_integrable X j i) ?_

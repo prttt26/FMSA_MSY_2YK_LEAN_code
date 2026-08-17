@@ -87,7 +87,7 @@ theorem bMixEntry_support_subset (X : Mix N M) (m n : Fin N) :
 `P_im(u) = 2π√(ρᵢρ_m) q_im(−u)`, supported on `[−R_im, −λ_im]`).  This is the reflection input to the
 odd part `𝒲(r) − 𝒲(−r)`. -/
 noncomputable def pMixEntry (X : Mix N M) (i m : Fin N) (u : ℝ) : ℝ :=
-  2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * q0MixEntry X i m (-u)
+  2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * X.q0MixEntry i m (-u)
 
 /-- The reflected kernel is supported on the reflected core `[−R_im, −λ_im]`:
 `Function.support (pMixEntry X i m) ⊆ Set.Icc (−R_{im}) (−λ_{im})`.  Follows from
@@ -97,9 +97,9 @@ theorem pMixEntry_support_subset (X : Mix N M) (i m : Fin N) :
   intro x hx
   rw [Function.mem_support] at hx
   -- the constant `2π√(ρᵢρ_m)` factor cannot rescue a zero of `q0MixEntry(−x)`
-  have hq : q0MixEntry X i m (-x) ≠ 0 := by
+  have hq : X.q0MixEntry i m (-x) ≠ 0 := by
     intro h; apply hx; unfold pMixEntry; rw [h]; ring
-  have hmem := q0MixEntry_support_subset X i m (Function.mem_support.mpr hq)
+  have hmem := X.q0MixEntry_support_subset i m (Function.mem_support.mpr hq)
   rw [Set.mem_Icc] at hmem
   rw [Set.mem_Icc]
   constructor <;> linarith [hmem.1, hmem.2]
@@ -151,12 +151,12 @@ edge; it can only enter as an *interior* piece-edge, which is the "removable mer
 /-- The two-fold edge `R_in − R_jn` is exactly `−λ_ij` (the intermediate species `n` cancels). -/
 theorem bConvP_edge_eq (X : Mix N M) (i n j : Fin N) :
     X.R i n - X.R j n = -(X.lam i j) := by
-  simp only [Mix.R, Mix.lam]; ring
+  simp only [HSMix.R, HSMix.lam]; ring
 
 /-- The triple edge `−R_im + (R_mn − R_jn)` is exactly `−R_ij` (both intermediate species cancel). -/
 theorem pbp_edge_eq (X : Mix N M) (i m n j : Fin N) :
     -(X.R i m) + (X.R m n - X.R j n) = -(X.R i j) := by
-  simp only [Mix.R]; ring
+  simp only [HSMix.R]; ring
 
 /-! #### All four breakpoints of the mediated triple are `{±λ_ij, ±R_ij}` — `m, n` cancel everywhere
 
@@ -171,17 +171,17 @@ IB.9's "support geometry, *not* cancellation" content — no coefficient-merging
 /-- Triple breakpoint (lower·upper): `−R_im + (R_mn − λ_jn) = λ_ij`. -/
 theorem pbp_edge_lu (X : Mix N M) (i m n j : Fin N) :
     -(X.R i m) + (X.R m n - X.lam j n) = X.lam i j := by
-  simp only [Mix.R, Mix.lam]; ring
+  simp only [HSMix.R, HSMix.lam]; ring
 
 /-- Triple breakpoint (upper·lower): `−λ_im + (R_mn − R_jn) = −λ_ij`. -/
 theorem pbp_edge_ul (X : Mix N M) (i m n j : Fin N) :
     -(X.lam i m) + (X.R m n - X.R j n) = -(X.lam i j) := by
-  simp only [Mix.R, Mix.lam]; ring
+  simp only [HSMix.R, HSMix.lam]; ring
 
 /-- Triple breakpoint (upper·upper): `−λ_im + (R_mn − λ_jn) = R_ij`. -/
 theorem pbp_edge_uu (X : Mix N M) (i m n j : Fin N) :
     -(X.lam i m) + (X.R m n - X.lam j n) = X.R i j := by
-  simp only [Mix.R, Mix.lam]; ring
+  simp only [HSMix.R, HSMix.lam]; ring
 
 /-- **IB.9 support-geometry closure — the mediated triple's breakpoint set is `{±λ_ij, ±R_ij}`.**
 Every one of the four support-edge combinations of `P_im ⋆ ℬ_mn ⋆ P_jn` lands in the explicit,
