@@ -70,9 +70,9 @@ namespace FMSA.MixtureRDF
 `doubly_prop_entry_eq` (`MixtureInnerDCF.lean`); unlike those, its denominator is `det Q̂₀` itself,
 which is what makes the concrete family below available. -/
 theorem hhat1_entry_eq_num_div_det_sq {N : ℕ} (M B : Matrix (Fin N) (Fin N) ℂ) (i j : Fin N) :
-    FMSA.YukawaWH.Hhat1 M B i j
+    FMSA.MixtureYukawaWH.Hhat1 M B i j
       = ((M.adjugate)ᵀ * B * M.adjugate) i j / (M.det) ^ 2 := by
-  unfold FMSA.YukawaWH.Hhat1
+  unfold FMSA.MixtureYukawaWH.Hhat1
   have h1 : (Mᵀ)⁻¹ = (M.det)⁻¹ • (M.adjugate)ᵀ := by
     rw [Matrix.inv_def, Ring.inverse_eq_inv', Matrix.det_transpose, Matrix.adjugate_transpose]
   have h2 : M⁻¹ = (M.det)⁻¹ • M.adjugate := by rw [Matrix.inv_def, Ring.inverse_eq_inv']
@@ -129,7 +129,7 @@ theorem hhat1_double_pole {N : ℕ} (Mf B1f : ℂ → Matrix (Fin N) (Fin N) ℂ
     (hD : HasDerivAt (fun z => (Mf z).det) Dprime s_k)
     (hD0 : (Mf s_k).det = 0) (hDp : Dprime ≠ 0)
     (hNum : ContinuousAt (fun z => (((Mf z).adjugate)ᵀ * B1f z * (Mf z).adjugate) i j) s_k) :
-    Tendsto (fun z => (z - s_k) ^ 2 * (FMSA.YukawaWH.Hhat1 (Mf z) (B1f z) i j)) (𝓝[≠] s_k)
+    Tendsto (fun z => (z - s_k) ^ 2 * (FMSA.MixtureYukawaWH.Hhat1 (Mf z) (B1f z) i j)) (𝓝[≠] s_k)
       (𝓝 (((hsResidueMatrix (Mf s_k) Dprime)ᵀ * B1f s_k
             * hsResidueMatrix (Mf s_k) Dprime) i j)) := by
   have hbase := FMSA.MixtureHSPoles.double_pole_leading_coeff
@@ -196,7 +196,7 @@ theorem detF_rdf_pole_family (P : MixParams) (hP : P.Phys) {rdist : ℝ}
     (hB1 : ∀ (s : ℂ) (p q : Fin 2), ContinuousAt (fun z => B1f z p q) s) :
     ∃ g : ℕ → ℂ, Function.Injective g ∧
       (∀ n, P.detF (g n) = 0 ∧ g n ≠ 0 ∧ derivF P (g n) ≠ 0) ∧
-      (∀ n, Tendsto (fun z => (z - g n) ^ 2 * (FMSA.YukawaWH.Hhat1 (q0Mat P z) (B1f z) i j))
+      (∀ n, Tendsto (fun z => (z - g n) ^ 2 * (FMSA.MixtureYukawaWH.Hhat1 (q0Mat P z) (B1f z) i j))
         (𝓝[≠] (g n)) (𝓝 (rdfBeta P B1f (g n) i j))) ∧
       Summable (poleExpTerm (fun n => q0Residue P (g n) 0 1) (fun n => -(g n)) rdist) := by
   obtain ⟨g, hinj, hpoledata, _hres, hsum⟩ := detF_mixHS_summable P hP hrd
@@ -395,7 +395,7 @@ theorem cmix_eq_one_fin_one_of_det (C0 T0 : Matrix (Fin 1) (Fin 1) ℂ)
 genuine **double** pole at a simple zero of `det Q̂₀`, exactly as the `Q̂₀⁻¹`-count reading of
 MML.8's Crux #1 predicts (two inverse factors ⇒ order 2). -/
 theorem hhat1_fin_one_entry (M B : Matrix (Fin 1) (Fin 1) ℂ) :
-    FMSA.YukawaWH.Hhat1 M B 0 0 = B 0 0 / (M 0 0) ^ 2 := by
+    FMSA.MixtureYukawaWH.Hhat1 M B 0 0 = B 0 0 / (M 0 0) ^ 2 := by
   rw [hhat1_entry_eq_num_div_det_sq, Matrix.adjugate_fin_one, Matrix.det_fin_one]
   simp
 

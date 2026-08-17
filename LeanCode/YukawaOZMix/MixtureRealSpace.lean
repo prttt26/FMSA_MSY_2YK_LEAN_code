@@ -90,9 +90,9 @@ partner **(b)** is exactly Y1.6's `Hhat1_spec` — solving for `Ĉ₁` gives (�
 `Ĉ₁ = Q̂₀(−k)·B₁·Q̂₀ᵀ(−k)`. -/
 theorem star_of_oz1_baxter_hhat1 {N : ℕ} (Q0k Qm C1 B1 : Matrix (Fin N) (Fin N) ℂ)
     (hQ0k : IsUnit Q0k.det) (hQm : IsUnit Qm.det)
-    (ha : Q0kᵀ * FMSA.YukawaWH.Hhat1 Q0k B1 * Q0k = Qm⁻¹ * C1 * (Qmᵀ)⁻¹) :
+    (ha : Q0kᵀ * FMSA.MixtureYukawaWH.Hhat1 Q0k B1 * Q0k = Qm⁻¹ * C1 * (Qmᵀ)⁻¹) :
     C1 = Qm * B1 * Qmᵀ := by
-  have hb := FMSA.YukawaWH.Hhat1_spec Q0k B1 hQ0k
+  have hb := FMSA.MixtureYukawaWH.Hhat1_spec Q0k B1 hQ0k
   rw [hb] at ha
   exact star_of_oz1_baxter Qm C1 B1 hQm ha.symm
 

@@ -42,7 +42,7 @@ set_option linter.style.longLine false
 
 open Filter Topology Matrix
 
-namespace FMSA.YukawaWH
+namespace FMSA.MixtureYukawaWH
 
 open FMSA.SpectralAmplitude
 
@@ -84,4 +84,4 @@ theorem outer_residue_eq_spectralAmp_residue {n : ℕ} (Lf Rf : ℂ → Matrix (
       (𝓝 ((Gmat * Kmat * Gmatᵀ : Matrix (Fin n) (Fin n) ℂ) i j)) :=
   outer_residue Lf Rf Kmat Gmat Gmatᵀ z i j hL hR
 
-end FMSA.YukawaWH
+end FMSA.MixtureYukawaWH

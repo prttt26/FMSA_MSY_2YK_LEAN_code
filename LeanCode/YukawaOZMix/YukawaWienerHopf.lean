@@ -40,7 +40,7 @@ set_option linter.style.whitespace false
 
 open Filter Topology Matrix
 
-namespace FMSA.YukawaWH
+namespace FMSA.MixtureYukawaWH
 
 /-- Entry of a triple matrix product as a double sum: `(L·X·R)_{ij} = Σ_q Σ_p L_{ip} X_{pq} R_{qj}`. -/
 theorem triple_apply {n : ℕ} (L X R : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) :
@@ -121,4 +121,4 @@ theorem Hhat1_residue {n : ℕ} (Q0 : Matrix (Fin n) (Fin n) ℂ)
   unfold Hhat1
   exact matrix_conj_residue (Q0ᵀ)⁻¹ Q0⁻¹ bfun s0 Bres i j hb
 
-end FMSA.YukawaWH
+end FMSA.MixtureYukawaWH
