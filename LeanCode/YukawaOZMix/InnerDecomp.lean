@@ -179,7 +179,7 @@ Note the order: **second index minus first**. -/
 noncomputable def lam (k l : Fin N) : ℝ := (X.σ l - X.σ k) / 2
 
 /-- Size-asymmetry lower cutoff `σ_min(i,j) = min(σᵢ, σⱼ)`. -/
-noncomputable def σmin (i j : Fin N) : ℝ := min (X.σ i) (X.σ j)
+noncomputable def sigMin (i j : Fin N) : ℝ := min (X.σ i) (X.σ j)
 
 theorem R_pos (i j : Fin N) : 0 < X.R i j := by
   have hi := X.hσ i
