@@ -139,7 +139,7 @@ theorem contourSum_leading_term {K z0 k : ℂ} {r0 : ℝ}
           ≤ (4 * ‖K‖ / R) * |Real.pi - 0| :=
             intervalIntegral.norm_integral_le_of_norm_le_const hle
       _ = 4 * ‖K‖ * Real.pi / R := by rw [sub_zero, abs_of_pos Real.pi_pos]; ring
-  have key := improper_integral_eq_sum_yukawa_residues (ι := Fin 1) (z := fun _ => z0)
+  have key := FMSA.Analysis.improper_integral_eq_sum_yukawa_residues (ι := Fin 1) (z := fun _ => z0)
     (r' := fun _ => r0) (ĝ := fun _ _ => K) (k := k)
     (f := fun w => K / ((w - k) * (Complex.I * w + z0)))
     Set.countable_empty (fun _ => hr0) (fun _ => hUHP)

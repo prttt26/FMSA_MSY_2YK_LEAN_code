@@ -20,7 +20,7 @@ the residue is `−Q̂₀₀₁(s_k)/det′(Q̂₀)(s_k)` — the `B_k` coeffici
 
 Everything reuses existing tools: Mathlib `Matrix.det_fin_two` / `adjugate_fin_two`,
 `FMSA.Q0Complex.inv_apply_eq_adj_div_det` (Y1.1, `M⁻¹ = adj/det` unconditional), and
-`FMSA.HardSphere.residue_of_simple_pole` (`ResidueAtSimplePole.lean`).
+`FMSA.Analysis.residue_of_simple_pole` (`ResidueAtSimplePole.lean`).
 
 ## Results
 
@@ -96,7 +96,7 @@ theorem b_k_residue (s_k : ℂ) (sigma : Fin 2 → ℂ) (rho_geo Qp Qpp : Fin 2 
         / (FMSA.Q0Complex.Q0_mat_c z sigma rho_geo Qp Qpp).det :=
     fun z => Q0inv_zero_one z sigma rho_geo Qp Qpp
   simp_rw [hrw]
-  exact FMSA.HardSphere.residue_of_simple_pole
+  exact FMSA.Analysis.residue_of_simple_pole
     (fun z => -(FMSA.Q0Complex.Q0_mat_c z sigma rho_geo Qp Qpp) 0 1)
     (fun z => (FMSA.Q0Complex.Q0_mat_c z sigma rho_geo Qp Qpp).det)
     Dprime s_k hD hDz0 hDprime hNcont.neg

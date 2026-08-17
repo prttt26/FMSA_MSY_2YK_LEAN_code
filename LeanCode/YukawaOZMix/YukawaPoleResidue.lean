@@ -29,7 +29,7 @@ The mathematical content splits into two reusable pieces, both fully proved and 
 * `c5_residue_eq_K_mul_Ginv` — the residue assembly: given the Blum simple-pole shape of `ĉ^(1)`
   near `z_t` (`N/D` with a simple zero of `D` at `z_t`, and `N(z_t)/D'(z_t) = K_t·G_{ij}(z_t)`), the
   residue-defining limit `(s−z_t)·ĉ^(1) → K_t·G_{ij}(z_t)`.  Reuses the general simple-pole residue
-  lemma `FMSA.HardSphere.residue_of_simple_pole` (`ResidueAtSimplePole.lean`).
+  lemma `FMSA.Analysis.residue_of_simple_pole` (`ResidueAtSimplePole.lean`).
 
 ## Modeling input — `hblum` is NOT dischargeable as an equality (audit 2026-07-17)
 
@@ -103,7 +103,7 @@ theorem c5_residue_eq_K_mul_Ginv (N Dfun : ℂ → ℂ) (Dprime z_t Kt : ℂ) {n
     Tendsto (fun s => (s - z_t) * (N s / Dfun s)) (𝓝[≠] z_t)
       (𝓝 (Kt * (Q0.adjugate i j / Q0.det))) := by
   rw [← g_entry_eq_adj_div_det Q0 i j]
-  have h := FMSA.HardSphere.residue_of_simple_pole N Dfun Dprime z_t hD hDz hDp hN
+  have h := FMSA.Analysis.residue_of_simple_pole N Dfun Dprime z_t hD hDz hDp hN
   rwa [hblum] at h
 
 end FMSA.YukawaPoleResidue

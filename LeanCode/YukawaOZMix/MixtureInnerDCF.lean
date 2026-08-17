@@ -196,7 +196,7 @@ theorem double_pole_leading_coeff (N D : ℂ → ℂ) (Dprime s_k : ℂ)
     Tendsto (fun z => (z - s_k) ^ 2 * (N z / (D z) ^ 2)) (𝓝[≠] s_k)
       (𝓝 (N s_k / Dprime ^ 2)) := by
   have h1 : Tendsto (fun z => (z - s_k) * (1 / D z)) (𝓝[≠] s_k) (𝓝 (1 / Dprime)) := by
-    have := FMSA.HardSphere.residue_of_simple_pole (fun _ => (1 : ℂ)) D Dprime s_k hD hDz0 hDprime
+    have := FMSA.Analysis.residue_of_simple_pole (fun _ => (1 : ℂ)) D Dprime s_k hD hDz0 hDprime
       continuousAt_const
     simpa using this
   have h2 : Tendsto (fun z => ((z - s_k) * (1 / D z)) ^ 2) (𝓝[≠] s_k) (𝓝 ((1 / Dprime) ^ 2)) :=

@@ -27,7 +27,7 @@ simple zero at `z0`), not tied to any specific application.
 
 open Filter Topology
 
-namespace FMSA.HardSphere
+namespace FMSA.Analysis
 
 /-- **Residue at a simple pole, via the elementary limit characterization** — no Cauchy integral
 formula needed. For `f = N/D` with `D` having a simple zero at `z0` (`HasDerivAt D D' z0`,
@@ -50,4 +50,4 @@ theorem residue_of_simple_pole (N D : ℂ → ℂ) (Dprime : ℂ) (z0 : ℂ) (hD
   have hfinal := hprod.congr heq2
   rwa [show N z0 * Dprime⁻¹ = N z0 / Dprime from (div_eq_mul_inv (N z0) Dprime).symm] at hfinal
 
-end FMSA.HardSphere
+end FMSA.Analysis

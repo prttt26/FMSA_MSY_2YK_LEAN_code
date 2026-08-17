@@ -100,8 +100,8 @@ theorem Hhat_residue_at_pole (eta sigma rho r : ℝ) (hsigma : 0 < sigma) {k_n :
     exact hnum.div hGnegcont hGneg_ne
   have hD : HasDerivAt D (G_baxter_deriv eta sigma rho k_n) k_n :=
     G_baxter_hasDerivAt eta sigma rho k_n
-  have hres := residue_of_simple_pole N D (G_baxter_deriv eta sigma rho k_n) k_n hD hzero
-    hGderiv_ne hNcont
+  have hres := FMSA.Analysis.residue_of_simple_pole N D (G_baxter_deriv eta sigma rho k_n) k_n hD
+    hzero hGderiv_ne hNcont
   have heq : ∀ k : ℂ,
       (k - k_n) * (N k / D k) = (k - k_n) * (Hhat_residue_integrand eta sigma rho r k) := by
     intro k

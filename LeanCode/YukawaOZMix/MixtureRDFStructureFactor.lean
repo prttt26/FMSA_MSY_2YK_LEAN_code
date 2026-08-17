@@ -413,7 +413,7 @@ theorem structureFactor_entry_residue {N : ℕ} (T0f : ℂ → Matrix (Fin N) (F
     (hadj : ContinuousAt (fun z => (T0f z).adjugate i j) s_k) :
     Tendsto (fun z => (z - s_k) * ((T0f z)⁻¹ i j)) (𝓝[≠] s_k)
       (𝓝 (hsResidueMatrix (T0f s_k) Dprime i j)) := by
-  have hbase := FMSA.HardSphere.residue_of_simple_pole
+  have hbase := FMSA.Analysis.residue_of_simple_pole
     (fun z => (T0f z).adjugate i j) (fun z => (T0f z).det) Dprime s_k hD hD0 hDp hadj
   have hval : (T0f s_k).adjugate i j / Dprime = hsResidueMatrix (T0f s_k) Dprime i j := by
     unfold hsResidueMatrix

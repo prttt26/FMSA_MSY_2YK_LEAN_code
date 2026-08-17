@@ -47,7 +47,7 @@ the *open* UHP).
 
 open Filter Topology Metric MeasureTheory Complex
 
-namespace FMSA.MixtureRDF
+namespace FMSA.Analysis
 
 /-- **Contour-sum step (general engine).**  Finitely many simple poles `c' i` strictly inside the
 open upper half-plane, residue factor `g i` (`f = g i /(·−c' i)` near `c' i`), `f` holomorphic on
@@ -142,4 +142,4 @@ theorem improper_integral_eq_sum_yukawa_residues
   rw [show (Complex.I * z i - k) * Complex.I = -(Complex.I * k + z i) from by
     linear_combination (z i) * Complex.I_sq, div_neg, neg_div]
 
-end FMSA.MixtureRDF
+end FMSA.Analysis
