@@ -1,4 +1,4 @@
-import LeanCode.YukawaOZ.MixtureYukawaTransform
+import LeanCode.YukawaOZMix.MixtureYukawaTransform
 
 /-!
 # Residue extraction at the Yukawa poles (Tang & Lu eq (20)→(21))

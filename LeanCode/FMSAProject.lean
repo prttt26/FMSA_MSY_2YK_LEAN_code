@@ -10,7 +10,7 @@ import LeanCode.YukawaOZMix.MixtureDCFSmooth
 import LeanCode.YukawaOZMix.MixtureRealSpace
 import LeanCode.YukawaOZMix.ReflectedTermSupports
 import LeanCode.YukawaOZMix.MixtureRDFStructureFactor
-import LeanCode.YukawaOZ.MixtureYukawaContourTerm
+import LeanCode.YukawaOZMix.MixtureYukawaContourTerm
 
 /-!
 # FMSA-DP paper — scope and axiom gate

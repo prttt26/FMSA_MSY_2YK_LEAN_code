@@ -9,7 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.HardSphere.BaxterRealSpace
 import LeanCode.YukawaOZMix.InnerDecomp
-import LeanCode.HardSphere.Splitting
+import LeanCode.YukawaOZ.Splitting
 import LeanCode.HSMixture.HSMix
 
 /-!
@@ -119,7 +119,7 @@ theorem integral_Ici_eq_of_support {g : ℝ → ℂ} {R : ℝ}
 
 /-- **Anti-causal (inner `S₁`) side.**  For an amplitude `f` supported on `(−∞, R]`, the half-line
 Fourier integral over `Set.Iic R` equals the full-line one.  The `Set.Iic R` analogue of
-`FMSA.WienerHopf.T_S_eq_fourier_of_innerCore` (`[0,R]` case). -/
+`FMSA.YukawaWH.T_S_eq_fourier_of_innerCore` (`[0,R]` case). -/
 theorem fourier_Iic_eq_full {f : ℝ → ℂ} {R : ℝ} (k : ℝ)
     (hsupp : Function.support f ⊆ Set.Iic R) :
     ∫ r in Set.Iic R, f r * Complex.exp (-Complex.I * k * r)

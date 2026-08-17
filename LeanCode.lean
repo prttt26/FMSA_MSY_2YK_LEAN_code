@@ -88,7 +88,6 @@ import LeanCode.HardSphere.RadialLaplace
 import LeanCode.HardSphere.ShellKernel
 import LeanCode.HardSphere.SingleCompIdentity
 import LeanCode.HardSphere.SingleCompReduction
-import LeanCode.HardSphere.Splitting
 
 -- ===== Layer 2 — N-component pure hard-sphere mixture =====
 import LeanCode.HSMixture.AppendixWDet
@@ -135,6 +134,12 @@ import LeanCode.HSMixture.Q0DetLimit
 import LeanCode.HSMixture.Q0DetRankTwo
 import LeanCode.HSMixture.Q0MomentGeOne
 import LeanCode.HSMixture.WhiteBearFMT
+import LeanCode.HSMixture.MixtureCoercivityReduction
+import LeanCode.HSMixture.MixtureSymbolBridge
+import LeanCode.HSMixture.MatrixGramWienerHopf
+import LeanCode.HSMixture.MixtureWienerHopfN1
+import LeanCode.HSMixture.MatrixBaxterFourierWH
+import LeanCode.HSMixture.MatrixWienerKhinchin
 
 -- ===== Layer 3 — single-component Yukawa OZ (+ generic-scalar base) =====
 import LeanCode.YukawaOZ.BijReduction
@@ -144,11 +149,8 @@ import LeanCode.YukawaOZ.InnerOriginBC
 import LeanCode.YukawaOZ.MSAClosedForm
 import LeanCode.YukawaOZ.MSAElimination
 import LeanCode.YukawaOZ.MSABaxterTransform
-import LeanCode.YukawaOZ.MixtureYukawaContourTerm
-import LeanCode.YukawaOZ.MixtureYukawaResidue
-import LeanCode.YukawaOZ.MixtureYukawaTransform
 import LeanCode.YukawaOZ.OuterDCF
-import LeanCode.YukawaOZ.YukawaArcBound
+import LeanCode.YukawaOZ.Splitting
 import LeanCode.YukawaOZ.YukawaCausalProjection
 import LeanCode.YukawaOZ.YukawaInnerCore
 
@@ -170,12 +172,10 @@ import LeanCode.YukawaOZMix.MixturePolyCoeffs
 import LeanCode.YukawaOZMix.MixtureRDFAntideriv
 import LeanCode.YukawaOZMix.MixtureRDFContact
 import LeanCode.YukawaOZMix.MixtureRDFEqualDiam
-import LeanCode.HSMixture.MixtureCoercivityReduction
-import LeanCode.HSMixture.MixtureSymbolBridge
-import LeanCode.HSMixture.MatrixGramWienerHopf
-import LeanCode.HSMixture.MixtureWienerHopfN1
-import LeanCode.HSMixture.MatrixBaxterFourierWH
-import LeanCode.HSMixture.MatrixWienerKhinchin
+import LeanCode.YukawaOZMix.MixtureYukawaTransform
+import LeanCode.YukawaOZMix.MixtureYukawaResidue
+import LeanCode.YukawaOZMix.MixtureYukawaContourTerm
+import LeanCode.YukawaOZMix.YukawaArcBound
 import LeanCode.YukawaOZMix.MixtureRDFPoleData
 import LeanCode.YukawaOZMix.MixtureRDFStructureFactor
 import LeanCode.YukawaOZMix.MixtureRealSpace

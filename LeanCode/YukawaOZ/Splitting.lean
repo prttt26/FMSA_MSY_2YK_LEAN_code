@@ -26,7 +26,7 @@ not know by default — all goals involving `Complex.I` require `linear_combinat
 with `Complex.I_sq` as the hint.
 -/
 
-namespace FMSA.WienerHopf
+namespace FMSA.YukawaWH
 
 /-- The Yukawa denominator factors over ℂ as a product of the two Wiener–Hopf denominators. -/
 lemma yukawa_factor (k z : ℂ) :
@@ -117,4 +117,4 @@ theorem T_S_eq_fourier_of_innerCore (c : ℝ → ℝ) (R k : ℝ) (hR : 0 <= R)
   -- Goal: ∫ in Ioc 0 R = ∫ in Icc 0 R
   exact MeasureTheory.integral_Icc_eq_integral_Ioc.symm
 
-end FMSA.WienerHopf
+end FMSA.YukawaWH
