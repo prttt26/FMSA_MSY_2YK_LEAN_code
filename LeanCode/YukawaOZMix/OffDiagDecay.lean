@@ -87,11 +87,11 @@ mechanism hypotheses from `Q0DetLimit.lean`: the off-diagonal entry `→ 0`
 (`Q0_mat_phys_offdiag01_tendsto_zero`) and `det → 1 ≠ 0` (`Q0_mat_phys_det_tendsto_one`).
 **Axiom-clean** — the nonzero limit `L = 1` is *proved*, not assumed (no `Q0_moment_det_pos`). -/
 theorem g_mat_offdiag_decay_concrete (sigma rho : Fin 2 → ℝ)
-    (hσ : sigma 0 < sigma 1) (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i)
+    (hsigma : sigma 0 < sigma 1) (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i)
     (hsig : ∀ i, 0 < sigma i) :
     Tendsto (fun z => Q0_mat_phys z sigma rho 0 1 / (Q0_mat_phys z sigma rho).det) atTop (𝓝 0) :=
   g_mat_offdiag_decay'
-    (Q0_mat_phys_offdiag01_tendsto_zero sigma rho hσ hvac.ne' hrho hsig)
+    (Q0_mat_phys_offdiag01_tendsto_zero sigma rho hsigma hvac.ne' hrho hsig)
     (Q0_mat_phys_det_tendsto_one hvac.ne' hrho hsig)
     one_ne_zero
 

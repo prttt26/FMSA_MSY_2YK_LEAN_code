@@ -838,7 +838,7 @@ theorem k1_guess_hstep_of (eta sigma rho rr KK : ℝ) (n : ℕ)
           Dpoly eta sigma rho ((x : ℂ) + (y : ℂ) * Complex.I)) - ((sigma * y : ℝ) : ℂ)) := by
     unfold baxterPhi
     rw [hK, hxdef]
-    have hσ : ((sigma : ℝ) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hsigma.ne'
+    have hsigma : ((sigma : ℝ) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hsigma.ne'
     push_cast
     field_simp
     ring
@@ -884,15 +884,15 @@ theorem k1_guess_hstep_of (eta sigma rho rr KK : ℝ) (n : ℕ)
           Dpoly eta sigma rho ((x : ℂ) + (y : ℂ) * Complex.I)‖ - sigma * y| +
         |Complex.arg (Npoly eta sigma rho ((x : ℂ) + (y : ℂ) * Complex.I) /
           Dpoly eta sigma rho ((x : ℂ) + (y : ℂ) * Complex.I))|) := by
-        have hσ1 : (0:ℝ) ≤ 1 / sigma := by positivity
-        exact mul_le_mul_of_nonneg_left (log_sub_ofReal_norm_le _ _) hσ1
+        have hsigma1 : (0:ℝ) ≤ 1 / sigma := by positivity
+        exact mul_le_mul_of_nonneg_left (log_sub_ofReal_norm_le _ _) hsigma1
     _ ≤ (1 / sigma) *
         (deltaN eta sigma rho x y / (lowN eta sigma rho x - deltaN eta sigma rho x y) +
           deltaD eta sigma rho y / (lowD eta sigma rho x - deltaD eta sigma rho y) +
           Real.pi / 2 * ((|wIm eta sigma rho x| + deltaW eta sigma rho x y) /
             (wRe eta sigma rho x - deltaW eta sigma rho x y))) := by
-        have hσ1 : (0:ℝ) ≤ 1 / sigma := by positivity
-        apply mul_le_mul_of_nonneg_left _ hσ1
+        have hsigma1 : (0:ℝ) ≤ 1 / sigma := by positivity
+        apply mul_le_mul_of_nonneg_left _ hsigma1
         linarith [hlogW, harg]
     _ ≤ rr * (1 - KK) := hbudget
 
@@ -1367,7 +1367,7 @@ theorem k1_guess_hstep_of_thresholds (eta sigma rho rr KK ε : ℝ) (n : ℕ)
     exact hstep
   -- assemble the budget and close via the master theorem
   have hπ2 : (0 : ℝ) ≤ Real.pi / 2 := by positivity
-  have hσ1 : (0 : ℝ) ≤ 1 / sigma := by positivity
+  have hsigma1 : (0 : ℝ) ≤ 1 / sigma := by positivity
   have hsum : deltaN eta sigma rho x y / (lowN eta sigma rho x - deltaN eta sigma rho x y) +
       deltaD eta sigma rho y / (lowD eta sigma rho x - deltaD eta sigma rho y) +
       Real.pi / 2 * ((|wIm eta sigma rho x| + deltaW eta sigma rho x y) /
@@ -1378,7 +1378,7 @@ theorem k1_guess_hstep_of_thresholds (eta sigma rho rr KK ε : ℝ) (n : ℕ)
     have h3 := mul_le_mul_of_nonneg_left ht3 hπ2
     linarith [ht1, ht2, h3]
   exact k1_guess_hstep_of eta sigma rho rr KK n hsigma hQp hxdef hydef hx0 hy0
-    hNgap hDgap hwgap (le_trans (mul_le_mul_of_nonneg_left hsum hσ1) hbud)
+    hNgap hDgap hwgap (le_trans (mul_le_mul_of_nonneg_left hsum hsigma1) hbud)
 
 /-- **The `POLE.7` threshold/eventually theorem**: for every positive chord target
 `rr·(1−KK)` the residual bound of the master `k1_guess_hstep_of` holds for all
@@ -1552,9 +1552,9 @@ theorem k1_guess_hstep_eventually (eta sigma rho rr KK : ℝ)
       have h1 : (1 / sigma) * (ε * Ks) = ε * Ks / sigma := by ring
       rw [h1, div_le_div_iff₀ hsigma (by norm_num : (0 : ℝ) < 2)]
       linarith [hεK]
-    have hστQ : (0 : ℝ) < sigma * (rho * q_prime_py eta sigma) * (rr * (1 - KK)) :=
+    have hsigmaτQ : (0 : ℝ) < sigma * (rho * q_prime_py eta sigma) * (rr * (1 - KK)) :=
       mul_pos (mul_pos hsigma hQp) htarget
-    rw [div_le_iff₀ hστQ] at hxI
+    rw [div_le_iff₀ hsigmaτQ] at hxI
     have hQx : (0 : ℝ) < rho * q_prime_py eta sigma * (2 * Real.pi * (n : ℝ) / sigma) :=
       mul_pos hQp hx0
     have hpart2 : (1 / sigma) * (Real.pi / 2 * (4 * guessCI eta sigma rho /

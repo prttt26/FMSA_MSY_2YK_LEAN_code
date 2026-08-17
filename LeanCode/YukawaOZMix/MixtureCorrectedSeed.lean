@@ -1534,12 +1534,12 @@ theorem matDCFfold_to_twoArm (Q Psi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sig
   have hfz : ∀ v, v ∉ Set.Icc (-sigma) sigma →
       matDCFfoldKernel Q i k v * Psi k j (r + v) = 0 := by
     intro v hv
-    have hσv : sigma < |v| := by
+    have hsigmav : sigma < |v| := by
       rw [Set.mem_Icc, not_and_or, not_le, not_le] at hv
       rcases hv with h | h
       · rw [abs_of_neg (by linarith : v < 0)]; linarith
       · rw [abs_of_pos (by linarith : (0:ℝ) < v)]; linarith
-    rw [hsupp v hσv, zero_mul]
+    rw [hsupp v hsigmav, zero_mul]
   have hfull : (∫ v, matDCFfoldKernel Q i k v * Psi k j (r + v))
       = ∫ v in (-sigma)..sigma, matDCFfoldKernel Q i k v * Psi k j (r + v) := by
     rw [intervalIntegral.integral_of_le (by linarith : -sigma ≤ sigma),

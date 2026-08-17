@@ -362,7 +362,7 @@ combine as `−λ_im + (−R_mn) + R_nj = R_ij − σ_m`: the intermediate speci
 `m` survives only as the *margin* `σ_m`.  (Contact algebra `R_ab = (σ_a+σ_b)/2`,
 `λ_ab = (σ_b−σ_a)/2` — the same cancellation pattern as `MixtureConvolution.pbp_edge_eq`.) -/
 theorem reflected_rdf_edge_eq {N M : ℕ} (X : Mix N M) (i m n j : Fin N) :
-    -(X.lam i m) + -(X.R m n) + X.R n j = X.R i j - X.σ m := by
+    -(X.lam i m) + -(X.R m n) + X.R n j = X.R i j - X.sigma m := by
   simp only [Mix.R, Mix.lam]
   ring
 
@@ -379,7 +379,7 @@ theorem reflected_rdf_conj_support_physical {N M : ℕ} (X : Mix N M) (i m n j :
     Function.support
         ((q0MixEntryRefl X i m ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (fun r => h1 (-r)))
           ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (q0MixEntry X n j))
-      ⊆ Set.Iic (X.R i j - X.σ m) := by
+      ⊆ Set.Iic (X.R i j - X.sigma m) := by
   have hinner : Function.support
       (q0MixEntryRefl X i m ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (fun r => h1 (-r)))
       ⊆ Set.Iic (-(X.lam i m) + -(X.R m n)) := by
@@ -403,7 +403,7 @@ theorem reflected_rdf_conj_eq_zero_of_contact_le {N M : ℕ} (X : Mix N M) (i m 
   by_contra hne
   have hmem := reflected_rdf_conj_support_physical X i m n j h1 hhard hne
   rw [Set.mem_Iic] at hmem
-  have hpos : 0 < X.σ m := X.hσ m
+  have hpos : 0 < X.sigma m := X.hsigma m
   linarith
 
 /-! #### The fourth atom: the inverse Baxter factors -/

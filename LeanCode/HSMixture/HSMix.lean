@@ -21,23 +21,23 @@ namespace FMSA.HSMix
 /-- Pure hard-sphere mixture data (no Yukawa tail). -/
 structure _root_.FMSA.HSMix (N : ℕ) where
   /-- Hard-sphere diameters. -/
-  σ : Fin N → ℝ
+  sigma : Fin N → ℝ
   /-- Number densities. -/
-  ρ : Fin N → ℝ
+  rho : Fin N → ℝ
   /-- Baxter `Q₀` matrix. -/
   Q0 : Fin N → Fin N → ℝ
   /-- Baxter `Q''` diagonal. -/
   Qpp : Fin N → ℝ
   /-- Diameters are strictly positive. -/
-  hσ : ∀ k, 0 < σ k
+  hsigma : ∀ k, 0 < sigma k
 
 variable {N : ℕ} (X : FMSA.HSMix N)
 
 /-- Contact distance `R[i,j] = (σᵢ + σⱼ)/2`. -/
-noncomputable def R (i j : Fin N) : ℝ := (X.σ i + X.σ j) / 2
+noncomputable def R (i j : Fin N) : ℝ := (X.sigma i + X.sigma j) / 2
 
 /-- Size-asymmetry parameter `λ[k,l] = (σ[l] − σ[k])/2` (second index minus first). -/
-noncomputable def lam (k l : Fin N) : ℝ := (X.σ l - X.σ k) / 2
+noncomputable def lam (k l : Fin N) : ℝ := (X.sigma l - X.sigma k) / 2
 
 /-- The real-space Baxter entry — the quadratic on `[λᵢⱼ, Rᵢⱼ]`, `0` outside. -/
 noncomputable def q0MixEntry (i j : Fin N) (r : ℝ) : ℝ :=

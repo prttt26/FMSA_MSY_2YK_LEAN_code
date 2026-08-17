@@ -19,6 +19,8 @@ Together with the real removable values `p1 → −σ²/2`, `p2 → σ³/6` (`p1
 analytic input to `c ≠ 0` (`MixtureDetOrigin.lean`).  **Axiom-clean** — no physics axiom.
 -/
 
+set_option linter.style.longLine false
+
 open Filter Topology
 
 namespace FMSA.MatrixQ0
@@ -33,26 +35,26 @@ theorem ofReal_tendsto_nhdsNE : Tendsto (Complex.ofReal) (𝓝[≠] (0:ℝ)) (�
     exact Complex.ofReal_ne_zero.mpr hz
 
 /-- `p1(σ,z) → −σ²/2` as `z → 0` (real removable value of the Baxter `φ₁` kernel). -/
-theorem p1_tendsto_zero_nhds {σ : ℝ} (hσ : σ ≠ 0) :
-    Tendsto (fun z : ℝ => p1 σ z) (𝓝[≠] (0:ℝ)) (𝓝 (-σ ^ 2 / 2)) := by
+theorem p1_tendsto_zero_nhds {sigma : ℝ} (hsigma : sigma ≠ 0) :
+    Tendsto (fun z : ℝ => p1 sigma z) (𝓝[≠] (0:ℝ)) (𝓝 (-sigma ^ 2 / 2)) := by
   rw [← tendsto_ofReal_iff]
-  have heq : (fun z : ℝ => ((p1 σ z : ℝ) : ℂ))
-      = (fun s : ℂ => (1 - s * (σ : ℂ) - Complex.exp (-(s * (σ : ℂ)))) / s ^ 2) ∘ Complex.ofReal := by
+  have heq : (fun z : ℝ => ((p1 sigma z : ℝ) : ℂ))
+      = (fun s : ℂ => (1 - s * (sigma : ℂ) - Complex.exp (-(s * (sigma : ℂ)))) / s ^ 2) ∘ Complex.ofReal := by
     funext z; simp only [Function.comp_apply, p1]; push_cast [Complex.ofReal_exp]; ring
-  rw [heq, show (((-σ ^ 2 / 2 : ℝ)) : ℂ) = -(σ : ℂ) ^ 2 / 2 by push_cast; ring]
-  exact (FMSA.ExpTaylorLimits.phi1_tendsto (σ : ℂ) (Complex.ofReal_ne_zero.mpr hσ)).comp
+  rw [heq, show (((-sigma ^ 2 / 2 : ℝ)) : ℂ) = -(sigma : ℂ) ^ 2 / 2 by push_cast; ring]
+  exact (FMSA.ExpTaylorLimits.phi1_tendsto (sigma : ℂ) (Complex.ofReal_ne_zero.mpr hsigma)).comp
     ofReal_tendsto_nhdsNE
 
 /-- `p2(σ,z) → σ³/6` as `z → 0` (real removable value of the Baxter `φ₂` kernel). -/
-theorem p2_tendsto_zero_nhds {σ : ℝ} (hσ : σ ≠ 0) :
-    Tendsto (fun z : ℝ => p2 σ z) (𝓝[≠] (0:ℝ)) (𝓝 (σ ^ 3 / 6)) := by
+theorem p2_tendsto_zero_nhds {sigma : ℝ} (hsigma : sigma ≠ 0) :
+    Tendsto (fun z : ℝ => p2 sigma z) (𝓝[≠] (0:ℝ)) (𝓝 (sigma ^ 3 / 6)) := by
   rw [← tendsto_ofReal_iff]
-  have heq : (fun z : ℝ => ((p2 σ z : ℝ) : ℂ))
-      = (fun s : ℂ => (1 - s * (σ : ℂ) + (s * (σ : ℂ)) ^ 2 / 2 - Complex.exp (-(s * (σ : ℂ)))) / s ^ 3)
+  have heq : (fun z : ℝ => ((p2 sigma z : ℝ) : ℂ))
+      = (fun s : ℂ => (1 - s * (sigma : ℂ) + (s * (sigma : ℂ)) ^ 2 / 2 - Complex.exp (-(s * (sigma : ℂ)))) / s ^ 3)
           ∘ Complex.ofReal := by
     funext z; simp only [Function.comp_apply, p2]; push_cast [Complex.ofReal_exp]; ring
-  rw [heq, show (((σ ^ 3 / 6 : ℝ)) : ℂ) = (σ : ℂ) ^ 3 / 6 by push_cast; ring]
-  exact (FMSA.ExpTaylorLimits.phi2_tendsto (σ : ℂ) (Complex.ofReal_ne_zero.mpr hσ)).comp
+  rw [heq, show (((sigma ^ 3 / 6 : ℝ)) : ℂ) = (sigma : ℂ) ^ 3 / 6 by push_cast; ring]
+  exact (FMSA.ExpTaylorLimits.phi2_tendsto (sigma : ℂ) (Complex.ofReal_ne_zero.mpr hsigma)).comp
     ofReal_tendsto_nhdsNE
 
 /-- **`det(Q̂₀) ≥ 1`** (stronger than `Q0_moment_det_pos`): `moment_key` gives `ad − bc ≥ a + d`, so

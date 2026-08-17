@@ -51,108 +51,110 @@ introducing them is the one remaining piece.  The exponent cancellation, the far
 bounds/decay, and the assembly logic (this file) are all in place.
 -/
 
+set_option linter.style.longLine false
+
 open Complex
 
 namespace FMSA.MixtureArcBound
 
 /-- **Additive-diameter cancellation, leading term** (`m = i`, `n = j`): the net exponent
 `σᵢ/2 − Rᵢⱼ + σⱼ/2` of `E(−y)ᵢᵢ·U₁(y)ᵢⱼ·E(−y)ⱼⱼ` vanishes. -/
-theorem expSum_diag_eq_zero {N : ℕ} (σ : Fin N → ℝ) (i j : Fin N) :
-    σ i / 2 - (σ i + σ j) / 2 + σ j / 2 = 0 := by ring
+theorem expSum_diag_eq_zero {N : ℕ} (sigma : Fin N → ℝ) (i j : Fin N) :
+    sigma i / 2 - (sigma i + sigma j) / 2 + sigma j / 2 = 0 := by ring
 
 /-- **Additive-diameter cancellation, left term** (`m = i`): the net exponent
 `σᵢ/2 − Rᵢₙ + λⱼₙ + σⱼ/2` of `E(−y)ᵢᵢ·U₁(y)ᵢₙ·{[Q̂₀ᵀ(−y)]⁻¹}ₙⱼ·E(−y)ⱼⱼ` vanishes. -/
-theorem expSum_left_eq_zero {N : ℕ} (σ : Fin N → ℝ) (i j n : Fin N) :
-    σ i / 2 - (σ i + σ n) / 2 + (σ n - σ j) / 2 + σ j / 2 = 0 := by ring
+theorem expSum_left_eq_zero {N : ℕ} (sigma : Fin N → ℝ) (i j n : Fin N) :
+    sigma i / 2 - (sigma i + sigma n) / 2 + (sigma n - sigma j) / 2 + sigma j / 2 = 0 := by ring
 
 /-- **Additive-diameter cancellation, right term** (`n = j`): the net exponent
 `σᵢ/2 + λᵢₘ − Rₘⱼ + σⱼ/2` of `E(−y)ᵢᵢ·{[Q̂₀(−y)]⁻¹}ᵢₘ·U₁(y)ₘⱼ·E(−y)ⱼⱼ` vanishes. -/
-theorem expSum_right_eq_zero {N : ℕ} (σ : Fin N → ℝ) (i j m : Fin N) :
-    σ i / 2 + (σ m - σ i) / 2 - (σ m + σ j) / 2 + σ j / 2 = 0 := by ring
+theorem expSum_right_eq_zero {N : ℕ} (sigma : Fin N → ℝ) (i j m : Fin N) :
+    sigma i / 2 + (sigma m - sigma i) / 2 - (sigma m + sigma j) / 2 + sigma j / 2 = 0 := by ring
 
 /-- **Additive-diameter cancellation, both** (general `m`, `n`): the net exponent
 `σᵢ/2 + λᵢₘ − Rₘₙ + λⱼₙ + σⱼ/2` of the full product term vanishes. -/
-theorem expSum_both_eq_zero {N : ℕ} (σ : Fin N → ℝ) (i j m n : Fin N) :
-    σ i / 2 + (σ m - σ i) / 2 - (σ m + σ n) / 2 + (σ n - σ j) / 2 + σ j / 2 = 0 := by ring
+theorem expSum_both_eq_zero {N : ℕ} (sigma : Fin N → ℝ) (i j m n : Fin N) :
+    sigma i / 2 + (sigma m - sigma i) / 2 - (sigma m + sigma n) / 2 + (sigma n - sigma j) / 2 + sigma j / 2 = 0 := by ring
 
 /-- **Far-region bound on `φ₁ = (1−sσ−e^{−sσ})/s²`.**  For `‖s‖ ≥ 1` and `Re(sσ) ≥ 0` (the arc,
 where `s = −iy`, `Re s = R sinθ ≥ 0`, `σ` real ≥ 0), `‖φ₁‖ ≤ 2 + ‖σ‖`.  (Uses `‖e^{−sσ}‖ ≤ 1`.) -/
-theorem normP2_arc_le {s σ : ℂ} (hs : 1 ≤ ‖s‖) (hre : 0 ≤ (s * σ).re) :
-    ‖(1 - s * σ - Complex.exp (-(s * σ))) / s ^ 2‖ ≤ 2 + ‖σ‖ := by
-  have hexp : ‖Complex.exp (-(s * σ))‖ ≤ 1 := by
+theorem normP2_arc_le {s sigma : ℂ} (hs : 1 ≤ ‖s‖) (hre : 0 ≤ (s * sigma).re) :
+    ‖(1 - s * sigma - Complex.exp (-(s * sigma))) / s ^ 2‖ ≤ 2 + ‖sigma‖ := by
+  have hexp : ‖Complex.exp (-(s * sigma))‖ ≤ 1 := by
     rw [Complex.norm_exp, Complex.neg_re]
     exact Real.exp_le_one_iff.mpr (by linarith)
-  have hnum : ‖1 - s * σ - Complex.exp (-(s * σ))‖ ≤ 2 + ‖s‖ * ‖σ‖ := by
-    calc ‖1 - s * σ - Complex.exp (-(s * σ))‖
-        ≤ ‖1 - s * σ‖ + ‖Complex.exp (-(s * σ))‖ := norm_sub_le _ _
-      _ ≤ (‖(1:ℂ)‖ + ‖s * σ‖) + 1 := by gcongr; exact norm_sub_le _ _
-      _ = 2 + ‖s‖ * ‖σ‖ := by rw [norm_one, norm_mul]; ring
+  have hnum : ‖1 - s * sigma - Complex.exp (-(s * sigma))‖ ≤ 2 + ‖s‖ * ‖sigma‖ := by
+    calc ‖1 - s * sigma - Complex.exp (-(s * sigma))‖
+        ≤ ‖1 - s * sigma‖ + ‖Complex.exp (-(s * sigma))‖ := norm_sub_le _ _
+      _ ≤ (‖(1:ℂ)‖ + ‖s * sigma‖) + 1 := by gcongr; exact norm_sub_le _ _
+      _ = 2 + ‖s‖ * ‖sigma‖ := by rw [norm_one, norm_mul]; ring
   rw [norm_div, norm_pow, div_le_iff₀ (by positivity)]
   have hs2 : ‖s‖ ≤ ‖s‖ ^ 2 := by nlinarith [norm_nonneg s]
-  nlinarith [norm_nonneg σ, norm_nonneg s, hnum, hs, hs2]
+  nlinarith [norm_nonneg sigma, norm_nonneg s, hnum, hs, hs2]
 
 /-- **Far-region bound on `φ₂ = (1−sσ+(sσ)²/2−e^{−sσ})/s³`.**  For `‖s‖ ≥ 1` and `Re(sσ) ≥ 0`,
 `‖φ₂‖ ≤ 2 + ‖σ‖ + ‖σ‖²/2`. -/
-theorem normP3_arc_le {s σ : ℂ} (hs : 1 ≤ ‖s‖) (hre : 0 ≤ (s * σ).re) :
-    ‖(1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) / s ^ 3‖
-      ≤ 2 + ‖σ‖ + ‖σ‖ ^ 2 / 2 := by
-  have hexp : ‖Complex.exp (-(s * σ))‖ ≤ 1 := by
+theorem normP3_arc_le {s sigma : ℂ} (hs : 1 ≤ ‖s‖) (hre : 0 ≤ (s * sigma).re) :
+    ‖(1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) / s ^ 3‖
+      ≤ 2 + ‖sigma‖ + ‖sigma‖ ^ 2 / 2 := by
+  have hexp : ‖Complex.exp (-(s * sigma))‖ ≤ 1 := by
     rw [Complex.norm_exp, Complex.neg_re]
     exact Real.exp_le_one_iff.mpr (by linarith)
-  have hsq : ‖(s * σ) ^ 2 / 2‖ = ‖s‖ ^ 2 * ‖σ‖ ^ 2 / 2 := by
+  have hsq : ‖(s * sigma) ^ 2 / 2‖ = ‖s‖ ^ 2 * ‖sigma‖ ^ 2 / 2 := by
     rw [norm_div, norm_pow, norm_mul, mul_pow]; simp
-  have hnum : ‖1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))‖
-      ≤ 2 + ‖s‖ * ‖σ‖ + ‖s‖ ^ 2 * ‖σ‖ ^ 2 / 2 := by
-    calc ‖1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))‖
-        ≤ ‖1 - s * σ + (s * σ) ^ 2 / 2‖ + ‖Complex.exp (-(s * σ))‖ := norm_sub_le _ _
-      _ ≤ ((‖(1:ℂ)‖ + ‖s * σ‖) + ‖(s * σ) ^ 2 / 2‖) + 1 := by
+  have hnum : ‖1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))‖
+      ≤ 2 + ‖s‖ * ‖sigma‖ + ‖s‖ ^ 2 * ‖sigma‖ ^ 2 / 2 := by
+    calc ‖1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))‖
+        ≤ ‖1 - s * sigma + (s * sigma) ^ 2 / 2‖ + ‖Complex.exp (-(s * sigma))‖ := norm_sub_le _ _
+      _ ≤ ((‖(1:ℂ)‖ + ‖s * sigma‖) + ‖(s * sigma) ^ 2 / 2‖) + 1 := by
             gcongr
             exact (norm_add_le _ _).trans (by gcongr; exact norm_sub_le _ _)
-      _ = 2 + ‖s‖ * ‖σ‖ + ‖s‖ ^ 2 * ‖σ‖ ^ 2 / 2 := by rw [norm_one, norm_mul, hsq]; ring
+      _ = 2 + ‖s‖ * ‖sigma‖ + ‖s‖ ^ 2 * ‖sigma‖ ^ 2 / 2 := by rw [norm_one, norm_mul, hsq]; ring
   rw [norm_div, norm_pow, div_le_iff₀ (by positivity)]
   have h1 : ‖s‖ ≤ ‖s‖ ^ 3 := by nlinarith [norm_nonneg s]
   have h2 : ‖s‖ ^ 2 ≤ ‖s‖ ^ 3 := by nlinarith [norm_nonneg s]
   have h3 : (1:ℝ) ≤ ‖s‖ ^ 3 := by nlinarith [norm_nonneg s]
-  nlinarith [norm_nonneg σ, norm_nonneg s, hnum, mul_nonneg (norm_nonneg σ) (norm_nonneg σ)]
+  nlinarith [norm_nonneg sigma, norm_nonneg s, hnum, mul_nonneg (norm_nonneg sigma) (norm_nonneg sigma)]
 
 /-! ### Decay versions — `φ → 0`, needed for `det(−iy) → 1` (bounded below) -/
 
 /-- **Far-region decay of `φ₁`.**  `‖(1−sσ−e^{−sσ})/s²‖ ≤ (2+‖σ‖)/‖s‖ → 0` for `‖s‖ ≥ 1`,
 `Re(sσ) ≥ 0` — the sharper `1/‖s‖` version of `normP2_arc_le`, so `φ₁ → 0` on the arc. -/
-theorem normP2_arc_decay {s σ : ℂ} (hs : 1 ≤ ‖s‖) (hre : 0 ≤ (s * σ).re) :
-    ‖(1 - s * σ - Complex.exp (-(s * σ))) / s ^ 2‖ ≤ (2 + ‖σ‖) / ‖s‖ := by
+theorem normP2_arc_decay {s sigma : ℂ} (hs : 1 ≤ ‖s‖) (hre : 0 ≤ (s * sigma).re) :
+    ‖(1 - s * sigma - Complex.exp (-(s * sigma))) / s ^ 2‖ ≤ (2 + ‖sigma‖) / ‖s‖ := by
   have hs0 : (0:ℝ) < ‖s‖ := by linarith
-  have hexp : ‖Complex.exp (-(s * σ))‖ ≤ 1 := by
+  have hexp : ‖Complex.exp (-(s * sigma))‖ ≤ 1 := by
     rw [Complex.norm_exp, Complex.neg_re]; exact Real.exp_le_one_iff.mpr (by linarith)
-  have hnum : ‖1 - s * σ - Complex.exp (-(s * σ))‖ ≤ 2 + ‖s‖ * ‖σ‖ := by
-    calc ‖1 - s * σ - Complex.exp (-(s * σ))‖
-        ≤ ‖1 - s * σ‖ + ‖Complex.exp (-(s * σ))‖ := norm_sub_le _ _
-      _ ≤ (‖(1:ℂ)‖ + ‖s * σ‖) + 1 := by gcongr; exact norm_sub_le _ _
-      _ = 2 + ‖s‖ * ‖σ‖ := by rw [norm_one, norm_mul]; ring
+  have hnum : ‖1 - s * sigma - Complex.exp (-(s * sigma))‖ ≤ 2 + ‖s‖ * ‖sigma‖ := by
+    calc ‖1 - s * sigma - Complex.exp (-(s * sigma))‖
+        ≤ ‖1 - s * sigma‖ + ‖Complex.exp (-(s * sigma))‖ := norm_sub_le _ _
+      _ ≤ (‖(1:ℂ)‖ + ‖s * sigma‖) + 1 := by gcongr; exact norm_sub_le _ _
+      _ = 2 + ‖s‖ * ‖sigma‖ := by rw [norm_one, norm_mul]; ring
   rw [norm_div, norm_pow, div_le_div_iff₀ (by positivity) hs0]
-  nlinarith [norm_nonneg σ, norm_nonneg s, hnum, hs]
+  nlinarith [norm_nonneg sigma, norm_nonneg s, hnum, hs]
 
 /-- **Far-region decay of `φ₂`.**  `‖(1−sσ+(sσ)²/2−e^{−sσ})/s³‖ ≤ (2+‖σ‖+‖σ‖²/2)/‖s‖ → 0` for
 `‖s‖ ≥ 1`, `Re(sσ) ≥ 0` — the sharper `1/‖s‖` version of `normP3_arc_le`. -/
-theorem normP3_arc_decay {s σ : ℂ} (hs : 1 ≤ ‖s‖) (hre : 0 ≤ (s * σ).re) :
-    ‖(1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) / s ^ 3‖
-      ≤ (2 + ‖σ‖ + ‖σ‖ ^ 2 / 2) / ‖s‖ := by
+theorem normP3_arc_decay {s sigma : ℂ} (hs : 1 ≤ ‖s‖) (hre : 0 ≤ (s * sigma).re) :
+    ‖(1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) / s ^ 3‖
+      ≤ (2 + ‖sigma‖ + ‖sigma‖ ^ 2 / 2) / ‖s‖ := by
   have hs0 : (0:ℝ) < ‖s‖ := by linarith
-  have hexp : ‖Complex.exp (-(s * σ))‖ ≤ 1 := by
+  have hexp : ‖Complex.exp (-(s * sigma))‖ ≤ 1 := by
     rw [Complex.norm_exp, Complex.neg_re]; exact Real.exp_le_one_iff.mpr (by linarith)
-  have hsq : ‖(s * σ) ^ 2 / 2‖ = ‖s‖ ^ 2 * ‖σ‖ ^ 2 / 2 := by
+  have hsq : ‖(s * sigma) ^ 2 / 2‖ = ‖s‖ ^ 2 * ‖sigma‖ ^ 2 / 2 := by
     rw [norm_div, norm_pow, norm_mul, mul_pow]; simp
-  have hnum : ‖1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))‖
-      ≤ 2 + ‖s‖ * ‖σ‖ + ‖s‖ ^ 2 * ‖σ‖ ^ 2 / 2 := by
-    calc ‖1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))‖
-        ≤ ‖1 - s * σ + (s * σ) ^ 2 / 2‖ + ‖Complex.exp (-(s * σ))‖ := norm_sub_le _ _
-      _ ≤ ((‖(1:ℂ)‖ + ‖s * σ‖) + ‖(s * σ) ^ 2 / 2‖) + 1 := by
+  have hnum : ‖1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))‖
+      ≤ 2 + ‖s‖ * ‖sigma‖ + ‖s‖ ^ 2 * ‖sigma‖ ^ 2 / 2 := by
+    calc ‖1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))‖
+        ≤ ‖1 - s * sigma + (s * sigma) ^ 2 / 2‖ + ‖Complex.exp (-(s * sigma))‖ := norm_sub_le _ _
+      _ ≤ ((‖(1:ℂ)‖ + ‖s * sigma‖) + ‖(s * sigma) ^ 2 / 2‖) + 1 := by
             gcongr
             exact (norm_add_le _ _).trans (by gcongr; exact norm_sub_le _ _)
-      _ = 2 + ‖s‖ * ‖σ‖ + ‖s‖ ^ 2 * ‖σ‖ ^ 2 / 2 := by rw [norm_one, norm_mul, hsq]; ring
+      _ = 2 + ‖s‖ * ‖sigma‖ + ‖s‖ ^ 2 * ‖sigma‖ ^ 2 / 2 := by rw [norm_one, norm_mul, hsq]; ring
   rw [norm_div, norm_pow, div_le_div_iff₀ (by positivity) hs0]
   have h2 : ‖s‖ ^ 2 ≤ ‖s‖ ^ 3 := by nlinarith [norm_nonneg s]
-  nlinarith [norm_nonneg σ, norm_nonneg s, hnum, hs, h2, mul_nonneg (norm_nonneg σ) (norm_nonneg σ)]
+  nlinarith [norm_nonneg sigma, norm_nonneg s, hnum, hs, h2, mul_nonneg (norm_nonneg sigma) (norm_nonneg sigma)]
 
 /-! ### (C) Assembly logic — amplitude bounded from `W` bounded and `det` bounded below -/
 

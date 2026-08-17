@@ -39,6 +39,8 @@ matching its entries to `2π√(ρρ)W/(Δ det)·e^{−ikλ}`.  This is a whole-
 scalar base case (no `2×2` inverse), which is why it closes to `ring`.
 -/
 
+set_option linter.style.longLine false
+
 open Complex
 
 namespace FMSA.MixtureRDF
@@ -48,11 +50,11 @@ open FMSA.MatrixQ0 FMSA.Q0Complex FMSA.MixtureArcBound
 /-- **Appendix bridge, `N = 1` (Baxter-factor form).**  The scalar Baxter factor `q0` equals
 `1 − 2π√(ρ₀ρ₀)·W₀₀/Δ` — the `N = 1` case of Tang & Lu's inverse formula (the physical PY
 coefficients `Q'phys`, `Q''phys` are precisely the `Wtl` coefficients; `Δ = vacMix`). -/
-theorem bridge_N1 {σ ρ : Fin 1 → ℝ} (s : ℂ) (hs : s ≠ 0) (hvac : vacMix ρ σ ≠ 0) :
-    q0_entry_c s (σ 0) 0 (Q0phys ρ σ 0 0) (Qppphys ρ σ 0 0) (rhoGeoPhys ρ 0 0) 1
-      = 1 - 2 * Real.pi * (rhoGeoPhys ρ 0 0 : ℂ) * Wtl s ρ σ 0 0 / (vacMix ρ σ : ℂ) := by
-  have hvacC : (vacMix ρ σ : ℂ) ≠ 0 := by exact_mod_cast hvac
-  have hDvac : (Delta ρ σ : ℂ) = (vacMix ρ σ : ℂ) := by norm_cast
+theorem bridge_N1 {sigma rho : Fin 1 → ℝ} (s : ℂ) (hs : s ≠ 0) (hvac : vacMix rho sigma ≠ 0) :
+    q0_entry_c s (sigma 0) 0 (Q0phys rho sigma 0 0) (Qppphys rho sigma 0 0) (rhoGeoPhys rho 0 0) 1
+      = 1 - 2 * Real.pi * (rhoGeoPhys rho 0 0 : ℂ) * Wtl s rho sigma 0 0 / (vacMix rho sigma : ℂ) := by
+  have hvacC : (vacMix rho sigma : ℂ) ≠ 0 := by exact_mod_cast hvac
+  have hDvac : (Delta rho sigma : ℂ) = (vacMix rho sigma : ℂ) := by norm_cast
   simp only [q0_entry_c, Wtl, phi1, phi2, Q0phys, Qppphys, rhoGeoPhys, xi2, xiMom,
     Fin.sum_univ_one, zero_mul, mul_zero, neg_zero, Complex.exp_zero, sub_self, hDvac]
   push_cast
@@ -62,13 +64,13 @@ theorem bridge_N1 {σ ρ : Fin 1 → ℝ} (s : ℂ) (hs : s ≠ 0) (hvac : vacMi
 /-- **Appendix bridge, `N = 1` (inverse form).**  The actual Tang & Lu bridge at `N = 1`:
 `[Q̂₀]⁻¹ = q0⁻¹ = 1 + 2π√(ρρ)W₀₀/(Δ·det)` with `det = q0` (scalar).  From `bridge_N1` by
 division. -/
-theorem bridge_N1_inv {σ ρ : Fin 1 → ℝ} (s : ℂ) (hs : s ≠ 0) (hvac : vacMix ρ σ ≠ 0)
-    (hq0 : q0_entry_c s (σ 0) 0 (Q0phys ρ σ 0 0) (Qppphys ρ σ 0 0) (rhoGeoPhys ρ 0 0) 1 ≠ 0) :
-    (q0_entry_c s (σ 0) 0 (Q0phys ρ σ 0 0) (Qppphys ρ σ 0 0) (rhoGeoPhys ρ 0 0) 1)⁻¹
-      = 1 + 2 * Real.pi * (rhoGeoPhys ρ 0 0 : ℂ) * Wtl s ρ σ 0 0
-          / ((vacMix ρ σ : ℂ)
-              * q0_entry_c s (σ 0) 0 (Q0phys ρ σ 0 0) (Qppphys ρ σ 0 0) (rhoGeoPhys ρ 0 0) 1) := by
-  have hvacC : (vacMix ρ σ : ℂ) ≠ 0 := by exact_mod_cast hvac
+theorem bridge_N1_inv {sigma rho : Fin 1 → ℝ} (s : ℂ) (hs : s ≠ 0) (hvac : vacMix rho sigma ≠ 0)
+    (hq0 : q0_entry_c s (sigma 0) 0 (Q0phys rho sigma 0 0) (Qppphys rho sigma 0 0) (rhoGeoPhys rho 0 0) 1 ≠ 0) :
+    (q0_entry_c s (sigma 0) 0 (Q0phys rho sigma 0 0) (Qppphys rho sigma 0 0) (rhoGeoPhys rho 0 0) 1)⁻¹
+      = 1 + 2 * Real.pi * (rhoGeoPhys rho 0 0 : ℂ) * Wtl s rho sigma 0 0
+          / ((vacMix rho sigma : ℂ)
+              * q0_entry_c s (sigma 0) 0 (Q0phys rho sigma 0 0) (Qppphys rho sigma 0 0) (rhoGeoPhys rho 0 0) 1) := by
+  have hvacC : (vacMix rho sigma : ℂ) ≠ 0 := by exact_mod_cast hvac
   have hb := bridge_N1 s hs hvac
   field_simp
   rw [eq_comm, mul_comm]
@@ -79,14 +81,14 @@ theorem bridge_N1_inv {σ ρ : Fin 1 → ℝ} (s : ℂ) (hs : s ≠ 0) (hvac : v
 formula `detTL` equals the scalar Baxter factor `q0 = det Q̂₀` (`√(ρ₀²) = ρ₀`, `ρ₀ ≥ 0`).  With
 `bridge_N1_inv` this closes the `N=1` bridge to the *actual* objects:
 `[Q̂₀]⁻¹ = 1 + 2π√(ρρ)W₀₀/(Δ·detTL)` with `detTL = det Q̂₀`. -/
-theorem detTL_eq_q0_N1 {σ ρ : Fin 1 → ℝ} (s : ℂ) (hs : s ≠ 0) (hvac : vacMix ρ σ ≠ 0)
-    (hρ : 0 ≤ ρ 0) :
-    detTL s ρ σ
-      = q0_entry_c s (σ 0) 0 (Q0phys ρ σ 0 0) (Qppphys ρ σ 0 0) (rhoGeoPhys ρ 0 0) 1 := by
-  have hvacC : (vacMix ρ σ : ℂ) ≠ 0 := by exact_mod_cast hvac
-  have hDvac : (Delta ρ σ : ℂ) = (vacMix ρ σ : ℂ) := by norm_cast
-  have hsqrt : (rhoGeoPhys ρ 0 0 : ℝ) = ρ 0 := by
-    simp only [rhoGeoPhys]; rw [Real.sqrt_mul_self hρ]
+theorem detTL_eq_q0_N1 {sigma rho : Fin 1 → ℝ} (s : ℂ) (hs : s ≠ 0) (hvac : vacMix rho sigma ≠ 0)
+    (hrho : 0 ≤ rho 0) :
+    detTL s rho sigma
+      = q0_entry_c s (sigma 0) 0 (Q0phys rho sigma 0 0) (Qppphys rho sigma 0 0) (rhoGeoPhys rho 0 0) 1 := by
+  have hvacC : (vacMix rho sigma : ℂ) ≠ 0 := by exact_mod_cast hvac
+  have hDvac : (Delta rho sigma : ℂ) = (vacMix rho sigma : ℂ) := by norm_cast
+  have hsqrt : (rhoGeoPhys rho 0 0 : ℝ) = rho 0 := by
+    simp only [rhoGeoPhys]; rw [Real.sqrt_mul_self hrho]
   simp only [q0_entry_c, detTL, phi1, phi2, Q0phys, Qppphys, xi2, xiMom, hsqrt,
     Fin.sum_univ_one, zero_mul, neg_zero, Complex.exp_zero, sub_self, hDvac]
   push_cast

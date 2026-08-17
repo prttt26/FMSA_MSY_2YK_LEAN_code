@@ -545,27 +545,27 @@ theorem kernel_nonneg {u v : ℝ} (hu : 0 ≤ u) (hv : 0 ≤ v) :
 
 /-- **Per-pair moment bound.**  `kernel_nonneg` at `u = z·σⱼ, v = z·σₖ`, divided by `z > 0`:
 `(σₖ−σⱼ)·(mAux(zσₖ)pAux(zσⱼ) − mAux(zσⱼ)pAux(zσₖ)) ≤ −½z²σⱼσₖ(σₖ·mAux(zσⱼ) + σⱼ·mAux(zσₖ))`. -/
-theorem momentPair_le {z : ℝ} (hz : 0 < z) {σj σk : ℝ} (hj : 0 < σj) (hk : 0 < σk) :
-    (σk - σj) * (mAux (z * σk) * pAux (z * σj) - mAux (z * σj) * pAux (z * σk))
-      ≤ -(1 / 2) * z ^ 2 * σj * σk * (σk * mAux (z * σj) + σj * mAux (z * σk)) := by
-  have hK := kernel_nonneg (u := z * σj) (v := z * σk)
+theorem momentPair_le {z : ℝ} (hz : 0 < z) {sigCj sigCk : ℝ} (hj : 0 < sigCj) (hk : 0 < sigCk) :
+    (sigCk - sigCj) * (mAux (z * sigCk) * pAux (z * sigCj) - mAux (z * sigCj) * pAux (z * sigCk))
+      ≤ -(1 / 2) * z ^ 2 * sigCj * sigCk * (sigCk * mAux (z * sigCj) + sigCj * mAux (z * sigCk)) := by
+  have hK := kernel_nonneg (u := z * sigCj) (v := z * sigCk)
     (mul_nonneg hz.le hj.le) (mul_nonneg hz.le hk.le)
   have hEz :
-      (1 / 2) * (z * σj) * (z * σk) * (-(z * σk) * mAux (z * σj) - (z * σj) * mAux (z * σk))
-        - ((z * σk) - (z * σj)) *
-            (mAux (z * σk) * pAux (z * σj) - mAux (z * σj) * pAux (z * σk))
-      = z * (-(1 / 2) * z ^ 2 * σj * σk * (σk * mAux (z * σj) + σj * mAux (z * σk))
-        - (σk - σj) * (mAux (z * σk) * pAux (z * σj) - mAux (z * σj) * pAux (z * σk))) := by
+      (1 / 2) * (z * sigCj) * (z * sigCk) * (-(z * sigCk) * mAux (z * sigCj) - (z * sigCj) * mAux (z * sigCk))
+        - ((z * sigCk) - (z * sigCj)) *
+            (mAux (z * sigCk) * pAux (z * sigCj) - mAux (z * sigCj) * pAux (z * sigCk))
+      = z * (-(1 / 2) * z ^ 2 * sigCj * sigCk * (sigCk * mAux (z * sigCj) + sigCj * mAux (z * sigCk))
+        - (sigCk - sigCj) * (mAux (z * sigCk) * pAux (z * sigCj) - mAux (z * sigCj) * pAux (z * sigCk))) := by
     ring
   rw [hEz] at hK
   nlinarith [hK, hz]
 
 /-- `pAux(zσ) = z²·p1(σ,z)`. -/
-theorem pAux_z_eq {z σ : ℝ} (hz : z ≠ 0) : pAux (z * σ) = z ^ 2 * p1 σ z := by
+theorem pAux_z_eq {z sigC : ℝ} (hz : z ≠ 0) : pAux (z * sigC) = z ^ 2 * p1 sigC z := by
   unfold pAux p1; field_simp
 
 /-- `mAux(zσ) = z³·(σ·p1 + 2·p2)` (= `f_identity` cleared). -/
-theorem mAux_z_eq {z σ : ℝ} (hz : z ≠ 0) : mAux (z * σ) = z ^ 3 * (p1 σ z * σ + 2 * p2 σ z) := by
+theorem mAux_z_eq {z sigC : ℝ} (hz : z ≠ 0) : mAux (z * sigC) = z ^ 3 * (p1 sigC z * sigC + 2 * p2 sigC z) := by
   rw [f_identity hz]; field_simp
 
 /-- `fFun i = (π/vac)·mAux(zσᵢ)/z³`. -/
@@ -588,8 +588,8 @@ theorem per_pair_f {N : ℕ} {z : ℝ} (hz : 0 < z) {sigma rho : Fin N → ℝ}
         - fFun rho sigma j z * gFun rho sigma k z
       = (Real.pi / vacMix rho sigma) ^ 2 / z ^ 5 *
           (mAux (z * sigma k) * pAux (z * sigma j) - mAux (z * sigma j) * pAux (z * sigma k)) := by
-    rw [mAux_z_eq (σ := sigma k) hz0, mAux_z_eq (σ := sigma j) hz0,
-        pAux_z_eq (σ := sigma j) hz0, pAux_z_eq (σ := sigma k) hz0]
+    rw [mAux_z_eq (sigC := sigma k) hz0, mAux_z_eq (sigC := sigma j) hz0,
+        pAux_z_eq (sigC := sigma j) hz0, pAux_z_eq (sigC := sigma k) hz0]
     unfold fFun gFun
     field_simp
     ring
@@ -642,8 +642,8 @@ theorem moment_key {N : ℕ} {z : ℝ} (hz : 0 < z) {sigma rho : Fin N → ℝ}
           (-(1 / 2) * (Real.pi / vac) * (sigma j * sigma k) * (sigma k * f j + sigma j * f k)) := by
     refine Finset.sum_le_sum (fun j _ => Finset.sum_le_sum (fun k _ => ?_))
     have hpp := per_pair_f hz hvac j k (hsigma j) (hsigma k)
-    have hρρ : 0 ≤ rho j * rho k := mul_nonneg (hrho j) (hrho k)
-    nlinarith [mul_le_mul_of_nonneg_left hpp hρρ]
+    have hrhorho : 0 ≤ rho j * rho k := mul_nonneg (hrho j) (hrho k)
+    nlinarith [mul_le_mul_of_nonneg_left hpp hrhorho]
   -- ∑∑ of the per-pair RHS = −(π/vac)·ξ₂·(∑ρσf)  (= 2·D)
   have hRHS : ∑ j, ∑ k, rho j * rho k *
           (-(1 / 2) * (Real.pi / vac) * (sigma j * sigma k) * (sigma k * f j + sigma j * f k))

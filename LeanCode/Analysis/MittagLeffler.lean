@@ -73,21 +73,21 @@ private theorem pole_kernel_circleIntegral {f : ℂ → ℂ} {p : ℕ → ℂ} {
   have hT : (0:ℝ) < T := lt_trans hz0' hzT
   have hmn : Monotone (fun n => ‖p n‖) := monotone_nat_of_le_succ hpmono
   -- pole-ball radii
-  set ρ : ℕ → ℝ := fun n =>
-    min (r' n) ((1/3) * min ‖p n‖ (min ‖z - p n‖ (T - ‖p n‖))) with hρdef
+  set rho : ℕ → ℝ := fun n =>
+    min (r' n) ((1/3) * min ‖p n‖ (min ‖z - p n‖ (T - ‖p n‖))) with hrhodef
   -- z-ball radius (needs the min distance to the enclosed poles)
   set dz : ℝ := if h : (Finset.range κ).Nonempty
     then (Finset.range κ).inf' h (fun n => ‖z - p n‖) else 1 with hdzdef
-  set ρz : ℝ := (1/3) * min (min ‖z‖ (T - ‖z‖)) dz with hρzdef
+  set rhoz : ℝ := (1/3) * min (min ‖z‖ (T - ‖z‖)) dz with hrhozdef
   -- origin-ball radius
-  set ρ0 : ℝ := (1/3) * min ‖z‖ (min ‖p 0‖ T) with hρ0def
+  set rho0 : ℝ := (1/3) * min ‖z‖ (min ‖p 0‖ T) with hrho0def
   -- positivity and elementary bounds
   have hpn_pos : ∀ n, (0:ℝ) < ‖p n‖ := fun n => norm_pos_iff.mpr (hp0 n)
   have hzp_pos : ∀ n, (0:ℝ) < ‖z - p n‖ := fun n => norm_pos_iff.mpr (sub_ne_zero.mpr (hzp n))
   have hTp : ∀ n, n < κ → (0:ℝ) < T - ‖p n‖ := fun n hn => by linarith [(hk n).mp hn]
-  have hρpos : ∀ n, n < κ → 0 < ρ n := by
+  have hrhopos : ∀ n, n < κ → 0 < rho n := by
     intro n hn
-    rw [hρdef]
+    rw [hrhodef]
     apply lt_min (hr'pos n)
     have h1 := hpn_pos n
     have h2 := hzp_pos n
@@ -106,65 +106,65 @@ private theorem pole_kernel_circleIntegral {f : ℂ → ℂ} {p : ℕ → ℂ} {
     have hne : (Finset.range κ).Nonempty := ⟨n, Finset.mem_range.mpr hn⟩
     rw [dif_pos hne]
     exact Finset.inf'_le _ (Finset.mem_range.mpr hn)
-  have hρz_pos : 0 < ρz := by
-    rw [hρzdef]
+  have hrhoz_pos : 0 < rhoz := by
+    rw [hrhozdef]
     have h1 : (0:ℝ) < T - ‖z‖ := by linarith
     positivity
-  have hρ0_pos : 0 < ρ0 := by
-    rw [hρ0def]
+  have hrho0_pos : 0 < rho0 := by
+    rw [hrho0def]
     have := hpn_pos 0
     positivity
   -- key radius bounds
-  have hρ_le_r' : ∀ n, ρ n ≤ r' n := fun n => min_le_left _ _
-  have hρ_le : ∀ n, ρ n ≤ (1/3) * min ‖p n‖ (min ‖z - p n‖ (T - ‖p n‖)) :=
+  have hrho_le_r' : ∀ n, rho n ≤ r' n := fun n => min_le_left _ _
+  have hrho_le : ∀ n, rho n ≤ (1/3) * min ‖p n‖ (min ‖z - p n‖ (T - ‖p n‖)) :=
     fun n => min_le_right _ _
-  have hρ_le_pn : ∀ n, ρ n ≤ ‖p n‖ / 3 := by
+  have hrho_le_pn : ∀ n, rho n ≤ ‖p n‖ / 3 := by
     intro n
-    have h := hρ_le n
+    have h := hrho_le n
     have h2 : min ‖p n‖ (min ‖z - p n‖ (T - ‖p n‖)) ≤ ‖p n‖ := min_le_left _ _
     nlinarith
-  have hρ_le_zp : ∀ n, ρ n ≤ ‖z - p n‖ / 3 := by
+  have hrho_le_zp : ∀ n, rho n ≤ ‖z - p n‖ / 3 := by
     intro n
-    have h := hρ_le n
+    have h := hrho_le n
     have h2 : min ‖p n‖ (min ‖z - p n‖ (T - ‖p n‖)) ≤ ‖z - p n‖ :=
       le_trans (min_le_right _ _) (min_le_left _ _)
     nlinarith
-  have hρ_le_T : ∀ n, ρ n ≤ (T - ‖p n‖) / 3 := by
+  have hrho_le_T : ∀ n, rho n ≤ (T - ‖p n‖) / 3 := by
     intro n
-    have h := hρ_le n
+    have h := hrho_le n
     have h2 : min ‖p n‖ (min ‖z - p n‖ (T - ‖p n‖)) ≤ T - ‖p n‖ :=
       le_trans (min_le_right _ _) (min_le_right _ _)
     nlinarith
-  have hρz_le_z : ρz ≤ ‖z‖ / 3 := by
-    rw [hρzdef]
+  have hrhoz_le_z : rhoz ≤ ‖z‖ / 3 := by
+    rw [hrhozdef]
     have h2 : min (min ‖z‖ (T - ‖z‖)) dz ≤ ‖z‖ := le_trans (min_le_left _ _) (min_le_left _ _)
     nlinarith
-  have hρz_le_T : ρz ≤ (T - ‖z‖) / 3 := by
-    rw [hρzdef]
+  have hrhoz_le_T : rhoz ≤ (T - ‖z‖) / 3 := by
+    rw [hrhozdef]
     have h2 : min (min ‖z‖ (T - ‖z‖)) dz ≤ T - ‖z‖ :=
       le_trans (min_le_left _ _) (min_le_right _ _)
     nlinarith
-  have hρz_le_dz : ρz ≤ dz / 3 := by
-    rw [hρzdef]
+  have hrhoz_le_dz : rhoz ≤ dz / 3 := by
+    rw [hrhozdef]
     have h2 : min (min ‖z‖ (T - ‖z‖)) dz ≤ dz := min_le_right _ _
     nlinarith
-  have hρ0_le_z : ρ0 ≤ ‖z‖ / 3 := by
-    rw [hρ0def]
+  have hrho0_le_z : rho0 ≤ ‖z‖ / 3 := by
+    rw [hrho0def]
     have h2 : min ‖z‖ (min ‖p 0‖ T) ≤ ‖z‖ := min_le_left _ _
     nlinarith
-  have hρ0_le_p0 : ρ0 ≤ ‖p 0‖ / 3 := by
-    rw [hρ0def]
+  have hrho0_le_p0 : rho0 ≤ ‖p 0‖ / 3 := by
+    rw [hrho0def]
     have h2 : min ‖z‖ (min ‖p 0‖ T) ≤ ‖p 0‖ := le_trans (min_le_right _ _) (min_le_left _ _)
     nlinarith
-  have hρ0_le_T : ρ0 ≤ T / 3 := by
-    rw [hρ0def]
+  have hrho0_le_T : rho0 ≤ T / 3 := by
+    rw [hrho0def]
     have h2 : min ‖z‖ (min ‖p 0‖ T) ≤ T := le_trans (min_le_right _ _) (min_le_right _ _)
     nlinarith
-  have hρ0_le_pn : ∀ n, ρ0 ≤ ‖p n‖ / 3 := by
+  have hrho0_le_pn : ∀ n, rho0 ≤ ‖p n‖ / 3 := by
     intro n
     have := hmn (Nat.zero_le n)
     simp only at this
-    linarith [hρ0_le_p0]
+    linarith [hrho0_le_p0]
   -- far poles (n ≥ κ) are strictly outside the big circle
   have hfar : ∀ n, ¬ n < κ → T < ‖p n‖ := by
     intro n hn
@@ -173,89 +173,89 @@ private theorem pole_kernel_circleIntegral {f : ℂ → ℂ} {p : ℕ → ℂ} {
     push_neg at h1
     exact lt_of_le_of_ne h1 (Ne.symm h2)
   -- avoidance facts on the pole balls
-  have hpole_ne0 : ∀ n, n < κ → ∀ w ∈ closedBall (p n) (ρ n), w ≠ 0 := by
+  have hpole_ne0 : ∀ n, n < κ → ∀ w ∈ closedBall (p n) (rho n), w ≠ 0 := by
     intro n hn w hw h0
     rw [mem_closedBall, h0, dist_zero_left] at hw
-    linarith [hρ_le_pn n, hpn_pos n]
-  have hpole_nez : ∀ n, n < κ → ∀ w ∈ closedBall (p n) (ρ n), w ≠ z := by
+    linarith [hrho_le_pn n, hpn_pos n]
+  have hpole_nez : ∀ n, n < κ → ∀ w ∈ closedBall (p n) (rho n), w ≠ z := by
     intro n hn w hw hwz
     rw [mem_closedBall, hwz, dist_eq_norm] at hw
-    linarith [hρ_le_zp n, hzp_pos n]
+    linarith [hrho_le_zp n, hzp_pos n]
   -- avoidance facts on the origin ball
-  have h0ball_nez : ∀ w ∈ closedBall (0:ℂ) ρ0, w ≠ z := by
+  have h0ball_nez : ∀ w ∈ closedBall (0:ℂ) rho0, w ≠ z := by
     intro w hw hwz
     rw [mem_closedBall, hwz, dist_zero_right] at hw
-    linarith [hρ0_le_z, hz0']
-  have h0ball_nep : ∀ w ∈ closedBall (0:ℂ) ρ0, ∀ n, w ≠ p n := by
+    linarith [hrho0_le_z, hz0']
+  have h0ball_nep : ∀ w ∈ closedBall (0:ℂ) rho0, ∀ n, w ≠ p n := by
     intro w hw n hwp
     rw [mem_closedBall, hwp, dist_zero_right] at hw
-    linarith [hρ0_le_pn n, hpn_pos n]
+    linarith [hrho0_le_pn n, hpn_pos n]
   -- avoidance facts on the z ball
-  have hzball_ne0 : ∀ w ∈ closedBall z ρz, w ≠ 0 := by
+  have hzball_ne0 : ∀ w ∈ closedBall z rhoz, w ≠ 0 := by
     intro w hw h0
     rw [mem_closedBall, h0, dist_zero_left] at hw
-    linarith [hρz_le_z, hz0']
-  have hzball_norm : ∀ w ∈ closedBall z ρz, ‖w‖ < T := by
+    linarith [hrhoz_le_z, hz0']
+  have hzball_norm : ∀ w ∈ closedBall z rhoz, ‖w‖ < T := by
     intro w hw
     rw [mem_closedBall] at hw
     have h1 : dist w 0 ≤ dist w z + dist z 0 := dist_triangle _ _ _
     rw [dist_zero_right, dist_zero_right] at h1
-    linarith [hρz_le_T]
-  have hzball_nep : ∀ w ∈ closedBall z ρz, ∀ n, w ≠ p n := by
+    linarith [hrhoz_le_T]
+  have hzball_nep : ∀ w ∈ closedBall z rhoz, ∀ n, w ≠ p n := by
     intro w hw n hwp
     by_cases hn : n < κ
     · rw [mem_closedBall, hwp, dist_comm, dist_eq_norm] at hw
-      linarith [hρz_le_dz, hdz_pos, hdz_le n hn]
+      linarith [hrhoz_le_dz, hdz_pos, hdz_le n hn]
     · have h1 := hfar n hn
       have h2 := hzball_norm w hw
       rw [hwp] at h2
       linarith
   -- hole data for the residue-sum theorem
   set c' : Fin κ ⊕ Bool → ℂ := Sum.elim (fun i => p i.val) (fun b => cond b z 0) with hc'def
-  set rr : Fin κ ⊕ Bool → ℝ := Sum.elim (fun i => ρ i.val) (fun b => cond b ρz ρ0) with hrrdef
+  set rr : Fin κ ⊕ Bool → ℝ := Sum.elim (fun i => rho i.val) (fun b => cond b rhoz rho0) with hrrdef
   set gg : Fin κ ⊕ Bool → ℂ → ℂ :=
     Sum.elim (fun i => fun w => g i.val w / (w * (w - z)))
       (fun b => cond b (fun w => f w / w) (fun w => f w / (w - z))) with hggdef
   have hrrpos : ∀ i, 0 < rr i := by
     rintro (i | b)
-    · exact hρpos i.val i.isLt
+    · exact hrhopos i.val i.isLt
     · cases b
-      · exact hρ0_pos
-      · exact hρz_pos
+      · exact hrho0_pos
+      · exact hrhoz_pos
   have hinside : ∀ i, closedBall (c' i) (rr i) ⊆ ball (0:ℂ) T := by
     rintro (i | b) w hw
     · simp only [hc'def, hrrdef, Sum.elim_inl, mem_closedBall] at hw
       rw [mem_ball, dist_zero_right]
       have h1 : dist w 0 ≤ dist w (p i.val) + dist (p i.val) 0 := dist_triangle _ _ _
       rw [dist_zero_right, dist_zero_right] at h1
-      have h2 := hρ_le_T i.val
+      have h2 := hrho_le_T i.val
       have h3 := hTp i.val i.isLt
       linarith [hw, h1]
     · cases b
       · simp only [hc'def, hrrdef, Sum.elim_inr, Bool.cond_false, mem_closedBall,
           dist_zero_right] at hw
         rw [mem_ball, dist_zero_right]
-        linarith [hρ0_le_T]
+        linarith [hrho0_le_T]
       · simp only [hc'def, hrrdef, Sum.elim_inr, Bool.cond_true, mem_closedBall] at hw
         rw [mem_ball, dist_zero_right]
         exact hzball_norm w hw
-  have hdisjP0 : ∀ n, ρ n + ρ0 < dist (p n) 0 := by
+  have hdisjP0 : ∀ n, rho n + rho0 < dist (p n) 0 := by
     intro n
     rw [dist_zero_right]
-    linarith [hρ_le_pn n, hρ0_le_pn n, hpn_pos n]
-  have hdisjPz : ∀ n, n < κ → ρ n + ρz < dist (p n) z := by
+    linarith [hrho_le_pn n, hrho0_le_pn n, hpn_pos n]
+  have hdisjPz : ∀ n, n < κ → rho n + rhoz < dist (p n) z := by
     intro n hn
     rw [dist_eq_norm, ← norm_sub_rev]
-    linarith [hρ_le_zp n, hρz_le_dz, hdz_le n hn, hzp_pos n]
-  have hdisj0z : ρ0 + ρz < dist (0:ℂ) z := by
+    linarith [hrho_le_zp n, hrhoz_le_dz, hdz_le n hn, hzp_pos n]
+  have hdisj0z : rho0 + rhoz < dist (0:ℂ) z := by
     rw [dist_zero_left]
-    linarith [hρ0_le_z, hρz_le_z, hz0']
+    linarith [hrho0_le_z, hrhoz_le_z, hz0']
   have hdisj' : ∀ i j, i ≠ j → Disjoint (closedBall (c' i) (rr i)) (closedBall (c' j) (rr j)) := by
     rintro (i | bi) (j | bj) hij
     · have hne : i.val ≠ j.val := fun h => hij (congrArg Sum.inl (Fin.val_injective h))
       exact (hdisj i.val j.val hne).mono
-        (closedBall_subset_closedBall (hρ_le_r' i.val))
-        (closedBall_subset_closedBall (hρ_le_r' j.val))
+        (closedBall_subset_closedBall (hrho_le_r' i.val))
+        (closedBall_subset_closedBall (hrho_le_r' j.val))
     · cases bj
       · exact closedBall_disjoint_closedBall (hdisjP0 i.val)
       · exact closedBall_disjoint_closedBall (hdisjPz i.val i.isLt)
@@ -275,16 +275,16 @@ private theorem pole_kernel_circleIntegral {f : ℂ → ℂ} {p : ℕ → ℂ} {
     · intro h0
       exact hwnot (Sum.inr false) (by
         simp only [hc'def, hrrdef, Sum.elim_inr, Bool.cond_false]
-        rw [h0]; exact mem_ball_self hρ0_pos)
+        rw [h0]; exact mem_ball_self hrho0_pos)
     · intro hzz
       exact hwnot (Sum.inr true) (by
         simp only [hc'def, hrrdef, Sum.elim_inr, Bool.cond_true]
-        rw [hzz]; exact mem_ball_self hρz_pos)
+        rw [hzz]; exact mem_ball_self hrhoz_pos)
     · intro n hp
       by_cases hn : n < κ
       · exact hwnot (Sum.inl ⟨n, hn⟩) (by
           simp only [hc'def, hrrdef, Sum.elim_inl]
-          rw [hp]; exact mem_ball_self (hρpos n hn))
+          rw [hp]; exact mem_ball_self (hrhopos n hn))
       · rw [mem_closedBall, dist_zero_right] at hwT
         have := hfar n hn
         rw [hp] at hwT
@@ -317,7 +317,7 @@ private theorem pole_kernel_circleIntegral {f : ℂ → ℂ} {p : ℕ → ℂ} {
       -- local pole representations
       rintro (i | b) w hw
       · simp only [hc'def, hrrdef, hggdef, Sum.elim_inl] at hw ⊢
-        rw [hgeq i.val w (closedBall_subset_closedBall (hρ_le_r' i.val) hw)]
+        rw [hgeq i.val w (closedBall_subset_closedBall (hrho_le_r' i.val) hw)]
         rw [div_right_comm]
       · cases b
         · simp only [hc'def, hggdef, Sum.elim_inr, Bool.cond_false]
@@ -329,7 +329,7 @@ private theorem pole_kernel_circleIntegral {f : ℂ → ℂ} {p : ℕ → ℂ} {
       rintro (i | b)
       · simp only [hc'def, hrrdef, hggdef, Sum.elim_inl]
         apply ContinuousOn.div
-        · exact (hgc i.val).mono (closedBall_subset_closedBall (hρ_le_r' i.val))
+        · exact (hgc i.val).mono (closedBall_subset_closedBall (hrho_le_r' i.val))
         · fun_prop
         · intro w hw
           exact mul_ne_zero (hpole_ne0 i.val i.isLt w hw)
@@ -351,7 +351,7 @@ private theorem pole_kernel_circleIntegral {f : ℂ → ℂ} {p : ℕ → ℂ} {
       · obtain ⟨hw, -⟩ := hw
         simp only [hc'def, hrrdef, hggdef, Sum.elim_inl] at hw ⊢
         apply DifferentiableAt.div
-        · exact hgd i.val w (ball_subset_ball (hρ_le_r' i.val) hw)
+        · exact hgd i.val w (ball_subset_ball (hrho_le_r' i.val) hw)
         · fun_prop
         · exact mul_ne_zero (hpole_ne0 i.val i.isLt w (ball_subset_closedBall hw))
             (sub_ne_zero.mpr (hpole_nez i.val i.isLt w (ball_subset_closedBall hw)))

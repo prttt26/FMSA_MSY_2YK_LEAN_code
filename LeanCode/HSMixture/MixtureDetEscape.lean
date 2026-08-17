@@ -27,19 +27,21 @@ a `B` uniform over `t ∈ [0,1]` is supplied (the `K`-constants are continuous i
 the compact `[0,1]`).
 -/
 
+set_option linter.style.longLine false
+
 open Complex
 namespace FMSA.MixtureHSPoles
 noncomputable section
 
 /-- For `Re s ≥ 0` and `σ ≥ 0`, the decaying exponential is a contraction: `‖e^{−sσ}‖ ≤ 1`.
 The mechanism that makes the exponential terms subdominant in the right half `s`-plane. -/
-theorem exp_neg_mul_norm_le_one {s : ℂ} {σ : ℝ} (hre : 0 ≤ s.re) (hσ : 0 ≤ σ) :
-    ‖Complex.exp (-(s * (σ : ℂ)))‖ ≤ 1 := by
+theorem exp_neg_mul_norm_le_one {s : ℂ} {sigma : ℝ} (hre : 0 ≤ s.re) (hsigma : 0 ≤ sigma) :
+    ‖Complex.exp (-(s * (sigma : ℂ)))‖ ≤ 1 := by
   rw [Complex.norm_exp, Real.exp_le_one_iff]
-  have : (-(s * (σ : ℂ))).re = -(s.re * σ) := by
+  have : (-(s * (sigma : ℂ))).re = -(s.re * sigma) := by
     simp [Complex.mul_re]
   rw [this]
-  have : 0 ≤ s.re * σ := mul_nonneg hre hσ
+  have : 0 ≤ s.re * sigma := mul_nonneg hre hsigma
   linarith
 
 /-- **Norm-dominance ⇒ `W ≠ 0`.**  In the right half-plane the three exponential terms of the monomial

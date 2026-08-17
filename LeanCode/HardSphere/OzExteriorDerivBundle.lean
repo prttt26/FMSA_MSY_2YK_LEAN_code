@@ -65,7 +65,7 @@ theorem baxterForcing_sigma_pos {eta sigma rho : ℝ} (heta0 : 0 < eta) (heta_lt
   have h1e : (0 : ℝ) < 1 - eta := by linarith
   have hν : 0 < rho * q_doubleprime_py eta := baxterNu_pos heta0 heta_lt hrho
   -- `μ - ν·σ/2 = ρπσ/(1-η) > 0`
-  have hμνσ : 0 < rho * q_prime_py eta sigma - rho * q_doubleprime_py eta * sigma / 2 := by
+  have hμνsigma : 0 < rho * q_prime_py eta sigma - rho * q_doubleprime_py eta * sigma / 2 := by
     have heq : rho * q_prime_py eta sigma - rho * q_doubleprime_py eta * sigma / 2
         = rho * Real.pi * sigma / (1 - eta) := by
       unfold q_prime_py q_doubleprime_py

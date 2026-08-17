@@ -37,6 +37,8 @@ threading genuinely open regularity/integrability conditions explicitly (e.g.
 the same way).
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Filter Real Set intervalIntegral
 open scoped FourierTransform Topology
 
@@ -529,9 +531,9 @@ theorem g0_HS_contact_value_of_oz_h_regularity {eta sigma rho : ℝ} (hsigma : 0
       (cHS_leading_coeff eta - (oz_h eta sigma rho sigma + 1)) = 0 :=
     eq_zero_of_tendsto_mul_cos _ sigma hsigma hdiff
   have hJ : oz_h eta sigma rho sigma + 1 = cHS_leading_coeff eta := by
-    have h4πσ : (4 : ℝ) * Real.pi * sigma ≠ 0 := by positivity
+    have h4πsigma : (4 : ℝ) * Real.pi * sigma ≠ 0 := by positivity
     rcases mul_eq_zero.mp hzero with h | h
-    · exact absurd h h4πσ
+    · exact absurd h h4πsigma
     · linarith
   have hJ0 : cHS_leading_coeff eta = (1 + eta / 2) / (1 - eta) ^ 2 := by
     unfold cHS_leading_coeff

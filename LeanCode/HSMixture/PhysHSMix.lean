@@ -28,20 +28,20 @@ variable {N : ℕ}
 /-- **The physical hard-sphere mixture at general `N`.**  Fields `σ`/`ρ` free, Baxter coefficients
 the Lebowitz-PY closed forms `Q0phys`/`Qppphys`. -/
 noncomputable def physHSMixN (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k) : FMSA.HSMix N where
-  σ := sigma
-  ρ := rho
+  sigma := sigma
+  rho := rho
   Q0 := Q0phys rho sigma
   Qpp := fun j => Qppphys rho sigma j j
-  hσ := hsig
+  hsigma := hsig
 
 /-- **The physical binary hard-sphere mixture.**  The `Fin 2` specialisation; `Qpp` is written with
 the `Qppphys rho sigma 0 j` row (the first index of `Qppphys` is discarded), matching the Yukawa
 `physMix` field so `physMix.toHSMix = physHSMix` is `rfl`. -/
 noncomputable def physHSMix (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) : FMSA.HSMix 2 where
-  σ := sigma
-  ρ := rho
+  sigma := sigma
+  rho := rho
   Q0 := Q0phys rho sigma
   Qpp := fun j => Qppphys rho sigma 0 j
-  hσ := hsig
+  hsigma := hsig
 
 end FMSA.HSMix

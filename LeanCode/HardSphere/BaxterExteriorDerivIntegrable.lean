@@ -29,6 +29,8 @@ are each `L¹(σ,∞)`:
   `t > r` region where `q0PolyDeriv (r−t)` (with negative argument) is *not* zero.
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Set Filter Topology
 open scoped Convolution
 
@@ -247,20 +249,20 @@ theorem ozExterior_deriv_integrable_proved (heta0 : 0 < eta) (heta1 : eta < 1) (
     IntegrableOn (fun r => g r + r * g' r) (Ioi sigma) := by
   refine (baxterPsiSmoothDeriv_integrableOn heta0 heta1 hsigma hrho heta_def).congr_fun
     (fun r hr => ?_) measurableSet_Ioi
-  have hrσ : sigma < r := mem_Ioi.mp hr
-  have hr0 : 0 < r := lt_trans hsigma hrσ
+  have hrsigma : sigma < r := mem_Ioi.mp hr
+  have hr0 : 0 < r := lt_trans hsigma hrsigma
   -- `y ↦ y * g y` agrees with `baxterPsiSmooth` on the open set `Ioi σ ∋ r`
   have hev : (fun y : ℝ => y * g y) =ᶠ[nhds r] baxterPsiSmooth eta sigma rho := by
-    filter_upwards [Ioi_mem_nhds hrσ] with y hy
-    have hyσ : sigma ≤ y := le_of_lt (mem_Ioi.mp hy)
+    filter_upwards [Ioi_mem_nhds hrsigma] with y hy
+    have hysigma : sigma ≤ y := le_of_lt (mem_Ioi.mp hy)
     have hy0 : y ≠ 0 := ne_of_gt (lt_trans hsigma (mem_Ioi.mp hy))
-    rw [hg_eq y hyσ, baxterPsiSmooth_eq_of_ge hsigma hyσ]
+    rw [hg_eq y hysigma, baxterPsiSmooth_eq_of_ge hsigma hysigma]
     field_simp
   have hd1 : HasDerivAt (fun y : ℝ => y * g y) (1 * g r + r * g' r) r :=
-    (hasDerivAt_id r).mul (hderiv r (le_of_lt hrσ))
+    (hasDerivAt_id r).mul (hderiv r (le_of_lt hrsigma))
   rw [one_mul] at hd1
   have hd2 : HasDerivAt (fun y : ℝ => y * g y) (baxterPsiSmoothDeriv eta sigma rho r) r :=
-    (hasDerivAt_baxterPsiSmooth hsigma (le_of_lt hrσ)).congr_of_eventuallyEq hev
+    (hasDerivAt_baxterPsiSmooth hsigma (le_of_lt hrsigma)).congr_of_eventuallyEq hev
   exact hd2.unique hd1
 
 end

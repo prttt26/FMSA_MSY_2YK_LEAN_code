@@ -39,23 +39,23 @@ namespace FMSA.MatrixQ0
 /-! ### Atomic limits: `p1, p2 → 0` -/
 
 /-- `exp(-(z·σ)) → 0` as `z → ∞` for `σ > 0`. -/
-theorem exp_neg_scaled_tendsto {σ : ℝ} (hσ : 0 < σ) :
-    Tendsto (fun z : ℝ => Real.exp (-(z * σ))) atTop (𝓝 0) := by
-  have h : Tendsto (fun z : ℝ => -(z * σ)) atTop atBot :=
-    tendsto_neg_atTop_atBot.comp (tendsto_id.atTop_mul_const hσ)
+theorem exp_neg_scaled_tendsto {sigC : ℝ} (hsigC : 0 < sigC) :
+    Tendsto (fun z : ℝ => Real.exp (-(z * sigC))) atTop (𝓝 0) := by
+  have h : Tendsto (fun z : ℝ => -(z * sigC)) atTop atBot :=
+    tendsto_neg_atTop_atBot.comp (tendsto_id.atTop_mul_const hsigC)
   exact Real.tendsto_exp_atBot.comp h
 
 /-- `p1(σ,z) = (1 − zσ − e^{−zσ})/z² → 0` as `z → ∞`, for `σ > 0`. -/
-theorem p1_tendsto_zero {σ : ℝ} (hσ : 0 < σ) :
-    Tendsto (fun z : ℝ => p1 σ z) atTop (𝓝 0) := by
+theorem p1_tendsto_zero {sigC : ℝ} (hsigC : 0 < sigC) :
+    Tendsto (fun z : ℝ => p1 sigC z) atTop (𝓝 0) := by
   have h1 : Tendsto (fun z : ℝ => (z ^ 2)⁻¹) atTop (𝓝 0) :=
     (tendsto_pow_atTop (by norm_num)).inv_tendsto_atTop
-  have h2 : Tendsto (fun z : ℝ => σ * z⁻¹) atTop (𝓝 0) := by
-    have := tendsto_inv_atTop_zero.const_mul σ; rwa [mul_zero] at this
-  have h3 : Tendsto (fun z : ℝ => Real.exp (-(z * σ)) * (z ^ 2)⁻¹) atTop (𝓝 0) := by
-    have := (exp_neg_scaled_tendsto hσ).mul h1; rwa [mul_zero] at this
-  have hcongr : (fun z : ℝ => p1 σ z) =ᶠ[atTop]
-      (fun z => (z ^ 2)⁻¹ - σ * z⁻¹ - Real.exp (-(z * σ)) * (z ^ 2)⁻¹) := by
+  have h2 : Tendsto (fun z : ℝ => sigC * z⁻¹) atTop (𝓝 0) := by
+    have := tendsto_inv_atTop_zero.const_mul sigC; rwa [mul_zero] at this
+  have h3 : Tendsto (fun z : ℝ => Real.exp (-(z * sigC)) * (z ^ 2)⁻¹) atTop (𝓝 0) := by
+    have := (exp_neg_scaled_tendsto hsigC).mul h1; rwa [mul_zero] at this
+  have hcongr : (fun z : ℝ => p1 sigC z) =ᶠ[atTop]
+      (fun z => (z ^ 2)⁻¹ - sigC * z⁻¹ - Real.exp (-(z * sigC)) * (z ^ 2)⁻¹) := by
     filter_upwards [eventually_gt_atTop 0] with z hz
     have hz' : z ≠ 0 := hz.ne'
     unfold p1
@@ -66,20 +66,20 @@ theorem p1_tendsto_zero {σ : ℝ} (hσ : 0 < σ) :
   simpa using this
 
 /-- `p2(σ,z) = (1 − zσ + (zσ)²/2 − e^{−zσ})/z³ → 0` as `z → ∞`, for `σ > 0`. -/
-theorem p2_tendsto_zero {σ : ℝ} (hσ : 0 < σ) :
-    Tendsto (fun z : ℝ => p2 σ z) atTop (𝓝 0) := by
+theorem p2_tendsto_zero {sigC : ℝ} (hsigC : 0 < sigC) :
+    Tendsto (fun z : ℝ => p2 sigC z) atTop (𝓝 0) := by
   have h1 : Tendsto (fun z : ℝ => (z ^ 3)⁻¹) atTop (𝓝 0) :=
     (tendsto_pow_atTop (by norm_num)).inv_tendsto_atTop
-  have h2 : Tendsto (fun z : ℝ => σ * (z ^ 2)⁻¹) atTop (𝓝 0) := by
+  have h2 : Tendsto (fun z : ℝ => sigC * (z ^ 2)⁻¹) atTop (𝓝 0) := by
     have hp : Tendsto (fun z : ℝ => (z ^ 2)⁻¹) atTop (𝓝 0) :=
       (tendsto_pow_atTop (n := 2) (by norm_num)).inv_tendsto_atTop
-    have := hp.const_mul σ; rwa [mul_zero] at this
-  have h3 : Tendsto (fun z : ℝ => σ ^ 2 / 2 * z⁻¹) atTop (𝓝 0) := by
-    have := tendsto_inv_atTop_zero.const_mul (σ ^ 2 / 2); rwa [mul_zero] at this
-  have h4 : Tendsto (fun z : ℝ => Real.exp (-(z * σ)) * (z ^ 3)⁻¹) atTop (𝓝 0) := by
-    have := (exp_neg_scaled_tendsto hσ).mul h1; rwa [mul_zero] at this
-  have hcongr : (fun z : ℝ => p2 σ z) =ᶠ[atTop]
-      (fun z => (z ^ 3)⁻¹ - σ * (z ^ 2)⁻¹ + σ ^ 2 / 2 * z⁻¹ - Real.exp (-(z * σ)) * (z ^ 3)⁻¹) := by
+    have := hp.const_mul sigC; rwa [mul_zero] at this
+  have h3 : Tendsto (fun z : ℝ => sigC ^ 2 / 2 * z⁻¹) atTop (𝓝 0) := by
+    have := tendsto_inv_atTop_zero.const_mul (sigC ^ 2 / 2); rwa [mul_zero] at this
+  have h4 : Tendsto (fun z : ℝ => Real.exp (-(z * sigC)) * (z ^ 3)⁻¹) atTop (𝓝 0) := by
+    have := (exp_neg_scaled_tendsto hsigC).mul h1; rwa [mul_zero] at this
+  have hcongr : (fun z : ℝ => p2 sigC z) =ᶠ[atTop]
+      (fun z => (z ^ 3)⁻¹ - sigC * (z ^ 2)⁻¹ + sigC ^ 2 / 2 * z⁻¹ - Real.exp (-(z * sigC)) * (z ^ 3)⁻¹) := by
     filter_upwards [eventually_gt_atTop 0] with z hz
     have hz' : z ≠ 0 := hz.ne'
     unfold p2
@@ -94,8 +94,8 @@ theorem p2_tendsto_zero {σ : ℝ} (hσ : 0 < σ) :
 /-- `fFun rho sigma i z → 0` as `z → ∞`. -/
 theorem fFun_tendsto_zero {N : ℕ} {rho sigma : Fin N → ℝ} (i : Fin N) (hsig : 0 < sigma i) :
     Tendsto (fun z : ℝ => fFun rho sigma i z) atTop (𝓝 0) := by
-  have hp1 := p1_tendsto_zero (σ := sigma i) hsig
-  have hp2 := p2_tendsto_zero (σ := sigma i) hsig
+  have hp1 := p1_tendsto_zero (sigC := sigma i) hsig
+  have hp2 := p2_tendsto_zero (sigC := sigma i) hsig
   have ha : Tendsto (fun z : ℝ => p1 (sigma i) z * sigma i) atTop (𝓝 0) := by
     have := hp1.mul_const (sigma i); rwa [zero_mul] at this
   have hb : Tendsto (fun z : ℝ => 2 * p2 (sigma i) z) atTop (𝓝 0) := by
@@ -108,8 +108,8 @@ theorem fFun_tendsto_zero {N : ℕ} {rho sigma : Fin N → ℝ} (i : Fin N) (hsi
 /-- `gFun rho sigma i z → 0` as `z → ∞`. -/
 theorem gFun_tendsto_zero {N : ℕ} {rho sigma : Fin N → ℝ} (i : Fin N) (hsig : 0 < sigma i) :
     Tendsto (fun z : ℝ => gFun rho sigma i z) atTop (𝓝 0) := by
-  have hp1 := p1_tendsto_zero (σ := sigma i) hsig
-  have hp2 := p2_tendsto_zero (σ := sigma i) hsig
+  have hp1 := p1_tendsto_zero (sigC := sigma i) hsig
+  have hp2 := p2_tendsto_zero (sigC := sigma i) hsig
   have hterm1 : Tendsto (fun z : ℝ => Real.pi / vacMix rho sigma * p1 (sigma i) z) atTop (𝓝 0) := by
     have := hp1.const_mul (Real.pi / vacMix rho sigma); rwa [mul_zero] at this
   have ha : Tendsto (fun z : ℝ => p1 (sigma i) z * sigma i / 2) atTop (𝓝 0) := by
@@ -181,7 +181,7 @@ theorem Q0_mat_phys_det_tendsto_one {N : ℕ} {sigma rho : Fin N → ℝ}
 `Q0_mat_phys = 1 − U·V` ⇒ entry(0,1) `= −(U·V)₀₁ = −√(ρ₀ρ₁)·exp(−((σ₁−σ₀)/2)z)·(fFun 0 + gFun 0·σ₁)`;
 both `exp(−λz) → 0` (`λ = (σ₁−σ₀)/2 > 0`) and the bracket `→ 0`. -/
 theorem Q0_mat_phys_offdiag01_tendsto_zero (sigma rho : Fin 2 → ℝ)
-    (hσ : sigma 0 < sigma 1) (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i)
+    (hsigC : sigma 0 < sigma 1) (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i)
     (hsig : ∀ i, 0 < sigma i) :
     Tendsto (fun z : ℝ => Q0_mat_phys z sigma rho 0 1) atTop (𝓝 0) := by
   have hcongr : (fun z : ℝ => Q0_mat_phys z sigma rho 0 1) =ᶠ[atTop]
@@ -194,7 +194,7 @@ theorem Q0_mat_phys_offdiag01_tendsto_zero (sigma rho : Fin 2 → ℝ)
   rw [tendsto_congr' hcongr]
   have hlam : 0 < (sigma 1 - sigma 0) / 2 := by linarith
   have hexp : Tendsto (fun z : ℝ => Real.exp (-((sigma 1 - sigma 0) / 2 * z))) atTop (𝓝 0) := by
-    simpa [mul_comm] using exp_neg_scaled_tendsto (σ := (sigma 1 - sigma 0) / 2) hlam
+    simpa [mul_comm] using exp_neg_scaled_tendsto (sigC := (sigma 1 - sigma 0) / 2) hlam
   have hbr : Tendsto (fun z : ℝ => fFun rho sigma 0 z + gFun rho sigma 0 z * sigma 1)
       atTop (𝓝 0) := by
     have hf := fFun_tendsto_zero (rho := rho) (sigma := sigma) 0 (hsig 0)

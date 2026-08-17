@@ -48,7 +48,7 @@ theorem q0MixEntry_subZeroTail_zero (X : FMSA.HSMix N) (i k : Fin N) (f : ℝ �
 /-- **Full-line ⇄ windowed split for the compactly-supported `q0MixEntry`.**  `∫_ℝ q0MixEntry·g =
 ∫₀^σ + ∫_{≤0}` — the `(σ,∞)` piece vanishes (`q0MixEntry = 0` past `Rᵢₖ ≤ σ`). -/
 theorem q0MixEntry_intSplit (X : FMSA.HSMix N) (i k : Fin N) (g : ℝ → ℝ) (sigma : ℝ)
-    (hsig0 : 0 ≤ sigma) (hRσ : X.R i k ≤ sigma)
+    (hsig0 : 0 ≤ sigma) (hRsigma : X.R i k ≤ sigma)
     (hint : Integrable (fun t => X.q0MixEntry i k t * g t)) :
     (∫ t, X.q0MixEntry i k t * g t)
       = (∫ t in (0:ℝ)..sigma, X.q0MixEntry i k t * g t)
@@ -58,7 +58,7 @@ theorem q0MixEntry_intSplit (X : FMSA.HSMix N) (i k : Fin N) (g : ℝ → ℝ) (
   have hzero : (∫ t in Set.Ioi sigma, X.q0MixEntry i k t * g t) = 0 :=
     MeasureTheory.setIntegral_eq_zero_of_forall_eq_zero (fun t ht => by
       rw [Function.notMem_support.mp (fun hs => absurd (q0MixEntry_support_subset X i k hs).2
-        (not_le.mpr (lt_of_le_of_lt hRσ (Set.mem_Ioi.mp ht)))), zero_mul])
+        (not_le.mpr (lt_of_le_of_lt hRsigma (Set.mem_Ioi.mp ht)))), zero_mul])
   have hIoi : (∫ t in Set.Ioi (0:ℝ), X.q0MixEntry i k t * g t)
       = ∫ t in (0:ℝ)..sigma, X.q0MixEntry i k t * g t := by
     rw [(Set.Ioc_union_Ioi_eq_Ioi hsig0).symm, MeasureTheory.setIntegral_union
@@ -111,7 +111,7 @@ theorem q0MixEntry_subZeroTail_poly (X : FMSA.HSMix N) (i k : Fin N) (g : ℝ �
   refine intervalIntegral.integral_congr (fun t ht => ?_)
   rw [Set.uIcc_of_le hlam, Set.mem_Icc] at ht
   have hR : (0:ℝ) ≤ X.R i k := by
-    simp only [FMSA.HSMix.R]; linarith [X.hσ i, X.hσ k]
+    simp only [FMSA.HSMix.R]; linarith [X.hsigma i, X.hsigma k]
   rw [q0MixEntry_inner_expand X i k (Set.mem_Icc.mpr ⟨ht.1, le_trans ht.2 hR⟩)]
 
 end FMSA.HSMix

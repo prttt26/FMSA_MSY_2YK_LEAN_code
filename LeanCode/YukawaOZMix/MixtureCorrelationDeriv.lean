@@ -36,6 +36,8 @@ The coefficients (matching `qpConv_contDiffOn_upper`): `rri = 2π√(ρᵢρₖ)
 `D0 x = rrj(−Qj(x+Rjk) + Pk(x+Rjk)²/2)`, `D1 x = rrj(Qj − Pk(x+Rjk))`, `d2 = rrj·Pk/2`.
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Set
 
 namespace FMSA.MixtureHSDCF
@@ -54,15 +56,15 @@ theorem qpConv_upper_intervalForm (X : Mix N M) (i k j : Fin N) (hlam : 0 ≤ X.
     {x : ℝ} (hx : x ∈ Set.Ioo (X.lam i j) (X.R i j)) :
     qpConv X i k j x
       = ∫ t in (x + X.lam j k)..(X.R i k),
-          (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+          (2 * Real.pi * Real.sqrt (X.rho i * X.rho k)
               * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
-            + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
-            + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2)
-          * (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k)
+            + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
+            + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Qpp k / 2) * t ^ 2)
+          * (2 * Real.pi * Real.sqrt (X.rho j * X.rho k)
               * (-X.Q0 j k * (x + X.R j k) + X.Qpp k * (x + X.R j k) ^ 2 / 2)
-            + 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (X.Q0 j k - X.Qpp k * (x + X.R j k)) * t
-            + 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (X.Qpp k / 2) * t ^ 2) := by
-  have hkR : X.lam i k ≤ X.R i k := by have := X.hσ i; simp only [Mix.lam, Mix.R]; linarith
+            + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Q0 j k - X.Qpp k * (x + X.R j k)) * t
+            + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Qpp k / 2) * t ^ 2) := by
+  have hkR : X.lam i k ≤ X.R i k := by have := X.hsigma i; simp only [Mix.lam, Mix.R]; linarith
   have hLid : X.lam i k - X.lam j k = X.lam i j := by simp only [Mix.lam]; ring
   have hRid : X.R i k - X.lam j k = X.R i j := by simp only [Mix.R, Mix.lam]; ring
   have hRRid : X.R i k - X.R j k = -(X.lam i j) := by simp only [Mix.R, Mix.lam]; ring
@@ -80,7 +82,7 @@ theorem qpConv_upper_intervalForm (X : Mix N M) (i k j : Fin N) (hlam : 0 ≤ X.
     (Set.mem_uIcc.mpr (Or.inl ⟨hkR, le_refl _⟩)) :
       Set.uIcc (x + X.lam j k) (X.R i k) ⊆ Set.uIcc (X.lam i k) (X.R i k))
   rw [← intervalIntegral.integral_add_adjacent_intervals hI0 hIx]
-  have hvanish : (∫ t in (X.lam i k)..(x + X.lam j k), (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+  have hvanish : (∫ t in (X.lam i k)..(x + X.lam j k), (2 * Real.pi * Real.sqrt (X.rho i * X.rho k)
         * (X.Q0 i k * (t - X.R i k) + X.Qpp k * (t - X.R i k) ^ 2 / 2))
           * pMixEntry X j k (x - t)) = 0 := by
     rw [intervalIntegral.integral_congr_ae ?_, intervalIntegral.integral_zero]
@@ -115,15 +117,15 @@ theorem qpConv_lower_intervalForm (X : Mix N M) (i k j : Fin N) (hlam : 0 ≤ X.
     {x : ℝ} (hx : x ∈ Set.Ioo (0 : ℝ) (X.lam i j)) :
     qpConv X i k j x
       = ∫ t in (X.lam i k)..(X.R i k),
-          (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+          (2 * Real.pi * Real.sqrt (X.rho i * X.rho k)
               * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
-            + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
-            + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2)
-          * (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k)
+            + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
+            + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Qpp k / 2) * t ^ 2)
+          * (2 * Real.pi * Real.sqrt (X.rho j * X.rho k)
               * (-X.Q0 j k * (x + X.R j k) + X.Qpp k * (x + X.R j k) ^ 2 / 2)
-            + 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (X.Q0 j k - X.Qpp k * (x + X.R j k)) * t
-            + 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (X.Qpp k / 2) * t ^ 2) := by
-  have hkR : X.lam i k ≤ X.R i k := by have := X.hσ i; simp only [Mix.lam, Mix.R]; linarith
+            + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Q0 j k - X.Qpp k * (x + X.R j k)) * t
+            + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Qpp k / 2) * t ^ 2) := by
+  have hkR : X.lam i k ≤ X.R i k := by have := X.hsigma i; simp only [Mix.lam, Mix.R]; linarith
   have hLid : X.lam i k - X.lam j k = X.lam i j := by simp only [Mix.lam]; ring
   have hRRid : X.R i k - X.R j k = -(X.lam i j) := by simp only [Mix.R, Mix.lam]; ring
   obtain ⟨hx0, hxlam⟩ := hx
@@ -169,16 +171,16 @@ coeff derivatives `rrⱼ(−Qⱼ+Pₖ(x+Rⱼₖ))`, `rrⱼ(−Pₖ)` against the
 `∫Fwd`, `∫Fwd·t`.  Named so the species sum `∑ₗ qpConvLowerDeriv/(2π)²` (= `matCorrFull'`) is
 stateable. -/
 noncomputable def qpConvLowerDeriv (X : Mix N M) (i k j : Fin N) (x : ℝ) : ℝ :=
-  2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Q0 j k + X.Qpp k * (x + X.R j k))
-      * (∫ t in (X.lam i k)..(X.R i k), 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+  2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (-X.Q0 j k + X.Qpp k * (x + X.R j k))
+      * (∫ t in (X.lam i k)..(X.R i k), 2 * Real.pi * Real.sqrt (X.rho i * X.rho k)
           * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
-        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
-        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2)
-    + 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Qpp k)
-      * (∫ t in (X.lam i k)..(X.R i k), (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+        + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
+        + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Qpp k / 2) * t ^ 2)
+    + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (-X.Qpp k)
+      * (∫ t in (X.lam i k)..(X.R i k), (2 * Real.pi * Real.sqrt (X.rho i * X.rho k)
           * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
-        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
-        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2) * t)
+        + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
+        + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Qpp k / 2) * t ^ 2) * t)
 
 /-- **Correlation derivative on the lower piece.**  On `(0, λᵢⱼ)` the fixed-limit lower closed form
 `qpConv X i k j x = ∫ Fwd(t)·(D0 x + D1 x·t + d2 t²) dt` differentiates by the parameter-Leibniz
@@ -190,31 +192,31 @@ theorem hasDerivAt_qpConv_lower (X : Mix N M) (i k j : Fin N) (hlam : 0 ≤ X.la
     HasDerivAt (qpConv X i k j) (qpConvLowerDeriv X i k j x) x := by
   rw [qpConvLowerDeriv]
   -- the explicit forward quadratic `F` and the `x`-dependent `pMixEntry` coefficients `D0, D1`
-  set F : ℝ → ℝ := fun t => 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+  set F : ℝ → ℝ := fun t => 2 * Real.pi * Real.sqrt (X.rho i * X.rho k)
       * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
-    + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
-    + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2 with hF
-  set D0 : ℝ → ℝ := fun y => 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k)
+    + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
+    + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Qpp k / 2) * t ^ 2 with hF
+  set D0 : ℝ → ℝ := fun y => 2 * Real.pi * Real.sqrt (X.rho j * X.rho k)
     * (-X.Q0 j k * (y + X.R j k) + X.Qpp k * (y + X.R j k) ^ 2 / 2) with hD0
-  set D1 : ℝ → ℝ := fun y => 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k)
+  set D1 : ℝ → ℝ := fun y => 2 * Real.pi * Real.sqrt (X.rho j * X.rho k)
     * (X.Q0 j k - X.Qpp k * (y + X.R j k)) with hD1
   have hFcont : Continuous F := by rw [hF]; fun_prop
   have hD0d : HasDerivAt D0
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Q0 j k + X.Qpp k * (x + X.R j k))) x := by
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (-X.Q0 j k + X.Qpp k * (x + X.R j k))) x := by
     have h1 : HasDerivAt (fun y : ℝ => y + X.R j k) 1 x := (hasDerivAt_id x).add_const _
     have ha := h1.const_mul (-X.Q0 j k)
     have hb := ((h1.pow 2).const_mul (X.Qpp k)).div_const 2
     rw [hD0]
     exact ((ha.add hb).const_mul
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k))).congr_deriv (by ring)
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho k))).congr_deriv (by ring)
   have hD1d : HasDerivAt D1
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Qpp k)) x := by
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (-X.Qpp k)) x := by
     have h1 : HasDerivAt (fun y : ℝ => y + X.R j k) 1 x := (hasDerivAt_id x).add_const _
     have hb := (hasDerivAt_const x (X.Q0 j k)).sub (h1.const_mul (X.Qpp k))
     rw [hD1]
-    exact (hb.const_mul (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k))).congr_deriv (by ring)
+    exact (hb.const_mul (2 * Real.pi * Real.sqrt (X.rho j * X.rho k))).congr_deriv (by ring)
   have hbase := hasDerivAt_fixedConv_quadParam (F := F) hFcont (A := D0) (B := D1)
-    (C := 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (X.Qpp k / 2)) (X.lam i k) (X.R i k) hD0d hD1d
+    (C := 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Qpp k / 2)) (X.lam i k) (X.R i k) hD0d hD1d
   refine hbase.congr_of_eventuallyEq ?_
   filter_upwards [isOpen_Ioo.mem_nhds hx] with y hy
   rw [qpConv_lower_intervalForm X i k j hlam hy]

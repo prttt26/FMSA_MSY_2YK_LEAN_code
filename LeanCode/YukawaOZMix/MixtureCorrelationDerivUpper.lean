@@ -82,26 +82,26 @@ the forward-quadratic moments `∫Fwd`, `∫Fwd·t` over the **moving** window `
 the FTC boundary term (the forward quadratic times the shifted quadratic, both at the moving edge
 `x+λⱼₖ`). -/
 noncomputable def qpConvUpperDeriv (X : Mix N M) (i k j : Fin N) (x : ℝ) : ℝ :=
-  2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Q0 j k + X.Qpp k * (x + X.R j k))
-      * (∫ t in (x + X.lam j k)..(X.R i k), 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+  2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (-X.Q0 j k + X.Qpp k * (x + X.R j k))
+      * (∫ t in (x + X.lam j k)..(X.R i k), 2 * Real.pi * Real.sqrt (X.rho i * X.rho k)
           * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
-        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
-        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2)
-    + 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Qpp k)
-      * (∫ t in (x + X.lam j k)..(X.R i k), (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+        + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
+        + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Qpp k / 2) * t ^ 2)
+    + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (-X.Qpp k)
+      * (∫ t in (x + X.lam j k)..(X.R i k), (2 * Real.pi * Real.sqrt (X.rho i * X.rho k)
           * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
-        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
-        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2) * t)
-    - (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+        + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
+        + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Qpp k / 2) * t ^ 2) * t)
+    - (2 * Real.pi * Real.sqrt (X.rho i * X.rho k)
           * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
-        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k)
+        + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Q0 i k - X.Qpp k * X.R i k)
             * (x + X.lam j k)
-        + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * (x + X.lam j k) ^ 2)
-      * (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k)
+        + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Qpp k / 2) * (x + X.lam j k) ^ 2)
+      * (2 * Real.pi * Real.sqrt (X.rho j * X.rho k)
           * (-X.Q0 j k * (x + X.R j k) + X.Qpp k * (x + X.R j k) ^ 2 / 2)
-        + 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (X.Q0 j k - X.Qpp k * (x + X.R j k))
+        + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Q0 j k - X.Qpp k * (x + X.R j k))
             * (x + X.lam j k)
-        + 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (X.Qpp k / 2) * (x + X.lam j k) ^ 2)
+        + 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Qpp k / 2) * (x + X.lam j k) ^ 2)
 
 /-- **Correlation derivative on the upper piece.**  On `(λᵢⱼ, Rᵢⱼ)` the upper interval form
 `qpConv X i k j x = ∫ t in (x+λⱼₖ)..(Rᵢₖ), Fwd(t)·(A x + B x·t + C t²)` has a moving lower limit, so
@@ -111,31 +111,31 @@ theorem hasDerivAt_qpConv_upper (X : Mix N M) (i k j : Fin N) (hlam : 0 ≤ X.la
     {x : ℝ} (hx : x ∈ Set.Ioo (X.lam i j) (X.R i j)) :
     HasDerivAt (qpConv X i k j) (qpConvUpperDeriv X i k j x) x := by
   rw [qpConvUpperDeriv]
-  set F : ℝ → ℝ := fun t => 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k)
+  set F : ℝ → ℝ := fun t => 2 * Real.pi * Real.sqrt (X.rho i * X.rho k)
       * (-X.Q0 i k * X.R i k + X.Qpp k * X.R i k ^ 2 / 2)
-    + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
-    + 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ k) * (X.Qpp k / 2) * t ^ 2 with hF
-  set A : ℝ → ℝ := fun y => 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k)
+    + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Q0 i k - X.Qpp k * X.R i k) * t
+    + 2 * Real.pi * Real.sqrt (X.rho i * X.rho k) * (X.Qpp k / 2) * t ^ 2 with hF
+  set A : ℝ → ℝ := fun y => 2 * Real.pi * Real.sqrt (X.rho j * X.rho k)
     * (-X.Q0 j k * (y + X.R j k) + X.Qpp k * (y + X.R j k) ^ 2 / 2) with hA
-  set B : ℝ → ℝ := fun y => 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k)
+  set B : ℝ → ℝ := fun y => 2 * Real.pi * Real.sqrt (X.rho j * X.rho k)
     * (X.Q0 j k - X.Qpp k * (y + X.R j k)) with hB
   have hFcont : Continuous F := by rw [hF]; fun_prop
   have hAd : HasDerivAt A
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Q0 j k + X.Qpp k * (x + X.R j k))) x := by
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (-X.Q0 j k + X.Qpp k * (x + X.R j k))) x := by
     have h1 : HasDerivAt (fun y : ℝ => y + X.R j k) 1 x := (hasDerivAt_id x).add_const _
     have ha := h1.const_mul (-X.Q0 j k)
     have hb := ((h1.pow 2).const_mul (X.Qpp k)).div_const 2
     rw [hA]
     exact ((ha.add hb).const_mul
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k))).congr_deriv (by ring)
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho k))).congr_deriv (by ring)
   have hBd : HasDerivAt B
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (-X.Qpp k)) x := by
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (-X.Qpp k)) x := by
     have h1 : HasDerivAt (fun y : ℝ => y + X.R j k) 1 x := (hasDerivAt_id x).add_const _
     have hb := (hasDerivAt_const x (X.Q0 j k)).sub (h1.const_mul (X.Qpp k))
     rw [hB]
-    exact (hb.const_mul (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k))).congr_deriv (by ring)
+    exact (hb.const_mul (2 * Real.pi * Real.sqrt (X.rho j * X.rho k))).congr_deriv (by ring)
   have hbase := hasDerivAt_movingConv_quadParam (F := F) hFcont (A := A) (B := B)
-    (C := 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ k) * (X.Qpp k / 2)) (c := X.lam j k)
+    (C := 2 * Real.pi * Real.sqrt (X.rho j * X.rho k) * (X.Qpp k / 2)) (c := X.lam j k)
     (b := X.R i k) hAd hBd
   refine hbase.congr_of_eventuallyEq ?_
   filter_upwards [isOpen_Ioo.mem_nhds hx] with y hy

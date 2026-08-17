@@ -25,6 +25,8 @@ Yukawa `Mix`-layer copies (`MixtureHSDCFFin1.lean`) delegate here through `toHSM
 `physMix.toHSMix = physHSMix`.
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Set FMSA.MixtureOzStar
 
 namespace FMSA.HSMix
@@ -112,46 +114,46 @@ theorem q0MixEntry_matBaxterPsi_integrable_gen (X : FMSA.HSMix N)
 theorem matBaxterUExt_eq_matBaxterU_smallest_of_cont (X : FMSA.HSMix N)
     (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma)
     (hPo : ∀ a b, Continuous (Po a b)) (hPc : ∀ a b, Continuous (Pc a b))
-    (i j : Fin N) (r : ℝ) (hlam : ∀ k, 0 ≤ X.lam i k) (hRσ : ∀ k, X.R i k ≤ sigma) :
+    (i j : Fin N) (r : ℝ) (hlam : ∀ k, 0 ≤ X.lam i k) (hRsigC : ∀ k, X.R i k ≤ sigma) :
     matBaxterUExt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) i j r
       = matBaxterU (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) sigma i j r :=
   matBaxterUExt_eq_matBaxterU_of_row_lam_nonneg X (matBaxterPsi Po Pc sigma) sigma hsig0 i j r
-    hlam hRσ (fun k => q0MixEntry_matBaxterPsi_integrable X Po Pc sigma hPo hPc i k j r)
+    hlam hRsigC (fun k => q0MixEntry_matBaxterPsi_integrable X Po Pc sigma hPo hPc i k j r)
 
 /-- Largest-species bridge, integrability discharged: EXPLICIT polynomial-moment loss. -/
 theorem matBaxterUExt_sub_polyTail_of_cont (X : FMSA.HSMix N)
     (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma)
     (hPo : ∀ a b, Continuous (Po a b)) (hPc : ∀ a b, Continuous (Pc a b))
-    (i j : Fin N) (r : ℝ) (hlam : ∀ k, X.lam i k ≤ 0) (hRσ : ∀ k, X.R i k ≤ sigma) :
+    (i j : Fin N) (r : ℝ) (hlam : ∀ k, X.lam i k ≤ 0) (hRsigC : ∀ k, X.R i k ≤ sigma) :
     matBaxterUExt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) i j r
       = matBaxterU (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) sigma i j r
         - ∑ k, ∫ t in (X.lam i k)..(0:ℝ),
             (X.Q0 i k * (t - X.R i k) + X.Qpp k * (t - X.R i k) ^ 2 / 2)
               * matBaxterPsi Po Pc sigma k j (r - t) :=
   matBaxterUExt_eq_matBaxterU_sub_polyTail X (matBaxterPsi Po Pc sigma) sigma hsig0 i j r
-    hlam hRσ (fun k => q0MixEntry_matBaxterPsi_integrable X Po Pc sigma hPo hPc i k j r)
+    hlam hRsigC (fun k => q0MixEntry_matBaxterPsi_integrable X Po Pc sigma hPo hPc i k j r)
 
 /-- Transposed arm, hint-free (largest species): NO loss. -/
 theorem matBaxterUtExt_eq_matBaxterUt_of_cont (X : FMSA.HSMix N)
     (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma)
     (hPo : ∀ a b, Continuous (Po a b)) (hPc : ∀ a b, Continuous (Pc a b))
-    (i j : Fin N) (r : ℝ) (hlam : ∀ k, 0 ≤ X.lam k i) (hRσ : ∀ k, X.R k i ≤ sigma) :
+    (i j : Fin N) (r : ℝ) (hlam : ∀ k, 0 ≤ X.lam k i) (hRsigC : ∀ k, X.R k i ≤ sigma) :
     matBaxterUtExt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) i j r
       = matBaxterUt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) sigma i j r :=
-  matBaxterUtExt_eq_matBaxterUt_of_row X (matBaxterPsi Po Pc sigma) sigma hsig0 i j r hlam hRσ
+  matBaxterUtExt_eq_matBaxterUt_of_row X (matBaxterPsi Po Pc sigma) sigma hsig0 i j r hlam hRsigC
     (fun k => q0MixEntry_matBaxterPsi_integrable_gen X Po Pc sigma hPo hPc k i k j r)
 
 /-- Transposed arm, hint-free (smallest species): EXPLICIT loss. -/
 theorem matBaxterUtExt_sub_polyTail_of_cont (X : FMSA.HSMix N)
     (Po Pc : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma)
     (hPo : ∀ a b, Continuous (Po a b)) (hPc : ∀ a b, Continuous (Pc a b))
-    (i j : Fin N) (r : ℝ) (hlam : ∀ k, X.lam k i ≤ 0) (hRσ : ∀ k, X.R k i ≤ sigma) :
+    (i j : Fin N) (r : ℝ) (hlam : ∀ k, X.lam k i ≤ 0) (hRsigC : ∀ k, X.R k i ≤ sigma) :
     matBaxterUtExt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) i j r
       = matBaxterUt (matBaxterPsi Po Pc sigma) (fun a b => X.q0MixEntry a b) sigma i j r
         - ∑ k, ∫ t in (X.lam k i)..(0:ℝ),
             (X.Q0 k i * (t - X.R k i) + X.Qpp i * (t - X.R k i) ^ 2 / 2)
               * matBaxterPsi Po Pc sigma k j (r - t) :=
-  matBaxterUtExt_eq_matBaxterUt_sub_polyTail X (matBaxterPsi Po Pc sigma) sigma hsig0 i j r hlam hRσ
+  matBaxterUtExt_eq_matBaxterUt_sub_polyTail X (matBaxterPsi Po Pc sigma) sigma hsig0 i j r hlam hRsigC
     (fun k => q0MixEntry_matBaxterPsi_integrable_gen X Po Pc sigma hPo hPc k i k j r)
 
 /-- Symmetric-kernel windowing loss, hint-free: the two arms' losses sum to the symmetrized tail. -/
@@ -374,7 +376,7 @@ theorem baxterQuad_integral (Q0 Qpp R a b : ℝ) :
 
 /-- Support ordering `λᵢₖ ≤ Rᵢₖ` (`Rᵢₖ − λᵢₖ = σᵢ > 0`). -/
 theorem lam_le_R (X : FMSA.HSMix N) (i k : Fin N) : X.lam i k ≤ X.R i k := by
-  simp only [FMSA.HSMix.lam, FMSA.HSMix.R]; linarith [X.hσ i]
+  simp only [FMSA.HSMix.lam, FMSA.HSMix.R]; linarith [X.hsigma i]
 
 /-- **The Baxter-factor mass (M0) over its support `[λᵢₖ, Rᵢₖ]`, in closed form.** -/
 theorem q0MixEntry_baxterMoment (X : FMSA.HSMix N) (i k : Fin N) :

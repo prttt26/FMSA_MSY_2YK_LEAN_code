@@ -44,12 +44,12 @@ variable {N : ℕ}
 The density weight on the summed (second) index that turns the seed's row-sum into the scalar
 `q0_poly`; the bare `q0MixEntry` (physical `Q0phys` are `ρ`-stripped) does not. -/
 noncomputable def q0MixEntryW (X : FMSA.HSMix N) (i j : Fin N) (r : ℝ) : ℝ :=
-  X.ρ j * X.q0MixEntry i j r
+  X.rho j * X.q0MixEntry i j r
 
 /-- **`q0MixEntryW` row-sum = the `ρ_k`-weighted `q0MixEntry` row-sum** (pull the constant `ρⱼ`
 weights into the sum). -/
 theorem q0MixEntryW_rowSum (X : FMSA.HSMix N) (i : Fin N) (r : ℝ) :
-    (∑ k, X.q0MixEntryW i k r) = ∑ k, X.ρ k * X.q0MixEntry i k r := rfl
+    (∑ k, X.q0MixEntryW i k r) = ∑ k, X.rho k * X.q0MixEntry i k r := rfl
 
 /-- **Physical `Q0phys` collapses to the scalar `q'_py` at equal diameters.**  With every `σₖ = s`,
 `Rᵢₖ = s`, `σᵢσₖ = s²`, and `π·ξ₂·s = 6η` (`ξ₂ = (∑ρ)s²`, `η = (π/6)(∑ρ)s³`), the Lebowitz
@@ -93,7 +93,7 @@ density weight) — the concrete Lean content of "the physical seed needs `ρ_k`
 theorem physHSMixN_rhoWeighted_rowSum {rho sigma : Fin N → ℝ} {s : ℝ} (hsig : ∀ k, 0 < sigma k)
     (hs : ∀ k, sigma k = s) (hs0 : 0 < s) (hvac : vacMix rho sigma ≠ 0)
     (i : Fin N) (u : ℝ) (hu : u ∈ Set.Icc (0 : ℝ) s) :
-    (∑ k, (physHSMixN rho sigma hsig).ρ k * (physHSMixN rho sigma hsig).q0MixEntry i k u)
+    (∑ k, (physHSMixN rho sigma hsig).rho k * (physHSMixN rho sigma hsig).q0MixEntry i k u)
       = q0_poly (etaMix rho sigma) s (∑ k, rho k) u := by
   have hR : ∀ k, (physHSMixN rho sigma hsig).R i k = s := by
     intro k; simp only [physHSMixN, FMSA.HSMix.R, hs i, hs k]; ring
@@ -109,7 +109,7 @@ theorem physHSMixN_rhoWeighted_rowSum {rho sigma : Fin N → ℝ} {s : ℝ} (hsi
     simp only [physHSMixN]
     rw [Q0phys_equalDiam hs hs0 hvac i k, Qppphys_equalDiam hs hs0 hvac k k]
     ring
-  calc (∑ k, (physHSMixN rho sigma hsig).ρ k * (physHSMixN rho sigma hsig).q0MixEntry i k u)
+  calc (∑ k, (physHSMixN rho sigma hsig).rho k * (physHSMixN rho sigma hsig).q0MixEntry i k u)
       = ∑ k, rho k * (q_prime_py (etaMix rho sigma) s * (u - s)
           + q_doubleprime_py (etaMix rho sigma) * ((u - s) ^ 2 / 2)) := by
         refine Finset.sum_congr rfl (fun k _ => ?_)
@@ -153,7 +153,7 @@ theorem matBaxterUQm_rhoWeighted_physHSMix_eq_rcHS
     exact (q0MixEntry_intervalIntegrable (physHSMixN rho sigma hsig) i' k 0 s).const_mul _
   · intro i' k
     convert (q0MixEntry_mul_id_intervalIntegrable (physHSMixN rho sigma hsig) i' k 0 s).const_mul
-      ((physHSMixN rho sigma hsig).ρ k) using 1
+      ((physHSMixN rho sigma hsig).rho k) using 1
     funext t; simp only [q0MixEntryW]; ring
 
 end FMSA.HSMix

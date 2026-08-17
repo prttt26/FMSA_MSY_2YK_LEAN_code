@@ -172,18 +172,18 @@ namespace Mix
 variable {N M : ℕ} (X : Mix N M)
 
 /-- Contact distance `R[i,j] = (σᵢ + σⱼ)/2`. -/
-noncomputable def R (i j : Fin N) : ℝ := (X.σ i + X.σ j) / 2
+noncomputable def R (i j : Fin N) : ℝ := (X.sigma i + X.sigma j) / 2
 
 /-- Size-asymmetry parameter `lambda_ij[k,l] = (σ[l] − σ[k])/2` (`fmsa_ga_matrix_mix.py:162`).
 Note the order: **second index minus first**. -/
-noncomputable def lam (k l : Fin N) : ℝ := (X.σ l - X.σ k) / 2
+noncomputable def lam (k l : Fin N) : ℝ := (X.sigma l - X.sigma k) / 2
 
 /-- Size-asymmetry lower cutoff `σ_min(i,j) = min(σᵢ, σⱼ)`. -/
-noncomputable def sigMin (i j : Fin N) : ℝ := min (X.σ i) (X.σ j)
+noncomputable def sigMin (i j : Fin N) : ℝ := min (X.sigma i) (X.sigma j)
 
 theorem R_pos (i j : Fin N) : 0 < X.R i j := by
-  have hi := X.hσ i
-  have hj := X.hσ j
+  have hi := X.hsigma i
+  have hj := X.hsigma j
   unfold R
   linarith
 
@@ -196,25 +196,25 @@ noncomputable def ellII (r : ℝ) (a j : Fin N) : ℝ := r - X.R a j
 
 /-- `alpha = l + lambda_ij[i,a] − sigma[a]` for Term II (`_compute_mediated` line 744). -/
 noncomputable def alphaII (r : ℝ) (i j a : Fin N) : ℝ :=
-    X.ellII r a j + X.lam i a - X.σ a
+    X.ellII r a j + X.lam i a - X.sigma a
 
 /-- `l = r − R[i,b]` for Term III (`_compute_mediated` line 771). -/
 noncomputable def ellIII (r : ℝ) (i b : Fin N) : ℝ := r - X.R i b
 
 /-- `alpha = l + lambda_ij[j,b] − sigma[b]` for Term III (`_compute_mediated` line 772). -/
 noncomputable def alphaIII (r : ℝ) (i j b : Fin N) : ℝ :=
-    X.ellIII r i b + X.lam j b - X.σ b
+    X.ellIII r i b + X.lam j b - X.sigma b
 
 /-- **The sign-convention identity.**  Term II's activation variable collapses to
 `alpha = r − σ[a] − R[i,j]`.  Everything in IB.1 follows from this. -/
 theorem alphaII_eq (r : ℝ) (i j a : Fin N) :
-    X.alphaII r i j a = r - X.σ a - X.R i j := by
+    X.alphaII r i j a = r - X.sigma a - X.R i j := by
   unfold alphaII ellII lam R
   ring
 
 /-- Term III's activation variable collapses to `alpha = r − σ[b] − R[i,j]`. -/
 theorem alphaIII_eq (r : ℝ) (i j b : Fin N) :
-    X.alphaIII r i j b = r - X.σ b - X.R i j := by
+    X.alphaIII r i j b = r - X.sigma b - X.R i j := by
   unfold alphaIII ellIII lam R
   ring
 
@@ -222,7 +222,7 @@ theorem alphaIII_eq (r : ℝ) (i j b : Fin N) :
 (`_compute_mediated` lines 737-763).  The Python's `continue` guards are omitted because
 `lstar_eq_zero_of_alpha_neg` shows both branches agree in the inner region. -/
 noncomputable def termII (r : ℝ) (i j : Fin N) : ℝ :=
-    ∑ a : Fin N, Real.sqrt (X.ρ a * X.ρ i) *
+    ∑ a : Fin N, Real.sqrt (X.rho a * X.rho i) *
       ∑ k : Fin M, X.cb a j k *
         (X.Q0 a i * I1cl (X.zp a j k) (X.alphaII r i j a)
             (lstar (X.ellII r a j) (X.alphaII r i j a))
@@ -232,7 +232,7 @@ noncomputable def termII (r : ℝ) (i j : Fin N) : ℝ :=
 /-- Term III: `Σ_b √(ρ_bρⱼ) · Σ_k Rst_k · [Q₀[b,j]·I1 + ½·Q''[j]·I2]`
 (`_compute_mediated` lines 765-791). -/
 noncomputable def termIII (r : ℝ) (i j : Fin N) : ℝ :=
-    ∑ b : Fin N, Real.sqrt (X.ρ b * X.ρ j) *
+    ∑ b : Fin N, Real.sqrt (X.rho b * X.rho j) *
       ∑ k : Fin M, X.cb i b k *
         (X.Q0 b j * I1cl (X.zp i b k) (X.alphaIII r i j b)
             (lstar (X.ellIII r i b) (X.alphaIII r i j b))
@@ -244,7 +244,7 @@ noncomputable def termIII (r : ℝ) (i j : Fin N) : ℝ :=
 -/
 
 /-- `Delta_ai = lambda_ij[i,a] − sigma[a]` (`_compute_mediated` line 800). -/
-noncomputable def DeltaAi (i a : Fin N) : ℝ := X.lam i a - X.σ a
+noncomputable def DeltaAi (i a : Fin N) : ℝ := X.lam i a - X.sigma a
 
 /-- `c_exp = R[a,b] + max(0, −Delta_ai)` — where `lstar` first turns positive (line 802). -/
 noncomputable def cexp (i a b : Fin N) : ℝ := X.R a b + max 0 (-(X.DeltaAi i a))
@@ -253,7 +253,7 @@ noncomputable def cexp (i a b : Fin N) : ℝ := X.R a b + max 0 (-(X.DeltaAi i a
 noncomputable def dexp (i a b : Fin N) : ℝ := X.R a b - X.DeltaAi i a
 
 /-- `u_lo_bj = r + lambda_ij[b,j] − sigma[b]` (line 805). -/
-noncomputable def uLo (r : ℝ) (j b : Fin N) : ℝ := r + X.lam b j - X.σ b
+noncomputable def uLo (r : ℝ) (j b : Fin N) : ℝ := r + X.lam b j - X.sigma b
 
 /-- `u_hi_bj = r + lambda_ij[b,j]` (line 806). -/
 noncomputable def uHi (r : ℝ) (j b : Fin N) : ℝ := r + X.lam b j
@@ -275,7 +275,7 @@ noncomputable def ivIntegrand (r : ℝ) (i j a b : Fin N) (k : Fin M) (u : ℝ) 
     let ce   := X.cexp i a b
     let de   := X.dexp i a b
     let ulo  := X.uLo r j b
-    let Cbj  := Real.sqrt (X.ρ b * X.ρ j)
+    let Cbj  := Real.sqrt (X.rho b * X.rho j)
     let qP2  := -Cbj * (1 / 2) * X.Qpp j
     let qP1  := -Cbj * (-X.Q0 b j - X.Qpp j * ulo)
     let qP0  := -Cbj * (X.Q0 b j * ulo + (1 / 2) * X.Qpp j * ulo ^ 2)
@@ -302,7 +302,7 @@ noncomputable def ivIntegrand (r : ℝ) (i j a b : Fin N) (k : Fin M) (u : ℝ) 
 not a property of the integral (a reversed interval integral is `−∫`, not `0`). -/
 noncomputable def termIVsub (r : ℝ) (i j a b : Fin N) : ℝ :=
     if X.uHiEff r j b ≤ X.uLoEff r i j a b then 0
-    else Real.sqrt (X.ρ a * X.ρ i) *
+    else Real.sqrt (X.rho a * X.rho i) *
       ∑ k : Fin M, ∫ u in (X.uLoEff r i j a b)..(X.uHiEff r j b), X.ivIntegrand r i j a b k u
 
 /-- `IV = −Σ_{a,b} (sub-term)` (line 855). -/
@@ -312,7 +312,7 @@ noncomputable def termIV (r : ℝ) (i j : Fin N) : ℝ :=
 /-- The full mediated correction `(II + III + IV) / (2π√(ρᵢρⱼ)·r)` (lines 856-857). -/
 noncomputable def mediated (r : ℝ) (i j : Fin N) : ℝ :=
     (X.termII r i j + X.termIII r i j + X.termIV r i j)
-      / (2 * π * Real.sqrt (X.ρ i * X.ρ j) * r)
+      / (2 * π * Real.sqrt (X.rho i * X.rho j) * r)
 
 /-!
 ### Term IV activation conditions
@@ -320,11 +320,11 @@ noncomputable def mediated (r : ℝ) (i j : Fin N) : ℝ :=
 
 /-- Condition **(A)**: `2σₐ + σ_b < σⱼ`.  Equivalent to `r* < R[i,j]`, i.e. the breakpoint
 lies strictly inside the inner region. -/
-def ActiveA (j a b : Fin N) : Prop := 2 * X.σ a + X.σ b < X.σ j
+def ActiveA (j a b : Fin N) : Prop := 2 * X.sigma a + X.sigma b < X.sigma j
 
 /-- Condition **(B)**: `σⱼ < 3σ_b`.  Equivalent to `u_lo_bj < r`, i.e. the integration window
 is nonempty above `r*`. -/
-def ActiveB (j b : Fin N) : Prop := X.σ j < 3 * X.σ b
+def ActiveB (j b : Fin N) : Prop := X.sigma j < 3 * X.sigma b
 
 /-!
 ### The second mediated knot `r**` and Condition C
@@ -333,18 +333,18 @@ def ActiveB (j b : Fin N) : Prop := X.σ j < 3 * X.σ b
 /-- The second mediated breakpoint `r** = r* + (3d_b − d_j)/2 = R[a,b] + R[i,a] + (3σ_b − σ_j)/2`
 — where the effective lower limit switches from the constant `c_exp = r*` to the moving
 `u_lo_bj(r)`. -/
-noncomputable def rstarstar (i j a b : Fin N) : ℝ := X.R a b + X.R i a + (3 * X.σ b - X.σ j) / 2
+noncomputable def rstarstar (i j a b : Fin N) : ℝ := X.R a b + X.R i a + (3 * X.sigma b - X.sigma j) / 2
 
 /-- Condition **(C)**: `σₐ + 2σ_b < σⱼ`.  Equivalent to `r** < R[i,j]`, i.e. the second knot lies
 strictly inside the inner region.  Strictly stronger than **(A)** together with **(B)**. -/
-def CondC (j a b : Fin N) : Prop := X.σ a + 2 * X.σ b < X.σ j
+def CondC (j a b : Fin N) : Prop := X.sigma a + 2 * X.sigma b < X.sigma j
 
 /-- The b–j quadratic `qP(u) = qP0 + qP1·u + qP2·u²` assembled by `_compute_mediated`
 (`fmsa_ga_matrix_mix.py:1092-1094`), whose coefficients are built from the moving lower limit
 `u_lo_bj = uLo r j b`.  Exactly the `qP` factor inside `ivIntegrand`. -/
 noncomputable def qPoly (r : ℝ) (j b : Fin N) (u : ℝ) : ℝ :=
     let ulo := X.uLo r j b
-    let Cbj := Real.sqrt (X.ρ b * X.ρ j)
+    let Cbj := Real.sqrt (X.rho b * X.rho j)
     let qP2 := -Cbj * (1 / 2) * X.Qpp j
     let qP1 := -Cbj * (-X.Q0 b j - X.Qpp j * ulo)
     let qP0 := -Cbj * (X.Q0 b j * ulo + (1 / 2) * X.Qpp j * ulo ^ 2)
@@ -377,7 +377,7 @@ theorem terms_II_III_zero {N M : ℕ} (X : Mix N M) (i j : Fin N) :
     apply Finset.sum_eq_zero
     intro a _
     have halpha : X.alphaII r i j a < 0 := by
-      rw [X.alphaII_eq]; have := X.hσ a; linarith
+      rw [X.alphaII_eq]; have := X.hsigma a; linarith
     rw [lstar_eq_zero_of_alpha_neg halpha]
     simp
   · -- Term III: symmetric, via `alphaIII_eq`.
@@ -385,7 +385,7 @@ theorem terms_II_III_zero {N M : ℕ} (X : Mix N M) (i j : Fin N) :
     apply Finset.sum_eq_zero
     intro b _
     have halpha : X.alphaIII r i j b < 0 := by
-      rw [X.alphaIII_eq]; have := X.hσ b; linarith
+      rw [X.alphaIII_eq]; have := X.hsigma b; linarith
     rw [lstar_eq_zero_of_alpha_neg halpha]
     simp
 
@@ -445,10 +445,10 @@ Three strictly increasing diameters are needed — which is exactly why `N = 2` 
 activate Term IV (`binary_mediated_zero`). -/
 theorem active_pair_size_chain {N M : ℕ} (X : Mix N M) (j a b : Fin N)
     (hA : X.ActiveA j a b) (hB : X.ActiveB j b) :
-    X.σ a < X.σ b ∧ X.σ b < X.σ j := by
+    X.sigma a < X.sigma b ∧ X.sigma b < X.sigma j := by
   unfold Mix.ActiveA at hA
   unfold Mix.ActiveB at hB
-  have ha := X.hσ a
+  have ha := X.hsigma a
   exact ⟨by linarith, by linarith⟩
 
 /-- **Task IB.3.**  If no intermediate pair `(a,b)` satisfies both activation conditions,
@@ -631,9 +631,9 @@ and the breakpoint lies strictly inside the inner region of pair `(0,2)`:
 
 This is the Tern148 block of `verify_mediated_breakpoints.py`, where mediated is confirmed
 nonzero for pairs (0,2), (1,2), (2,2). -/
-theorem ternary_148_active {M : ℕ} (X : Mix 3 M) (hσ : X.σ = ![1, 4, 8]) :
+theorem ternary_148_active {M : ℕ} (X : Mix 3 M) (hsigma : X.sigma = ![1, 4, 8]) :
     X.ActiveA 2 0 1 ∧ X.ActiveB 2 1 ∧ X.R 0 1 + X.R 0 0 < X.R 0 2 := by
-  refine ⟨?_, ?_, ?_⟩ <;> simp [Mix.ActiveA, Mix.ActiveB, Mix.R, hσ] <;> norm_num
+  refine ⟨?_, ?_, ?_⟩ <;> simp [Mix.ActiveA, Mix.ActiveB, Mix.R, hsigma] <;> norm_num
 
 /-!
 ## IB.7 — The second knot `r**` is interior iff Condition C; and `C ∧ B ⟹ A`
@@ -667,7 +667,7 @@ theorem condC_activeB_imp_activeA {N M : ℕ} (X : Mix N M) (j a b : Fin N)
 `u_hi_eff = min(r, u_hi_bj) = r`, because `u_hi_bj = r + (σ_j − σ_b)/2 ≥ r`.
 Only the *lower* limit `u_lo_eff` can move, so the `(a,b)` sub-term changes analytic form only
 where the lower limit switches — at `r*` and (if C) `r**`, and nowhere else. -/
-theorem uHiEff_eq_r {N M : ℕ} (X : Mix N M) (r : ℝ) (j b : Fin N) (h : X.σ b < X.σ j) :
+theorem uHiEff_eq_r {N M : ℕ} (X : Mix N M) (r : ℝ) (j b : Fin N) (h : X.sigma b < X.sigma j) :
     X.uHiEff r j b = r := by
   unfold Mix.uHiEff Mix.uHi Mix.lam
   exact min_eq_left (by linarith)

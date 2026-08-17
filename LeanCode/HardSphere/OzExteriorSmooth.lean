@@ -45,6 +45,8 @@ genuinely `C¹` on the closed exterior and linearly extendable.  Neither is a ph
 comment below.**
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Set Real Filter Topology
 
 namespace FMSA.HardSphere
@@ -137,9 +139,9 @@ theorem ozBaxterFixedPt_smooth_deriv_bundle {eta sigma rho : ℝ} (heta0 : 0 < e
     r_mul_ozBaxterFixedPt_tendsto_zero heta0 heta1 hsigma hrho heta_def,
     r_mul_ozBaxterFixedPt_integrableOn heta0 heta1 hsigma hrho heta_def, hg'_int⟩
   · intro r hr
-    have hσr : sigma ≤ r := le_of_lt hr
+    have hsigmar : sigma ≤ r := le_of_lt hr
     have hr0 : 0 < r := lt_trans hsigma hr
-    rw [ozBaxterFixedPt_eq_div hsigma hr0, baxterPsi_outer hσr, ← hg_eq r hσr]
+    rw [ozBaxterFixedPt_eq_div hsigma hr0, baxterPsi_outer hsigmar, ← hg_eq r hsigmar]
   · rw [hg_eq sigma (le_refl sigma), ozBaxterFixedPt_eq_div hsigma hsigma,
       baxterPsi_outer (le_refl sigma)]
 

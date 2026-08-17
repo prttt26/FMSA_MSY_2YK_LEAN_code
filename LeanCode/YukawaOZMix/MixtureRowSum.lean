@@ -41,6 +41,8 @@ the matrix core seed for the concrete kernel.
 Status: ✓ axiom-clean.
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Set
 namespace FMSA.MixtureBaxter
 open FMSA.MixtureOzStar
@@ -59,27 +61,27 @@ non-symmetric convention matching the bare core value `Ψₖⱼ = −v`), the ro
 This **discharges** the `hrow` hypothesis of `matBaxterUQm_momentSeed_of_rowSum` /
 `matBaxterUQm_eq_rcHS_of_rowSum` for the concrete kernel, closing the equal-diameter matrix seed. -/
 theorem q0MixEntry_rowSum_eq_q0_poly {N M : ℕ} (X : Mix N M) {sigma eta rho : ℝ}
-    (hsig : ∀ k, X.σ k = sigma)
-    (hrho : rho = ∑ k, X.ρ k)
-    (hQ0 : ∀ i k, X.Q0 i k = X.ρ k * q_prime_py eta sigma)
-    (hQpp : ∀ k, X.Qpp k = X.ρ k * q_doubleprime_py eta)
+    (hsig : ∀ k, X.sigma k = sigma)
+    (hrho : rho = ∑ k, X.rho k)
+    (hQ0 : ∀ i k, X.Q0 i k = X.rho k * q_prime_py eta sigma)
+    (hQpp : ∀ k, X.Qpp k = X.rho k * q_doubleprime_py eta)
     (i : Fin N) (u : ℝ) (hu : u ∈ Set.Icc (0:ℝ) sigma) :
     ∑ k, q0MixEntry X i k u = q0_poly eta sigma rho u := by
-  obtain ⟨hu0, huσ⟩ := hu
+  obtain ⟨hu0, husigma⟩ := hu
   -- each entry collapses to `ρₖ·(per-density quadratic)` on the equal-diameter core `[0,σ]`
   have hentry : ∀ k : Fin N, q0MixEntry X i k u
-      = X.ρ k * (q_prime_py eta sigma * (u - sigma)
+      = X.rho k * (q_prime_py eta sigma * (u - sigma)
                   + q_doubleprime_py eta * (u - sigma) ^ 2 / 2) := by
     intro k
     have hlam : X.lam i k = 0 := by simp only [Mix.lam, hsig]; ring
     have hR : X.R i k = sigma := by simp only [Mix.R, hsig]; ring
     have hmem : u ∈ Set.Icc (X.lam i k) (X.R i k) := by
-      rw [hlam, hR]; exact Set.mem_Icc.mpr ⟨hu0, huσ⟩
+      rw [hlam, hR]; exact Set.mem_Icc.mpr ⟨hu0, husigma⟩
     unfold q0MixEntry
     rw [Set.indicator_of_mem hmem]
     simp only [hR, hQ0 i k, hQpp k]
     ring
-  rw [Finset.sum_congr rfl (fun k _ => hentry k), ← Finset.sum_mul, ← hrho, q0_poly_inner huσ]
+  rw [Finset.sum_congr rfl (fun k _ => hentry k), ← Finset.sum_mul, ← hrho, q0_poly_inner husigma]
   ring
 
 /-! ### Integrability of the concrete kernel — the seed's remaining side-conditions -/
@@ -105,9 +107,9 @@ discharged for the physical kernel at equal diameters.  This is exactly the `hMo
 `matBaxterUQm_eq_rPhi_of_momentSeed` needs, now unconditional in the kernel. -/
 theorem matBaxterUQm_momentSeed_q0MixEntry {N M : ℕ} (X : Mix N M) {sigma eta rho : ℝ}
     (hsigma : 0 < sigma) (heta : eta < 1) (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6)
-    (hsig : ∀ k, X.σ k = sigma) (hrho : rho = ∑ k, X.ρ k)
-    (hQ0 : ∀ i k, X.Q0 i k = X.ρ k * q_prime_py eta sigma)
-    (hQpp : ∀ k, X.Qpp k = X.ρ k * q_doubleprime_py eta) :
+    (hsig : ∀ k, X.sigma k = sigma) (hrho : rho = ∑ k, X.rho k)
+    (hQ0 : ∀ i k, X.Q0 i k = X.rho k * q_prime_py eta sigma)
+    (hQpp : ∀ k, X.Qpp k = X.rho k * q_doubleprime_py eta) :
     ∀ (i _j : Fin N), ∀ r ∈ Set.Ioo (0 : ℝ) sigma,
       (r * ((∑ k, ∫ t in (0:ℝ)..sigma, q0MixEntry X i k t) - 1)
           - ∑ k, ∫ t in (0:ℝ)..sigma, t * q0MixEntry X i k t)
@@ -190,12 +192,12 @@ theorem matBaxterPsi_hUouter {N : ℕ} (sigma : ℝ) (hsigma : 0 < sigma)
 /-- The convolution window `x ↦ ∫₀^σ Q(t)·Psi(x−t) dt` is measurable (for measurable `Q, Psi`) — via
 `StronglyMeasurable.integral_prod_right` after rewriting the interval integral as an `Ioc`-indicator. -/
 theorem convWindow_measurable {Q Psi : ℝ → ℝ} (hQ : Measurable Q) (hPsi : Measurable Psi)
-    {sigma : ℝ} (hσ : 0 ≤ sigma) :
+    {sigma : ℝ} (hsigma : 0 ≤ sigma) :
     Measurable (fun x => ∫ t in (0:ℝ)..sigma, Q t * Psi (x - t)) := by
   have hrw : (fun x => ∫ t in (0:ℝ)..sigma, Q t * Psi (x - t))
       = fun x => ∫ t, (Set.Ioc (0:ℝ) sigma).indicator (fun t => Q t * Psi (x - t)) t := by
     funext x
-    rw [intervalIntegral.integral_of_le hσ, ← MeasureTheory.integral_indicator measurableSet_Ioc]
+    rw [intervalIntegral.integral_of_le hsigma, ← MeasureTheory.integral_indicator measurableSet_Ioc]
   rw [hrw]
   apply StronglyMeasurable.measurable
   apply StronglyMeasurable.integral_prod_right
@@ -204,17 +206,17 @@ theorem convWindow_measurable {Q Psi : ℝ → ℝ} (hQ : Measurable Q) (hPsi : 
     (measurableSet_Ioc.preimage (by fun_prop))).stronglyMeasurable
 
 /-- `matBaxterU Psi Q σ k j` is measurable (continuous `Q`, measurable `Psi` entries). -/
-theorem matBaxterU_measurable {N : ℕ} (sigma : ℝ) (hσ : 0 ≤ sigma)
+theorem matBaxterU_measurable {N : ℕ} (sigma : ℝ) (hsigma : 0 ≤ sigma)
     (Psi Q : Matrix (Fin N) (Fin N) (ℝ → ℝ))
     (hQcont : ∀ i k, Continuous (Q i k)) (hPsiMeas : ∀ l j, Measurable (Psi l j)) (k j : Fin N) :
     Measurable (matBaxterU Psi Q sigma k j) := by
   unfold matBaxterU
   refine (hPsiMeas k j).sub (Finset.measurable_sum _ (fun l _ => ?_))
-  exact convWindow_measurable (hQcont k l).measurable (hPsiMeas l j) hσ
+  exact convWindow_measurable (hQcont k l).measurable (hPsiMeas l j) hsigma
 
 /-- `matBaxterU Psi Q σ k j` is bounded on every `Icc a b` (`a ≤ b`) — continuous `Q`, locally
 bounded `Psi`. -/
-theorem matBaxterU_bddOn {N : ℕ} (sigma : ℝ) (hσ : 0 ≤ sigma)
+theorem matBaxterU_bddOn {N : ℕ} (sigma : ℝ) (hsigma : 0 ≤ sigma)
     (Psi Q : Matrix (Fin N) (Fin N) (ℝ → ℝ))
     (hQcont : ∀ i k, Continuous (Q i k))
     (hPsiBdd : ∀ l j a b, ∃ C, ∀ x ∈ Set.uIcc a b, |Psi l j x| ≤ C)
@@ -231,10 +233,10 @@ theorem matBaxterU_bddOn {N : ℕ} (sigma : ℝ) (hσ : 0 ≤ sigma)
     have hbd : ∀ t ∈ Set.Ioc (min (0:ℝ) sigma) (max 0 sigma),
         ‖Q k l t * Psi l j (x - t)‖ ≤ (max Cq 0) * (max Cp 0) := by
       intro t ht
-      rw [min_eq_left hσ, max_eq_right hσ] at ht
+      rw [min_eq_left hsigma, max_eq_right hsigma] at ht
       rw [Real.norm_eq_abs, abs_mul]
       have h1 : |Q k l t| ≤ max Cq 0 := by
-        have := hCq t (Set.Ioc_subset_Icc_self.trans (le_of_eq (Set.uIcc_of_le hσ).symm) ht)
+        have := hCq t (Set.Ioc_subset_Icc_self.trans (le_of_eq (Set.uIcc_of_le hsigma).symm) ht)
         rw [Real.norm_eq_abs] at this; exact le_trans this (le_max_left _ _)
       have h2 : |Psi l j (x - t)| ≤ max Cp 0 := by
         have hmem : x - t ∈ Set.uIcc (a - sigma) b := by
@@ -243,7 +245,7 @@ theorem matBaxterU_bddOn {N : ℕ} (sigma : ℝ) (hσ : 0 ≤ sigma)
         exact le_trans (hCp _ hmem) (le_max_left _ _)
       exact mul_le_mul h1 h2 (abs_nonneg _) (le_max_right _ _)
     have := intervalIntegral.norm_integral_le_of_norm_le_const hbd
-    rw [Real.norm_eq_abs, sub_zero, abs_of_nonneg hσ] at this
+    rw [Real.norm_eq_abs, sub_zero, abs_of_nonneg hsigma] at this
     exact this
   choose Cl hCl using hconv
   refine ⟨C0 + ∑ l, Cl l, fun x hx => ?_⟩
@@ -261,14 +263,14 @@ theorem matBaxterU_bddOn {N : ℕ} (sigma : ℝ) (hσ : 0 ≤ sigma)
 /-- **`hint` from regularity** — interval-integrability of `Qᵢₖ · matBaxterU Ψ Q σ ₖⱼ(r+·)` on `[0,σ]`,
 from `Q` continuous and `Ψ` measurable + locally bounded.  Reduces (via `matBaxterU_measurable` +
 `matBaxterU_bddOn`) to a bounded-measurable interval integrand times the continuous `Q`. -/
-theorem matBaxterU_hint_of_regular {N : ℕ} (sigma : ℝ) (hσ : 0 ≤ sigma)
+theorem matBaxterU_hint_of_regular {N : ℕ} (sigma : ℝ) (hsigma : 0 ≤ sigma)
     (Psi Q : Matrix (Fin N) (Fin N) (ℝ → ℝ))
     (hQcont : ∀ i k, Continuous (Q i k)) (hPsiMeas : ∀ l j, Measurable (Psi l j))
     (hPsiBdd : ∀ l j a b, ∃ C, ∀ x ∈ Set.uIcc a b, |Psi l j x| ≤ C)
     (i k j : Fin N) (r : ℝ) :
     IntervalIntegrable (fun t => Q i k t * matBaxterU Psi Q sigma k j (r + t)) volume 0 sigma := by
-  have hMUmeas := matBaxterU_measurable sigma hσ Psi Q hQcont hPsiMeas k j
-  obtain ⟨C, hC⟩ := matBaxterU_bddOn sigma hσ Psi Q hQcont hPsiBdd k j r (r + sigma) (by linarith)
+  have hMUmeas := matBaxterU_measurable sigma hsigma Psi Q hQcont hPsiMeas k j
+  obtain ⟨C, hC⟩ := matBaxterU_bddOn sigma hsigma Psi Q hQcont hPsiBdd k j r (r + sigma) (by linarith)
   have hcompInt : IntervalIntegrable (fun t => matBaxterU Psi Q sigma k j (r + t)) volume 0 sigma := by
     rw [intervalIntegrable_iff]
     have hfin : volume (Set.uIoc (0:ℝ) sigma) ≠ ⊤ :=
@@ -276,7 +278,7 @@ theorem matBaxterU_hint_of_regular {N : ℕ} (sigma : ℝ) (hσ : 0 ≤ sigma)
     refine Measure.integrableOn_of_bounded (M := C) hfin
       (hMUmeas.comp (by fun_prop)).aestronglyMeasurable ?_
     filter_upwards [ae_restrict_mem measurableSet_uIoc] with t ht
-    rw [Set.uIoc_of_le hσ] at ht
+    rw [Set.uIoc_of_le hsigma] at ht
     rw [Real.norm_eq_abs]
     exact hC (r + t) (Set.mem_Icc.mpr ⟨by linarith [ht.1], by linarith [ht.2]⟩)
   exact hcompInt.continuousOn_mul (hQcont i k).continuousOn
@@ -783,13 +785,13 @@ every entry is `q0MixEntryᵢₗ = ρₗ·(indicator quadratic)` — separable �
 closing obstruction (b) for the concrete equal-diameter factor.  (For *unequal* diameters the factor is
 not separable — each pair has its own `σ_il`, `λ_il` profile — so `hMsym` there genuinely needs the WH
 factorization of the symmetric PY DCF.) -/
-theorem q0MixEntry_hMsym_equalDiam {N M : ℕ} (X : Mix N M) {sigma : ℝ} (hsig : ∀ k, X.σ k = sigma)
-    {a b : ℝ} (hQ0 : ∀ i l, X.Q0 i l = X.ρ l * a) (hQpp : ∀ l, X.Qpp l = X.ρ l * b)
+theorem q0MixEntry_hMsym_equalDiam {N M : ℕ} (X : Mix N M) {sigma : ℝ} (hsig : ∀ k, X.sigma k = sigma)
+    {a b : ℝ} (hQ0 : ∀ i l, X.Q0 i l = X.rho l * a) (hQpp : ∀ l, X.Qpp l = X.rho l * b)
     (i k : Fin N) (t s : ℝ) :
     ∑ l, q0MixEntry X i l t * q0MixEntry X k l s
       = ∑ l, q0MixEntry X i l s * q0MixEntry X k l t := by
   have hsep : ∀ (m l : Fin N) (u : ℝ), q0MixEntry X m l u
-      = X.ρ l * Set.indicator (Set.Icc (0:ℝ) sigma)
+      = X.rho l * Set.indicator (Set.Icc (0:ℝ) sigma)
           (fun u => a * (u - sigma) + b * (u - sigma) ^ 2 / 2) u := by
     intro m l u
     have hlam : X.lam m l = 0 := by simp only [Mix.lam, hsig]; ring
@@ -1030,10 +1032,10 @@ B4 (injectivity) remain to complete `hbridge`. -/
 theorem q0MixEntry_laplace {N M : ℕ} (X : Mix N M) (i j : Fin N) (z : ℝ) (hz : z ≠ 0) :
     (∫ t in (X.lam i j)..(X.R i j), Real.exp (-(z * t)) * q0MixEntry X i j t)
       = Real.exp (-(z * X.lam i j))
-        * (X.Q0 i j * ((1 - z * X.σ i - Real.exp (-(z * X.σ i))) / z ^ 2)
-          + X.Qpp j * ((1 - z * X.σ i + (z * X.σ i) ^ 2 / 2 - Real.exp (-(z * X.σ i))) / z ^ 3)) := by
-  have hRlam : X.R i j = X.lam i j + X.σ i := by simp only [Mix.R, Mix.lam]; ring
-  have hle : X.lam i j ≤ X.R i j := by rw [hRlam]; linarith [X.hσ i]
+        * (X.Q0 i j * ((1 - z * X.sigma i - Real.exp (-(z * X.sigma i))) / z ^ 2)
+          + X.Qpp j * ((1 - z * X.sigma i + (z * X.sigma i) ^ 2 / 2 - Real.exp (-(z * X.sigma i))) / z ^ 3)) := by
+  have hRlam : X.R i j = X.lam i j + X.sigma i := by simp only [Mix.R, Mix.lam]; ring
+  have hle : X.lam i j ≤ X.R i j := by rw [hRlam]; linarith [X.hsigma i]
   have hcongr : (∫ t in (X.lam i j)..(X.R i j), Real.exp (-(z * t)) * q0MixEntry X i j t)
       = ∫ t in (X.lam i j)..(X.R i j), Real.exp (-(z * t))
           * (X.Q0 i j * (t - X.R i j) + X.Qpp j * (t - X.R i j) ^ 2 / 2) := by
@@ -1042,7 +1044,7 @@ theorem q0MixEntry_laplace {N M : ℕ} (X : Mix N M) (i j : Fin N) (z : ℝ) (hz
     unfold q0MixEntry
     rw [Set.indicator_of_mem ht]
   rw [hcongr, hRlam]
-  exact laplace_baxter_quad z (X.lam i j) (X.σ i) (X.Q0 i j) (X.Qpp j) hz
+  exact laplace_baxter_quad z (X.lam i j) (X.sigma i) (X.Q0 i j) (X.Qpp j) hz
 
 /-! ### B2 of the transform bridge — the Laplace product↔correlation theorem -/
 
@@ -1195,11 +1197,11 @@ theorem laplace_product_eq_corr_c (f g : ℝ → ℂ) (z : ℂ)
 theorem q0MixEntry_laplace_c {M : ℕ} (X : Mix N M) (i j : Fin N) (z : ℂ) (hz : z ≠ 0) :
     (∫ t in (X.lam i j)..(X.R i j), Complex.exp (-(z * (t : ℂ))) * ((q0MixEntry X i j t : ℝ) : ℂ))
       = Complex.exp (-(z * (X.lam i j : ℂ)))
-        * ((X.Q0 i j : ℂ) * ((1 - z * X.σ i - Complex.exp (-(z * X.σ i))) / z ^ 2)
+        * ((X.Q0 i j : ℂ) * ((1 - z * X.sigma i - Complex.exp (-(z * X.sigma i))) / z ^ 2)
           + (X.Qpp j : ℂ)
-            * ((1 - z * X.σ i + (z * X.σ i) ^ 2 / 2 - Complex.exp (-(z * X.σ i))) / z ^ 3)) := by
-  have hRlam : X.R i j = X.lam i j + X.σ i := by simp only [Mix.R, Mix.lam]; ring
-  have hle : X.lam i j ≤ X.R i j := by rw [hRlam]; linarith [X.hσ i]
+            * ((1 - z * X.sigma i + (z * X.sigma i) ^ 2 / 2 - Complex.exp (-(z * X.sigma i))) / z ^ 3)) := by
+  have hRlam : X.R i j = X.lam i j + X.sigma i := by simp only [Mix.R, Mix.lam]; ring
+  have hle : X.lam i j ≤ X.R i j := by rw [hRlam]; linarith [X.hsigma i]
   have hcongr :
       (∫ t in (X.lam i j)..(X.R i j), Complex.exp (-(z * (t : ℂ))) * ((q0MixEntry X i j t : ℝ) : ℂ))
       = ∫ t in (X.lam i j)..(X.R i j), Complex.exp (-(z * (t : ℂ)))
@@ -1212,7 +1214,7 @@ theorem q0MixEntry_laplace_c {M : ℕ} (X : Mix N M) (i j : Fin N) (z : ℂ) (hz
     push_cast
     ring
   rw [hcongr, hRlam]
-  exact laplace_baxter_quad_c z (X.lam i j) (X.σ i) (X.Q0 i j) (X.Qpp j) hz
+  exact laplace_baxter_quad_c z (X.lam i j) (X.sigma i) (X.Q0 i j) (X.Qpp j) hz
 
 /-! ### B3 — `∑ₗ` into the full-line correlation `R`
 

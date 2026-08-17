@@ -221,7 +221,7 @@ theorem matBaxterUQmSymFullExtRho_physHSMix_eq_rcHS {rho sigma : Fin N → ℝ} 
       rw [Finset.sum_mul]; exact Finset.sum_congr rfl (fun k _ => by rw [hs k])
     simp only [etaMix, hsum]; ring
   -- kernels coincide on the core `[0,s]`
-  have hrhoeq : (physHSMixN rho sigma hsig).ρ = rho := rfl
+  have hrhoeq : (physHSMixN rho sigma hsig).rho = rho := rfl
   have hagree : ∀ (a b : Fin N) (t : ℝ), t ∈ Set.Icc (0 : ℝ) s →
       (colScaleK rho (fun a b => (physHSMixN rho sigma hsig).q0MixEntry a b)) a b t
         = Kpoly a b t := by

@@ -61,6 +61,8 @@ convolution equation to a causal Volterra renewal for a *general* fixed point ne
 not just the general OZFIX.18/19/20 machinery).
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Set Filter Topology
 
 namespace FMSA.HardSphere
@@ -81,7 +83,7 @@ theorem radial3d_conv_cHS_congr {eta sigma : ℝ} (hsigma : 0 < sigma) {r : ℝ}
   rw [if_neg (not_le.mpr hr), if_neg (not_le.mpr hr)]
   congr 1
   refine MeasureTheory.setIntegral_congr_fun measurableSet_Ioi (fun t ht => ?_)
-  rcases lt_or_ge t sigma with htσ | htσ
+  rcases lt_or_ge t sigma with htsigma | htsigma
   · -- `t < σ`: the inner shell integrals agree (they only sample `s ∈ [0, r+σ)`)
     have hinner : (∫ s in Set.Icc (|r - t|) (r + t), s * g1 s)
         = ∫ s in Set.Icc (|r - t|) (r + t), s * g2 s := by
@@ -98,7 +100,7 @@ theorem radial3d_conv_cHS_congr {eta sigma : ℝ} (hsigma : 0 < sigma) {r : ℝ}
   · -- `t ≥ σ`: `c_HS t = 0` kills the term
     show t * c_HS eta sigma t * (∫ s in Set.Icc (|r - t|) (r + t), s * g1 s)
       = t * c_HS eta sigma t * (∫ s in Set.Icc (|r - t|) (r + t), s * g2 s)
-    rw [c_HS_outer htσ]; ring
+    rw [c_HS_outer htsigma]; ring
 
 /-- **`OZFIX.22` — `oz_core_closure` as a theorem, conditional on the bridge `oz_h = baxterPsi/·`.**
 

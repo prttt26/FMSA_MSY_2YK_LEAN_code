@@ -25,6 +25,8 @@ All four of `MA.16`'s hypotheses on the kernel are supplied by `BaxterKernelDeri
 `q0PolyDeriv_measurable`, and `q0_poly_lipschitzOnWith`.
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Set Filter Topology
 
 namespace FMSA.HardSphere
@@ -109,7 +111,7 @@ plus the `−q0_poly(s)·q0_poly(0)` boundary.  This is the step that connects `
 correlation derivative to `baxter_factorization_inner`'s integral: in the N=1 ODE derivation the
 `−q0_poly(s)·q0_poly(0)` boundary here CANCELS the Leibniz boundary from the variable lower
 limit. -/
-theorem q0_ibp (eta sigma rho s : ℝ) (hs : 0 < s) (hsσ : s < sigma) :
+theorem q0_ibp (eta sigma rho s : ℝ) (hs : 0 < s) (hssigma : s < sigma) :
     (∫ t in s..sigma, q0_poly eta sigma rho t * q0PolyDeriv eta sigma rho (t - s))
     = -(q0_poly eta sigma rho s * q0_poly eta sigma rho 0)
       - ∫ t in s..sigma, q0PolyDeriv eta sigma rho t * q0_poly eta sigma rho (t - s) := by
@@ -138,7 +140,7 @@ theorem q0_ibp (eta sigma rho s : ℝ) (hs : 0 < s) (hsσ : s < sigma) :
   have hLHS : (∫ t in s..sigma, q0_poly eta sigma rho t * q0PolyDeriv eta sigma rho (t - s))
       = ∫ t in s..sigma, P t * P' (t - s) := by
     refine intervalIntegral.integral_congr (fun t ht => ?_)
-    rw [Set.uIcc_of_le hsσ.le, Set.mem_Icc] at ht
+    rw [Set.uIcc_of_le hssigma.le, Set.mem_Icc] at ht
     rw [hq0P t ht.2, hdP (t - s) (by linarith [ht.2])]
   have hvd : ∀ x : ℝ, HasDerivAt (fun t => P (t - s)) (P' (x - s)) x := by
     intro x
@@ -163,12 +165,12 @@ theorem q0_ibp (eta sigma rho s : ℝ) (hs : 0 < s) (hsσ : s < sigma) :
     ((by simp only [hP']; fun_prop : Continuous P').intervalIntegrable s sigma)
     ((by simp only [hP']; fun_prop : Continuous fun t => P' (t - s)).intervalIntegrable s sigma)
   rw [hLHS, hIBP]
-  have hPσ : P sigma = 0 := by simp only [hP]; ring
-  rw [hPσ, zero_mul, zero_sub]
+  have hPsigma : P sigma = 0 := by simp only [hP]; ring
+  rw [hPsigma, zero_mul, zero_sub]
   congr 1
-  · rw [sub_self, ← hq0P s hsσ.le, ← hq0P 0 (by linarith)]
+  · rw [sub_self, ← hq0P s hssigma.le, ← hq0P 0 (by linarith)]
   · refine intervalIntegral.integral_congr_ae ?_
-    rw [Set.uIoc_of_le hsσ.le]
+    rw [Set.uIoc_of_le hssigma.le]
     have hne : ∀ᵐ t : ℝ, t ≠ sigma := by rw [MeasureTheory.ae_iff]; simp
     filter_upwards [hne] with t htne hmem
     rw [Set.mem_Ioc] at hmem
@@ -236,11 +238,11 @@ theorem q0PolyDeriv_q0_poly_iintegr (eta sigma rho s a b : ℝ) :
   filter_upwards [self_mem_ae_restrict measurableSet_uIoc] with x hx
   rw [Real.norm_eq_abs]
   have hxuIcc : x ∈ Set.uIcc a b := Set.uIoc_subset_uIcc hx
-  by_cases hxσ : x < sigma
-  · rw [q0PolyDeriv_of_lt sigma hxσ]
+  by_cases hxsigma : x < sigma
+  · rw [q0PolyDeriv_of_lt sigma hxsigma]
     have := hC x hxuIcc; rw [Real.norm_eq_abs] at this
     exact le_trans this (le_max_left _ _)
-  · rw [q0PolyDeriv_eq_zero_of_ge sigma (not_lt.mp hxσ), zero_mul, abs_zero]
+  · rw [q0PolyDeriv_eq_zero_of_ge sigma (not_lt.mp hxsigma), zero_mul, abs_zero]
     exact le_max_right _ _
 
 /-- **⭐ N=1 Baxter ODE — the capstone.**  The scalar DCF-core `q0_poly(s) − corrM(s)` (`corrM` the

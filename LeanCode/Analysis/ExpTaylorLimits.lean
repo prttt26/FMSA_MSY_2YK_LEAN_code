@@ -117,42 +117,42 @@ theorem expTaylor3 :
   simpa using tendsto_const_nhds.add hrem
 
 /-- The substitution map `s ↦ −sσ` sends `𝓝[≠] 0` to `𝓝[≠] 0` (for `σ ≠ 0`). -/
-theorem neg_mul_tendsto_punctured {σ : ℂ} (hσ : σ ≠ 0) :
-    Tendsto (fun s : ℂ => -(s * σ)) (𝓝[≠] (0 : ℂ)) (𝓝[≠] (0 : ℂ)) := by
+theorem neg_mul_tendsto_punctured {sigma : ℂ} (hsigma : sigma ≠ 0) :
+    Tendsto (fun s : ℂ => -(s * sigma)) (𝓝[≠] (0 : ℂ)) (𝓝[≠] (0 : ℂ)) := by
   rw [tendsto_nhdsWithin_iff]
   refine ⟨?_, ?_⟩
-  · have h : Tendsto (fun s : ℂ => -(s * σ)) (𝓝 (0 : ℂ)) (𝓝 0) := by
+  · have h : Tendsto (fun s : ℂ => -(s * sigma)) (𝓝 (0 : ℂ)) (𝓝 0) := by
       simpa using ((continuous_id.mul continuous_const).neg).tendsto (0 : ℂ)
     exact h.mono_left nhdsWithin_le_nhds
   · filter_upwards [self_mem_nhdsWithin] with s hs
     simp only [Set.mem_compl_iff, Set.mem_singleton_iff] at hs ⊢
-    exact neg_ne_zero.mpr (mul_ne_zero hs hσ)
+    exact neg_ne_zero.mpr (mul_ne_zero hs hsigma)
 
 /-- **Baxter `φ₁` removable value:** `φ₁(s) = (1 − sσ − e^{−sσ})/s² → −σ²/2` as `s → 0`.  The `s=0`
 Taylor coefficient of the Baxter entry (cf. MPOLY, GAP.9). -/
-theorem phi1_tendsto (σ : ℂ) (hσ : σ ≠ 0) :
-    Tendsto (fun s : ℂ => (1 - s * σ - Complex.exp (-(s * σ))) / s ^ 2) (𝓝[≠] (0 : ℂ))
-      (𝓝 (-σ ^ 2 / 2)) := by
-  have hg := (expTaylor2.comp (neg_mul_tendsto_punctured hσ)).const_mul (-σ ^ 2)
-  rw [show -σ ^ 2 * (1 / 2) = -σ ^ 2 / 2 from by ring] at hg
+theorem phi1_tendsto (sigma : ℂ) (hsigma : sigma ≠ 0) :
+    Tendsto (fun s : ℂ => (1 - s * sigma - Complex.exp (-(s * sigma))) / s ^ 2) (𝓝[≠] (0 : ℂ))
+      (𝓝 (-sigma ^ 2 / 2)) := by
+  have hg := (expTaylor2.comp (neg_mul_tendsto_punctured hsigma)).const_mul (-sigma ^ 2)
+  rw [show -sigma ^ 2 * (1 / 2) = -sigma ^ 2 / 2 from by ring] at hg
   refine hg.congr' ?_
   filter_upwards [self_mem_nhdsWithin] with s hs
   simp only [Set.mem_compl_iff, Set.mem_singleton_iff] at hs
-  have hsσ : s * σ ≠ 0 := mul_ne_zero hs hσ
+  have hssigma : s * sigma ≠ 0 := mul_ne_zero hs hsigma
   simp only [Function.comp_apply]
   field_simp
   ring
 
 /-- **Baxter `φ₂` removable value:** `φ₂(s) = (1 − sσ + (sσ)²/2 − e^{−sσ})/s³ → σ³/6` as `s → 0`. -/
-theorem phi2_tendsto (σ : ℂ) (hσ : σ ≠ 0) :
-    Tendsto (fun s : ℂ => (1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) / s ^ 3)
-      (𝓝[≠] (0 : ℂ)) (𝓝 (σ ^ 3 / 6)) := by
-  have hg := (expTaylor3.comp (neg_mul_tendsto_punctured hσ)).const_mul (σ ^ 3)
-  rw [show σ ^ 3 * (1 / 6) = σ ^ 3 / 6 from by ring] at hg
+theorem phi2_tendsto (sigma : ℂ) (hsigma : sigma ≠ 0) :
+    Tendsto (fun s : ℂ => (1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) / s ^ 3)
+      (𝓝[≠] (0 : ℂ)) (𝓝 (sigma ^ 3 / 6)) := by
+  have hg := (expTaylor3.comp (neg_mul_tendsto_punctured hsigma)).const_mul (sigma ^ 3)
+  rw [show sigma ^ 3 * (1 / 6) = sigma ^ 3 / 6 from by ring] at hg
   refine hg.congr' ?_
   filter_upwards [self_mem_nhdsWithin] with s hs
   simp only [Set.mem_compl_iff, Set.mem_singleton_iff] at hs
-  have hsσ : s * σ ≠ 0 := mul_ne_zero hs hσ
+  have hssigma : s * sigma ≠ 0 := mul_ne_zero hs hsigma
   simp only [Function.comp_apply]
   field_simp
   ring

@@ -133,7 +133,7 @@ transform.  `qFwd_ii = 2π√(ρᵢρᵢ)·(quadratic in r)`, so `r·qFwd_ii` is
 moments `ψ1,ψ2,ψ3` at `σᵢ = R_ii`. -/
 theorem radial_fourier_qFwd_diag (X : Mix N M) (i : Fin N) {k : ℝ} (hk : k ≠ 0) :
     radial_fourier (qFwd X i i) k
-      = (4 * Real.pi / k) * (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ i)) *
+      = (4 * Real.pi / k) * (2 * Real.pi * Real.sqrt (X.rho i * X.rho i)) *
         ((-(X.Q0 i i) * X.R i i + X.Qpp i * (X.R i i) ^ 2 / 2)
             * ((Real.sin (k * X.R i i) - k * X.R i i * Real.cos (k * X.R i i)) / k ^ 2)
           + (X.Q0 i i - X.Qpp i * X.R i i)
@@ -144,7 +144,7 @@ theorem radial_fourier_qFwd_diag (X : Mix N M) (i : Fin N) {k : ℝ} (hk : k ≠
               + (3 * (X.R i i) ^ 2 / k ^ 2 - 6 / k ^ 4) * Real.sin (k * X.R i i))) := by
   have hlam : X.lam i i = 0 := by simp [Mix.lam]
   have hexpand : Set.EqOn (fun r => r * qFwd X i i r * Real.sin (k * r))
-      (fun r => (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ i)) *
+      (fun r => (2 * Real.pi * Real.sqrt (X.rho i * X.rho i)) *
           ((-(X.Q0 i i) * X.R i i + X.Qpp i * (X.R i i) ^ 2 / 2) * (r * Real.sin (k * r))
           + (X.Q0 i i - X.Qpp i * X.R i i) * (r ^ 2 * Real.sin (k * r))
           + (X.Qpp i / 2) * (r ^ 3 * Real.sin (k * r))))
@@ -153,7 +153,7 @@ theorem radial_fourier_qFwd_diag (X : Mix N M) (i : Fin N) {k : ℝ} (hk : k ≠
     rw [Set.uIoo_of_le (X.R_pos i i).le] at hr
     have hmem : r ∈ Set.Icc (X.lam i i) (X.R i i) := by
       rw [hlam, Set.mem_Icc]; exact ⟨hr.1.le, hr.2.le⟩
-    have hq : qFwd X i i r = 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ i)
+    have hq : qFwd X i i r = 2 * Real.pi * Real.sqrt (X.rho i * X.rho i)
         * (X.Q0 i i * (r - X.R i i) + X.Qpp i * (r - X.R i i) ^ 2 / 2) := by
       unfold qFwd q0MixEntry; rw [Set.indicator_of_mem hmem]
     dsimp only

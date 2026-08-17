@@ -89,11 +89,11 @@ theorem matBaxterFactor_cos_eq_rho_radial_fourier
   have hpull : ∫ v in (0:ℝ)..sigma, (q i j v - matSelfConv q sigma v i j) * Real.cos (k * v)
              = ∫ v in (0:ℝ)..sigma, (rho * K i j v) * Real.cos (k * v) := by
     apply intervalIntegral.integral_congr_ae
-    have hσnull : ∀ᵐ v ∂(volume : Measure ℝ), v ≠ sigma := by
+    have hsigmanull : ∀ᵐ v ∂(volume : Measure ℝ), v ≠ sigma := by
       rw [ae_iff]
       have hset : {a : ℝ | ¬ a ≠ sigma} = {sigma} := by ext a; simp
       rw [hset]; exact Real.volume_singleton
-    filter_upwards [hσnull] with v hv hmem
+    filter_upwards [hsigmanull] with v hv hmem
     rw [Set.uIoc_of_le hsigma.le, Set.mem_Ioc] at hmem
     have hvIoo : v ∈ Set.Ioo (0:ℝ) sigma := ⟨hmem.1, lt_of_le_of_ne hmem.2 hv⟩
     rw [hKDEF i j v hvIoo]

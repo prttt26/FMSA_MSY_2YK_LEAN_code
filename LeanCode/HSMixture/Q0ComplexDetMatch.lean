@@ -40,6 +40,8 @@ reindex.  A whole-Appendix Finset derivation — the "tedious algebraic work" Ta
 All lemmas here axiom-clean (`propext, Classical.choice, Quot.sound`).
 -/
 
+set_option linter.style.longLine false
+
 open Complex Matrix
 
 namespace FMSA.ComplexRankTwo
@@ -56,7 +58,7 @@ theorem p2c_eq_phi2 (s : ℂ) (R : ℝ) : p2c s (R : ℂ) = phi2 s R := rfl
 R²/2s` relation).  This is the term-shuffle engine of the A6 → A7 (`det(I−VₒUₒ) = detTL`) match:
 `det(I−VₒUₒ)` and `detTL` are not equal as polynomials in independent `{φ1,φ2}`; the identity moves
 the `φ2`-linear discrepancy into the `φ1φ1` double sum. -/
-theorem p2c_eq_p1c (s σ : ℂ) (hs : s ≠ 0) : p2c s σ = p1c s σ / s + σ ^ 2 / (2 * s) := by
+theorem p2c_eq_p1c (s sigma : ℂ) (hs : s ≠ 0) : p2c s sigma = p1c s sigma / s + sigma ^ 2 / (2 * s) := by
   have hs2 : s ^ 2 ≠ 0 := pow_ne_zero 2 hs
   have hs3 : s ^ 3 ≠ 0 := pow_ne_zero 3 hs
   simp only [p1c, p2c]

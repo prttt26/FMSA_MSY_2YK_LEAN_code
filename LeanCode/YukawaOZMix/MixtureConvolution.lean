@@ -87,7 +87,7 @@ theorem bMixEntry_support_subset (X : Mix N M) (m n : Fin N) :
 `P_im(u) = 2π√(ρᵢρ_m) q_im(−u)`, supported on `[−R_im, −λ_im]`).  This is the reflection input to the
 odd part `𝒲(r) − 𝒲(−r)`. -/
 noncomputable def pMixEntry (X : Mix N M) (i m : Fin N) (u : ℝ) : ℝ :=
-  2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * q0MixEntry X i m (-u)
+  2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * q0MixEntry X i m (-u)
 
 /-- The reflected kernel is supported on the reflected core `[−R_im, −λ_im]`:
 `Function.support (pMixEntry X i m) ⊆ Set.Icc (−R_{im}) (−λ_{im})`.  Follows from

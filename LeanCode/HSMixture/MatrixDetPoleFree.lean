@@ -23,6 +23,8 @@ the physical mixture matrix `Q0_mat_c_phys` then yields LHP pole-freeness of the
 factor — the analytic input to the matrix OZ★ decay.
 -/
 
+set_option linter.style.longLine false
+
 open Matrix Set
 namespace FMSA.MixtureOzStar
 noncomputable section
@@ -33,24 +35,24 @@ theorem differentiable_matrix_det {N : ℕ} {f : ℂ → Matrix (Fin N) (Fin N) 
     (hf : ∀ a b, Differentiable ℂ (fun z => (f z) a b)) :
     Differentiable ℂ (fun z => (f z).det) := by
   have heq : (fun z => (f z).det)
-      = fun z => ∑ σ : Equiv.Perm (Fin N),
-          (↑↑(Equiv.Perm.sign σ) : ℂ) * ∏ i, (f z) (σ i) i := by
+      = fun z => ∑ sigma : Equiv.Perm (Fin N),
+          (↑↑(Equiv.Perm.sign sigma) : ℂ) * ∏ i, (f z) (sigma i) i := by
     funext z; rw [Matrix.det_apply']
   rw [heq]
-  refine Differentiable.fun_sum fun σ _ => ?_
-  exact (differentiable_const _).mul (Differentiable.fun_finsetProd fun i _ => hf (σ i) i)
+  refine Differentiable.fun_sum fun sigma _ => ?_
+  exact (differentiable_const _).mul (Differentiable.fun_finsetProd fun i _ => hf (sigma i) i)
 
 /-- Entry-wise `ContinuousOn` ⇒ `det` `ContinuousOn`. -/
 theorem continuousOn_matrix_det {N : ℕ} {M : ℝ → ℂ → Matrix (Fin N) (Fin N) ℂ} {S : Set (ℝ × ℂ)}
     (hM : ∀ a b, ContinuousOn (fun p : ℝ × ℂ => (M p.1 p.2) a b) S) :
     ContinuousOn (fun p : ℝ × ℂ => (M p.1 p.2).det) S := by
   have heq : (fun p : ℝ × ℂ => (M p.1 p.2).det)
-      = fun p => ∑ σ : Equiv.Perm (Fin N),
-          (↑↑(Equiv.Perm.sign σ) : ℂ) * ∏ i, (M p.1 p.2) (σ i) i := by
+      = fun p => ∑ sigma : Equiv.Perm (Fin N),
+          (↑↑(Equiv.Perm.sign sigma) : ℂ) * ∏ i, (M p.1 p.2) (sigma i) i := by
     funext p; rw [Matrix.det_apply']
   rw [heq]
-  refine continuousOn_finsetSum _ fun σ _ => ?_
-  exact continuousOn_const.mul (continuousOn_finsetProd _ fun i _ => hM (σ i) i)
+  refine continuousOn_finsetSum _ fun sigma _ => ?_
+  exact continuousOn_const.mul (continuousOn_finsetProd _ fun i _ => hM (sigma i) i)
 
 /-- **Matrix determinant pole-freeness on the open lower half-plane, via homotopy.**  For a
 `η`-homotopy `M : ℝ → ℂ → Matrix (Fin N) (Fin N) ℂ` of entrywise-entire matrices with no

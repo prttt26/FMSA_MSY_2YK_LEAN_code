@@ -121,16 +121,16 @@ a limit at 0" hypothesis of `det_divisor_nonneg_of_tendsto` and is independently
 /-- **Removable value of a Baxter matrix entry.**  As `s → 0` the complex entry `q0_entry_c` tends to
 `δ − ρ·(Qp·(−σ²/2) + Qpp·(σ³/6))` (`e^{−λs} → 1`, `φ₁ → −σ²/2`, `φ₂ → σ³/6`).  These are the `s = 0`
 Taylor coefficients of the Baxter entry (cf. MPOLY / GAP.9). -/
-theorem q0_entry_c_tendsto (σ lam Qp Qpp ρ δ : ℂ) (hσ : σ ≠ 0) :
-    Tendsto (fun s : ℂ => FMSA.Q0Complex.q0_entry_c s σ lam Qp Qpp ρ δ) (𝓝[≠] (0 : ℂ))
-      (𝓝 (δ - ρ * (Qp * (-σ ^ 2 / 2) + Qpp * (σ ^ 3 / 6)))) := by
+theorem q0_entry_c_tendsto (sigma lam Qp Qpp rho δ : ℂ) (hsigma : sigma ≠ 0) :
+    Tendsto (fun s : ℂ => FMSA.Q0Complex.q0_entry_c s sigma lam Qp Qpp rho δ) (𝓝[≠] (0 : ℂ))
+      (𝓝 (δ - rho * (Qp * (-sigma ^ 2 / 2) + Qpp * (sigma ^ 3 / 6)))) := by
   have hexp : Tendsto (fun s : ℂ => Complex.exp (-(lam * s))) (𝓝[≠] (0 : ℂ)) (𝓝 1) := by
     have hc : Continuous (fun s : ℂ => Complex.exp (-(lam * s))) := by fun_prop
     have h := hc.tendsto (0 : ℂ)
     simp only [mul_zero, neg_zero, Complex.exp_zero] at h
     exact h.mono_left nhdsWithin_le_nhds
-  have hbracket := ((phi1_tendsto σ hσ).const_mul Qp).add ((phi2_tendsto σ hσ).const_mul Qpp)
-  have hprod := (hexp.const_mul ρ).mul hbracket
+  have hbracket := ((phi1_tendsto sigma hsigma).const_mul Qp).add ((phi2_tendsto sigma hsigma).const_mul Qpp)
+  have hprod := (hexp.const_mul rho).mul hbracket
   have hconst : Tendsto (fun _ : ℂ => δ) (𝓝[≠] (0 : ℂ)) (𝓝 δ) := tendsto_const_nhds
   have hfin := hconst.sub hprod
   simp only [mul_one] at hfin
@@ -140,20 +140,20 @@ theorem q0_entry_c_tendsto (σ lam Qp Qpp ρ δ : ℂ) (hσ : σ ≠ 0) :
 (finite) removable limit as `s → 0`: `det = M₀₀·M₁₁ − M₀₁·M₁₀` (`det_fin_two`) and every entry
 `Mᵢⱼ = q0_entry_c` has the removable value of `q0_entry_c_tendsto`. -/
 theorem detC_tendsto (sigma : Fin 2 → ℝ) (rho_geo Qp Qpp : Fin 2 → Fin 2 → ℂ)
-    (hσ : ∀ i, (sigma i : ℂ) ≠ 0) :
+    (hsigma : ∀ i, (sigma i : ℂ) ≠ 0) :
     ∃ c, Tendsto (detC sigma rho_geo Qp Qpp) (𝓝[≠] (0 : ℂ)) (𝓝 c) := by
   have h00 : Tendsto
       (fun s => FMSA.Q0Complex.Q0_mat_c s (fun i => (sigma i : ℂ)) rho_geo Qp Qpp 0 0)
-      (𝓝[≠] (0 : ℂ)) (𝓝 _) := q0_entry_c_tendsto _ _ _ _ _ _ (hσ 0)
+      (𝓝[≠] (0 : ℂ)) (𝓝 _) := q0_entry_c_tendsto _ _ _ _ _ _ (hsigma 0)
   have h11 : Tendsto
       (fun s => FMSA.Q0Complex.Q0_mat_c s (fun i => (sigma i : ℂ)) rho_geo Qp Qpp 1 1)
-      (𝓝[≠] (0 : ℂ)) (𝓝 _) := q0_entry_c_tendsto _ _ _ _ _ _ (hσ 1)
+      (𝓝[≠] (0 : ℂ)) (𝓝 _) := q0_entry_c_tendsto _ _ _ _ _ _ (hsigma 1)
   have h01 : Tendsto
       (fun s => FMSA.Q0Complex.Q0_mat_c s (fun i => (sigma i : ℂ)) rho_geo Qp Qpp 0 1)
-      (𝓝[≠] (0 : ℂ)) (𝓝 _) := q0_entry_c_tendsto _ _ _ _ _ _ (hσ 0)
+      (𝓝[≠] (0 : ℂ)) (𝓝 _) := q0_entry_c_tendsto _ _ _ _ _ _ (hsigma 0)
   have h10 : Tendsto
       (fun s => FMSA.Q0Complex.Q0_mat_c s (fun i => (sigma i : ℂ)) rho_geo Qp Qpp 1 0)
-      (𝓝[≠] (0 : ℂ)) (𝓝 _) := q0_entry_c_tendsto _ _ _ _ _ _ (hσ 1)
+      (𝓝[≠] (0 : ℂ)) (𝓝 _) := q0_entry_c_tendsto _ _ _ _ _ _ (hsigma 1)
   have heq : (fun s => FMSA.Q0Complex.Q0_mat_c s (fun i => (sigma i : ℂ)) rho_geo Qp Qpp 0 0
         * FMSA.Q0Complex.Q0_mat_c s (fun i => (sigma i : ℂ)) rho_geo Qp Qpp 1 1
         - FMSA.Q0Complex.Q0_mat_c s (fun i => (sigma i : ℂ)) rho_geo Qp Qpp 0 1
@@ -168,10 +168,10 @@ theorem detC_tendsto (sigma : Fin 2 → ℝ) (rho_geo Qp Qpp : Fin 2 → Fin 2 �
 limit `detC_tendsto` discharges the `∃ c, Tendsto` hypothesis of `det_divisor_nonneg_of_tendsto`.
 This nails the MZERO.9(ii) obligation with no remaining `Tendsto` hypothesis. -/
 theorem det_divisor_nonneg (sigma : Fin 2 → ℝ) (rho_geo Qp Qpp : Fin 2 → Fin 2 → ℂ)
-    (hσ : ∀ i, sigma i ≠ 0) (U : Set ℂ) :
+    (hsigma : ∀ i, sigma i ≠ 0) (U : Set ℂ) :
     0 ≤ MeromorphicOn.divisor (detC sigma rho_geo Qp Qpp) U :=
   det_divisor_nonneg_of_tendsto sigma rho_geo Qp Qpp U
-    (detC_tendsto sigma rho_geo Qp Qpp (fun i => Complex.ofReal_ne_zero.mpr (hσ i)))
+    (detC_tendsto sigma rho_geo Qp Qpp (fun i => Complex.ofReal_ne_zero.mpr (hsigma i)))
 
 /-! ### MZERO.9 (iii) — the Jensen-counting bound `hJensen`, now PROVED
 
@@ -191,7 +191,7 @@ boundary log-average is `O(log R)`: `circleAverage (log‖detC·‖) 0 R ≤ M·
 `circleAverage_log_norm_le_of_finite_zeros`.  Axiom-clean; the exact statement consumed by
 `infinite_zeros_of_growth`'s `hJensen`. -/
 theorem detC_jensen_log_bound (sigma : Fin 2 → ℝ) (rho_geo Qp Qpp : Fin 2 → Fin 2 → ℂ)
-    (hσ : ∀ i, sigma i ≠ 0) :
+    (hsigma : ∀ i, sigma i ≠ 0) :
     Set.Finite {s : ℂ | detC sigma rho_geo Qp Qpp s = 0} →
       ∃ M C R₀ : ℝ, ∀ R : ℝ, R₀ ≤ R →
         circleAverage (fun s => Real.log ‖detC sigma rho_geo Qp Qpp s‖) 0 R
@@ -201,7 +201,7 @@ theorem detC_jensen_log_bound (sigma : Fin 2 → ℝ) (rho_geo Qp Qpp : Fin 2 �
   have hmero : MeromorphicOn f Set.univ := by
     rw [hf]; exact det_meromorphicOn (fun i => (sigma i : ℂ)) rho_geo Qp Qpp Set.univ
   have hdiv : 0 ≤ MeromorphicOn.divisor f Set.univ := by
-    rw [hf]; exact det_divisor_nonneg sigma rho_geo Qp Qpp hσ Set.univ
+    rw [hf]; exact det_divisor_nonneg sigma rho_geo Qp Qpp hsigma Set.univ
   -- the `detC`-specific bridge: finite literal zeros ⇒ finite divisor support
   have hfindiv : (MeromorphicOn.divisor f Set.univ).support.Finite := by
     refine Set.Finite.subset (hfin.insert 0) ?_
@@ -230,10 +230,10 @@ rests on **only** `DetBoundaryGrowth` (MZERO.10, the `e^{−sσ}` boundary growt
 hypothesis of `detC_zeros_infinite_of_growth` is discharged.  This is Route B's counterpart to Route
 A's `Q0_det_c_zeros_infinite` (which rests on the MZERO.5 magnitude bounds). -/
 theorem detC_zeros_infinite_of_boundaryGrowth (sigma : Fin 2 → ℝ)
-    (rho_geo Qp Qpp : Fin 2 → Fin 2 → ℂ) (hσ : ∀ i, sigma i ≠ 0)
+    (rho_geo Qp Qpp : Fin 2 → Fin 2 → ℂ) (hsigma : ∀ i, sigma i ≠ 0)
     (hgrow : DetBoundaryGrowth (detC sigma rho_geo Qp Qpp)) :
     Set.Infinite {s : ℂ | detC sigma rho_geo Qp Qpp s = 0} :=
-  infinite_zeros_of_growth (detC_jensen_log_bound sigma rho_geo Qp Qpp hσ) hgrow
+  infinite_zeros_of_growth (detC_jensen_log_bound sigma rho_geo Qp Qpp hsigma) hgrow
 
 /-! ### The equivalence `DetBoundaryGrowth detC ↔ Set.Infinite {detC = 0}` (Route B ≡ MZERO.1)
 
@@ -254,14 +254,14 @@ non-vanishing witness `Q0_det_c_tendsto_one`.) -/
 LOWER bound.  Needs `0 < σᵢ` (for the non-vanishing witness `Q0_det_c_tendsto_one`, which rules out
 `detC` locally-zero so each zero has a genuine positive order). -/
 theorem detC_boundaryGrowth_of_infinite_zeros (sigma : Fin 2 → ℝ)
-    (rho_geo Qp Qpp : Fin 2 → Fin 2 → ℂ) (hσ : ∀ i, 0 < sigma i)
+    (rho_geo Qp Qpp : Fin 2 → Fin 2 → ℂ) (hsigma : ∀ i, 0 < sigma i)
     (hinf : Set.Infinite {s : ℂ | detC sigma rho_geo Qp Qpp s = 0}) :
     DetBoundaryGrowth (detC sigma rho_geo Qp Qpp) := by
   set f := detC sigma rho_geo Qp Qpp with hf
   have hmeroOn : ∀ U : Set ℂ, MeromorphicOn f U := by
     intro U; rw [hf]; exact det_meromorphicOn (fun i => (sigma i : ℂ)) rho_geo Qp Qpp U
   have hnn : ∀ (U : Set ℂ) (u : ℂ), 0 ≤ MeromorphicOn.divisor f U u := by
-    intro U u; have h := det_divisor_nonneg sigma rho_geo Qp Qpp (fun i => (hσ i).ne') U
+    intro U u; have h := det_divisor_nonneg sigma rho_geo Qp Qpp (fun i => (hsigma i).ne') U
     rw [← hf] at h; exact h u
   have hdetC0 : f 0 = 1 := by
     rw [hf]
@@ -273,7 +273,7 @@ theorem detC_boundaryGrowth_of_infinite_zeros (sigma : Fin 2 → ℝ)
   have hAnalOn : AnalyticOnNhd ℂ f {(0 : ℂ)}ᶜ := hdiffOn.analyticOnNhd isOpen_compl_singleton
   obtain ⟨x₀, hx₀ne, hx₀⟩ : ∃ x : ℂ, x ≠ 0 ∧ f x ≠ 0 := by
     have htend : Tendsto (fun t : ℝ => f (t : ℂ)) atTop (𝓝 1) :=
-      Q0_det_c_tendsto_one hσ rho_geo Qp Qpp
+      Q0_det_c_tendsto_one hsigma rho_geo Qp Qpp
     have h1 : ∀ᶠ t : ℝ in atTop, f (t : ℂ) ≠ 0 := by
       have hb : ∀ᶠ t : ℝ in atTop, ‖f (t : ℂ) - 1‖ < 1 := by
         have h0 := htend.sub_const 1
@@ -411,13 +411,13 @@ theorem detC_boundaryGrowth_of_infinite_zeros (sigma : Fin 2 → ℝ)
 (MZERO.10) is **logically equivalent** to `det` having infinitely many zeros (MZERO.1).  So Route B is a
 Jensen reformulation of MZERO.1, not an independent closure of it. -/
 theorem detC_boundaryGrowth_iff_infinite_zeros (sigma : Fin 2 → ℝ)
-    (rho_geo Qp Qpp : Fin 2 → Fin 2 → ℂ) (hσ : ∀ i, 0 < sigma i) :
+    (rho_geo Qp Qpp : Fin 2 → Fin 2 → ℂ) (hsigma : ∀ i, 0 < sigma i) :
     DetBoundaryGrowth (detC sigma rho_geo Qp Qpp)
       ↔ Set.Infinite {s : ℂ | detC sigma rho_geo Qp Qpp s = 0} := by
   constructor
   · intro hgrow
-    exact detC_zeros_infinite_of_boundaryGrowth sigma rho_geo Qp Qpp (fun i => (hσ i).ne') hgrow
+    exact detC_zeros_infinite_of_boundaryGrowth sigma rho_geo Qp Qpp (fun i => (hsigma i).ne') hgrow
   · intro hinf
-    exact detC_boundaryGrowth_of_infinite_zeros sigma rho_geo Qp Qpp hσ hinf
+    exact detC_boundaryGrowth_of_infinite_zeros sigma rho_geo Qp Qpp hsigma hinf
 
 end FMSA.MixtureHSPoles

@@ -23,6 +23,8 @@ any `oz*` dependency — the layering `Baxter (pure analysis) → OZ (interface)
 inverted one they had before.
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Set Filter Topology
 
 namespace FMSA.HardSphere
@@ -83,9 +85,9 @@ theorem r_mul_ozBaxterFixedPt_integrableOn (heta0 : 0 < eta) (heta1 : eta < 1) (
     ?_ measurableSet_Ioi
   intro r hr
   have hr0 : 0 < r := lt_trans hsigma (mem_Ioi.mp hr)
-  have hrσ : sigma ≤ r := le_of_lt (mem_Ioi.mp hr)
+  have hrsigma : sigma ≤ r := le_of_lt (mem_Ioi.mp hr)
   change baxterPsiOuter eta sigma rho r = r * ozBaxterFixedPt eta sigma rho r
-  rw [ozBaxterFixedPt_eq_div hsigma hr0, baxterPsi_outer hrσ]
+  rw [ozBaxterFixedPt_eq_div hsigma hr0, baxterPsi_outer hrsigma]
   field_simp
 
 end

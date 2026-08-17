@@ -25,93 +25,95 @@ hard-sphere mixture — **unconditional**, depending only on the two existing ax
 `zeroFree_lowerHalfPlane_of_homotopy` (math) and `pyhs_mixture_no_spinodal` (physics).
 -/
 
+set_option linter.style.longLine false
+
 open Filter Topology Complex
 namespace FMSA.MixtureHSPoles
 noncomputable section
 
 
 /-- Continuous removable extension of the Baxter `φ₁` kernel `(1−sσ−e^{−sσ})/s²`. -/
-def psi1 (σ : ℂ) (s : ℂ) : ℂ :=
-  Function.update (fun s => (1 - s * σ - Complex.exp (-(s * σ))) / s ^ 2) 0 (-σ ^ 2 / 2) s
+def psi1 (sigma : ℂ) (s : ℂ) : ℂ :=
+  Function.update (fun s => (1 - s * sigma - Complex.exp (-(s * sigma))) / s ^ 2) 0 (-sigma ^ 2 / 2) s
 
-theorem psi1_continuous {σ : ℂ} (hσ : σ ≠ 0) : Continuous (psi1 σ) := by
+theorem psi1_continuous {sigma : ℂ} (hsigma : sigma ≠ 0) : Continuous (psi1 sigma) := by
   rw [continuous_iff_continuousAt]
   intro s
   by_cases hs : s = 0
   · subst hs
     have hd : ∀ᶠ z in 𝓝[≠] (0:ℂ),
-        DifferentiableAt ℂ (fun s => (1 - s * σ - Complex.exp (-(s * σ))) / s ^ 2) z := by
+        DifferentiableAt ℂ (fun s => (1 - s * sigma - Complex.exp (-(s * sigma))) / s ^ 2) z := by
       filter_upwards [self_mem_nhdsWithin] with w hw
       simp only [Set.mem_compl_iff, Set.mem_singleton_iff] at hw
       apply DifferentiableAt.div (by fun_prop) (by fun_prop)
       exact pow_ne_zero 2 hw
-    have hc : ContinuousAt (psi1 σ) 0 := by
+    have hc : ContinuousAt (psi1 sigma) 0 := by
       unfold psi1
       rw [ContinuousAt, Function.update_self, ← nhdsNE_sup_pure, tendsto_sup]
       refine ⟨?_, ?_⟩
-      · refine Filter.Tendsto.congr' ?_ (FMSA.ExpTaylorLimits.phi1_tendsto σ hσ)
+      · refine Filter.Tendsto.congr' ?_ (FMSA.ExpTaylorLimits.phi1_tendsto sigma hsigma)
         filter_upwards [self_mem_nhdsWithin] with w hw
         rw [Set.mem_compl_iff, Set.mem_singleton_iff] at hw
         rw [Function.update_of_ne hw]
       · have := tendsto_pure_nhds (Function.update
-          (fun s => (1 - s * σ - Complex.exp (-(s * σ))) / s ^ 2) 0 (-σ ^ 2 / 2)) 0
+          (fun s => (1 - s * sigma - Complex.exp (-(s * sigma))) / s ^ 2) 0 (-sigma ^ 2 / 2)) 0
         rwa [Function.update_self] at this
     exact hc
   · unfold psi1
-    have : Function.update (fun s => (1 - s * σ - Complex.exp (-(s * σ))) / s ^ 2) 0 (-σ ^ 2 / 2)
-        =ᶠ[𝓝 s] (fun s => (1 - s * σ - Complex.exp (-(s * σ))) / s ^ 2) := by
+    have : Function.update (fun s => (1 - s * sigma - Complex.exp (-(s * sigma))) / s ^ 2) 0 (-sigma ^ 2 / 2)
+        =ᶠ[𝓝 s] (fun s => (1 - s * sigma - Complex.exp (-(s * sigma))) / s ^ 2) := by
       filter_upwards [isOpen_ne.mem_nhds hs] with x hx
       exact Function.update_of_ne hx _ _
     refine ContinuousAt.congr ?_ this.symm
     exact (ContinuousAt.div (by fun_prop) (by fun_prop) (pow_ne_zero 2 hs))
 
 /-- Continuous removable extension of the Baxter `φ₂` kernel. -/
-def psi2 (σ : ℂ) (s : ℂ) : ℂ :=
-  Function.update (fun s => (1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) / s ^ 3) 0
-    (σ ^ 3 / 6) s
+def psi2 (sigma : ℂ) (s : ℂ) : ℂ :=
+  Function.update (fun s => (1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) / s ^ 3) 0
+    (sigma ^ 3 / 6) s
 
-theorem psi2_continuous {σ : ℂ} (hσ : σ ≠ 0) : Continuous (psi2 σ) := by
+theorem psi2_continuous {sigma : ℂ} (hsigma : sigma ≠ 0) : Continuous (psi2 sigma) := by
   rw [continuous_iff_continuousAt]
   intro s
   by_cases hs : s = 0
   · subst hs
-    have hc : ContinuousAt (psi2 σ) 0 := by
+    have hc : ContinuousAt (psi2 sigma) 0 := by
       unfold psi2
       rw [ContinuousAt, Function.update_self, ← nhdsNE_sup_pure, tendsto_sup]
       refine ⟨?_, ?_⟩
-      · refine Filter.Tendsto.congr' ?_ (FMSA.ExpTaylorLimits.phi2_tendsto σ hσ)
+      · refine Filter.Tendsto.congr' ?_ (FMSA.ExpTaylorLimits.phi2_tendsto sigma hsigma)
         filter_upwards [self_mem_nhdsWithin] with w hw
         rw [Set.mem_compl_iff, Set.mem_singleton_iff] at hw
         rw [Function.update_of_ne hw]
       · have := tendsto_pure_nhds (Function.update
-          (fun s => (1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) / s ^ 3) 0 (σ ^ 3 / 6)) 0
+          (fun s => (1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) / s ^ 3) 0 (sigma ^ 3 / 6)) 0
         rwa [Function.update_self] at this
     exact hc
   · unfold psi2
     have heq : Function.update
-        (fun s => (1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) / s ^ 3) 0 (σ ^ 3 / 6)
-        =ᶠ[𝓝 s] (fun s => (1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) / s ^ 3) := by
+        (fun s => (1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) / s ^ 3) 0 (sigma ^ 3 / 6)
+        =ᶠ[𝓝 s] (fun s => (1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) / s ^ 3) := by
       filter_upwards [isOpen_ne.mem_nhds hs] with x hx
       exact Function.update_of_ne hx _ _
     refine ContinuousAt.congr ?_ heq.symm
     exact ContinuousAt.div (by fun_prop) (by fun_prop) (pow_ne_zero 3 hs)
 
 /-- The `φ`-kernels agree with `ψ` away from `0`: `q0_entry_c` equals its `ψ`-form for `s ≠ 0`. -/
-theorem q0_entry_c_eq_psi {s σ lam Qp Qpp rho delta : ℂ} (hs : s ≠ 0) :
-    FMSA.Q0Complex.q0_entry_c s σ lam Qp Qpp rho delta
-      = delta - rho * Complex.exp (-(lam * s)) * (Qp * psi1 σ s + Qpp * psi2 σ s) := by
+theorem q0_entry_c_eq_psi {s sigma lam Qp Qpp rho delta : ℂ} (hs : s ≠ 0) :
+    FMSA.Q0Complex.q0_entry_c s sigma lam Qp Qpp rho delta
+      = delta - rho * Complex.exp (-(lam * s)) * (Qp * psi1 sigma s + Qpp * psi2 sigma s) := by
   unfold FMSA.Q0Complex.q0_entry_c psi1 psi2
   rw [Function.update_of_ne hs, Function.update_of_ne hs]
 
 /-- The `ψ`-form Baxter entry — jointly continuous (no `0/0` at `s=0`). -/
-def q0_entry_psi (σ lam Qp Qpp rho delta : ℂ) (s : ℂ) : ℂ :=
-  delta - rho * Complex.exp (-(lam * s)) * (Qp * psi1 σ s + Qpp * psi2 σ s)
+def q0_entry_psi (sigma lam Qp Qpp rho delta : ℂ) (s : ℂ) : ℂ :=
+  delta - rho * Complex.exp (-(lam * s)) * (Qp * psi1 sigma s + Qpp * psi2 sigma s)
 
-theorem q0_entry_psi_continuous {σ lam Qp Qpp rho delta : ℂ} (hσ : σ ≠ 0) :
-    Continuous (fun s => q0_entry_psi σ lam Qp Qpp rho delta s) := by
+theorem q0_entry_psi_continuous {sigma lam Qp Qpp rho delta : ℂ} (hsigma : sigma ≠ 0) :
+    Continuous (fun s => q0_entry_psi sigma lam Qp Qpp rho delta s) := by
   unfold q0_entry_psi
-  have h1 := psi1_continuous hσ
-  have h2 := psi2_continuous hσ
+  have h1 := psi1_continuous hsigma
+  have h2 := psi2_continuous hsigma
   fun_prop
 
 /-- The `ψ`-form determinant (`N=2`): jointly continuous, equal to `detF` away from `0`. -/
@@ -128,24 +130,24 @@ theorem detFpsi_eq_detF (P : MixParams) {s : ℂ} (hs : s ≠ 0) : detFpsi P s =
   rw [q0_entry_c_eq_psi hs, q0_entry_c_eq_psi hs, q0_entry_c_eq_psi hs, q0_entry_c_eq_psi hs]
   norm_num [q0_entry_psi]
 
-theorem detFpsi_continuous {P : MixParams} (hσ0 : (P.sig0 : ℂ) ≠ 0) (hσ1 : (P.sig1 : ℂ) ≠ 0) :
+theorem detFpsi_continuous {P : MixParams} (hsigma0 : (P.sig0 : ℂ) ≠ 0) (hsigma1 : (P.sig1 : ℂ) ≠ 0) :
     Continuous (fun s => detFpsi P s) := by
   unfold detFpsi
-  have c00 := q0_entry_psi_continuous (σ := (P.sig0:ℂ)) (lam := 0) (Qp := P.Qp 0 0)
-    (Qpp := P.Qpp 0 0) (rho := P.rr 0 0) (delta := 1) hσ0
-  have c11 := q0_entry_psi_continuous (σ := (P.sig1:ℂ)) (lam := 0) (Qp := P.Qp 1 1)
-    (Qpp := P.Qpp 1 1) (rho := P.rr 1 1) (delta := 1) hσ1
-  have c01 := q0_entry_psi_continuous (σ := (P.sig0:ℂ)) (lam := ((P.sig1:ℂ)-(P.sig0:ℂ))/2)
-    (Qp := P.Qp 0 1) (Qpp := P.Qpp 0 1) (rho := P.rr 0 1) (delta := 0) hσ0
-  have c10 := q0_entry_psi_continuous (σ := (P.sig1:ℂ)) (lam := ((P.sig0:ℂ)-(P.sig1:ℂ))/2)
-    (Qp := P.Qp 1 0) (Qpp := P.Qpp 1 0) (rho := P.rr 1 0) (delta := 0) hσ1
+  have c00 := q0_entry_psi_continuous (sigma := (P.sig0:ℂ)) (lam := 0) (Qp := P.Qp 0 0)
+    (Qpp := P.Qpp 0 0) (rho := P.rr 0 0) (delta := 1) hsigma0
+  have c11 := q0_entry_psi_continuous (sigma := (P.sig1:ℂ)) (lam := 0) (Qp := P.Qp 1 1)
+    (Qpp := P.Qpp 1 1) (rho := P.rr 1 1) (delta := 1) hsigma1
+  have c01 := q0_entry_psi_continuous (sigma := (P.sig0:ℂ)) (lam := ((P.sig1:ℂ)-(P.sig0:ℂ))/2)
+    (Qp := P.Qp 0 1) (Qpp := P.Qpp 0 1) (rho := P.rr 0 1) (delta := 0) hsigma0
+  have c10 := q0_entry_psi_continuous (sigma := (P.sig1:ℂ)) (lam := ((P.sig0:ℂ)-(P.sig1:ℂ))/2)
+    (Qp := P.Qp 1 0) (Qpp := P.Qpp 1 0) (rho := P.rr 1 0) (delta := 0) hsigma1
   fun_prop
 
 /-- `cf t = detFpsi (Pₜ) 0` — the removable limit equals the continuous `ψ`-value at the origin. -/
-theorem cf_eq_detFpsi_zero {P : MixParams} (hσ0 : (P.sig0 : ℂ) ≠ 0) (hσ1 : (P.sig1 : ℂ) ≠ 0)
+theorem cf_eq_detFpsi_zero {P : MixParams} (hsigma0 : (P.sig0 : ℂ) ≠ 0) (hsigma1 : (P.sig1 : ℂ) ≠ 0)
     {c : ℂ} (hc : Tendsto P.detF (𝓝[≠] (0:ℂ)) (𝓝 c)) : c = detFpsi P 0 := by
   have htp : Tendsto (fun s => detFpsi P s) (𝓝[≠] (0:ℂ)) (𝓝 (detFpsi P 0)) :=
-    ((detFpsi_continuous hσ0 hσ1).continuousAt (x := 0)).mono_left nhdsWithin_le_nhds
+    ((detFpsi_continuous hsigma0 hsigma1).continuousAt (x := 0)).mono_left nhdsWithin_le_nhds
   have heq : Tendsto P.detF (𝓝[≠] (0:ℂ)) (𝓝 (detFpsi P 0)) := by
     refine Filter.Tendsto.congr' ?_ htp
     filter_upwards [self_mem_nhdsWithin] with w hw
@@ -163,7 +165,7 @@ theorem hcont_Pdens {sigma rho : Fin 2 → ℝ} (hsig : ∀ i, 0 < sigma i) (hrh
     ContinuousOn (fun p : ℝ × ℂ =>
         Function.update (Pdens sigma rho p.1).detF 0 (cf p.1) (Complex.I * p.2))
       (Icc 0 1 ×ˢ (univ : Set ℂ)) := by
-  have hσ0 : ((Pdens sigma rho 0).sig0 : ℂ) ≠ 0 := by
+  have hsigma0 : ((Pdens sigma rho 0).sig0 : ℂ) ≠ 0 := by
     simp only [Pdens]; exact_mod_cast (hsig 0).ne'
   -- the ψ-form is jointly continuous
   have hmaps : MapsTo (Prod.fst : ℝ × ℂ → ℝ) (Icc (0:ℝ) 1 ×ˢ univ) (Icc 0 1) := fun p hp => hp.1
@@ -210,58 +212,58 @@ theorem mixtureDet_pole_free {sigma rho : Fin 2 → ℝ} (hsig : ∀ i, 0 < sigm
     (hsord : sigma 0 < sigma 1) (hrho : ∀ i, 0 < rho i)
     (heta : FMSA.MatrixQ0.etaMix rho sigma < 1) {z : ℂ} (hz : z.im < 0) :
     (Pdens sigma rho 1).detF (Complex.I * z) ≠ 0 := by
-  have hσ0 : ∀ t : ℝ, ((Pdens sigma rho t).sig0 : ℂ) ≠ 0 :=
+  have hsigma0 : ∀ t : ℝ, ((Pdens sigma rho t).sig0 : ℂ) ≠ 0 :=
     fun t => by simp only [Pdens]; exact_mod_cast (hsig 0).ne'
-  have hσ1 : ∀ t : ℝ, ((Pdens sigma rho t).sig1 : ℂ) ≠ 0 :=
+  have hsigma1 : ∀ t : ℝ, ((Pdens sigma rho t).sig1 : ℂ) ≠ 0 :=
     fun t => by simp only [Pdens]; exact_mod_cast (hsig 1).ne'
-  set cf : ℝ → ℂ := fun t => Classical.choose (detF_tendsto (Pdens sigma rho t) (hσ0 t) (hσ1 t))
+  set cf : ℝ → ℂ := fun t => Classical.choose (detF_tendsto (Pdens sigma rho t) (hsigma0 t) (hsigma1 t))
     with hcfdef
   have hcf : ∀ t ∈ Set.Icc (0:ℝ) 1, Tendsto (Pdens sigma rho t).detF (𝓝[≠] (0:ℂ)) (𝓝 (cf t)) :=
-    fun t _ => Classical.choose_spec (detF_tendsto (Pdens sigma rho t) (hσ0 t) (hσ1 t))
+    fun t _ => Classical.choose_spec (detF_tendsto (Pdens sigma rho t) (hsigma0 t) (hsigma1 t))
   obtain ⟨R, hR1, hRunif⟩ := hRunif_Pdens hsig hsord hrho heta
   exact mixtureDet_pole_free_of_regular hsig hrho heta cf hcf
     (hcont_Pdens hsig hrho heta cf hcf) hR1 hRunif hz
 
 /-- `psi1 σ` is **entire** (removable singularity filled): differentiable away from `0`, continuous
 at `0` (`psi1_continuous`), so entire by Riemann's removable-singularity theorem. -/
-theorem psi1_entire {σ : ℂ} (hσ : σ ≠ 0) : Differentiable ℂ (psi1 σ) := by
+theorem psi1_entire {sigma : ℂ} (hsigma : sigma ≠ 0) : Differentiable ℂ (psi1 sigma) := by
   intro z
   by_cases hz : z = 0
   · subst hz
     refine (analyticAt_of_differentiable_on_punctured_nhds_of_continuousAt ?_ ?_).differentiableAt
     · filter_upwards [self_mem_nhdsWithin] with w hw
       simp only [Set.mem_compl_iff, Set.mem_singleton_iff] at hw
-      have : psi1 σ =ᶠ[𝓝 w] (fun s => (1 - s * σ - Complex.exp (-(s * σ))) / s ^ 2) := by
+      have : psi1 sigma =ᶠ[𝓝 w] (fun s => (1 - s * sigma - Complex.exp (-(s * sigma))) / s ^ 2) := by
         filter_upwards [isOpen_ne.mem_nhds hw] with x hx
         exact Function.update_of_ne hx _ _
-      exact (((by fun_prop : DifferentiableAt ℂ (fun s : ℂ => 1 - s * σ - Complex.exp (-(s * σ))) w)).div
+      exact (((by fun_prop : DifferentiableAt ℂ (fun s : ℂ => 1 - s * sigma - Complex.exp (-(s * sigma))) w)).div
         (by fun_prop : DifferentiableAt ℂ (fun s : ℂ => s ^ 2) w) (pow_ne_zero 2 hw)).congr_of_eventuallyEq this
-    · exact (psi1_continuous hσ).continuousAt
-  · have : psi1 σ =ᶠ[𝓝 z] (fun s => (1 - s * σ - Complex.exp (-(s * σ))) / s ^ 2) := by
+    · exact (psi1_continuous hsigma).continuousAt
+  · have : psi1 sigma =ᶠ[𝓝 z] (fun s => (1 - s * sigma - Complex.exp (-(s * sigma))) / s ^ 2) := by
       filter_upwards [isOpen_ne.mem_nhds hz] with x hx
       exact Function.update_of_ne hx _ _
-    exact (((by fun_prop : DifferentiableAt ℂ (fun s : ℂ => 1 - s * σ - Complex.exp (-(s * σ))) z)).div
+    exact (((by fun_prop : DifferentiableAt ℂ (fun s : ℂ => 1 - s * sigma - Complex.exp (-(s * sigma))) z)).div
       (by fun_prop : DifferentiableAt ℂ (fun s : ℂ => s ^ 2) z) (pow_ne_zero 2 hz)).congr_of_eventuallyEq this
 
-theorem psi2_entire {σ : ℂ} (hσ : σ ≠ 0) : Differentiable ℂ (psi2 σ) := by
+theorem psi2_entire {sigma : ℂ} (hsigma : sigma ≠ 0) : Differentiable ℂ (psi2 sigma) := by
   intro z
   by_cases hz : z = 0
   · subst hz
     refine (analyticAt_of_differentiable_on_punctured_nhds_of_continuousAt ?_ ?_).differentiableAt
     · filter_upwards [self_mem_nhdsWithin] with w hw
       simp only [Set.mem_compl_iff, Set.mem_singleton_iff] at hw
-      have : psi2 σ =ᶠ[𝓝 w]
-          (fun s => (1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) / s ^ 3) := by
+      have : psi2 sigma =ᶠ[𝓝 w]
+          (fun s => (1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) / s ^ 3) := by
         filter_upwards [isOpen_ne.mem_nhds hw] with x hx
         exact Function.update_of_ne hx _ _
-      exact (((by fun_prop : DifferentiableAt ℂ (fun s : ℂ => 1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) w)).div
+      exact (((by fun_prop : DifferentiableAt ℂ (fun s : ℂ => 1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) w)).div
         (by fun_prop : DifferentiableAt ℂ (fun s : ℂ => s ^ 3) w) (pow_ne_zero 3 hw)).congr_of_eventuallyEq this
-    · exact (psi2_continuous hσ).continuousAt
-  · have : psi2 σ =ᶠ[𝓝 z]
-        (fun s => (1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) / s ^ 3) := by
+    · exact (psi2_continuous hsigma).continuousAt
+  · have : psi2 sigma =ᶠ[𝓝 z]
+        (fun s => (1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) / s ^ 3) := by
       filter_upwards [isOpen_ne.mem_nhds hz] with x hx
       exact Function.update_of_ne hx _ _
-    exact (((by fun_prop : DifferentiableAt ℂ (fun s : ℂ => 1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) z)).div
+    exact (((by fun_prop : DifferentiableAt ℂ (fun s : ℂ => 1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) z)).div
       (by fun_prop : DifferentiableAt ℂ (fun s : ℂ => s ^ 3) z) (pow_ne_zero 3 hz)).congr_of_eventuallyEq this
 
 end

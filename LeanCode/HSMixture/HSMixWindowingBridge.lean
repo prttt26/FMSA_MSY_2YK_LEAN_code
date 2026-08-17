@@ -24,6 +24,8 @@ structural facts (`q0MixEntry_intSplit`, `_subZeroTail_zero`, `_subZeroTail_poly
 Ported (2026-08-11) from the `Mix`-based versions in `YukawaOZMix/MixtureHSDCFFin1.lean`.
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Set FMSA.MixtureOzStar
 
 namespace FMSA.HSMix
@@ -35,12 +37,12 @@ species is smallest (`λᵢₖ ≥ 0` ∀k, i.e. `σᵢ ≤ σₖ`), every sub-z
 (`∫_ℝ`) and windowed (`∫₀^σ`) first Baxter convolutions COINCIDE — NO windowing loss. -/
 theorem matBaxterUExt_eq_matBaxterU_of_row_lam_nonneg (X : FMSA.HSMix N)
     (Psi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma) (i j : Fin N) (r : ℝ)
-    (hlam : ∀ k, 0 ≤ X.lam i k) (hRσ : ∀ k, X.R i k ≤ sigma)
+    (hlam : ∀ k, 0 ≤ X.lam i k) (hRsigma : ∀ k, X.R i k ≤ sigma)
     (hint : ∀ k, Integrable (fun t => X.q0MixEntry i k t * Psi k j (r - t))) :
     matBaxterUExt Psi (fun a b => X.q0MixEntry a b) i j r
       = matBaxterU Psi (fun a b => X.q0MixEntry a b) sigma i j r := by
   rw [matBaxterUExt_eq_matBaxterU_sub_tail Psi (fun a b => X.q0MixEntry a b) sigma i j r
-      (fun k => q0MixEntry_intSplit X i k (fun t => Psi k j (r - t)) sigma hsig0 (hRσ k) (hint k)),
+      (fun k => q0MixEntry_intSplit X i k (fun t => Psi k j (r - t)) sigma hsig0 (hRsigma k) (hint k)),
     Finset.sum_eq_zero (fun k _ => q0MixEntry_subZeroTail_zero X i k _ (hlam k)), sub_zero]
 
 /-- **Windowing loss for the LARGEST species, made EXPLICIT.**  On a row `i` whose species is
@@ -49,14 +51,14 @@ concrete sum of Lebowitz polynomial moments `∑ₖ ∫_{λᵢₖ}^0 (Q0ᵢₖ(t
 the exact windowing loss, NOT fabricated away. -/
 theorem matBaxterUExt_eq_matBaxterU_sub_polyTail (X : FMSA.HSMix N)
     (Psi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma) (i j : Fin N) (r : ℝ)
-    (hlam : ∀ k, X.lam i k ≤ 0) (hRσ : ∀ k, X.R i k ≤ sigma)
+    (hlam : ∀ k, X.lam i k ≤ 0) (hRsigma : ∀ k, X.R i k ≤ sigma)
     (hint : ∀ k, Integrable (fun t => X.q0MixEntry i k t * Psi k j (r - t))) :
     matBaxterUExt Psi (fun a b => X.q0MixEntry a b) i j r
       = matBaxterU Psi (fun a b => X.q0MixEntry a b) sigma i j r
         - ∑ k, ∫ t in (X.lam i k)..(0:ℝ),
             (X.Q0 i k * (t - X.R i k) + X.Qpp k * (t - X.R i k) ^ 2 / 2) * Psi k j (r - t) := by
   rw [matBaxterUExt_eq_matBaxterU_sub_tail Psi (fun a b => X.q0MixEntry a b) sigma i j r
-    (fun k => q0MixEntry_intSplit X i k (fun t => Psi k j (r - t)) sigma hsig0 (hRσ k) (hint k))]
+    (fun k => q0MixEntry_intSplit X i k (fun t => Psi k j (r - t)) sigma hsig0 (hRsigma k) (hint k))]
   congr 1
   exact Finset.sum_congr rfl (fun k _ =>
     q0MixEntry_subZeroTail_poly X i k (fun t => Psi k j (r - t)) (hlam k) (hint k))
@@ -67,13 +69,13 @@ the un-transposed arm: it VANISHES on the LARGEST-species row (`σᵢ ≥ σₖ 
 transpose `rfl`s at kernel `Qᵀ`. -/
 theorem matBaxterUtExt_eq_matBaxterUt_of_row (X : FMSA.HSMix N)
     (Psi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma) (i j : Fin N) (r : ℝ)
-    (hlam : ∀ k, 0 ≤ X.lam k i) (hRσ : ∀ k, X.R k i ≤ sigma)
+    (hlam : ∀ k, 0 ≤ X.lam k i) (hRsigma : ∀ k, X.R k i ≤ sigma)
     (hint : ∀ k, Integrable (fun t => X.q0MixEntry k i t * Psi k j (r - t))) :
     matBaxterUtExt Psi (fun a b => X.q0MixEntry a b) i j r
       = matBaxterUt Psi (fun a b => X.q0MixEntry a b) sigma i j r := by
   rw [matBaxterUtExt_eq_transpose, matBaxterUt_eq_transpose,
     matBaxterUExt_eq_matBaxterU_sub_tail Psi (fun a b => X.q0MixEntry b a) sigma i j r
-      (fun k => q0MixEntry_intSplit X k i (fun t => Psi k j (r - t)) sigma hsig0 (hRσ k) (hint k)),
+      (fun k => q0MixEntry_intSplit X k i (fun t => Psi k j (r - t)) sigma hsig0 (hRsigma k) (hint k)),
     Finset.sum_eq_zero (fun k _ => q0MixEntry_subZeroTail_zero X k i _ (hlam k)), sub_zero]
 
 /-- **Transposed-arm windowing loss, EXPLICIT — smallest species (`λₖᵢ ≤ 0`).**  On the
@@ -82,7 +84,7 @@ explicit sum of Lebowitz polynomial moments `∑ₖ ∫_{λₖᵢ}^0 (Q0ₖᵢ(t
 the DUAL of the un-transposed largest-species loss. -/
 theorem matBaxterUtExt_eq_matBaxterUt_sub_polyTail (X : FMSA.HSMix N)
     (Psi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (sigma : ℝ) (hsig0 : 0 ≤ sigma) (i j : Fin N) (r : ℝ)
-    (hlam : ∀ k, X.lam k i ≤ 0) (hRσ : ∀ k, X.R k i ≤ sigma)
+    (hlam : ∀ k, X.lam k i ≤ 0) (hRsigma : ∀ k, X.R k i ≤ sigma)
     (hint : ∀ k, Integrable (fun t => X.q0MixEntry k i t * Psi k j (r - t))) :
     matBaxterUtExt Psi (fun a b => X.q0MixEntry a b) i j r
       = matBaxterUt Psi (fun a b => X.q0MixEntry a b) sigma i j r
@@ -90,7 +92,7 @@ theorem matBaxterUtExt_eq_matBaxterUt_sub_polyTail (X : FMSA.HSMix N)
             (X.Q0 k i * (t - X.R k i) + X.Qpp i * (t - X.R k i) ^ 2 / 2) * Psi k j (r - t) := by
   rw [matBaxterUtExt_eq_transpose, matBaxterUt_eq_transpose,
     matBaxterUExt_eq_matBaxterU_sub_tail Psi (fun a b => X.q0MixEntry b a) sigma i j r
-      (fun k => q0MixEntry_intSplit X k i (fun t => Psi k j (r - t)) sigma hsig0 (hRσ k) (hint k))]
+      (fun k => q0MixEntry_intSplit X k i (fun t => Psi k j (r - t)) sigma hsig0 (hRsigma k) (hint k))]
   congr 1
   exact Finset.sum_congr rfl (fun k _ =>
     q0MixEntry_subZeroTail_poly X k i (fun t => Psi k j (r - t)) (hlam k) (hint k))

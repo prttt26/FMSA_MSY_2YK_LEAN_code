@@ -79,11 +79,11 @@ theorem radial3d_conv_eq_shellKernel {c : ℝ → ℝ} {sigma : ℝ} (hsigma : 0
           (fun t => t * c t * ∫ s in (r - t)..(r + t), oddExt g s))
         (Set.Ioi 0) := by
       intro t ht
-      by_cases htσ : t ∈ Set.Ioc 0 sigma
-      · rw [Set.indicator_of_mem htσ]
-      · rw [Set.indicator_of_notMem htσ]
+      by_cases htsigma : t ∈ Set.Ioc 0 sigma
+      · rw [Set.indicator_of_mem htsigma]
+      · rw [Set.indicator_of_notMem htsigma]
         have htge : sigma ≤ t := by
-          rcases not_and_or.mp htσ with h | h
+          rcases not_and_or.mp htsigma with h | h
           · exact absurd ht h
           · exact (not_le.mp h).le
         show t * c t * (∫ s in (r - t)..(r + t), oddExt g s) = 0

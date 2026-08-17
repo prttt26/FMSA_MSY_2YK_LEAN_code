@@ -35,6 +35,8 @@ the correctly `ρ_geo`-weighted full-line DCF whose `zOfW` transform is the (sym
 feeding `Qphys_Cmix0_symm`.  Axiom-clean (`propext`, `Classical.choice`, `Quot.sound`).
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Complex
 open scoped FourierTransform
 
@@ -65,20 +67,20 @@ This is the momentum-side closed form the weighted real-space full-line DCF must
 `ρ_geoᵢⱼ·q0MixEntry(i,j) + ρ_geoⱼᵢ·q0MixEntry(j,i)(−·) − (weighted matCorr)`, and `Qphys_Cmix0_symm`
 + `ae_eq_of_zOfW_transform_eq` then give the DCF a.e.-symmetry `hCsym`. -/
 theorem Cmix0_entry_of_id_sub {N : ℕ} (Q : ℂ → Matrix (Fin N) (Fin N) ℂ)
-    (B : ℂ → Fin N → Fin N → ℂ) (ρg : Fin N → Fin N → ℂ) (k : ℂ) (i j : Fin N)
-    (hQ : ∀ s a b, Q s a b = (if a = b then (1 : ℂ) else 0) - ρg a b * B s a b) :
+    (B : ℂ → Fin N → Fin N → ℂ) (rhoCg : Fin N → Fin N → ℂ) (k : ℂ) (i j : Fin N)
+    (hQ : ∀ s a b, Q s a b = (if a = b then (1 : ℂ) else 0) - rhoCg a b * B s a b) :
     Cmix0 Q k i j
-      = ρg i j * B k i j + ρg j i * B (-k) j i
-        - ∑ l, ρg i l * ρg j l * B k i l * B (-k) j l := by
+      = rhoCg i j * B k i j + rhoCg j i * B (-k) j i
+        - ∑ l, rhoCg i l * rhoCg j l * B k i l * B (-k) j l := by
   simp only [Cmix0, Matrix.sub_apply, Matrix.one_apply, Matrix.mul_apply, Matrix.transpose_apply,
     hQ]
   have hexp : ∀ l : Fin N,
-      ((if i = l then (1 : ℂ) else 0) - ρg i l * B k i l)
-        * ((if j = l then (1 : ℂ) else 0) - ρg j l * B (-k) j l)
+      ((if i = l then (1 : ℂ) else 0) - rhoCg i l * B k i l)
+        * ((if j = l then (1 : ℂ) else 0) - rhoCg j l * B (-k) j l)
       = (if i = l then (1 : ℂ) else 0) * (if j = l then (1 : ℂ) else 0)
-        - (if i = l then (1 : ℂ) else 0) * (ρg j l * B (-k) j l)
-        - (if j = l then (1 : ℂ) else 0) * (ρg i l * B k i l)
-        + ρg i l * ρg j l * B k i l * B (-k) j l := fun l => by ring
+        - (if i = l then (1 : ℂ) else 0) * (rhoCg j l * B (-k) j l)
+        - (if j = l then (1 : ℂ) else 0) * (rhoCg i l * B k i l)
+        + rhoCg i l * rhoCg j l * B k i l * B (-k) j l := fun l => by ring
   simp only [hexp, Finset.sum_add_distrib, Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul,
     Finset.sum_ite_eq, Finset.mem_univ, if_true]
   rcases eq_or_ne i j with hij | hij
@@ -221,13 +223,13 @@ open FMSA.InnerDecomp FMSA.MatrixQ0 in
 (`M = 0`).  `q0MixEntry (physMix …)` is the physical real-space Baxter kernel whose transform is
 `BbarePhys`. -/
 noncomputable def physMix (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k) : Mix 2 0 where
-  σ := sigma
-  ρ := rho
+  sigma := sigma
+  rho := rho
   zp := fun _ _ => Fin.elim0
   cb := fun _ _ => Fin.elim0
   Q0 := Q0phys rho sigma
   Qpp := fun j => Qppphys rho sigma 0 j
-  hσ := hsig
+  hsigma := hsig
 
 open FMSA.InnerDecomp FMSA.WHSupports FMSA.MatrixQ0 in
 /-- **Step (ii) — the window Laplace transform of the physical kernel equals `BbarePhys`.**
@@ -275,10 +277,10 @@ theorem q0MixEntry_physMix_fullline (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0
 open FMSA.InnerDecomp FMSA.WHSupports in
 /-- The `ρ_geo`-weighted full-line matrix correlation
 `∑ₗ ∫ (ρᵢₗ·q0(i,l)(t))·(ρⱼₗ·q0(j,l)(t−v)) dt` — the double-product part of the real-space DCF. -/
-noncomputable def matCorrW {M : ℕ} (X : Mix 2 M) (ρg : Fin 2 → Fin 2 → ℝ) (i j : Fin 2) (v : ℝ) :
+noncomputable def matCorrW {M : ℕ} (X : Mix 2 M) (rhoCg : Fin 2 → Fin 2 → ℝ) (i j : Fin 2) (v : ℝ) :
     ℂ :=
-  ∑ l, ∫ t, ((ρg i l : ℂ) * (q0MixEntry X i l t : ℂ))
-              * ((ρg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ))
+  ∑ l, ∫ t, ((rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ))
+              * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ))
 
 open FMSA.InnerDecomp FMSA.WHSupports in
 /-- **Step (iii) — weighted correlation Laplace transform.**  `∫ matCorrW·e^{−zv} =
@@ -286,13 +288,13 @@ open FMSA.InnerDecomp FMSA.WHSupports in
 absorbed into `F l = ρᵢₗ·q0(i,l)`, `G l = ρⱼₗ·q0(j,l)`, integrability from the unweighted lemmas ×
 constants, then the constants factored out.  Its RHS is the `Cmix0_Qphys_eq` double-product term
 (each `∫ q0·e^{−st} = BbarePhys(s)`). -/
-theorem matCorrW_laplace {M : ℕ} (X : Mix 2 M) (ρg : Fin 2 → Fin 2 → ℝ) (i j : Fin 2) (z : ℂ) :
-    (∫ v, matCorrW X ρg i j v * Complex.exp (-(z * v)))
-      = ∑ l, (ρg i l : ℂ) * (ρg j l : ℂ)
+theorem matCorrW_laplace {M : ℕ} (X : Mix 2 M) (rhoCg : Fin 2 → Fin 2 → ℝ) (i j : Fin 2) (z : ℂ) :
+    (∫ v, matCorrW X rhoCg i j v * Complex.exp (-(z * v)))
+      = ∑ l, (rhoCg i l : ℂ) * (rhoCg j l : ℂ)
           * (∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(z * t)))
           * (∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (z * s)) := by
-  set F : Fin 2 → ℝ → ℂ := fun l t => (ρg i l : ℂ) * (q0MixEntry X i l t : ℂ) with hF
-  set G : Fin 2 → ℝ → ℂ := fun l t => (ρg j l : ℂ) * (q0MixEntry X j l t : ℂ) with hG
+  set F : Fin 2 → ℝ → ℂ := fun l t => (rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ) with hF
+  set G : Fin 2 → ℝ → ℂ := fun l t => (rhoCg j l : ℂ) * (q0MixEntry X j l t : ℂ) with hG
   have h3 : ∀ l : Fin 2, Integrable
       (fun v => (∫ t, F l t * G l (t - v)) * Complex.exp (-(z * v))) := by
     intro l
@@ -303,37 +305,37 @@ theorem matCorrW_laplace {M : ℕ} (X : Mix 2 M) (ρg : Fin 2 → Fin 2 → ℝ)
         (Filter.Eventually.of_forall (fun v => ?_))
       simp only [Function.uncurry]
       exact MeasureTheory.integral_mul_const (Complex.exp (-(z * (v : ℂ)))) _
-    refine (hUnw.const_mul ((ρg i l : ℂ) * (ρg j l : ℂ))).congr
+    refine (hUnw.const_mul ((rhoCg i l : ℂ) * (rhoCg j l : ℂ))).congr
       (Filter.Eventually.of_forall (fun v => ?_))
     simp only [hF, hG]
-    rw [show (fun t => (ρg i l : ℂ) * (q0MixEntry X i l t : ℂ)
-            * ((ρg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
-          = (fun t => ((ρg i l : ℂ) * (ρg j l : ℂ))
+    rw [show (fun t => (rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ)
+            * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
+          = (fun t => ((rhoCg i l : ℂ) * (rhoCg j l : ℂ))
               * ((q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ))) from by
         funext t; ring, MeasureTheory.integral_const_mul]
     ring
   have key := laplace_sum_eq_corr_c (ι := Fin 2) Finset.univ F G z
     (fun l _ => by
-      have h := ((q0MixEntry_mul_exp_integrable X i l (-z)).const_mul (ρg i l : ℂ)).mul_prod
-        ((q0MixEntry_mul_exp_integrable X j l z).const_mul (ρg j l : ℂ))
+      have h := ((q0MixEntry_mul_exp_integrable X i l (-z)).const_mul (rhoCg i l : ℂ)).mul_prod
+        ((q0MixEntry_mul_exp_integrable X j l z).const_mul (rhoCg j l : ℂ))
       refine h.congr (Filter.Eventually.of_forall (fun p => ?_))
       simp only [hF, hG, neg_mul]; ring)
     (fun l _ => by
       refine ((q0MixEntry_corr_exp_prod_integrable X i j l z).const_mul
-        ((ρg i l : ℂ) * (ρg j l : ℂ))).congr (Filter.Eventually.of_forall (fun p => ?_))
+        ((rhoCg i l : ℂ) * (rhoCg j l : ℂ))).congr (Filter.Eventually.of_forall (fun p => ?_))
       simp only [hF, hG, Function.uncurry]; ring)
     (fun l _ => h3 l)
-  have hmc : (∫ v, matCorrW X ρg i j v * Complex.exp (-(z * v)))
+  have hmc : (∫ v, matCorrW X rhoCg i j v * Complex.exp (-(z * v)))
       = ∫ v, (∑ l, ∫ t, F l t * G l (t - v)) * Complex.exp (-(z * v)) := by
     simp only [matCorrW, hF, hG]
   rw [hmc, ← key]
   refine Finset.sum_congr rfl (fun l _ => ?_)
   rw [show (∫ t, F l t * Complex.exp (-(z * t)))
-        = (ρg i l : ℂ) * ∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(z * t)) from by
+        = (rhoCg i l : ℂ) * ∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(z * t)) from by
       rw [← MeasureTheory.integral_const_mul]; refine integral_congr_ae
         (Filter.Eventually.of_forall (fun t => ?_)); simp only [hF]; ring,
     show (∫ s, G l s * Complex.exp (z * s))
-        = (ρg j l : ℂ) * ∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (z * s) from by
+        = (rhoCg j l : ℂ) * ∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (z * s) from by
       rw [← MeasureTheory.integral_const_mul]; refine integral_congr_ae
         (Filter.Eventually.of_forall (fun s => ?_)); simp only [hG]; ring]
   ring
@@ -471,13 +473,13 @@ theorem q0MixEntry_continuousAt (X : Mix 2 M) (i j : Fin 2) {v : ℝ}
 
 open FMSA.MatrixQ0 in
 /-- `matCorrW` is continuous (finite sum of `const · (continuous correlation)`). -/
-theorem matCorrW_continuous (X : Mix 2 M) (ρg : Fin 2 → Fin 2 → ℝ) (i j : Fin 2) :
-    Continuous (fun v => matCorrW X ρg i j v) := by
+theorem matCorrW_continuous (X : Mix 2 M) (rhoCg : Fin 2 → Fin 2 → ℝ) (i j : Fin 2) :
+    Continuous (fun v => matCorrW X rhoCg i j v) := by
   simp only [matCorrW]
   refine continuous_finsetSum _ (fun l _ => ?_)
-  have heq : (fun v => ∫ t, ((ρg i l : ℂ) * (q0MixEntry X i l t : ℂ))
-        * ((ρg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
-      = (fun v => (ρg i l : ℂ) * (ρg j l : ℂ)
+  have heq : (fun v => ∫ t, ((rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ))
+        * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
+      = (fun v => (rhoCg i l : ℂ) * (rhoCg j l : ℂ)
           * ∫ t, (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ)) := by
     funext v; rw [← MeasureTheory.integral_const_mul]
     exact integral_congr_ae (Filter.Eventually.of_forall (fun t => by ring))
@@ -579,14 +581,14 @@ open FMSA.MatrixQ0 FMSA.MRS in
 and `matDCFfull j i` coincide away from `w = 0`, straight from `matDCFfull_laplace`
 + the momentum-space DCF entry symmetry `Qphys_Cmix0_entry_symm`. -/
 theorem matDCFfull_transform_offdiag (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    (hρ0 : 0 ≤ rho 0) (hρ1 : 0 ≤ rho 1) (hvac : vacMix rho sigma ≠ 0) (i j : Fin 2)
+    (hrhoC0 : 0 ≤ rho 0) (hrhoC1 : 0 ≤ rho 1) (hvac : vacMix rho sigma ≠ 0) (i j : Fin 2)
     {w : ℝ} (hw : w ≠ 0) :
     (∫ v, matDCFfull rho sigma hsig i j v * Complex.exp (-(zOfW w * v)))
       = ∫ v, matDCFfull rho sigma hsig j i v * Complex.exp (-(zOfW w * v)) := by
   have hzw : zOfW w ≠ 0 := zOfW_ne_zero hw
   rw [matDCFfull_laplace rho sigma hsig (zOfW w) hzw i j,
     matDCFfull_laplace rho sigma hsig (zOfW w) hzw j i]
-  exact Qphys_Cmix0_entry_symm sigma rho (zOfW w) hρ0 hρ1 hzw hvac i j
+  exact Qphys_Cmix0_entry_symm sigma rho (zOfW w) hrhoC0 hrhoC1 hzw hvac i j
 
 open FMSA.MatrixQ0 FMSA.MRS in
 /-- **Obstruction (b), discharged: the real-space zeroth-order mixture DCF is a.e.-symmetric.**
@@ -595,25 +597,25 @@ Route: `ae_eq_of_zOfW_transform_eq` needs the transform equality at **every** `w
 is `matDCFfull_transform_offdiag`, and the `w = 0` edge follows because both transforms are
 continuous (`zOfW_transform_continuous`) and agree on the dense set `{0}ᶜ`. -/
 theorem matDCF_ae_symm (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    (hρ0 : 0 ≤ rho 0) (hρ1 : 0 ≤ rho 1) (hvac : vacMix rho sigma ≠ 0) (i j : Fin 2) :
+    (hrhoC0 : 0 ≤ rho 0) (hrhoC1 : 0 ≤ rho 1) (hvac : vacMix rho sigma ≠ 0) (i j : Fin 2) :
     (fun v => matDCFfull rho sigma hsig i j v)
       =ᵐ[volume] (fun v => matDCFfull rho sigma hsig j i v) :=
   ae_eq_of_zOfW_transform_offdiag
     (matDCFfull_integrable rho sigma hsig i j) (matDCFfull_integrable rho sigma hsig j i)
     (matDCFfull_ae_continuous rho sigma hsig i j) (matDCFfull_ae_continuous rho sigma hsig j i)
-    (fun _ hw => matDCFfull_transform_offdiag rho sigma hsig hρ0 hρ1 hvac i j hw)
+    (fun _ hw => matDCFfull_transform_offdiag rho sigma hsig hrhoC0 hrhoC1 hvac i j hw)
 
 open FMSA.InnerDecomp FMSA.WHSupports in
 /-- **Reflection-swap of the weighted correlation** — `matCorrW i j (−v) = matCorrW j i v`.  The
 double product `∑ₗ ∫ (ρ q0(i,l))(t)·(ρ q0(j,l))(t−(−v))` translation-substitutes `t ↦ t+v` into
 `∑ₗ ∫ (ρ q0(j,l))(t)·(ρ q0(i,l))(t−v)` (Lebesgue translation invariance + commute). -/
-theorem matCorrW_reflect_swap {M : ℕ} (X : Mix 2 M) (ρg : Fin 2 → Fin 2 → ℝ) (i j : Fin 2) (v : ℝ) :
-    matCorrW X ρg i j (-v) = matCorrW X ρg j i v := by
+theorem matCorrW_reflect_swap {M : ℕ} (X : Mix 2 M) (rhoCg : Fin 2 → Fin 2 → ℝ) (i j : Fin 2) (v : ℝ) :
+    matCorrW X rhoCg i j (-v) = matCorrW X rhoCg j i v := by
   simp only [matCorrW]
   refine Finset.sum_congr rfl (fun l _ => ?_)
   rw [← MeasureTheory.integral_add_right_eq_self
-    (fun t => ((ρg j l : ℂ) * (q0MixEntry X j l t : ℂ))
-      * ((ρg i l : ℂ) * (q0MixEntry X i l (t - v) : ℂ))) v]
+    (fun t => ((rhoCg j l : ℂ) * (q0MixEntry X j l t : ℂ))
+      * ((rhoCg i l : ℂ) * (q0MixEntry X i l (t - v) : ℂ))) v]
   refine MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall (fun t => ?_))
   simp only [sub_neg_eq_add, add_sub_cancel_right]
   ring
@@ -820,10 +822,10 @@ open FMSA.MatrixQ0 in
 `matSelfConv`/single-linear `K` is not symmetric even a.e.; only this full-line two-linear-term
 object is). -/
 theorem matDCFreCore_ae_symm (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    (hρ0 : 0 ≤ rho 0) (hρ1 : 0 ≤ rho 1) (hvac : vacMix rho sigma ≠ 0) (i j : Fin 2) :
+    (hrhoC0 : 0 ≤ rho 0) (hrhoC1 : 0 ≤ rho 1) (hvac : vacMix rho sigma ≠ 0) (i j : Fin 2) :
     (fun v => matDCFreCore rho sigma hsig i j v)
       =ᵐ[volume] (fun v => matDCFreCore rho sigma hsig j i v) := by
-  filter_upwards [matDCF_ae_symm rho sigma hsig hρ0 hρ1 hvac i j] with v hv
+  filter_upwards [matDCF_ae_symm rho sigma hsig hrhoC0 hrhoC1 hvac i j] with v hv
   simp only [matDCFreCore, hv]
 
 open FMSA.MatrixQ0 in
@@ -836,7 +838,7 @@ inputs are exactly `hbridge` (provable, `matRadialConv_eq_matShellConv`) and `hc
 corrected seed); the symmetry obstruction is gone. -/
 theorem matOzStar_of_matDCF_ae (Psi Phi Kmat : Matrix (Fin 2) (Fin 2) (ℝ → ℝ))
     (rhoV sigmaV : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigmaV k)
-    (hρ0 : 0 ≤ rhoV 0) (hρ1 : 0 ≤ rhoV 1) (hvac : vacMix rhoV sigmaV ≠ 0)
+    (hrhoC0 : 0 ≤ rhoV 0) (hrhoC1 : 0 ≤ rhoV 1) (hvac : vacMix rhoV sigmaV ≠ 0)
     {rho sigmaS : ℝ} (hrho : rho ≠ 0) (hsigmaS : 0 ≤ sigmaS)
     (hKdcf : ∀ i k, ∀ᵐ u ∂volume, u ∈ Set.Ioc (0 : ℝ) sigmaS →
       rho * Kmat i k u = matDCFreCore rhoV sigmaV hsig i k u)
@@ -849,7 +851,7 @@ theorem matOzStar_of_matDCF_ae (Psi Phi Kmat : Matrix (Fin 2) (Fin 2) (ℝ → �
             (fun k l => fun x => Psi k l x / x) sigmaS r i j) :
     MatOZStar Psi Phi rho := by
   refine matOzStar_of_asymK_ae Psi Phi Kmat hsigmaS (fun i k => ?_) hbridge hclaimA
-  filter_upwards [hKdcf i k, hKdcf k i, matDCFreCore_ae_symm rhoV sigmaV hsig hρ0 hρ1 hvac i k]
+  filter_upwards [hKdcf i k, hKdcf k i, matDCFreCore_ae_symm rhoV sigmaV hsig hrhoC0 hrhoC1 hvac i k]
     with u h1 h2 h3
   intro hmem
   have hmul : rho * Kmat i k u = rho * Kmat k i u := by rw [h1 hmem, h3, ← h2 hmem]
@@ -863,7 +865,7 @@ unequal-diameter `MatOZStar` are the shell bridge `hbridge` (provable) and the c
 `hclaimA` — the symmetry obstruction (b) is fully gone. -/
 theorem matOzStar_of_matDCF_ae_canonical (Psi Phi : Matrix (Fin 2) (Fin 2) (ℝ → ℝ))
     (rhoV sigmaV : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigmaV k)
-    (hρ0 : 0 ≤ rhoV 0) (hρ1 : 0 ≤ rhoV 1) (hvac : vacMix rhoV sigmaV ≠ 0)
+    (hrhoC0 : 0 ≤ rhoV 0) (hrhoC1 : 0 ≤ rhoV 1) (hvac : vacMix rhoV sigmaV ≠ 0)
     {rho sigmaS : ℝ} (hrho : rho ≠ 0) (hsigmaS : 0 ≤ sigmaS)
     (hbridge : ∀ (i j : Fin 2) (r : ℝ), 0 < r →
       r * matRadialConv Phi (fun k l => fun x => Psi k l x / x) r i j
@@ -876,7 +878,7 @@ theorem matOzStar_of_matDCF_ae_canonical (Psi Phi : Matrix (Fin 2) (Fin 2) (ℝ 
             (fun k l => fun x => Psi k l x / x) sigmaS r i j) :
     MatOZStar Psi Phi rho := by
   refine matOzStar_of_matDCF_ae Psi Phi
-    (fun i k u => matDCFreCore rhoV sigmaV hsig i k u / rho) rhoV sigmaV hsig hρ0 hρ1 hvac
+    (fun i k u => matDCFreCore rhoV sigmaV hsig i k u / rho) rhoV sigmaV hsig hrhoC0 hrhoC1 hvac
     hrho hsigmaS (fun i k => ?_) hbridge hclaimA
   filter_upwards with u _
   rw [mul_div_cancel₀ _ hrho]
@@ -1031,13 +1033,13 @@ variable {N : ℕ}
 
 /-- General-N physical Mix (M=0, no Yukawa tails). -/
 noncomputable def physMixN (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k) : Mix N 0 where
-  σ := sigma
-  ρ := rho
+  sigma := sigma
+  rho := rho
   zp := fun _ _ => Fin.elim0
   cb := fun _ _ => Fin.elim0
   Q0 := Q0phys rho sigma
   Qpp := fun j => Qppphys rho sigma j j
-  hσ := hsig
+  hsigma := hsig
 
 /-- **`M=0` bridge — the physical `Mix N 0` forgets to the HS-layer `physHSMixN`.**  `physMixN` is the
 `M=0` lift of the pure hard-sphere `FMSA.HSMix.physHSMixN` (`HSMixture/PhysHSMix.lean`); dropping the
@@ -1085,18 +1087,18 @@ theorem q0MixEntry_physMixN_fullline (rho sigma : Fin N → ℝ) (hsig : ∀ k, 
   exact q0MixEntry_physMixN_laplace rho sigma hsig s hs i j
 
 
-noncomputable def matCorrWN {M : ℕ} (X : Mix N M) (ρg : Fin N → Fin N → ℝ) (i j : Fin N)
+noncomputable def matCorrWN {M : ℕ} (X : Mix N M) (rhoCg : Fin N → Fin N → ℝ) (i j : Fin N)
     (v : ℝ) : ℂ :=
-  ∑ l, ∫ t, ((ρg i l : ℂ) * (q0MixEntry X i l t : ℂ))
-              * ((ρg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ))
+  ∑ l, ∫ t, ((rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ))
+              * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ))
 
-theorem matCorrWN_laplace {M : ℕ} (X : Mix N M) (ρg : Fin N → Fin N → ℝ) (i j : Fin N) (z : ℂ) :
-    (∫ v, matCorrWN X ρg i j v * Complex.exp (-(z * v)))
-      = ∑ l, (ρg i l : ℂ) * (ρg j l : ℂ)
+theorem matCorrWN_laplace {M : ℕ} (X : Mix N M) (rhoCg : Fin N → Fin N → ℝ) (i j : Fin N) (z : ℂ) :
+    (∫ v, matCorrWN X rhoCg i j v * Complex.exp (-(z * v)))
+      = ∑ l, (rhoCg i l : ℂ) * (rhoCg j l : ℂ)
           * (∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(z * t)))
           * (∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (z * s)) := by
-  set F : Fin N → ℝ → ℂ := fun l t => (ρg i l : ℂ) * (q0MixEntry X i l t : ℂ) with hF
-  set G : Fin N → ℝ → ℂ := fun l t => (ρg j l : ℂ) * (q0MixEntry X j l t : ℂ) with hG
+  set F : Fin N → ℝ → ℂ := fun l t => (rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ) with hF
+  set G : Fin N → ℝ → ℂ := fun l t => (rhoCg j l : ℂ) * (q0MixEntry X j l t : ℂ) with hG
   have h3 : ∀ l : Fin N, Integrable
       (fun v => (∫ t, F l t * G l (t - v)) * Complex.exp (-(z * v))) := by
     intro l
@@ -1107,37 +1109,37 @@ theorem matCorrWN_laplace {M : ℕ} (X : Mix N M) (ρg : Fin N → Fin N → ℝ
         (Filter.Eventually.of_forall (fun v => ?_))
       simp only [Function.uncurry]
       exact MeasureTheory.integral_mul_const (Complex.exp (-(z * (v : ℂ)))) _
-    refine (hUnw.const_mul ((ρg i l : ℂ) * (ρg j l : ℂ))).congr
+    refine (hUnw.const_mul ((rhoCg i l : ℂ) * (rhoCg j l : ℂ))).congr
       (Filter.Eventually.of_forall (fun v => ?_))
     simp only [hF, hG]
-    rw [show (fun t => (ρg i l : ℂ) * (q0MixEntry X i l t : ℂ)
-            * ((ρg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
-          = (fun t => ((ρg i l : ℂ) * (ρg j l : ℂ))
+    rw [show (fun t => (rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ)
+            * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
+          = (fun t => ((rhoCg i l : ℂ) * (rhoCg j l : ℂ))
               * ((q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ))) from by
         funext t; ring, MeasureTheory.integral_const_mul]
     ring
   have key := laplace_sum_eq_corr_c (ι := Fin N) Finset.univ F G z
     (fun l _ => by
-      have h := ((q0MixEntry_mul_exp_integrable X i l (-z)).const_mul (ρg i l : ℂ)).mul_prod
-        ((q0MixEntry_mul_exp_integrable X j l z).const_mul (ρg j l : ℂ))
+      have h := ((q0MixEntry_mul_exp_integrable X i l (-z)).const_mul (rhoCg i l : ℂ)).mul_prod
+        ((q0MixEntry_mul_exp_integrable X j l z).const_mul (rhoCg j l : ℂ))
       refine h.congr (Filter.Eventually.of_forall (fun p => ?_))
       simp only [hF, hG, neg_mul]; ring)
     (fun l _ => by
       refine ((q0MixEntry_corr_exp_prod_integrable X i j l z).const_mul
-        ((ρg i l : ℂ) * (ρg j l : ℂ))).congr (Filter.Eventually.of_forall (fun p => ?_))
+        ((rhoCg i l : ℂ) * (rhoCg j l : ℂ))).congr (Filter.Eventually.of_forall (fun p => ?_))
       simp only [hF, hG, Function.uncurry]; ring)
     (fun l _ => h3 l)
-  have hmc : (∫ v, matCorrWN X ρg i j v * Complex.exp (-(z * v)))
+  have hmc : (∫ v, matCorrWN X rhoCg i j v * Complex.exp (-(z * v)))
       = ∫ v, (∑ l, ∫ t, F l t * G l (t - v)) * Complex.exp (-(z * v)) := by
     simp only [matCorrWN, hF, hG]
   rw [hmc, ← key]
   refine Finset.sum_congr rfl (fun l _ => ?_)
   rw [show (∫ t, F l t * Complex.exp (-(z * t)))
-        = (ρg i l : ℂ) * ∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(z * t)) from by
+        = (rhoCg i l : ℂ) * ∫ t, (q0MixEntry X i l t : ℂ) * Complex.exp (-(z * t)) from by
       rw [← MeasureTheory.integral_const_mul]; refine integral_congr_ae
         (Filter.Eventually.of_forall (fun t => ?_)); simp only [hF]; ring,
     show (∫ s, G l s * Complex.exp (z * s))
-        = (ρg j l : ℂ) * ∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (z * s) from by
+        = (rhoCg j l : ℂ) * ∫ s, (q0MixEntry X j l s : ℂ) * Complex.exp (z * s) from by
       rw [← MeasureTheory.integral_const_mul]; refine integral_congr_ae
         (Filter.Eventually.of_forall (fun s => ?_)); simp only [hG]; ring]
   ring
@@ -1278,13 +1280,13 @@ theorem q0MixEntry_continuousAt_N {M : ℕ} (X : Mix N M) (i j : Fin N) {v : ℝ
         rw [q0MixEntry, Set.indicator_of_notMem hnm]
   exact Complex.continuous_ofReal.continuousAt.comp hreal
 
-theorem matCorrWN_continuous {M : ℕ} (X : Mix N M) (ρg : Fin N → Fin N → ℝ) (i j : Fin N) :
-    Continuous (fun v => matCorrWN X ρg i j v) := by
+theorem matCorrWN_continuous {M : ℕ} (X : Mix N M) (rhoCg : Fin N → Fin N → ℝ) (i j : Fin N) :
+    Continuous (fun v => matCorrWN X rhoCg i j v) := by
   simp only [matCorrWN]
   refine continuous_finsetSum _ (fun l _ => ?_)
-  have heq : (fun v => ∫ t, ((ρg i l : ℂ) * (q0MixEntry X i l t : ℂ))
-        * ((ρg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
-      = (fun v => (ρg i l : ℂ) * (ρg j l : ℂ)
+  have heq : (fun v => ∫ t, ((rhoCg i l : ℂ) * (q0MixEntry X i l t : ℂ))
+        * ((rhoCg j l : ℂ) * (q0MixEntry X j l (t - v) : ℂ)))
+      = (fun v => (rhoCg i l : ℂ) * (rhoCg j l : ℂ)
           * ∫ t, (q0MixEntry X i l t : ℂ) * (q0MixEntry X j l (t - v) : ℂ)) := by
     funext v; rw [← MeasureTheory.integral_const_mul]
     exact integral_congr_ae (Filter.Eventually.of_forall (fun t => by ring))
@@ -1496,33 +1498,33 @@ theorem qWeighted_eq_zero_of_notMem (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0
 /-- With a shell radius `sigmaS ≥` every diameter, `qWeighted i k` vanishes for `|t| > sigmaS`
 (its support `[(σₖ−σᵢ)/2,(σᵢ+σₖ)/2] ⊆ [−sigmaS, sigmaS]`). -/
 theorem qWeighted_eq_zero_of_sigmaS_lt_abs (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    {sigmaS : ℝ} (hσσ : ∀ l, sigma l ≤ sigmaS) (i k : Fin 2) {t : ℝ} (ht : sigmaS < |t|) :
+    {sigmaS : ℝ} (hsigCsigC : ∀ l, sigma l ≤ sigmaS) (i k : Fin 2) {t : ℝ} (ht : sigmaS < |t|) :
     qWeighted rho sigma hsig i k t = 0 := by
   apply qWeighted_eq_zero_of_notMem
   rw [Set.mem_Icc, not_and_or]
   rcases lt_abs.mp ht with h | h
-  · right; rw [not_le]; linarith [hσσ i, hσσ k]
-  · left; rw [not_le]; linarith [hσσ i, hsig k, hsig i]
+  · right; rw [not_le]; linarith [hsigCsigC i, hsigCsigC k]
+  · left; rw [not_le]; linarith [hsigCsigC i, hsig k, hsig i]
 
 /-- **`hsupp` discharge** — the physical DCF fold kernel is compactly supported in `[−σ,σ]`
 for any shell radius `sigmaS ≥` every diameter: `matDCFfoldKernel (qWeighted) i k v = 0` for
 `sigmaS < |v|` (both linear Baxter terms and the correlation `matCorrFull` vanish). -/
 theorem matDCFfoldKernel_qWeighted_eq_zero_of_lt_abs (rho sigma : Fin 2 → ℝ)
-    (hsig : ∀ k, 0 < sigma k) {sigmaS : ℝ} (hσσ : ∀ l, sigma l ≤ sigmaS) (i k : Fin 2) {v : ℝ}
+    (hsig : ∀ k, 0 < sigma k) {sigmaS : ℝ} (hsigCsigC : ∀ l, sigma l ≤ sigmaS) (i k : Fin 2) {v : ℝ}
     (hv : sigmaS < |v|) :
     matDCFfoldKernel (qWeighted rho sigma hsig) i k v = 0 := by
   simp only [matDCFfoldKernel]
-  rw [qWeighted_eq_zero_of_sigmaS_lt_abs rho sigma hsig hσσ i k hv,
-      qWeighted_eq_zero_of_sigmaS_lt_abs rho sigma hsig hσσ k i (by rwa [abs_neg]),
-      matCorrFull_qWeighted_eq_zero_of_R_lt_abs rho sigma hsig i k (by linarith [hσσ i, hσσ k])]
+  rw [qWeighted_eq_zero_of_sigmaS_lt_abs rho sigma hsig hsigCsigC i k hv,
+      qWeighted_eq_zero_of_sigmaS_lt_abs rho sigma hsig hsigCsigC k i (by rwa [abs_neg]),
+      matCorrFull_qWeighted_eq_zero_of_R_lt_abs rho sigma hsig i k (by linarith [hsigCsigC i, hsigCsigC k])]
   ring
 
 /-- **`hQlam` discharge** — `qWeighted i k` vanishes below `−sigmaS` (the global support lower bound
 `lam = −sigmaS ≤ 0` works for every pair). -/
 theorem qWeighted_eq_zero_of_lt_neg_sigmaS (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    {sigmaS : ℝ} (hσσ : ∀ l, sigma l ≤ sigmaS) (i k : Fin 2) {t : ℝ} (ht : t < -sigmaS) :
+    {sigmaS : ℝ} (hsigCsigC : ∀ l, sigma l ≤ sigmaS) (i k : Fin 2) {t : ℝ} (ht : t < -sigmaS) :
     qWeighted rho sigma hsig i k t = 0 := by
-  refine qWeighted_eq_zero_of_sigmaS_lt_abs rho sigma hsig hσσ i k ?_
+  refine qWeighted_eq_zero_of_sigmaS_lt_abs rho sigma hsig hsigCsigC i k ?_
   rw [lt_abs]; right; linarith
 /-! #### Discharging the `qWeighted` integrability side-conditions (`hB`/`hA`/`hC`/`hint`/`hIfwd`/
 `hIbwd`) of the `hclaimA` capstone, from continuity of the OZ solution `Ψ`.  Each pairs the
@@ -1956,7 +1958,7 @@ theorem matBridge_of_regular (Phi Psi : Matrix (Fin 2) (Fin 2) (ℝ → ℝ)) {s
     obtain ⟨M, hM⟩ := (isCompact_Icc (a := r - sigma) (b := r + sigma)).exists_bound_of_continuousOn
       (hΨcont k).continuousOn
     have hCφ0 : 0 ≤ Cφ := le_trans (abs_nonneg _) (hCφ 0)
-    have hσ0 : 0 ≤ sigma := hsigma.le
+    have hsigC0 : 0 ≤ sigma := hsigma.le
     have hInd : Measurable
         (fun p : ℝ × ℝ => (Set.Ioi p.1).indicator (fun s => s * Phi i k s) p.2) := by
       have he : (fun p : ℝ × ℝ => (Set.Ioi p.1).indicator (fun s => s * Phi i k s) p.2)
@@ -1992,15 +1994,15 @@ theorem matBridge_of_regular (Phi Psi : Matrix (Fin 2) (Fin 2) (ℝ → ℝ)) {s
           rw [Set.indicator_apply]
           split
           · rw [abs_mul]
-            exact mul_le_mul (by rw [abs_of_pos hs.1]; exact hs.2) (hCφ p.2) (abs_nonneg _) hσ0
-          · rw [abs_zero]; exact mul_nonneg hσ0 hCφ0
+            exact mul_le_mul (by rw [abs_of_pos hs.1]; exact hs.2) (hCφ p.2) (abs_nonneg _) hsigC0
+          · rw [abs_zero]; exact mul_nonneg hsigC0 hCφ0
         have hb2 : |Psi k j (r - p.1) + Psi k j (r + p.1)| ≤ M + M := by
           refine (abs_add_le _ _).trans (add_le_add ?_ ?_)
           · have := hM (r - p.1) ⟨by linarith [hu.2], by linarith [hu.1]⟩
             rwa [Real.norm_eq_abs] at this
           · have := hM (r + p.1) ⟨by linarith [hu.1], by linarith [hu.2]⟩
             rwa [Real.norm_eq_abs] at this
-        exact mul_le_mul hb1 hb2 (abs_nonneg _) (mul_nonneg hσ0 hCφ0)
+        exact mul_le_mul hb1 hb2 (abs_nonneg _) (mul_nonneg hsigC0 hCφ0)
     exact hint.congr (Filter.Eventually.of_forall (fun p => by
       simp only [Function.uncurry, hoe]))
 open FMSA.HardSphere in
@@ -2043,7 +2045,7 @@ open FMSA.HardSphere
 if `F σ = 0` and `F' = −2π·s·c(s)` on `[v,σ]`, then `shellKernel c σ v = F v` (for `0 < v < σ`).
 This turns `hShellDCF` (`shellKernel(Φᵢₖ) = matDCFreCore/ρ`) into the DIFFERENTIAL relation
 `(matDCFreCore/ρ)'(s) = −2π·s·Φᵢₖ(s)` + boundary `matDCFreCore(σ)/ρ = 0`. -/
-theorem shellKernel_eq_of_hasDerivAt {c F : ℝ → ℝ} {sigma : ℝ} (hFσ : F sigma = 0)
+theorem shellKernel_eq_of_hasDerivAt {c F : ℝ → ℝ} {sigma : ℝ} (hFsigC : F sigma = 0)
     {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) sigma)
     (hderiv : ∀ s ∈ Set.uIcc v sigma, HasDerivAt F (-(2 * Real.pi * s * c s)) s)
     (hint : IntervalIntegrable (fun s => -(2 * Real.pi * s * c s)) volume v sigma) :
@@ -2052,7 +2054,7 @@ theorem shellKernel_eq_of_hasDerivAt {c F : ℝ → ℝ} {sigma : ℝ} (hFσ : F
   rw [abs_of_pos hv.1]
   have hftc : ∫ s in v..sigma, -(2 * Real.pi * s * c s) = F sigma - F v :=
     intervalIntegral.integral_eq_sub_of_hasDerivAt hderiv hint
-  rw [hFσ, zero_sub] at hftc
+  rw [hFsigC, zero_sub] at hftc
   have h2 : (∫ s in v..sigma, -(2 * Real.pi * s * c s))
       = -(2 * Real.pi) * ∫ s in v..sigma, s * c s := by
     rw [← intervalIntegral.integral_const_mul]
@@ -2065,7 +2067,7 @@ theorem shellKernel_eq_of_hasDerivAt {c F : ℝ → ℝ} {sigma : ℝ} (hFσ : F
 differentiable only on the OPEN `(v,σ)` but continuous on closed `[v,σ]` (matching `matDCFreCore`,
 which may have a kink at `σ`). -/
 theorem shellKernel_eq_of_hasDeriv_of_continuousOn {c F : ℝ → ℝ} {sigma v : ℝ}
-    (hv : v ∈ Set.Ioo (0 : ℝ) sigma) (hFσ : F sigma = 0)
+    (hv : v ∈ Set.Ioo (0 : ℝ) sigma) (hFsigC : F sigma = 0)
     (hFc : ContinuousOn F (Set.Icc v sigma))
     (hderiv : ∀ s ∈ Set.Ioo v sigma, HasDerivAt F (-(2 * Real.pi * s * c s)) s)
     (hint : IntervalIntegrable (fun s => -(2 * Real.pi * s * c s)) volume v sigma) :
@@ -2075,7 +2077,7 @@ theorem shellKernel_eq_of_hasDeriv_of_continuousOn {c F : ℝ → ℝ} {sigma v 
   have hftc : ∫ s in v..sigma, -(2 * Real.pi * s * c s) = F sigma - F v :=
     intervalIntegral.integral_eq_sub_of_hasDeriv_right_of_le hv.2.le hFc
       (fun s hs => (hderiv s hs).hasDerivWithinAt) hint
-  rw [hFσ, zero_sub] at hftc
+  rw [hFsigC, zero_sub] at hftc
   have h2 : (∫ s in v..sigma, -(2 * Real.pi * s * c s))
       = -(2 * Real.pi) * ∫ s in v..sigma, s * c s := by
     rw [← intervalIntegral.integral_const_mul]
@@ -2121,7 +2123,7 @@ noncomputable def shellForcing (rhoV sigmaV : Fin 2 → ℝ) (hsigV : ∀ k, 0 <
 /-- The ODE `(matDCFreCore/ρ)'(s) = −2π·s·Φᶜᵢₖ(s)` holds BY CONSTRUCTION for `Φᶜ = shellForcing`,
 given `matDCFreCore(i,k)` differentiable at `s ≠ 0`. -/
 theorem hasDerivAt_matDCFreCore_div {rhoV sigmaV : Fin 2 → ℝ} {hsigV : ∀ k, 0 < sigmaV k}
-    {rho : ℝ} {i k : Fin 2} {s : ℝ} (hs : s ≠ 0) (hρ : rho ≠ 0)
+    {rho : ℝ} {i k : Fin 2} {s : ℝ} (hs : s ≠ 0) (hrhoC : rho ≠ 0)
     (hd : DifferentiableAt ℝ (fun w => matDCFreCore rhoV sigmaV hsigV i k w) s) :
     HasDerivAt (fun w => matDCFreCore rhoV sigmaV hsigV i k w / rho)
       (-(2 * Real.pi * s * shellForcing rhoV sigmaV hsigV rho i k s)) s := by
@@ -2139,7 +2141,7 @@ integrability of its derivative.  So the ODE is discharged; the residue is the D
 (mechanical for the piecewise-polynomial DCF) plus identifying `shellForcing` with the physical DCF
 `c_HS` (the open Baxter–WH content). -/
 theorem hShellDCF_construct (rhoV sigmaV : Fin 2 → ℝ) (hsigV : ∀ k, 0 < sigmaV k)
-    {sigma rho : ℝ} (hρ : rho ≠ 0) (i k : Fin 2)
+    {sigma rho : ℝ} (hrhoC : rho ≠ 0) (i k : Fin 2)
     (hbdry : matDCFreCore rhoV sigmaV hsigV i k sigma / rho = 0)
     (hFc : ∀ v ∈ Set.Ioo (0 : ℝ) sigma,
       ContinuousOn (fun w => matDCFreCore rhoV sigmaV hsigV i k w / rho) (Set.Icc v sigma))
@@ -2151,7 +2153,7 @@ theorem hShellDCF_construct (rhoV sigmaV : Fin 2 → ℝ) (hsigV : ∀ k, 0 < si
     shellKernel (shellForcing rhoV sigmaV hsigV rho i k) sigma v
       = matDCFreCore rhoV sigmaV hsigV i k v / rho :=
   hShellDCF_of_deriv (shellForcing rhoV sigmaV hsigV rho) rhoV sigmaV hsigV i k hbdry hFc
-    (fun s hs => hasDerivAt_matDCFreCore_div (ne_of_gt hs.1) hρ (hdiff s hs)) hint v hv
+    (fun s hs => hasDerivAt_matDCFreCore_div (ne_of_gt hs.1) hrhoC (hdiff s hs)) hint v hv
 /-! #### `matDCFreCore` C¹ regularity (item (a) of the `hShellDCF_construct` reduction).  The
 linear Baxter term is `C^∞` on the open support (`qWeighted_contDiffOn`, a quadratic — same idea
 as `cHSmixRaw_contDiffOn`'s `hqFwd`); `matDCFreCore_contDiffOn_of_corr` then reduces the DCF core's
@@ -2293,7 +2295,7 @@ equal `shellForcing` there — differentiate the identity: `−2π·v·Φ(v) = (
 identifying the physical `c_HS` with `shellForcing` is EXACTLY the claim that `c_HS` satisfies
 `hShellDCF` — the open Baxter–WH gap; there is no independent content. -/
 theorem forcing_eq_shellForcing_of_hShellDCF (rhoV sigmaV : Fin 2 → ℝ) (hsigV : ∀ k, 0 < sigmaV k)
-    {sigma rho : ℝ} (hρ : rho ≠ 0) (i k : Fin 2) (Phi : ℝ → ℝ) (hΦ : Continuous Phi)
+    {sigma rho : ℝ} (hrhoC : rho ≠ 0) (i k : Fin 2) (Phi : ℝ → ℝ) (hΦ : Continuous Phi)
     (hSK : ∀ v ∈ Set.Ioo (0 : ℝ) sigma,
       shellKernel Phi sigma v = matDCFreCore rhoV sigmaV hsigV i k v / rho)
     (v : ℝ) (hv : v ∈ Set.Ioo (0 : ℝ) sigma) :
@@ -2308,7 +2310,7 @@ theorem forcing_eq_shellForcing_of_hShellDCF (rhoV sigmaV : Fin 2 → ℝ) (hsig
       = -(2 * Real.pi * v * Phi v) := (hL.congr_of_eventuallyEq heq.symm).deriv
   rw [deriv_div_const] at hderivval
   have hdv : deriv (fun w => matDCFreCore rhoV sigmaV hsigV i k w) v
-      = -(2 * Real.pi * v * Phi v) * rho := (div_eq_iff hρ).mp hderivval
+      = -(2 * Real.pi * v * Phi v) * rho := (div_eq_iff hrhoC).mp hderivval
   have hv0 : v ≠ 0 := ne_of_gt hv.1
   have hπ : (2 : ℝ) * Real.pi ≠ 0 := by positivity
   simp only [shellForcing, hdv]
@@ -2362,10 +2364,10 @@ open FMSA.MatrixQ0 in
 `= 1`), the reflected term vanishes (support below `0`), and the correlation is globally continuous
 (`matCorrFull_continuous`).  Discharges `hFc`. -/
 theorem matDCFreCore_continuousOn_Icc (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    {σ : ℝ} (hED : ∀ n, sigma n = σ) (i k : Fin 2) {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) σ) :
-    ContinuousOn (fun w => matDCFreCore rho sigma hsig i k w) (Set.Icc v σ) := by
+    {sigC : ℝ} (hED : ∀ n, sigma n = sigC) (i k : Fin 2) {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) sigC) :
+    ContinuousOn (fun w => matDCFreCore rho sigma hsig i k w) (Set.Icc v sigC) := by
   have hlam : (physMix rho sigma hsig).lam i k = 0 := by simp only [physMix, Mix.lam, hED]; ring
-  have hR : (physMix rho sigma hsig).R i k = σ := by simp only [physMix, Mix.R, hED]; ring
+  have hR : (physMix rho sigma hsig).R i k = sigC := by simp only [physMix, Mix.R, hED]; ring
   have hfold : (fun w => matDCFreCore rho sigma hsig i k w)
       = fun w => qWeighted rho sigma hsig i k w + qWeighted rho sigma hsig k i (-w)
           - matCorrFull (qWeighted rho sigma hsig) i k w := by
@@ -2396,39 +2398,39 @@ vanishes at `R = σ`, the reflected term's support is below `0`, and the correla
 (the supports `[0,σ]` and `[σ,2σ]` touch only at `t = σ`, where the forward factor is already `0`).
 Discharges `hbdry`. -/
 theorem matDCFreCore_boundary (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    {σ : ℝ} (hED : ∀ n, sigma n = σ) (i k : Fin 2) :
-    matDCFreCore rho sigma hsig i k σ = 0 := by
-  have hσ0 : 0 < σ := by rw [← hED 0]; exact hsig 0
+    {sigC : ℝ} (hED : ∀ n, sigma n = sigC) (i k : Fin 2) :
+    matDCFreCore rho sigma hsig i k sigC = 0 := by
+  have hsigC0 : 0 < sigC := by rw [← hED 0]; exact hsig 0
   have hlam : ∀ a b : Fin 2, (physMix rho sigma hsig).lam a b = 0 := by
     intro a b; simp only [physMix, Mix.lam, hED]; ring
-  have hR : ∀ a b : Fin 2, (physMix rho sigma hsig).R a b = σ := by
+  have hR : ∀ a b : Fin 2, (physMix rho sigma hsig).R a b = sigC := by
     intro a b; simp only [physMix, Mix.R, hED]; ring
-  have hq0σ : ∀ a b : Fin 2, q0MixEntry (physMix rho sigma hsig) a b σ = 0 := by
+  have hq0sigC : ∀ a b : Fin 2, q0MixEntry (physMix rho sigma hsig) a b sigC = 0 := by
     intro a b
     unfold q0MixEntry
-    rw [Set.indicator_of_mem (by rw [Set.mem_Icc, hlam, hR]; exact ⟨hσ0.le, le_refl _⟩), hR]
+    rw [Set.indicator_of_mem (by rw [Set.mem_Icc, hlam, hR]; exact ⟨hsigC0.le, le_refl _⟩), hR]
     ring
   rw [← matDCFfoldKernel_qWeighted_eq_matDCFreCore]
   simp only [matDCFfoldKernel]
-  have h1 : qWeighted rho sigma hsig i k σ = 0 := by simp only [qWeighted, hq0σ, mul_zero]
-  have h2 : qWeighted rho sigma hsig k i (-σ) = 0 := by
+  have h1 : qWeighted rho sigma hsig i k sigC = 0 := by simp only [qWeighted, hq0sigC, mul_zero]
+  have h2 : qWeighted rho sigma hsig k i (-sigC) = 0 := by
     simp only [qWeighted]
     rw [q0_physMix_eq_zero_of_notMem rho sigma hsig k i
-      (fun hmem => by rw [Set.mem_Icc] at hmem; linarith [hσ0, hED i, hED k, hmem.1]), mul_zero]
-  have h3 : matCorrFull (qWeighted rho sigma hsig) i k σ = 0 := by
+      (fun hmem => by rw [Set.mem_Icc] at hmem; linarith [hsigC0, hED i, hED k, hmem.1]), mul_zero]
+  have h3 : matCorrFull (qWeighted rho sigma hsig) i k sigC = 0 := by
     simp only [matCorrFull]
     refine Finset.sum_eq_zero (fun m _ => ?_)
-    have hz : (fun t => qWeighted rho sigma hsig i m t * qWeighted rho sigma hsig k m (t - σ))
+    have hz : (fun t => qWeighted rho sigma hsig i m t * qWeighted rho sigma hsig k m (t - sigC))
         = fun _ => (0 : ℝ) := by
       funext t
-      rcases lt_trichotomy t σ with ht | ht | ht
-      · have : qWeighted rho sigma hsig k m (t - σ) = 0 := by
+      rcases lt_trichotomy t sigC with ht | ht | ht
+      · have : qWeighted rho sigma hsig k m (t - sigC) = 0 := by
           simp only [qWeighted]
           rw [q0_physMix_eq_zero_of_notMem rho sigma hsig k m
             (fun hmem => by rw [Set.mem_Icc] at hmem; linarith [hED k, hED m, hmem.1]), mul_zero]
         rw [this, mul_zero]
-      · have hzσ : qWeighted rho sigma hsig i m σ = 0 := by simp only [qWeighted, hq0σ, mul_zero]
-        rw [ht, hzσ, zero_mul]
+      · have hzsigC : qWeighted rho sigma hsig i m sigC = 0 := by simp only [qWeighted, hq0sigC, mul_zero]
+        rw [ht, hzsigC, zero_mul]
       · have : qWeighted rho sigma hsig i m t = 0 := by
           simp only [qWeighted]
           rw [q0_physMix_eq_zero_of_notMem rho sigma hsig i m
@@ -2449,24 +2451,24 @@ open FMSA.MatrixQ0 in
 `q0MixEntry i m x = quad(min x σ)` there — a Lipschitz composition (`quad` Lipschitz on the compact
 `[0,σ]`, `min · σ` is `1`-Lipschitz).  This is the ingredient that makes `matCorrFull` Lipschitz. -/
 theorem qWeighted_lipschitzOnWith (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    {σ : ℝ} (hED : ∀ n, sigma n = σ) (i m : Fin 2) :
+    {sigC : ℝ} (hED : ∀ n, sigma n = sigC) (i m : Fin 2) :
     ∃ K : NNReal, LipschitzOnWith K (fun x => qWeighted rho sigma hsig i m x) (Set.Ici 0) := by
   set X := physMix rho sigma hsig with hX
-  have hR : X.R i m = σ := by simp only [hX, physMix, Mix.R, hED]; ring
+  have hR : X.R i m = sigC := by simp only [hX, physMix, Mix.R, hED]; ring
   have hlam : X.lam i m = 0 := by simp only [hX, physMix, Mix.lam, hED]; ring
-  have hσ0 : 0 < σ := by rw [← hED 0]; exact hsig 0
+  have hsigC0 : 0 < sigC := by rw [← hED 0]; exact hsig 0
   set a := X.Q0 i m with ha
   set b := X.Qpp m with hb
   have hq0 : ∀ x : ℝ, 0 ≤ x → q0MixEntry X i m x
-      = a * (min x σ - σ) + b * (min x σ - σ) ^ 2 / 2 := by
+      = a * (min x sigC - sigC) + b * (min x sigC - sigC) ^ 2 / 2 := by
     intro x hx
     simp only [q0MixEntry, hlam, hR, ← ha, ← hb]
-    by_cases hxσ : x ≤ σ
-    · rw [Set.indicator_of_mem (by rw [Set.mem_Icc]; exact ⟨hx, hxσ⟩), min_eq_left hxσ]
+    by_cases hxsigC : x ≤ sigC
+    · rw [Set.indicator_of_mem (by rw [Set.mem_Icc]; exact ⟨hx, hxsigC⟩), min_eq_left hxsigC]
     · rw [Set.indicator_of_notMem (by rw [Set.mem_Icc, not_and_or]; exact Or.inr (by
-          push_neg; exact lt_of_not_ge hxσ)), min_eq_right (le_of_not_ge hxσ), sub_self]
+          push_neg; exact lt_of_not_ge hxsigC)), min_eq_right (le_of_not_ge hxsigC), sub_self]
       ring
-  refine ⟨Real.toNNReal (|rhoGeoPhys rho i m| * (|a| + |b| * σ)), ?_⟩
+  refine ⟨Real.toNNReal (|rhoGeoPhys rho i m| * (|a| + |b| * sigC)), ?_⟩
   rw [lipschitzOnWith_iff_dist_le_mul]
   intro x hx y hy
   rw [Set.mem_Ici] at hx hy
@@ -2474,35 +2476,35 @@ theorem qWeighted_lipschitzOnWith (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 <
   have hqW : ∀ z : ℝ, qWeighted rho sigma hsig i m z = rhoGeoPhys rho i m * q0MixEntry X i m z :=
     fun z => by simp only [qWeighted, hX]
   rw [hqW x, hqW y, hq0 x hx, hq0 y hy]
-  set u := min x σ with hu
-  set v := min y σ with hv
-  have hu0 : 0 ≤ u := le_min hx hσ0.le
-  have huσ : u ≤ σ := min_le_right _ _
-  have hv0 : 0 ≤ v := le_min hy hσ0.le
-  have hvσ : v ≤ σ := min_le_right _ _
+  set u := min x sigC with hu
+  set v := min y sigC with hv
+  have hu0 : 0 ≤ u := le_min hx hsigC0.le
+  have husigC : u ≤ sigC := min_le_right _ _
+  have hv0 : 0 ≤ v := le_min hy hsigC0.le
+  have hvsigC : v ≤ sigC := min_le_right _ _
   have huv : |u - v| ≤ |x - y| := by
-    have h := (LipschitzWith.min_const LipschitzWith.id σ).dist_le_mul x y
+    have h := (LipschitzWith.min_const LipschitzWith.id sigC).dist_le_mul x y
     simp only [Real.dist_eq, NNReal.coe_one, one_mul] at h
     exact h
-  have hfac : rhoGeoPhys rho i m * (a * (u - σ) + b * (u - σ) ^ 2 / 2)
-      - rhoGeoPhys rho i m * (a * (v - σ) + b * (v - σ) ^ 2 / 2)
-      = rhoGeoPhys rho i m * (u - v) * (a + b * (u + v - 2 * σ) / 2) := by ring
+  have hfac : rhoGeoPhys rho i m * (a * (u - sigC) + b * (u - sigC) ^ 2 / 2)
+      - rhoGeoPhys rho i m * (a * (v - sigC) + b * (v - sigC) ^ 2 / 2)
+      = rhoGeoPhys rho i m * (u - v) * (a + b * (u + v - 2 * sigC) / 2) := by ring
   rw [hfac, abs_mul, abs_mul]
-  have hbnd : |a + b * (u + v - 2 * σ) / 2| ≤ |a| + |b| * σ := by
-    calc |a + b * (u + v - 2 * σ) / 2| ≤ |a| + |b * (u + v - 2 * σ) / 2| := abs_add_le _ _
-      _ = |a| + |b| * (|u + v - 2 * σ| / 2) := by rw [abs_div, abs_mul]; simp; ring
-      _ ≤ |a| + |b| * σ := by
-          have : |u + v - 2 * σ| ≤ 2 * σ := by rw [abs_le]; constructor <;> linarith
+  have hbnd : |a + b * (u + v - 2 * sigC) / 2| ≤ |a| + |b| * sigC := by
+    calc |a + b * (u + v - 2 * sigC) / 2| ≤ |a| + |b * (u + v - 2 * sigC) / 2| := abs_add_le _ _
+      _ = |a| + |b| * (|u + v - 2 * sigC| / 2) := by rw [abs_div, abs_mul]; simp; ring
+      _ ≤ |a| + |b| * sigC := by
+          have : |u + v - 2 * sigC| ≤ 2 * sigC := by rw [abs_le]; constructor <;> linarith
           nlinarith [this, abs_nonneg b]
-  have hK : (Real.toNNReal (|rhoGeoPhys rho i m| * (|a| + |b| * σ)) : ℝ)
-      = |rhoGeoPhys rho i m| * (|a| + |b| * σ) :=
+  have hK : (Real.toNNReal (|rhoGeoPhys rho i m| * (|a| + |b| * sigC)) : ℝ)
+      = |rhoGeoPhys rho i m| * (|a| + |b| * sigC) :=
     Real.coe_toNNReal _ (mul_nonneg (abs_nonneg _) (by positivity))
   rw [hK]
-  calc |rhoGeoPhys rho i m| * |u - v| * |a + b * (u + v - 2 * σ) / 2|
-      ≤ |rhoGeoPhys rho i m| * |x - y| * (|a| + |b| * σ) := by
+  calc |rhoGeoPhys rho i m| * |u - v| * |a + b * (u + v - 2 * sigC) / 2|
+      ≤ |rhoGeoPhys rho i m| * |x - y| * (|a| + |b| * sigC) := by
         apply mul_le_mul (mul_le_mul_of_nonneg_left huv (abs_nonneg _)) hbnd (abs_nonneg _)
         exact mul_nonneg (abs_nonneg _) (abs_nonneg _)
-    _ = |rhoGeoPhys rho i m| * (|a| + |b| * σ) * |x - y| := by ring
+    _ = |rhoGeoPhys rho i m| * (|a| + |b| * sigC) * |x - y| := by ring
 
 /-- **`matCorrFull` is Lipschitz on `Ici 0`** (equal diameters) — hence its derivative is bounded on
 the interior, the `matCorrFull'`-at-`σ` fact.  In the SUBSTITUTED form `∑ₘ ∫ qim(u+v)·qkm(u) du` the
@@ -2510,7 +2512,7 @@ moving kernel `qim` has argument `u+v ≥ 0` (its left-edge jump at `0` is never
 `qWeighted_lipschitzOnWith` bounds the integrand difference pointwise — NO region-split.  Lipschitz
 constant `∑ₘ Lip(qim)·‖qkm‖₁`. -/
 theorem matCorrFull_lipschitzOnWith (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    {σ : ℝ} (hED : ∀ n, sigma n = σ) (i k : Fin 2) :
+    {sigC : ℝ} (hED : ∀ n, sigma n = sigC) (i k : Fin 2) :
     ∃ C : NNReal, LipschitzOnWith C
       (fun v => matCorrFull (qWeighted rho sigma hsig) i k v) (Set.Ici 0) := by
   choose Kq hKq using fun m => qWeighted_lipschitzOnWith rho sigma hsig hED i m
@@ -2584,7 +2586,7 @@ theorem matCorrFull_lipschitzOnWith (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0
 `qWeighted_lipschitzOnWith` and `matCorrFull_lipschitzOnWith`: on `Ioi 0` the reflected term
 vanishes so `matDCFreCore = qWeighted i k − matCorrFull`.  Its `deriv` is then bounded. -/
 theorem matDCFreCore_lipschitzOnWith (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    {σ : ℝ} (hED : ∀ n, sigma n = σ) (i k : Fin 2) :
+    {sigC : ℝ} (hED : ∀ n, sigma n = sigC) (i k : Fin 2) :
     ∃ C : NNReal, LipschitzOnWith C
       (fun v => matDCFreCore rho sigma hsig i k v) (Set.Ioi 0) := by
   obtain ⟨Kik, hKik⟩ := qWeighted_lipschitzOnWith rho sigma hsig hED i k
@@ -2644,13 +2646,13 @@ theorem matDCFreCore_deriv_continuousOn (rho sigma : Fin 2 → ℝ) (hsig : ∀ 
 cancels, `s ≠ 0`), so its interval-integrability is exactly that of `deriv(matDCFreCore)/ρ`.  This
 strips the `shellForcing`/`ρ`/`s` bookkeeping off `hint`, leaving the pure analytic residual. -/
 theorem hint_of_deriv_intervalIntegrable (rhoV sigmaV : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigmaV k)
-    {rho v sigma : ℝ} (hρ : rho ≠ 0) (a b : Fin 2) (hv : 0 < v) (hvσ : v ≤ sigma)
+    {rho v sigma : ℝ} (hrhoC : rho ≠ 0) (a b : Fin 2) (hv : 0 < v) (hvsigC : v ≤ sigma)
     (hD : IntervalIntegrable (fun s => deriv (fun w => matDCFreCore rhoV sigmaV hsig a b w) s)
       volume v sigma) :
     IntervalIntegrable (fun s => -(2 * Real.pi * s * shellForcing rhoV sigmaV hsig rho a b s))
       volume v sigma := by
   refine (hD.div_const rho).congr (fun s hs => ?_)
-  rw [Set.uIoc_of_le hvσ, Set.mem_Ioc] at hs
+  rw [Set.uIoc_of_le hvsigC, Set.mem_Ioc] at hs
   have hs0 : s ≠ 0 := ne_of_gt (lt_of_lt_of_le hv hs.1.le)
   simp only [shellForcing]
   field_simp
@@ -2662,13 +2664,13 @@ on `[v,σ]` (`0 < v ≤ σ`): via `hint_of_deriv_intervalIntegrable` it reduces 
 `Measure.integrableOn_of_bounded` closes it.  This is the LAST mechanical residual of the
 shell-inverse reduction; only the open Baxter–WH identification `shellForcing = c_HS` remains. -/
 theorem hint_discharged (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    {σ : ℝ} (hED : ∀ n, sigma n = σ) {ρ v : ℝ} (hρ : ρ ≠ 0) (a b : Fin 2)
-    (hv : 0 < v) (hvσ : v ≤ σ) :
-    IntervalIntegrable (fun s => -(2 * Real.pi * s * shellForcing rho sigma hsig ρ a b s))
-      volume v σ := by
-  refine hint_of_deriv_intervalIntegrable rho sigma hsig hρ a b hv hvσ ?_
+    {sigC : ℝ} (hED : ∀ n, sigma n = sigC) {rhoC v : ℝ} (hrhoC : rhoC ≠ 0) (a b : Fin 2)
+    (hv : 0 < v) (hvsigC : v ≤ sigC) :
+    IntervalIntegrable (fun s => -(2 * Real.pi * s * shellForcing rho sigma hsig rhoC a b s))
+      volume v sigC := by
+  refine hint_of_deriv_intervalIntegrable rho sigma hsig hrhoC a b hv hvsigC ?_
   obtain ⟨C, hC⟩ := matDCFreCore_lipschitzOnWith rho sigma hsig hED a b
-  rw [intervalIntegrable_iff, Set.uIoc_of_le hvσ]
+  rw [intervalIntegrable_iff, Set.uIoc_of_le hvsigC]
   refine Measure.integrableOn_of_bounded (M := (C : ℝ)) measure_Ioc_lt_top.ne
     (measurable_deriv _).aestronglyMeasurable ?_
   filter_upwards [self_mem_ae_restrict measurableSet_Ioc] with u hu
@@ -2690,28 +2692,28 @@ to `σ`, integrability, the shell-kernel inversion `forcing_eq_shellForcing_of_h
 discharged.  So the whole open Baxter–WH content is EXACTLY this one ODE (a genuine identity in `η`;
 the classical real-space factorization, which the route deliberately never evaluates). -/
 theorem shellForcing_eq_cHS_of_baxterODE (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
-    {σ : ℝ} (hED : ∀ n, sigma n = σ) {ρ : ℝ} (hρ : ρ ≠ 0) {eta : ℝ} (i k : Fin 2)
-    (hODE : ∀ s ∈ Set.Ioo (0 : ℝ) σ,
-      HasDerivAt (fun w => matDCFreCore rho sigma hsig i k w / ρ)
+    {sigC : ℝ} (hED : ∀ n, sigma n = sigC) {rhoC : ℝ} (hrhoC : rhoC ≠ 0) {eta : ℝ} (i k : Fin 2)
+    (hODE : ∀ s ∈ Set.Ioo (0 : ℝ) sigC,
+      HasDerivAt (fun w => matDCFreCore rho sigma hsig i k w / rhoC)
         (-(2 * Real.pi * s
-            * -(py_a0 eta + py_a1 eta * (s / σ) + py_a3 eta * (s / σ) ^ 3))) s)
-    {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) σ) :
-    shellForcing rho sigma hsig ρ i k v = c_HS eta σ v := by
-  set Phi : ℝ → ℝ := fun r => -(py_a0 eta + py_a1 eta * (r / σ) + py_a3 eta * (r / σ) ^ 3) with hPhi
+            * -(py_a0 eta + py_a1 eta * (s / sigC) + py_a3 eta * (s / sigC) ^ 3))) s)
+    {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) sigC) :
+    shellForcing rho sigma hsig rhoC i k v = c_HS eta sigC v := by
+  set Phi : ℝ → ℝ := fun r => -(py_a0 eta + py_a1 eta * (r / sigC) + py_a3 eta * (r / sigC) ^ 3) with hPhi
   have hcont : Continuous Phi := by simp only [hPhi]; fun_prop
-  have hbdry : matDCFreCore rho sigma hsig i k σ / ρ = 0 := by
+  have hbdry : matDCFreCore rho sigma hsig i k sigC / rhoC = 0 := by
     rw [matDCFreCore_boundary rho sigma hsig hED i k]; simp
-  have hFc : ∀ w ∈ Set.Ioo (0 : ℝ) σ,
-      ContinuousOn (fun z => matDCFreCore rho sigma hsig i k z / ρ) (Set.Icc w σ) :=
-    fun w hw => (matDCFreCore_continuousOn_Icc rho sigma hsig hED i k hw).div_const ρ
-  have hint : ∀ w ∈ Set.Ioo (0 : ℝ) σ,
-      IntervalIntegrable (fun s => -(2 * Real.pi * s * Phi s)) volume w σ :=
+  have hFc : ∀ w ∈ Set.Ioo (0 : ℝ) sigC,
+      ContinuousOn (fun z => matDCFreCore rho sigma hsig i k z / rhoC) (Set.Icc w sigC) :=
+    fun w hw => (matDCFreCore_continuousOn_Icc rho sigma hsig hED i k hw).div_const rhoC
+  have hint : ∀ w ∈ Set.Ioo (0 : ℝ) sigC,
+      IntervalIntegrable (fun s => -(2 * Real.pi * s * Phi s)) volume w sigC :=
     fun w _ => (by simp only [hPhi]; fun_prop :
       Continuous fun s => -(2 * Real.pi * s * Phi s)).intervalIntegrable _ _
-  have hSK : ∀ w ∈ Set.Ioo (0 : ℝ) σ,
-      shellKernel Phi σ w = matDCFreCore rho sigma hsig i k w / ρ :=
+  have hSK : ∀ w ∈ Set.Ioo (0 : ℝ) sigC,
+      shellKernel Phi sigC w = matDCFreCore rho sigma hsig i k w / rhoC :=
     fun w hw => hShellDCF_of_deriv (fun _ _ => Phi) rho sigma hsig i k hbdry hFc hODE hint w hw
-  have hforcing := forcing_eq_shellForcing_of_hShellDCF rho sigma hsig hρ i k Phi hcont hSK v hv
+  have hforcing := forcing_eq_shellForcing_of_hShellDCF rho sigma hsig hrhoC i k Phi hcont hSK v hv
   rw [← hforcing, c_HS_inner hv.2]
 
 /-! #### Shell-inverse form of the corrected seed.  With `matDCFreCore/ρ =
@@ -2729,7 +2731,7 @@ shell-inverse forcing.  Since `matDCFreCore/ρ = shellKernel(shellForcing)` on `
 construction (`hShellDCF_construct`), and the shell convolution only samples its kernel there, the
 two agree. -/
 theorem matShellConvAsym_matDCFreCore_eq_shellForcing (rhoV sigmaV : Fin 2 → ℝ)
-    (hsig : ∀ k, 0 < sigmaV k) {rho sigma : ℝ} (hσ : 0 < sigma) (hρ : rho ≠ 0)
+    (hsig : ∀ k, 0 < sigmaV k) {rho sigma : ℝ} (hsigC : 0 < sigma) (hrhoC : rho ≠ 0)
     (G : Matrix (Fin 2) (Fin 2) (ℝ → ℝ)) (r : ℝ) (i j : Fin 2)
     (hbdry : ∀ a b : Fin 2, matDCFreCore rhoV sigmaV hsig a b sigma / rho = 0)
     (hFc : ∀ (a b : Fin 2), ∀ v ∈ Set.Ioo (0 : ℝ) sigma,
@@ -2747,13 +2749,13 @@ theorem matShellConvAsym_matDCFreCore_eq_shellForcing (rhoV sigmaV : Fin 2 → �
   unfold matShellConvAsym
   refine Finset.sum_congr rfl (fun k _ => ?_)
   refine intervalIntegral.integral_congr_ae ?_
-  rw [Set.uIoc_of_le hσ.le]
+  rw [Set.uIoc_of_le hsigC.le]
   have hne : ∀ᵐ u : ℝ, u ≠ sigma := by rw [MeasureTheory.ae_iff]; simp
   filter_upwards [hne] with u hune hmem
   have huoo : u ∈ Set.Ioo (0 : ℝ) sigma := ⟨hmem.1, lt_of_le_of_ne hmem.2 hune⟩
-  rw [hShellDCF_construct rhoV sigmaV hsig hρ i k (hbdry i k) (hFc i k) (hdiff i k) (hint i k)
+  rw [hShellDCF_construct rhoV sigmaV hsig hrhoC i k (hbdry i k) (hFc i k) (hdiff i k) (hint i k)
       u huoo,
-    hShellDCF_construct rhoV sigmaV hsig hρ k i (hbdry k i) (hFc k i) (hdiff k i) (hint k i) u huoo]
+    hShellDCF_construct rhoV sigmaV hsig hrhoC k i (hbdry k i) (hFc k i) (hdiff k i) (hint k i) u huoo]
 
 /-- **⭐ Shell-inverse form of the corrected seed (`matBaxterUQmSymFullExt` via `qWeighted`).**  The
 seed's `hclaimA` — stated with the physical fold kernel `matDCFfoldKernel(qWeighted)/ρ` (which IS
@@ -2762,7 +2764,7 @@ DCF kernel is `shellKernel(shellForcing)`, the shell kernel of the shell-inverse
 renewal seed's forcing is exactly `shellForcing = −matDCFreCore'/(ρ·2π·s)`; under the (open)
 Baxter–WH gap `hShellDCF` that forcing is `c_HS` (`forcing_eq_shellForcing_of_hShellDCF`). -/
 theorem hclaimA_qWeighted_to_shellForcing (rhoV sigmaV : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigmaV k)
-    (Psi Phi : Matrix (Fin 2) (Fin 2) (ℝ → ℝ)) {rho sigma r : ℝ} (hσ : 0 < sigma) (hρ : rho ≠ 0)
+    (Psi Phi : Matrix (Fin 2) (Fin 2) (ℝ → ℝ)) {rho sigma r : ℝ} (hsigC : 0 < sigma) (hrhoC : rho ≠ 0)
     (i j : Fin 2)
     (hbdry : ∀ a b : Fin 2, matDCFreCore rhoV sigmaV hsig a b sigma / rho = 0)
     (hFc : ∀ (a b : Fin 2), ∀ v ∈ Set.Ioo (0 : ℝ) sigma,
@@ -2782,7 +2784,7 @@ theorem hclaimA_qWeighted_to_shellForcing (rhoV sigmaV : Fin 2 → ℝ) (hsig : 
           (fun a b u => shellKernel (shellForcing rhoV sigmaV hsig rho b a) sigma u)
           (fun k l => fun x => Psi k l x / x) sigma r i j := by
   rw [hclaimA_qWeighted_to_matDCFreCore rhoV sigmaV hsig Psi Phi rho sigma r i j h,
-    matShellConvAsym_matDCFreCore_eq_shellForcing rhoV sigmaV hsig hσ hρ
+    matShellConvAsym_matDCFreCore_eq_shellForcing rhoV sigmaV hsig hsigC hrhoC
       (fun k l => fun x => Psi k l x / x) r i j hbdry hFc hdiff hint]
 
 end PhysicalIdentification

@@ -36,27 +36,29 @@ Fourier DCF bridge (`Ĉ₀ =` the radial DCF transform, MRS.8-level), the SAME b
 region's `hfack` needs; it is not a separate origin obstacle.
 -/
 
+set_option linter.style.longLine false
+
 open Filter Topology
 namespace FMSA.MixtureGenN
 
 /-- Matrix built from the ENTIRE representative `q0_entry_c_repr` — the finite Baxter factor
 including the removable origin `s = 0` (mirrors `Q0_mat_c_phys`'s entry assembly). -/
-noncomputable def Q0_mat_c_repr {N : ℕ} (s : ℂ) (σ ρ : Fin N → ℝ) : Matrix (Fin N) (Fin N) ℂ :=
+noncomputable def Q0_mat_c_repr {N : ℕ} (s : ℂ) (sigma rho : Fin N → ℝ) : Matrix (Fin N) (Fin N) ℂ :=
   fun i j => FMSA.Q0Complex.q0_entry_c_repr
-    ((σ i : ℂ)) (((σ j : ℂ) - (σ i : ℂ)) / 2)
-    ((FMSA.MatrixQ0.Q0phys ρ σ i j : ℂ)) ((FMSA.MatrixQ0.Qppphys ρ σ i j : ℂ))
-    ((FMSA.MatrixQ0.rhoGeoPhys ρ i j : ℂ)) (if i = j then 1 else 0) s
+    ((sigma i : ℂ)) (((sigma j : ℂ) - (sigma i : ℂ)) / 2)
+    ((FMSA.MatrixQ0.Q0phys rho sigma i j : ℂ)) ((FMSA.MatrixQ0.Qppphys rho sigma i j : ℂ))
+    ((FMSA.MatrixQ0.rhoGeoPhys rho i j : ℂ)) (if i = j then 1 else 0) s
 
 /-- The representative matrix agrees with the raw physical Baxter matrix away from the origin. -/
-theorem Q0_mat_c_repr_eq_of_ne {N : ℕ} {s : ℂ} (hs : s ≠ 0) (σ ρ : Fin N → ℝ) :
-    Q0_mat_c_repr s σ ρ = FMSA.MixtureNoSpinodal.Q0_mat_c_phys s σ ρ := by
+theorem Q0_mat_c_repr_eq_of_ne {N : ℕ} {s : ℂ} (hs : s ≠ 0) (sigma rho : Fin N → ℝ) :
+    Q0_mat_c_repr s sigma rho = FMSA.MixtureNoSpinodal.Q0_mat_c_phys s sigma rho := by
   funext i j
   rw [Q0_mat_c_repr, FMSA.Q0Complex.q0_entry_c_repr_eq_of_ne hs]
   rfl
 
 /-- The representative matrix is continuous everywhere, including the removable origin. -/
-theorem continuous_Q0_mat_c_repr {N : ℕ} (σ ρ : Fin N → ℝ) :
-    Continuous (fun s => Q0_mat_c_repr s σ ρ) := by
+theorem continuous_Q0_mat_c_repr {N : ℕ} (sigma rho : Fin N → ℝ) :
+    Continuous (fun s => Q0_mat_c_repr s sigma rho) := by
   apply continuous_matrix
   intro i j
   exact (FMSA.Q0Complex.differentiable_q0_entry_c_repr _ _ _ _ _ _).continuous
@@ -67,19 +69,19 @@ through `s = 0` and agrees with `Q0_mat_c_phys` off `0`, so `det (Q0_mat_c_repr 
 value `c` of `det_Q0_contour_origin_ne_zero`, whence nonzero.  **No physics axiom** — the
 compressibility positivity is proved from `moment_key`.  Supplies the `hB₀` (`det B₀ ≠ 0`) input of
 the origin Gram factorization (`matSymbol_pd_at_zero_of_gram`), with `B₀ = (Q0_mat_c_repr 0)ᵀ`. -/
-theorem det_Q0_mat_c_repr_origin_ne_zero {N : ℕ} {σ ρ : Fin N → ℝ}
-    (hσ : ∀ i, 0 < σ i) (hρ : ∀ i, 0 < ρ i) (heta : FMSA.MatrixQ0.etaMix ρ σ < 1) :
-    (Q0_mat_c_repr 0 σ ρ).det ≠ 0 := by
-  have hcont : Continuous (fun s => (Q0_mat_c_repr s σ ρ).det) :=
-    (continuous_Q0_mat_c_repr σ ρ).matrix_det
-  have h0 : Tendsto (fun s => (Q0_mat_c_repr s σ ρ).det) (𝓝[≠] (0 : ℂ))
-      (𝓝 ((Q0_mat_c_repr 0 σ ρ).det)) :=
+theorem det_Q0_mat_c_repr_origin_ne_zero {N : ℕ} {sigma rho : Fin N → ℝ}
+    (hsigma : ∀ i, 0 < sigma i) (hrho : ∀ i, 0 < rho i) (heta : FMSA.MatrixQ0.etaMix rho sigma < 1) :
+    (Q0_mat_c_repr 0 sigma rho).det ≠ 0 := by
+  have hcont : Continuous (fun s => (Q0_mat_c_repr s sigma rho).det) :=
+    (continuous_Q0_mat_c_repr sigma rho).matrix_det
+  have h0 : Tendsto (fun s => (Q0_mat_c_repr s sigma rho).det) (𝓝[≠] (0 : ℂ))
+      (𝓝 ((Q0_mat_c_repr 0 sigma rho).det)) :=
     (hcont.continuousAt.tendsto).mono_left nhdsWithin_le_nhds
-  have htend : Tendsto (fun s => (FMSA.MixtureNoSpinodal.Q0_mat_c_phys s σ ρ).det) (𝓝[≠] (0 : ℂ))
-      (𝓝 ((Q0_mat_c_repr 0 σ ρ).det)) := by
+  have htend : Tendsto (fun s => (FMSA.MixtureNoSpinodal.Q0_mat_c_phys s sigma rho).det) (𝓝[≠] (0 : ℂ))
+      (𝓝 ((Q0_mat_c_repr 0 sigma rho).det)) := by
     refine h0.congr' ?_
     filter_upwards [self_mem_nhdsWithin] with s hs
-    rw [Q0_mat_c_repr_eq_of_ne (Set.mem_compl_singleton_iff.mp hs) σ ρ]
-  exact det_Q0_contour_origin_ne_zero hσ hρ heta htend
+    rw [Q0_mat_c_repr_eq_of_ne (Set.mem_compl_singleton_iff.mp hs) sigma rho]
+  exact det_Q0_contour_origin_ne_zero hsigma hrho heta htend
 
 end FMSA.MixtureGenN

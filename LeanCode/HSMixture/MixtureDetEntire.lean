@@ -25,6 +25,8 @@ Remaining for the full physical-path assembly on `detF_ext`: the origin value
 uniform-in-`t` escape radius.
 -/
 
+set_option linter.style.longLine false
+
 open Complex Filter Topology
 namespace FMSA.MixtureHSPoles
 noncomputable section
@@ -61,19 +63,19 @@ theorem detF_update_differentiable (P : MixParams) {c : ℂ}
     exact (hdiff z hz).congr_of_eventuallyEq hupd
 
 /-- `detF` has a finite removable limit at `s = 0` (for nonzero diameters), from `detC_tendsto`. -/
-theorem detF_tendsto (P : MixParams) (hσ0 : (P.sig0 : ℂ) ≠ 0) (hσ1 : (P.sig1 : ℂ) ≠ 0) :
+theorem detF_tendsto (P : MixParams) (hsigma0 : (P.sig0 : ℂ) ≠ 0) (hsigma1 : (P.sig1 : ℂ) ≠ 0) :
     ∃ c, Tendsto P.detF (𝓝[≠] (0 : ℂ)) (𝓝 c) := by
   refine detC_tendsto ![P.sig0, P.sig1] _ _ _ ?_
   intro i; fin_cases i
-  · exact hσ0
-  · exact hσ1
+  · exact hsigma0
+  · exact hsigma1
 
 /-- **`detF` extends to an entire function** (given nonzero diameters): the removable extension
 `Function.update detF 0 (lim)` is entire. -/
-theorem detF_ext_differentiable (P : MixParams) (hσ0 : (P.sig0 : ℂ) ≠ 0) (hσ1 : (P.sig1 : ℂ) ≠ 0) :
+theorem detF_ext_differentiable (P : MixParams) (hsigma0 : (P.sig0 : ℂ) ≠ 0) (hsigma1 : (P.sig1 : ℂ) ≠ 0) :
     ∃ c, Differentiable ℂ (Function.update P.detF 0 c)
       ∧ Tendsto P.detF (𝓝[≠] (0 : ℂ)) (𝓝 c) := by
-  obtain ⟨c, hc⟩ := detF_tendsto P hσ0 hσ1
+  obtain ⟨c, hc⟩ := detF_tendsto P hsigma0 hsigma1
   exact ⟨c, detF_update_differentiable P hc, hc⟩
 
 /-! ### Dilute base of the extension (`hbase`) -/

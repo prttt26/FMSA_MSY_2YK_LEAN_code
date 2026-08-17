@@ -343,38 +343,38 @@ entries `q0_entry_c` with `Q0_ij = (σᵢ/2)Qpp_j + c·σⱼ` (KEY 1) and the fo
 `Q̂₀(k)·Q̂₀ᵀ(−k)` is symmetric: `(Qp Qmᵀ) 0 1 = (Qp Qmᵀ) 1 0`.  Verified symbolically (defect ≡ 0);
 the specific PY values are eliminated.  Proof: normalise all exponentials to the two atoms
 `E₀ = e^{σ₀k/2}`, `E₁ = e^{σ₁k/2}`, then `field_simp` + `ring`. -/
-theorem swap_offdiag_of_keys (σ0 σ1 c ξ2 Qpp0 Qpp1 rg00 rg01 rg11 k : ℂ) (hk : k ≠ 0)
-    (hQpp0 : Qpp0 = 2 * c + c ^ 2 * ξ2 * σ0) (hQpp1 : Qpp1 = 2 * c + c ^ 2 * ξ2 * σ1)
-    (hξ2 : ξ2 = rg00 * σ0 ^ 2 + rg11 * σ1 ^ 2) (hrg : rg00 * rg11 = rg01 ^ 2) :
-    FMSA.Q0Complex.q0_entry_c k σ0 0 (σ0 / 2 * Qpp0 + c * σ0) Qpp0 rg00 1
-        * FMSA.Q0Complex.q0_entry_c (-k) σ1 ((σ0 - σ1) / 2) (σ1 / 2 * Qpp0 + c * σ0) Qpp0 rg01 0
-      + FMSA.Q0Complex.q0_entry_c k σ0 ((σ1 - σ0) / 2) (σ0 / 2 * Qpp1 + c * σ1) Qpp1 rg01 0
-        * FMSA.Q0Complex.q0_entry_c (-k) σ1 0 (σ1 / 2 * Qpp1 + c * σ1) Qpp1 rg11 1
-      = FMSA.Q0Complex.q0_entry_c k σ1 ((σ0 - σ1) / 2) (σ1 / 2 * Qpp0 + c * σ0) Qpp0 rg01 0
-        * FMSA.Q0Complex.q0_entry_c (-k) σ0 0 (σ0 / 2 * Qpp0 + c * σ0) Qpp0 rg00 1
-      + FMSA.Q0Complex.q0_entry_c k σ1 0 (σ1 / 2 * Qpp1 + c * σ1) Qpp1 rg11 1
-        * FMSA.Q0Complex.q0_entry_c (-k) σ0 ((σ1 - σ0) / 2) (σ0 / 2 * Qpp1 + c * σ1) Qpp1 rg01 0 := by
+theorem swap_offdiag_of_keys (sigC0 sigC1 c ξ2 Qpp0 Qpp1 rg00 rg01 rg11 k : ℂ) (hk : k ≠ 0)
+    (hQpp0 : Qpp0 = 2 * c + c ^ 2 * ξ2 * sigC0) (hQpp1 : Qpp1 = 2 * c + c ^ 2 * ξ2 * sigC1)
+    (hξ2 : ξ2 = rg00 * sigC0 ^ 2 + rg11 * sigC1 ^ 2) (hrg : rg00 * rg11 = rg01 ^ 2) :
+    FMSA.Q0Complex.q0_entry_c k sigC0 0 (sigC0 / 2 * Qpp0 + c * sigC0) Qpp0 rg00 1
+        * FMSA.Q0Complex.q0_entry_c (-k) sigC1 ((sigC0 - sigC1) / 2) (sigC1 / 2 * Qpp0 + c * sigC0) Qpp0 rg01 0
+      + FMSA.Q0Complex.q0_entry_c k sigC0 ((sigC1 - sigC0) / 2) (sigC0 / 2 * Qpp1 + c * sigC1) Qpp1 rg01 0
+        * FMSA.Q0Complex.q0_entry_c (-k) sigC1 0 (sigC1 / 2 * Qpp1 + c * sigC1) Qpp1 rg11 1
+      = FMSA.Q0Complex.q0_entry_c k sigC1 ((sigC0 - sigC1) / 2) (sigC1 / 2 * Qpp0 + c * sigC0) Qpp0 rg01 0
+        * FMSA.Q0Complex.q0_entry_c (-k) sigC0 0 (sigC0 / 2 * Qpp0 + c * sigC0) Qpp0 rg00 1
+      + FMSA.Q0Complex.q0_entry_c k sigC1 0 (sigC1 / 2 * Qpp1 + c * sigC1) Qpp1 rg11 1
+        * FMSA.Q0Complex.q0_entry_c (-k) sigC0 ((sigC1 - sigC0) / 2) (sigC0 / 2 * Qpp1 + c * sigC1) Qpp1 rg01 0 := by
   subst hQpp0 hQpp1 hξ2
   unfold FMSA.Q0Complex.q0_entry_c
-  set E0 := Complex.exp (σ0 * k / 2) with hE0def
-  set E1 := Complex.exp (σ1 * k / 2) with hE1def
+  set E0 := Complex.exp (sigC0 * k / 2) with hE0def
+  set E1 := Complex.exp (sigC1 * k / 2) with hE1def
   have hE0 : E0 ≠ 0 := Complex.exp_ne_zero _
   have hE1 : E1 ≠ 0 := Complex.exp_ne_zero _
-  have e0 : Complex.exp (k * σ0) = E0 * E0 := by
+  have e0 : Complex.exp (k * sigC0) = E0 * E0 := by
     rw [hE0def, ← Complex.exp_add]; ring_nf
-  have e0' : Complex.exp (-(k * σ0)) = E0⁻¹ * E0⁻¹ := by
+  have e0' : Complex.exp (-(k * sigC0)) = E0⁻¹ * E0⁻¹ := by
     rw [hE0def, ← Complex.exp_neg, ← Complex.exp_add]; ring_nf
-  have e1 : Complex.exp (k * σ1) = E1 * E1 := by
+  have e1 : Complex.exp (k * sigC1) = E1 * E1 := by
     rw [hE1def, ← Complex.exp_add]; ring_nf
-  have e1' : Complex.exp (-(k * σ1)) = E1⁻¹ * E1⁻¹ := by
+  have e1' : Complex.exp (-(k * sigC1)) = E1⁻¹ * E1⁻¹ := by
     rw [hE1def, ← Complex.exp_neg, ← Complex.exp_add]; ring_nf
-  have h01 : Complex.exp ((σ0 - σ1) / 2 * k) = E0 * E1⁻¹ := by
+  have h01 : Complex.exp ((sigC0 - sigC1) / 2 * k) = E0 * E1⁻¹ := by
     rw [hE0def, hE1def, ← Complex.exp_neg, ← Complex.exp_add]; ring_nf
-  have h10 : Complex.exp ((σ1 - σ0) / 2 * k) = E0⁻¹ * E1 := by
+  have h10 : Complex.exp ((sigC1 - sigC0) / 2 * k) = E0⁻¹ * E1 := by
     rw [hE0def, hE1def, ← Complex.exp_neg, ← Complex.exp_add]; ring_nf
-  have h01' : Complex.exp (-((σ1 - σ0) / 2 * k)) = E0 * E1⁻¹ := by
+  have h01' : Complex.exp (-((sigC1 - sigC0) / 2 * k)) = E0 * E1⁻¹ := by
     rw [hE0def, hE1def, ← Complex.exp_neg, ← Complex.exp_add]; ring_nf
-  have h10' : Complex.exp (-((σ0 - σ1) / 2 * k)) = E0⁻¹ * E1 := by
+  have h10' : Complex.exp (-((sigC0 - sigC1) / 2 * k)) = E0⁻¹ * E1 := by
     rw [hE0def, hE1def, ← Complex.exp_neg, ← Complex.exp_add]; ring_nf
   simp only [neg_mul, mul_neg, neg_neg, zero_mul, neg_zero, Complex.exp_zero,
     e0, e0', e1, e1', h01, h10, h01', h10']
@@ -474,7 +474,7 @@ concrete Lebowitz PY Baxter matrix, `T₀ = Q̂₀(k)·Q̂₀ᵀ(−k)` is symme
 relations + `√(ρᵢρᵢ) = ρᵢ`.  This closes the WH-factorization gate's symmetry obligation for the
 physical matrix — no remaining math, only casts. -/
 theorem Qphys_T0_isSymm (sigma rho : Fin 2 → ℝ) (k : ℂ)
-    (hρ0 : 0 ≤ rho 0) (hρ1 : 0 ≤ rho 1) (hk : k ≠ 0)
+    (hrho0 : 0 ≤ rho 0) (hrho1 : 0 ≤ rho 1) (hk : k ≠ 0)
     (hvac : FMSA.MatrixQ0.vacMix rho sigma ≠ 0) :
     (Qphys sigma rho k * (Qphys sigma rho (-k))ᵀ)ᵀ = Qphys sigma rho k * (Qphys sigma rho (-k))ᵀ := by
   rw [fin2_transpose_eq_iff_offdiag]
@@ -486,9 +486,9 @@ theorem Qphys_T0_isSymm (sigma rho : Fin 2 → ℝ) (k : ℂ)
       = ((FMSA.MatrixQ0.rhoGeoPhys rho 0 1 : ℝ) : ℂ) := by
     simp only [FMSA.MatrixQ0.rhoGeoPhys, mul_comm (rho 1) (rho 0)]
   have hrg00 : ((FMSA.MatrixQ0.rhoGeoPhys rho 0 0 : ℝ) : ℂ) = ((rho 0 : ℝ) : ℂ) := by
-    simp only [FMSA.MatrixQ0.rhoGeoPhys, Real.sqrt_mul_self hρ0]
+    simp only [FMSA.MatrixQ0.rhoGeoPhys, Real.sqrt_mul_self hrho0]
   have hrg11 : ((FMSA.MatrixQ0.rhoGeoPhys rho 1 1 : ℝ) : ℂ) = ((rho 1 : ℝ) : ℂ) := by
-    simp only [FMSA.MatrixQ0.rhoGeoPhys, Real.sqrt_mul_self hρ1]
+    simp only [FMSA.MatrixQ0.rhoGeoPhys, Real.sqrt_mul_self hrho1]
   have hQpp : ∀ j : Fin 2, ((FMSA.MatrixQ0.Qppphys rho sigma 0 j : ℝ) : ℂ)
       = 2 * ((Real.pi / FMSA.MatrixQ0.vacMix rho sigma : ℝ) : ℂ)
         + ((Real.pi / FMSA.MatrixQ0.vacMix rho sigma : ℝ) : ℂ) ^ 2
@@ -506,7 +506,7 @@ theorem Qphys_T0_isSymm (sigma rho : Fin 2 → ℝ) (k : ℂ)
       = ((FMSA.MatrixQ0.rhoGeoPhys rho 0 1 : ℝ) : ℂ) ^ 2 := by
     rw [hrg00, hrg11]
     simp only [FMSA.MatrixQ0.rhoGeoPhys]
-    rw [← Complex.ofReal_pow, Real.sq_sqrt (mul_nonneg hρ0 hρ1)]
+    rw [← Complex.ofReal_pow, Real.sq_sqrt (mul_nonneg hrho0 hrho1)]
     push_cast
     ring
   have hqpp_row : ∀ j : Fin 2, ((FMSA.MatrixQ0.Qppphys rho sigma 1 j : ℝ) : ℂ)
@@ -541,11 +541,11 @@ of obstruction (b): the DCF matrix `Ĉ₀(k) = I − Q̂₀(k)·Q̂₀(−k)ᵀ`
 physical Lebowitz PY factor, straight from `Qphys_T0_isSymm`/`swap_offdiag_of_keys`.  This is the correct
 symmetric object (the function-part `matSelfConv` is not symmetric); `cᵢⱼ = cⱼᵢ` in real space. -/
 theorem Qphys_Cmix0_symm (sigma rho : Fin 2 → ℝ) (k : ℂ)
-    (hρ0 : 0 ≤ rho 0) (hρ1 : 0 ≤ rho 1) (hk : k ≠ 0)
+    (hrho0 : 0 ≤ rho 0) (hrho1 : 0 ≤ rho 1) (hk : k ≠ 0)
     (hvac : FMSA.MatrixQ0.vacMix rho sigma ≠ 0) :
     (Cmix0 (Qphys sigma rho) k)ᵀ = Cmix0 (Qphys sigma rho) k := by
   refine Cmix0_symm_of_swap (Qphys sigma rho) k ?_
-  have h := Qphys_T0_isSymm sigma rho k hρ0 hρ1 hk hvac
+  have h := Qphys_T0_isSymm sigma rho k hrho0 hrho1 hk hvac
   rwa [Matrix.transpose_mul, Matrix.transpose_transpose] at h
 
 /-- **`Ĉ₀ = linear − self-conv` (the corrected `hfact` decomposition, momentum space).**  With
@@ -563,10 +563,10 @@ theorem Cmix0_linear_selfconv {N : ℕ} (Qfun : ℂ → Matrix (Fin N) (Fin N) �
 `hCsym`-input shape (`cᵢⱼ = cⱼᵢ`) that the seed's `matSelfConv_symm_of_dcf` consumes — discharged in
 momentum space from `swap_offdiag_of_keys`, for any physical density/diameter pair. -/
 theorem Qphys_Cmix0_entry_symm (sigma rho : Fin 2 → ℝ) (k : ℂ)
-    (hρ0 : 0 ≤ rho 0) (hρ1 : 0 ≤ rho 1) (hk : k ≠ 0)
+    (hrho0 : 0 ≤ rho 0) (hrho1 : 0 ≤ rho 1) (hk : k ≠ 0)
     (hvac : FMSA.MatrixQ0.vacMix rho sigma ≠ 0) (i j : Fin 2) :
     Cmix0 (Qphys sigma rho) k i j = Cmix0 (Qphys sigma rho) k j i := by
-  have h := congrFun (congrFun (Qphys_Cmix0_symm sigma rho k hρ0 hρ1 hk hvac) j) i
+  have h := congrFun (congrFun (Qphys_Cmix0_symm sigma rho k hrho0 hrho1 hk hvac) j) i
   rwa [Matrix.transpose_apply] at h
 
 /-! ### MRS.2 — deriving (★) from the physics (first-order OZ + factorization)

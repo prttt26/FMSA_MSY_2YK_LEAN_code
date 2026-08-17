@@ -3912,15 +3912,15 @@ theorem q01_norm_le (P : MixParams) (hP : P.Phys) {s : ℂ} (hA : 1 ≤ ‖s‖)
 /-- **The log-lift conversion**: if `x` equals `2·log A/σ` up to `K`, then `e^{θx}` is `A^{2θ/σ}`
 up to the fixed factor `e^{|θ|K}`, for *any* sign of `θ`.  Kept in `Real.exp (· * Real.log A)`
 form (no `rpow`), matching Stage A's style. -/
-theorem exp_theta_le {x A K θ σ : ℝ} (hσ : 0 < σ) (hdev : |x - 2 * Real.log A / σ| ≤ K) :
-    Real.exp (θ * x) ≤ Real.exp (|θ| * K) * Real.exp (2 * θ / σ * Real.log A) := by
+theorem exp_theta_le {x A K θ sigma : ℝ} (hsigma : 0 < sigma) (hdev : |x - 2 * Real.log A / sigma| ≤ K) :
+    Real.exp (θ * x) ≤ Real.exp (|θ| * K) * Real.exp (2 * θ / sigma * Real.log A) := by
   rw [← Real.exp_add]
   apply Real.exp_le_exp.mpr
-  have h1 : θ * x = θ * (x - 2 * Real.log A / σ) + 2 * θ / σ * Real.log A := by
+  have h1 : θ * x = θ * (x - 2 * Real.log A / sigma) + 2 * θ / sigma * Real.log A := by
     field_simp; ring
-  have h2 : θ * (x - 2 * Real.log A / σ) ≤ |θ| * K := by
-    calc θ * (x - 2 * Real.log A / σ) ≤ |θ * (x - 2 * Real.log A / σ)| := le_abs_self _
-      _ = |θ| * |x - 2 * Real.log A / σ| := abs_mul _ _
+  have h2 : θ * (x - 2 * Real.log A / sigma) ≤ |θ| * K := by
+    calc θ * (x - 2 * Real.log A / sigma) ≤ |θ * (x - 2 * Real.log A / sigma)| := le_abs_self _
+      _ = |θ| * |x - 2 * Real.log A / sigma| := abs_mul _ _
       _ ≤ |θ| * K := mul_le_mul_of_nonneg_left hdev (abs_nonneg _)
   linarith [h1]
 

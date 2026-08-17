@@ -137,8 +137,8 @@ theorem baxterExterior_linear_op_integrand_intervalIntegrable {eta sigma rho : �
   apply intervalIntegral.integral_congr
   intro s hs
   rw [Set.uIcc_of_le hle] at hs
-  have hsσ : sigma ≤ s := le_trans (le_max_right (r - t) sigma) hs.1
-  simp only [hc_def, max_eq_left hsσ]
+  have hssigma : sigma ≤ s := le_trans (le_max_right (r - t) sigma) hs.1
+  simp only [hc_def, max_eq_left hssigma]
 
 /-! ### 6i — `r·c_HS(r)·sin(kr)` is integrable on `(0,∞)` -/
 
@@ -159,11 +159,11 @@ theorem baxterExterior_cHS_sin_integrable {eta sigma : ℝ} (hsigma : 0 < sigma)
         ‖r * Real.sin (k * r)‖ ≤ sigma := by
       filter_upwards [ae_restrict_mem measurableSet_Ioc] with r hr
       rw [Real.norm_eq_abs, abs_mul]
-      have hrσ : |r| ≤ sigma := by rw [abs_of_pos hr.1]; exact hr.2
+      have hrsigma : |r| ≤ sigma := by rw [abs_of_pos hr.1]; exact hr.2
       have hsin : |Real.sin (k * r)| ≤ 1 :=
         abs_le.mpr ⟨Real.neg_one_le_sin _, Real.sin_le_one _⟩
       calc |r| * |Real.sin (k * r)| ≤ sigma * 1 :=
-            mul_le_mul hrσ hsin (abs_nonneg _) hsigma.le
+            mul_le_mul hrsigma hsin (abs_nonneg _) hsigma.le
         _ = sigma := mul_one _
     have hcInt : IntegrableOn (c_HS eta sigma) (Set.Ioc 0 sigma) :=
       (c_HS_integrableOn hsigma).mono_set Set.Ioc_subset_Icc_self

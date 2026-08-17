@@ -205,7 +205,7 @@ theorem q0AbsL1_eq {eta sigma rho : ℝ} (heta0 : 0 < eta) (heta1 : eta < 1) (hs
   -- Step 3: assemble and substitute π ρ σ³ = 6η
   rw [habs, hcongr, hintF, hαdef, hβdef, q_prime_py, q_doubleprime_py]
   have hπ : Real.pi ≠ 0 := Real.pi_ne_zero
-  have hσ : sigma ≠ 0 := hsigma.ne'
+  have hsigma : sigma ≠ 0 := hsigma.ne'
   have h1e : (1 : ℝ) - eta ≠ 0 := by intro h; apply absurd heta1; linarith [h]
   have hrho_eq : rho = 6 * eta / (Real.pi * sigma ^ 3) := by
     rw [heta_def]; field_simp
@@ -286,23 +286,23 @@ theorem baxterPsi_bounded_of_dilute {eta sigma rho : ℝ} (hsigma : 0 < sigma)
   have hne : (Set.Icc sigma r).Nonempty := ⟨sigma, ⟨le_rfl, hr⟩⟩
   obtain ⟨rs, hrsmem, hrsmax0⟩ := isCompact_Icc.exists_isMaxOn hne hcontψ
   have hrsmax : ∀ y ∈ Set.Icc sigma r, |ψ y| ≤ |ψ rs| := isMaxOn_iff.mp hrsmax0
-  have hσrs : sigma ≤ rs := hrsmem.1
+  have hsigmars : sigma ≤ rs := hrsmem.1
   -- integrability of the renewal integrand and its abs on [σ,rs]
   have hq0comp : Continuous (fun t => q0_poly eta sigma rho (rs - t)) :=
     (q0_poly_continuous eta sigma rho).comp (continuous_const.sub continuous_id)
   have hgcont : ContinuousOn (fun t => q0_poly eta sigma rho (rs - t) * ψ t) (Set.Icc sigma rs) :=
-    hq0comp.continuousOn.mul (baxterPsiOuter_continuousOn hσrs)
+    hq0comp.continuousOn.mul (baxterPsiOuter_continuousOn hsigmars)
   -- the kernel integral bound |∫ q0(rs-t)ψ(t)| ≤ M·|ψ rs|
   have hintbound : |∫ t in sigma..rs, q0_poly eta sigma rho (rs - t) * ψ t| ≤ qL1 * |ψ rs| := by
     have hstep1 : |∫ t in sigma..rs, q0_poly eta sigma rho (rs - t) * ψ t|
         ≤ ∫ t in sigma..rs, |q0_poly eta sigma rho (rs - t) * ψ t| := by
-      have := intervalIntegral.norm_integral_le_integral_norm (μ := volume) hσrs
+      have := intervalIntegral.norm_integral_le_integral_norm (μ := volume) hsigmars
         (f := fun t => q0_poly eta sigma rho (rs - t) * ψ t)
       simpa only [Real.norm_eq_abs] using this
     have hstep2 : ∫ t in sigma..rs, |q0_poly eta sigma rho (rs - t) * ψ t|
         ≤ ∫ t in sigma..rs, |ψ rs| * |q0_poly eta sigma rho (rs - t)| := by
-      apply intervalIntegral.integral_mono_on hσrs
-      · exact (hgcont.abs).intervalIntegrable_of_Icc hσrs
+      apply intervalIntegral.integral_mono_on hsigmars
+      · exact (hgcont.abs).intervalIntegrable_of_Icc hsigmars
       · exact ((continuous_const.mul hq0comp.abs)).intervalIntegrable _ _
       · intro t ht
         rw [abs_mul, mul_comm]
@@ -327,13 +327,13 @@ theorem baxterPsi_bounded_of_dilute {eta sigma rho : ℝ} (hsigma : 0 < sigma)
   -- renewal equation at rs ⇒ S ≤ Φ + M·S
   have hmain : |ψ rs| ≤ Φ + qL1 * |ψ rs| := by
     have hspec : ψ rs = baxterForcing eta sigma rho rs
-        + ∫ t in sigma..rs, q0_poly eta sigma rho (rs - t) * ψ t := baxterPsiOuter_spec hσrs
+        + ∫ t in sigma..rs, q0_poly eta sigma rho (rs - t) * ψ t := baxterPsiOuter_spec hsigmars
     calc |ψ rs|
         = |baxterForcing eta sigma rho rs
             + ∫ t in sigma..rs, q0_poly eta sigma rho (rs - t) * ψ t| := by rw [hspec]
       _ ≤ |baxterForcing eta sigma rho rs|
             + |∫ t in sigma..rs, q0_poly eta sigma rho (rs - t) * ψ t| := abs_add_le _ _
-      _ ≤ Φ + qL1 * |ψ rs| := add_le_add (hΦ rs hσrs) hintbound
+      _ ≤ Φ + qL1 * |ψ rs| := add_le_add (hΦ rs hsigmars) hintbound
   -- solve for |ψ rs| and transfer to r
   have hpsirs : |ψ rs| ≤ Φ / (1 - qL1) := by
     rw [le_div_iff₀ h1q]; nlinarith [hmain]
@@ -360,33 +360,33 @@ theorem baxterPsi_tendsto_zero_of_dilute {eta sigma rho : ℝ} (hsigma : 0 < sig
     | zero =>
       intro r hr
       simp only [Nat.cast_zero, zero_mul, add_zero] at hr
-      have hrσ : sigma ≤ r := by linarith
-      simpa using hCb r hrσ
+      have hrsigma : sigma ≤ r := by linarith
+      simpa using hCb r hrsigma
     | succ n ih =>
       intro r hr
       push_cast at hr
       have hexp : ((n : ℝ) + 1) * sigma = (n : ℝ) * sigma + sigma := by ring
-      have hnσ : 0 ≤ (n : ℝ) * sigma := mul_nonneg (Nat.cast_nonneg n) hsigma.le
-      have hr2σ : 2 * sigma ≤ r := by linarith [hr, hexp, hnσ]
-      have hrσ : sigma ≤ r := by linarith
+      have hnsigma : 0 ≤ (n : ℝ) * sigma := mul_nonneg (Nat.cast_nonneg n) hsigma.le
+      have hr2sigma : 2 * sigma ≤ r := by linarith [hr, hexp, hnsigma]
+      have hrsigma : sigma ≤ r := by linarith
       have hφ0 : baxterForcing eta sigma rho r = 0 :=
-        baxterForcing_eq_zero_of_two_sigma_le hsigma hr2σ
+        baxterForcing_eq_zero_of_two_sigma_le hsigma hr2sigma
       have hspec : baxterPsiOuter eta sigma rho r
           = ∫ t in sigma..r, q0_poly eta sigma rho (r - t) * baxterPsiOuter eta sigma rho t := by
-        rw [baxterPsiOuter_spec hrσ, hφ0, zero_add]
+        rw [baxterPsiOuter_spec hrsigma, hφ0, zero_add]
       have hcontψr : ContinuousOn (baxterPsiOuter eta sigma rho) (Set.Icc sigma r) :=
-        baxterPsiOuter_continuousOn hrσ
+        baxterPsiOuter_continuousOn hrsigma
       have hq0compr : Continuous (fun t => q0_poly eta sigma rho (r - t)) :=
         (q0_poly_continuous eta sigma rho).comp (continuous_const.sub continuous_id)
       rw [hspec]
       calc |∫ t in sigma..r, q0_poly eta sigma rho (r - t) * baxterPsiOuter eta sigma rho t|
           ≤ ∫ t in sigma..r, |q0_poly eta sigma rho (r - t) * baxterPsiOuter eta sigma rho t| := by
-            have := intervalIntegral.norm_integral_le_integral_norm (μ := volume) hrσ
+            have := intervalIntegral.norm_integral_le_integral_norm (μ := volume) hrsigma
               (f := fun t => q0_poly eta sigma rho (r - t) * baxterPsiOuter eta sigma rho t)
             simpa only [Real.norm_eq_abs] using this
         _ ≤ ∫ t in sigma..r, |q0_poly eta sigma rho (r - t)| * (qL1 ^ n * Cb) := by
-            apply intervalIntegral.integral_mono_on hrσ
-            · exact ((hq0compr.continuousOn.mul hcontψr).abs).intervalIntegrable_of_Icc hrσ
+            apply intervalIntegral.integral_mono_on hrsigma
+            · exact ((hq0compr.continuousOn.mul hcontψr).abs).intervalIntegrable_of_Icc hrsigma
             · exact (hq0compr.abs.mul continuous_const).intervalIntegrable _ _
             · intro t ht
               rw [abs_mul]

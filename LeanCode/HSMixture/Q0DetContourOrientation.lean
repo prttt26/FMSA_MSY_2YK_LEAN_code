@@ -46,41 +46,43 @@ For `y ≠ 0` the argument `I·(−y) ≠ 0`, so the raw `Q0_mat_c_phys` and the
 matrix used by the engine.
 -/
 
+set_option linter.style.longLine false
+
 namespace FMSA.MixtureGenN
 
 open FMSA.MixtureNoSpinodal Filter Topology
 
 /-- **Orientation on the open upper half-plane.**  `det Q̂₀(−y) ≠ 0` for `Im y > 0`, directly from
 `mixtureDet_pole_free_N` at `z = −y` (`Im (−y) = −Im y < 0`).  Rests on the two pole-free axioms. -/
-theorem det_Q0_contour_ne_zero_of_im_pos {N : ℕ} {σ ρ : Fin N → ℝ}
-    (hσ : ∀ i, 0 < σ i) (hρ : ∀ i, 0 < ρ i) (heta : FMSA.MatrixQ0.etaMix ρ σ < 1)
+theorem det_Q0_contour_ne_zero_of_im_pos {N : ℕ} {sigma rho : Fin N → ℝ}
+    (hsigma : ∀ i, 0 < sigma i) (hrho : ∀ i, 0 < rho i) (heta : FMSA.MatrixQ0.etaMix rho sigma < 1)
     {y : ℂ} (hy : 0 < y.im) :
-    (Q0_mat_c_phys (Complex.I * (-y)) σ ρ).det ≠ 0 :=
-  mixtureDet_pole_free_N hσ hρ heta (z := -y) (by rw [Complex.neg_im]; linarith)
+    (Q0_mat_c_phys (Complex.I * (-y)) sigma rho).det ≠ 0 :=
+  mixtureDet_pole_free_N hsigma hrho heta (z := -y) (by rw [Complex.neg_im]; linarith)
 
 /-- **Orientation on the closed upper half-plane minus the origin.**  `det Q̂₀(−y) ≠ 0` for
 `Im y ≥ 0`, `y ≠ 0` — the open UHP by `mixtureDet_pole_free_N` and the real axis (`Im y = 0`) by
 `pyhs_mixture_no_spinodal` (the no-spinodal physics axiom).  This is exactly the contour region the
 engine's `hc`/`hd` require (the origin `y = 0` is the `k = 0` compressibility, a separate removable
 point). -/
-theorem det_Q0_contour_ne_zero {N : ℕ} {σ ρ : Fin N → ℝ}
-    (hσ : ∀ i, 0 < σ i) (hρ : ∀ i, 0 < ρ i) (heta : FMSA.MatrixQ0.etaMix ρ σ < 1)
+theorem det_Q0_contour_ne_zero {N : ℕ} {sigma rho : Fin N → ℝ}
+    (hsigma : ∀ i, 0 < sigma i) (hrho : ∀ i, 0 < rho i) (heta : FMSA.MatrixQ0.etaMix rho sigma < 1)
     {y : ℂ} (hyim : 0 ≤ y.im) (hy0 : y ≠ 0) :
-    (Q0_mat_c_phys (Complex.I * (-y)) σ ρ).det ≠ 0 := by
+    (Q0_mat_c_phys (Complex.I * (-y)) sigma rho).det ≠ 0 := by
   rcases hyim.lt_or_eq with h | h
-  · exact det_Q0_contour_ne_zero_of_im_pos hσ hρ heta h
+  · exact det_Q0_contour_ne_zero_of_im_pos hsigma hrho heta h
   · -- real axis, y ≠ 0 ⇒ y.re ≠ 0 ⇒ purely imaginary argument I·(−y.re)
     have hyim0 : y.im = 0 := h.symm
     have hre : y.re ≠ 0 := fun hc => hy0 (by simp [Complex.ext_iff, hc, hyim0])
     have harg : Complex.I * (-y) = Complex.I * ((-y.re : ℝ) : ℂ) := by
       congr 1; apply Complex.ext <;> simp [hyim0]
     rw [harg]
-    exact pyhs_mixture_no_spinodal hσ hρ heta (k := -y.re) (neg_ne_zero.mpr hre)
+    exact pyhs_mixture_no_spinodal hsigma hrho heta (k := -y.re) (neg_ne_zero.mpr hre)
 
 /-- At a real argument the physical complex Baxter matrix is the cast of the real one (general `N`).
 The complex `q0_entry_c` kernel `e^{−sσ}` at `s = z` real is `e^{−zσ}` cast to `ℂ`. -/
-theorem Q0_mat_c_phys_ofReal {N : ℕ} (z : ℝ) (σ ρ : Fin N → ℝ) :
-    Q0_mat_c_phys (z : ℂ) σ ρ = (FMSA.MatrixQ0.Q0_mat_phys z σ ρ).map Complex.ofReal := by
+theorem Q0_mat_c_phys_ofReal {N : ℕ} (z : ℝ) (sigma rho : Fin N → ℝ) :
+    Q0_mat_c_phys (z : ℂ) sigma rho = (FMSA.MatrixQ0.Q0_mat_phys z sigma rho).map Complex.ofReal := by
   funext i j
   simp only [Q0_mat_c_phys, FMSA.MatrixQ0.Q0_mat_phys,
     FMSA.Q0Complex.Q0_mat_c, FMSA.MatrixQ0.Q0_mat, Matrix.map_apply,
@@ -95,22 +97,22 @@ pole-free axioms on the real axis) this rests **only on proved algebra** (`Q0_ma
 ⇐ `moment_key`): compressibility positivity is *proved*, not assumed — `pyhs_mixture_no_spinodal`
 covers only `k ≠ 0`.  Together with `det_Q0_contour_ne_zero` this closes the **whole** closed upper
 half-plane: the raw value is non-zero off the origin, the removable value is non-zero at it. -/
-theorem det_Q0_contour_origin_ne_zero {N : ℕ} {σ ρ : Fin N → ℝ}
-    (hσ : ∀ i, 0 < σ i) (hρ : ∀ i, 0 < ρ i) (heta : FMSA.MatrixQ0.etaMix ρ σ < 1)
-    {c : ℂ} (hc : Tendsto (fun s => (Q0_mat_c_phys s σ ρ).det) (𝓝[≠] (0:ℂ)) (𝓝 c)) :
+theorem det_Q0_contour_origin_ne_zero {N : ℕ} {sigma rho : Fin N → ℝ}
+    (hsigma : ∀ i, 0 < sigma i) (hrho : ∀ i, 0 < rho i) (heta : FMSA.MatrixQ0.etaMix rho sigma < 1)
+    {c : ℂ} (hc : Tendsto (fun s => (Q0_mat_c_phys s sigma rho).det) (𝓝[≠] (0:ℂ)) (𝓝 c)) :
     c ≠ 0 := by
   have hofR : Tendsto (fun z : ℝ => (z : ℂ)) (𝓝[>] (0:ℝ)) (𝓝[≠] (0:ℂ)) :=
     FMSA.MatrixQ0.ofReal_tendsto_nhdsNE.mono_left (nhdsWithin_mono 0 (fun x hx =>
       Set.mem_compl_singleton_iff.mpr (ne_of_gt (Set.mem_Ioi.mp hx))))
-  have hreal : Tendsto (fun z : ℝ => ((FMSA.MatrixQ0.Q0_mat_phys z σ ρ).det : ℂ))
+  have hreal : Tendsto (fun z : ℝ => ((FMSA.MatrixQ0.Q0_mat_phys z sigma rho).det : ℂ))
       (𝓝[>] (0:ℝ)) (𝓝 c) := by
-    have hfe : (fun z : ℝ => ((FMSA.MatrixQ0.Q0_mat_phys z σ ρ).det : ℂ))
-        = fun z : ℝ => (Q0_mat_c_phys (z : ℂ) σ ρ).det := by
+    have hfe : (fun z : ℝ => ((FMSA.MatrixQ0.Q0_mat_phys z sigma rho).det : ℂ))
+        = fun z : ℝ => (Q0_mat_c_phys (z : ℂ) sigma rho).det := by
       funext z
       rw [Q0_mat_c_phys_ofReal]
-      exact RingHom.map_det Complex.ofRealHom (FMSA.MatrixQ0.Q0_mat_phys z σ ρ)
+      exact RingHom.map_det Complex.ofRealHom (FMSA.MatrixQ0.Q0_mat_phys z sigma rho)
     rw [hfe]; exact hc.comp hofR
-  have hvac : 0 < FMSA.MatrixQ0.vacMix ρ σ := by
+  have hvac : 0 < FMSA.MatrixQ0.vacMix rho sigma := by
     unfold FMSA.MatrixQ0.vacMix; linarith [heta]
   have h := (Complex.continuous_re.tendsto c).comp hreal
   have h1 : (1:ℝ) ≤ c.re := by
@@ -118,7 +120,7 @@ theorem det_Q0_contour_origin_ne_zero {N : ℕ} {σ ρ : Fin N → ℝ}
     filter_upwards [self_mem_nhdsWithin] with z hz
     rw [Function.comp_apply, Complex.ofReal_re]
     exact FMSA.MatrixQ0.Q0_mat_phys_det_ge_one_N (Set.mem_Ioi.mp hz) hvac
-      (fun i => (hρ i).le) hσ
+      (fun i => (hrho i).le) hsigma
   intro hc0
   rw [hc0, Complex.zero_re] at h1
   linarith

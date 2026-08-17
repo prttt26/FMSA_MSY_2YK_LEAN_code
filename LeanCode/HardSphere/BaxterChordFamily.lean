@@ -435,7 +435,7 @@ theorem G_baxter_deriv_ball_diff_le (eta sigma rho : ℝ) (n : ℕ)
   rw [← hxdef] at hP
   set r : ℝ := 1 / (10 * sigma) with hrdef
   have hr0 : 0 < r := by rw [hrdef]; positivity
-  have hσr : sigma * r = 1 / 10 := by rw [hrdef]; field_simp
+  have hsigmar : sigma * r = 1 / 10 := by rw [hrdef]; field_simp
   set t : ℝ := ‖Npoly eta sigma rho (x : ℂ)‖ / ‖Dpoly eta sigma rho (x : ℂ)‖ with htdef
   have htpos : 0 < t := div_pos hNpos hDpos
   have ht2 := t_ratio_lower eta sigma rho hQp hx1 hxB
@@ -580,7 +580,7 @@ theorem G_baxter_deriv_ball_diff_le (eta sigma rho : ℝ) (n : ℕ)
     have hz1 : ‖-Complex.I * (s - k1_guess eta sigma rho n) * (sigma : ℂ)‖ ≤ 1 := by
       rw [hznorm]
       have := mul_le_mul_of_nonneg_left hsK hsigma.le
-      rw [hσr] at this
+      rw [hsigmar] at this
       linarith
     calc ‖Complex.exp (-Complex.I * (s - k1_guess eta sigma rho n) * sigma) - 1‖
         ≤ 2 * ‖-Complex.I * (s - k1_guess eta sigma rho n) * (sigma : ℂ)‖ :=
@@ -605,7 +605,7 @@ theorem G_baxter_deriv_ball_diff_le (eta sigma rho : ℝ) (n : ℕ)
           rho * q_prime_py eta sigma := by
         rw [norm_mul, Complex.norm_I, one_mul, Complex.norm_real, Real.norm_eq_abs,
           abs_of_pos hQp]
-      have hIσD : ‖Complex.I * (sigma : ℂ) * Dpoly eta sigma rho s‖ =
+      have hIsigmaD : ‖Complex.I * (sigma : ℂ) * Dpoly eta sigma rho s‖ =
           sigma * ‖Dpoly eta sigma rho s‖ := by
         rw [norm_mul, norm_mul, Complex.norm_I, one_mul, Complex.norm_real,
           Real.norm_eq_abs, abs_of_pos hsigma]
@@ -616,7 +616,7 @@ theorem G_baxter_deriv_ball_diff_le (eta sigma rho : ℝ) (n : ℕ)
         _ ≤ rho * q_prime_py eta sigma + sigma *
             (rho * q_prime_py eta sigma * x + 2 * |guessP2 eta sigma rho| +
               rho * q_prime_py eta sigma * (y + r)) := by
-            rw [hIQ, hIσD]
+            rw [hIQ, hIsigmaD]
             have := mul_le_mul_of_nonneg_left hDs hsigma.le
             linarith
     have hft : ‖((t : ℝ) : ℂ)‖ = t := by
@@ -638,24 +638,24 @@ theorem G_baxter_deriv_ball_diff_le (eta sigma rho : ℝ) (n : ℕ)
         rho * q_prime_py eta sigma * (y + r))) * t * (2 * (sigma * r)) ≤
       1 / 5 * (sigma * (rho * q_prime_py eta sigma) * x * t) +
         2 / 100 * (sigma * (rho * q_prime_py eta sigma) * x * t) := by
-    rw [hσr]
+    rw [hsigmar]
     -- now the factor `2·(σr)` is the literal `2·(1/10) = 1/5`
     have hyt : sigma * (rho * q_prime_py eta sigma) * y * t ≤
         1 / 20 * (sigma * (rho * q_prime_py eta sigma) * x * t) := by
       have h20 := mul_le_mul_of_nonneg_left hy20
         (mul_nonneg (mul_nonneg hsigma.le hQp.le) htpos.le)
       linarith [h20]
-    have hσQrt : sigma * (rho * q_prime_py eta sigma) * r * t =
+    have hsigmaQrt : sigma * (rho * q_prime_py eta sigma) * r * t =
         1 / 10 * (rho * q_prime_py eta sigma * t) := by
       calc sigma * (rho * q_prime_py eta sigma) * r * t
           = (sigma * r) * (rho * q_prime_py eta sigma * t) := by ring
-        _ = 1 / 10 * (rho * q_prime_py eta sigma * t) := by rw [hσr]
+        _ = 1 / 10 * (rho * q_prime_py eta sigma * t) := by rw [hsigmar]
     have hconst : (rho * q_prime_py eta sigma + 2 * sigma * |guessP2 eta sigma rho| +
         1 / 10 * (rho * q_prime_py eta sigma)) * t ≤
         1 / 20 * (sigma * (rho * q_prime_py eta sigma) * x * t) := by
       have h8t := mul_le_mul_of_nonneg_right hx8 htpos.le
       linarith [h8t]
-    linarith [hyt, hconst, hσQrt]
+    linarith [hyt, hconst, hsigmaQrt]
   -- piece 3: the `D`-drift
   have hn3 : ‖Complex.I * (sigma : ℂ) *
       (Dpoly eta sigma rho (k1_guess eta sigma rho n) - Dpoly eta sigma rho s) *
@@ -679,12 +679,12 @@ theorem G_baxter_deriv_ball_diff_le (eta sigma rho : ℝ) (n : ℕ)
   -- piece 3 budget: `≤ (1/100)·σQxt`
   have hn3bud : sigma * (rho * q_prime_py eta sigma * r) * t ≤
       1 / 100 * (sigma * (rho * q_prime_py eta sigma) * x * t) := by
-    have hσQrt : sigma * (rho * q_prime_py eta sigma * r) * t =
+    have hsigmaQrt : sigma * (rho * q_prime_py eta sigma * r) * t =
         1 / 10 * (rho * q_prime_py eta sigma * t) := by
       calc sigma * (rho * q_prime_py eta sigma * r) * t
           = (sigma * r) * (rho * q_prime_py eta sigma * t) := by ring
-        _ = 1 / 10 * (rho * q_prime_py eta sigma * t) := by rw [hσr]
-    rw [hσQrt]
+        _ = 1 / 10 * (rho * q_prime_py eta sigma * t) := by rw [hsigmar]
+    rw [hsigmaQrt]
     have h10t := mul_le_mul_of_nonneg_right hx10
       (mul_nonneg hQp.le htpos.le)
     linarith [h10t]
@@ -965,20 +965,20 @@ theorem chord_conditions_eventually (eta sigma rho : ℝ)
   have hx0 : (0 : ℝ) < 2 * Real.pi * (n : ℝ) / sigma := lt_of_lt_of_le one_pos hx1
   have hx_le_sq : 2 * Real.pi * (n : ℝ) / sigma ≤ (2 * Real.pi * (n : ℝ) / sigma) ^ 2 := by
     nlinarith [mul_nonneg (by linarith : (0 : ℝ) ≤ 2 * Real.pi * (n : ℝ) / sigma - 1) hx0.le]
-  have hσQ : 0 < sigma * (rho * q_prime_py eta sigma) := mul_pos hsigma hQp
+  have hsigmaQ : 0 < sigma * (rho * q_prime_py eta sigma) := mul_pos hsigma hQp
   -- convert the divided thresholds to multiplied form
   have hx6 : 4 ≤ sigma * (2 * Real.pi * (n : ℝ) / sigma) := by
     rw [div_le_iff₀ hsigma] at hx6'; linarith
   have hx7 : 8 * guessCN eta sigma rho * guessCD eta sigma rho ≤
       sigma * (rho * q_prime_py eta sigma) * (2 * Real.pi * (n : ℝ) / sigma) := by
-    rw [div_le_iff₀ hσQ] at hx7'; linarith
+    rw [div_le_iff₀ hsigmaQ] at hx7'; linarith
   have hx8 : 22 * (rho * q_prime_py eta sigma) + 40 * sigma * |guessP2 eta sigma rho| ≤
       sigma * (rho * q_prime_py eta sigma) * (2 * Real.pi * (n : ℝ) / sigma) := by
-    rw [div_le_iff₀ hσQ] at hx8'; linarith
+    rw [div_le_iff₀ hsigmaQ] at hx8'; linarith
   have hx9 : 100 * guessCD eta sigma rho * (1 / (10 * sigma)) *
       (12 + 3 * (1 / (10 * sigma)) + 2 * |guessP0 eta sigma rho|) ≤
       sigma * (rho * q_prime_py eta sigma) * (2 * Real.pi * (n : ℝ) / sigma) := by
-    rw [div_le_iff₀ hσQ] at hx9'; linarith
+    rw [div_le_iff₀ hsigmaQ] at hx9'; linarith
   have hx10 : 10 ≤ sigma * (2 * Real.pi * (n : ℝ) / sigma) := by
     rw [div_le_iff₀ hsigma] at hx10'; linarith
   have hx11 : 480 * guessCI eta sigma rho * guessCD eta sigma rho ≤

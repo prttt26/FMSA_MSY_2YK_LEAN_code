@@ -77,8 +77,8 @@ theorem oz_linear_op_congr {eta sigma rho : ℝ} (hsigma : 0 < sigma) {f g : ℝ
   apply intervalIntegral.integral_congr
   intro s hs
   rw [Set.uIcc_of_le hmax] at hs
-  have hsσ : sigma ≤ s := le_trans (le_max_right (r - t) sigma) hs.1
-  simp only [hfg s hsσ]
+  have hssigma : sigma ≤ s := le_trans (le_max_right (r - t) sigma) hs.1
+  simp only [hfg s hssigma]
 
 /-- **Linearity of `oz_linear_op` on the exterior, for exterior-continuous bounded functions.**
 `oz_linear_op h₁ − oz_linear_op h₂ = oz_linear_op (h₁ − h₂)` for `r ≥ σ`.  Reduces to

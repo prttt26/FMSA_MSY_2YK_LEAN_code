@@ -36,7 +36,7 @@ variable {N : ℕ}
 `q0MixPolyMatW X r := (ρ_k·q0MixPoly X i k r)ᵢₖ`.  The `ρ_k`-weight on the summed 2nd/column index;
 continuous (unlike `q0MixEntryW`) so the Banach–Volterra renewal machinery applies. -/
 noncomputable def q0MixPolyMatW (X : FMSA.HSMix N) : ℝ → Matrix (Fin N) (Fin N) ℝ :=
-  fun r => Matrix.of (fun i k => X.ρ k * X.q0MixPoly i k r)
+  fun r => Matrix.of (fun i k => X.rho k * X.q0MixPoly i k r)
 
 theorem q0MixPolyMatW_continuous (X : FMSA.HSMix N) : Continuous (q0MixPolyMatW X) :=
   continuous_matrix (fun i k => by
@@ -67,10 +67,10 @@ the `q0MixEntry` row-sum via `q0MixPoly_eq_q0MixEntry_core`). -/
 theorem physHSMixN_rhoWeighted_rowSum_poly {rho sigma : Fin N → ℝ} {s : ℝ} (hsig : ∀ k, 0 < sigma k)
     (hs : ∀ k, sigma k = s) (hs0 : 0 < s) (hvac : vacMix rho sigma ≠ 0)
     (i : Fin N) (u : ℝ) (hu : u ∈ Set.Icc (0 : ℝ) s) :
-    (∑ k, (physHSMixN rho sigma hsig).ρ k * (physHSMixN rho sigma hsig).q0MixPoly i k u)
+    (∑ k, (physHSMixN rho sigma hsig).rho k * (physHSMixN rho sigma hsig).q0MixPoly i k u)
       = q0_poly (etaMix rho sigma) s (∑ k, rho k) u := by
-  rw [show (∑ k, (physHSMixN rho sigma hsig).ρ k * (physHSMixN rho sigma hsig).q0MixPoly i k u)
-      = ∑ k, (physHSMixN rho sigma hsig).ρ k * (physHSMixN rho sigma hsig).q0MixEntry i k u from
+  rw [show (∑ k, (physHSMixN rho sigma hsig).rho k * (physHSMixN rho sigma hsig).q0MixPoly i k u)
+      = ∑ k, (physHSMixN rho sigma hsig).rho k * (physHSMixN rho sigma hsig).q0MixEntry i k u from
     Finset.sum_congr rfl (fun k _ => by rw [q0MixPoly_eq_q0MixEntry_core hsig hs i k hu])]
   exact physHSMixN_rhoWeighted_rowSum hsig hs hs0 hvac i u hu
 

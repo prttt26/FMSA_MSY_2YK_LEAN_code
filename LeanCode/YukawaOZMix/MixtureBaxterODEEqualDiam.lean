@@ -36,6 +36,8 @@ per-entry normalization `ρ = rgᵢₖ` gives `shellForcing rgᵢₖ i k = c_HS`
 diameters (`shellForcing_eq_cHS_equalDiam`) — the open Baxter–WH input of MRS.8, discharged.
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Set
 
 namespace FMSA.MixtureBaxter
@@ -188,7 +190,7 @@ theorem matCorrFull_qWeighted_equalDiam {rho sigma : Fin 2 → ℝ} {s : ℝ}
 `(0,σ)`, `matDCFreCoreᵢₖ = (rgᵢₖ/∑ρ)·(baxterODE_n1's function at ρ = ∑ρ)`. -/
 theorem matDCFreCore_equalDiam_eq {rho sigma : Fin 2 → ℝ} {s : ℝ}
     (hsig : ∀ k, 0 < sigma k) (hs : ∀ k, sigma k = s) (hs0 : 0 < s)
-    (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i) (hρT : (∑ l, rho l) ≠ 0)
+    (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i) (hrhoT : (∑ l, rho l) ≠ 0)
     (i k : Fin 2) {x : ℝ} (hx : x ∈ Set.Ioo (0 : ℝ) s) :
     matDCFreCore rho sigma hsig i k x
       = (rhoGeoPhys rho i k / (∑ l, rho l))
@@ -225,7 +227,7 @@ theorem matDCFreCore_equalDiam_eq {rho sigma : Fin 2 → ℝ} {s : ℝ}
 scalar `baxterODE_n1` through the equal-diameter collapse `matDCFreCore_equalDiam_eq`. -/
 theorem matDCFreCore_hasDerivAt_equalDiam {rho sigma : Fin 2 → ℝ} {s : ℝ}
     (hsig : ∀ k, 0 < sigma k) (hs : ∀ k, sigma k = s) (hs0 : 0 < s)
-    (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i) (hρT : (∑ l, rho l) ≠ 0)
+    (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i) (hrhoT : (∑ l, rho l) ≠ 0)
     (hetalt : etaMix rho sigma < 1) (i k : Fin 2) {x : ℝ} (hx : x ∈ Set.Ioo (0 : ℝ) s) :
     HasDerivAt (fun w => matDCFreCore rho sigma hsig i k w)
       (-(2 * Real.pi * rhoGeoPhys rho i k * x * c_HS (etaMix rho sigma) s x)) x := by
@@ -245,7 +247,7 @@ theorem matDCFreCore_hasDerivAt_equalDiam {rho sigma : Fin 2 → ℝ} {s : ℝ}
            - ∫ t in (0 : ℝ)..s, q0_poly (etaMix rho sigma) s (∑ l, rho l) (t + w)
                * q0_poly (etaMix rho sigma) s (∑ l, rho l) t)) := by
     filter_upwards [isOpen_Ioo.mem_nhds hx] with w hw
-    exact matDCFreCore_equalDiam_eq hsig hs hs0 hvac hrho hρT i k hw
+    exact matDCFreCore_equalDiam_eq hsig hs hs0 hvac hrho hrhoT i k hw
   have hval : (rhoGeoPhys rho i k / (∑ l, rho l))
         * (-(2 * Real.pi * (∑ l, rho l) * x * c_HS (etaMix rho sigma) s x))
       = -(2 * Real.pi * rhoGeoPhys rho i k * x * c_HS (etaMix rho sigma) s x) := by
@@ -260,13 +262,13 @@ sole remaining open input of the OZ★ value route (`shellForcing_eq_cHS_of_baxt
 from the proved mixture ODE `matDCFreCore_hasDerivAt_equalDiam`. -/
 theorem shellForcing_eq_cHS_equalDiam {rho sigma : Fin 2 → ℝ} {s : ℝ}
     (hsig : ∀ k, 0 < sigma k) (hs : ∀ k, sigma k = s) (hs0 : 0 < s)
-    (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i) (hρT : (∑ l, rho l) ≠ 0)
+    (hvac : vacMix rho sigma ≠ 0) (hrho : ∀ i, 0 ≤ rho i) (hrhoT : (∑ l, rho l) ≠ 0)
     (hetalt : etaMix rho sigma < 1) (i k : Fin 2) (hrg : rhoGeoPhys rho i k ≠ 0)
     {v : ℝ} (hv : v ∈ Set.Ioo (0 : ℝ) s) :
     shellForcing rho sigma hsig (rhoGeoPhys rho i k) i k v = c_HS (etaMix rho sigma) s v := by
   refine shellForcing_eq_cHS_of_baxterODE rho sigma hsig hs hrg
     (eta := etaMix rho sigma) i k (fun s' hs' => ?_) hv
-  have hD := matDCFreCore_hasDerivAt_equalDiam hsig hs hs0 hvac hrho hρT hetalt i k hs'
+  have hD := matDCFreCore_hasDerivAt_equalDiam hsig hs hs0 hvac hrho hrhoT hetalt i k hs'
   have hd2 := hD.div_const (rhoGeoPhys rho i k)
   have hval : (-(2 * Real.pi * rhoGeoPhys rho i k * s' * c_HS (etaMix rho sigma) s s'))
         / rhoGeoPhys rho i k

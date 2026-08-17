@@ -103,27 +103,27 @@ theorem ozBaxterExterior_shell_integrable {eta sigma rho : ℝ} (hsigma : 0 < si
     intro p hp hnotb
     obtain ⟨hp1, hp2⟩ := hp
     rw [Set.mem_Ioi] at hp1 hp2
-    by_cases hp1σ : p.1 ≤ sigma
+    by_cases hp1sigma : p.1 ≤ sigma
     · -- `p.1 ≤ σ`; then not-in-box forces `p.2 > r+σ`, so the indicator vanishes
       have hp2b : r + sigma < p.2 := by
         by_contra h
-        exact hnotb ⟨⟨hp1, hp1σ⟩, ⟨hp2, not_lt.mp h⟩⟩
+        exact hnotb ⟨⟨hp1, hp1sigma⟩, ⟨hp2, not_lt.mp h⟩⟩
       have hnotmem : p.2 ∉ Set.Icc |r - p.1| (r + p.1) := by
         rw [Set.mem_Icc]; rintro ⟨_, h2⟩; linarith
       change p.1 * c_HS eta sigma p.1 *
         (Set.Icc |r - p.1| (r + p.1)).indicator _ p.2 = 0
       rw [Set.indicator_of_notMem hnotmem, mul_zero]
     · -- `p.1 > σ`; then `c_HS p.1 = 0`
-      have hσp1 : sigma ≤ p.1 := (not_le.mp hp1σ).le
+      have hsigmap1 : sigma ≤ p.1 := (not_le.mp hp1sigma).le
       change p.1 * c_HS eta sigma p.1 * _ = 0
-      rw [c_HS_outer hσp1, mul_zero, zero_mul]
+      rw [c_HS_outer hsigmap1, mul_zero, zero_mul]
   · -- boundedness on the box
     intro p hp
-    obtain ⟨⟨hp10, hp1σ⟩, ⟨hp20, hp2b⟩⟩ := hp
+    obtain ⟨⟨hp10, hp1sigma⟩, ⟨hp20, hp2b⟩⟩ := hp
     rw [Real.norm_eq_abs, abs_mul]
     have h1 : |p.1 * c_HS eta sigma p.1| ≤ sigma * Cc := by
       rw [abs_mul, abs_of_pos hp10]
-      exact mul_le_mul hp1σ (hCc p.1 ⟨hp10.le, hp1σ⟩) (abs_nonneg _) hsigma.le
+      exact mul_le_mul hp1sigma (hCc p.1 ⟨hp10.le, hp1sigma⟩) (abs_nonneg _) hsigma.le
     have h2 : |(Set.Icc |r - p.1| (r + p.1)).indicator
         (fun s => s * ozBaxterFixedPt eta sigma rho s) p.2| ≤ (r + sigma) * Cb := by
       have hle : |(Set.Icc |r - p.1| (r + p.1)).indicator

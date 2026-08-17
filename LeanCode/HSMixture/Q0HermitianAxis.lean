@@ -26,25 +26,27 @@ The complementary sub-fact (1) — the radial-FT convolution theorem assembling 
 `1 − Q̂₀Q̂₀ᵀ` — remains the open Wertheim content.
 -/
 
+set_option linter.style.longLine false
+
 namespace FMSA.MixtureGenN
 variable {N : ℕ}
 
 /-- **Schwarz reflection of the Baxter entry.**  For `conj`-fixed (real) coefficients, the complex
 Baxter entry commutes with conjugation in `s`: `conj(q̂₀(s)) = q̂₀(conj s)` — every factor is a real
 coefficient (fixed by `conj`), an `exp` (commuting via `Complex.exp_conj`), or a power/quotient. -/
-theorem q0_entry_c_conj {s σ lam Qp Qpp ρ δ : ℂ}
-    (hσ : starRingEnd ℂ σ = σ) (hlam : starRingEnd ℂ lam = lam) (hQp : starRingEnd ℂ Qp = Qp)
-    (hQpp : starRingEnd ℂ Qpp = Qpp) (hρ : starRingEnd ℂ ρ = ρ) (hδ : starRingEnd ℂ δ = δ) :
-    starRingEnd ℂ (FMSA.Q0Complex.q0_entry_c s σ lam Qp Qpp ρ δ)
-      = FMSA.Q0Complex.q0_entry_c (starRingEnd ℂ s) σ lam Qp Qpp ρ δ := by
+theorem q0_entry_c_conj {s sigma lam Qp Qpp rho δ : ℂ}
+    (hsigma : starRingEnd ℂ sigma = sigma) (hlam : starRingEnd ℂ lam = lam) (hQp : starRingEnd ℂ Qp = Qp)
+    (hQpp : starRingEnd ℂ Qpp = Qpp) (hrho : starRingEnd ℂ rho = rho) (hδ : starRingEnd ℂ δ = δ) :
+    starRingEnd ℂ (FMSA.Q0Complex.q0_entry_c s sigma lam Qp Qpp rho δ)
+      = FMSA.Q0Complex.q0_entry_c (starRingEnd ℂ s) sigma lam Qp Qpp rho δ := by
   unfold FMSA.Q0Complex.q0_entry_c
   simp only [map_sub, map_mul, map_div₀, map_pow, map_neg, map_add, ← Complex.exp_conj,
-    map_one, map_ofNat, hσ, hlam, hQp, hQpp, hρ, hδ]
+    map_one, map_ofNat, hsigma, hlam, hQp, hQpp, hrho, hδ]
 
 /-- The physical Baxter matrix commutes entrywise with conjugation in `s` (real coefficients). -/
-theorem Q0_mat_c_phys_conj (s : ℂ) (σ ρ : Fin N → ℝ) (i j : Fin N) :
-    starRingEnd ℂ (FMSA.MixtureNoSpinodal.Q0_mat_c_phys s σ ρ i j)
-      = FMSA.MixtureNoSpinodal.Q0_mat_c_phys (starRingEnd ℂ s) σ ρ i j := by
+theorem Q0_mat_c_phys_conj (s : ℂ) (sigma rho : Fin N → ℝ) (i j : Fin N) :
+    starRingEnd ℂ (FMSA.MixtureNoSpinodal.Q0_mat_c_phys s sigma rho i j)
+      = FMSA.MixtureNoSpinodal.Q0_mat_c_phys (starRingEnd ℂ s) sigma rho i j := by
   unfold FMSA.MixtureNoSpinodal.Q0_mat_c_phys FMSA.Q0Complex.Q0_mat_c
   apply q0_entry_c_conj
   · exact Complex.conj_ofReal _
@@ -58,19 +60,19 @@ theorem Q0_mat_c_phys_conj (s : ℂ) (σ ρ : Fin N → ℝ) (i j : Fin N) :
 `Q0_mat_c_phys_conj` at `s = ik` (`conj(ik) = i(−k)`).  This turns the structure-factor form
 `vᵀ Q̂₀(ik)Q̂₀(−ik)ᵀ v` into the squared norm `∑ₗ|(Q̂₀(ik)ᵀ v)ₗ|²` (the `normSq` shape of the Gram
 factorizations `hfack`/`hfac0`). -/
-theorem Q0_mat_c_phys_neg_axis (k : ℝ) (σ ρ : Fin N → ℝ) (i j : Fin N) :
-    FMSA.MixtureNoSpinodal.Q0_mat_c_phys (Complex.I * (-(k : ℂ))) σ ρ i j
-      = starRingEnd ℂ (FMSA.MixtureNoSpinodal.Q0_mat_c_phys (Complex.I * (k : ℂ)) σ ρ i j) := by
+theorem Q0_mat_c_phys_neg_axis (k : ℝ) (sigma rho : Fin N → ℝ) (i j : Fin N) :
+    FMSA.MixtureNoSpinodal.Q0_mat_c_phys (Complex.I * (-(k : ℂ))) sigma rho i j
+      = starRingEnd ℂ (FMSA.MixtureNoSpinodal.Q0_mat_c_phys (Complex.I * (k : ℂ)) sigma rho i j) := by
   have hconj : (Complex.I * (-(k : ℂ)) : ℂ) = starRingEnd ℂ (Complex.I * (k : ℂ)) := by
     rw [map_mul, Complex.conj_I, Complex.conj_ofReal]; ring
   rw [hconj, ← Q0_mat_c_phys_conj]
 
 /-- Matrix form of the on-axis Hermitian reality: `Q̂₀(−ik) = (Q̂₀(ik)).map conj`. -/
-theorem Q0_mat_c_phys_neg_axis_map (k : ℝ) (σ ρ : Fin N → ℝ) :
-    FMSA.MixtureNoSpinodal.Q0_mat_c_phys (Complex.I * (-(k : ℂ))) σ ρ
-      = (FMSA.MixtureNoSpinodal.Q0_mat_c_phys (Complex.I * (k : ℂ)) σ ρ).map (starRingEnd ℂ) := by
+theorem Q0_mat_c_phys_neg_axis_map (k : ℝ) (sigma rho : Fin N → ℝ) :
+    FMSA.MixtureNoSpinodal.Q0_mat_c_phys (Complex.I * (-(k : ℂ))) sigma rho
+      = (FMSA.MixtureNoSpinodal.Q0_mat_c_phys (Complex.I * (k : ℂ)) sigma rho).map (starRingEnd ℂ) := by
   funext i j
   rw [Matrix.map_apply]
-  exact Q0_mat_c_phys_neg_axis k σ ρ i j
+  exact Q0_mat_c_phys_neg_axis k sigma rho i j
 
 end FMSA.MixtureGenN

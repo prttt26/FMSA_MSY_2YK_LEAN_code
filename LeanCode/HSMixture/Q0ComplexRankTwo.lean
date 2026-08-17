@@ -49,11 +49,11 @@ namespace FMSA.ComplexRankTwo
 open FMSA.MatrixQ0 FMSA.Q0Complex FMSA.MixtureNoSpinodal
 
 /-- Complex quadratic-pole kernel `φ1(σ,s) = (1 − sσ − e^{−sσ})/s²` (the `q0_entry_c` `p1` term). -/
-noncomputable def p1c (s σ : ℂ) : ℂ := (1 - s * σ - Complex.exp (-(s * σ))) / s ^ 2
+noncomputable def p1c (s sigC : ℂ) : ℂ := (1 - s * sigC - Complex.exp (-(s * sigC))) / s ^ 2
 
 /-- Complex cubic-pole kernel `φ2(σ,s) = (1 − sσ + (sσ)²/2 − e^{−sσ})/s³` (`q0_entry_c`'s `p2`). -/
-noncomputable def p2c (s σ : ℂ) : ℂ :=
-  (1 - s * σ + (s * σ) ^ 2 / 2 - Complex.exp (-(s * σ))) / s ^ 3
+noncomputable def p2c (s sigC : ℂ) : ℂ :=
+  (1 - s * sigC + (s * sigC) ^ 2 / 2 - Complex.exp (-(s * sigC))) / s ^ 3
 
 /-- First Woodbury column `fFunC = (2π/Δ)(σᵢ/2·φ1ᵢ + φ2ᵢ)` (complex-`s` `fFun`). -/
 noncomputable def fFunC {N : ℕ} (rho sigma : Fin N → ℝ) (i : Fin N) (s : ℂ) : ℂ :=

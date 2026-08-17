@@ -62,7 +62,7 @@ is the cubic `A·r − B·r² + C·r³`, giving `(4π/k)·2π√(ρᵢρₘ)·(A
 theorem radial_fourier_pMixEntry_lower (X : Mix N M) (i m : Fin N)
     (hlam : X.lam i m < 0) {k : ℝ} (hk : k ≠ 0) :
     radial_fourier (pMixEntry X i m) k
-      = (4 * Real.pi / k) * (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)) *
+      = (4 * Real.pi / k) * (2 * Real.pi * Real.sqrt (X.rho i * X.rho m)) *
         ((-(X.Q0 i m) * X.R i m + X.Qpp m * (X.R i m) ^ 2 / 2)
             * ((Real.sin (k * (-(X.lam i m))) - k * (-(X.lam i m)) * Real.cos (k * (-(X.lam i m))))
                 / k ^ 2)
@@ -93,7 +93,7 @@ theorem radial_fourier_pMixEntry_lower (X : Mix N M) (i m : Fin N)
     ← intervalIntegral.integral_of_le hlpos.le, mul_assoc]
   congr 1
   have hexpand : Set.EqOn (fun r => r * pMixEntry X i m r * Real.sin (k * r))
-      (fun r => (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)) *
+      (fun r => (2 * Real.pi * Real.sqrt (X.rho i * X.rho m)) *
           ((-(X.Q0 i m) * X.R i m + X.Qpp m * (X.R i m) ^ 2 / 2) * (r * Real.sin (k * r))
           + (-(X.Q0 i m - X.Qpp m * X.R i m)) * (r ^ 2 * Real.sin (k * r))
           + (X.Qpp m / 2) * (r ^ 3 * Real.sin (k * r))))
@@ -102,7 +102,7 @@ theorem radial_fourier_pMixEntry_lower (X : Mix N M) (i m : Fin N)
     rw [Set.uIoo_of_le hlpos.le] at hr
     have hmem : -r ∈ Set.Icc (X.lam i m) (X.R i m) := by
       rw [Set.mem_Icc]; exact ⟨by linarith [hr.2], by linarith [hr.1, X.R_pos i m]⟩
-    have hq : pMixEntry X i m r = 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)
+    have hq : pMixEntry X i m r = 2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
         * (X.Q0 i m * (-r - X.R i m) + X.Qpp m * (-r - X.R i m) ^ 2 / 2) := by
       unfold pMixEntry q0MixEntry; rw [Set.indicator_of_mem hmem]
     dsimp only; rw [hq]; ring

@@ -34,6 +34,8 @@ that the project's Woodbury inverse (`Q0_mat_phys_inv_eq`) equals this `2π√W/
 derivation that ties `Wtl`/`detTL` to the actual `[Q̂₀]⁻¹`.
 -/
 
+set_option linter.style.longLine false
+
 open Complex
 
 namespace FMSA.MixtureArcBound
@@ -46,33 +48,33 @@ noncomputable def phi2 (s : ℂ) (R : ℝ) : ℂ :=
   (1 - s * R + (s * R) ^ 2 / 2 - Complex.exp (-(s * R))) / s ^ 3
 
 /-- Moment `ξᵢ = ∑ₘ ρₘ Rₘⁱ`. -/
-def xiMom {N : ℕ} (ρ R : Fin N → ℝ) (i : ℕ) : ℝ := ∑ m, ρ m * R m ^ i
+def xiMom {N : ℕ} (rho R : Fin N → ℝ) (i : ℕ) : ℝ := ∑ m, rho m * R m ^ i
 
 /-- Packing-fraction factor `Δ = 1 − (π/6)ξ₃`. -/
-noncomputable def Delta {N : ℕ} (ρ R : Fin N → ℝ) : ℝ := 1 - Real.pi / 6 * xiMom ρ R 3
+noncomputable def Delta {N : ℕ} (rho R : Fin N → ℝ) : ℝ := 1 - Real.pi / 6 * xiMom rho R 3
 
 /-- **Tang & Lu Appendix `Wᵢⱼ(ik)`** (`s = ik`), p. 95: `φ₂(Rᵢ)(1+πξ₃/2Δ) + φ₁(Rᵢ)(Rᵢⱼ+πξ₂RᵢRⱼ/4Δ)
 + (π/2Δ)φ₁(Rᵢ)∑ₘρₘφ₁(Rₘ)(Rₘ−Rᵢ)(Rₘ−Rⱼ) + (π/2Δ)Rᵢ²∑ₘρₘφ₂(Rₘ)(Rⱼ−Rₘ)`. -/
-noncomputable def Wtl {N : ℕ} (s : ℂ) (ρ R : Fin N → ℝ) (i j : Fin N) : ℂ :=
-  phi2 s (R i) * (1 + Real.pi * (xiMom ρ R 3 : ℂ) / (2 * (Delta ρ R : ℂ)))
+noncomputable def Wtl {N : ℕ} (s : ℂ) (rho R : Fin N → ℝ) (i j : Fin N) : ℂ :=
+  phi2 s (R i) * (1 + Real.pi * (xiMom rho R 3 : ℂ) / (2 * (Delta rho R : ℂ)))
   + phi1 s (R i) * (((R i + R j) / 2 : ℝ)
-      + Real.pi * (xiMom ρ R 2 : ℂ) * (R i : ℂ) * (R j : ℂ) / (4 * (Delta ρ R : ℂ)))
-  + Real.pi / (2 * (Delta ρ R : ℂ)) * phi1 s (R i)
-      * ∑ m, (ρ m : ℂ) * phi1 s (R m) * ((R m : ℂ) - (R i : ℂ)) * ((R m : ℂ) - (R j : ℂ))
-  + Real.pi / (2 * (Delta ρ R : ℂ)) * (R i : ℂ) ^ 2
-      * ∑ m, (ρ m : ℂ) * phi2 s (R m) * ((R j : ℂ) - (R m : ℂ))
+      + Real.pi * (xiMom rho R 2 : ℂ) * (R i : ℂ) * (R j : ℂ) / (4 * (Delta rho R : ℂ)))
+  + Real.pi / (2 * (Delta rho R : ℂ)) * phi1 s (R i)
+      * ∑ m, (rho m : ℂ) * phi1 s (R m) * ((R m : ℂ) - (R i : ℂ)) * ((R m : ℂ) - (R j : ℂ))
+  + Real.pi / (2 * (Delta rho R : ℂ)) * (R i : ℂ) ^ 2
+      * ∑ m, (rho m : ℂ) * phi2 s (R m) * ((R j : ℂ) - (R m : ℂ))
 
 /-- **Tang & Lu Appendix `det(ik)`** (`s = ik`), p. 95, the `2×2`-reduced Baxter determinant:
 `1 − (2π/Δ)∑ₘρₘφ₂(Rₘ)(1+πξ₃/2Δ) − (2π/Δ)∑ₘρₘφ₁(Rₘ)(Rₘ+πξ₂Rₘ²/4Δ)
 − (π²/2Δ²)∑ₘ∑ₙρₘρₙφ₁(Rₘ)φ₁(Rₙ)(Rₘ−Rₙ)²`. -/
-noncomputable def detTL {N : ℕ} (s : ℂ) (ρ R : Fin N → ℝ) : ℂ :=
-  1 - 2 * Real.pi / (Delta ρ R : ℂ)
-        * ∑ m, (ρ m : ℂ) * phi2 s (R m) * (1 + Real.pi * (xiMom ρ R 3 : ℂ) / (2 * (Delta ρ R : ℂ)))
-    - 2 * Real.pi / (Delta ρ R : ℂ)
-        * ∑ m, (ρ m : ℂ) * phi1 s (R m)
-            * ((R m : ℂ) + Real.pi * (xiMom ρ R 2 : ℂ) * (R m : ℂ) ^ 2 / (4 * (Delta ρ R : ℂ)))
-    - Real.pi ^ 2 / (2 * (Delta ρ R : ℂ) ^ 2)
-        * ∑ m, ∑ n, (ρ m : ℂ) * (ρ n : ℂ) * phi1 s (R m) * phi1 s (R n)
+noncomputable def detTL {N : ℕ} (s : ℂ) (rho R : Fin N → ℝ) : ℂ :=
+  1 - 2 * Real.pi / (Delta rho R : ℂ)
+        * ∑ m, (rho m : ℂ) * phi2 s (R m) * (1 + Real.pi * (xiMom rho R 3 : ℂ) / (2 * (Delta rho R : ℂ)))
+    - 2 * Real.pi / (Delta rho R : ℂ)
+        * ∑ m, (rho m : ℂ) * phi1 s (R m)
+            * ((R m : ℂ) + Real.pi * (xiMom rho R 2 : ℂ) * (R m : ℂ) ^ 2 / (4 * (Delta rho R : ℂ)))
+    - Real.pi ^ 2 / (2 * (Delta rho R : ℂ) ^ 2)
+        * ∑ m, ∑ n, (rho m : ℂ) * (rho n : ℂ) * phi1 s (R m) * phi1 s (R n)
             * ((R m : ℂ) - (R n : ℂ)) ^ 2
 
 /-- **Arc decay of `φ₁`.**  `‖phi1 s R‖ ≤ (2 + R)/‖s‖ → 0` for `‖s‖ ≥ 1`, `0 ≤ Re s`, `0 ≤ R`
@@ -82,7 +84,7 @@ theorem norm_phi1_le {s : ℂ} {R : ℝ} (hs : 1 ≤ ‖s‖) (hre : 0 ≤ s.re)
   have hre' : 0 ≤ (s * (R : ℂ)).re := by
     rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
     exact mul_nonneg hre hR
-  have h := normP2_arc_decay (σ := (R : ℂ)) hs hre'
+  have h := normP2_arc_decay (sigma := (R : ℂ)) hs hre'
   rw [Complex.norm_real, Real.norm_of_nonneg hR] at h
   exact h
 
@@ -93,7 +95,7 @@ theorem norm_phi2_le {s : ℂ} {R : ℝ} (hs : 1 ≤ ‖s‖) (hre : 0 ≤ s.re)
   have hre' : 0 ≤ (s * (R : ℂ)).re := by
     rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
     exact mul_nonneg hre hR
-  have h := normP3_arc_decay (σ := (R : ℂ)) hs hre'
+  have h := normP3_arc_decay (sigma := (R : ℂ)) hs hre'
   rw [Complex.norm_real, Real.norm_of_nonneg hR] at h
   exact h
 
@@ -140,73 +142,73 @@ theorem norm_const_mul_le {s c X : ℂ} {B : ℝ} (h : ‖X‖ ≤ B / ‖s‖) 
     _ = ‖c‖ * B / ‖s‖ := (mul_div_assoc _ _ _).symm
 
 /-- A single `ρ`-weighted `φ₁`-sum with per-`m` coefficient `κ` (the shape of `W`/`det` terms). -/
-theorem norm_rhoWeighted_phi1_sum_le {N : ℕ} {s : ℂ} {ρ R : Fin N → ℝ} (hs : 1 ≤ ‖s‖)
+theorem norm_rhoWeighted_phi1_sum_le {N : ℕ} {s : ℂ} {rho R : Fin N → ℝ} (hs : 1 ≤ ‖s‖)
     (hre : 0 ≤ s.re) (hR : ∀ m, 0 ≤ R m) (κ : Fin N → ℂ) :
-    ‖∑ m, (ρ m : ℂ) * phi1 s (R m) * κ m‖ ≤ (∑ m, ‖(ρ m : ℂ) * κ m‖ * (2 + R m)) / ‖s‖ := by
-  have heq : (∑ m, (ρ m : ℂ) * phi1 s (R m) * κ m)
-      = ∑ m, ((ρ m : ℂ) * κ m) * phi1 s (R m) := by
+    ‖∑ m, (rho m : ℂ) * phi1 s (R m) * κ m‖ ≤ (∑ m, ‖(rho m : ℂ) * κ m‖ * (2 + R m)) / ‖s‖ := by
+  have heq : (∑ m, (rho m : ℂ) * phi1 s (R m) * κ m)
+      = ∑ m, ((rho m : ℂ) * κ m) * phi1 s (R m) := by
     apply Finset.sum_congr rfl; intro m _; ring
-  rw [heq]; exact norm_weighted_phi1_sum_le hs hre hR (fun m => (ρ m : ℂ) * κ m)
+  rw [heq]; exact norm_weighted_phi1_sum_le hs hre hR (fun m => (rho m : ℂ) * κ m)
 
 /-- A single `ρ`-weighted `φ₂`-sum with per-`m` coefficient `κ`. -/
-theorem norm_rhoWeighted_phi2_sum_le {N : ℕ} {s : ℂ} {ρ R : Fin N → ℝ} (hs : 1 ≤ ‖s‖)
+theorem norm_rhoWeighted_phi2_sum_le {N : ℕ} {s : ℂ} {rho R : Fin N → ℝ} (hs : 1 ≤ ‖s‖)
     (hre : 0 ≤ s.re) (hR : ∀ m, 0 ≤ R m) (κ : Fin N → ℂ) :
-    ‖∑ m, (ρ m : ℂ) * phi2 s (R m) * κ m‖
-      ≤ (∑ m, ‖(ρ m : ℂ) * κ m‖ * (2 + R m + R m ^ 2 / 2)) / ‖s‖ := by
-  have heq : (∑ m, (ρ m : ℂ) * phi2 s (R m) * κ m)
-      = ∑ m, ((ρ m : ℂ) * κ m) * phi2 s (R m) := by
+    ‖∑ m, (rho m : ℂ) * phi2 s (R m) * κ m‖
+      ≤ (∑ m, ‖(rho m : ℂ) * κ m‖ * (2 + R m + R m ^ 2 / 2)) / ‖s‖ := by
+  have heq : (∑ m, (rho m : ℂ) * phi2 s (R m) * κ m)
+      = ∑ m, ((rho m : ℂ) * κ m) * phi2 s (R m) := by
     apply Finset.sum_congr rfl; intro m _; ring
-  rw [heq]; exact norm_weighted_phi2_sum_le hs hre hR (fun m => (ρ m : ℂ) * κ m)
+  rw [heq]; exact norm_weighted_phi2_sum_le hs hre hR (fun m => (rho m : ℂ) * κ m)
 
 /-- The double `φ₁·φ₁` sum of `detTL`'s third term — `O(1/‖s‖)` (one `φ₁` crude, one decaying). -/
-theorem norm_rhoRho_phi1_phi1_dsum_le {N : ℕ} {s : ℂ} {ρ R : Fin N → ℝ} (hs : 1 ≤ ‖s‖)
+theorem norm_rhoRho_phi1_phi1_dsum_le {N : ℕ} {s : ℂ} {rho R : Fin N → ℝ} (hs : 1 ≤ ‖s‖)
     (hre : 0 ≤ s.re) (hR : ∀ m, 0 ≤ R m) :
-    ‖∑ m, ∑ n, (ρ m : ℂ) * (ρ n : ℂ) * phi1 s (R m) * phi1 s (R n) * ((R m : ℂ) - (R n : ℂ)) ^ 2‖
-      ≤ (∑ m, ∑ n, ‖(ρ m : ℂ)‖ * ‖(ρ n : ℂ)‖ * (2 + R m)
+    ‖∑ m, ∑ n, (rho m : ℂ) * (rho n : ℂ) * phi1 s (R m) * phi1 s (R n) * ((R m : ℂ) - (R n : ℂ)) ^ 2‖
+      ≤ (∑ m, ∑ n, ‖(rho m : ℂ)‖ * ‖(rho n : ℂ)‖ * (2 + R m)
           * ‖((R m : ℂ) - (R n : ℂ)) ^ 2‖ * (2 + R n)) / ‖s‖ := by
   rw [Finset.sum_div]
   refine (norm_sum_le _ _).trans (Finset.sum_le_sum (fun m _ => ?_))
   refine norm_sum_le_of_termwise (fun n => ?_)
   have hpm : ‖phi1 s (R m)‖ ≤ 2 + R m := norm_phi1_le_const hs hre (hR m)
   have hpn : ‖phi1 s (R n)‖ ≤ (2 + R n) / ‖s‖ := norm_phi1_le hs hre (hR n)
-  calc ‖(ρ m : ℂ) * (ρ n : ℂ) * phi1 s (R m) * phi1 s (R n) * ((R m : ℂ) - (R n : ℂ)) ^ 2‖
-      = ‖(ρ m : ℂ)‖ * ‖(ρ n : ℂ)‖ * ‖phi1 s (R m)‖ * ‖phi1 s (R n)‖
+  calc ‖(rho m : ℂ) * (rho n : ℂ) * phi1 s (R m) * phi1 s (R n) * ((R m : ℂ) - (R n : ℂ)) ^ 2‖
+      = ‖(rho m : ℂ)‖ * ‖(rho n : ℂ)‖ * ‖phi1 s (R m)‖ * ‖phi1 s (R n)‖
           * ‖((R m : ℂ) - (R n : ℂ)) ^ 2‖ := by rw [norm_mul, norm_mul, norm_mul, norm_mul]
-    _ ≤ ‖(ρ m : ℂ)‖ * ‖(ρ n : ℂ)‖ * (2 + R m) * ((2 + R n) / ‖s‖)
+    _ ≤ ‖(rho m : ℂ)‖ * ‖(rho n : ℂ)‖ * (2 + R m) * ((2 + R n) / ‖s‖)
           * ‖((R m : ℂ) - (R n : ℂ)) ^ 2‖ := by
         gcongr
         exact mul_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg _)) (by linarith [hR m])
-    _ = ‖(ρ m : ℂ)‖ * ‖(ρ n : ℂ)‖ * (2 + R m)
+    _ = ‖(rho m : ℂ)‖ * ‖(rho n : ℂ)‖ * (2 + R m)
           * ‖((R m : ℂ) - (R n : ℂ)) ^ 2‖ * (2 + R n) / ‖s‖ := by ring
 
 /-- **`det(−iy) → 1` on the arc** — `‖detTL s ρ R − 1‖ ≤ Cdet/‖s‖` (a constant over `‖s‖`), so
 `detTL → 1`, hence bounded below by `norm_ge_of_norm_sub_one_le`.  The three terms are bounded by
 the single- and double-`φ`-sum lemmas above; each is a constant times a sum `O(1/‖s‖)`. -/
-theorem norm_detTL_sub_one_le {N : ℕ} {s : ℂ} {ρ R : Fin N → ℝ}
+theorem norm_detTL_sub_one_le {N : ℕ} {s : ℂ} {rho R : Fin N → ℝ}
     (hs : 1 ≤ ‖s‖) (hre : 0 ≤ s.re) (hR : ∀ m, 0 ≤ R m) :
-    ‖detTL s ρ R - 1‖ ≤
-      (‖2 * Real.pi / (Delta ρ R : ℂ)‖ * (∑ m, ‖(ρ m : ℂ)
-            * (1 + Real.pi * (xiMom ρ R 3 : ℂ) / (2 * (Delta ρ R : ℂ)))‖ * (2 + R m + R m ^ 2 / 2))
-        + ‖2 * Real.pi / (Delta ρ R : ℂ)‖ * (∑ m, ‖(ρ m : ℂ)
-            * ((R m : ℂ) + Real.pi * (xiMom ρ R 2 : ℂ) * (R m : ℂ) ^ 2 / (4 * (Delta ρ R : ℂ)))‖
+    ‖detTL s rho R - 1‖ ≤
+      (‖2 * Real.pi / (Delta rho R : ℂ)‖ * (∑ m, ‖(rho m : ℂ)
+            * (1 + Real.pi * (xiMom rho R 3 : ℂ) / (2 * (Delta rho R : ℂ)))‖ * (2 + R m + R m ^ 2 / 2))
+        + ‖2 * Real.pi / (Delta rho R : ℂ)‖ * (∑ m, ‖(rho m : ℂ)
+            * ((R m : ℂ) + Real.pi * (xiMom rho R 2 : ℂ) * (R m : ℂ) ^ 2 / (4 * (Delta rho R : ℂ)))‖
             * (2 + R m))
-        + ‖Real.pi ^ 2 / (2 * (Delta ρ R : ℂ) ^ 2)‖ * (∑ m, ∑ n, ‖(ρ m : ℂ)‖ * ‖(ρ n : ℂ)‖
+        + ‖Real.pi ^ 2 / (2 * (Delta rho R : ℂ) ^ 2)‖ * (∑ m, ∑ n, ‖(rho m : ℂ)‖ * ‖(rho n : ℂ)‖
             * (2 + R m) * ‖((R m : ℂ) - (R n : ℂ)) ^ 2‖ * (2 + R n))) / ‖s‖ := by
-  have h1 := norm_const_mul_le (c := 2 * Real.pi / (Delta ρ R : ℂ))
-    (norm_rhoWeighted_phi2_sum_le (ρ := ρ) hs hre hR
-      (fun _ => (1 + Real.pi * (xiMom ρ R 3 : ℂ) / (2 * (Delta ρ R : ℂ)))))
-  have h2 := norm_const_mul_le (c := 2 * Real.pi / (Delta ρ R : ℂ))
-    (norm_rhoWeighted_phi1_sum_le (ρ := ρ) hs hre hR
-      (fun m => (R m : ℂ) + Real.pi * (xiMom ρ R 2 : ℂ) * (R m : ℂ) ^ 2 / (4 * (Delta ρ R : ℂ))))
-  have h3 := norm_const_mul_le (c := Real.pi ^ 2 / (2 * (Delta ρ R : ℂ) ^ 2))
-    (norm_rhoRho_phi1_phi1_dsum_le (ρ := ρ) hs hre hR)
-  have hsub : detTL s ρ R - 1 = -(2 * Real.pi / (Delta ρ R : ℂ)
-        * ∑ m, (ρ m : ℂ) * phi2 s (R m) * (1 + Real.pi * (xiMom ρ R 3 : ℂ) / (2 * (Delta ρ R : ℂ))))
-      - 2 * Real.pi / (Delta ρ R : ℂ)
-        * (∑ m, (ρ m : ℂ) * phi1 s (R m)
-            * ((R m : ℂ) + Real.pi * (xiMom ρ R 2 : ℂ) * (R m : ℂ) ^ 2 / (4 * (Delta ρ R : ℂ))))
-      - Real.pi ^ 2 / (2 * (Delta ρ R : ℂ) ^ 2)
-        * (∑ m, ∑ n, (ρ m : ℂ) * (ρ n : ℂ) * phi1 s (R m) * phi1 s (R n)
+  have h1 := norm_const_mul_le (c := 2 * Real.pi / (Delta rho R : ℂ))
+    (norm_rhoWeighted_phi2_sum_le (rho := rho) hs hre hR
+      (fun _ => (1 + Real.pi * (xiMom rho R 3 : ℂ) / (2 * (Delta rho R : ℂ)))))
+  have h2 := norm_const_mul_le (c := 2 * Real.pi / (Delta rho R : ℂ))
+    (norm_rhoWeighted_phi1_sum_le (rho := rho) hs hre hR
+      (fun m => (R m : ℂ) + Real.pi * (xiMom rho R 2 : ℂ) * (R m : ℂ) ^ 2 / (4 * (Delta rho R : ℂ))))
+  have h3 := norm_const_mul_le (c := Real.pi ^ 2 / (2 * (Delta rho R : ℂ) ^ 2))
+    (norm_rhoRho_phi1_phi1_dsum_le (rho := rho) hs hre hR)
+  have hsub : detTL s rho R - 1 = -(2 * Real.pi / (Delta rho R : ℂ)
+        * ∑ m, (rho m : ℂ) * phi2 s (R m) * (1 + Real.pi * (xiMom rho R 3 : ℂ) / (2 * (Delta rho R : ℂ))))
+      - 2 * Real.pi / (Delta rho R : ℂ)
+        * (∑ m, (rho m : ℂ) * phi1 s (R m)
+            * ((R m : ℂ) + Real.pi * (xiMom rho R 2 : ℂ) * (R m : ℂ) ^ 2 / (4 * (Delta rho R : ℂ))))
+      - Real.pi ^ 2 / (2 * (Delta rho R : ℂ) ^ 2)
+        * (∑ m, ∑ n, (rho m : ℂ) * (rho n : ℂ) * phi1 s (R m) * phi1 s (R n)
             * ((R m : ℂ) - (R n : ℂ)) ^ 2) := by
     simp only [detTL]; ring
   rw [hsub, add_div, add_div]
@@ -246,38 +248,38 @@ theorem norm_c_phi1_mul_le {s : ℂ} {R0 : ℝ} {c0 X : ℂ} {B : ℝ} (hs : 1 �
 The four `Wtl` terms are bounded by the `φ`-times-constant / `φ`-sum lemmas above; combined with
 `norm_detTL_sub_one_le` and the (iii) assembly logic (`amplitude_norm_le`), this bounds the `A(−iy)`
 amplitude on the arc. -/
-theorem norm_Wtl_le {N : ℕ} {s : ℂ} {ρ R : Fin N → ℝ} (i j : Fin N)
+theorem norm_Wtl_le {N : ℕ} {s : ℂ} {rho R : Fin N → ℝ} (i j : Fin N)
     (hs : 1 ≤ ‖s‖) (hre : 0 ≤ s.re) (hR : ∀ m, 0 ≤ R m) :
-    ‖Wtl s ρ R i j‖ ≤
-      (‖1 + Real.pi * (xiMom ρ R 3 : ℂ) / (2 * (Delta ρ R : ℂ))‖ * (2 + R i + R i ^ 2 / 2)
+    ‖Wtl s rho R i j‖ ≤
+      (‖1 + Real.pi * (xiMom rho R 3 : ℂ) / (2 * (Delta rho R : ℂ))‖ * (2 + R i + R i ^ 2 / 2)
         + ‖(R i / 2 + R j / 2 : ℝ)
-            + Real.pi * (xiMom ρ R 2 : ℂ) * (R i : ℂ) * (R j : ℂ) / (4 * (Delta ρ R : ℂ))‖
+            + Real.pi * (xiMom rho R 2 : ℂ) * (R i : ℂ) * (R j : ℂ) / (4 * (Delta rho R : ℂ))‖
             * (2 + R i)
-        + ‖Real.pi / (2 * (Delta ρ R : ℂ))‖ * (2 + R i)
-            * (∑ m, ‖(ρ m : ℂ) * (((R m : ℂ) - (R i : ℂ)) * ((R m : ℂ) - (R j : ℂ)))‖ * (2 + R m))
-        + ‖Real.pi / (2 * (Delta ρ R : ℂ)) * (R i : ℂ) ^ 2‖
-            * (∑ m, ‖(ρ m : ℂ) * ((R j : ℂ) - (R m : ℂ))‖ * (2 + R m + R m ^ 2 / 2))) / ‖s‖ := by
+        + ‖Real.pi / (2 * (Delta rho R : ℂ))‖ * (2 + R i)
+            * (∑ m, ‖(rho m : ℂ) * (((R m : ℂ) - (R i : ℂ)) * ((R m : ℂ) - (R j : ℂ)))‖ * (2 + R m))
+        + ‖Real.pi / (2 * (Delta rho R : ℂ)) * (R i : ℂ) ^ 2‖
+            * (∑ m, ‖(rho m : ℂ) * ((R j : ℂ) - (R m : ℂ))‖ * (2 + R m + R m ^ 2 / 2))) / ‖s‖ := by
   have h1 := norm_phi2_mul_le (s := s) (R := R i)
-    (c := 1 + Real.pi * (xiMom ρ R 3 : ℂ) / (2 * (Delta ρ R : ℂ))) hs hre (hR i)
+    (c := 1 + Real.pi * (xiMom rho R 3 : ℂ) / (2 * (Delta rho R : ℂ))) hs hre (hR i)
   have h2 := norm_phi1_mul_le (s := s) (R := R i)
     (c := (R i / 2 + R j / 2 : ℝ)
-      + Real.pi * (xiMom ρ R 2 : ℂ) * (R i : ℂ) * (R j : ℂ) / (4 * (Delta ρ R : ℂ))) hs hre (hR i)
-  have hSA3 : ‖∑ m, (ρ m : ℂ) * phi1 s (R m)
+      + Real.pi * (xiMom rho R 2 : ℂ) * (R i : ℂ) * (R j : ℂ) / (4 * (Delta rho R : ℂ))) hs hre (hR i)
+  have hSA3 : ‖∑ m, (rho m : ℂ) * phi1 s (R m)
         * ((R m : ℂ) - (R i : ℂ)) * ((R m : ℂ) - (R j : ℂ))‖
-      ≤ (∑ m, ‖(ρ m : ℂ) * (((R m : ℂ) - (R i : ℂ)) * ((R m : ℂ) - (R j : ℂ)))‖ * (2 + R m))
+      ≤ (∑ m, ‖(rho m : ℂ) * (((R m : ℂ) - (R i : ℂ)) * ((R m : ℂ) - (R j : ℂ)))‖ * (2 + R m))
           / ‖s‖ := by
-    have heq : (∑ m, (ρ m : ℂ) * phi1 s (R m) * ((R m : ℂ) - (R i : ℂ)) * ((R m : ℂ) - (R j : ℂ)))
-        = ∑ m, (ρ m : ℂ) * phi1 s (R m)
+    have heq : (∑ m, (rho m : ℂ) * phi1 s (R m) * ((R m : ℂ) - (R i : ℂ)) * ((R m : ℂ) - (R j : ℂ)))
+        = ∑ m, (rho m : ℂ) * phi1 s (R m)
             * (((R m : ℂ) - (R i : ℂ)) * ((R m : ℂ) - (R j : ℂ))) := by
       apply Finset.sum_congr rfl; intro m _; ring
     rw [heq]
-    exact norm_rhoWeighted_phi1_sum_le (ρ := ρ) hs hre hR
+    exact norm_rhoWeighted_phi1_sum_le (rho := rho) hs hre hR
       (fun m => ((R m : ℂ) - (R i : ℂ)) * ((R m : ℂ) - (R j : ℂ)))
   have h3 := norm_c_phi1_mul_le (s := s) (R0 := R i)
-    (c0 := Real.pi / (2 * (Delta ρ R : ℂ))) hs hre (hR i)
+    (c0 := Real.pi / (2 * (Delta rho R : ℂ))) hs hre (hR i)
     (Finset.sum_nonneg (fun m _ => mul_nonneg (norm_nonneg _) (by linarith [hR m]))) hSA3
-  have h4 := norm_const_mul_le (c := Real.pi / (2 * (Delta ρ R : ℂ)) * (R i : ℂ) ^ 2)
-    (norm_rhoWeighted_phi2_sum_le (ρ := ρ) hs hre hR (fun m => (R j : ℂ) - (R m : ℂ)))
+  have h4 := norm_const_mul_le (c := Real.pi / (2 * (Delta rho R : ℂ)) * (R i : ℂ) ^ 2)
+    (norm_rhoWeighted_phi2_sum_le (rho := rho) hs hre hR (fun m => (R j : ℂ) - (R m : ℂ)))
   unfold Wtl
   simp only [add_div]
   refine (norm_add_le _ _).trans (add_le_add ((norm_add_le _ _).trans

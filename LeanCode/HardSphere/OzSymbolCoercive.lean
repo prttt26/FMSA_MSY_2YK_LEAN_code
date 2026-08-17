@@ -54,9 +54,9 @@ theorem cHS_r_abs_intervalIntegrable {eta sigma : ℝ} (hsigma : 0 < sigma) :
       (measurable_id.mul (c_HS_measurable eta sigma)).aestronglyMeasurable) ?_
   intro r hr
   rw [Set.uIcc_of_le hsigma.le] at hr
-  obtain ⟨hr0, hrσ⟩ := hr
+  obtain ⟨hr0, hrsigma⟩ := hr
   simp only [id_eq, abs_abs, abs_mul, abs_of_nonneg hr0]
-  exact mul_le_mul hrσ (hCc r ⟨hr0, hrσ⟩) (abs_nonneg _) hsigma.le
+  exact mul_le_mul hrsigma (hCc r ⟨hr0, hrsigma⟩) (abs_nonneg _) hsigma.le
 
 /-- The sine transform integral `k ↦ ∫₀^σ r·c_HS(r)·sin(kr)` is continuous in `k`
 (dominated convergence: integrand bounded by the integrable `|r·c_HS(r)|`). -/
@@ -108,12 +108,12 @@ theorem one_sub_rho_radial_fourier_c_HS_ge_one {eta sigma rho : ℝ} (heta0 : 0 
     have hnonpos : (∫ r in (0:ℝ)..sigma, r * c_HS eta sigma r * Real.sin (k * r)) ≤ 0 := by
       rw [intervalIntegral.integral_of_le hsigma.le]
       refine setIntegral_nonpos measurableSet_Ioc (fun r hr => ?_)
-      obtain ⟨hr0, hrσ⟩ := hr
-      rcases eq_or_lt_of_le hrσ with hrσ' | hrσ'
-      · rw [hrσ', c_HS_contact]; simp
-      · have hcHS : c_HS eta sigma r < 0 := c_HS_neg heta0 heta1 hsigma hr0 hrσ'
+      obtain ⟨hr0, hrsigma⟩ := hr
+      rcases eq_or_lt_of_le hrsigma with hrsigma' | hrsigma'
+      · rw [hrsigma', c_HS_contact]; simp
+      · have hcHS : c_HS eta sigma r < 0 := c_HS_neg heta0 heta1 hsigma hr0 hrsigma'
         have hkr : k * r ≤ Real.pi := by
-          have h1 : k * r ≤ k * sigma := mul_le_mul_of_nonneg_left hrσ hk0
+          have h1 : k * r ≤ k * sigma := mul_le_mul_of_nonneg_left hrsigma hk0
           have h2 : k * sigma ≤ Real.pi := by
             rw [← le_div_iff₀ hsigma]; exact hkπ
           linarith

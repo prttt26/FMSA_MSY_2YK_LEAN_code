@@ -75,6 +75,8 @@ Volterra construction) and the `1D-odd ↔ 3D-radial` bridge remain — see `pro
 `OZFIX.15`.
 -/
 
+set_option linter.style.longLine false
+
 open MeasureTheory Set intervalIntegral
 
 namespace FMSA.HardSphere
@@ -1297,7 +1299,7 @@ theorem rho_baxterK_eq_q0_self_conv {eta sigma rho : ℝ} (hsigma : 0 < sigma) (
   obtain ⟨hv0, hvs⟩ := hv
   set α := rho * q_prime_py eta sigma with hα
   set β := rho * q_doubleprime_py eta with hβ
-  have hσ : sigma ≠ 0 := ne_of_gt hsigma
+  have hsigma : sigma ≠ 0 := ne_of_gt hsigma
   -- (1) baxterK(v) = 2π (Gpoly σ − Gpoly v)
   set Gpoly : ℝ → ℝ := fun s => -(py_a0 eta * s ^ 2 / 2 + py_a1 eta * s ^ 3 / (3 * sigma)
     + py_a3 eta * s ^ 5 / (5 * sigma ^ 3)) with hGdef
@@ -1435,11 +1437,11 @@ theorem radial3d_conv_eq_baxterK_shell {eta sigma : ℝ} (hsigma : 0 < sigma) {g
           (fun t => t * c_HS eta sigma t * ∫ s in (r - t)..(r + t), oddExt g s))
         (Set.Ioi 0) := by
       intro t ht
-      by_cases htσ : t ∈ Set.Ioc 0 sigma
-      · rw [Set.indicator_of_mem htσ]
-      · rw [Set.indicator_of_notMem htσ]
+      by_cases htsigma : t ∈ Set.Ioc 0 sigma
+      · rw [Set.indicator_of_mem htsigma]
+      · rw [Set.indicator_of_notMem htsigma]
         have htge : sigma ≤ t := by
-          rcases not_and_or.mp htσ with h | h
+          rcases not_and_or.mp htsigma with h | h
           · exact absurd ht h
           · exact (not_le.mp h).le
         show t * c_HS eta sigma t * (∫ s in (r - t)..(r + t), oddExt g s) = 0

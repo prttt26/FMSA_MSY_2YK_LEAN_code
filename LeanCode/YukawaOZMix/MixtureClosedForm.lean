@@ -321,7 +321,7 @@ The capstones above take an abstract `(Icc b c).indicator (p₀+p₁u+p₂u²)` 
 `2π√(ρᵢρ_m)·(Q₀(−u−R)+Qpp(−u−R)²/2)`.  Reflecting `q0MixEntry`'s `[λ,R]` window to `[−R,−λ]`. -/
 theorem pMixEntry_eq_indicator_quad {N M : ℕ} (X : Mix N M) (i m : Fin N) :
     pMixEntry X i m = Set.indicator (Set.Icc (-(X.R i m)) (-(X.lam i m)))
-      (fun u => 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)
+      (fun u => 2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
         * (X.Q0 i m * (-u - X.R i m) + X.Qpp m * (-u - X.R i m) ^ 2 / 2)) := by
   funext u
   unfold pMixEntry q0MixEntry
@@ -383,12 +383,12 @@ theorem bConvP_closed_form {N M : ℕ} (X : Mix N M) (i n j : Fin N) (x : ℝ)
     (hz : ∀ q : Fin M, X.zp i n q ≠ 0)
     (halign : x - -(X.lam j n) ≤ X.R i n) (hne : X.R i n ≤ x - -(X.R j n)) :
     bConvP X i n j x = ∑ q : Fin M, expQuadClosed (X.cb i n q) (X.zp i n q) (X.R i n)
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n + X.Qpp n * X.R j n))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (X.Qpp n / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n + X.Qpp n * X.R j n))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (X.Qpp n / 2))
         x (X.R i n) (x - -(X.R j n)) := by
   set F : ℝ → ℝ := fun v => ∑ q : Fin M, X.cb i n q * Real.exp (-(X.zp i n q) * (v - X.R i n)) with hF
-  set G : ℝ → ℝ := fun u => 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n)
+  set G : ℝ → ℝ := fun u => 2 * Real.pi * Real.sqrt (X.rho j * X.rho n)
       * (X.Q0 j n * (-u - X.R j n) + X.Qpp n * (-u - X.R j n) ^ 2 / 2) with hG
   have hbM : bMixEntry X i n = (Set.Ici (X.R i n)).indicator F := by unfold bMixEntry; rw [hF]
   have hbase : bConvP X i n j
@@ -411,9 +411,9 @@ theorem bConvP_closed_form {N M : ℕ} (X : Mix N M) (i n j : Fin N) (x : ℝ)
   rw [hsplit]
   refine Finset.sum_congr rfl (fun q _ => ?_)
   rw [← intervalIntegral_expR_quad (X.cb i n q) (X.zp i n q) (X.R i n)
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n + X.Qpp n * X.R j n))
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (X.Qpp n / 2))
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n + X.Qpp n * X.R j n))
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (X.Qpp n / 2))
       x (X.R i n) (x - -(X.R j n)) (hz q)]
   refine intervalIntegral.integral_congr (fun t _ => ?_)
   rw [hG]; ring
@@ -443,11 +443,11 @@ theorem pConvB_closed_form {N M : ℕ} (X : Mix N M) (i m j : Fin N) (x : ℝ)
     (halign : x - X.R m j ≤ -(X.lam i m)) (hb : -(X.R i m) ≤ x - X.R m j) :
     ((pMixEntry X i m) ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (bMixEntry X m j)) x
       = ∑ q : Fin M, expQuadClosedPos (X.cb m j q) (X.zp m j q) (X.R m j)
-        (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (-X.Q0 i m * X.R i m + X.Qpp m * X.R i m ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (-X.Q0 i m + X.Qpp m * X.R i m))
-        (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (X.Qpp m / 2))
+        (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (-X.Q0 i m * X.R i m + X.Qpp m * X.R i m ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (-X.Q0 i m + X.Qpp m * X.R i m))
+        (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (X.Qpp m / 2))
         x (-(X.R i m)) (x - X.R m j) := by
-  set F : ℝ → ℝ := fun u => 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)
+  set F : ℝ → ℝ := fun u => 2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
       * (X.Q0 i m * (-u - X.R i m) + X.Qpp m * (-u - X.R i m) ^ 2 / 2) with hF
   set G : ℝ → ℝ := fun v => ∑ q : Fin M, X.cb m j q * Real.exp (-(X.zp m j q) * (v - X.R m j)) with hG
   have hbM : bMixEntry X m j = (Set.Ici (X.R m j)).indicator G := by unfold bMixEntry; rw [hG]
@@ -470,9 +470,9 @@ theorem pConvB_closed_form {N M : ℕ} (X : Mix N M) (i m j : Fin N) (x : ℝ)
   rw [hsplit]
   refine Finset.sum_congr rfl (fun q _ => ?_)
   rw [← intervalIntegral_quad_expR_pos (X.cb m j q) (X.zp m j q) (X.R m j)
-      (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (-X.Q0 i m * X.R i m + X.Qpp m * X.R i m ^ 2 / 2))
-      (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (-X.Q0 i m + X.Qpp m * X.R i m))
-      (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (X.Qpp m / 2))
+      (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (-X.Q0 i m * X.R i m + X.Qpp m * X.R i m ^ 2 / 2))
+      (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (-X.Q0 i m + X.Qpp m * X.R i m))
+      (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (X.Qpp m / 2))
       x (-(X.R i m)) (x - X.R m j) (hz q)]
   refine intervalIntegral.integral_congr (fun t _ => ?_)
   rw [hF]; ring
@@ -680,12 +680,12 @@ theorem bConvP_closed_form_outer {N M : ℕ} (X : Mix N M) (i n j : Fin N) (x : 
     (hz : ∀ q : Fin M, X.zp i n q ≠ 0)
     (halign : X.R i n ≤ x - -(X.lam j n)) (hne : x - -(X.lam j n) ≤ x - -(X.R j n)) :
     bConvP X i n j x = ∑ q : Fin M, expQuadClosed (X.cb i n q) (X.zp i n q) (X.R i n)
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n + X.Qpp n * X.R j n))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (X.Qpp n / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n + X.Qpp n * X.R j n))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (X.Qpp n / 2))
         x (x - -(X.lam j n)) (x - -(X.R j n)) := by
   set F : ℝ → ℝ := fun v => ∑ q : Fin M, X.cb i n q * Real.exp (-(X.zp i n q) * (v - X.R i n)) with hF
-  set G : ℝ → ℝ := fun u => 2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n)
+  set G : ℝ → ℝ := fun u => 2 * Real.pi * Real.sqrt (X.rho j * X.rho n)
       * (X.Q0 j n * (-u - X.R j n) + X.Qpp n * (-u - X.R j n) ^ 2 / 2) with hG
   have hbM : bMixEntry X i n = (Set.Ici (X.R i n)).indicator F := by unfold bMixEntry; rw [hF]
   have hbase : bConvP X i n j
@@ -707,9 +707,9 @@ theorem bConvP_closed_form_outer {N M : ℕ} (X : Mix N M) (i n j : Fin N) (x : 
   rw [hsplit]
   refine Finset.sum_congr rfl (fun q _ => ?_)
   rw [← intervalIntegral_expR_quad (X.cb i n q) (X.zp i n q) (X.R i n)
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n + X.Qpp n * X.R j n))
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (X.Qpp n / 2))
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n + X.Qpp n * X.R j n))
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (X.Qpp n / 2))
       x (x - -(X.lam j n)) (x - -(X.R j n)) (hz q)]
   refine intervalIntegral.integral_congr (fun t _ => ?_)
   rw [hG]; ring
@@ -725,11 +725,11 @@ form (whose evaluation, splitting the `P`-window at the `bConvP` aligned/outer b
 each piece with `intervalIntegral_expR_quad` / `integral_quartic_exppos_conv`, is mechanical). -/
 theorem pbpConv_eq_intervalIntegral {N M : ℕ} (X : Mix N M) (i m n j : Fin N) (x : ℝ)
     (hle : X.lam i m ≤ X.R i m)
-    (hint : IntervalIntegrable (fun t => (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)
+    (hint : IntervalIntegrable (fun t => (2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
         * (X.Q0 i m * (-t - X.R i m) + X.Qpp m * (-t - X.R i m) ^ 2 / 2)) * bConvP X m n j (x - t))
       volume (-(X.R i m)) (-(X.lam i m))) :
     pbpConv X i m n j x = ∫ t in (-(X.R i m))..(-(X.lam i m)),
-      (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)
+      (2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
         * (X.Q0 i m * (-t - X.R i m) + X.Qpp m * (-t - X.R i m) ^ 2 / 2)) * bConvP X m n j (x - t) := by
   unfold pbpConv
   rw [pMixEntry_eq_indicator_quad,

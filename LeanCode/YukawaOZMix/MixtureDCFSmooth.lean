@@ -147,16 +147,16 @@ theorem bConvP_contDiffOn {M : ℕ} (X : Mix 1 M) (hz : ∀ q : Fin M, X.zp 0 0 
     ContDiffOn ℝ (⊤ : ℕ∞) (bConvP X 0 0 0) (Set.Ioo 0 (X.R 0 0)) := by
   have hg : ContDiff ℝ (⊤ : ℕ∞) (fun x => ∑ q : Fin M,
       expQuadClosed (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0)
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (X.Qpp 0 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (X.Qpp 0 / 2))
         x (X.R 0 0) (x - -(X.R 0 0))) := by
     apply ContDiff.sum
     intro q _
     simpa only [sub_neg_eq_add] using expQuadClosed_contDiff (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0)
-      (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
-      (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
-      (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (X.Qpp 0 / 2)) (X.R 0 0) (X.R 0 0)
+      (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
+      (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
+      (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (X.Qpp 0 / 2)) (X.R 0 0) (X.R 0 0)
   refine hg.contDiffOn.congr ?_
   intro x hx
   rw [Set.mem_Ioo] at hx
@@ -173,16 +173,16 @@ theorem pConvB_contDiffOn {M : ℕ} (X : Mix 1 M) (hz : ∀ q : Fin M, X.zp 0 0 
       (Set.Ioo 0 (X.R 0 0)) := by
   have hg : ContDiff ℝ (⊤ : ℕ∞) (fun x => ∑ q : Fin M,
       expQuadClosedPos (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0)
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (X.Qpp 0 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (X.Qpp 0 / 2))
         x (-(X.R 0 0)) (x - X.R 0 0)) := by
     apply ContDiff.sum
     intro q _
     have h := expQuadClosedPos_contDiff (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0)
-      (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
-      (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
-      (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (X.Qpp 0 / 2)) (-(X.R 0 0)) (-(X.R 0 0))
+      (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
+      (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
+      (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (X.Qpp 0 / 2)) (-(X.R 0 0)) (-(X.R 0 0))
     simpa only [← sub_eq_add_neg] using h
   refine hg.contDiffOn.congr ?_
   intro x hx
@@ -205,7 +205,7 @@ this is "piecewise gluing" for *integrability*, not continuity. -/
 
 /-- The `pbpConv_eq_intervalIntegral` integrand for N=1 (the `𝒬⁻`-window quadratic times `bConvP`). -/
 noncomputable def pbpIntegrand {M : ℕ} (X : Mix 1 M) (x t : ℝ) : ℝ :=
-  2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0)
+  2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0)
     * (X.Q0 0 0 * (-t - X.R 0 0) + X.Qpp 0 * (-t - X.R 0 0) ^ 2 / 2) * bConvP X 0 0 0 (x - t)
 
 /-- OUTER half `[−R, x−R]`: `bConvP(x−t) = Σ_q expQuadClosed(outer)` (continuous) ⇒ integrable. -/
@@ -213,12 +213,12 @@ theorem pbpIntegrand_intervalIntegrable_outer {M : ℕ} (X : Mix 1 M)
     (hz : ∀ q : Fin M, X.zp 0 0 q ≠ 0) {x : ℝ} (hx : 0 ≤ x) :
     IntervalIntegrable (pbpIntegrand X x) volume (-(X.R 0 0)) (x - X.R 0 0) := by
   have hlam : X.lam 0 0 = 0 := by simp only [Mix.lam]; ring
-  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0)
+  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0)
       * (X.Q0 0 0 * (-t - X.R 0 0) + X.Qpp 0 * (-t - X.R 0 0) ^ 2 / 2) *
       ∑ q : Fin M, expQuadClosed (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0)
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (X.Qpp 0 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (X.Qpp 0 / 2))
         (x-t) ((x-t) - -(X.lam 0 0)) ((x-t) - -(X.R 0 0))) ?_).mpr ?_
   · intro t ht
     rw [Set.uIoo_of_le (by linarith : -(X.R 0 0) ≤ x - X.R 0 0), Set.mem_Ioo] at ht
@@ -236,12 +236,12 @@ theorem pbpIntegrand_intervalIntegrable_aligned {M : ℕ} (X : Mix 1 M)
     (hz : ∀ q : Fin M, X.zp 0 0 q ≠ 0) {x : ℝ} (hx : 0 < x) (hxR : x < X.R 0 0) :
     IntervalIntegrable (pbpIntegrand X x) volume (x - X.R 0 0) 0 := by
   have hlam : X.lam 0 0 = 0 := by simp only [Mix.lam]; ring
-  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0)
+  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0)
       * (X.Q0 0 0 * (-t - X.R 0 0) + X.Qpp 0 * (-t - X.R 0 0) ^ 2 / 2) *
       ∑ q : Fin M, expQuadClosed (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0)
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
-        (2 * Real.pi * Real.sqrt (X.ρ 0 * X.ρ 0) * (X.Qpp 0 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 * X.R 0 0 + X.Qpp 0 * X.R 0 0 ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (-X.Q0 0 0 + X.Qpp 0 * X.R 0 0))
+        (2 * Real.pi * Real.sqrt (X.rho 0 * X.rho 0) * (X.Qpp 0 / 2))
         (x-t) (X.R 0 0) ((x-t) - -(X.R 0 0))) ?_).mpr ?_
   · intro t ht
     rw [Set.uIoo_of_le (by linarith : x - X.R 0 0 ≤ 0), Set.mem_Ioo] at ht
@@ -268,9 +268,9 @@ theorem pbpIntegrand_intervalIntegrable {M : ℕ} (X : Mix 1 M)
 `r−t` lands in the OUTER region (`R ≤ r−t`), where `bConvP(r−t)` is the pure-exponential outer closed
 form; term-by-term the P-weighted integral is `outerPerPoleVal` (via `outer_perpole_integral`). -/
 theorem pbpConv_outer_half_eq {M:ℕ} (X : Mix 1 M) (hz : ∀ q : Fin M, X.zp 0 0 q ≠ 0) {r:ℝ} (hr0:0<r) (hrR:r<X.R 0 0)
-    (G0 G1 G2 : ℝ) (hG0 : G0 = 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2))
-    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0))
-    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(X.Qpp 0/2)) :
+    (G0 G1 G2 : ℝ) (hG0 : G0 = 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2))
+    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0))
+    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(X.Qpp 0/2)) :
     (∫ t in (-(X.R 0 0))..(r - X.R 0 0), pbpIntegrand X r t)
       = ∑ q : Fin M, outerPerPoleVal G0 G1 G2 (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0) (X.lam 0 0) (X.R 0 0) G0 G1 G2 r (-(X.R 0 0)) (r - X.R 0 0) := by
   have hlam : X.lam 0 0 = 0 := by simp only [Mix.lam]; ring
@@ -293,9 +293,9 @@ theorem pbpConv_outer_half_eq {M:ℕ} (X : Mix 1 M) (hz : ∀ q : Fin M, X.zp 0 
 `r−t∈[0,R]` lands in the ALIGNED region, where `bConvP(r−t)` is the `bConvP_closed_form` quadratic×exp;
 term-by-term the P-weighted integral is `alignedPerPoleVal` (via `aligned_perpole_integral`). -/
 theorem pbpConv_aligned_half_eq {M:ℕ} (X : Mix 1 M) (hz : ∀ q : Fin M, X.zp 0 0 q ≠ 0) {r:ℝ} (hr0:0<r) (hrR:r<X.R 0 0)
-    (G0 G1 G2 : ℝ) (hG0 : G0 = 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2))
-    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0))
-    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(X.Qpp 0/2)) :
+    (G0 G1 G2 : ℝ) (hG0 : G0 = 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2))
+    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0))
+    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(X.Qpp 0/2)) :
     (∫ t in (r - X.R 0 0)..0, pbpIntegrand X r t)
       = ∑ q : Fin M, alignedPerPoleVal G0 G1 G2 (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0) (X.R 0 0) G0 G1 G2 r (r - X.R 0 0) 0 := by
   have hlam : X.lam 0 0 = 0 := by simp only [Mix.lam]; ring
@@ -329,9 +329,9 @@ jump `t=r−R` into outer + aligned halves, each a finite `Σ_q` of smooth per-p
 needed — only piecewise integrability plus the two closed-form half evaluations. -/
 theorem pbpConv_pos_contDiffOn {M:ℕ} (X : Mix 1 M) (hz : ∀ q : Fin M, X.zp 0 0 q ≠ 0) :
     ContDiffOn ℝ (⊤:ℕ∞) (fun r => pbpConv X 0 0 0 0 r) (Ioo 0 (X.R 0 0)) := by
-  set G0 := 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2) with hG0
-  set G1 := 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0) with hG1
-  set G2 := 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(X.Qpp 0/2) with hG2
+  set G0 := 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2) with hG0
+  set G1 := 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0) with hG1
+  set G2 := 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(X.Qpp 0/2) with hG2
   have hcd : ContDiff ℝ (⊤:ℕ∞) (fun r =>
       (∑ q : Fin M, outerPerPoleVal G0 G1 G2 (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0) (X.lam 0 0) (X.R 0 0) G0 G1 G2 r (-(X.R 0 0)) (r - X.R 0 0))
       + (∑ q : Fin M, alignedPerPoleVal G0 G1 G2 (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0) (X.R 0 0) G0 G1 G2 r (r - X.R 0 0) 0)) := by
@@ -356,12 +356,12 @@ theorem pbpConv_pos_contDiffOn {M:ℕ} (X : Mix 1 M) (hz : ∀ q : Fin M, X.zp 0
 theorem pbpIntegrand_neg_intervalIntegrable_aligned {M:ℕ} (X : Mix 1 M) (hz : ∀ q : Fin M, X.zp 0 0 q ≠ 0) {r:ℝ} (hr0:0<r) (hrR:r<X.R 0 0) :
     IntervalIntegrable (pbpIntegrand X (-r)) volume (-(X.R 0 0)) (-r) := by
   have hlam : X.lam 0 0 = 0 := by simp only [Mix.lam]; ring
-  refine (intervalIntegrable_congr_uIoo (g := fun t => 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)
+  refine (intervalIntegrable_congr_uIoo (g := fun t => 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)
       * (X.Q0 0 0*(-t-X.R 0 0)+X.Qpp 0*(-t-X.R 0 0)^2/2) *
       ∑ q : Fin M, expQuadClosed (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0)
-        (2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2))
-        (2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0))
-        (2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(X.Qpp 0/2))
+        (2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2))
+        (2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0))
+        (2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(X.Qpp 0/2))
         (-r-t) (X.R 0 0) ((-r-t) - -(X.R 0 0))) ?_).mpr ?_
   · intro t ht
     rw [Set.uIoo_of_le (by linarith : -(X.R 0 0) ≤ -r), mem_Ioo] at ht
@@ -390,9 +390,9 @@ theorem pbpIntegrand_neg_intervalIntegrable_zero {M:ℕ} (X : Mix 1 M) {r:ℝ} (
 `Σ_q alignedPerPoleVal(…,−r,−R,−r)` (via `aligned_perpole_integral`); the complementary `∫_{−r}^{0}`
 vanishes by support. -/
 theorem pbpConv_neg_half_eq {M:ℕ} (X : Mix 1 M) (hz : ∀ q : Fin M, X.zp 0 0 q ≠ 0) {r:ℝ} (hr0:0<r) (hrR:r<X.R 0 0)
-    (G0 G1 G2 : ℝ) (hG0 : G0 = 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2))
-    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0))
-    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(X.Qpp 0/2)) :
+    (G0 G1 G2 : ℝ) (hG0 : G0 = 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2))
+    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0))
+    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(X.Qpp 0/2)) :
     (∫ t in (-(X.R 0 0))..(-r), pbpIntegrand X (-r) t)
       = ∑ q : Fin M, alignedPerPoleVal G0 G1 G2 (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0) (X.R 0 0) G0 G1 G2 (-r) (-(X.R 0 0)) (-r) := by
   have hlam : X.lam 0 0 = 0 := by simp only [Mix.lam]; ring
@@ -415,9 +415,9 @@ aligned window `Σ_q alignedPerPoleVal(…,−r,−R,−r)` (the `[−r,0]` piec
 `poly+exp` in `r`, hence smooth. -/
 theorem pbpConv_neg_contDiffOn {M:ℕ} (X : Mix 1 M) (hz : ∀ q : Fin M, X.zp 0 0 q ≠ 0) :
     ContDiffOn ℝ (⊤:ℕ∞) (fun r => pbpConv X 0 0 0 0 (-r)) (Ioo 0 (X.R 0 0)) := by
-  set G0 := 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2) with hG0
-  set G1 := 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0) with hG1
-  set G2 := 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(X.Qpp 0/2) with hG2
+  set G0 := 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0*X.R 0 0+X.Qpp 0*X.R 0 0^2/2) with hG0
+  set G1 := 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(-X.Q0 0 0+X.Qpp 0*X.R 0 0) with hG1
+  set G2 := 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(X.Qpp 0/2) with hG2
   have hlam : X.lam 0 0 = 0 := by simp only [Mix.lam]; ring
   have hcd : ContDiff ℝ (⊤:ℕ∞) (fun r =>
       ∑ q : Fin M, alignedPerPoleVal G0 G1 G2 (X.cb 0 0 q) (X.zp 0 0 q) (X.R 0 0) (X.R 0 0) G0 G1 G2 (-r) (-(X.R 0 0)) (-r)) := by
@@ -428,7 +428,7 @@ theorem pbpConv_neg_contDiffOn {M:ℕ} (X : Mix 1 M) (hz : ∀ q : Fin M, X.zp 0
   rw [pbpConv_eq_intervalIntegral X 0 0 0 0 (-r) (by rw [hlam]; linarith [X.R_pos 0 0])
       (by rw [show -(X.lam 0 0) = (0:ℝ) from by rw [hlam]; ring]; exact (pbpIntegrand_neg_intervalIntegrable_aligned X hz hr.1 hr.2).trans (pbpIntegrand_neg_intervalIntegrable_zero X hr.1))]
   rw [show -(X.lam 0 0) = (0:ℝ) from by rw [hlam]; ring]
-  rw [show (∫ t in (-(X.R 0 0))..0, 2*Real.pi*Real.sqrt (X.ρ 0*X.ρ 0)*(X.Q0 0 0*(-t-X.R 0 0)+X.Qpp 0*(-t-X.R 0 0)^2/2) * bConvP X 0 0 0 (-r-t))
+  rw [show (∫ t in (-(X.R 0 0))..0, 2*Real.pi*Real.sqrt (X.rho 0*X.rho 0)*(X.Q0 0 0*(-t-X.R 0 0)+X.Qpp 0*(-t-X.R 0 0)^2/2) * bConvP X 0 0 0 (-r-t))
       = ∫ t in (-(X.R 0 0))..0, pbpIntegrand X (-r) t from rfl,
       ← intervalIntegral.integral_add_adjacent_intervals (pbpIntegrand_neg_intervalIntegrable_aligned X hz hr.1 hr.2) (pbpIntegrand_neg_intervalIntegrable_zero X hr.1),
       pbpConv_neg_half_eq X hz hr.1 hr.2 G0 G1 G2 hG0 hG1 hG2]
@@ -481,16 +481,16 @@ theorem bConvP_contDiffOn_aligned (X : Mix N M) (i n j : Fin N)
     ContDiffOn ℝ (⊤ : ℕ∞) (bConvP X i n j) (Set.Ioo (-(X.lam i j)) (X.R i j)) := by
   have hg : ContDiff ℝ (⊤ : ℕ∞) (fun x => ∑ q : Fin M,
       expQuadClosed (X.cb i n q) (X.zp i n q) (X.R i n)
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n + X.Qpp n * X.R j n))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (X.Qpp n / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n + X.Qpp n * X.R j n))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (X.Qpp n / 2))
         x (X.R i n) (x - -(X.R j n))) := by
     apply ContDiff.sum
     intro q _
     simpa only [sub_neg_eq_add] using expQuadClosed_contDiff (X.cb i n q) (X.zp i n q) (X.R i n)
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n + X.Qpp n * X.R j n))
-      (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (X.Qpp n / 2)) (X.R i n) (X.R j n)
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n + X.Qpp n * X.R j n))
+      (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (X.Qpp n / 2)) (X.R i n) (X.R j n)
   refine hg.contDiffOn.congr ?_
   intro x hx
   rw [Set.mem_Ioo] at hx
@@ -517,16 +517,16 @@ theorem pConvB_contDiffOn_aligned (X : Mix N M) (i m j : Fin N)
       (Set.Ioo (X.lam i j) (X.R i j)) := by
   have hg : ContDiff ℝ (⊤ : ℕ∞) (fun x => ∑ q : Fin M,
       expQuadClosedPos (X.cb m j q) (X.zp m j q) (X.R m j)
-        (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (-X.Q0 i m * X.R i m + X.Qpp m * X.R i m ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (-X.Q0 i m + X.Qpp m * X.R i m))
-        (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (X.Qpp m / 2))
+        (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (-X.Q0 i m * X.R i m + X.Qpp m * X.R i m ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (-X.Q0 i m + X.Qpp m * X.R i m))
+        (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (X.Qpp m / 2))
         x (-(X.R i m)) (x - X.R m j)) := by
     apply ContDiff.sum
     intro q _
     have := expQuadClosedPos_contDiff (X.cb m j q) (X.zp m j q) (X.R m j)
-      (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (-X.Q0 i m * X.R i m + X.Qpp m * X.R i m ^ 2 / 2))
-      (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (-X.Q0 i m + X.Qpp m * X.R i m))
-      (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m) * (X.Qpp m / 2)) (-(X.R i m)) (-(X.R m j))
+      (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (-X.Q0 i m * X.R i m + X.Qpp m * X.R i m ^ 2 / 2))
+      (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (-X.Q0 i m + X.Qpp m * X.R i m))
+      (2 * Real.pi * Real.sqrt (X.rho i * X.rho m) * (X.Qpp m / 2)) (-(X.R i m)) (-(X.R m j))
     simpa only [sub_eq_add_neg] using this
   refine hg.contDiffOn.congr ?_
   intro x hx
@@ -551,7 +551,7 @@ theorem pConvB_eq_zero_of_lt (X : Mix N M) (i m j : Fin N) {x : ℝ} (hx : x < X
   rw [pConvB_edge_eq]; exact hx
 
 noncomputable def pbpIntegrandG (X : Mix N M) (i m n j : Fin N) (x t : ℝ) : ℝ :=
-  2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)
+  2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
     * (X.Q0 i m * (-t - X.R i m) + X.Qpp m * (-t - X.R i m) ^ 2 / 2) * bConvP X m n j (x - t)
 
 theorem pbpIntegrandG_ii_outer (X : Mix N M) (i m n j : Fin N)
@@ -560,12 +560,12 @@ theorem pbpIntegrandG_ii_outer (X : Mix N M) (i m n j : Fin N)
   have hwin : -(X.R i m) ≤ x - X.R m j := by
     have : X.R m j - X.R i m = X.lam i j := by simp only [Mix.R, Mix.lam]; ring
     linarith
-  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)
+  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
       * (X.Q0 i m * (-t - X.R i m) + X.Qpp m * (-t - X.R i m) ^ 2 / 2) *
       ∑ q : Fin M, expQuadClosed (X.cb m n q) (X.zp m n q) (X.R m n)
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n + X.Qpp n * X.R j n))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (X.Qpp n / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n + X.Qpp n * X.R j n))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (X.Qpp n / 2))
         (x-t) ((x-t) - -(X.lam j n)) ((x-t) - -(X.R j n))) ?_).mpr ?_
   · intro t ht
     rw [Set.uIoo_of_le hwin, Set.mem_Ioo] at ht
@@ -574,7 +574,7 @@ theorem pbpIntegrandG_ii_outer (X : Mix N M) (i m n j : Fin N)
     rw [bConvP_closed_form_outer X m n j (x-t) hz
         (by rw [show X.R m n ≤ (x-t) - -(X.lam j n) ↔ X.R m j ≤ x - t from by
               rw [← R_sub_lam_eq X m n j]; constructor <;> intro h <;> linarith]; linarith [ht.2])
-        (by have hjn : X.lam j n ≤ X.R j n := by simp only [Mix.lam, Mix.R]; linarith [X.hσ j]
+        (by have hjn : X.lam j n ≤ X.R j n := by simp only [Mix.lam, Mix.R]; linarith [X.hsigma j]
             linarith)]
   · apply Continuous.intervalIntegrable
     refine Continuous.mul (by fun_prop) (continuous_finsetSum _ ?_)
@@ -587,12 +587,12 @@ theorem pbpIntegrandG_ii_aligned (X : Mix N M) (i m n j : Fin N)
   have hsplit : x - X.R m j ≤ -(X.lam i m) := by
     have : X.R m j - X.lam i m = X.R i j := by simp only [Mix.R, Mix.lam]; ring
     linarith
-  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)
+  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
       * (X.Q0 i m * (-t - X.R i m) + X.Qpp m * (-t - X.R i m) ^ 2 / 2) *
       ∑ q : Fin M, expQuadClosed (X.cb m n q) (X.zp m n q) (X.R m n)
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n + X.Qpp n * X.R j n))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (X.Qpp n / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n + X.Qpp n * X.R j n))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (X.Qpp n / 2))
         (x-t) (X.R m n) ((x-t) - -(X.R j n))) ?_).mpr ?_
   · intro t ht
     rw [Set.uIoo_of_le hsplit, Set.mem_Ioo] at ht
@@ -606,9 +606,9 @@ theorem pbpIntegrandG_ii_aligned (X : Mix N M) (i m n j : Fin N)
     have hNe : X.R m n ≤ (x-t) - -(X.R j n) := by
       rw [show X.R m n ≤ (x-t) - -(X.R j n) ↔ X.R m n - X.R j n ≤ x - t from by
             constructor <;> intro h <;> linarith, bConvP_edge_eq X m n j]
-      have e1 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
-      have e2 : X.lam i m = (X.σ m - X.σ i)/2 := rfl
-      have e3 : X.lam i j = (X.σ j - X.σ i)/2 := rfl
+      have e1 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
+      have e2 : X.lam i m = (X.sigma m - X.sigma i)/2 := rfl
+      have e3 : X.lam i j = (X.sigma j - X.sigma i)/2 := rfl
       linarith [ht.2]
     rw [bConvP_closed_form X m n j (x-t) hz hAl hNe]
   · apply Continuous.intervalIntegrable
@@ -622,7 +622,7 @@ theorem pbpConvG_eq (X : Mix N M) (i m n j : Fin N)
     (hlam0 : 0 ≤ X.lam i j) :
     pbpConv X i m n j x
       = ∫ t in (-(X.R i m))..(-(X.lam i m)), pbpIntegrandG X i m n j x t := by
-  rw [pbpConv_eq_intervalIntegral X i m n j x (by simp only [Mix.lam, Mix.R]; linarith [X.hσ i])
+  rw [pbpConv_eq_intervalIntegral X i m n j x (by simp only [Mix.lam, Mix.R]; linarith [X.hsigma i])
       ((pbpIntegrandG_ii_outer X i m n j hz hlo).trans
         (pbpIntegrandG_ii_aligned X i m n j hz hlo hhi hlam0))]
   rfl
@@ -630,12 +630,12 @@ theorem pbpConvG_eq (X : Mix N M) (i m n j : Fin N)
 theorem outerHalfG_eq (X : Mix N M) (i m n j : Fin N)
     (hz : ∀ q : Fin M, X.zp m n q ≠ 0) {x : ℝ}
     (P0 P1 P2 G0 G1 G2 : ℝ)
-    (hP0 : P0 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2))
-    (hP1 : P1 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m+X.Qpp m*X.R i m))
-    (hP2 : P2 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(X.Qpp m/2))
-    (hG0 : G0 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2))
-    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n+X.Qpp n*X.R j n))
-    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(X.Qpp n/2))
+    (hP0 : P0 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2))
+    (hP1 : P1 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m+X.Qpp m*X.R i m))
+    (hP2 : P2 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(X.Qpp m/2))
+    (hG0 : G0 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2))
+    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n+X.Qpp n*X.R j n))
+    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(X.Qpp n/2))
     (hlo : X.lam i j < x) :
     (∫ t in (-(X.R i m))..(x - X.R m j), pbpIntegrandG X i m n j x t)
       = ∑ q : Fin M, outerPerPoleVal P0 P1 P2 (X.cb m n q) (X.zp m n q) (X.R m n)
@@ -659,7 +659,7 @@ theorem outerHalfG_eq (X : Mix N M) (i m n j : Fin N)
       rw [bConvP_closed_form_outer X m n j (x-t) hz
           (by rw [show X.R m n ≤ (x-t) - -(X.lam j n) ↔ X.R m j ≤ x - t from by
                 rw [← R_sub_lam_eq X m n j]; constructor <;> intro h <;> linarith]; linarith [ht.2])
-          (by have hjn : X.lam j n ≤ X.R j n := by simp only [Mix.lam, Mix.R]; linarith [X.hσ j]
+          (by have hjn : X.lam j n ≤ X.R j n := by simp only [Mix.lam, Mix.R]; linarith [X.hsigma j]
               linarith), Finset.mul_sum]
       apply Finset.sum_congr rfl; intro q _
       rw [hP0, hP1, hP2, hG0, hG1, hG2]; simp only [sub_neg_eq_add]; ring
@@ -668,12 +668,12 @@ theorem outerHalfG_eq (X : Mix N M) (i m n j : Fin N)
 theorem alignedHalfG_eq (X : Mix N M) (i m n j : Fin N)
     (hz : ∀ q : Fin M, X.zp m n q ≠ 0) {x : ℝ}
     (P0 P1 P2 G0 G1 G2 : ℝ)
-    (hP0 : P0 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2))
-    (hP1 : P1 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m+X.Qpp m*X.R i m))
-    (hP2 : P2 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(X.Qpp m/2))
-    (hG0 : G0 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2))
-    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n+X.Qpp n*X.R j n))
-    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(X.Qpp n/2))
+    (hP0 : P0 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2))
+    (hP1 : P1 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m+X.Qpp m*X.R i m))
+    (hP2 : P2 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(X.Qpp m/2))
+    (hG0 : G0 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2))
+    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n+X.Qpp n*X.R j n))
+    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(X.Qpp n/2))
     (hlo : X.lam i j < x) (hhi : x < X.R i j) (hlam0 : 0 ≤ X.lam i j) :
     (∫ t in (x - X.R m j)..(-(X.lam i m)), pbpIntegrandG X i m n j x t)
       = ∑ q : Fin M, alignedPerPoleVal P0 P1 P2 (X.cb m n q) (X.zp m n q) (X.R m n)
@@ -702,9 +702,9 @@ theorem alignedHalfG_eq (X : Mix N M) (i m n j : Fin N)
       have hNe : X.R m n ≤ (x-t) - -(X.R j n) := by
         rw [show X.R m n ≤ (x-t) - -(X.R j n) ↔ X.R m n - X.R j n ≤ x - t from by
               constructor <;> intro h <;> linarith, bConvP_edge_eq X m n j]
-        have e1 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
-        have e2 : X.lam i m = (X.σ m - X.σ i)/2 := rfl
-        have e3 : X.lam i j = (X.σ j - X.σ i)/2 := rfl
+        have e1 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
+        have e2 : X.lam i m = (X.sigma m - X.sigma i)/2 := rfl
+        have e3 : X.lam i j = (X.sigma j - X.sigma i)/2 := rfl
         linarith [ht.2]
       rw [bConvP_closed_form X m n j (x-t) hz hAl hNe, Finset.mul_sum]
       apply Finset.sum_congr rfl; intro q _
@@ -718,12 +718,12 @@ smooth per-pole closed forms; no interior breakpoint of the term lies in `(λ_ij
 theorem pbpConv_forward_contDiffOn (X : Mix N M) (i m n j : Fin N)
     (hz : ∀ q : Fin M, X.zp m n q ≠ 0) (hlam0 : 0 ≤ X.lam i j) :
     ContDiffOn ℝ (⊤ : ℕ∞) (fun x => pbpConv X i m n j x) (Set.Ioo (X.lam i j) (X.R i j)) := by
-  set P0 := 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2) with hP0
-  set P1 := 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m+X.Qpp m*X.R i m) with hP1
-  set P2 := 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(X.Qpp m/2) with hP2
-  set G0 := 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2) with hG0
-  set G1 := 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n+X.Qpp n*X.R j n) with hG1
-  set G2 := 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(X.Qpp n/2) with hG2
+  set P0 := 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2) with hP0
+  set P1 := 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m+X.Qpp m*X.R i m) with hP1
+  set P2 := 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(X.Qpp m/2) with hP2
+  set G0 := 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2) with hG0
+  set G1 := 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n+X.Qpp n*X.R j n) with hG1
+  set G2 := 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(X.Qpp n/2) with hG2
   have hcd : ContDiff ℝ (⊤:ℕ∞) (fun x =>
       (∑ q : Fin M, outerPerPoleVal P0 P1 P2 (X.cb m n q) (X.zp m n q) (X.R m n)
           (X.lam j n) (X.R j n) G0 G1 G2 x (-(X.R i m)) (x - X.R m j))
@@ -751,16 +751,16 @@ theorem pbpIntegrandG_neg_ii_aligned (X : Mix N M) (i m n j : Fin N)
     (hlo : X.lam i j < x) (hhi : x < X.R i j) (hlam0 : 0 ≤ X.lam i j) :
     IntervalIntegrable (pbpIntegrandG X i m n j (-x)) volume (-(X.R i m)) (-x + X.lam m j) := by
   have hwin : -(X.R i m) ≤ -x + X.lam m j := by
-    have e3 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
-    have er : X.R i m = (X.σ i + X.σ m)/2 := rfl
-    have erij : X.R i j = (X.σ i + X.σ j)/2 := rfl
+    have e3 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
+    have er : X.R i m = (X.sigma i + X.sigma m)/2 := rfl
+    have erij : X.R i j = (X.sigma i + X.sigma j)/2 := rfl
     linarith [hhi]
-  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)
+  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
       * (X.Q0 i m * (-t - X.R i m) + X.Qpp m * (-t - X.R i m) ^ 2 / 2) *
       ∑ q : Fin M, expQuadClosed (X.cb m n q) (X.zp m n q) (X.R m n)
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n + X.Qpp n * X.R j n))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (X.Qpp n / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n + X.Qpp n * X.R j n))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (X.Qpp n / 2))
         (-x-t) (X.R m n) ((-x-t) - -(X.R j n))) ?_).mpr ?_
   · intro t ht
     rw [Set.uIoo_of_le hwin, Set.mem_Ioo] at ht
@@ -769,14 +769,14 @@ theorem pbpIntegrandG_neg_ii_aligned (X : Mix N M) (i m n j : Fin N)
     have hAl : (-x-t) - -(X.lam j n) ≤ X.R m n := by
       rw [show (-x-t) - -(X.lam j n) ≤ X.R m n ↔ -x - t ≤ X.R m j from by
             rw [← R_sub_lam_eq X m n j]; constructor <;> intro h <;> linarith]
-      have er : X.R i m = (X.σ i + X.σ m)/2 := rfl
-      have erj : X.R m j = (X.σ m + X.σ j)/2 := rfl
-      have e4 : X.lam i j = (X.σ j - X.σ i)/2 := rfl
+      have er : X.R i m = (X.sigma i + X.sigma m)/2 := rfl
+      have erj : X.R m j = (X.sigma m + X.sigma j)/2 := rfl
+      have e4 : X.lam i j = (X.sigma j - X.sigma i)/2 := rfl
       linarith [ht.1]
     have hNe : X.R m n ≤ (-x-t) - -(X.R j n) := by
       rw [show X.R m n ≤ (-x-t) - -(X.R j n) ↔ X.R m n - X.R j n ≤ -x - t from by
             constructor <;> intro h <;> linarith, bConvP_edge_eq X m n j]
-      have e1 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
+      have e1 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
       linarith [ht.2]
     rw [show (-x-t) = ((-x)-t) from by ring] at hAl hNe ⊢
     rw [bConvP_closed_form X m n j ((-x)-t) hz hAl hNe]
@@ -789,9 +789,9 @@ theorem pbpIntegrandG_neg_ii_zero (X : Mix N M) (i m n j : Fin N) {x : ℝ}
     (hlo : X.lam i j < x) (hhi : x < X.R i j) :
     IntervalIntegrable (pbpIntegrandG X i m n j (-x)) volume (-x + X.lam m j) (-(X.lam i m)) := by
   have hwin : -x + X.lam m j ≤ -(X.lam i m) := by
-    have e2 : X.lam i m = (X.σ m - X.σ i)/2 := rfl
-    have e3 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
-    have e4 : X.lam i j = (X.σ j - X.σ i)/2 := rfl
+    have e2 : X.lam i m = (X.sigma m - X.sigma i)/2 := rfl
+    have e3 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
+    have e4 : X.lam i j = (X.sigma j - X.sigma i)/2 := rfl
     linarith
   refine (intervalIntegrable_congr_uIoo (g := fun _ => (0:ℝ)) ?_).mpr (by simp)
   intro t ht
@@ -801,7 +801,7 @@ theorem pbpIntegrandG_neg_ii_zero (X : Mix N M) (i m n j : Fin N) {x : ℝ}
   have hb0 : bConvP X m n j (-x - t) = 0 := by
     refine eq_zero_of_lt_support_edge (bConvP_support_subset X m n j) ?_
     rw [bConvP_edge_eq X m n j]
-    have e1 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
+    have e1 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
     linarith [ht.1]
   rw [show (-x - t) = ((-x) - t) from by ring, hb0, mul_zero]
 
@@ -810,19 +810,19 @@ theorem neg_halfG_eq (X : Mix N M) (i m n j : Fin N)
     (hz : ∀ q : Fin M, X.zp m n q ≠ 0) {x : ℝ}
     (hlo : X.lam i j < x) (hhi : x < X.R i j) (hlam0 : 0 ≤ X.lam i j)
     (P0 P1 P2 G0 G1 G2 : ℝ)
-    (hP0 : P0 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2))
-    (hP1 : P1 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m+X.Qpp m*X.R i m))
-    (hP2 : P2 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(X.Qpp m/2))
-    (hG0 : G0 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2))
-    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n+X.Qpp n*X.R j n))
-    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(X.Qpp n/2)) :
+    (hP0 : P0 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2))
+    (hP1 : P1 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m+X.Qpp m*X.R i m))
+    (hP2 : P2 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(X.Qpp m/2))
+    (hG0 : G0 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2))
+    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n+X.Qpp n*X.R j n))
+    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(X.Qpp n/2)) :
     (∫ t in (-(X.R i m))..(-x + X.lam m j), pbpIntegrandG X i m n j (-x) t)
       = ∑ q : Fin M, alignedPerPoleVal P0 P1 P2 (X.cb m n q) (X.zp m n q) (X.R m n)
           (X.R j n) G0 G1 G2 (-x) (-(X.R i m)) (-x + X.lam m j) := by
   have hwin : -(X.R i m) ≤ -x + X.lam m j := by
-    have e3 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
-    have er : X.R i m = (X.σ i + X.σ m)/2 := rfl
-    have erij : X.R i j = (X.σ i + X.σ j)/2 := rfl
+    have e3 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
+    have er : X.R i m = (X.sigma i + X.sigma m)/2 := rfl
+    have erij : X.R i j = (X.sigma i + X.sigma j)/2 := rfl
     linarith [hhi]
   rw [show (∫ t in (-(X.R i m))..(-x + X.lam m j), pbpIntegrandG X i m n j (-x) t)
       = ∑ q : Fin M, ∫ t in (-(X.R i m))..(-x + X.lam m j), (P0 + P1*t + P2*t^2)
@@ -840,14 +840,14 @@ theorem neg_halfG_eq (X : Mix N M) (i m n j : Fin N)
       have hAl : ((-x)-t) - -(X.lam j n) ≤ X.R m n := by
         rw [show ((-x)-t) - -(X.lam j n) ≤ X.R m n ↔ (-x) - t ≤ X.R m j from by
               rw [← R_sub_lam_eq X m n j]; constructor <;> intro h <;> linarith]
-        have er : X.R i m = (X.σ i + X.σ m)/2 := rfl
-        have erj : X.R m j = (X.σ m + X.σ j)/2 := rfl
-        have e4 : X.lam i j = (X.σ j - X.σ i)/2 := rfl
+        have er : X.R i m = (X.sigma i + X.sigma m)/2 := rfl
+        have erj : X.R m j = (X.sigma m + X.sigma j)/2 := rfl
+        have e4 : X.lam i j = (X.sigma j - X.sigma i)/2 := rfl
         linarith [ht.1]
       have hNe : X.R m n ≤ ((-x)-t) - -(X.R j n) := by
         rw [show X.R m n ≤ ((-x)-t) - -(X.R j n) ↔ X.R m n - X.R j n ≤ (-x) - t from by
               constructor <;> intro h <;> linarith, bConvP_edge_eq X m n j]
-        have e1 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
+        have e1 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
         linarith [ht.2]
       rw [bConvP_closed_form X m n j ((-x)-t) hz hAl hNe, Finset.mul_sum]
       apply Finset.sum_congr rfl; intro q _
@@ -860,12 +860,12 @@ where `bConvP(−x−t)` vanishes by support (`−x−t < −λ_mj`). -/
 theorem pbpConv_reflected_contDiffOn (X : Mix N M) (i m n j : Fin N)
     (hz : ∀ q : Fin M, X.zp m n q ≠ 0) (hlam0 : 0 ≤ X.lam i j) :
     ContDiffOn ℝ (⊤ : ℕ∞) (fun x => pbpConv X i m n j (-x)) (Set.Ioo (X.lam i j) (X.R i j)) := by
-  set P0 := 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2) with hP0
-  set P1 := 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m+X.Qpp m*X.R i m) with hP1
-  set P2 := 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(X.Qpp m/2) with hP2
-  set G0 := 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2) with hG0
-  set G1 := 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n+X.Qpp n*X.R j n) with hG1
-  set G2 := 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(X.Qpp n/2) with hG2
+  set P0 := 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2) with hP0
+  set P1 := 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m+X.Qpp m*X.R i m) with hP1
+  set P2 := 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(X.Qpp m/2) with hP2
+  set G0 := 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2) with hG0
+  set G1 := 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n+X.Qpp n*X.R j n) with hG1
+  set G2 := 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(X.Qpp n/2) with hG2
   have hcd : ContDiff ℝ (⊤:ℕ∞) (fun x =>
       ∑ q : Fin M, alignedPerPoleVal P0 P1 P2 (X.cb m n q) (X.zp m n q) (X.R m n)
           (X.R j n) G0 G1 G2 (-x) (-(X.R i m)) (-x + X.lam m j)) := by
@@ -874,11 +874,11 @@ theorem pbpConv_reflected_contDiffOn (X : Mix N M) (i m n j : Fin N)
   intro x hx
   rw [Set.mem_Ioo] at hx
   rw [pbpConv_eq_intervalIntegral X i m n j (-x)
-      (by simp only [Mix.lam, Mix.R]; linarith [X.hσ i])
+      (by simp only [Mix.lam, Mix.R]; linarith [X.hsigma i])
       ((pbpIntegrandG_neg_ii_aligned X i m n j hz hx.1 hx.2 hlam0).trans
         (pbpIntegrandG_neg_ii_zero X i m n j hx.1 hx.2))]
   rw [show (∫ t in (-(X.R i m))..(-(X.lam i m)),
-        2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(X.Q0 i m*(-t-X.R i m)+X.Qpp m*(-t-X.R i m)^2/2)
+        2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(X.Q0 i m*(-t-X.R i m)+X.Qpp m*(-t-X.R i m)^2/2)
           * bConvP X m n j ((-x)-t))
       = ∫ t in (-(X.R i m))..(-(X.lam i m)), pbpIntegrandG X i m n j (-x) t from rfl,
       ← intervalIntegral.integral_add_adjacent_intervals
@@ -889,9 +889,9 @@ theorem pbpConv_reflected_contDiffOn (X : Mix N M) (i m n j : Fin N)
     have h0 : ∀ᵐ t ∂volume, t ∈ Set.uIoc (-x + X.lam m j) (-(X.lam i m)) →
         pbpIntegrandG X i m n j (-x) t = (fun _ => (0:ℝ)) t := by
       have hwin : -x + X.lam m j ≤ -(X.lam i m) := by
-        have e2 : X.lam i m = (X.σ m - X.σ i)/2 := rfl
-        have e3 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
-        have e4 : X.lam i j = (X.σ j - X.σ i)/2 := rfl
+        have e2 : X.lam i m = (X.sigma m - X.sigma i)/2 := rfl
+        have e3 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
+        have e4 : X.lam i j = (X.sigma j - X.sigma i)/2 := rfl
         linarith [hx.1]
       filter_upwards with t ht
       rw [Set.uIoc_of_le hwin, Set.mem_Ioc] at ht
@@ -900,7 +900,7 @@ theorem pbpConv_reflected_contDiffOn (X : Mix N M) (i m n j : Fin N)
       have hb0 : bConvP X m n j ((-x) - t) = 0 := by
         refine eq_zero_of_lt_support_edge (bConvP_support_subset X m n j) ?_
         rw [bConvP_edge_eq X m n j]
-        have e1 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
+        have e1 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
         linarith [ht.1]
       rw [hb0, mul_zero]
     rw [intervalIntegral.integral_congr_ae h0, intervalIntegral.integral_zero]
@@ -918,14 +918,14 @@ theorem pbpIntegrandG_ii_mid (X : Mix N M) (i m n j : Fin N)
     (hz : ∀ q : Fin M, X.zp m n q ≠ 0) {y : ℝ} (hlo : -(X.lam i j) < y) (hhi : y < X.lam i j) :
     IntervalIntegrable (pbpIntegrandG X i m n j y) volume (-(X.R i m)) (-(X.lam i m)) := by
   have hwin : -(X.R i m) ≤ -(X.lam i m) := by
-    have : X.lam i m ≤ X.R i m := by simp only [Mix.lam, Mix.R]; linarith [X.hσ i]
+    have : X.lam i m ≤ X.R i m := by simp only [Mix.lam, Mix.R]; linarith [X.hsigma i]
     linarith
-  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)
+  refine (intervalIntegrable_congr_uIoo (g := fun t => 2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
       * (X.Q0 i m * (-t - X.R i m) + X.Qpp m * (-t - X.R i m) ^ 2 / 2) *
       ∑ q : Fin M, expQuadClosed (X.cb m n q) (X.zp m n q) (X.R m n)
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (-X.Q0 j n + X.Qpp n * X.R j n))
-        (2 * Real.pi * Real.sqrt (X.ρ j * X.ρ n) * (X.Qpp n / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n * X.R j n + X.Qpp n * X.R j n ^ 2 / 2))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (-X.Q0 j n + X.Qpp n * X.R j n))
+        (2 * Real.pi * Real.sqrt (X.rho j * X.rho n) * (X.Qpp n / 2))
         (y-t) (X.R m n) ((y-t) - -(X.R j n))) ?_).mpr ?_
   · intro t ht
     rw [Set.uIoo_of_le hwin, Set.mem_Ioo] at ht
@@ -934,16 +934,16 @@ theorem pbpIntegrandG_ii_mid (X : Mix N M) (i m n j : Fin N)
     have hAl : (y-t) - -(X.lam j n) ≤ X.R m n := by
       rw [show (y-t) - -(X.lam j n) ≤ X.R m n ↔ y - t ≤ X.R m j from by
             rw [← R_sub_lam_eq X m n j]; constructor <;> intro h <;> linarith]
-      have er : X.R i m = (X.σ i + X.σ m)/2 := rfl
-      have erj : X.R m j = (X.σ m + X.σ j)/2 := rfl
-      have e4 : X.lam i j = (X.σ j - X.σ i)/2 := rfl
+      have er : X.R i m = (X.sigma i + X.sigma m)/2 := rfl
+      have erj : X.R m j = (X.sigma m + X.sigma j)/2 := rfl
+      have e4 : X.lam i j = (X.sigma j - X.sigma i)/2 := rfl
       linarith [ht.1]
     have hNe : X.R m n ≤ (y-t) - -(X.R j n) := by
       rw [show X.R m n ≤ (y-t) - -(X.R j n) ↔ X.R m n - X.R j n ≤ y - t from by
             constructor <;> intro h <;> linarith, bConvP_edge_eq X m n j]
-      have e1 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
-      have e2 : X.lam i m = (X.σ m - X.σ i)/2 := rfl
-      have e4 : X.lam i j = (X.σ j - X.σ i)/2 := rfl
+      have e1 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
+      have e2 : X.lam i m = (X.sigma m - X.sigma i)/2 := rfl
+      have e4 : X.lam i j = (X.sigma j - X.sigma i)/2 := rfl
       linarith [ht.2]
     rw [bConvP_closed_form X m n j (y-t) hz hAl hNe]
   · apply Continuous.intervalIntegrable
@@ -953,17 +953,17 @@ theorem pbpIntegrandG_ii_mid (X : Mix N M) (i m n j : Fin N)
 theorem midHalfG_eq (X : Mix N M) (i m n j : Fin N)
     (hz : ∀ q : Fin M, X.zp m n q ≠ 0) {y : ℝ} (hlo : -(X.lam i j) < y) (hhi : y < X.lam i j)
     (P0 P1 P2 G0 G1 G2 : ℝ)
-    (hP0 : P0 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2))
-    (hP1 : P1 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m+X.Qpp m*X.R i m))
-    (hP2 : P2 = 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(X.Qpp m/2))
-    (hG0 : G0 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2))
-    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n+X.Qpp n*X.R j n))
-    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(X.Qpp n/2)) :
+    (hP0 : P0 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2))
+    (hP1 : P1 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m+X.Qpp m*X.R i m))
+    (hP2 : P2 = 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(X.Qpp m/2))
+    (hG0 : G0 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2))
+    (hG1 : G1 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n+X.Qpp n*X.R j n))
+    (hG2 : G2 = 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(X.Qpp n/2)) :
     (∫ t in (-(X.R i m))..(-(X.lam i m)), pbpIntegrandG X i m n j y t)
       = ∑ q : Fin M, alignedPerPoleVal P0 P1 P2 (X.cb m n q) (X.zp m n q) (X.R m n)
           (X.R j n) G0 G1 G2 y (-(X.R i m)) (-(X.lam i m)) := by
   have hwin : -(X.R i m) ≤ -(X.lam i m) := by
-    have : X.lam i m ≤ X.R i m := by simp only [Mix.lam, Mix.R]; linarith [X.hσ i]
+    have : X.lam i m ≤ X.R i m := by simp only [Mix.lam, Mix.R]; linarith [X.hsigma i]
     linarith
   rw [show (∫ t in (-(X.R i m))..(-(X.lam i m)), pbpIntegrandG X i m n j y t)
       = ∑ q : Fin M, ∫ t in (-(X.R i m))..(-(X.lam i m)), (P0 + P1*t + P2*t^2)
@@ -981,16 +981,16 @@ theorem midHalfG_eq (X : Mix N M) (i m n j : Fin N)
       have hAl : (y-t) - -(X.lam j n) ≤ X.R m n := by
         rw [show (y-t) - -(X.lam j n) ≤ X.R m n ↔ y - t ≤ X.R m j from by
               rw [← R_sub_lam_eq X m n j]; constructor <;> intro h <;> linarith]
-        have er : X.R i m = (X.σ i + X.σ m)/2 := rfl
-        have erj : X.R m j = (X.σ m + X.σ j)/2 := rfl
-        have e4 : X.lam i j = (X.σ j - X.σ i)/2 := rfl
+        have er : X.R i m = (X.sigma i + X.sigma m)/2 := rfl
+        have erj : X.R m j = (X.sigma m + X.sigma j)/2 := rfl
+        have e4 : X.lam i j = (X.sigma j - X.sigma i)/2 := rfl
         linarith [ht.1]
       have hNe : X.R m n ≤ (y-t) - -(X.R j n) := by
         rw [show X.R m n ≤ (y-t) - -(X.R j n) ↔ X.R m n - X.R j n ≤ y - t from by
               constructor <;> intro h <;> linarith, bConvP_edge_eq X m n j]
-        have e1 : X.lam m j = (X.σ j - X.σ m)/2 := rfl
-        have e2 : X.lam i m = (X.σ m - X.σ i)/2 := rfl
-        have e4 : X.lam i j = (X.σ j - X.σ i)/2 := rfl
+        have e1 : X.lam m j = (X.sigma j - X.sigma m)/2 := rfl
+        have e2 : X.lam i m = (X.sigma m - X.sigma i)/2 := rfl
+        have e4 : X.lam i j = (X.sigma j - X.sigma i)/2 := rfl
         linarith [ht.2]
       rw [bConvP_closed_form X m n j (y-t) hz hAl hNe, Finset.mul_sum]
       apply Finset.sum_congr rfl; intro q _
@@ -1002,12 +1002,12 @@ theorem midHalfG_eq (X : Mix N M) (i m n j : Fin N)
 theorem pbpConv_contDiffOn_midAligned (X : Mix N M) (i m n j : Fin N)
     (hz : ∀ q : Fin M, X.zp m n q ≠ 0) :
     ContDiffOn ℝ (⊤ : ℕ∞) (fun y => pbpConv X i m n j y) (Set.Ioo (-(X.lam i j)) (X.lam i j)) := by
-  set P0 := 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2) with hP0
-  set P1 := 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(-X.Q0 i m+X.Qpp m*X.R i m) with hP1
-  set P2 := 2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(X.Qpp m/2) with hP2
-  set G0 := 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2) with hG0
-  set G1 := 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(-X.Q0 j n+X.Qpp n*X.R j n) with hG1
-  set G2 := 2*Real.pi*Real.sqrt (X.ρ j*X.ρ n)*(X.Qpp n/2) with hG2
+  set P0 := 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m*X.R i m+X.Qpp m*X.R i m^2/2) with hP0
+  set P1 := 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(-X.Q0 i m+X.Qpp m*X.R i m) with hP1
+  set P2 := 2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(X.Qpp m/2) with hP2
+  set G0 := 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n*X.R j n+X.Qpp n*X.R j n^2/2) with hG0
+  set G1 := 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(-X.Q0 j n+X.Qpp n*X.R j n) with hG1
+  set G2 := 2*Real.pi*Real.sqrt (X.rho j*X.rho n)*(X.Qpp n/2) with hG2
   have hcd : ContDiff ℝ (⊤:ℕ∞) (fun y =>
       ∑ q : Fin M, alignedPerPoleVal P0 P1 P2 (X.cb m n q) (X.zp m n q) (X.R m n)
           (X.R j n) G0 G1 G2 y (-(X.R i m)) (-(X.lam i m))) := by
@@ -1016,10 +1016,10 @@ theorem pbpConv_contDiffOn_midAligned (X : Mix N M) (i m n j : Fin N)
   intro y hy
   rw [Set.mem_Ioo] at hy
   rw [pbpConv_eq_intervalIntegral X i m n j y
-      (by simp only [Mix.lam, Mix.R]; linarith [X.hσ i])
+      (by simp only [Mix.lam, Mix.R]; linarith [X.hsigma i])
       (pbpIntegrandG_ii_mid X i m n j hz hy.1 hy.2)]
   rw [show (∫ t in (-(X.R i m))..(-(X.lam i m)),
-        2*Real.pi*Real.sqrt (X.ρ i*X.ρ m)*(X.Q0 i m*(-t-X.R i m)+X.Qpp m*(-t-X.R i m)^2/2)
+        2*Real.pi*Real.sqrt (X.rho i*X.rho m)*(X.Q0 i m*(-t-X.R i m)+X.Qpp m*(-t-X.R i m)^2/2)
           * bConvP X m n j (y-t))
       = ∫ t in (-(X.R i m))..(-(X.lam i m)), pbpIntegrandG X i m n j y t from rfl,
       midHalfG_eq X i m n j hz hy.1 hy.2 P0 P1 P2 G0 G1 G2 hP0 hP1 hP2 hG0 hG1 hG2]
@@ -1088,7 +1088,7 @@ like pairs (`λ_ij = 0`); the genuine content is unlike pairs. -/
 theorem dcfOdd_contDiffOn_lower (X : Mix N M) (i j : Fin N)
     (hz : ∀ a b : Fin N, ∀ q : Fin M, X.zp a b q ≠ 0) (hlam0 : 0 ≤ X.lam i j) :
     ContDiffOn ℝ (⊤ : ℕ∞) (dcfOdd X i j) (Set.Ioo 0 (X.lam i j)) := by
-  have hlamR : X.lam i j ≤ X.R i j := by simp only [Mix.lam, Mix.R]; linarith [X.hσ i]
+  have hlamR : X.lam i j ≤ X.R i j := by simp only [Mix.lam, Mix.R]; linarith [X.hsigma i]
   have hsub_bc : Set.Ioo (0:ℝ) (X.lam i j) ⊆ Set.Ioo (-(X.lam i j)) (X.R i j) :=
     Set.Ioo_subset_Ioo (by linarith) hlamR
   have hsub_pp : Set.Ioo (0:ℝ) (X.lam i j) ⊆ Set.Ioo (-(X.lam i j)) (X.lam i j) :=

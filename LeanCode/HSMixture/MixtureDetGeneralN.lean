@@ -43,6 +43,8 @@ stripped (`lam = 0`).  Then `Mgauge = 1 − A` with `‖A‖_{L∞ op} ≤ Abnd/
 (`isUnit_one_sub_of_norm_lt_one`) and `det ≠ 0` for `‖s‖` large.
 -/
 
+set_option linter.style.longLine false
+
 open Filter Topology Complex Set Matrix
 open scoped Matrix.Norms.Operator
 namespace FMSA.MixtureGenN
@@ -112,11 +114,11 @@ theorem Qpsi_eq_Q0_mat_c {N : ℕ} {s : ℂ} (hs : s ≠ 0) (sigma : Fin N → �
   funext i j
   rw [Qpsi, Q0_mat_c, q0_entry_c_eq_psi hs, q0_entry_psi]
 
-theorem q0_entry_psi_entire {σ lam Qp Qpp ρ δ : ℂ} (hσ : σ ≠ 0) :
-    Differentiable ℂ (fun s => q0_entry_psi σ lam Qp Qpp ρ δ s) := by
+theorem q0_entry_psi_entire {sigC lam Qp Qpp rho δ : ℂ} (hsigC : sigC ≠ 0) :
+    Differentiable ℂ (fun s => q0_entry_psi sigC lam Qp Qpp rho δ s) := by
   unfold q0_entry_psi
-  have h1 := psi1_entire hσ
-  have h2 := psi2_entire hσ
+  have h1 := psi1_entire hsigC
+  have h2 := psi2_entire hsigC
   fun_prop
 
 /-! ### Density homotopy matrix and its regularity (hholo, hcont) -/
@@ -131,8 +133,8 @@ def Mdens {N : ℕ} (sigma rho : Fin N → ℝ) (t : ℝ) (s : ℂ) : Matrix (Fi
 theorem Mdens_hholo {N : ℕ} {sigma rho : Fin N → ℝ} (hsig : ∀ i, 0 < sigma i)
     (t : ℝ) (i j : Fin N) :
     Differentiable ℂ (fun z => (Mdens sigma rho t (Complex.I * z)) i j) := by
-  have hσ : ((sigma i : ℝ) : ℂ) ≠ 0 := by exact_mod_cast (hsig i).ne'
-  exact (q0_entry_psi_entire hσ).comp (differentiable_id.const_mul Complex.I)
+  have hsigC : ((sigma i : ℝ) : ℂ) ≠ 0 := by exact_mod_cast (hsig i).ne'
+  exact (q0_entry_psi_entire hsigC).comp (differentiable_id.const_mul Complex.I)
 
 /-- **`hcont`** — every entry of `(t,z) ↦ Mdens t (I·z)` is jointly continuous on `[0,1] × ℂ`
 (`ψ` continuous in `z`; `rhoGeoPhys`/`Q0phys`/`Qppphys` continuous in `t`). -/
@@ -140,7 +142,7 @@ theorem Mdens_hcont {N : ℕ} {sigma rho : Fin N → ℝ} (hsig : ∀ i, 0 < sig
     (hrho : ∀ i, 0 < rho i) (heta : etaMix rho sigma < 1) (i j : Fin N) :
     ContinuousOn (fun p : ℝ × ℂ => (Mdens sigma rho p.1 (Complex.I * p.2)) i j)
       (Icc 0 1 ×ˢ (univ : Set ℂ)) := by
-  have hσ : ((sigma i : ℝ) : ℂ) ≠ 0 := by exact_mod_cast (hsig i).ne'
+  have hsigC : ((sigma i : ℝ) : ℂ) ≠ 0 := by exact_mod_cast (hsig i).ne'
   have hmaps : Set.MapsTo (Prod.fst : ℝ × ℂ → ℝ) (Icc (0:ℝ) 1 ×ˢ univ) (Icc 0 1) := fun p hp => hp.1
   have L : ∀ (f : ℝ → ℝ), ContinuousOn f (Icc 0 1) →
       ContinuousOn (fun p : ℝ × ℂ => ((f p.1 : ℝ) : ℂ)) (Icc 0 1 ×ˢ (univ : Set ℂ)) :=
@@ -148,8 +150,8 @@ theorem Mdens_hcont {N : ℕ} {sigma rho : Fin N → ℝ} (hsig : ∀ i, 0 < sig
   have hg := L _ (rhoGeoPhys_contN (rho := rho) i j)
   have hp := L _ (Q0phys_contN hsig hrho heta i j)
   have hq := L _ (Qppphys_contN hsig hrho heta i j)
-  have hps1 : Continuous (fun z : ℂ => psi1 (sigma i : ℂ) z) := psi1_continuous hσ
-  have hps2 : Continuous (fun z : ℂ => psi2 (sigma i : ℂ) z) := psi2_continuous hσ
+  have hps1 : Continuous (fun z : ℂ => psi1 (sigma i : ℂ) z) := psi1_continuous hsigC
+  have hps2 : Continuous (fun z : ℂ => psi2 (sigma i : ℂ) z) := psi2_continuous hsigC
   simp only [Mdens, Qpsi, q0_entry_psi]
   fun_prop
 
@@ -194,8 +196,8 @@ theorem detMdens_continuous {N : ℕ} {sigma rho : Fin N → ℝ} (hsig : ∀ i,
     Continuous (fun s => (Mdens sigma rho t s).det) := by
   refine (FMSA.MixtureOzStar.differentiable_matrix_det (f := fun s => Mdens sigma rho t s)
     (fun a b => ?_)).continuous
-  have hσ : ((sigma a : ℝ) : ℂ) ≠ 0 := by exact_mod_cast (hsig a).ne'
-  exact q0_entry_psi_entire hσ
+  have hsigC : ((sigma a : ℝ) : ℂ) ≠ 0 := by exact_mod_cast (hsig a).ne'
+  exact q0_entry_psi_entire hsigC
 
 /-- **General-`N` compressibility (`k=0` origin value).**  `det (Mdens σ ρ t) 0 ≠ 0` for `t ∈ (0,1]`:
 `Re` of the origin value is the limit of `det Q0_mat_phys(x) ≥ 1` along `x → 0⁺`, hence `≥ 1 > 0`.
@@ -292,71 +294,71 @@ theorem mixtureDet_pole_free_N_of_escape {N : ℕ} {sigma rho : Fin N → ℝ}
 /-! ## The escape (`hbound`) via diagonal-gauge similarity + operator-norm Neumann bound -/
 
 
-def Mgauge {N : ℕ} (s : ℂ) (σ : Fin N → ℂ) (ρ Qp Qpp : Fin N → Fin N → ℂ) :
+def Mgauge {N : ℕ} (s : ℂ) (sigC : Fin N → ℂ) (rho Qp Qpp : Fin N → Fin N → ℂ) :
     Matrix (Fin N) (Fin N) ℂ :=
-  fun i j => q0_entry_c s (σ i) 0 (Qp i j) (Qpp i j) (ρ i j) (if i = j then 1 else 0)
+  fun i j => q0_entry_c s (sigC i) 0 (Qp i j) (Qpp i j) (rho i j) (if i = j then 1 else 0)
 
-theorem Q0_mat_c_eq_gauge {N : ℕ} (s : ℂ) (σ : Fin N → ℂ) (ρ Qp Qpp : Fin N → Fin N → ℂ) :
-    Q0_mat_c s σ ρ Qp Qpp
-      = Matrix.of (fun i j => Complex.exp (σ i * s / 2) *
-          (Complex.exp (-(σ j * s / 2)) * Mgauge s σ ρ Qp Qpp i j)) := by
+theorem Q0_mat_c_eq_gauge {N : ℕ} (s : ℂ) (sigC : Fin N → ℂ) (rho Qp Qpp : Fin N → Fin N → ℂ) :
+    Q0_mat_c s sigC rho Qp Qpp
+      = Matrix.of (fun i j => Complex.exp (sigC i * s / 2) *
+          (Complex.exp (-(sigC j * s / 2)) * Mgauge s sigC rho Qp Qpp i j)) := by
   funext i j
   by_cases hij : i = j
   · subst hij
     simp only [Q0_mat_c, Mgauge, Matrix.of_apply, q0_entry_c, sub_self, zero_div,
       zero_mul, neg_zero, Complex.exp_zero]
-    rw [← mul_assoc, ← Complex.exp_add, show σ i * s / 2 + -(σ i * s / 2) = 0 from by ring,
+    rw [← mul_assoc, ← Complex.exp_add, show sigC i * s / 2 + -(sigC i * s / 2) = 0 from by ring,
       Complex.exp_zero, one_mul]
-  · have hEF : Complex.exp (σ i * s / 2) * Complex.exp (-(σ j * s / 2))
-        = Complex.exp (-((σ j - σ i) / 2 * s)) := by rw [← Complex.exp_add]; congr 1; ring
+  · have hEF : Complex.exp (sigC i * s / 2) * Complex.exp (-(sigC j * s / 2))
+        = Complex.exp (-((sigC j - sigC i) / 2 * s)) := by rw [← Complex.exp_add]; congr 1; ring
     simp only [Q0_mat_c, Mgauge, Matrix.of_apply, q0_entry_c, if_neg hij, zero_mul, neg_zero,
       Complex.exp_zero, one_mul]
     rw [← mul_assoc, hEF]; ring
 
-theorem det_Q0_eq_det_gauge {N : ℕ} (s : ℂ) (σ : Fin N → ℂ) (ρ Qp Qpp : Fin N → Fin N → ℂ) :
-    (Q0_mat_c s σ ρ Qp Qpp).det = (Mgauge s σ ρ Qp Qpp).det := by
-  have hQ : Q0_mat_c s σ ρ Qp Qpp
-      = Matrix.diagonal (fun i => Complex.exp (σ i * s / 2)) * Mgauge s σ ρ Qp Qpp
-        * Matrix.diagonal (fun j => Complex.exp (-(σ j * s / 2))) := by
+theorem det_Q0_eq_det_gauge {N : ℕ} (s : ℂ) (sigC : Fin N → ℂ) (rho Qp Qpp : Fin N → Fin N → ℂ) :
+    (Q0_mat_c s sigC rho Qp Qpp).det = (Mgauge s sigC rho Qp Qpp).det := by
+  have hQ : Q0_mat_c s sigC rho Qp Qpp
+      = Matrix.diagonal (fun i => Complex.exp (sigC i * s / 2)) * Mgauge s sigC rho Qp Qpp
+        * Matrix.diagonal (fun j => Complex.exp (-(sigC j * s / 2))) := by
     funext i j
     rw [Q0_mat_c_eq_gauge, Matrix.of_apply, Matrix.mul_diagonal, Matrix.diagonal_mul]; ring
   rw [hQ, Matrix.det_mul, Matrix.det_mul, Matrix.det_diagonal, Matrix.det_diagonal,
     ← mul_rotate, ← Finset.prod_mul_distrib,
-    show (∏ i, Complex.exp (-(σ i * s / 2)) * Complex.exp (σ i * s / 2)) = 1 from
+    show (∏ i, Complex.exp (-(sigC i * s / 2)) * Complex.exp (sigC i * s / 2)) = 1 from
       Finset.prod_eq_one (fun i _ => by
-        rw [← Complex.exp_add, show -(σ i * s / 2) + σ i * s / 2 = 0 from by ring, Complex.exp_zero]),
+        rw [← Complex.exp_add, show -(sigC i * s / 2) + sigC i * s / 2 = 0 from by ring, Complex.exp_zero]),
     one_mul]
 
 
 /-! ### Stage B: kernel bounds and the norm row bound (imported into namespace) -/
 
-theorem norm_exp_neg_le {σ : ℝ} (hσ : 0 ≤ σ) {s : ℂ} (hre : 0 ≤ s.re) :
-    ‖Complex.exp (-(s * (σ:ℂ)))‖ ≤ 1 := by
+theorem norm_exp_neg_le {sigC : ℝ} (hsigC : 0 ≤ sigC) {s : ℂ} (hre : 0 ≤ s.re) :
+    ‖Complex.exp (-(s * (sigC:ℂ)))‖ ≤ 1 := by
   rw [Complex.norm_exp]
-  rw [show (-(s * (σ:ℂ))).re = -(σ * s.re) by
+  rw [show (-(s * (sigC:ℂ))).re = -(sigC * s.re) by
     simp only [Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero,
       sub_zero]; ring]
   rw [Real.exp_le_one_iff]
-  exact neg_nonpos.mpr (mul_nonneg hσ hre)
+  exact neg_nonpos.mpr (mul_nonneg hsigC hre)
 
-theorem norm_phi1_le {σ : ℝ} (hσ : 0 ≤ σ) {s : ℂ} (hre : 0 ≤ s.re) (hs1 : 1 ≤ ‖s‖) :
-    ‖(1 - s * (σ:ℂ) - Complex.exp (-(s * (σ:ℂ)))) / s ^ 2‖ ≤ (2 + σ) / ‖s‖ := by
+theorem norm_phi1_le {sigC : ℝ} (hsigC : 0 ≤ sigC) {s : ℂ} (hre : 0 ≤ s.re) (hs1 : 1 ≤ ‖s‖) :
+    ‖(1 - s * (sigC:ℂ) - Complex.exp (-(s * (sigC:ℂ)))) / s ^ 2‖ ≤ (2 + sigC) / ‖s‖ := by
   -- specialise the general complex-σ arc bound `normP2_arc_decay` (`ArcAmplitudeBound`) to real σ
-  have hre' : 0 ≤ (s * (σ : ℂ)).re := by
+  have hre' : 0 ≤ (s * (sigC : ℂ)).re := by
     rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
-    exact mul_nonneg hre hσ
-  have h := FMSA.MixtureArcBound.normP2_arc_decay (σ := (σ : ℂ)) hs1 hre'
-  rwa [Complex.norm_real, Real.norm_of_nonneg hσ] at h
+    exact mul_nonneg hre hsigC
+  have h := FMSA.MixtureArcBound.normP2_arc_decay (sigma := (sigC : ℂ)) hs1 hre'
+  rwa [Complex.norm_real, Real.norm_of_nonneg hsigC] at h
 
-theorem norm_phi2_le {σ : ℝ} (hσ : 0 ≤ σ) {s : ℂ} (hre : 0 ≤ s.re) (hs1 : 1 ≤ ‖s‖) :
-    ‖(1 - s * (σ:ℂ) + (s * (σ:ℂ)) ^ 2 / 2 - Complex.exp (-(s * (σ:ℂ)))) / s ^ 3‖
-      ≤ (2 + σ + σ ^ 2 / 2) / ‖s‖ := by
+theorem norm_phi2_le {sigC : ℝ} (hsigC : 0 ≤ sigC) {s : ℂ} (hre : 0 ≤ s.re) (hs1 : 1 ≤ ‖s‖) :
+    ‖(1 - s * (sigC:ℂ) + (s * (sigC:ℂ)) ^ 2 / 2 - Complex.exp (-(s * (sigC:ℂ)))) / s ^ 3‖
+      ≤ (2 + sigC + sigC ^ 2 / 2) / ‖s‖ := by
   -- specialise the general complex-σ arc bound `normP3_arc_decay` (`ArcAmplitudeBound`) to real σ
-  have hre' : 0 ≤ (s * (σ : ℂ)).re := by
+  have hre' : 0 ≤ (s * (sigC : ℂ)).re := by
     rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
-    exact mul_nonneg hre hσ
-  have h := FMSA.MixtureArcBound.normP3_arc_decay (σ := (σ : ℂ)) hs1 hre'
-  rwa [Complex.norm_real, Real.norm_of_nonneg hσ] at h
+    exact mul_nonneg hre hsigC
+  have h := FMSA.MixtureArcBound.normP3_arc_decay (sigma := (sigC : ℂ)) hs1 hre'
+  rwa [Complex.norm_real, Real.norm_of_nonneg hsigC] at h
 
 theorem linfty_opNorm_le_row {N : ℕ} (A : Matrix (Fin N) (Fin N) ℂ) {c : ℝ} (hc : 0 ≤ c)
     (h : ∀ i, ∑ j, ‖A i j‖ ≤ c) : ‖A‖ ≤ c := by
@@ -369,96 +371,96 @@ theorem linfty_opNorm_le_row {N : ℕ} (A : Matrix (Fin N) (Fin N) ℂ) {c : ℝ
   exact h i
 
 /-- Entry of `1 - Mgauge` is exactly the Baxter perturbation `ρ·(Qp·φ₁ + Qpp·φ₂)`. -/
-theorem one_sub_Mgauge_apply {N : ℕ} (s : ℂ) (σ : Fin N → ℂ) (ρ Qp Qpp : Fin N → Fin N → ℂ)
+theorem one_sub_Mgauge_apply {N : ℕ} (s : ℂ) (sigC : Fin N → ℂ) (rho Qp Qpp : Fin N → Fin N → ℂ)
     (i j : Fin N) :
-    (1 - Mgauge s σ ρ Qp Qpp) i j
-      = ρ i j * (Qp i j * ((1 - s * σ i - Complex.exp (-(s * σ i))) / s ^ 2) +
-          Qpp i j * ((1 - s * σ i + (s * σ i) ^ 2 / 2 - Complex.exp (-(s * σ i))) / s ^ 3)) := by
+    (1 - Mgauge s sigC rho Qp Qpp) i j
+      = rho i j * (Qp i j * ((1 - s * sigC i - Complex.exp (-(s * sigC i))) / s ^ 2) +
+          Qpp i j * ((1 - s * sigC i + (s * sigC i) ^ 2 / 2 - Complex.exp (-(s * sigC i))) / s ^ 3)) := by
   simp only [Matrix.sub_apply, Matrix.one_apply, Mgauge, q0_entry_c, zero_mul, neg_zero,
     Complex.exp_zero, one_mul]
   split_ifs <;> ring
 
 
 /-- Per-entry envelope coefficient (real, `≥ 0`). -/
-def ecoef {N : ℕ} (σ ρ' : Fin N → ℝ) (i j : Fin N) : ℝ :=
-  rhoGeoPhys ρ' i j * (|Q0phys ρ' σ i j| * (2 + σ i)
-    + |Qppphys ρ' σ i j| * (2 + σ i + (σ i) ^ 2 / 2))
+def ecoef {N : ℕ} (sigC rho' : Fin N → ℝ) (i j : Fin N) : ℝ :=
+  rhoGeoPhys rho' i j * (|Q0phys rho' sigC i j| * (2 + sigC i)
+    + |Qppphys rho' sigC i j| * (2 + sigC i + (sigC i) ^ 2 / 2))
 
-theorem ecoef_nonneg {N : ℕ} {σ ρ' : Fin N → ℝ} (hσ : ∀ i, 0 < σ i) (i j : Fin N) :
-    0 ≤ ecoef σ ρ' i j := by
+theorem ecoef_nonneg {N : ℕ} {sigC rho' : Fin N → ℝ} (hsigC : ∀ i, 0 < sigC i) (i j : Fin N) :
+    0 ≤ ecoef sigC rho' i j := by
   unfold ecoef rhoGeoPhys
-  have := hσ i
+  have := hsigC i
   positivity
 
 /-- Per-entry bound on the Baxter perturbation of the diagonal-gauge matrix. -/
-theorem norm_A_entry_le {N : ℕ} {σ ρ' : Fin N → ℝ} (hσ : ∀ i, 0 < σ i) {s : ℂ}
+theorem norm_A_entry_le {N : ℕ} {sigC rho' : Fin N → ℝ} (hsigC : ∀ i, 0 < sigC i) {s : ℂ}
     (hre : 0 ≤ s.re) (hs1 : 1 ≤ ‖s‖) (i j : Fin N) :
-    ‖(1 - Mgauge s (fun i => (σ i : ℂ)) (fun i j => (rhoGeoPhys ρ' i j : ℂ))
-        (fun i j => (Q0phys ρ' σ i j : ℂ)) (fun i j => (Qppphys ρ' σ i j : ℂ))) i j‖
-      ≤ ecoef σ ρ' i j / ‖s‖ := by
+    ‖(1 - Mgauge s (fun i => (sigC i : ℂ)) (fun i j => (rhoGeoPhys rho' i j : ℂ))
+        (fun i j => (Q0phys rho' sigC i j : ℂ)) (fun i j => (Qppphys rho' sigC i j : ℂ))) i j‖
+      ≤ ecoef sigC rho' i j / ‖s‖ := by
   have hs0 : (0:ℝ) < ‖s‖ := lt_of_lt_of_le one_pos hs1
   rw [one_sub_Mgauge_apply]
-  have hρge : (0:ℝ) ≤ rhoGeoPhys ρ' i j := Real.sqrt_nonneg _
-  rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg hρge]
+  have hrhoge : (0:ℝ) ≤ rhoGeoPhys rho' i j := Real.sqrt_nonneg _
+  rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg hrhoge]
   rw [ecoef, mul_div_assoc]
-  refine mul_le_mul_of_nonneg_left ?_ hρge
-  calc ‖(Q0phys ρ' σ i j : ℂ) * ((1 - s * (σ i:ℂ) - Complex.exp (-(s * (σ i:ℂ)))) / s ^ 2) +
-          (Qppphys ρ' σ i j : ℂ) *
-            ((1 - s * (σ i:ℂ) + (s * (σ i:ℂ)) ^ 2 / 2 - Complex.exp (-(s * (σ i:ℂ)))) / s ^ 3)‖
-      ≤ ‖(Q0phys ρ' σ i j : ℂ) * ((1 - s * (σ i:ℂ) - Complex.exp (-(s * (σ i:ℂ)))) / s ^ 2)‖ +
-          ‖(Qppphys ρ' σ i j : ℂ) *
-            ((1 - s * (σ i:ℂ) + (s * (σ i:ℂ)) ^ 2 / 2 - Complex.exp (-(s * (σ i:ℂ)))) / s ^ 3)‖ :=
+  refine mul_le_mul_of_nonneg_left ?_ hrhoge
+  calc ‖(Q0phys rho' sigC i j : ℂ) * ((1 - s * (sigC i:ℂ) - Complex.exp (-(s * (sigC i:ℂ)))) / s ^ 2) +
+          (Qppphys rho' sigC i j : ℂ) *
+            ((1 - s * (sigC i:ℂ) + (s * (sigC i:ℂ)) ^ 2 / 2 - Complex.exp (-(s * (sigC i:ℂ)))) / s ^ 3)‖
+      ≤ ‖(Q0phys rho' sigC i j : ℂ) * ((1 - s * (sigC i:ℂ) - Complex.exp (-(s * (sigC i:ℂ)))) / s ^ 2)‖ +
+          ‖(Qppphys rho' sigC i j : ℂ) *
+            ((1 - s * (sigC i:ℂ) + (s * (sigC i:ℂ)) ^ 2 / 2 - Complex.exp (-(s * (sigC i:ℂ)))) / s ^ 3)‖ :=
         norm_add_le _ _
-    _ ≤ |Q0phys ρ' σ i j| * ((2 + σ i) / ‖s‖) + |Qppphys ρ' σ i j| * ((2 + σ i + (σ i)^2/2) / ‖s‖) := by
+    _ ≤ |Q0phys rho' sigC i j| * ((2 + sigC i) / ‖s‖) + |Qppphys rho' sigC i j| * ((2 + sigC i + (sigC i)^2/2) / ‖s‖) := by
         rw [norm_mul, norm_mul, Complex.norm_real, Complex.norm_real, Real.norm_eq_abs,
           Real.norm_eq_abs]
         gcongr
-        · exact norm_phi1_le (hσ i).le hre hs1
-        · exact norm_phi2_le (hσ i).le hre hs1
-    _ = (|Q0phys ρ' σ i j| * (2 + σ i) + |Qppphys ρ' σ i j| * (2 + σ i + (σ i)^2/2)) / ‖s‖ := by
+        · exact norm_phi1_le (hsigC i).le hre hs1
+        · exact norm_phi2_le (hsigC i).le hre hs1
+    _ = (|Q0phys rho' sigC i j| * (2 + sigC i) + |Qppphys rho' sigC i j| * (2 + sigC i + (sigC i)^2/2)) / ‖s‖ := by
         ring
 
 /-- Total envelope constant (the `L∞` operator-norm bound coefficient). -/
-def Abnd {N : ℕ} (σ ρ' : Fin N → ℝ) : ℝ := ∑ i, ∑ j, ecoef σ ρ' i j
+def Abnd {N : ℕ} (sigC rho' : Fin N → ℝ) : ℝ := ∑ i, ∑ j, ecoef sigC rho' i j
 
-theorem Abnd_nonneg {N : ℕ} {σ ρ' : Fin N → ℝ} (hσ : ∀ i, 0 < σ i) : 0 ≤ Abnd σ ρ' :=
-  Finset.sum_nonneg (fun i _ => Finset.sum_nonneg (fun j _ => ecoef_nonneg hσ i j))
+theorem Abnd_nonneg {N : ℕ} {sigC rho' : Fin N → ℝ} (hsigC : ∀ i, 0 < sigC i) : 0 ≤ Abnd sigC rho' :=
+  Finset.sum_nonneg (fun i _ => Finset.sum_nonneg (fun j _ => ecoef_nonneg hsigC i j))
 
 /-- `L∞` operator-norm bound on the Baxter perturbation: `‖1 - Mgauge‖ ≤ Abnd / ‖s‖`. -/
-theorem norm_one_sub_Mgauge_le {N : ℕ} {σ ρ' : Fin N → ℝ} (hσ : ∀ i, 0 < σ i) {s : ℂ}
+theorem norm_one_sub_Mgauge_le {N : ℕ} {sigC rho' : Fin N → ℝ} (hsigC : ∀ i, 0 < sigC i) {s : ℂ}
     (hre : 0 ≤ s.re) (hs1 : 1 ≤ ‖s‖) :
-    ‖1 - Mgauge s (fun i => (σ i : ℂ)) (fun i j => (rhoGeoPhys ρ' i j : ℂ))
-        (fun i j => (Q0phys ρ' σ i j : ℂ)) (fun i j => (Qppphys ρ' σ i j : ℂ))‖
-      ≤ Abnd σ ρ' / ‖s‖ := by
+    ‖1 - Mgauge s (fun i => (sigC i : ℂ)) (fun i j => (rhoGeoPhys rho' i j : ℂ))
+        (fun i j => (Q0phys rho' sigC i j : ℂ)) (fun i j => (Qppphys rho' sigC i j : ℂ))‖
+      ≤ Abnd sigC rho' / ‖s‖ := by
   have hs0 : (0:ℝ) < ‖s‖ := lt_of_lt_of_le one_pos hs1
-  refine linfty_opNorm_le_row _ (div_nonneg (Abnd_nonneg hσ) hs0.le) (fun i => ?_)
-  calc ∑ j, ‖(1 - Mgauge s (fun i => (σ i : ℂ)) (fun i j => (rhoGeoPhys ρ' i j : ℂ))
-          (fun i j => (Q0phys ρ' σ i j : ℂ)) (fun i j => (Qppphys ρ' σ i j : ℂ))) i j‖
-      ≤ ∑ j, ecoef σ ρ' i j / ‖s‖ := Finset.sum_le_sum (fun j _ => norm_A_entry_le hσ hre hs1 i j)
-    _ = (∑ j, ecoef σ ρ' i j) / ‖s‖ := by rw [← Finset.sum_div]
-    _ ≤ Abnd σ ρ' / ‖s‖ := by
+  refine linfty_opNorm_le_row _ (div_nonneg (Abnd_nonneg hsigC) hs0.le) (fun i => ?_)
+  calc ∑ j, ‖(1 - Mgauge s (fun i => (sigC i : ℂ)) (fun i j => (rhoGeoPhys rho' i j : ℂ))
+          (fun i j => (Q0phys rho' sigC i j : ℂ)) (fun i j => (Qppphys rho' sigC i j : ℂ))) i j‖
+      ≤ ∑ j, ecoef sigC rho' i j / ‖s‖ := Finset.sum_le_sum (fun j _ => norm_A_entry_le hsigC hre hs1 i j)
+    _ = (∑ j, ecoef sigC rho' i j) / ‖s‖ := by rw [← Finset.sum_div]
+    _ ≤ Abnd sigC rho' / ‖s‖ := by
         gcongr
-        exact Finset.single_le_sum (fun i _ => Finset.sum_nonneg (fun j _ => ecoef_nonneg hσ i j))
+        exact Finset.single_le_sum (fun i _ => Finset.sum_nonneg (fun j _ => ecoef_nonneg hsigC i j))
           (Finset.mem_univ i)
 
 /-- The envelope constant is continuous along the density path (hence bounded on `[0,1]`). -/
-theorem Abnd_cont {N : ℕ} {σ ρ : Fin N → ℝ} (hσ : ∀ i, 0 < σ i) (hρ : ∀ i, 0 < ρ i)
-    (heta : etaMix ρ σ < 1) : ContinuousOn (fun t : ℝ => Abnd σ (t • ρ)) (Icc 0 1) := by
+theorem Abnd_cont {N : ℕ} {sigC rho : Fin N → ℝ} (hsigC : ∀ i, 0 < sigC i) (hrho : ∀ i, 0 < rho i)
+    (heta : etaMix rho sigC < 1) : ContinuousOn (fun t : ℝ => Abnd sigC (t • rho)) (Icc 0 1) := by
   unfold Abnd ecoef
   refine continuousOn_finset_sum _ (fun i _ => continuousOn_finset_sum _ (fun j _ => ?_))
   exact (rhoGeoPhys_contN i j).mul
-    (((Q0phys_contN hσ hρ heta i j).abs.mul continuousOn_const).add
-      ((Qppphys_contN hσ hρ heta i j).abs.mul continuousOn_const))
+    (((Q0phys_contN hsigC hrho heta i j).abs.mul continuousOn_const).add
+      ((Qppphys_contN hsigC hrho heta i j).abs.mul continuousOn_const))
 
 /-- **The escape (`hbound`) — general `N`.**  A uniform radius `R` beyond which the density
 homotopy's determinant cannot vanish for `Re s ≥ 0`.  The diagonal gauge sends the blow-up into a
 similarity (`det Q̂₀ = det Mgauge`), and `Mgauge = 1 − A` with `‖A‖ ≤ Abnd/‖s‖ → 0` (uniformly in `t`,
 as `Abnd` is continuous hence bounded on `[0,1]`), so `Mgauge` is a unit for `‖s‖` large. -/
-theorem exists_uniform_escape {N : ℕ} {σ ρ : Fin N → ℝ} (hσ : ∀ i, 0 < σ i) (hρ : ∀ i, 0 < ρ i)
-    (heta : etaMix ρ σ < 1) :
+theorem exists_uniform_escape {N : ℕ} {sigC rho : Fin N → ℝ} (hsigC : ∀ i, 0 < sigC i) (hrho : ∀ i, 0 < rho i)
+    (heta : etaMix rho sigC < 1) :
     ∃ R : ℝ, 0 < R ∧ ∀ t ∈ Icc (0:ℝ) 1, ∀ z : ℂ, z.im ≤ 0 →
-      (Mdens σ ρ t (Complex.I * z)).det = 0 → ‖z‖ < R := by
-  obtain ⟨C, hC⟩ := isCompact_Icc.exists_bound_of_continuousOn (Abnd_cont hσ hρ heta)
+      (Mdens sigC rho t (Complex.I * z)).det = 0 → ‖z‖ < R := by
+  obtain ⟨C, hC⟩ := isCompact_Icc.exists_bound_of_continuousOn (Abnd_cont hsigC hrho heta)
   refine ⟨max 1 C + 1, by positivity, fun t ht z hzim hdet => ?_⟩
   by_contra hnot
   rw [not_lt] at hnot
@@ -471,21 +473,21 @@ theorem exists_uniform_escape {N : ℕ} {σ ρ : Fin N → ℝ} (hσ : ∀ i, 0 
   have hIz : s ≠ 0 := by
     intro h; rw [h, norm_zero] at hsnorm; rw [← hsnorm] at hz1; linarith
   -- det Mgauge = det Mdens = 0
-  have hdetg : (Mgauge s (fun i => (σ i : ℂ)) (fun i j => (rhoGeoPhys (t • ρ) i j : ℂ))
-      (fun i j => (Q0phys (t • ρ) σ i j : ℂ)) (fun i j => (Qppphys (t • ρ) σ i j : ℂ))).det = 0 := by
-    rw [Mdens_eq_phys σ ρ t hIz] at hdet
+  have hdetg : (Mgauge s (fun i => (sigC i : ℂ)) (fun i j => (rhoGeoPhys (t • rho) i j : ℂ))
+      (fun i j => (Q0phys (t • rho) sigC i j : ℂ)) (fun i j => (Qppphys (t • rho) sigC i j : ℂ))).det = 0 := by
+    rw [Mdens_eq_phys sigC rho t hIz] at hdet
     rw [← det_Q0_eq_det_gauge]
     exact hdet
   -- ‖A‖ < 1
-  have hbnd : ‖1 - Mgauge s (fun i => (σ i : ℂ)) (fun i j => (rhoGeoPhys (t • ρ) i j : ℂ))
-      (fun i j => (Q0phys (t • ρ) σ i j : ℂ)) (fun i j => (Qppphys (t • ρ) σ i j : ℂ))‖ < 1 := by
-    refine lt_of_le_of_lt (norm_one_sub_Mgauge_le hσ hre hs1) ?_
+  have hbnd : ‖1 - Mgauge s (fun i => (sigC i : ℂ)) (fun i j => (rhoGeoPhys (t • rho) i j : ℂ))
+      (fun i j => (Q0phys (t • rho) sigC i j : ℂ)) (fun i j => (Qppphys (t • rho) sigC i j : ℂ))‖ < 1 := by
+    refine lt_of_le_of_lt (norm_one_sub_Mgauge_le hsigC hre hs1) ?_
     rw [div_lt_one (by linarith [hs1] : (0:ℝ) < ‖s‖)]
-    have hAC : Abnd σ (t • ρ) ≤ C := by
-      have := hC t ht; rwa [Real.norm_of_nonneg (Abnd_nonneg hσ)] at this
+    have hAC : Abnd sigC (t • rho) ≤ C := by
+      have := hC t ht; rwa [Real.norm_of_nonneg (Abnd_nonneg hsigC)] at this
     rw [hsnorm]; linarith [le_max_right 1 C, hnot]
-  have hunit : IsUnit (Mgauge s (fun i => (σ i : ℂ)) (fun i j => (rhoGeoPhys (t • ρ) i j : ℂ))
-      (fun i j => (Q0phys (t • ρ) σ i j : ℂ)) (fun i j => (Qppphys (t • ρ) σ i j : ℂ))) := by
+  have hunit : IsUnit (Mgauge s (fun i => (sigC i : ℂ)) (fun i j => (rhoGeoPhys (t • rho) i j : ℂ))
+      (fun i j => (Q0phys (t • rho) sigC i j : ℂ)) (fun i j => (Qppphys (t • rho) sigC i j : ℂ))) := by
     have h := isUnit_one_sub_of_norm_lt_one hbnd
     rwa [sub_sub_cancel] at h
   rw [Matrix.isUnit_iff_isUnit_det] at hunit
@@ -499,11 +501,11 @@ hard-sphere mixture.  The `N=2` `mixtureDet_pole_free` generalised to arbitrary 
 (`‖1 − Mgauge‖ ≤ Abnd/‖s‖ → 0`, uniform in `t` by compactness).  Depends only on the two existing
 axioms `zeroFree_lowerHalfPlane_of_homotopy` (math) and `pyhs_mixture_no_spinodal` (physics) —
 **no new axiom**. -/
-theorem mixtureDet_pole_free_N {N : ℕ} {σ ρ : Fin N → ℝ} (hσ : ∀ i, 0 < σ i) (hρ : ∀ i, 0 < ρ i)
-    (heta : etaMix ρ σ < 1) {z : ℂ} (hz : z.im < 0) :
-    (FMSA.MixtureNoSpinodal.Q0_mat_c_phys (Complex.I * z) σ ρ).det ≠ 0 := by
-  obtain ⟨R, hR, hesc⟩ := exists_uniform_escape hσ hρ heta
-  exact mixtureDet_pole_free_N_of_escape hσ hρ heta hR hesc hz
+theorem mixtureDet_pole_free_N {N : ℕ} {sigC rho : Fin N → ℝ} (hsigC : ∀ i, 0 < sigC i) (hrho : ∀ i, 0 < rho i)
+    (heta : etaMix rho sigC < 1) {z : ℂ} (hz : z.im < 0) :
+    (FMSA.MixtureNoSpinodal.Q0_mat_c_phys (Complex.I * z) sigC rho).det ≠ 0 := by
+  obtain ⟨R, hR, hesc⟩ := exists_uniform_escape hsigC hrho heta
+  exact mixtureDet_pole_free_N_of_escape hsigC hrho heta hR hesc hz
 
 end
 end FMSA.MixtureGenN

@@ -51,15 +51,15 @@ theorem differentiableAt_matrix_det {N : ℕ} {M : ℂ → Matrix (Fin N) (Fin N
     (hM : ∀ a b, DifferentiableAt ℂ (fun z => M z a b) w) :
     DifferentiableAt ℂ (fun z => (M z).det) w := by
   have heq : (fun z => (M z).det)
-      = ∑ σ : Equiv.Perm (Fin N), fun z => Equiv.Perm.sign σ • ∏ i, M z (σ i) i := by
+      = ∑ sigma : Equiv.Perm (Fin N), fun z => Equiv.Perm.sign sigma • ∏ i, M z (sigma i) i := by
     funext z; simp only [Finset.sum_apply, Matrix.det_apply]
   rw [heq]
-  refine DifferentiableAt.sum (fun σ _ => ?_)
+  refine DifferentiableAt.sum (fun sigma _ => ?_)
   refine DifferentiableAt.const_smul ?_ _
-  have hp : (fun z => ∏ i, M z (σ i) i) = ∏ i : Fin N, (fun z => M z (σ i) i) := by
+  have hp : (fun z => ∏ i, M z (sigma i) i) = ∏ i : Fin N, (fun z => M z (sigma i) i) := by
     funext z; rw [Finset.prod_apply]
   rw [hp]
-  exact DifferentiableAt.finsetProd (fun i _ => hM (σ i) i)
+  exact DifferentiableAt.finsetProd (fun i _ => hM (sigma i) i)
 
 /-- An `updateRow` of a holomorphic matrix by a **constant** row stays holomorphic entrywise. -/
 theorem differentiableAt_updateRow_entry {N : ℕ} {M : ℂ → Matrix (Fin N) (Fin N) ℂ} {w : ℂ}

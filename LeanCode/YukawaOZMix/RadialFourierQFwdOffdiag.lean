@@ -107,7 +107,7 @@ longer at `0`).  Recovers `radial_fourier_qFwd_diag` at `λ = 0` (where every `�
 theorem radial_fourier_qFwd_offdiag (X : Mix N M) (i m : Fin N)
     (hlam : 0 ≤ X.lam i m) {k : ℝ} (hk : k ≠ 0) :
     radial_fourier (qFwd X i m) k
-      = (4 * Real.pi / k) * (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)) *
+      = (4 * Real.pi / k) * (2 * Real.pi * Real.sqrt (X.rho i * X.rho m)) *
         (((-(X.Q0 i m) * X.R i m + X.Qpp m * (X.R i m) ^ 2 / 2)
               * ((Real.sin (k * X.R i m) - k * X.R i m * Real.cos (k * X.R i m)) / k ^ 2)
             + (X.Q0 i m - X.Qpp m * X.R i m)
@@ -124,13 +124,13 @@ theorem radial_fourier_qFwd_offdiag (X : Mix N M) (i m : Fin N)
             + (X.Qpp m / 2)
               * ((-(X.lam i m) ^ 3 / k + 6 * X.lam i m / k ^ 3) * Real.cos (k * X.lam i m)
                 + (3 * (X.lam i m) ^ 2 / k ^ 2 - 6 / k ^ 4) * Real.sin (k * X.lam i m)))) := by
-  have hLR : X.lam i m ≤ X.R i m := by simp only [Mix.lam, Mix.R]; linarith [X.hσ i]
+  have hLR : X.lam i m ≤ X.R i m := by simp only [Mix.lam, Mix.R]; linarith [X.hsigma i]
   have hqII : ∀ a b, IntervalIntegrable
       (fun r => r * qFwd X i m r * Real.sin (k * r)) volume a b := by
     intro a b
     have hq : IntervalIntegrable (qFwd X i m) volume a b :=
       (FMSA.MixtureBaxter.q0MixEntry_intervalIntegrable X i m a b).const_mul
-        (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m))
+        (2 * Real.pi * Real.sqrt (X.rho i * X.rho m))
     exact (hq.mul_continuousOn (g := fun r => r * Real.sin (k * r))
       ((continuous_id.mul (Real.continuous_sin.comp
         (continuous_const.mul continuous_id))).continuousOn)).congr (fun r _ => by ring)
@@ -150,7 +150,7 @@ theorem radial_fourier_qFwd_offdiag (X : Mix N M) (i m : Fin N)
     rw [qFwd_lower X i m hr.2]; ring
   rw [hz, zero_add]
   have hpoly : Set.EqOn (fun r => r * qFwd X i m r * Real.sin (k * r))
-      (fun r => (2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)) *
+      (fun r => (2 * Real.pi * Real.sqrt (X.rho i * X.rho m)) *
           ((-(X.Q0 i m) * X.R i m + X.Qpp m * (X.R i m) ^ 2 / 2) * (r * Real.sin (k * r))
           + (X.Q0 i m - X.Qpp m * X.R i m) * (r ^ 2 * Real.sin (k * r))
           + (X.Qpp m / 2) * (r ^ 3 * Real.sin (k * r))))
@@ -158,7 +158,7 @@ theorem radial_fourier_qFwd_offdiag (X : Mix N M) (i m : Fin N)
     intro r hr
     rw [Set.uIoo_of_le hLR] at hr
     have hmem : r ∈ Set.Icc (X.lam i m) (X.R i m) := Set.mem_Icc.mpr ⟨hr.1.le, hr.2.le⟩
-    have hq : qFwd X i m r = 2 * Real.pi * Real.sqrt (X.ρ i * X.ρ m)
+    have hq : qFwd X i m r = 2 * Real.pi * Real.sqrt (X.rho i * X.rho m)
         * (X.Q0 i m * (r - X.R i m) + X.Qpp m * (r - X.R i m) ^ 2 / 2) := by
       unfold qFwd q0MixEntry; rw [Set.indicator_of_mem hmem]
     dsimp only; rw [hq]; ring
