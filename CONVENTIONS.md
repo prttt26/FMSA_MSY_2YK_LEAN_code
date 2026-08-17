@@ -173,6 +173,26 @@ These names belong to Mathlib's API and **cannot** be renamed:
 - `(𝕜 := ℝ)` — field argument in `hasDerivAt_pow`, etc.
 - `inv_mul_cancel₀` — Mathlib lemma name (subscript `₀` is part of the name)
 
+### Physics-identifier normalization (2026-08-17) — same quantity, one ASCII name
+
+The physics identifiers were normalized to ASCII in **code** (docstrings keep Greek math
+notation): `σ→sigma`, `ρ→rho`, `η→eta`, `ξ→xi`, `χ→chi` (incl. the `FMSA.HSMix` fields
+`σ/ρ/hσ` → `sigma/rho/hsigma`). This removed a "same quantity, two names" split (diameter was
+both `sigma` and `σ`; packing fraction both `eta` and `η`).
+
+**⚠ The scalar-vs-function collision.** In the equal-diameter mixture theorems the *scalar*
+common diameter and the *per-species* diameter function were DISTINCT variables that a blind
+`σ→sigma` would merge (`sigma n = sigma` is ill-typed). They must keep distinct names: the
+function/`HSMix` field is `sigma`/`rho`; the **scalar** equal-diameter/density value is
+**`sigC`/`rhoC`** (see `MixtureDCFAEInjective`, `Q0DetLimit`, …). Do not rename a scalar
+`sigC : ℝ` to `sigma` — it shadows the diameter function.
+
+Deliberately **left Greek** (not physics-inconsistent): Mathlib idioms `α`/`β`/`γ` (type
+variables), `μ` (measures), `λ`/`π` (Lean notation); and **narrow-scope proof temporaries**
+(`ε`/`δ` in ε-δ arguments, integration variables `τ`, `set α := …`/`set β := …` local Baxter
+coefficients, count binders `κ`, generic function binders `φ`). These are single-scope and
+carry no cross-file ASCII twin, so renaming would only hurt readability or break Mathlib idiom.
+
 ---
 
 ## Comparison operators in code
