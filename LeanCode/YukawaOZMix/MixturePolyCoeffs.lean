@@ -56,7 +56,7 @@ respectively, proved below as `HasDerivAt` statements.
 | GAP.5  | `q0_entry_degree_bound`                 | ✓ proved                                      |
 | GAP.6  | `origin_unique_constraint`     | ✓ proved                                      |
 | GAP.7  | `no_contact_bc`                | ✓ proved                                      |
-| GAP.8  | `poly_coeff_from_laurent`      | ⚠ VACUOUS (see its docstring)                 |
+| GAP.8  | ~~`poly_coeff_from_laurent`~~   | ⌫ RETIRED — vacuous; premise (single `P_ij`) falsified |
 | GAP.9  | `no_odd_symmetry`,             | ✓ proved (true, but see below)                |
 |      | `d_ij_nonzero_example`,        |                                               |
 |      | `dij_cubic_nonzero`            | ✓ proved — **Laplace-space `q0_entry` fact**, |
@@ -464,64 +464,18 @@ E_{ij}^{(4)} = R_{ij}(0)       / 4!
 ```
 -/
 
-section LaurentExtraction
-
-/-- **Task GAP.8 — Laurent extraction of polynomial coefficients:**
-
-⚠ **THIS STATEMENT IS VACUOUS — do not cite it as content (flagged 2026-07-16).** It is an
-existential whose witnesses are the formulas themselves, discharged by five `rfl`s; the hypothesis
-`hR : AnalyticAt ℝ R 0` is **never used**. It asserts only "these five real numbers exist", which is
-true of any five formulas. Consequences for consumers: **MPOLY.4 "extends GAP.8" inherits nothing**, and
-GAP.10 (`natDegree = 4`) must not lean on it.
-
-*Why it came out vacuous:* the intended claim quantifies over `P_ij(r)`, which **does not exist as a
-Lean object** — it was to be the deliverable of MPOLY.5 (the closed-form `S_ij` → `R_ij` → `P_ij`
-chain, [LN] §9.4.5). With only the `R`-side available there was nothing to predicate on.
-
-⚠ **MPOLY.5 is NOT completable (falsified 2026-07-17): a single `P_ij` on `(0,R_ij)` does not exist
-for unlike pairs.** [LN] Eq (101)'s single-polynomial inner core is **false** off-diagonal — the
-shipped `fmsa_double_prop` closed form splits at `λ_ij` (see `InnerDecomp.residue_is_polynomial`
-and `not_single_poly_of_pieces_ne`). So `P_ij` cannot be produced, and this theorem cannot be made
-non-vacuous by supplying it. The concrete inner-DCF object is instead the **piecewise (poly×exp)**
-real-space convolution built by task **MRS.5** (`𝒲 = 𝒬⁻ ⋆ ℬ ⋆ (𝒬⁻)ᵀ`, `todo_lean.md`); that — not
-a single `P_ij` — is where a real degree/coefficient theorem will attach.
-
-*What has since been supplied* (`HSMixture/MixtureLaurent.lean`, axiom-clean): the missing **anchor** —
-`taylor4_coeff_unique` (with `poly4_eq_zero_of_littleO`) proves the order-4 Taylor coefficients in the
-project's `Tendsto (f − poly)/z^k` convention are **unique**, so "the Taylor coefficients of `R`" is now
-a well-defined notion. *Still open:* the bridge `aₖ = R⁽ᵏ⁾(0)/k!` tying [LN]'s `iteratedDeriv` form of
-Eq (120) to that convention (route: `AnalyticAt` → `ContDiffOn` on a ball → `taylor_isLittleO` →
-`taylorCoeffWithin = (k!)⁻¹ • iteratedDerivWithin` → restrict to `𝓝[>]0`), and the `P_ij` side (MPOLY.5).
-
-Original intent: given the regularised remainder `R : ℝ → ℝ` analytic at 0 (from GAP.5), the
-polynomial coefficients of P_{ij}(r) equal the rescaled Taylor coefficients
-of R at s = 0.
-
-**Implementation consequence:**  In Python, `_solve_polycorr` must compute
-the 4th-order Taylor series of each `q_{ab}(s)` entry, assemble `R_{ij}(s)`
-analytically via the determinant recursion, and return a 5-element array
-`[A, B, C, D, E^{(4)}]` for unlike pairs.  The current `[p0, p1, 0, 0]` is
-insufficient because it omits C, D, and E^{(4)}. -/
-theorem poly_coeff_from_laurent
-    (R : ℝ → ℝ) (hR : AnalyticAt ℝ R 0) :
-    -- Polynomial coefficients as rescaled Taylor coefficients of R at s = 0
-    let a := fun n : ℕ => iteratedDeriv n R 0
-    ∃ (A B C D E4 : ℝ),
-      A  = a 4 / Nat.factorial 4 ∧
-      B  = a 3 / Nat.factorial 3 ∧
-      C  = a 2 / (Nat.factorial 2 * Nat.factorial 2) ∧
-      D  = a 1 / Nat.factorial 3 ∧
-      E4 = a 0 / Nat.factorial 4 := by
-  -- The statement is an existence claim: the witnesses are the formulas themselves.
-  -- `let a` is transparent, so `a n` reduces to `iteratedDeriv n R 0` definitionally.
-  exact ⟨iteratedDeriv 4 R 0 / Nat.factorial 4,
-         iteratedDeriv 3 R 0 / Nat.factorial 3,
-         iteratedDeriv 2 R 0 / (Nat.factorial 2 * Nat.factorial 2),
-         iteratedDeriv 1 R 0 / Nat.factorial 3,
-         iteratedDeriv 0 R 0 / Nat.factorial 4,
-         rfl, rfl, rfl, rfl, rfl⟩
-
-end LaurentExtraction
+/-! **Task GAP.8 — RETIRED (2026-08-19, premise falsified).**  The intended claim was that the
+inner-core DCF's polynomial `P_ij` coefficients equal the rescaled Taylor coefficients of the
+Laurent remainder `R` at `s=0` ([LN] Eq 120).  It rested on [LN] Eq (101)'s *single* degree-≤4
+`P_ij` on all of `(0, R_ij)`, which is **false for unlike pairs**: the inner core splits at `λ_ij`
+into two different polynomials (`InnerDecomp.not_single_poly_of_pieces_ne`, axiom-clean; the shipped
+`fmsa_double_prop` closed form; and independently `Ĉ₁ = Q̂₀(−k)·B₁·Q̂₀ᵀ(−k)` carries no `Q̂₀⁻¹`).
+The former theorem `poly_coeff_from_laurent` was **vacuous** (an `∃` closed by five `rfl`s with the
+`AnalyticAt` hypothesis unused), so it was removed rather than made non-vacuous — MPOLY.4/MPOLY.5,
+its "other half", are `NOT COMPLETABLE` for the same reason.  The correct inner-core mixture DCF is
+the piecewise two-piece Lebowitz form `cMixDCFN` / `shellForcing_eq_cMixDCFN` (MIXCHS.7-N, general
+`N`, `MixtureBaxterODEUnequalDiamN.lean`); the surviving generic order-4 Taylor calculus is in
+`HSMixture/MixtureLaurent.lean` (`taylor4_coeff_unique`). -/
 
 -- ============================================================
 -- § GAP.9 — D_{ij} is Generically Nonzero for Unlike Pairs

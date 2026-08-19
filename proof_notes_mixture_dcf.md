@@ -843,7 +843,9 @@ coefficient formulas (from `iteratedDeriv` / GAP.8)
 + the Eq-120 unified corollary.
 
 **Depends on.** ~~GAP.8~~ — **GAP.8 is vacuous** (`∃` closed by 5 `rfl`s; its `AnalyticAt` hypothesis is
-never used) ⇒ nothing to inherit.
+never used) ⇒ nothing to inherit.  **RETIRED 2026-08-19**: the theorem `poly_coeff_from_laurent` was
+deleted (premise falsified; real object = piecewise `cMixDCFN`), leaving a retirement note in
+`MixturePolyCoeffs.lean`.
 **Status.** ❌ **NOT COMPLETABLE** — see below. Beyond GAP.8's vacuity, the target `P_ij` itself does not
 exist for unlike pairs.
 
