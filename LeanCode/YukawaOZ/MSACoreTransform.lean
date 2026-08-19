@@ -9,6 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.YukawaOZ.MSAFactorizationSplit
 import LeanCode.HardSphere.BaxterWienerHopf
+import LeanCode.HardSphere.RadialFourier
 
 /-!
 # MSAEXACT.1 — the core-DCF sine transforms (steps 1–2 of the core identity)
@@ -113,5 +114,34 @@ theorem coshRatio_sin_integral {z k sigma : ℝ} (hzk : z ^ 2 + k ^ 2 ≠ 0) (hk
     intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
     intervalIntegral.integral_const_mul,
     exp_pos_sin_integral hzk, exp_sin_integral hzk, psi0_formula hk]
+
+/-! ### Step 1 — the support collapse `(0,∞) → (0,σ)` -/
+
+/-- **The radial (sine) transform of a core-supported function collapses to an interval integral.**
+If `f` vanishes on `[σ,∞)`, then `radial_fourier f k = (4π/k)·∫₀^σ r·f(r)·sin(kr)` — the `Set.Ioi 0`
+integral in `radial_fourier`'s definition reduces to `Set.Ioc 0 σ`, i.e. the `intervalIntegral` on
+`[0,σ]`.  Generalises `HardSphere.radial_fourier_c_HS_eq_intervalIntegral` from `c_HS` to any core
+function; this is what lets the core-DCF correction (supported on the core) be transformed with the
+`psiN`/`yuk`/`coshRatio` interval formulas of this file. -/
+theorem radial_fourier_of_core_support (f : ℝ → ℝ) {k sigma : ℝ} (hsigma : 0 < sigma)
+    (hsupp : ∀ r, sigma ≤ r → f r = 0) :
+    radial_fourier f k = (4 * Real.pi / k) * ∫ r in (0 : ℝ)..sigma, r * f r * Real.sin (k * r) := by
+  unfold radial_fourier
+  congr 1
+  have hpt : Set.EqOn (fun r => r * f r * Real.sin (k * r))
+      ((Set.Ioc 0 sigma).indicator (fun r => r * f r * Real.sin (k * r)))
+      (Set.Ioi (0 : ℝ)) := by
+    intro r hr0
+    by_cases hr : r ∈ Set.Ioc (0 : ℝ) sigma
+    · rw [Set.indicator_of_mem hr]
+    · rw [Set.indicator_of_notMem hr]
+      have hrge : sigma ≤ r := by
+        simp only [Set.mem_Ioc, not_and, not_le] at hr
+        exact (hr hr0).le
+      simp [hsupp r hrge]
+  rw [MeasureTheory.setIntegral_congr_fun measurableSet_Ioi hpt,
+    MeasureTheory.setIntegral_indicator measurableSet_Ioc,
+    Set.inter_eq_self_of_subset_right Set.Ioc_subset_Ioi_self,
+    ← intervalIntegral.integral_of_le hsigma.le]
 
 end FMSA.MSAExact
