@@ -603,6 +603,7 @@ The theory is equally well defined at every order; only *solvability in finite c
 section FOEQAllOrders
 
 open scoped ContDiff
+open Filter Topology
 
 variable {𝔸 : Type*} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸]
 
@@ -631,7 +632,10 @@ theorem msaOuter_iteratedDeriv_terminates (beta u : ℝ) {γ : ℕ} (hγ : 2 ≤
 
 /-- ⭐ **FOEQ.7 — differentiating OZ to order `γ` returns the Cauchy convolution, term for term.**
 Let `s ↦ (H s, C s)` be any coupling-scaled family obeying the Ornstein–Zernike relation
-`(1 + H̃)(1 − C̃) = 1`, `γ`-fold differentiable.  Then the order-`γ` Taylor coefficients satisfy
+`(1 + H̃)(1 − C̃) = 1` **on a neighbourhood of `0`** (MSAFAM.4: `∀ᶠ s in 𝓝 0` — no implicit
+function theorem gives a *global* root, and the branch folds at finite coupling, so the germ at `0`
+is all the Taylor coefficients see), `γ`-fold differentiable.  Then the order-`γ` coefficients
+satisfy
 
     ∑_{i=0}^{γ}  C(γ,i) · H̃_i · C̃'_{γ−i}  =  0        (`H̃_i := ∂ⁱ(1+H)|₀`, `C̃'_j := ∂ʲ(1−C)|₀`)
 
@@ -646,16 +650,20 @@ scoped-norm pitfall. -/
 theorem oz_taylor_coeff_eq_cauchy_convolution
     (H C : ℝ → 𝔸) {γ : ℕ} (hγ : 1 ≤ γ)
     (hH : ContDiffAt ℝ γ H 0) (hC : ContDiffAt ℝ γ C 0)
-    (hOZ : ∀ s, (1 + H s) * (1 - C s) = 1) :
+    (hOZ : ∀ᶠ s in 𝓝 (0 : ℝ), (1 + H s) * (1 - C s) = 1) :
     ∑ i ∈ Finset.range (γ + 1),
       (γ.choose i : 𝔸) * iteratedDeriv i (fun s => 1 + H s) 0
         * iteratedDeriv (γ - i) (fun s => 1 - C s) 0 = 0 := by
   have hF : ContDiffAt ℝ γ (fun s => (1 : 𝔸) + H s) 0 := contDiffAt_const.add hH
   have hG : ContDiffAt ℝ γ (fun s => (1 : 𝔸) - C s) 0 := contDiffAt_const.sub hC
   have key := iteratedDeriv_mul (n := γ) (x := 0) hF hG
-  have hconst : (fun s => (1 : 𝔸) + H s) * (fun s => (1 : 𝔸) - C s) = fun _ => (1 : 𝔸) := by
-    funext s; simpa [Pi.mul_apply] using hOZ s
-  rw [hconst, iteratedDeriv_const, if_neg (by omega)] at key
+  -- ⚠ MSAFAM.4: the product is `1` only *near* `0` (no IFT gives a global root — the branch folds
+  -- at finite coupling), so `iteratedDeriv` is pinned by the germ, not by a global `funext`.
+  have hev : (fun s => (1 : 𝔸) + H s) * (fun s => (1 : 𝔸) - C s)
+      =ᶠ[𝓝 (0 : ℝ)] fun _ => (1 : 𝔸) := by
+    filter_upwards [hOZ] with s hs
+    simpa [Pi.mul_apply] using hs
+  rw [hev.iteratedDeriv_eq γ, iteratedDeriv_const, if_neg (by omega)] at key
   exact key.symm
 
 /-- ⭐ **FOEQ.8 — the capstone (paper Theorem IV.1).**  For a `C^∞` coupling family solving OZ, the
@@ -666,7 +674,7 @@ closure coefficients terminate) this is the full statement that (D1) = (D2) orde
 converge. -/
 theorem oz_msa_taylor_eq_hierarchy (H C : ℝ → 𝔸)
     (hH : ContDiff ℝ ∞ H) (hC : ContDiff ℝ ∞ C)
-    (hOZ : ∀ s, (1 + H s) * (1 - C s) = 1) {m : ℕ} (hm : 1 ≤ m) :
+    (hOZ : ∀ᶠ s in 𝓝 (0 : ℝ), (1 + H s) * (1 - C s) = 1) {m : ℕ} (hm : 1 ≤ m) :
     ∑ i ∈ Finset.range (m + 1),
       (m.choose i : 𝔸) * iteratedDeriv i (fun s => 1 + H s) 0
         * iteratedDeriv (m - i) (fun s => 1 - C s) 0 = 0 :=
@@ -681,7 +689,8 @@ theorem oz_deriv_eq_firstOrderLine_of_taylor (H C : ℝ → 𝔸)
     (hH : ContDiffAt ℝ 1 H 0) (hC : ContDiffAt ℝ 1 C 0)
     (hOZ : ∀ s, (1 + H s) * (1 - C s) = 1) :
     deriv H 0 * (1 - C 0) = (1 + H 0) * deriv C 0 := by
-  have h := oz_taylor_coeff_eq_cauchy_convolution H C (le_refl 1) hH hC hOZ
+  have h := oz_taylor_coeff_eq_cauchy_convolution H C (le_refl 1) hH hC
+    (Filter.Eventually.of_forall hOZ)
   rw [Finset.sum_range_succ, Finset.sum_range_one] at h
   simp only [Nat.choose_self, Nat.choose_zero_right, Nat.cast_one, one_mul,
     iteratedDeriv_zero, iteratedDeriv_one, Nat.sub_self, Nat.sub_zero,

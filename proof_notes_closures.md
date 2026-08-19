@@ -751,7 +751,7 @@ which is why FOEQ.1 is small and why the closure layer is not the gap.
 | FOEQ.2 | supports are `s`-free | ✓ discharged by construction (record-only) |
 | FOEQ.3 ⭐ | `oz_deriv_eq_firstOrderLine` | **✓ DONE** |
 | FOEQ.4 | `firstOrder_dcf_of_oz_deriv` (algebraic) **+** `firstOrder_khat_unique` / `firstOrder_dcf_unique_on_core` / **`firstOrder_dcf_unique_on_core_of_oz`** (WH-uniqueness) | **✓ DONE** — both halves; real-space core uniqueness via PYE.5. **2026-08-11: the left inverse is no longer assumed** — `_of_oz` derives it from the zeroth-order OZ `(1+H̃₀)(1−C̃₀)=1` (`Matrix.mul_eq_one_comm`), so it rests only on OZ + the `γ=1` line + injectivity |
-| FOEQ.5 ⭐⭐ | existence of the derivative | ◑ **Jacobian ✓, IFT ✓, item (i) structural core ✓, AND the C¹ upgrade ✓ (2026-08-11)** — `msa_amplitude_differentiable_of_bh_shape`: from `F,P` **`C¹`** + the vanishing-`G`-derivative structure + `F₀≠0` + the PY base equation, the amplitude is differentiable at `K=0`, **no abstract `f₂` hypothesis**. Item (i)'s residue is now **only (a)** the literal transcription of the BH `F,P` — see below, and now **MSAFAM.1–2** |
+| FOEQ.5 ⭐⭐ | existence of the derivative | ✅ **DONE at `N=1, γ=1` (2026-08-19)** — Jacobian ✓, IFT ✓, C¹ upgrade ✓ (2026-08-11) gave `msa_amplitude_differentiable_of_bh_shape` (from `F,P` `C¹` + vanishing-`G`-derivative + `F₀≠0` + PY base equation, no abstract `f₂`). **Item (i)'s residue (a), the literal BH transcription, is now discharged in MSAFAM.1–2**: `MSASolutionFamily.msa_amplitude_differentiableAt_yukawa` produces the derivative from `ξ∈(0,1)`, `z>0` alone. General `N` still gated (MSAFAM.7 ← MSAEMIX) |
 | MSAEXACT.5 ⭐ | `firstOrder_amplitude_eq_hardSphere_dressed` | **✓ DONE** (same file) |
 
 `#print axioms` = the standard three on **all** theorems, the FOEQ.4/5 additions included (verified
@@ -980,6 +980,14 @@ formalized" (`:1600`). Numerical partner: `numerical_notes/theory/waisman_msa_cl
 
 **Purpose, in one line: remove Theorem I.1's hypothesis. Not weaken it, not witness it.**
 
+> **Status 2026-08-19 — MSAFAM.1–4 LANDED, axiom-clean, full build 8784 jobs.** Homes:
+> `YukawaOZ/MSABlumHoyeSystem.lean` (MSAFAM.1–2, ns `FMSA.MSAExact`),
+> `Closures/MSASolutionFamily.lean` (MSAFAM.3 + the `γ=1` payoff, ns `FMSA.MSASolutionFamily`),
+> `Closures/FirstOrderEquivalence.lean` edited in place (MSAFAM.4). Gaps (A) transcription and
+> (B) order are **closed**; FOEQ.5 is hypothesis-free at `N=1, γ=1`. **The group is NOT closed:**
+> gap (C) — the pair family (MSAFAM.5, ← MSAEXACT.1) — and MSAFAM.6/.7 remain, so the paper's
+> §"What is *not* formalized" Theorem-I.1 bullet **stays** (see the closing condition below).
+
 ## What the hypothesis *is*, exactly
 
 The paper: *"Fix `γ ≥ 1` and let `τ ↦ (H̃(τ), C̃(τ))` solve OZ+MSA at coupling `τK`, `γ` times
@@ -1037,10 +1045,10 @@ the bullet's subject is the hypothesis as a whole.
 
 | task | statement | depends on | status |
 |---|---|---|---|
-| MSAFAM.1 | `bhF`, `bhP : ℝ × ℝ → ℝ` — the *concrete* Blum–Høye residual data in `(Dt, G)` at `N = 1`, one tail, plus `ContDiff ℝ ∞` for both | theory note §7g | ☐ |
-| MSAFAM.2 ⭐ | the four properties FOEQ.5's capstone assumes, **proved for `bhF`/`bhP`**: vanishing `G`-derivative, `bhF (0,G₀) = 1 − ρQ̂₀(z)`, `F₀ ≠ 0` from `Q0_ne_zero_at_yukawa`, and the PY base equation `2π·G₀·F₀ = bhP (0,G₀)` | MSAFAM.1; MSAEXACT.4; an `N=1` HS identity | ☐ — **closes gap (A); FOEQ.5 becomes hypothesis-free at `γ=1`** |
-| MSAFAM.3 ⭐ | `exists_contDiffAt_root_of_prodDomain_ift` — the `C^n` implicit function, replacing `exists_hasDerivAt_root_of_prodDomain_ift` | Mathlib `ContDiffAt.contDiffAt_implicitFunction` | ☐ — **closes gap (B); available now** |
-| MSAFAM.4 ⚠ | weaken FOEQ.7/FOEQ.8's `hOZ` from `∀ s` to `∀ᶠ s in 𝓝 0` | `Filter.EventuallyEq.iteratedDeriv_eq` | ☐ — **small, and load-bearing: see below** |
+| MSAFAM.1 | `bhF`, `bhP : ℝ × ℝ → ℝ` — the *concrete* Blum–Høye residual data in `(Dt, G)` at `N = 1`, one tail, plus `ContDiff ℝ ∞` for both | theory note §7g | ✅ **2026-08-19** — `YukawaOZ/MSABlumHoyeSystem.lean`: `bhF`/`bhP` in the factored form `base + Dt·rest(G)` (validated == `_bh_pieces` for arbitrary `(Dt,G,w)`), `G0` the closed-form PY base point; `bhF_contDiff`/`bhP_contDiff` at `∞` |
+| MSAFAM.2 ⭐ | the four properties FOEQ.5's capstone assumes, **proved for `bhF`/`bhP`**: vanishing `G`-derivative, `bhF (0,G₀) = 1 − ρQ̂₀(z)`, `F₀ ≠ 0` from `Q0_ne_zero_at_yukawa`, and the PY base equation `2π·G₀·F₀ = bhP (0,G₀)` | MSAFAM.1; MSAEXACT.4; an `N=1` HS identity | ✅ **2026-08-19** — `bhF_fderiv_snd`/`bhP_fderiv_snd` (vanishing `G`-deriv, via the `⭐ Dt=0` structural lemma `fderiv_fst_factor_snd_apply`), `bhF_base`, `bhF_base_ne_zero` (via base eqn + `bhP₀>0`), `bh_base_eq` (⭐ **rational identity in `w=e^{−z}`, `field_simp; ring`; no transcendental fact — only `Q0_ne_zero_at_yukawa` for the denominator**). Assembled: `MSASolutionFamily.msa_amplitude_differentiableAt_yukawa` — **closes gap (A); FOEQ.5 hypothesis-free at `γ=1`** |
+| MSAFAM.3 ⭐ | `exists_contDiffAt_root_of_prodDomain_ift` — the `C^n` implicit function, replacing `exists_hasDerivAt_root_of_prodDomain_ift` | Mathlib `ContDiffAt.contDiffAt_implicitFunction` | ✅ **2026-08-19** — `Closures/MSASolutionFamily.lean`, drop-in from `ContDiffAt.{implicitFunction, implicitFunction_apply_self, eventually_apply_implicitFunction, contDiffAt_implicitFunction}`; **closes gap (B); ceiling was NOT real** (cf. `feedback_stale_blockers`) |
+| MSAFAM.4 ⚠ | weaken FOEQ.7/FOEQ.8's `hOZ` from `∀ s` to `∀ᶠ s in 𝓝 0` | `Filter.EventuallyEq.iteratedDeriv_eq` | ✅ **2026-08-19** — `Closures/FirstOrderEquivalence.lean` in place: `hconst` funext → `hev` `EventuallyEq` + `hev.iteratedDeriv_eq γ`; `oz_deriv_eq_firstOrderLine_of_taylor` re-wraps with `Eventually.of_forall`. Both still axiom-clean |
 | MSAFAM.5 ⭐⭐ | `msaSolutionFamily` — from the root `ψ(τ)` to `H C : ℝ → ℂ` at fixed real `k`, with `ContDiff` and `∀ᶠ τ, (1+H τ)(1−C τ) = 1` | **MSAEXACT.1 (full)**; MSAFAM.1–4 | ☐ — gap (C), the real depth |
 | MSAFAM.6 ⭐⭐ | Theorem I.1 with **no hypothesis**: `oz_msa_taylor_eq_hierarchy` applied to the constructed family, `N = 1` | MSAFAM.2/3/4/5 | ☐ — the capstone |
 | MSAFAM.7 | the same at general `N` | **gated on MSAEMIX**, deliberately | ☐ |

@@ -150,6 +150,7 @@ import LeanCode.YukawaOZ.InnerOriginBC
 import LeanCode.YukawaOZ.MSAClosedForm
 import LeanCode.YukawaOZ.MSAElimination
 import LeanCode.YukawaOZ.MSABaxterTransform
+import LeanCode.YukawaOZ.MSABlumHoyeSystem
 import LeanCode.YukawaOZ.OuterDCF
 import LeanCode.YukawaOZ.Splitting
 import LeanCode.YukawaOZ.YukawaCausalProjection
@@ -208,6 +209,7 @@ import LeanCode.FreeEnergy.SumRule
 import LeanCode.Closures.ClosureExpansions
 import LeanCode.Closures.DPClosureMap
 import LeanCode.Closures.FirstOrderEquivalence
+import LeanCode.Closures.MSASolutionFamily
 
 -- The FMSA-DP paper's scope and axiom gate.  Imported last, and deliberately:
 -- it contains no mathematics, only #guard_msgs blocks asserting the axiom set of
