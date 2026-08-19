@@ -144,4 +144,61 @@ theorem radial_fourier_of_core_support (f : ℝ → ℝ) {k sigma : ℝ} (hsigma
     Set.inter_eq_self_of_subset_right Set.Ioc_subset_Ioi_self,
     ← intervalIntegral.integral_of_le hsigma.le]
 
+/-! ### Step 2 — the assembly (linearity)
+
+`r · coreCorrection(r)` — the radial-weighted core-DCF correction, the smooth integrand of the
+transform — is `−[da·r + db·r² + ½ξ·da·r⁴ + (v/z)(1−e^{−zr}) + (v²/2Kz²)·coshRatio]` with
+`da = a − a_HS`, `db = b − b_HS`.  Its sine integral splits, by linearity alone, into the five
+sub-integrals whose closed forms are `psi1/2/4_formula`, `one_sub_exp_sin_integral` and
+`coshRatio_sin_integral`.  Keeping the sub-integrals unexpanded here makes this a pure-linearity
+lemma; the caller (step 3, the `a,b,w↔D` match) rewrites them with the closed forms. -/
+
+/-- The radial-weighted core-DCF correction's sine integral, split by linearity into the five
+sub-integrals of the integral layer.  Fully generic in the coefficients `c₁…c₅`; the caller
+(step 3) supplies `c₁ = da`, `c₂ = db`, `c₃ = ½ξ·da`, `c₄ = v/z`, `c₅ = v²/(2Kz²)` and the overall
+sign. -/
+theorem coreCorr_sine_integral (c1 c2 c3 c4 c5 z sigma k : ℝ) :
+    ∫ r in (0 : ℝ)..sigma,
+        (c1 * r + c2 * r ^ 2 + c3 * r ^ 4 + c4 * (1 - Real.exp (-z * r))
+          + c5 * coshRatio z r) * Real.sin (k * r)
+      = c1 * (∫ r in (0 : ℝ)..sigma, r * Real.sin (k * r))
+        + c2 * (∫ r in (0 : ℝ)..sigma, r ^ 2 * Real.sin (k * r))
+        + c3 * (∫ r in (0 : ℝ)..sigma, r ^ 4 * Real.sin (k * r))
+        + c4 * (∫ r in (0 : ℝ)..sigma, (1 - Real.exp (-z * r)) * Real.sin (k * r))
+        + c5 * (∫ r in (0 : ℝ)..sigma, coshRatio z r * Real.sin (k * r)) := by
+  have h1 : IntervalIntegrable (fun r => c1 * (r * Real.sin (k * r))) volume 0 sigma :=
+    (continuous_const.mul (continuous_id.mul
+      (Real.continuous_sin.comp (by fun_prop)))).intervalIntegrable 0 sigma
+  have h2 : IntervalIntegrable (fun r => c2 * (r ^ 2 * Real.sin (k * r))) volume 0 sigma :=
+    (continuous_const.mul ((continuous_id.pow 2).mul
+      (Real.continuous_sin.comp (by fun_prop)))).intervalIntegrable 0 sigma
+  have h3 : IntervalIntegrable (fun r => c3 * (r ^ 4 * Real.sin (k * r))) volume 0 sigma :=
+    (continuous_const.mul ((continuous_id.pow 4).mul
+      (Real.continuous_sin.comp (by fun_prop)))).intervalIntegrable 0 sigma
+  have h4 : IntervalIntegrable
+      (fun r => c4 * ((1 - Real.exp (-z * r)) * Real.sin (k * r))) volume 0 sigma :=
+    (continuous_const.mul (((continuous_const.sub (Real.continuous_exp.comp (by fun_prop))).mul
+      (Real.continuous_sin.comp (by fun_prop))))).intervalIntegrable 0 sigma
+  have h5 : IntervalIntegrable (fun r => c5 * (coshRatio z r * Real.sin (k * r)))
+      volume 0 sigma := by
+    apply Continuous.intervalIntegrable
+    unfold coshRatio; fun_prop
+  have hcongr : ∫ r in (0 : ℝ)..sigma,
+        (c1 * r + c2 * r ^ 2 + c3 * r ^ 4 + c4 * (1 - Real.exp (-z * r))
+          + c5 * coshRatio z r) * Real.sin (k * r)
+      = ∫ r in (0 : ℝ)..sigma,
+          (c1 * (r * Real.sin (k * r)) + c2 * (r ^ 2 * Real.sin (k * r))
+            + c3 * (r ^ 4 * Real.sin (k * r))
+            + c4 * ((1 - Real.exp (-z * r)) * Real.sin (k * r))
+            + c5 * (coshRatio z r * Real.sin (k * r))) :=
+    intervalIntegral.integral_congr (fun r _ => by ring)
+  rw [hcongr,
+    intervalIntegral.integral_add (((h1.add h2).add h3).add h4) h5,
+    intervalIntegral.integral_add ((h1.add h2).add h3) h4,
+    intervalIntegral.integral_add (h1.add h2) h3,
+    intervalIntegral.integral_add h1 h2,
+    intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
+    intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
+    intervalIntegral.integral_const_mul]
+
 end FMSA.MSAExact
