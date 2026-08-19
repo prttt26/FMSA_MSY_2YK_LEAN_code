@@ -149,6 +149,7 @@ import LeanCode.YukawaOZ.I1I2Integrals
 import LeanCode.YukawaOZ.InnerOriginBC
 import LeanCode.YukawaOZ.MSAFactorizationSplit
 import LeanCode.YukawaOZ.MSADCFTransform
+import LeanCode.YukawaOZ.MSACoreTransform
 import LeanCode.YukawaOZ.MSAClosedForm
 import LeanCode.YukawaOZ.MSAElimination
 import LeanCode.YukawaOZ.MSABaxterTransform
