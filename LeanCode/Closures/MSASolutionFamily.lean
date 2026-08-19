@@ -131,4 +131,37 @@ theorem msaSolutionFamily_transport {n : ℕ∞ω} {Qp Qm : ℝ → ℂ}
       = (Qp τ * Qm τ)⁻¹ * (Qp τ * Qm τ) := by ring
   rw [this, inv_mul_cancel₀ hτ]
 
+/-! ## MSAFAM.6 — Theorem I.1 at every order, for the transport-built family -/
+
+open FMSA.FirstOrderEquivalence in
+/-- **MSAFAM.6, assembled (abstract).**  Given the Baxter transform `τ ↦ (Q̂(k,τ), Q̂(−k,τ))` smooth
+(`C^∞`) at `τ = 0` and non-vanishing there, the MSA pair family it transports
+(`msaSolutionFamily_transport`) has — at **every** order `m ≥ 1` — order-`m` Taylor coefficients
+satisfying the order-`m` line of the coupling hierarchy.  This is Theorem I.1's conclusion (FOEQ.7,
+`oz_taylor_coeff_eq_cauchy_convolution`) applied to a *constructed* family instead of a hypothesised
+one: `(D1) = (D2)` order by order, with the OZ + smoothness inputs no longer assumed but produced.
+
+⚠ **Why MSAFAM.4 was load-bearing.**  The family solves OZ only on a *neighbourhood* of `0` (it folds
+at finite coupling), so `msaSolutionFamily_transport` yields `∀ᶠ s in 𝓝 0` OZ, never the global `∀ s`.
+The pre-MSAFAM.4 FOEQ.7/.8 demanded `∀ s` and would have been unusable here; the `∀ᶠ` weakening is
+exactly what lets this composition typecheck.
+
+The only input still missing for Theorem I.1 at `N = 1` is the **concrete** transform family
+`τ ↦ Q̂(±k, ψ(τ))` — MSAEXACT.1's `k`-space Baxter transform (`msaBaxter_cos/sin_transform`) evaluated
+along the MSAFAM.3 root `ψ` (`exists_contDiffAt_root_of_prodDomain_ift`), with `Q̂(k,0) ≠ 0` (no
+spinodal at the PY point on the `k`-axis).  Everything downstream of that single input is assembled
+here. -/
+theorem msaFamily_taylor_eq_hierarchy {Qp Qm : ℝ → ℂ}
+    (hQp : ContDiffAt ℝ ∞ Qp 0) (hQm : ContDiffAt ℝ ∞ Qm 0) (h0 : Qp 0 * Qm 0 ≠ 0) :
+    ∃ H C : ℝ → ℂ,
+      (∀ᶠ τ in 𝓝 (0 : ℝ), (1 + H τ) * (1 - C τ) = 1) ∧
+      ∀ m : ℕ, 1 ≤ m →
+        ∑ i ∈ Finset.range (m + 1),
+          (m.choose i : ℂ) * iteratedDeriv i (fun s => 1 + H s) 0
+            * iteratedDeriv (m - i) (fun s => 1 - C s) 0 = 0 := by
+  obtain ⟨H, C, hC, hH, hOZ⟩ := msaSolutionFamily_transport hQp hQm h0
+  refine ⟨H, C, hOZ, fun m hm => ?_⟩
+  exact oz_taylor_coeff_eq_cauchy_convolution H C hm
+    (hH.of_le (by exact_mod_cast le_top)) (hC.of_le (by exact_mod_cast le_top)) hOZ
+
 end FMSA.MSASolutionFamily
