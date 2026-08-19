@@ -60,7 +60,7 @@ algebraic system, and the theory note flags the degree as unsettled.
 
 | Task | Title | Status |
 |------|-------|--------|
-| MSAEXACT.1 | `msaBaxter_factorization_of_closure` — coefficients satisfying the algebraic system ⇒ `Q̂(s)·Q̂(−s) = 1 − ρĉ(s)` | ◑ **down-payment DONE 2026-08-10** (`YukawaOZ/MSABaxterTransform.lean`, axiom-clean): the Baxter-function ansatz `msaBaxterFn` (`q0_poly` + Yukawa), `D→0 ⇒ q0_poly`, and the two Yukawa transform lemmas (`yukawa_laplace_unit`, `yukawa_tail_laplace`). ⚠ **The full factorization (closure recovery) is the remaining analytic core** — a multi-file effort re-running `baxter_wiener_hopf_factorization` with the tails |
+| MSAEXACT.1 | `msaBaxter_factorization_of_closure` — coefficients satisfying the algebraic system ⇒ `Q̂(s)·Q̂(−s) = 1 − ρĉ(s)` | ◑◑◑ **third down-payment DONE 2026-08-19** (`MSADCFTransform.lean`, axiom-clean): the `c`-side's exterior half is closed and MSAEXACT.1 is reduced to **one explicit scalar identity** about the core (`msaexact1_iff_core`), pinned numerically first. Also 2026-08-19: `MSAFactorizationSplit.lean` (the `q`-side transforms and the **split off BAXTER.3**). Earlier: ◑ **down-payment DONE 2026-08-10** (`YukawaOZ/MSABaxterTransform.lean`, axiom-clean): the Baxter-function ansatz `msaBaxterFn` (`q0_poly` + Yukawa), `D→0 ⇒ q0_poly`, and the two Yukawa transform lemmas (`yukawa_laplace_unit`, `yukawa_tail_laplace`). ⚠ **The full factorization (closure recovery) is the remaining analytic core** — a multi-file effort re-running `baxter_wiener_hopf_factorization` with the tails |
 | MSAEXACT.2 | elimination at one tail — degree 8, **REDUCIBLE = two quartics**; the physical branch is a quartic | ◑ **DONE 2026-08-10** (`YukawaOZ/MSAElimination.lean`, axiom-clean; Python `msax_elimination.py`). ⚠ **Corrects the earlier "irreducible"** — that was a float + uncorrected-Eq(2) artefact |
 | MSAEXACT.3 ⭐ | `msaRoot_unique_of_coupling_lt` — **exactly one physical root below an explicit coupling threshold** | ◑ **provable core DONE 2026-08-10** (`MSAClosedForm.lean`, axiom-clean): positivity/(39) selection + `physical_baxter_factor_unique` + the **capstone** `msaRoot_unique_of_coupling_lt` (physical uniqueness given the measured monotone coupling). ⚠ The monotonicity of `a` in `K` on the physical branch, and the explicit `βK≈3` threshold, stay **measured** (branch of a transcendental quartic — outside `ring`) |
 | MSAEXACT.4 | `pyA_pyB_satisfy_zero_coupling` — at `K = 0` the PY coefficients annihilate all three of Waisman's equations, **for every `w`** | **✓ DONE 2026-08-10** (axiom-clean) |
@@ -107,6 +107,77 @@ coefficients and the Yukawa tails in *both* `q` and `c` — several new integral
 the exterior tail) plus a large algebraic verification with the Pythagorean identity — a multi-file
 effort comparable to the original BAXTER group, not a one-shot emit. The transform identity alone is
 *definitional* (ĉ is defined by the factorization); the content is the closure recovery.
+
+### Landed — MSAEXACT.1 third down-payment (`YukawaOZ/MSADCFTransform.lean`, 2026-08-19)
+
+Build 8787 jobs, all six theorems on the standard three axioms, own `^axiom ` count 0.
+
+The `c`-side has two halves of very different character, and this file closes one of them and
+**isolates** the other rather than pretending they are the same job.
+
+* **Closed — the exterior.** The MSA closure *gives* `c(r) = −βu(r) = K e^{−z(r−σ)}/r` for `r > σ`.
+  The radial transform's `r` cancels the Yukawa's `1/r` exactly, so `yukawa_tail_sine_integral`
+  (`∫_σ^∞ e^{−z(r−σ)}sin kr dr = (k cos kσ + z sin kσ)/(z²+k²)`, by `integral_Ioi_…_of_tendsto'`)
+  and then `radial_fourier_cMSAtail` finish it. This is the Fourier partner of the existing
+  Laplace-side `yukawa_tail_laplace`.
+* **Connected.** `msaBaxter_cos_transform`/`msaBaxter_sin_transform`: the ansatz's transform really
+  is hard-sphere `+ D·`exponential, so `msa_lhs_split` is a statement about `msaBaxterFn` itself
+  rather than about an unmotivated pair of reals.
+* ⭐ **`msaexact1_iff_core` — the reduction.** Given only that `ĉ_MSA` splits as
+  `ĉ_HS + cCore + ĉ_tail`, the MSA factorization holds **iff** `ρ·cCore` equals an explicit
+  closed form: the `O(D)` bracket, minus the `O(D²)` bracket of `msa_exp_sq_modulus`, minus the tail
+  above. Nothing about the core is assumed — it is one scalar unknown.
+  `msaexact1_core_at_zero_coupling` checks the `K = D = 0` case returns `cCore = 0`.
+
+⇒ **All that is left of MSAEXACT.1 is: show Waisman's Eq. (2) has that transform.**
+
+⚠ **Why this is an `iff` and not a theorem about Eq. (2).** Eq. (2) as printed does not satisfy it.
+The `1/x` repair of theory note §7e was found at contact, through `y₀`; before formalising anything
+the target was checked over all `k` by `msaexact1_cside_check.py`, which evaluates
+`F(ik)F(−ik) = 1 − ρĉ(k)` with the two sides sharing no code path (Laplace transform of the Baxter
+factor vs Fourier transform of the DCF). Corrected: worst **9.9e-10** over 8 states × 8 `k`, and
+that is the quadrature floor at the smallest `k` — every `k ≥ 1` entry is `1e-15`–`1e-16`. As
+printed: worst **5.1**, and ⭐ **`1 − ρĉ(k)` goes negative at 3 sampled points**, impossible for a
+squared modulus. So the printed form is refuted by the factorization alone. Formalising it would
+have been formalising a false statement.
+
+⚠ **Lean note.** `Set.indicator_of_mem`/`_notMem` need the membership in `∈` form
+(`Set.mem_Ioi.mpr h`), not the unfolded `<`; and `fun_prop` does not discharge
+`IntervalIntegrable` here — spell the continuity out and use `Continuous.intervalIntegrable`.
+
+### Landed — MSAEXACT.1 second down-payment (`YukawaOZ/MSAFactorizationSplit.lean`, 2026-08-19)
+
+Build 8786 jobs, `#print axioms` = the standard three on all five theorems, own `^axiom ` count 0.
+
+⚠ **First, a check that saved the effort from being wasted:** `baxter_wiener_hopf_factorization` is
+**not general in `q`**. It is proved *for* `q0_poly` and `c_HS`, from their explicit cos/sin transform
+formulas plus `field_simp; ring`. So MSAEXACT.1 cannot be a corollary of BAXTER.3 — confirmed by
+reading the statement, before writing anything.
+
+But it can be **split**, and that is what this file does.
+
+* `exp_cos_integral`, `exp_sin_integral` — the two transforms the `q`-side was missing, i.e. exactly
+  the "new integral formulas (exp×cos/sin)" this note flags. FTC with the explicit antiderivatives;
+  the hypothesis is `z² + k² ≠ 0`, not `k ≠ 0`.
+* `msa_exp_sq_modulus` — `Rez² + Imz² = (1 − 2e^{−zσ}cos kσ + e^{−2zσ})/(z²+k²)`, the squared
+  modulus of one exponential integral. ⚠ **The algebra had to be abstracted into
+  `sq_modulus_algebra` with the exponential opaque**: left concrete, `field_simp` rewrites
+  `e^{−zσ}` through `Real.exp_neg` into `(e^{zσ})⁻¹`, clears it as one more denominator, and the
+  `linear_combination` multiple the algebra predicts no longer closes the goal.
+* ⭐ `msa_lhs_split` — with `q_MSA = q0_poly + D·e^{−zr}`, the factorization's left side is
+  *identically*
+
+      (1 − Re)² + Im² = [(1 − Re₀)² + Im₀²] − 2D[(1 − Re₀)Rez − Im₀Imz] + D²[Rez² + Imz²]
+
+  and `msa_lhs_split_at_zero` identifies the first bracket as `1 − ρĉ_HS(k)` via BAXTER.3.
+
+⇒ **MSAEXACT.1 is now "match the `O(D)` and `O(D²)` increments against `−ρ(ĉ_MSA − ĉ_HS)(k)`"** —
+which is the content of Waisman's Eq. (3) — rather than "re-run BAXTER with tails". The `O(D²)`
+coefficient is already closed.
+
+⚠ **Still open, and named:** the `c`-side. `ĉ_MSA(k)` needs Waisman's inner Eq. (2) — five terms,
+including the `v²(cosh zr − 1)/r` piece carrying the missing `1/x` of theory note §7e — plus the
+exterior Yukawa tail (`yukawa_tail_laplace`, already landed). That match is the remaining grind.
 
 **MSAEXACT.2. ✅ FORMALIZED 2026-08-10** (`YukawaOZ/MSAElimination.lean`, axiom-clean; the exact
 symbolic elimination is `msax_elimination.py`, emitting the Lean coefficients). Eliminating `a` (from
@@ -231,14 +302,110 @@ map is not linear.
 
 ## Group MSAEMIX — mixture
 
-**Opens only when Group MSAX's MSAX.5 returns GO.** The gating is deliberate: MSAEMIX stacks a
-genuinely new difficulty (which matrix root) on an algebra that must already be right.
+**⭐ UNGATED 2026-08-19.** The gate was "MSAX.5 returns GO". MSAX.5's go/no-go was **bypassed
+deliberately** when MSAX.6 closed (2026-08-13, `todo/waisman_msa_plan.md`): two of its three criteria
+were already answered, and the third — root selection — is exactly what the mixture *supplies*, since
+Blum & Høye's Eq. (41) is a criterion at `N ≥ 2` and vacuous at `N = 1`. MSAX.6 itself is closed and
+externally gated (72/72 Tang & Lu column-II contact values to their printed precision), so the
+algebra the mixture group formalises is the algebra that was measured.
 
 | Task | Title | Status |
 |------|-------|--------|
-| MSAEMIX.1 | `msaMixture_factorization` — the matrix form of MSAEXACT.1 at general `N` | ☐ gated on MSAX.5 |
-| MSAEMIX.2 | `msaMixture_reduces_to_scalar_at_fin_one` — the `N = 1` specialisation **is** MSAEXACT.1 | ☐ gated |
-| MSAEMIX.3 | mixture root selection | ☐ deliberately left open pending MSAEXACT.3 |
+| MSAEMIX.0 ⭐ | mixture positivity, the stability determinant, and what (39) does **not** see | **✓ DONE 2026-08-19** (`YukawaOZMix/MSAMixturePositivity.lean`, axiom-clean, 9 theorems) |
+| MSAEMIX.1 | `msaMixture_factorization` — the matrix form of MSAEXACT.1 at general `N` | ◑ **down-payment DONE 2026-08-19** (`YukawaOZMix/MSAMixtureCancellation.lean`, axiom-clean): the **(★) cancellation identity**, the one piece of genuinely mixture-specific algebra. ⚠ The factorization itself — the analytic core — is untouched, as at `N = 1` |
+| MSAEMIX.2 | `msaMixture_reduces_to_scalar_at_fin_one` — the `N = 1` specialisation **is** MSAEXACT.1 | ◑ the *positivity* half done (`mixCompressibility_fin_one`, `mixStability_fin_one`); the factorization half waits on MSAEMIX.1 |
+| MSAEMIX.3 ⭐ | mixture root selection — Eq. (41) as the `N ≥ 2` acceptability criterion | **✓ DONE 2026-08-19** (`YukawaOZMix/MSAMixtureSelection.lean`, axiom-clean, 8 theorems) |
+
+### Landed — MSAEMIX.0 (`LeanCode/YukawaOZMix/MSAMixturePositivity.lean`, 2026-08-19)
+
+Build 8558 jobs, `#print axioms` = the standard three on all nine theorems, raw `grep -rn "^axiom "`
+unchanged. Pure `Matrix` algebra — `Matrix.det_mul`, `Matrix.det_transpose`, `Finset.sum_nonneg` —
+so the group's "no new axiom" constraint holds trivially, as intended.
+
+**What it adds over the scalar wall.** `MSAClosedForm.lean` proves `a = B²` at `N = 1`. At `N ≥ 2`
+there are **two different squares**, and conflating them is a real trap:
+
+* `mixCompressibility_nonneg` — Eq. (39) is a **sum of squares**, so `∂βp/∂ρ ≥ 0` with *no
+  cancellation between species possible*; `no_real_mix_baxter_of_neg_compressibility` is the range
+  statement.
+* `mixStability_eq_det_sq` / `mixStability_nonneg` — the **stability determinant** is
+  `det(F Fᵀ) = (det F)²`, a *different* square. ⇒ **no real Baxter factorization represents a
+  thermodynamically unstable mixture**, at every `N`. `mixStability_eq_zero_iff`: the spinodal is
+  exactly `det F = 0` — **one** condition.
+* ⭐⭐ `mixCompressibility_pos_of_det_zero_example` / `..._pos_at_spinodal_example` — **Eq. (39) does
+  not detect that spinodal.** An explicit binary `F` sitting *on* the spinodal (`det F = 0`) with
+  every column sum (`= A_j/2π`, their Eq. 13) strictly positive, hence `∂βp/∂ρ > 0` there. This is
+  the formal counterpart of the MSAX.6 measurement (`∂βp/∂ρ` runs **0.4 … 24.5** at the mixture
+  spinodal) and the formal reason the scalar rule "spinodal ⟺ `A = 0`" must **not** be lifted to
+  "`A_j = 0` ∀ `j`" — that is `N` conditions for one parameter, and the true condition is compatible
+  with every `A_j` bounded away from zero.
+* MSAEMIX.2 discipline applied in place: `mixCompressibility_fin_one`, `mixStability_fin_one` reduce
+  to the scalar objects, and a non-degenerate binary `example` (not the dilute `F = I` point) guards
+  non-vacuity.
+
+### Landed — MSAEMIX.1 down-payment (`LeanCode/YukawaOZMix/MSAMixtureCancellation.lean`, 2026-08-19)
+
+Build 8785 jobs, `#print axioms` = the standard three on all four theorems, own `^axiom ` count 0.
+
+⚠ **A different kind of down-payment from MSAEXACT.1's.** The scalar one is *transform
+infrastructure* (ansatz, `D = 0` reduction, two Laplace integrals). This one is a **theorem the
+scalar case cannot state**: the mixture `e^{zσ}` cancellation.
+
+Blum & Høye's `M_j`, `N_j` (their (20)/(21)) are built from `D_lj + C_lj`, whose terms are each
+`O(e^{+zσ_l})` while the sum is `O(K)`. At `N = 1` that cancellation is on the face of it —
+`D + C = (1−γ)D` with `1−γ = 2πρĝ(z)/z`. At `N ≥ 2` it is **not term-by-term**: it runs through the
+*off-diagonal* of `γ`, and forming `M`, `N` from the unscaled `D`, `C` loses `zσ_max/ln 10` digits.
+
+* `entry_cancel` — the load-bearing step, and the reason it is one theorem rather than two:
+  `δ_lk − γ_lk e^{z(σ_k−σ_l)/2} = (2π/z)ρ_k Gt_lk e^{−zσ_l}` holds for `k = l` (the two Kronecker
+  deltas cancel, the exponential is `1`, `σ_ll = σ_l`) **and** for `k ≠ l` (`sigMix_exponent`:
+  `−σ_lk + (σ_k−σ_l)/2 = −σ_l` exactly). Same right-hand side both ways.
+* ⭐ `cancellation_star` — **(★)** `Dt_lj − Ct_lj = e^{−zσ_l}·W̃_lj` with
+  `W̃_ij = (2π/z)Σ_k ρ_k Gt_ik Dt_kj`, manifestly `O(K)` and exponential-free.
+* `cancellation_star_fin_one` — MSAEMIX.2's discipline applied here: at one component (★) *is* the
+  scalar `(1−γ)D`.
+
+⚠ **Scope, unchanged.** The analytic core of MSAEMIX.1 — that the matrix ansatz **recovers** the MSA
+closure `c_ij = −βu_ij` on the exterior, i.e. the `k`-space identity at general `N` — re-runs the
+`BAXTER` machinery with Yukawa tails in both `Q` and `c`. Multi-file, exactly as flagged for
+MSAEXACT.1, and not attempted.
+
+### Landed — MSAEMIX.3 (`LeanCode/YukawaOZMix/MSAMixtureSelection.lean`, 2026-08-19)
+
+Build 8784 jobs, `#print axioms` = the standard three on all eight theorems, own `^axiom ` count 0.
+`ring`, `field_simp`, `Finset` cardinality — nothing else.
+
+**Eq. (41) is not an extra physical input.** `bh41_iff_contact_symm` shows the criterion is exactly
+`g_ij = g_ji` (the `2πσ_ij` of (38) is common to both sides, given `σ` symmetric and nonzero), and
+`bh41_expand` shows that substituting (24) turns that difference into Blum & Høye's *printed* (41),
+needing only that `q^{0′}` is symmetric. So (41) is `g_ij = g_ji` rewritten, and the numerical
+finding that it is a **free root test** — not imposed, the system is square without it, and it
+returns `0 … 1e-15` on the branch through `K = 0` (MSAX.6 gate §4) — is consistent with it being a
+consequence rather than a constraint.
+
+**The vacuity, stated both ways.** `bh41_vacuous_at_fin_one`: at `N = 1` *every* candidate passes —
+the formal record of why single-component selection had to be supplied separately by MSAEXACT.3
+(`physical_baxter_factor_unique`, `A/2π > 0`). `bh41_conditions_card_{one,two,three}` counts the
+same fact: `0`, `1`, `3` conditions. And `bh41_not_vacuous` closes the group's own non-vacuity
+discipline from the other side — an explicit `N = 2` candidate the criterion **rejects**, so
+"acceptable root" theorems are not vacuously true.
+
+⭐ **`A0_row_index_forced` — the trap MSAX.6 had to clear.** (24) is printed as
+`q′_ij = q^{0′}_ij(1 + M_j) + A_i⁰ N_j`, and `A_i⁰` is the one object carrying the **row** index,
+alone among `M_j, N_j, A_j, B_j`. It is forced, not a typo: (13)/(14) give `q′_ij = B_j + σ_ij A_j`,
+and expanding with (23) makes the `N_j` coefficient `A_j⁰ + 4B_j⁰λ_ji/σ_j²`, which collapses
+identically to `A_i⁰`. Proved here as a `field_simp; ring` identity on (25)'s closed forms.
+⚠ At equal diameters `λ_ji = 0` and the two readings coincide — which is exactly why the misreading
+survives every equal-`σ` check, and why it only surfaced against Tang & Lu's `σ₂/σ₁ = 1.5` table.
+
+⚠ **Ceiling.** Eq. (41) is formalised as a *criterion* — what it says, that it is `g_ij = g_ji`, that
+it is vacuous at `N = 1` and proper beyond. That the physical branch **satisfies** it is measured
+(MSAX.6, `SolutionMix.symmetry_defect`), not proved; proving it needs MSAEMIX.1, the factorization.
+
+⚠ **Ceiling.** This is the fixed-`(η, T)` algebra only, exactly as the scalar Tier 1 is. That the
+*physical* branch has `det F > 0`, and where in `(η, T, x)` it vanishes, are measured
+(`msa_exact_mix.spinodal_densities` / `trace_coupling_mix`), for the same reason MSAEXACT.3's
+`hcoupling_pins` is.
 
 **MSAEMIX.2 is not decoration.** It is the check that the matrix statement is the right
 generalisation and not a differently-normalised object — the role `AppendixBridgeN1` plays for the

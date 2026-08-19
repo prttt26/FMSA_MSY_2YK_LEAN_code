@@ -147,6 +147,8 @@ import LeanCode.YukawaOZ.BijReduction
 import LeanCode.YukawaOZ.ContactMatching
 import LeanCode.YukawaOZ.I1I2Integrals
 import LeanCode.YukawaOZ.InnerOriginBC
+import LeanCode.YukawaOZ.MSAFactorizationSplit
+import LeanCode.YukawaOZ.MSADCFTransform
 import LeanCode.YukawaOZ.MSAClosedForm
 import LeanCode.YukawaOZ.MSAElimination
 import LeanCode.YukawaOZ.MSABaxterTransform
@@ -159,6 +161,9 @@ import LeanCode.YukawaOZ.YukawaInnerCore
 -- ===== Layer 4 — N-component Yukawa mixture OZ =====
 import LeanCode.YukawaOZMix.AppendixBridgeN1
 import LeanCode.YukawaOZMix.InnerDecomp
+import LeanCode.YukawaOZMix.MSAMixturePositivity
+import LeanCode.YukawaOZMix.MSAMixtureCancellation
+import LeanCode.YukawaOZMix.MSAMixtureSelection
 import LeanCode.YukawaOZMix.MixtureClosedForm
 import LeanCode.YukawaOZMix.MixtureConvolution
 import LeanCode.YukawaOZMix.MixtureDCFSmooth
