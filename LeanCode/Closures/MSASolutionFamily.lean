@@ -88,4 +88,47 @@ theorem msa_amplitude_differentiableAt_yukawa {xi z : ℝ}
     (bhF_fderiv_snd xi z (G0 xi z)) (bhP_fderiv_snd xi z (G0 xi z))
     (bhF_base_ne_zero hxi hz) (bh_base_eq hxi hz)
 
+/-! ## MSAFAM.5 — the transport half (the pair family from the Baxter transform)
+
+MSAFAM.5 has two halves (proof note, gap (C)):
+
+* **the transport** — given the Baxter transform `τ ↦ (Q̂(k,τ), Q̂(−k,τ))` along the coupling as a
+  smooth family, non-vanishing at `τ = 0`, produce the pair `(H̃, C̃)` obeying OZ and smooth near `0`.
+  `C̃ = 1 − Q̂(k)Q̂(−k)` is explicit and `H̃ = (1−C̃)⁻¹ − 1`, so OZ is definitional and the only real
+  content is smoothness + the non-vanishing that lets `(·)⁻¹` be taken. **This is done below.**
+* **the identity** — that the amplitudes `ψ(τ)` of the Blum–Høye system actually give a Baxter
+  factorization `1 − ρĉ_MSA = Q̂(k)Q̂(−k)` with `ĉ_MSA` the MSA closure DCF. **This is MSAEXACT.1's
+  open closure-recovery core** (a multi-file effort re-running `baxter_wiener_hopf_factorization` with
+  the tails) and is NOT attempted here.
+
+So `msaSolutionFamily_transport` closes the transport half unconditionally, reducing MSAFAM.5 to a
+single remaining input: **the concrete `ContDiff` family `τ ↦ Q̂(±k, ψ(τ))`** — the `k`-space Baxter
+transform of `msaBaxterFn` evaluated along the `MSAFAM.3` root `ψ` (`exists_contDiffAt_root_…`), with
+`Q̂(k,0) ≠ 0` (no spinodal at the PY point on the `k`-axis).  That transform is MSAEXACT.1 territory. -/
+
+open Filter in
+/-- **MSAFAM.5, transport half.**  Let `Qp, Qm : ℝ → ℂ` be the Baxter transform `τ ↦ Q̂(±k, τ)` along
+the coupling — smooth at `τ = 0` and with `Q̂(k,0)·Q̂(−k,0) ≠ 0` (which on the real `k` axis is
+`|Q̂(k,0)|² > 0`, the no-spinodal condition at the Percus–Yevick point).  Then the MSA pair family
+`C̃ = 1 − Q̂(k)Q̂(−k)`, `H̃ = (1−C̃)⁻¹ − 1` is smooth at `0` and obeys the Ornstein–Zernike relation
+`(1 + H̃)(1 − C̃) = 1` on a neighbourhood of `0` — exactly the three hypotheses FOEQ.7/.8
+(`oz_msa_taylor_eq_hierarchy`, MSAFAM.4-weakened) consume.
+
+The OZ relation is definitional here (`H̃` is *built* from `C̃` through it), so the content is entirely
+smoothness + the eventual non-vanishing of `Q̂(k)Q̂(−k)` that lets `(·)⁻¹` be taken.  What this does
+**not** supply is the *identity* half — that `1 − C̃` is the MSA closure's DCF factor — which is
+MSAEXACT.1. -/
+theorem msaSolutionFamily_transport {n : ℕ∞ω} {Qp Qm : ℝ → ℂ}
+    (hQp : ContDiffAt ℝ n Qp 0) (hQm : ContDiffAt ℝ n Qm 0)
+    (h0 : Qp 0 * Qm 0 ≠ 0) :
+    ∃ H C : ℝ → ℂ, ContDiffAt ℝ n C 0 ∧ ContDiffAt ℝ n H 0 ∧
+      (∀ᶠ τ in 𝓝 (0 : ℝ), (1 + H τ) * (1 - C τ) = 1) := by
+  have hW : ContDiffAt ℝ n (fun τ => Qp τ * Qm τ) 0 := hQp.mul hQm
+  refine ⟨fun τ => (Qp τ * Qm τ)⁻¹ - 1, fun τ => 1 - Qp τ * Qm τ,
+    contDiffAt_const.sub hW, (hW.inv h0).sub contDiffAt_const, ?_⟩
+  filter_upwards [hW.continuousAt.eventually_ne h0] with τ hτ
+  have : (1 + ((Qp τ * Qm τ)⁻¹ - 1)) * (1 - (1 - Qp τ * Qm τ))
+      = (Qp τ * Qm τ)⁻¹ * (Qp τ * Qm τ) := by ring
+  rw [this, inv_mul_cancel₀ hτ]
+
 end FMSA.MSASolutionFamily
