@@ -31,12 +31,15 @@ rearranges to the inverse form `q0⁻¹ = 1 + 2π√(ρρ)W₀₀/(Δ·q0)`; and
 denominator (`detTL = q0 = det Q̂₀`) — so at `N = 1` **both** the `W` numerator and the `det`
 denominator are tied to the actual objects: `[Q̂₀]⁻¹ = 1 + 2π√(ρρ)W₀₀/(Δ·detTL)`, `detTL = det Q̂₀`.
 
-**Remaining (general `N`):** the same for the `N×N` Woodbury inverse `[Q̂₀]⁻¹ = I + U(I−VU)⁻¹V`
-(`Q0_mat_phys_inv_eq`) — Tang & Lu's Appendix A2–A7, computing the `2×2` inverse `(I−VU)⁻¹` and
-matching its entries to `2π√(ρρ)W/(Δ det)·e^{−ikλ}`.  This is a whole-appendix algebraic derivation
-*and* requires complexifying the project's real-`z` rank-2/Woodbury machinery (`Umat`/`Vmat`,
-`Q0_mat_phys_eq_one_sub_mul`) to the complex argument `s = ik` the contour uses.  `N = 1` is the
-scalar base case (no `2×2` inverse), which is why it closes to `ring`.
+**General `N` — DONE** (this is now the scalar special case, not an open task).  The `N×N`
+Appendix inverse bridge is `FMSA.ComplexRankTwo.Q0_inv_entry_bridge`
+(`HSMixture/Q0ComplexDetMatchClose.lean`): for every `{N : ℕ}` it proves
+`{[Q̂₀(s)]⁻¹}ᵢⱼ = δᵢⱼ + 2π√(ρᵢρⱼ)·Wtl_ij·e^{−sλᵢⱼ}/(Δ·detTL)` — Tang & Lu's Appendix A2–A7,
+complexified to `s = ik`, via the `2×2` Woodbury inverse `(I−VₒUₒ)⁻¹ = detTL⁻¹·adj`
+(`Q0_mat_c_phys_inv_eq`) and the scalar coefficient match `numMatch` (`B_ij·Δ = 2π·Wtl_ij`).
+It is axiom-clean (standard three only; it takes `hdet : IsUnit det` as a hypothesis, so it does
+**not** invoke the physical no-spinodal axiom).  This file keeps the scalar `N = 1` case (no `2×2`
+inverse, so it closes to `ring`) as a self-contained special-case check of that same identity.
 -/
 
 set_option linter.style.longLine false
