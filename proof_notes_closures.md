@@ -1,4 +1,4 @@
-# Proof Notes: First-Order PY / HNCB Closures of the YK-Tail FMSA-DP Construction (Groups PYE / HNCB / FOEQ)
+# Proof Notes: First-Order PY / HNCB Closures of the YK-Tail FMSA-DP Construction (Groups PYE / HNCB / FOEQ / MSAFAM)
 
 Proof records for the **closure identity** of the shipped YK-tail FMSA-DP construction: at the
 zeroth pull-back rung it **is** the first-order PY DCF (**Group PYE**), and the full fixed-rate
@@ -57,7 +57,7 @@ between PYE.3/PYE.4 and the physical claim "the inner-core DCF is the first-orde
 | PYE.3 ⭐ | DCF error = DP-map applied to the finite-tail fit residual (*recommended first*) | ✓ DONE (2026-07-31, axiom-clean) — boundedness **proved, not assumed** |
 | PYE.4 | Abstract equivalence: `DP-map[g_HS·(−βu)] = OZ+PY first order` | ◑ **substantially reduced (2026-08-03)** — the lift is built except for ONE named classical input: `TailFitWHConvergent` is now *derived* from `L¹` convergence + an `L¹`-bounded WH projection (`WHProjectionL1`, MA.13/MA.15-class, non-vacuity certified) |
 | PYE.5 | **`k → r` bridge**: k-space identity ⇒ real-space DCF on the core `(0,R)` | ✓ DONE (2026-08-03, axiom-clean) |
-| PYE.6 | the zeroth-order factor **is** the PY hard-sphere Baxter factor | ✓ DONE at `N = 1` (2026-08-03, from BAXTER.3 + MRS.0b); general `N` = **MRS.8**, open |
+| PYE.6 | the zeroth-order factor **is** the PY hard-sphere Baxter factor | ✓ DONE at `N = 1` (2026-08-03, axiom-clean); **general `N` DONE (2026-08-19)** — `dp_zeroth_order_is_py_N` / `dp_eq_py_first_order_N`, carries `pyhs_mixture_no_spinodal` via `hTS` |
 | PYE.7 | density of finite Yukawa-tail fits ⇒ the residual → 0 on the outer window | ✓ DONE (2026-08-03, axiom-clean) — via Weierstrass after `t = e^{−r}`, **not** Stone-Weierstrass; ⚠ was called "PYE.5" in the 08-02 note |
 
 **Lean home.** All of Group PYE lives in **`LeanCode/Closures/ClosureExpansions.lean`**
@@ -421,13 +421,19 @@ Landed in the PYE file on top of them:
   `B₁ = Q̂₀ᵀH₁Q̂₀`) — and unlike the 08-02 `Qp = Qm = !![2]` witness this one has the genuinely
   distinct `Q̂₀(k)`, `Q̂₀(−k)`.
 
-**⚠ General `N` is exactly MRS.8 and is still open.** `Cmix0_factorization` (MRS.6) gives
-`Q̂₀(k)Q̂₀ᵀ(−k) = I − Ĉ₀` by *definition* of `Ĉ₀`; identifying that `Ĉ₀` with the physical Lebowitz
-mixture PY DCF is MRS.8, deferred. So the "same `Q̂₀` on both sides" caveat is **discharged at
-`N = 1`, still a caveat for `N ≥ 2`**.
+**✅ General `N` — DONE (2026-08-19), `Closures/DPClosureMap.lean`.**  `mixBaxterMat`/`mixT0Mat`
+lift the `N = 1` wiring to the physical `N`-component Baxter matrix `Q̂₀(ik) = Q0_mat_c_phys(i·k)`:
+`mixT0Mat_factorization` = `hfact` (`Cmix0_factorization`, MRS.6); `mixT0Mat_isSymm` = `hT0symm`
+(momentum-space `Ĉ₀ᵀ = Ĉ₀` from MRS.7 `Cmix0_phys_swap`'s rank-2 KEY relations — **`#print axioms`
+= std-3, axiom-clean**); `mixT0Mat_isUnit_det` = `hTS` (from `pyhs_mixture_no_spinodal`,
+`det Q̂₀(ik) ≠ 0`).  Bundled as `dp_zeroth_order_is_py_N`, and `dp_eq_py_first_order_N` applies
+MRS.2 (`dp_eq_py_first_order_of_exact_fit`) leaving only `hoz`.
 
-**Status.** ✓ `N = 1` DONE (axiom-clean); general `N` blocked on MRS.8 (off the critical path per
-`proof_notes_mixture_dcf.md`).
+**Status.** ✓ `N = 1` DONE (axiom-clean); ✅ **general `N` DONE** — `dp_zeroth_order_is_py_N` /
+`dp_eq_py_first_order_N`, `#print axioms` = **std-3 + the single physics axiom
+`pyhs_mixture_no_spinodal`** (via `hTS`; `hfact`/`hT0symm` are std-3).  The value-route
+identification `Ĉ₀ = Cmix0 =` physical Lebowitz DCF is MRS.8 (`shellForcing_eq_cMixDCFN`) with
+`Cmix0 = 𝓕(matDCFfull)` (`MixtureDCFAEInjective`).
 
 ---
 
@@ -745,13 +751,20 @@ which is why FOEQ.1 is small and why the closure layer is not the gap.
 | FOEQ.2 | supports are `s`-free | ✓ discharged by construction (record-only) |
 | FOEQ.3 ⭐ | `oz_deriv_eq_firstOrderLine` | **✓ DONE** |
 | FOEQ.4 | `firstOrder_dcf_of_oz_deriv` (algebraic) **+** `firstOrder_khat_unique` / `firstOrder_dcf_unique_on_core` / **`firstOrder_dcf_unique_on_core_of_oz`** (WH-uniqueness) | **✓ DONE** — both halves; real-space core uniqueness via PYE.5. **2026-08-11: the left inverse is no longer assumed** — `_of_oz` derives it from the zeroth-order OZ `(1+H̃₀)(1−C̃₀)=1` (`Matrix.mul_eq_one_comm`), so it rests only on OZ + the `γ=1` line + injectivity |
-| FOEQ.5 ⭐⭐ | existence of the derivative | ◑ **Jacobian ✓, IFT ✓, item (i) structural core ✓, AND the C¹ upgrade ✓ (2026-08-11)** — `msa_amplitude_differentiable_of_bh_shape`: from `F,P` **`C¹`** + the vanishing-`G`-derivative structure + `F₀≠0` + the PY base equation, the amplitude is differentiable at `K=0`, **no abstract `f₂` hypothesis**. Item (i)'s residue is now **only (a)** the literal transcription of the BH `F,P` — see below |
+| FOEQ.5 ⭐⭐ | existence of the derivative | ◑ **Jacobian ✓, IFT ✓, item (i) structural core ✓, AND the C¹ upgrade ✓ (2026-08-11)** — `msa_amplitude_differentiable_of_bh_shape`: from `F,P` **`C¹`** + the vanishing-`G`-derivative structure + `F₀≠0` + the PY base equation, the amplitude is differentiable at `K=0`, **no abstract `f₂` hypothesis**. Item (i)'s residue is now **only (a)** the literal transcription of the BH `F,P` — see below, and now **MSAFAM.1–2** |
 | MSAEXACT.5 ⭐ | `firstOrder_amplitude_eq_hardSphere_dressed` | **✓ DONE** (same file) |
 
 `#print axioms` = the standard three on **all** theorems, the FOEQ.4/5 additions included (verified
 2026-08-10). Raw `grep -rn "^axiom "` reads prose false positives (docstring lines beginning
 "axiom "); the real ledger is unchanged at **8 = 7 math + 1 physics**. ⚠ Quote the classified count,
 never the raw one.
+
+⚠ **Item (i), and the two gaps beyond it, now live in Group MSAFAM (opened 2026-08-19, below).**
+FOEQ.5's residue is not the whole of Theorem I.1's hypothesis — it is one of three gaps (the
+transcription), and the other two (`γ=1` → every `γ`; amplitude → *solution family*) were never
+FOEQ tasks. MSAFAM carries all three because the third is gated on MSAEXACT.1, which FOEQ by
+charter does not depend on. **FOEQ's own status is unchanged**: it stays ◑ until MSAFAM.2 lands,
+at which point FOEQ.5's capstone becomes hypothesis-free at `γ = 1` and the group closes.
 
 ⚠ **The group is STILL NOT closed — but only by item (i).** FOEQ.1–4 are now fully done, and FOEQ.5's
 two *provable* halves (the block-triangular Jacobian condition and the IFT application) landed
@@ -909,7 +922,7 @@ the whole analytic half — strict differentiability, the eventual solve, contin
 
 **The residue of item (i) is therefore only (a):** the *literal* transcription of the BH `F, P` in
 `(Dt, G)` (`waisman_msa_closed_form.md` §7f–§7g — polynomials and `exp`, three known print errors, the
-`2×2` `N=1` system where every `e^{z}` cancels) **plus** their `C¹`-ness and the two facts the capstone
+`2×2` `N=1` system where every `e^{z}` cancels — **this is MSAFAM.1–2**) **plus** their `C¹`-ness and the two facts the capstone
 takes as hypotheses: the vanishing-`G`-derivative property (`fderiv F/P (0,G₀) (0,1)=0`) and the PY
 base equation `2π G₀ F₀ = P₀`. That is pure algebra/transcription, no analysis. General `N` gated on
 MSAEMIX. Until (a) lands, `F, P` and those two facts are still the capstone's hypotheses.
@@ -955,3 +968,201 @@ derivations in `waisman_msa_closed_form.md`.
 * **Scope boundary.** FOEQ says nothing about how *good* first order is. That is the truncation cost
   (paper §XI: 20–37 % pointwise at full coupling, 8.4/1.3/1.4 % in `ĉ_ij(0)`, 15–20 % near a
   spinodal) and it is a measurement, not a theorem target.
+
+---
+
+# Group MSAFAM — The MSA Solution Family in the Coupling: Constructed, and Smooth at Zero
+
+**Opened 2026-08-19.** Source: paper Theorem `thm:firstorder`
+(`FMSA_dp_output/tex/fmsa_dp_theory.tex:303`) and its disclosure bullet in §"What is *not*
+formalized" (`:1600`). Numerical partner: `numerical_notes/theory/waisman_msa_closed_form.md`
+§7f–§7g and `numerical_notes/results/msa_exact/coupling_series_radius.md`.
+
+**Purpose, in one line: remove Theorem I.1's hypothesis. Not weaken it, not witness it.**
+
+## What the hypothesis *is*, exactly
+
+The paper: *"Fix `γ ≥ 1` and let `τ ↦ (H̃(τ), C̃(τ))` solve OZ+MSA at coupling `τK`, `γ` times
+differentiable at `τ = 0`."* In Lean that is not a paraphrase — it is literally the three
+hypotheses of FOEQ.7 `oz_taylor_coeff_eq_cauchy_convolution`:
+
+    (h1)  hH  : ContDiffAt ℝ γ H 0
+    (h2)  hC  : ContDiffAt ℝ γ C 0
+    (h3)  hOZ : ∀ s, (1 + H s) * (1 - C s) = 1
+
+So the target is unambiguous: **construct `H C : ℝ → 𝔸` from the model data and prove (h1)–(h3).**
+Anything less leaves the hypothesis standing; nothing more is needed to retire it.
+
+⚠ **This is NOT what FOEQ.5 produces, and the difference is two thirds of the work.** FOEQ.5's
+capstone `msa_amplitude_differentiable_of_bh_shape` returns `∃ D : ℝ → ℝ, D 0 = 0 ∧
+DifferentiableAt ℝ D 0` — **one real unknown** of the Blum–Høye system, at **`γ = 1`**, with `F, P`
+still hypotheses. The paper's hypothesis is about the **pair family** at **every `γ`**. Reading
+FOEQ.5's residue as "the hypothesis, modulo a transcription" understates it by two gaps:
+
+| gap | from | to | depth |
+|---|---|---|---|
+| **(A) transcription** | abstract `F, P` with four assumed properties | the concrete BH `F, P` of theory note §7g | algebra only, no analysis |
+| **(B) order** | `DifferentiableAt … 0` (`γ = 1`) | `ContDiffAt ℝ γ … 0` for every `γ` | ⭐ **free — Mathlib has it** |
+| **(C) family** | the amplitude `Dt(K)` | the pair `(H̃(τ), C̃(τ))` obeying OZ | the real depth; gated on **MSAEXACT.1** |
+
+Gap (C) is why the group exists at all. An amplitude that moves differentiably is not a solution
+family: nothing in FOEQ.5 says the numbers it produces *solve* OZ+MSA, and that step is exactly
+MSAEXACT.1's factorization `Q̂(s)Q̂(−s) = 1 − ρĉ(s)` — whose full closure-recovery half is the
+open analytic core of that group.
+
+## Why a separate group
+
+**Not FOEQ.10.** FOEQ's charter is explicit that it depends on nothing: *"Filing FOEQ under
+MSAEXACT would gate FOEQ.1–4 behind the degree-8 elimination … and FOEQ.1–4 are not gated on
+anything."* MSAFAM.5 **is** gated on MSAEXACT.1. Filing this under FOEQ would import that gate
+into the one group whose value is that it has none — and would move FOEQ from "◑ one transcription
+short" to "◑ blocked on a multi-file analytic core", which is a worse description of both.
+
+**Not MSAEXACT.6.** MSAEXACT answers *what the exact solution is* — closed form, elimination,
+which root is physical. MSAFAM answers *that a solution family exists and moves smoothly with the
+coupling*. The closed form does not state that, and MSAEXACT.3's uniqueness does not give it: a
+unique root at each `K` says nothing about regularity in `K`.
+
+**The deliverable is a constructed object, not another conditional lemma** — and only a
+construction can retire a hypothesis. That is the structural reason it is its own group rather than
+a row appended to either neighbour.
+
+⭐ **Closing condition, stated once so it cannot drift.** When MSAFAM.6 lands, the paper's
+§"What is *not* formalized" loses its Theorem-I.1 bullet and the theorem becomes unconditional at
+`N = 1`. Until then that bullet stays, **including** its "what is measured, in place of proof"
+paragraph. Landing MSAFAM.1–4 alone does *not* license editing it — they close (A) and (B), and
+the bullet's subject is the hypothesis as a whole.
+
+## Tasks
+
+| task | statement | depends on | status |
+|---|---|---|---|
+| MSAFAM.1 | `bhF`, `bhP : ℝ × ℝ → ℝ` — the *concrete* Blum–Høye residual data in `(Dt, G)` at `N = 1`, one tail, plus `ContDiff ℝ ∞` for both | theory note §7g | ☐ |
+| MSAFAM.2 ⭐ | the four properties FOEQ.5's capstone assumes, **proved for `bhF`/`bhP`**: vanishing `G`-derivative, `bhF (0,G₀) = 1 − ρQ̂₀(z)`, `F₀ ≠ 0` from `Q0_ne_zero_at_yukawa`, and the PY base equation `2π·G₀·F₀ = bhP (0,G₀)` | MSAFAM.1; MSAEXACT.4; an `N=1` HS identity | ☐ — **closes gap (A); FOEQ.5 becomes hypothesis-free at `γ=1`** |
+| MSAFAM.3 ⭐ | `exists_contDiffAt_root_of_prodDomain_ift` — the `C^n` implicit function, replacing `exists_hasDerivAt_root_of_prodDomain_ift` | Mathlib `ContDiffAt.contDiffAt_implicitFunction` | ☐ — **closes gap (B); available now** |
+| MSAFAM.4 ⚠ | weaken FOEQ.7/FOEQ.8's `hOZ` from `∀ s` to `∀ᶠ s in 𝓝 0` | `Filter.EventuallyEq.iteratedDeriv_eq` | ☐ — **small, and load-bearing: see below** |
+| MSAFAM.5 ⭐⭐ | `msaSolutionFamily` — from the root `ψ(τ)` to `H C : ℝ → ℂ` at fixed real `k`, with `ContDiff` and `∀ᶠ τ, (1+H τ)(1−C τ) = 1` | **MSAEXACT.1 (full)**; MSAFAM.1–4 | ☐ — gap (C), the real depth |
+| MSAFAM.6 ⭐⭐ | Theorem I.1 with **no hypothesis**: `oz_msa_taylor_eq_hierarchy` applied to the constructed family, `N = 1` | MSAFAM.2/3/4/5 | ☐ — the capstone |
+| MSAFAM.7 | the same at general `N` | **gated on MSAEMIX**, deliberately | ☐ |
+
+Home: `YukawaOZ/MSABlumHoyeSystem.lean` (L3, namespace `FMSA.MSAExact`, beside `MSAClosedForm.lean`)
+for MSAFAM.1–2; `Closures/MSASolutionFamily.lean` (L5, new namespace `FMSA.MSASolutionFamily`) for
+MSAFAM.3–6. MSAFAM.4 edits `Closures/FirstOrderEquivalence.lean` in place.
+
+## The three gaps, in order of depth
+
+### (A) Transcription — MSAFAM.1/2, algebra with no analysis in it
+
+Theory note §7g, at one tail, in the variables where every `e^{z}` cancels:
+
+    bhF (Dt, G) = 1 − ρ·Q̂(z)                                  … the Baxter factor
+    bhP (Dt, G) = A + z·q′ + (z²/2)·γ·Dt ,   γ = 1 − 2πρ·G·e^{−z}/z
+
+with `Q̂(z) = φ₁(z)q′ + φ₂(z)A + {[2πρ·Dt·G/z + γ·Dt·e^{−z}]/(2z) + γ·Dt(1−e^{−z})/z}`, and `A`,
+`q′` themselves depending on `(Dt, G)` through `M`, `N`. Polynomials, `exp`, and division by
+nonzero constants — `ContDiff ℝ ∞` is `fun_prop`.
+
+The four properties MSAFAM.2 owes are not equally sized:
+
+* **vanishing `G`-derivative** (`fderiv bhF (0,G₀) (0,1) = 0`, same for `bhP`) — the ⭐ insight
+  already recorded: `G` enters both **only** through the factor `Dt`, and `Dt = 0` at the base
+  point. With `bhF`/`bhP` written as above this should fall to `fderiv` computation, because every
+  `G`-bearing monomial carries a literal `Dt` factor. ⚠ Write them so that this is *syntactically*
+  visible; a formulation that expands `γ·Dt` into `Dt − 2πρ·G·Dt·e^{−z}/z` is equally true and much
+  worse to differentiate.
+* **`bhF (0,G₀) = 1 − ρQ̂₀(z)`** — the load-bearing one, and the *only* place the transcription
+  touches the rest of the library. Without it `F₀ ≠ 0` cannot be discharged from
+  `HardSphere.Q0_ne_zero_at_yukawa` and the whole chain reverts to an assumption.
+* **the PY base equation `2π·G₀·F₀ = bhP (0,G₀)`** — ⚠ **this is a hard-sphere identity, not a
+  Yukawa one.** At `Dt = 0` it reads `2π·ĝ_PY(z)e^{z}·(1−ρQ̂₀(z)) = (A⁰ + z·q⁰′)/z²`: a relation
+  among the PY Baxter factor, the PY `g`'s Laplace transform, and the PY coefficients, with no tail
+  in it. **Locate it before deriving it** — `HardSphere/{BaxterWienerHopf,BaxterRenewal,RadialLaplace}.lean`
+  and MSAEXACT.4's `y0_py_eq_contact` are where an equivalent is most likely already sitting. If it
+  genuinely is absent it is a small HS task, and it should be *filed as one*, not smuggled in here.
+* **`G₀` must be a `def`, not a variable.** FOEQ.5's capstone leaves `G₀` free; the concrete version
+  has to name it (`G₀ = ĝ_PY(z)·e^{z}`), which is what makes the base equation a theorem rather
+  than a hypothesis with a suggestive name.
+
+⚠ **Three known print errors in the source** (Blum & Høye 1978: (36) drops a power of `z` vs (21),
+with the correct powers *mixed*; (35) inverts `z` vs (27); (29) omits `e^{zσ_ij}`). The
+transcription must be against `waisman_msa_closed_form.md`'s corrected forms, **never** against the
+printed equations. This is the one place in the group where a wrong character is not caught by any
+type.
+
+### (B) Order — MSAFAM.3, and it is free
+
+⭐ **The pinned Mathlib already has the `C^n` implicit function theorem, in exactly the ProdDomain
+form this project consumes.** `Mathlib/Analysis/Calculus/ImplicitContDiff.lean`:
+
+    ContDiffAt.contDiffAt_implicitFunction
+      (cdf : ContDiffAt 𝕜 n f u) (pn : n ≠ 0)
+      (if₂ : (fderiv 𝕜 f u ∘L .inr 𝕜 E₁ E₂).IsInvertible) :
+      ContDiffAt 𝕜 n (cdf.implicitFunction pn if₂) u.1
+
+with `implicitFunction_apply_self` and `eventually_apply_implicitFunction` beside it — the same
+three facts `exists_hasDerivAt_root_of_prodDomain_ift` extracts, one smoothness class up. Since the
+BH map is `C^∞`, the root is `C^∞` at `τ = 0`, which is what Theorem I.1's `∀γ` needs.
+
+So MSAFAM.3 is a drop-in: same shape, `HasStrictFDerivAt` → `ContDiffAt`, `HasDerivAt ψ ψ' 0` →
+`ContDiffAt ℝ n ψ 0`. Keep the `HasDerivAt` version — FOEQ.5's `γ=1` capstone consumes it and there
+is no reason to churn a landed theorem.
+
+⚠ Per `feedback_stale_blockers`: the `γ = 1` ceiling was never argued as a Mathlib gap, but it was
+never lifted either, and it has been quietly setting the group's scope since 2026-08-10. **Check
+the library before assuming the ceiling is real** — this is the same lesson as MA.8.
+
+### (C) Family — MSAFAM.5, the real remaining depth
+
+The root `ψ(τ) = (Dt(τ), G(τ))` is a pair of numbers. Theorem I.1 wants functions obeying OZ. Two
+halves:
+
+* **the identity**, pointwise in `τ`: coefficients satisfying the algebraic system ⇒ Baxter
+  factorization ⇒ OZ with the MSA closure. **This is MSAEXACT.1**, and its closure-recovery half is
+  that group's open analytic core (a multi-file effort re-running `baxter_wiener_hopf_factorization`
+  with the tails). MSAFAM does not attempt it; it consumes it.
+* **the transport**, in `τ`: with the identity in hand, `C̃(k,τ)` is explicit in `(Dt(τ), G(τ))`
+  — polynomial and `exp` — so `ContDiff` composes. `H̃ = (1−C̃)⁻¹ − 1` needs `1 − C̃(k,τ) ≠ 0`,
+  which on the real `k` axis is `Q̂(k)Q̂(−k) = |Q̂(k)|² > 0`. ⚠ That nonvanishing is *not* free and
+  is not the same fact as `F₀ ≠ 0`: it is the no-spinodal statement, and at finite coupling it is
+  MSAEXACT.3 territory (physical branch only). **Take `k` fixed and real, and state the family at
+  `𝔸 = ℂ`** — Theorem I.1 is pointwise in `k`, so no `L¹`/operator-norm question arises and none
+  should be invented.
+
+### ⚠ MSAFAM.4 — the `∀ s` trap, which would surface only at the last step
+
+FOEQ.7 takes `hOZ : ∀ s, (1 + H s) * (1 - C s) = 1`, **globally in the coupling**. No implicit
+function theorem produces a global root — Mathlib's gives `∀ᶠ x in 𝓝 u.1, f (x, ψ x) = f u`, and it
+could not give more, since the branch folds at finite `τ` (`coupling_series_radius.md`). So **as
+written, FOEQ.7 is unusable by any construction of the kind MSAFAM.5 must perform**, and the
+mismatch appears only when the last piece is being fitted.
+
+The proofs support the weakening in substance — `iteratedDeriv … 0` is local — but not as written:
+`hconst` is proved by `funext s`. Route: make `hconst` a `Filter.EventuallyEq` and rewrite through
+`Filter.EventuallyEq.iteratedDeriv_eq` (`Mathlib/Analysis/Calculus/IteratedDeriv/Lemmas.lean:439`),
+then `iteratedDeriv_const`. Do this **first**, before MSAFAM.5 — it is an hour, and doing it last
+means discovering it with the expensive part already built against the wrong signature.
+
+⚠ It also improves the *paper*: `∀ s` claims OZ+MSA has a solution at every coupling, which is
+false past the fold. The theorem should say what it needs, which is a neighbourhood of zero.
+
+## Constraints and boundaries
+
+* **No new axiom is admissible in MSAFAM.1–4.** They are algebra over `ℝ` with `e^{−z}` a parameter
+  plus one Mathlib IFT — the same rule MSAEXACT states for itself. Needing an axiom means a route
+  was abandoned. MSAFAM.5 inherits whatever MSAEXACT.1 carries, and nothing beyond it.
+* ⚠ **Do not let MSAFAM.1–4 be reported as "the hypothesis is discharged".** They close (A) and (B);
+  the hypothesis is (A)+(B)+(C). The honest interim headline is *"FOEQ.5's capstone is now
+  hypothesis-free at `γ = 1`, and holds at every `γ`; it still produces an amplitude, not a
+  solution family."*
+* ⚠ **The measured evidence is not a partial proof and does not shrink the target.** Analyticity in
+  a measured disc with fortieth-order reconstruction to `6e-16` (SI, `coupling_series_radius.md`)
+  covers the hypothesis *as stated* — which is why the paper can lean on it — but it is evidence.
+  It is also the reason MSAFAM is worth opening rather than living with: the measurement says the
+  statement is true, so the only question left is formalization cost.
+* **Scope.** MSAFAM says nothing about `τ = 1`. The fold, the radius, the divergence of the summed
+  series are all statements at physical coupling; this group is entirely at `τ = 0`. Cf. the
+  paper's *"What does not bear on it"* paragraph — keep them separate here too.
+* **General `N` is deliberately gated.** MSAFAM.7 stacks the matrix root question on an algebra
+  that must already be right, exactly as MSAEMIX does; the paper's Theorem I.1 is stated at general
+  `N`, so `N = 1` closes the *hypothesis's substance*, not its full generality. Say so rather than
+  rounding up.

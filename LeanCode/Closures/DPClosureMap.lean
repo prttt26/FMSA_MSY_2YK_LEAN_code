@@ -13,6 +13,8 @@ import LeanCode.YukawaOZMix.MixtureRealSpace
 import LeanCode.Analysis.RadialFourierInversion
 import LeanCode.HardSphere.BaxterWienerHopfComplex
 import LeanCode.HardSphere.BaxterNoSpinodalEquiv
+import LeanCode.HSMixture.MixtureNoSpinodal
+import LeanCode.YukawaOZMix.MixtureDCFAEInjective
 
 /-!
 # The DP first-order-closure solution map  (Group PYE.2–PYE.7)
@@ -1243,6 +1245,125 @@ theorem exists_tailFit_whConvergent {N : ℕ} {R a C : ℝ} (ha : 0 < a)
     MeasureTheory.setIntegral_congr_fun measurableSet_Ioi fun r _ => abs_sub_comm _ _
   rw [hcomm]
   exact hbound m
+
+
+/-! ## PYE.6 at general `N` — the zeroth-order factor is the physical mixture PY Baxter
+
+The `N = 1` wiring above (`pyBaxterMat`/`pyT0Mat`/`dp_zeroth_order_is_py_n1`) is here lifted to a
+general `N`-component mixture, discharging MRS.2's `hfact`/`hT0symm`/`hTS` with the **physical**
+mixture Baxter matrix `Q̂₀(ik) = Q0_mat_c_phys (i·k)`:
+
+* `hfact` — `T₀ = Q̂₀(ik)·Q̂₀ᵀ(−ik)` — is `Cmix0_factorization` (MRS.6, by definition of `Ĉ₀`);
+* `hT0symm` — `T₀ᵀ = T₀` — is the momentum-space DCF symmetry `Ĉ₀ᵀ = Ĉ₀`, from MRS.7's swap
+  identity `Cmix0_phys_swap` (the rank-2 KEY relations of `Q0phys`/`Qppphys`);
+* `hTS` — `T₀` invertible — is the physical no-spinodal axiom `pyhs_mixture_no_spinodal`
+  (`det Q̂₀(ik) ≠ 0` for real `k ≠ 0`).
+
+⚠ Unlike the `N = 1` case (which uses the PROVEN scalar `pyhs_no_spinodal`), this carries the
+project's single physics axiom `pyhs_mixture_no_spinodal` through `hTS`.  The identification of the
+zeroth-order symbol `Ĉ₀ = Cmix0(Q̂₀)` with the physical Lebowitz mixture PY DCF is the value route
+MRS.8 (`shellForcing_eq_cMixDCFN`, general `N`) together with `Cmix0 = 𝓕(matDCFfull)`
+(`MixtureDCFAEInjective`). -/
+
+section PYE6GeneralN
+
+open FMSA.MixtureNoSpinodal FMSA.MRS FMSA.MatrixQ0 FMSA.MixtureBaxter
+
+variable {N : ℕ} (sigma rho : Fin N → ℝ)
+
+/-- The physical mixture Baxter factor at the Fourier argument `s = i·k`, `Q̂₀(ik)` (`N` species). -/
+noncomputable def mixBaxterMat (k : ℝ) : Matrix (Fin N) (Fin N) ℂ :=
+  Q0_mat_c_phys (Complex.I * (k : ℂ)) sigma rho
+
+/-- The physical mixture zeroth-order structure matrix `T₀ = I − Ĉ₀`. -/
+noncomputable def mixT0Mat (k : ℝ) : Matrix (Fin N) (Fin N) ℂ :=
+  1 - Cmix0 (fun s => Q0_mat_c_phys s sigma rho) (Complex.I * (k : ℂ))
+
+/-- **`hfact` (general `N`)** — `T₀ = Q̂₀(ik)·Q̂₀ᵀ(−ik)` (MRS.6 `Cmix0_factorization`). -/
+theorem mixT0Mat_factorization (k : ℝ) :
+    mixT0Mat sigma rho k
+      = mixBaxterMat sigma rho k * (Q0_mat_c_phys (-(Complex.I * (k : ℂ))) sigma rho)ᵀ := by
+  rw [mixT0Mat, mixBaxterMat, ← Cmix0_factorization]
+
+/-- **`hT0symm` (general `N`)** — the physical momentum-space DCF symmetry `T₀ᵀ = T₀`
+(MRS.7 `Cmix0_phys_swap`, the rank-2 KEY relations). -/
+theorem mixT0Mat_isSymm (hrho : ∀ i, 0 ≤ rho i) (hvac : vacMix rho sigma ≠ 0)
+    {k : ℝ} (hk : k ≠ 0) :
+    (mixT0Mat sigma rho k)ᵀ = mixT0Mat sigma rho k := by
+  have hkc : Complex.I * (k : ℂ) ≠ 0 :=
+    mul_ne_zero Complex.I_ne_zero (Complex.ofReal_ne_zero.mpr hk)
+  rw [mixT0Mat, Matrix.transpose_sub, Matrix.transpose_one]
+  congr 1
+  ext i j
+  rw [Matrix.transpose_apply]
+  refine Cmix0_phys_swap (fun a => (sigma a : ℂ)) (fun a => (rho a : ℂ))
+    (fun b => (Qppphys rho sigma b b : ℂ)) (fun a b => (Q0phys rho sigma a b : ℂ))
+    (fun a b => (Qppphys rho sigma a b : ℂ)) (fun a b => (rhoGeoPhys rho a b : ℂ))
+    (Real.pi / vacMix rho sigma : ℂ) (xi2 rho sigma : ℂ) (Complex.I * (k : ℂ)) hkc
+    ?_ ?_ ?_ ?_ ?_ ?_ j i
+  · intro a b
+    have h := Q0phys_key_relation rho sigma a b hvac
+    have hc : ((Q0phys rho sigma a b : ℝ) : ℂ)
+        = ((sigma a / 2 * Qppphys rho sigma a b
+            + Real.pi / vacMix rho sigma * sigma b : ℝ) : ℂ) := congrArg _ h
+    push_cast at hc ⊢; linear_combination hc
+  · intro a b; rfl
+  · intro b
+    have h := Qppphys_key_relation rho sigma b b hvac
+    have hc : ((Qppphys rho sigma b b : ℝ) : ℂ)
+        = ((2 * (Real.pi / vacMix rho sigma)
+            + (Real.pi / vacMix rho sigma) ^ 2 * xi2 rho sigma * sigma b : ℝ) : ℂ) := congrArg _ h
+    push_cast at hc ⊢; linear_combination hc
+  · simp only [xi2]; push_cast; ring
+  · intro a b; simp only [rhoGeoPhys]; rw [mul_comm (rho a) (rho b)]
+  · intro a b l
+    have h := rhoGeoPhys_mul_eq rho hrho a b l
+    have hc : ((rhoGeoPhys rho a l * rhoGeoPhys rho b l : ℝ) : ℂ)
+        = ((rho l * rhoGeoPhys rho a b : ℝ) : ℂ) := congrArg _ h
+    push_cast at hc ⊢; rw [hc]
+
+/-- **`hTS` (general `N`)** — `T₀` invertible at every real `k ≠ 0`, from the physical no-spinodal
+axiom `pyhs_mixture_no_spinodal` (`det Q̂₀(ik) ≠ 0`).  ⚠ carries `pyhs_mixture_no_spinodal`. -/
+theorem mixT0Mat_isUnit_det (hsig : ∀ i, 0 < sigma i) (hrho : ∀ i, 0 < rho i)
+    (heta : etaMix rho sigma < 1) {k : ℝ} (hk : k ≠ 0) :
+    IsUnit (mixT0Mat sigma rho k).det := by
+  rw [mixT0Mat_factorization, Matrix.det_mul, Matrix.det_transpose]
+  refine isUnit_iff_ne_zero.mpr (mul_ne_zero ?_ ?_)
+  · rw [mixBaxterMat]; exact pyhs_mixture_no_spinodal hsig hrho heta hk
+  · have h2 := pyhs_mixture_no_spinodal hsig hrho heta (neg_ne_zero.mpr hk)
+    have harg : Complex.I * ((-k : ℝ) : ℂ) = -(Complex.I * (k : ℂ)) := by push_cast; ring
+    rwa [harg] at h2
+
+/-- **PYE.6 at general `N` — the zeroth-order MRS.2 inputs, discharged with the physical mixture
+`Q̂₀`.**  `hfact`/`hT0symm`/`hTS`, so MRS.2 needs only `hoz`. -/
+theorem dp_zeroth_order_is_py_N (hsig : ∀ i, 0 < sigma i) (hrho : ∀ i, 0 < rho i)
+    (heta : etaMix rho sigma < 1) (hvac : vacMix rho sigma ≠ 0) {k : ℝ} (hk : k ≠ 0) :
+    mixT0Mat sigma rho k
+        = mixBaxterMat sigma rho k * (Q0_mat_c_phys (-(Complex.I * (k : ℂ))) sigma rho)ᵀ ∧
+      (mixT0Mat sigma rho k)ᵀ = mixT0Mat sigma rho k ∧
+      mixT0Mat sigma rho k * (mixT0Mat sigma rho k)⁻¹ = 1 :=
+  ⟨mixT0Mat_factorization sigma rho k,
+    mixT0Mat_isSymm sigma rho (fun i => (hrho i).le) hvac hk,
+    Matrix.mul_nonsing_inv _ (mixT0Mat_isUnit_det sigma rho hsig hrho heta hk)⟩
+
+/-- **PYE.4 at general `N` with the physical mixture PY zeroth order.**  With the physical mixture
+Baxter matrix as `Q̂₀` (so `hfact`/`hT0symm`/`hTS` are discharged), a fitted WH datum equal to Y1.6's
+projection `B₁ = Q̂₀ᵀ·Ĥ₁·Q̂₀` yields exactly the first-order DCF.  Only `hoz` remains a physical
+input.  ⚠ carries `pyhs_mixture_no_spinodal` via `hTS`. -/
+theorem dp_eq_py_first_order_N (hsig : ∀ i, 0 < sigma i) (hrho : ∀ i, 0 < rho i)
+    (heta : etaMix rho sigma < 1) (hvac : vacMix rho sigma ≠ 0) {k : ℝ} (hk : k ≠ 0)
+    (H1 C1py B1fit : Matrix (Fin N) (Fin N) ℂ)
+    (hoz : H1 * mixT0Mat sigma rho k = (mixT0Mat sigma rho k)⁻¹ * C1py)
+    (hB1 : B1fit = (mixBaxterMat sigma rho k)ᵀ * H1 * mixBaxterMat sigma rho k) :
+    starConjLinear (Q0_mat_c_phys (-(Complex.I * (k : ℂ))) sigma rho) B1fit = C1py :=
+  dp_eq_py_first_order_of_exact_fit (mixBaxterMat sigma rho k)
+    (Q0_mat_c_phys (-(Complex.I * (k : ℂ))) sigma rho) (mixT0Mat sigma rho k)
+    (mixT0Mat sigma rho k)⁻¹ H1 C1py B1fit B1fit hoz
+    (Matrix.mul_nonsing_inv _ (mixT0Mat_isUnit_det sigma rho hsig hrho heta hk))
+    (mixT0Mat_factorization sigma rho k)
+    (mixT0Mat_isSymm sigma rho (fun i => (hrho i).le) hvac hk) hB1 rfl
+
+end PYE6GeneralN
 
 
 end FMSA.FirstOrderClosure
