@@ -124,7 +124,7 @@ integral in `radial_fourier`'s definition reduces to `Set.Ioc 0 σ`, i.e. the `i
 function; this is what lets the core-DCF correction (supported on the core) be transformed with the
 `psiN`/`yuk`/`coshRatio` interval formulas of this file. -/
 theorem radial_fourier_of_core_support (f : ℝ → ℝ) {k sigma : ℝ} (hsigma : 0 < sigma)
-    (hsupp : ∀ r, sigma ≤ r → f r = 0) :
+    (hsupp : ∀ r, sigma < r → f r = 0) :
     radial_fourier f k = (4 * Real.pi / k) * ∫ r in (0 : ℝ)..sigma, r * f r * Real.sin (k * r) := by
   unfold radial_fourier
   congr 1
@@ -135,10 +135,10 @@ theorem radial_fourier_of_core_support (f : ℝ → ℝ) {k sigma : ℝ} (hsigma
     by_cases hr : r ∈ Set.Ioc (0 : ℝ) sigma
     · rw [Set.indicator_of_mem hr]
     · rw [Set.indicator_of_notMem hr]
-      have hrge : sigma ≤ r := by
+      have hrgt : sigma < r := by
         simp only [Set.mem_Ioc, not_and, not_le] at hr
-        exact (hr hr0).le
-      simp [hsupp r hrge]
+        exact hr hr0
+      simp [hsupp r hrgt]
   rw [MeasureTheory.setIntegral_congr_fun measurableSet_Ioi hpt,
     MeasureTheory.setIntegral_indicator measurableSet_Ioc,
     Set.inter_eq_self_of_subset_right Set.Ioc_subset_Ioi_self,
@@ -200,5 +200,42 @@ theorem coreCorr_sine_integral (c1 c2 c3 c4 c5 z sigma k : ℝ) :
     intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
     intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
     intervalIntegral.integral_const_mul]
+
+/-! ### Step 3 glue — the core-DCF correction as a function, and its radial transform -/
+
+/-- The MSA core-DCF correction as a **function** (core-supported): on `[0,σ]` it is
+`c₁ + c₂r + c₃r³ + c₄(1−e^{−zr})/r + c₅·coshRatio/r` (so that `r··` is the smooth integrand of
+`coreCorr_sine_integral`), and `0` beyond `σ`.  The `1/r` terms are `0/0 = 0` at `r = 0`, which is
+harmless — the radial weight `r` and the `sin(kr)` factor both vanish there. -/
+noncomputable def coreCorrection (c1 c2 c3 c4 c5 z sigma : ℝ) (r : ℝ) : ℝ :=
+  if r ≤ sigma then
+    c1 + c2 * r + c3 * r ^ 3 + c4 * (1 - Real.exp (-z * r)) / r + c5 * coshRatio z r / r
+  else 0
+
+/-- **Step 3 glue — the closed form of `radial_fourier(coreCorrection)`.**  The support collapse
+reduces it to `(4π/k)·∫₀^σ r·coreCorrection·sin`, the `1/r`s cancel the radial weight (`sin(kr)`
+covers `r = 0`), and `coreCorr_sine_integral` splits it into the five sub-integrals of the layer.
+Ready for the `a,b,w↔D` match: the caller supplies `c₁ = da`, `c₂ = db`, `c₃ = ½ξ·da`, `c₄ = v/z`,
+`c₅ = v²/(2Kz²)` and rewrites the sub-integrals with `psi1/2/4_formula`,
+`one_sub_exp_sin_integral`, `coshRatio_sin_integral`. -/
+theorem radial_fourier_coreCorrection (c1 c2 c3 c4 c5 z sigma k : ℝ) (hsigma : 0 < sigma) :
+    radial_fourier (coreCorrection c1 c2 c3 c4 c5 z sigma) k
+      = (4 * Real.pi / k) *
+          (c1 * (∫ r in (0 : ℝ)..sigma, r * Real.sin (k * r))
+            + c2 * (∫ r in (0 : ℝ)..sigma, r ^ 2 * Real.sin (k * r))
+            + c3 * (∫ r in (0 : ℝ)..sigma, r ^ 4 * Real.sin (k * r))
+            + c4 * (∫ r in (0 : ℝ)..sigma, (1 - Real.exp (-z * r)) * Real.sin (k * r))
+            + c5 * (∫ r in (0 : ℝ)..sigma, coshRatio z r * Real.sin (k * r))) := by
+  rw [radial_fourier_of_core_support _ hsigma
+    (fun r hr => by simp only [coreCorrection, if_neg (not_le.mpr hr)])]
+  rw [← coreCorr_sine_integral c1 c2 c3 c4 c5 z sigma k]
+  congr 1
+  apply intervalIntegral.integral_congr
+  intro r hr
+  rw [Set.uIcc_of_le hsigma.le] at hr
+  by_cases hr0 : r = 0
+  · subst hr0; simp
+  · simp only [coreCorrection, if_pos hr.2]
+    field_simp
 
 end FMSA.MSAExact
