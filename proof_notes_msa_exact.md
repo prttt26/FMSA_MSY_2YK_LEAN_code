@@ -360,7 +360,7 @@ algebra the mixture group formalises is the algebra that was measured.
 | Task | Title | Status |
 |------|-------|--------|
 | MSAEMIX.0 ⭐ | mixture positivity, the stability determinant, and what (39) does **not** see | **✓ DONE 2026-08-19** (`YukawaOZMix/MSAMixturePositivity.lean`, axiom-clean, 9 theorems) |
-| MSAEMIX.1 | `msaMixture_factorization` — the matrix form of MSAEXACT.1 at general `N` | ◑ **down-payment DONE 2026-08-19** (`YukawaOZMix/MSAMixtureCancellation.lean`, axiom-clean): the **(★) cancellation identity**, the one piece of genuinely mixture-specific algebra. ⚠ The factorization itself — the analytic core — is untouched, as at `N = 1` |
+| MSAEMIX.1 | `msaMixture_factorization` — the matrix form of MSAEXACT.1 at general `N` | ◑ **(★) cancellation DONE 2026-08-19** (`MSAMixtureCancellation.lean`) + **staged to a matrix `hcore` 2026-08-20** (`MSAEMixFactorization.lean`, axiom-clean): `matBaxterProd_split` + `matEMIXfactorization_of_core` reduce the matrix factorization to a single matrix `hcore` ring — **the matrix analog of MSAEXACT.6** — with the coupling-`0` part discharged via the HS-mixture `matSF_of_baxterFourierWH` (`matEMIXfactorization_of_baxterFourierWH`). ⚠ the matrix `hcore` for the specific MSA factor (increment from `M_j,N_j`+tails) is the analytic core, not attempted; at least as hard as scalar MSAEXACT.6 |
 | MSAEMIX.2 | `msaMixture_reduces_to_scalar_at_fin_one` — the `N = 1` specialisation **is** MSAEXACT.1 | ◑ the *positivity* half done (`mixCompressibility_fin_one`, `mixStability_fin_one`); the factorization half waits on MSAEMIX.1 |
 | MSAEMIX.3 ⭐ | mixture root selection — Eq. (41) as the `N ≥ 2` acceptability criterion | **✓ DONE 2026-08-19** (`YukawaOZMix/MSAMixtureSelection.lean`, axiom-clean, 8 theorems) |
 
@@ -413,10 +413,13 @@ Blum & Høye's `M_j`, `N_j` (their (20)/(21)) are built from `D_lj + C_lj`, whos
 * `cancellation_star_fin_one` — MSAEMIX.2's discipline applied here: at one component (★) *is* the
   scalar `(1−γ)D`.
 
-⚠ **Scope, unchanged.** The analytic core of MSAEMIX.1 — that the matrix ansatz **recovers** the MSA
-closure `c_ij = −βu_ij` on the exterior, i.e. the `k`-space identity at general `N` — re-runs the
-`BAXTER` machinery with Yukawa tails in both `Q` and `c`. Multi-file, exactly as flagged for
-MSAEXACT.1, and not attempted.
+⚠ **Scope.** The analytic core of MSAEMIX.1 — that the matrix ansatz **recovers** the MSA closure
+`c_ij = −βu_ij` on the exterior, i.e. the `k`-space identity at general `N` — re-runs the `BAXTER`
+machinery with Yukawa tails in both `Q` and `c`. **Staged 2026-08-20** (`MSAEMixFactorization.lean`,
+axiom-clean): `matBaxterProd_split` + `matEMIXfactorization_of_core` reduce it to a single matrix
+`hcore` ring (the coupling-`0` part discharged via `matSF_of_baxterFourierWH`), **the matrix analog
+of MSAEXACT.6**. The matrix `hcore` for the specific MSA factor (increment from `M_j,N_j`+tails) is
+the analytic core, not attempted — at least as hard as scalar MSAEXACT.6.
 
 ### Landed — MSAEMIX.3 (`LeanCode/YukawaOZMix/MSAMixtureSelection.lean`, 2026-08-19)
 
