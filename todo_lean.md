@@ -540,43 +540,22 @@ MPOLY-related declarations = **standard three**; GAP.8's vacuity re-confirmed by
 
 ### Groups MSAEXACT / MSAEMIX — The Exact MSA Closed Form *(msa_exact)*
 
-The Waisman / Blum–Høye / Ginoza analytic solution of MSA for a hard-core Yukawa fluid, split on the
-single-component (**MSAEXACT**, scalar algebra) / mixture (**MSAEMIX**, matrix eigenstructure) seam —
-the same seam the tree already uses for Y1 vs MRS/MML/MZERO. Numerical partner: Group **MSAX**
-(`todo/waisman_msa_plan.md`); derivation: `numerical_notes/theory/waisman_msa_closed_form.md`.
+Waisman/Blum–Høye/Ginoza analytic MSA for a hard-core Yukawa fluid, split scalar (**MSAEXACT**) /
+matrix (**MSAEMIX**). **No new axiom** (algebra over ℝ, `e^{−zσ}` a parameter). Detail, substrate,
+boundaries, non-vacuity: [proof_notes_msa_exact.md](proof_notes_msa_exact.md). Numerical: Group MSAX.
 
-Opened 2026-08-08 because Group FWL's Stopper Fig. 8 gate at `z = 5, 10` is **not** settleable
-numerically: the OZ solver converges to different MSA solutions per radial grid, λ-ramping pins the
-branch only to `βK ≈ 3`, and `r_max` provably cannot be the cause. The exact solution turns "which
-fixed point did DIIS find" into "which root of an explicit algebraic system is physical".
-
-⭐ `msaRoot_unique_of_coupling_lt` (MSAEXACT.3) is the formal counterpart of the measured `βK ≈ 3`
-boundary. ⭐ `fmsa_eq_firstOrder_msa` (MSAEXACT.5) makes the project's founding premise a theorem:
-FMSA-DP divides the bare coupling by the **hard-sphere** Baxter factor `Q̂₀(z)`, exact MSA by the
-**full** `Q̂(z)` — the two differ by exactly that substitution.
-
-⭐ **MSAEXACT.6 = the gap (new task number, 2026-08-20).** MSAEXACT.1's factorization is now staged
-correctly (non-compact `Q̂`, `factorization_of_core`) down to a single satisfiable core ring `hcore`;
-discharging that ring is **MSAEXACT.6**. It needs a ~1935-op `linear_combination` multiplier with no
-small-multiplier route (only sympy→Lean codegen). This one ring is the sole remaining gap of
-MSAEXACT.1 and of MSAFAM.5/.6 at `N=1`; **MSAEMIX.1's analytic core is its matrix analog** (same/
-similar gap). ⛔ the compact `q0_poly+D·e^{−zr}` route (`msaexact1_iff_core`) is a dead end.
-
-⚠ **MSAEXACT.5 is the *formal* linearisation, and that is not the whole premise.** Expanding the
-self-consistency in `K` recovers FMSA-DP's amplitudes; it does not assert that
-`s ↦ c_MSA(sK)` is **differentiable** at `s = 0`, i.e. that "linearise" means "differentiate". That
-hypothesis is **FOEQ.5** (`proof_notes_closures.md`, Group FOEQ, opened 2026-08-10), which consumes
-MSAEXACT.1 and MSAEXACT.4 ✓ through the implicit function theorem at the PY point. Quote MSAEXACT.5
-as the premise only once FOEQ.5 is discharged; until then it is conditional on it.
-
-**Constraint: no new axiom.** The content is algebra over `ℝ` with `e^{−zσ}` as a parameter; needing
-an axiom means the algebraic route was abandoned somewhere.
-
-See [proof_notes_msa_exact.md](proof_notes_msa_exact.md) for the task tables, the reusable substrate
-(`phi1_formula`/`phi2_formula`, `Q0_ne_zero_at_yukawa`, `Q0_mat_phys*`, BAXTER.3 = MRS.8 at N=1), and
-the recorded boundaries — including the **non-vacuity requirement**: every statement quantifies over
-"coefficients satisfying the algebraic system", so each group needs a non-degenerate witness before
-its results are quoted.
+| Task | Title | Status | Lean file |
+|------|-------|--------|-----------|
+| MSAEXACT.1 | non-compact Baxter factorization `\|1−ρQ̂(ik)\|²=1−ρĉ_MSA` | ◑ **reduced to MSAEXACT.6** (staged via `factorization_of_core`); ⛔ compact `msaexact1_iff_core` route dead | `YukawaOZ/{MSABaxterKSpace,MSAFullFactorization}` |
+| MSAEXACT.6 ⭐ | **the gap** — discharge the `hcore` closure-recovery ring | ☐ ~1935-op `linear_combination` multiplier, no small-multiplier route ⇒ sympy→Lean codegen. Sole gap of .1, MSAFAM.5/.6@N=1; MSAEMIX.1 = matrix analog | `YukawaOZ/MSAFullFactorization` |
+| MSAEXACT.2 | degree-8 elimination = two quartics; physical branch quartic | ✓ DONE | `YukawaOZ/MSAElimination` |
+| MSAEXACT.3 ⭐ | `msaRoot_unique_of_coupling_lt` — unique physical root below coupling threshold | ◑ core DONE (`βK≈3` measured) | `YukawaOZ/MSAClosedForm` |
+| MSAEXACT.4 | PY coeffs annihilate Waisman's eqns at `K=0`, ∀`w` | ✓ DONE | `YukawaOZ/MSAClosedForm` |
+| MSAEXACT.5 ⭐ | `fmsa_eq_firstOrder_msa` — 1st-order MSA = FMSA-DP HS-dressed amplitudes | ✓ DONE (needs FOEQ.5 for "linearise"="differentiate") | `Closures/FirstOrderEquivalence` |
+| MSAEMIX.0 ⭐ | mixture positivity + stability det (spinodal = `det F=0`) | ✓ DONE | `YukawaOZMix/MSAMixturePositivity` |
+| MSAEMIX.1 | matrix factorization (matrix form of MSAEXACT.1) | ◑ (★) cancellation DONE + **staged to matrix `hcore`** (`matEMIXfactorization_of_core`, analog of MSAEXACT.6) | `YukawaOZMix/{MSAMixtureCancellation,MSAEMixFactorization}` |
+| MSAEMIX.2 | `N=1` reduces to MSAEXACT.1 | ◑ positivity half; factorization half ← MSAEMIX.1 | `YukawaOZMix/MSAMixturePositivity` |
+| MSAEMIX.3 ⭐ | Eq.(41) mixture root selection = `g_ij=g_ji` | ✓ DONE | `YukawaOZMix/MSAMixtureSelection` |
 
 ### Group FOEQ — The Two Definitions of "First Order" Agree *(closures)*
 
