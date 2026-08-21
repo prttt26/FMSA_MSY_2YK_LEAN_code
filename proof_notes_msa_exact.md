@@ -60,7 +60,8 @@ algebraic system, and the theory note flags the degree as unsettled.
 
 | Task | Title | Status |
 |------|-------|--------|
-| MSAEXACT.1 | `msaBaxter_factorization_of_closure` — coefficients satisfying the algebraic system ⇒ `Q̂(s)·Q̂(−s) = 1 − ρĉ(s)` | ◑◑◑ **third down-payment DONE 2026-08-19** (`MSADCFTransform.lean`, axiom-clean): the `c`-side's exterior half is closed and MSAEXACT.1 is reduced to **one explicit scalar identity** about the core (`msaexact1_iff_core`), pinned numerically first. Also 2026-08-19: `MSAFactorizationSplit.lean` (the `q`-side transforms and the **split off BAXTER.3**). Earlier: ◑ **down-payment DONE 2026-08-10** (`YukawaOZ/MSABaxterTransform.lean`, axiom-clean): the Baxter-function ansatz `msaBaxterFn` (`q0_poly` + Yukawa), `D→0 ⇒ q0_poly`, and the two Yukawa transform lemmas (`yukawa_laplace_unit`, `yukawa_tail_laplace`). ⚠ **The full factorization (closure recovery) is the remaining analytic core** — a multi-file effort re-running `baxter_wiener_hopf_factorization` with the tails |
+| MSAEXACT.1 | `msaBaxter_factorization_of_closure` — coefficients satisfying the algebraic system ⇒ `\|1 − ρQ̂(ik)\|² = 1 − ρĉ_MSA(k)`, `Q̂` the **non-compact** Baxter factor (pole at `s=−z`) | ◑ **reduced to MSAEXACT.6, correctly, 2026-08-20** (`YukawaOZ/{MSAExteriorTransform,MSABaxterKSpace,MSAFullFactorization}.lean`, axiom-clean): `factorization_of_core` stages `\|1−ρQ̂\|²` into `Dt⁰`(=`1−ρ𝓕[c_HS]`, via `baxter_wiener_hopf_factorization`) + `O(Dt)` + `O(Dt²)`, reducing MSAEXACT.1 to a **single satisfiable** core ring `hcore` = **MSAEXACT.6**. ⚠ the compact `q0_poly+D·e^{−zr}` route (`msaexact1_iff_core`, MSADCFTransform) is a **DEAD END** — an entire-in-`k` factor cannot equal the physical one; its `hcore` is unsatisfiable |
+| MSAEXACT.6 ⭐ (**the gap**) | discharge `hcore` — the closure-recovery core ring `ρ(𝓕[c_core]+𝓕[c_tail]) = 2Dt·X − Dt²·Y` under Blum–Høye (29′)/(33) | ☐ **OPEN — the honest BAXTER-scale gap.** c-side transforms + dictionary DONE & pinned (`MSACoreTransform.lean`, 1e-14); closes via `linear_combination m29·h29 + m33·h33` but **m33 ≈ 1935 symbolic ops, NO small-multiplier route** (four shrink attempts disproved: Dt-elim op-317, K/bhF-rewrite false, atomic false, Dt-order-split no collapse). Only route = sympy→Lean codegen of m33 + heavy `ring` (OOM risk). ⭐ **This one ring is the sole remaining gap of MSAEXACT.1, of MSAFAM.5/.6 at `N=1` (via `MSAFamilyConcrete`), and MSAEMIX.1 is its matrix analog** |
 | MSAEXACT.2 | elimination at one tail — degree 8, **REDUCIBLE = two quartics**; the physical branch is a quartic | ◑ **DONE 2026-08-10** (`YukawaOZ/MSAElimination.lean`, axiom-clean; Python `msax_elimination.py`). ⚠ **Corrects the earlier "irreducible"** — that was a float + uncorrected-Eq(2) artefact |
 | MSAEXACT.3 ⭐ | `msaRoot_unique_of_coupling_lt` — **exactly one physical root below an explicit coupling threshold** | ◑ **provable core DONE 2026-08-10** (`MSAClosedForm.lean`, axiom-clean): positivity/(39) selection + `physical_baxter_factor_unique` + the **capstone** `msaRoot_unique_of_coupling_lt` (physical uniqueness given the measured monotone coupling). ⚠ The monotonicity of `a` in `K` on the physical branch, and the explicit `βK≈3` threshold, stay **measured** (branch of a transcendental quartic — outside `ring`) |
 | MSAEXACT.4 | `pyA_pyB_satisfy_zero_coupling` — at `K = 0` the PY coefficients annihilate all three of Waisman's equations, **for every `w`** | **✓ DONE 2026-08-10** (axiom-clean) |
@@ -108,7 +109,54 @@ the exterior tail) plus a large algebraic verification with the Pythagorean iden
 effort comparable to the original BAXTER group, not a one-shot emit. The transform identity alone is
 *definitional* (ĉ is defined by the factorization); the content is the closure recovery.
 
-### Landed — MSAEXACT.1 third down-payment (`YukawaOZ/MSADCFTransform.lean`, 2026-08-19)
+### Landed — MSAEXACT.1 the CORRECT non-compact reduction + MSAEXACT.6 defined (2026-08-20)
+
+`YukawaOZ/{MSAExteriorTransform, MSABaxterKSpace, MSAFullFactorization}.lean`, axiom-clean, build
+8631 jobs. **This supersedes the compact-ansatz route below** (the third down-payment's
+`msaexact1_iff_core`).
+
+⛔ **Why the compact route died.** The physical MSA `c = −βu = K e^{−z(r−1)}/r` is infinite-range,
+so `1 − ρĉ_MSA(k)` has poles at `k = ±iz` and the Baxter factor `Q̂(s)` a genuine simple pole at
+`s = −z` (residue `D = Dt·e^z`). A transform over `[0,σ]` — entire in `k` — can never equal it, so
+the compact `msaBaxterFn = q0_poly + D·e^{−zr}` ansatz is unsatisfiable by a genuine real-space `c`
+(verified 3 ways, k-dependent `D`-roots). `msaexact1_iff_core` is a TRUE algebraic iff but its
+`hcore` is **vacuous** for physical MSA.
+
+✅ **The correct route — stage the modulus of the non-compact factor.** `Q̂(ik)` is **affine in `Dt`**
+(`A, q′, tail` all `Dt`-linear; `γ` has none), so `MSABaxterKSpace` writes `msaQre/msaQim` (Re/Im of
+`ρQ̂(ik)`, validated ==`baxter_F` to 1e-14) with the `Dt`-affine split `msaQre_eq/msaQim_eq`, and the
+`Dt⁰` bridges `msaQre_zero/msaQim_zero` (= the `q0_poly` cos/−sin integrals). `MSAExteriorTransform`
+supplies the exterior transforms `∫_{Ioi 0} e^{−zr}cos/sin = z/(z²+k²), k/(z²+k²)`. Then
+`MSAFullFactorization.msa_factor_split` reorganises
+
+    |1 − ρQ̂(ik)|² = (1 − ρ𝓕[c_HS]) − 2Dt·X + Dt²·Y      (X,Y the O(Dt),O(Dt²) brackets)
+
+with the `Dt⁰` bracket collapsed to the hard-sphere factor by `baxter_wiener_hopf_factorization`
+(BAXTER.3). The capstone **`factorization_of_core`** then concludes MSAEXACT.1 from a *single*
+hypothesis `hcore : ρ(𝓕[c_core] + 𝓕[c_tail]) = 2Dt·X − Dt²·Y`. Unlike the compact one this `hcore`
+is **satisfiable** (`Q̂` carries the physical pole).
+
+### MSAEXACT.6 — the `hcore` closure-recovery ring (the gap, 2026-08-20)
+
+**MSAEXACT.6 = discharge `hcore` for the specific `coreCorrection` dictionary under (29′)/(33).** The
+c-side is fully closed and pinned (`MSACoreTransform.lean`: `radial_fourier_coreCorrection` glue,
+`coshRatio`/`one_sub_exp` sine integrals; dictionary `c1=−da, c2=−db, c3=−½ξda, c4=−v/z,
+c5=−v²/(2Kz²)` == `−minus_C` to 5e-15). The match closes by
+`linear_combination m29·h29 + m33·h33` with `h29 : Dt·F = 2πK/z`, `h33 : 2πG·F = (A+z q′+(z²/2)γDt)/z²`
+— but **`m33 ≈ 1935 symbolic ops** and there is **no small-multiplier route**: (a) eliminate `Dt`
+via h33 → `Dtsol` op-count 317, blow-up; (b) rewrite `K` via h29 + `bhF→bhP/(2πG)` → FALSE (breaks
+r29); (c) keep `A/q′/γ` atomic → FALSE (needs their `(Dt,G)` forms); (d) `Dt`-order split → collapse
+identity FALSE, degrades to a `D2·Dt`≈same-size multiplier. Only path = **sympy→Lean codegen of
+`m29`(93 ops, explicit `−(z/2π)∂Δ/∂K`) + `m33` then `field_simp; linear_combination; Pythagorean;
+ring`** — robust but slow, OOM risk. This is the honest BAXTER-scale boundary. **Sole gap of
+MSAEXACT.1, MSAFAM.5/.6@N=1; MSAEMIX.1 is the matrix analog.**
+
+### Landed — MSAEXACT.1 third down-payment (`YukawaOZ/MSADCFTransform.lean`, 2026-08-19) — ⚠ SUPERSEDED
+
+⚠ **SUPERSEDED by the correct non-compact route above (2026-08-20).** `msaexact1_iff_core` is the
+compact-ansatz reduction; its `hcore` is unsatisfiable for physical MSA (see ⛔ above). The transform
+infrastructure here (`yukawa_tail_sine_integral`, `radial_fourier_cMSAtail`, `msaBaxter_cos/sin_transform`)
+is still valid and reused; only the `q0_poly+D·e^{−zr}` *vehicle* is dead.
 
 Build 8787 jobs, all six theorems on the standard three axioms, own `^axiom ` count 0.
 
