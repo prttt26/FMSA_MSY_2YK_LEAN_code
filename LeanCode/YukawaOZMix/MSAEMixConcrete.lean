@@ -8,6 +8,7 @@ Authors: FMSA project
 
 import Mathlib
 import LeanCode.HSMixture.Q0Complex
+import LeanCode.HSMixture.MatrixQ0
 import LeanCode.YukawaOZ.MSADCFTransform
 import LeanCode.YukawaOZMix.MSAMixtureCancellation
 
@@ -90,5 +91,64 @@ theorem radial_fourier_matMSAtail (K : Matrix (Fin N) (Fin N) ℝ) {z : ℝ} (hz
     have h1 := hsig i; have h2 := hsig j; unfold sigMix; linarith
   unfold matMSAtail
   exact radial_fourier_cMSAtail hz hsij (K i j) k
+
+/-! ### The amplitude-difference values `Δq′, ΔA` (the Blum–Høye `M_j, N_j` dressing)
+
+⭐ **Numerically validated against `msa_exact_mix.py` `_pieces`** (`msaemix_MN_check.py`, binary
+equal/unequal σ + ternary): `M`/`N` err `0`, `ΔA`/`Δq′` err `≤1.8e-15`; the Baxter increment's
+amplitude part is **linear** in `(Δq′,ΔA)` to `1e-16` (so `Q0_mat_c_sub` applies), and `σ²φ₁/σ³φ₂`
+= `q0_entry_c`'s `φ` (so `Qp↔q′`, `Qpp↔A`).  `Q0phys = q^{0′}` (`= _pieces` `QP0`),
+`Qppphys = A⁰` (`= A0`), `−4B⁰_j/σ_j² = 2π²ξ₂/vac²` — all confirmed `≤7e-15`. -/
+
+open FMSA.MatrixQ0
+
+/-- Blum–Høye `M_j` (their `(20)`, `C` eliminated), single tail:
+`M_j = −(1/z) Σ_l ρ_l (W̃_lj + (1+zσ_l) C̃_lj)` — exponential-free via the (★) `Wt, Ct`. -/
+noncomputable def mixM (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt : Matrix (Fin N) (Fin N) ℝ)
+    (j : Fin N) : ℝ :=
+  -(1 / z) * ∑ l, rho l * (Wt z rho Gt Dt l j + (1 + z * sigma l) * Ct z rho sigma Gt Dt l j)
+
+/-- Blum–Høye `N_j` (their `(21)`), single tail, `λ_jl = (σ_j−σ_l)/2`. -/
+noncomputable def mixN (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt : Matrix (Fin N) (Fin N) ℝ)
+    (j : Fin N) : ℝ :=
+  ∑ l, rho l * (((1 + z * ((sigma j - sigma l) / 2)) / z ^ 2) * Wt z rho Gt Dt l j
+    + (((1 + z * sigma l + (z * sigma l) ^ 2 / 2) / z ^ 2)
+        + ((sigma j - sigma l) / 2) * (1 + z * sigma l) / z) * Ct z rho sigma Gt Dt l j)
+
+/-- `ΔA_j = A_j − A_j⁰ = A_j⁰ M_j − 4 B_j⁰ N_j/σ_j²`, with `A_j⁰ = Qppphys`,
+`−4B_j⁰/σ_j² = 2π²ξ₂/vac²` (`ξ₂ = xi2`, `vac = vacMix`).  The `q″`-amplitude difference. -/
+noncomputable def mixDA (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt : Matrix (Fin N) (Fin N) ℝ)
+    (j : Fin N) : ℝ :=
+  Qppphys rho sigma j j * mixM z rho sigma Gt Dt j
+    + (2 * π ^ 2 * xi2 rho sigma / vacMix rho sigma ^ 2) * mixN z rho sigma Gt Dt j
+
+/-- `Δq′_ij = q′_ij − q^{0′}_ij = q^{0′}_ij M_j + A_i⁰ N_j`, with `q^{0′}_ij = Q0phys` and
+`A_i⁰ = Qppphys _ i` — carrying the **row** index `i` (Blum–Høye `(24)`'s `A_i⁰`, forced).  The
+`q′`-amplitude difference. -/
+noncomputable def mixDqp (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt : Matrix (Fin N) (Fin N) ℝ)
+    (i j : Fin N) : ℝ :=
+  Q0phys rho sigma i j * mixM z rho sigma Gt Dt j
+    + Qppphys rho sigma i i * mixN z rho sigma Gt Dt j
+
+/-! ### Zero-coupling consistency — `Q₁ = 0` at `Dt = 0` -/
+
+/-- `W̃ = 0` at zero coupling (`Dt = 0`). -/
+theorem Wt_zero_of_Dt_zero (z : ℝ) (rho : Fin N → ℝ) (Gt : Matrix (Fin N) (Fin N) ℝ) (l j : Fin N) :
+    Wt z rho Gt 0 l j = 0 := by simp [Wt]
+
+/-- `C̃ = 0` at zero coupling (`Dt = 0`). -/
+theorem Ct_zero_of_Dt_zero (z : ℝ) (rho sigma : Fin N → ℝ) (Gt : Matrix (Fin N) (Fin N) ℝ)
+    (l j : Fin N) : Ct z rho sigma Gt 0 l j = 0 := by simp [Ct]
+
+/-- The `q′` amplitude difference vanishes at zero coupling (`M = N = 0` ⇒ `Δq′ = 0`) — the
+consistency check that the concrete increment `Q₁` is `0` at `K = 0`. -/
+theorem mixDqp_zero_of_Dt_zero (z : ℝ) (rho sigma : Fin N → ℝ) (Gt : Matrix (Fin N) (Fin N) ℝ)
+    (i j : Fin N) : mixDqp z rho sigma Gt 0 i j = 0 := by
+  simp [mixDqp, mixM, mixN, Wt_zero_of_Dt_zero, Ct_zero_of_Dt_zero]
+
+/-- The `q″` amplitude difference vanishes at zero coupling. -/
+theorem mixDA_zero_of_Dt_zero (z : ℝ) (rho sigma : Fin N → ℝ) (Gt : Matrix (Fin N) (Fin N) ℝ)
+    (j : Fin N) : mixDA z rho sigma Gt 0 j = 0 := by
+  simp [mixDA, mixM, mixN, Wt_zero_of_Dt_zero, Ct_zero_of_Dt_zero]
 
 end MSAEMix
