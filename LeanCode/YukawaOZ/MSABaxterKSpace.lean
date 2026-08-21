@@ -84,6 +84,44 @@ noncomputable def msaQim (Dt G k : ℝ) : ℝ :=
     - (uT xi z Dt G k * k + wT xi z Dt G k * z) / (z ^ 2 + k ^ 2)
     - gam xi z G * Dt * (1 - Real.cos k) / k)
 
+/-! ### The `Dt`-affine split `msaQre = msaQre₀ + Dt·Rez`
+
+`Q̂(ik)` is affine in `Dt`; `msaRez`, `msaImz` are the `Dt`-linear coefficients (the tail's `u`, `w`
+lose their `Dt` factor, becoming `uTil`, `wTil`).  This is the rewrite that puts
+`(1 − msaQre)² + msaQim²` into the shape `msa_lhs_split` consumes. -/
+
+/-- `uTil = u/Dt = 2πρG/z + γ cos k`. -/
+noncomputable def uTil (G k : ℝ) : ℝ := 2 * π * rhoOf xi * G / z + gam xi z G * Real.cos k
+
+/-- `wTil = w/Dt = γ sin k`. -/
+noncomputable def wTil (G k : ℝ) : ℝ := gam xi z G * Real.sin k
+
+/-- The `Dt`-linear coefficient of `msaQre`. -/
+noncomputable def msaRez (G k : ℝ) : ℝ :=
+  rhoOf xi * ((bA0 xi * Mtil xi z G - 4 * bB0 xi * Ntil xi z G) * reph2 k
+    + (qp0 xi * Mtil xi z G + bA0 xi * Ntil xi z G) * reph1 k
+    + (uTil xi z G k * z - wTil xi z G k * k) / (z ^ 2 + k ^ 2)
+    + gam xi z G * Real.sin k / k)
+
+/-- The `Dt`-linear coefficient of `msaQim`. -/
+noncomputable def msaImz (G k : ℝ) : ℝ :=
+  rhoOf xi * ((bA0 xi * Mtil xi z G - 4 * bB0 xi * Ntil xi z G) * imph2 k
+    + (qp0 xi * Mtil xi z G + bA0 xi * Ntil xi z G) * imph1 k
+    - (uTil xi z G k * k + wTil xi z G k * z) / (z ^ 2 + k ^ 2)
+    - gam xi z G * (1 - Real.cos k) / k)
+
+/-- `msaQre` is `msaQre₀ + Dt·msaRez` — affine in `Dt`. -/
+theorem msaQre_eq (Dt G k : ℝ) :
+    msaQre xi z Dt G k = msaQre xi z 0 G k + Dt * msaRez xi z G k := by
+  simp only [msaQre, msaA, msaQp, uT, wT, msaRez, uTil, wTil]
+  ring
+
+/-- `msaQim` is `msaQim₀ + Dt·msaImz` — affine in `Dt`. -/
+theorem msaQim_eq (Dt G k : ℝ) :
+    msaQim xi z Dt G k = msaQim xi z 0 G k + Dt * msaImz xi z G k := by
+  simp only [msaQim, msaA, msaQp, uT, wT, msaImz, uTil, wTil]
+  ring
+
 /-! ### The `Dt⁰` bridge to the hard-sphere Baxter transform
 
 At `Dt = 0` the shifted moments collapse to `A⁰`, `q⁰′` and the Yukawa tail vanishes, so `ρQ̂(ik)`
