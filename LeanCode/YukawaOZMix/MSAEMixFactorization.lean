@@ -122,4 +122,42 @@ theorem matEMIXfactorization_of_core_zero_coupling
   matEMIXfactorization_of_core Q0 0 Q0neg 0 rho cHShat cHShat hHS
     (by intro i j; simp) i j
 
+/-! ### MSAEMIX.2 (factorization half) — the `N = 1` specialisation is the scalar Baxter modulus -/
+
+/-- ⭐ **MSAEMIX.2 — the `N = 1` factorization IS the scalar Baxter modulus identity.**  At one
+component the matrix factorization `(Qf · Qnegfᵀ)₀₀ = 1 − ρ·ĉ` for a **conjugate-pair** `1×1` factor
+`Qf₀₀ = A − iB`, `Qnegf₀₀ = A + iB` (`A, B` real) is *exactly* the scalar `A² + B² = 1 − ρĉ` —
+the shape of `MSAEXACT.1`'s `factorization_of_core` conclusion `(1 − ρReQ̂)² + (ρImQ̂)² = 1 − ρĉ`
+(take `A = 1 − ρReQ̂`, `B = ρImQ̂`).  So the matrix statement is the right generalisation of the
+scalar one — the non-vacuity/consistency gate (the `AppendixBridgeN1` role) for the matrix group. -/
+theorem matEMIX_factorization_fin_one_iff (A B c rho : ℝ)
+    (Qf Qnegf : Matrix (Fin 1) (Fin 1) ℂ)
+    (hQf : Qf 0 0 = (A : ℂ) - Complex.I * (B : ℂ))
+    (hQnegf : Qnegf 0 0 = (A : ℂ) + Complex.I * (B : ℂ)) :
+    (Qf * Qnegf.transpose) 0 0 = 1 - (rho : ℂ) * (c : ℂ) ↔ A ^ 2 + B ^ 2 = 1 - rho * c := by
+  have hmul : (Qf * Qnegf.transpose) 0 0 = ((A ^ 2 + B ^ 2 : ℝ) : ℂ) := by
+    rw [Matrix.mul_apply, Fin.sum_univ_one, Matrix.transpose_apply, hQf, hQnegf]
+    push_cast
+    linear_combination (-(B : ℂ) ^ 2) * Complex.I_sq
+  rw [hmul, show (1 : ℂ) - (rho : ℂ) * (c : ℂ) = ((1 - rho * c : ℝ) : ℂ) by push_cast; ring]
+  exact Complex.ofReal_inj
+
+/-- `matEMIXfactorization_of_core` at `N = 1`, chained through the scalar bridge: given the
+coupling-`0` factorization `hHS`, the matrix `hcore`, and that the full conjugate-pair factor is
+`A ∓ iB` with real target `ĉ = c`, the scalar Baxter modulus identity `A² + B² = 1 − ρc` holds. -/
+theorem matEMIXfactorization_of_core_fin_one (A B c rho : ℝ)
+    (Q0 Q1 Q0neg Q1neg : Matrix (Fin 1) (Fin 1) ℂ) (cHShat cMSAhat : Fin 1 → Fin 1 → ℂ)
+    (hHS : ∀ i j, (Q0 * Q0neg.transpose) i j
+      = (if i = j then (1 : ℂ) else 0) - (rho : ℂ) * cHShat i j)
+    (hcore : ∀ i j, (Q0 * Q1neg.transpose) i j + (Q1 * Q0neg.transpose) i j
+        + (Q1 * Q1neg.transpose) i j = -(rho : ℂ) * (cMSAhat i j - cHShat i j))
+    (hfull : (Q0 + Q1) 0 0 = (A : ℂ) - Complex.I * (B : ℂ))
+    (hfullneg : (Q0neg + Q1neg) 0 0 = (A : ℂ) + Complex.I * (B : ℂ))
+    (hcMSA : cMSAhat 0 0 = (c : ℂ)) :
+    A ^ 2 + B ^ 2 = 1 - rho * c := by
+  refine (matEMIX_factorization_fin_one_iff A B c rho (Q0 + Q1) (Q0neg + Q1neg)
+    hfull hfullneg).mp ?_
+  have h := matEMIXfactorization_of_core Q0 Q1 Q0neg Q1neg rho cHShat cMSAhat hHS hcore 0 0
+  simpa [hcMSA] using h
+
 end MSAEMix
