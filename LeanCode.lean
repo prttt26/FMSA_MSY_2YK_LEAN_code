@@ -154,6 +154,7 @@ import LeanCode.YukawaOZ.MSAClosedForm
 import LeanCode.YukawaOZ.MSAElimination
 import LeanCode.YukawaOZ.MSABaxterTransform
 import LeanCode.YukawaOZ.MSABlumHoyeSystem
+import LeanCode.YukawaOZ.MSAExteriorTransform
 import LeanCode.YukawaOZ.OuterDCF
 import LeanCode.YukawaOZ.Splitting
 import LeanCode.YukawaOZ.YukawaCausalProjection
