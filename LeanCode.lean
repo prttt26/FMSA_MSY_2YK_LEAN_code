@@ -219,6 +219,7 @@ import LeanCode.Closures.ClosureExpansions
 import LeanCode.Closures.DPClosureMap
 import LeanCode.Closures.FirstOrderEquivalence
 import LeanCode.Closures.MSASolutionFamily
+import LeanCode.Closures.MSAFamilyConcrete
 
 -- The FMSA-DP paper's scope and axiom gate.  Imported last, and deliberately:
 -- it contains no mathematics, only #guard_msgs blocks asserting the axiom set of
