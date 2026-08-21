@@ -9,6 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.YukawaOZ.MSABaxterKSpace
 import LeanCode.YukawaOZ.MSAFactorizationSplit
+import LeanCode.YukawaOZ.MSADCFTransform
 import LeanCode.HardSphere.BaxterWienerHopf
 
 /-!
@@ -59,5 +60,29 @@ theorem msa_factor_split (Dt G : ℝ) {k : ℝ} (hk : k ≠ 0) (hxi : xi < 1) :
     rw [msaQre_zero xi z G hk, msaQim_zero xi z G hk, neg_sq,
       baxter_wiener_hopf_factorization xi 1 (rhoOf xi) k one_pos hk hxi heta_def]
   rw [msaQre_eq xi z Dt G k, msaQim_eq xi z Dt G k, msa_lhs_split, hHS]
+
+/-- ⭐ **MSAEXACT.1, reduced to the closure-recovery core** (the correct, non-compact analog of the
+compact `msaexact1_iff_core`).  Given that the MSA direct correlation function's *core* and *tail*
+transforms account for the `O(Dt)`/`O(Dt²)` amplitude terms —
+
+    ρ(𝓕[c_core] + 𝓕[c_tail]) = 2Dt·X − Dt²·Y
+
+with `X`, `Y` the `msa_factor_split` brackets — the non-compact Baxter factorisation holds:
+
+    |1 − ρQ̂(ik)|² = 1 − ρĉ_MSA(k),     ĉ_MSA = 𝓕[c_HS] + 𝓕[c_core] + 𝓕[c_tail].
+
+Pure algebra on top of `msa_factor_split`.  ⚠ The `hcore` hypothesis — matching the two transforms
+against the amplitude brackets under the Blum–Høye constraints (29′)/(33) — is the remaining
+closure-recovery ring; here `c_core` is any core-supported correction whose transform obeys it. -/
+theorem factorization_of_core (Dt G K : ℝ) (cCore : ℝ → ℝ) {k : ℝ} (hk : k ≠ 0) (hxi : xi < 1)
+    (hcore : rhoOf xi * (radial_fourier cCore k + radial_fourier (cMSAtail K z 1) k)
+      = 2 * Dt * ((1 - msaQre xi z 0 G k) * msaRez xi z G k
+            - msaQim xi z 0 G k * msaImz xi z G k)
+        - Dt ^ 2 * (msaRez xi z G k ^ 2 + msaImz xi z G k ^ 2)) :
+    (1 - msaQre xi z Dt G k) ^ 2 + msaQim xi z Dt G k ^ 2
+      = 1 - rhoOf xi * (radial_fourier (c_HS xi 1) k + radial_fourier cCore k
+          + radial_fourier (cMSAtail K z 1) k) := by
+  rw [msa_factor_split xi z Dt G hk hxi]
+  linarith [hcore]
 
 end FMSA.MSAExact
