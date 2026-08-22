@@ -3,11 +3,24 @@
 Registry for **general-purpose mathematical axioms**: classical, textbook-citable theorems with
 long-standing external proofs that are simply not in the pinned Mathlib (`v4.31.0`, commit
 `fabf563a`) yet. This is formalization debt, not open mathematics. Distinct from the project's
-**physics axioms** — now **exactly one (1)**, and it is *pre-placed with no consumer*:
+**physics axioms** — now **exactly one (1)**, **CONSUMED (2026-08-20)** by the general-`N` unequal-σ
+mixture RDF uniqueness capstone `matOzStar_unequalDiam_unique_uncond`:
 `pyhs_mixture_no_spinodal` (`HSMixture/MixtureNoSpinodal.lean`, added 2026-07-19), the
-**multicomponent** structure-factor nonsingularity for the not-yet-built mixture track.
+**multicomponent** structure-factor nonsingularity.
 Full inventory: `todo_lean.md`'s
 Axioms table. Lean home: `LeanCode/Analysis/`.
+
+**Distinct third category — one *computation* axiom (not a math or physics assumption).**
+`msaexact6_hcore` (`YukawaOZ/MSAFullFactorization.lean`) is a *specific, externally-certified
+polynomial identity* — the Blum–Høye MSA closure-recovery ring, sympy-verified in `msaexact6_cert.py`
+(`Δ = m29·r29 + m33·r33`, remainder 0). It is **not** a mathematical assumption: it is provable in
+principle, but `ring`/`linear_combination` cannot normalize it in practice — **measured 2026-08-22**,
+a clean 323-monomial degree-≈22 slice costs `ring` **3 h 12 m / 23 GB**, and the per-order reassembly
+extrapolates to weeks / ~200 GB (`native_decide` blocked: `MvPolynomial` semiring noncomputable). Its
+Fourier/definitional layer *is* discharged: `YukawaOZ/MSAExact6Certificate.lean` (an
+out-of-`defaultTargets` lib) derives the exact `msaexact6_hcore` statement from a single pure-cos/sin
+/exp axiom `msaexact6_kspace_residual`, so the only residual is the polynomial identity itself.
+Detail: `proof_notes_msa_exact.md` Group MSAEXACT.6. This does **not** change the physics-axiom count.
 
 **Admissibility.** (a) a *named* classical theorem, true independently of this project; (b)
 confirmed absent from Mathlib by a reconnaissance pass (source search + Mathlib's `docs/1000.yaml`
@@ -394,7 +407,8 @@ strict positive-definiteness ⟺ `det Q̂ ≠ 0`).
   artifact of discarding phase), and `ρ(M)<1` fails even at `N=1` (77%) since `M` has `k→0` poles
   while `det` stays bounded.  A proof needs a phase/winding argument — same difficulty class as
   MA.14.
-* **No consumer yet** (pre-placed, like MA.8).  ✅ **The `n = 1` bridge is DONE 2026-07-19**
+* **NOW CONSUMED (2026-08-20)** by `matOzStar_unequalDiam_unique_uncond` (was pre-placed
+  consumer-less, like MA.8).  ✅ **The `n = 1` bridge is DONE 2026-07-19**
   (`HSMixture/MixtureNoSpinodalN1.lean`): `pyhs_mixture_no_spinodal_n1` restates the axiom at `Fin 1`
   and proves it **without** the axiom, from the scalar `pyhs_no_spinodal`; `#print axioms` =
   **standard three only**.  So on the one-component slice the axiom is *redundant*, not merely

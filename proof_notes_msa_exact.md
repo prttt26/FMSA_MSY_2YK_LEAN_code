@@ -61,7 +61,7 @@ algebraic system, and the theory note flags the degree as unsettled.
 | Task | Title | Status |
 |------|-------|--------|
 | MSAEXACT.1 | `msaexact1_factorization` — `\|1 − ρQ̂(ik)\|² = 1 − ρĉ_MSA(k)`, `Q̂` the **non-compact** Baxter factor (pole at `s=−z`) | ✅ **CLOSED via `msaexact6_hcore` axiom, 2026-08-21** (`MSAFullFactorization.lean`): `factorization_of_core` (pure algebra) + the sympy-verified axiom ⇒ `msaexact1_factorization`. `#print axioms` = `[propext, Classical.choice, Quot.sound, msaexact6_hcore]`. Staging (`factorization_of_core`) splits `\|1−ρQ̂\|²` into `Dt⁰`(=`1−ρ𝓕[c_HS]`) + `O(Dt)` + `O(Dt²)`. ⚠ compact `msaexact1_iff_core` route is a DEAD END (entire-in-`k` ≠ physical) |
-| MSAEXACT.6 ⭐ | discharge `hcore` — the closure-recovery ring `ρ(𝓕[c_core]+𝓕[c_tail]) = 2Dt·X − Dt²·Y` under Blum–Høye (29′)/(33) | ⊘ **LANDED as documented sympy-verified axiom `msaexact6_hcore`, 2026-08-21.** Math CERTIFIED in `msaexact6_cert.py` (parent repo): `Δ = m29·r29 + m33·r33` exactly (poly-div remainder 0), via SEPARATE physics multipliers + Gröbner over inverse-atom relations (2 coupled extras hand-verified). Lean mechanism PROVEN at `Dt⁰` (`Cert_dt0_full.lean` compiles axiom-clean, `linear_combination` over `(C,S)`-chunks). ⛔ `Dt¹`/`Dt²` per-order **assembly** is a single ~3000-mono `ring` that TIMES OUT at 30min (confirmed) and does NOT decompose ⇒ recorded as axiom pending faster/decomposable `ring`. Upgradeable. ⭐ MSAEMIX.4 (matrix analog) has a DIFFERENT wall — not this ring timeout but a c-side derivation: `msaemix_hcore_cert.py` shows the mixture core = scalar 5-basis only at EQUAL σ (with Σ_l-coupled coefficients, not the scalar formula) and PIECEWISE at unequal σ |
+| MSAEXACT.6 ⭐ | discharge `hcore` — the closure-recovery ring `ρ(𝓕[c_core]+𝓕[c_tail]) = 2Dt·X − Dt²·Y` under Blum–Høye (29′)/(33) | ⊘ **LANDED as documented sympy-verified axiom `msaexact6_hcore`, 2026-08-21.** Math CERTIFIED in `msaexact6_cert.py` (parent repo): `Δ = m29·r29 + m33·r33` exactly (poly-div remainder 0), via SEPARATE physics multipliers + Gröbner over inverse-atom relations (2 coupled extras hand-verified). Lean mechanism PROVEN at `Dt⁰` (`Cert_dt0_full.lean` compiles axiom-clean, `linear_combination` over `(C,S)`-chunks). ⛔ **`ring` is the wall, MEASURED (2026-08-22) — NOT a heartbeat budget:** a clean single `(cos,sin,exp)`-graded `Dt²` coefficient (323 mono, deg≈22, `maxRecDepth` set, no error cascade) costs `ring` **3h12m / 23GB**; the irreducible per-order pieces are ~1000–2843 high-deg mono ⇒ the per-order reassembly (mathematically unavoidable — one full normalization) extrapolates to **~weeks / ~200GB (OOM-risk @250GB)**. Atom (inverse-atom) form is WORSE: deg≈35, 16 vars, 4.5MB/chunk. `native_decide` blocked (`MvPolynomial` semiring noncomputable). ⇒ **full closure is NEARLY INFEASIBLE with current tooling; the earlier "30-min timeout / upgradeable" note was measured on the wrong (denom-cleared, high-deg) form + a `maxRecDepth` bug and is RETRACTED.** ✅ **Fourier layer DISCHARGED 2026-08-22** (`YukawaOZ/MSAExact6Certificate.lean`, out-of-`defaultTargets` lib `MSAExact6Certificate`): `msaexact6_hcore_of_residual` proves the *exact* `msaexact6_hcore` statement from ONE pure-algebra axiom `msaexact6_kspace_residual` (both radial transforms rewritten to closed cos/sin/exp form via `radial_fourier_coreCorrection`+`psi1/2/4`+`one_sub_exp`+`coshRatio`+`radial_fourier_cMSAtail`); `#print axioms` = std-3 + `msaexact6_kspace_residual` (NOT the original axiom) ⇒ only the polynomial identity remains axiomatic. ⭐ MSAEMIX.4 (matrix analog) has a DIFFERENT wall — not this ring timeout but a c-side derivation: `msaemix_hcore_cert.py` shows the mixture core = scalar 5-basis only at EQUAL σ (with Σ_l-coupled coefficients, not the scalar formula) and PIECEWISE at unequal σ |
 | MSAEXACT.2 | elimination at one tail — degree 8, **REDUCIBLE = two quartics**; the physical branch is a quartic | ◑ **DONE 2026-08-10** (`YukawaOZ/MSAElimination.lean`, axiom-clean; Python `msax_elimination.py`). ⚠ **Corrects the earlier "irreducible"** — that was a float + uncorrected-Eq(2) artefact |
 | MSAEXACT.3 ⭐ | `msaRoot_unique_of_coupling_lt` — **exactly one physical root below an explicit coupling threshold** | ◑ **provable core DONE 2026-08-10** (`MSAClosedForm.lean`, axiom-clean): positivity/(39) selection + `physical_baxter_factor_unique` + the **capstone** `msaRoot_unique_of_coupling_lt` (physical uniqueness given the measured monotone coupling). ⚠ The monotonicity of `a` in `K` on the physical branch, and the explicit `βK≈3` threshold, stay **measured** (branch of a transcendental quartic — outside `ring`) |
 | MSAEXACT.4 | `pyA_pyB_satisfy_zero_coupling` — at `K = 0` the PY coefficients annihilate all three of Waisman's equations, **for every `w`** | **✓ DONE 2026-08-10** (axiom-clean) |
@@ -150,6 +150,43 @@ identity FALSE, degrades to a `D2·Dt`≈same-size multiplier. Only path = **sym
 `m29`(93 ops, explicit `−(z/2π)∂Δ/∂K`) + `m33` then `field_simp; linear_combination; Pythagorean;
 ring`** — robust but slow, OOM risk. This is the honest BAXTER-scale boundary. **Sole gap of
 MSAEXACT.1, MSAFAM.5/.6@N=1; MSAEMIX.1 is the matrix analog.**
+
+### MSAEXACT.6 — the codegen route MEASURED infeasible; Fourier layer discharged (2026-08-22)
+
+The "sympy→Lean codegen + `ring`" path above was **built and measured**, and it does not close in any
+practical budget — the blocker is `ring`'s performance, not a heartbeat cap:
+
+* **Clean `ring` timings** (`maxRecDepth 1000000`, no error cascade, `lake env lean`, 250 GB box):
+  * dense control `((a+b+c+d)^6)^2 = (a+b+c+d)^12` — 455 mono, deg 12: **17 s**.
+  * dense control deg 16 — 969 mono: **1 m 45 s**.
+  * **one `(cos,sin,exp)`-graded coefficient of the `Dt²` identity — 323 mono, deg ≈22: `ring`
+    3 h 12 m, 23 GB.**  Degree, not count, is the enemy (the cleared wave-denominators `k⁵·(z²+k²)²`
+    push total degree to ~22).
+* **The earlier "30-min timeout, doesn't decompose, upgradeable" note was wrong twice over:** it was
+  measured (i) on the high-degree *denominator-cleared* form, and (ii) with a `maxRecDepth` bug (the
+  `msaexact6_codegen.py`/`scaletest.py` headers omit `set_option maxRecDepth`, so the flat 100s-term
+  sums blew the default depth 512 and threw 101 "failed to synthesize" errors — those runs were timing
+  a *failing* elaboration, not `ring`).  **RETRACTED.**
+* **The irreducible pieces are large.** Every representation forces one full normalization of a
+  per-order identity: cleared form ≈2843 high-deg mono (deg 22); inverse-atom form is *worse* — the
+  `Dt¹` chunks are 897–1034 mono at total degree ≈35 in 16 atoms (both `k` and `ki=1/k` present),
+  4.5 MB per chunk (the 897-mono chunk did not finish in 20 min, still only 813 MB = stuck in
+  elaboration).  Extrapolating the 323→2843 curve: the per-order reassembly ≈ **weeks / ~200 GB**.
+* **`native_decide` is unavailable:** `MvPolynomial`'s `AddMonoidAlgebra.semiring` is noncomputable,
+  so the compiled-kernel route fails outright.  A custom computable reflection would add
+  `Lean.ofReduceBool` and is a major framework — not attempted.
+
+**What DID land (`YukawaOZ/MSAExact6Certificate.lean`, out-of-build lib, 2026-08-22):**
+`msaexact6_hcore_of_residual` proves the *exact* statement of `msaexact6_hcore`, deriving it from a
+single pure-cos/sin/exp axiom `msaexact6_kspace_residual` by rewriting both `radial_fourier` integrals
+into closed form (`radial_fourier_coreCorrection` + `psi1/2/4_formula` + `one_sub_exp_sin_integral` +
+`coshRatio_sin_integral` + `radial_fourier_cMSAtail`, then `simp [mul_one, one_pow]`).  Its
+`#print axioms` is `[propext, Classical.choice, Quot.sound, msaexact6_kspace_residual]` — the Fourier
+/ definitional layer is fully formalized and the *only* remaining axiom is the polynomial identity
+itself.  The file is deliberately **out of `defaultTargets`** (lib `MSAExact6Certificate`); a normal
+`lake build` skips it, `lake build MSAExact6Certificate` verifies it on demand.  Net: MSAEXACT.6 is
+as closed as `ring` allows — the physics is proven, the residual is one explicit, externally-certified
+polynomial identity that is *nearly infeasible* to discharge in-kernel.
 
 ### Landed — MSAEXACT.1 third down-payment (`YukawaOZ/MSADCFTransform.lean`, 2026-08-19) — ⚠ SUPERSEDED
 

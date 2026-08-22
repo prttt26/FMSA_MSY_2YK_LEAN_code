@@ -119,10 +119,15 @@ amplitude terms of `|1 − ρQ̂(ik)|²`.  This is the `hcore` closure-recovery 
 `m29·r29 + m33·r33` exactly (polynomial-division remainder 0), where `r29`, `r33` are the two
 Blum–Høye constraints and `m29`, `m33` the recovered multipliers.  The Lean
 `ring`/`linear_combination` proof is validated at `Dt⁰` (`Cert_dt0_full.lean` compiles axiom-clean),
-but the `Dt¹`/`Dt²` per-order assembly is a single ~3000-monomial `ring` that exceeds a 30-minute
-budget and does not decompose; the identity is recorded here as an axiom pending a faster/decomposable
-assembly.  ⚠ This is a *physics-computation* axiom (a specific verified polynomial identity), not a
-new mathematical assumption. -/
+but discharging `Dt¹`/`Dt²` in-kernel is *infeasible*, not merely slow (measured 2026-08-22): a
+clean `(cos,sin,exp)`-graded `Dt²` coefficient — 323 monomials, degree ≈22 — already costs `ring`
+**3 h 12 m / 23 GB**, and the per-order reassembly extrapolates to weeks / ~200 GB; `native_decide`
+is blocked (`MvPolynomial` semiring noncomputable).  So this is recorded as an axiom because `ring`
+cannot normalize the identity, **not** for want of a bigger budget.  The Fourier/definitional layer
+around it is discharged in `MSAExact6Certificate.lean` (an out-of-`defaultTargets` lib), which
+derives this exact statement from a pure-cos/sin/exp axiom `msaexact6_kspace_residual`.  ⚠ This is a
+*physics-computation* axiom (a specific externally-verified polynomial identity), not a new
+mathematical assumption. -/
 axiom msaexact6_hcore (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0)
     (h29 : Dt * bhF xi z (Dt, G) - 2 * π * K / z = 0)
     (h33 : 2 * π * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0) :
