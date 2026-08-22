@@ -38,8 +38,8 @@ physics-computation axiom, then closes MSAEMIX.1 at equal diameter.
 ⚠ Equal σ only; unequal σ has a piecewise core (separate).
 -/
 
-open Real
-open FMSA.Q0Complex FMSA.MSAExact FMSA.HardSphere FMSA.MatrixQ0
+open Real MeasureTheory
+open FMSA.Q0Complex FMSA.MSAExact FMSA.HardSphere FMSA.MatrixQ0 FMSA.MixtureOzStar
 
 namespace MSAEMix
 
@@ -178,6 +178,44 @@ theorem matMSAemix1_equalDiam (z sig : ℝ) (rho sigma : Fin N → ℝ)
       intro i j
       have hc := matMSAexact6_hcore z sig rho sigma Gt Dt K k hσ hroot i j
       simpa using hc) i j
+  simpa using h
+
+/-- ⭐⭐ **MSAEMIX.1 at equal diameter, `hHS` DISCHARGED via the HS-mixture Wiener–Hopf.**  Instead
+of assuming the hard-sphere symmetric factorization `hHS`, this takes the *standard* HS-mixture WH
+atoms — the Baxter core factorization `hKDEF` (`MatBaxterFactorization`), the shell-cosine bridge
+`hbridge`, and the pure-`q` Fourier identity `hWH` (`MatBaxterFourierWH`) for the HS factor `F̃₀` —
+and produces the full MSA factorization through `matEMIXfactorization_of_baxterFourierWH` (which
+discharges the HS part via `matSF_of_baxterFourierWH`).  So the HS factorization is no longer an
+ad-hoc hypothesis but the same shared WH machinery the mixture-RDF/OZ★ work rests on (symmetric
+√-weight, `ρ := 1`, `Φ` the √-weighted HS DCF).  The `hcore` fed to it is exactly
+`matMSAexact6_hcore`. -/
+theorem matMSAemix1_equalDiam_WH (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (k : ℝ)
+    (cHSker qbax PhiHS : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (hsig1 : 0 < sig)
+    (hσ : ∀ i, sigma i = sig) (hroot : MixBHRoot z sig rho sigma Gt Dt K)
+    (hKDEF : MatBaxterFactorization cHSker qbax 1 sig)
+    (hbridge : ∀ i j,
+      2 * ∫ v in (0 : ℝ)..sig, cHSker i j v * Real.cos (k * v) = radial_fourier (PhiHS i j) k)
+    (hWH : MatBaxterFourierWH (FtHS z sig rho sigma (Complex.I * k))
+      (FtHS z sig rho sigma (-(Complex.I * k))) qbax sig k) (i j : Fin N) :
+    ((FtHS z sig rho sigma (Complex.I * k) + Ft1 z sig rho sigma Gt Dt (Complex.I * k))
+        * (FtHS z sig rho sigma (-(Complex.I * k))
+            + Ft1 z sig rho sigma Gt Dt (-(Complex.I * k))).transpose) i j
+      = (if i = j then (1 : ℂ) else 0)
+        - ((radial_fourier (PhiHS i j) k : ℂ) + (Real.sqrt (rho i * rho j) : ℂ)
+            * ((radial_fourier (matMSACoreCorr z rho sigma Gt Dt K i j) k : ℂ)
+              + (radial_fourier (matMSAtail K z sigma i j) k : ℂ))) := by
+  have h := matEMIXfactorization_of_baxterFourierWH (FtHS z sig rho sigma (Complex.I * k))
+    (FtHS z sig rho sigma (-(Complex.I * k))) (Ft1 z sig rho sigma Gt Dt (Complex.I * k))
+    (Ft1 z sig rho sigma Gt Dt (-(Complex.I * k))) cHSker qbax PhiHS 1 sig k hsig1 hKDEF hbridge hWH
+    (fun i j => (radial_fourier (PhiHS i j) k : ℂ) + (Real.sqrt (rho i * rho j) : ℂ)
+      * ((radial_fourier (matMSACoreCorr z rho sigma Gt Dt K i j) k : ℂ)
+        + (radial_fourier (matMSAtail K z sigma i j) k : ℂ)))
+    (by
+      intro i j
+      have hc := matMSAexact6_hcore z sig rho sigma Gt Dt K k hσ hroot i j
+      simp only [Complex.ofReal_one, one_mul]
+      linear_combination hc) i j
   simpa using h
 
 end MSAEMix
