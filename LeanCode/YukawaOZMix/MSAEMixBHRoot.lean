@@ -21,7 +21,7 @@ This file supplies the **BH-root gate** and lands the closure-recovery `hcore` a
 physics-computation axiom, then closes MSAEMIX.1 at equal diameter.
 
 * `qhatMixC`/`qhatMixR` — the **full** mixture Baxter factor `Q̂_ij(s)` at equal σ (with the Yukawa
-  tails `W̃/(s+z)`, `C̃·[e^{−sσ}/(s+z) + σ(1−e^{−sσ})/s]`), complex/real `s`.  Its poly part is the
+  tails `W̃/(s+z)`, `C̃·[e^{−sσ}/(s+z) + (1−e^{−sσ})/s]`), complex/real `s`.  Its poly part is the
   `q0_entry_c` Baxter factor; the tails are what `Q0_mat_c` lacks.
 * `ftilde` — the symmetric Baxter factor entry `δ_ij − √(ρ_iρ_j)Q̂_ij(s)`; `FtHS`/`FtMSA` its HS and
   MSA instances, `Ft1` the coupling increment.
@@ -48,7 +48,7 @@ variable {N : ℕ}
 /-! ### The full mixture Baxter factor `Q̂(s)` (equal σ, with Yukawa tails) -/
 
 /-- The full mixture Baxter factor `Q̂_ij(s)` at **equal σ** (`σ_i = σ`, `λ = 0`), complex `s`:
-`φ₁(sσ)q'_ij + φ₂(sσ)A_j + W̃_ij/(s+z) + C̃_ij[e^{−sσ}/(s+z) + σ(1−e^{−sσ})/s]`, with
+`φ₁(sσ)q'_ij + φ₂(sσ)A_j + W̃_ij/(s+z) + C̃_ij[e^{−sσ}/(s+z) + (1−e^{−sσ})/s]`, with
 `φ₁(x)=(1−x−e^{−x})/s²`, `φ₂(x)=(1−x+x²/2−e^{−x})/s³` (the `q0_entry_c` Baxter poly plus the tails). -/
 noncomputable def qhatMixC (z sigma : ℝ) (qp Wt Ct : Matrix (Fin N) (Fin N) ℝ) (Av : Fin N → ℝ)
     (s : ℂ) (i j : Fin N) : ℂ :=
@@ -56,7 +56,7 @@ noncomputable def qhatMixC (z sigma : ℝ) (qp Wt Ct : Matrix (Fin N) (Fin N) �
     + (1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) / s ^ 3 * (Av j : ℂ)
     + (Wt i j : ℂ) / (s + z)
     + (Ct i j : ℂ) * (Complex.exp (-(s * sigma)) / (s + z)
-        + sigma * (1 - Complex.exp (-(s * sigma))) / s)
+        + (1 - Complex.exp (-(s * sigma))) / s)
 
 /-- The full mixture Baxter factor at **real** `s` (for the (29′)/(33′) residual gate). -/
 noncomputable def qhatMixR (z sigma : ℝ) (qp Wt Ct : Matrix (Fin N) (Fin N) ℝ) (Av : Fin N → ℝ)
@@ -64,7 +64,7 @@ noncomputable def qhatMixR (z sigma : ℝ) (qp Wt Ct : Matrix (Fin N) (Fin N) �
   (1 - s * sigma - Real.exp (-(s * sigma))) / s ^ 2 * qp i j
     + (1 - s * sigma + (s * sigma) ^ 2 / 2 - Real.exp (-(s * sigma))) / s ^ 3 * Av j
     + Wt i j / (s + z)
-    + Ct i j * (Real.exp (-(s * sigma)) / (s + z) + sigma * (1 - Real.exp (-(s * sigma))) / s)
+    + Ct i j * (Real.exp (-(s * sigma)) / (s + z) + (1 - Real.exp (-(s * sigma))) / s)
 
 /-! ### The MSA and hard-sphere amplitude bundles -/
 
