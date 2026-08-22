@@ -81,13 +81,16 @@ Detailed proof records (statements, proof sketches, pitfalls, Lean API notes) ar
 grep -rn "^axiom [a-zA-Z_]" LeanCode/ --include=*.lean | sed 's|LeanCode/\([A-Za-z]*\)/.*|\1|' | sort | uniq -c
 ```
 
-⚠ **That grep spans math *and* physics axioms — it is the count for BOTH tables, not this one alone.**
-As of 2026-07-30 it returns **10 raw hits = 2 + 8**:
-2 false positives (prose lines that happen to begin `axiom `, in `PYOZ_GHS.lean:278` and
-`HalfDiskArgumentPrinciple.lean:43`) and 8 real axioms — **7 math + 1 physics**
-(`HSMixture/`, `pyhs_mixture_no_spinodal`, in the *Physics axioms* table below). So the bucket
-counts are **`Analysis` 7 + `HardSphere` 0 + `HSMixture` 1** — the 1 HSMixture being
-`pyhs_mixture_no_spinodal` (physics).  The 7th math axiom (Analysis) is
+⚠ **That grep spans math, physics *and* symbolic-computation axioms — it is the count for ALL axiom
+tables on this page, not one alone.**
+As of 2026-08-22 it returns **14 raw hits = 3 false + 11 real**:
+3 false positives (prose lines that happen to begin `axiom `, in `PYOZ_GHS.lean`,
+`HalfDiskArgumentPrinciple.lean`, and `YukawaOZMix/MixturePoleExhaustion.lean`) and 11 real axioms —
+**7 math + 1 physics + 3 sympy-computation**. So the bucket counts are
+**`Analysis` 7 (math) + `HardSphere` 0 + `HSMixture` 1 (physics) + `YukawaOZ` 2 + `YukawaOZMix` 1** —
+the 1 HSMixture being `pyhs_mixture_no_spinodal` (physics), and the `YukawaOZ` 2 + `YukawaOZMix` 1
+being the sympy-certified `msaexact6_hcore` / `msaexact6_kspace_residual` / `matMSAexact6_hcore`
+identities (the *Symbolic-computation axioms* table below).  The 7th math axiom (Analysis) is
 `matRadialShell_bounded_injective` (`Analysis/MatrixRadialWienerHopf.lean`, MML.8 value route,
 committed + **abstracted to `Analysis/` in raw-integral form 2026-07-30**: the matrix analog of the
 scalar `radialShell_bounded_injective`, arbitrary matrix kernel; `MixtureRDFUniqueness.lean` re-exposes
@@ -163,6 +166,22 @@ MA.1's, S–P MA.7, homotopy-Cauchy MA.8, L∞ Wiener–Hopf MA.15 — are not "
 | `wiener_causal_resolvent` (MA.13) | Wiener `1/f`: symbol `1−q̂ ≠ 0` on the closed RHP ⇒ causal resolvent `R ∈ L¹`, `R = q + q⋆R` | `Analysis/WienerRenewal.lean` | `verify_ma13_route.py`: spectral radius `=‖q‖₁>1` (Neumann diverges); simulated renewal decay rate `= Im k₁` (Ornstein–Zernike), `ψ ∈ L¹` |
 | `zeroFree_lowerHalfPlane_of_homotopy` (MA.14) | Argument-principle/Hurwitz: open-LHP zero count is homotopy-invariant | `Analysis/ZeroCountHomotopy.lean` | `verify_ma14_route.py`: deflated zero count `= 0` (robust in `R,ε,η`); two elementary routes refuted at `k=−it₀` |
 | `pyhs_mixture_no_spinodal` (MRS.0) | `det Q0_mat_c_phys(ik) ≠ 0` for real `k≠0`, N-component | `HSMixture/MixtureNoSpinodal.lean` | 300 mixtures × 4 `k` × `N=1..4`, two det routes agree `2e-15`; `min_k\|det\| ≥ 0.375`; `n=1` bridge PROVED redundant |
+
+### Symbolic-computation axioms (sympy-certified exact polynomial identities)
+
+*A distinct category — **not** physics assumptions and **not** missing-Mathlib math. Each is a specific
+exact polynomial identity that is provable IN PRINCIPLE but that `ring`/`linear_combination` cannot
+normalize in feasible time. **Measured 2026-08-22:** one `(cos,sin,exp)`-graded deg-≈22 slice (323
+monomials) costs `ring` **3 h 12 m / 23 GB**; the irreducible per-order reassembly extrapolates to
+~weeks / ~200 GB; `native_decide` is blocked (`MvPolynomial` semiring noncomputable). So they are
+certified externally by **exact** (rational, not floating-point) symbolic computation and asserted as
+axioms — the honest `ring`-scale boundary, not a heartbeat budget.*
+
+| Axiom (task) | Claim | File | sympy certificate |
+|------|-------|------|-------------------|
+| `msaexact6_hcore` (MSAEXACT.6) | scalar Blum–Høye closure-recovery ring `ρ(𝓕[c_core]+𝓕[c_tail]) = 2Dt·X − Dt²·Y` on the BH manifold | `YukawaOZ/MSAFullFactorization.lean` | `msaexact6_cert.py`: `Δ = m29·r29 + m33·r33`, polynomial-division remainder 0. Its Fourier layer IS discharged (out-of-build `MSAExact6Certificate.lean` reduces it to `msaexact6_kspace_residual`) |
+| `msaexact6_kspace_residual` (MSAEXACT.6) | the same identity with both radial transforms in **closed cos/sin/exp form** (no `radial_fourier`) — the pure-algebra residual | `YukawaOZ/MSAExact6Certificate.lean` (**out of `defaultTargets`**) | same `msaexact6_cert.py`; `msaexact6_hcore_of_residual` derives the original axiom's exact statement from this (`#print axioms` = std-3 + this) |
+| `matMSAexact6_hcore` (MSAEMIX.4) | matrix analog of MSAEXACT.6 at general `N` (equal σ) — closes MSAEMIX.1 at equal diameter | `YukawaOZMix/MSAEMixBHRoot.lean` | `msaemix_hcore_cert.py` + `msaemix_core_coeffs.py`: mixture core = scalar 5-basis with Σ_l-coupled coeffs (all 5 cracked, held-out 1e-16) |
 
 ### Conditional-theorem hypotheses — ✅ all resolved (ledger)
 
