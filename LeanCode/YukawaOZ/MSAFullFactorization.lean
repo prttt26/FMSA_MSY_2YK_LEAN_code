@@ -10,6 +10,7 @@ import Mathlib
 import LeanCode.YukawaOZ.MSABaxterKSpace
 import LeanCode.YukawaOZ.MSAFactorizationSplit
 import LeanCode.YukawaOZ.MSADCFTransform
+import LeanCode.YukawaOZ.MSACoreTransform
 import LeanCode.HardSphere.BaxterWienerHopf
 
 /-!
@@ -84,5 +85,65 @@ theorem factorization_of_core (Dt G K : ℝ) (cCore : ℝ → ℝ) {k : ℝ} (hk
           + radial_fourier (cMSAtail K z 1) k) := by
   rw [msa_factor_split xi z Dt G hk hxi]
   linarith [hcore]
+
+/-! ### MSAEXACT.6 — the closure-recovery ring (sympy-certified axiom) and MSAEXACT.1 -/
+
+/-- The Blum–Høye MSA **core-correction** `c(r)` in `coreCorrection` form, with the closure's
+coefficients `c₁ = −da`, `c₂ = −db`, `c₃ = −½ξ·da`, `c₄ = −v/z`, `c₅ = −v²/(2Kz²)`, where
+`a = (A/2π)²`, `λ₁ = (1+2ξ)²/(1−ξ)⁴`, `b_HS = −6ξ(1+ξ/2)²/(1−ξ)⁴`, `v = 24ξKG`, `da = a−λ₁`,
+`db = bb−b_HS`, and
+`bb = (q′+zγDt)/2π − K − a − ½ξa − v(1−e^{−z})/z − v²(1−e^{−z})²/(4Kz²)`.
+These are the Blum–Høye MSA closure values; the resulting `hcore` identity is verified in sympy
+(`msaexact6_cert.py`). -/
+noncomputable def msaCoreCorr (Dt G K : ℝ) : ℝ → ℝ :=
+  let A := msaA xi z Dt G
+  let qp := msaQp xi z Dt G
+  let g := gam xi z G
+  let a := (A / (2 * π)) ^ 2
+  let lam1 := (1 + 2 * xi) ^ 2 / (1 - xi) ^ 4
+  let bHS := -6 * xi * (1 + xi / 2) ^ 2 / (1 - xi) ^ 4
+  let v := 24 * xi * K * G
+  let bb := (qp + z * g * Dt) / (2 * π) - K - a - xi * a / 2
+    - v * (1 - Real.exp (-z)) / z - v ^ 2 * (1 - Real.exp (-z)) ^ 2 / (4 * K * z ^ 2)
+  let da := a - lam1
+  let db := bb - bHS
+  coreCorrection (-da) (-db) (-(xi * da / 2)) (-(v / z)) (-(v ^ 2 / (2 * K * z ^ 2))) z 1
+
+/-- ⭐ **MSAEXACT.6 (axiom).**  At the physical Blum–Høye root — `(Dt, G)` satisfying the two
+constraints `Dt·bhF = 2πK/z` (Eq. 29′) and `2π·G·bhF = bhP` (Eq. 33) — the MSA core correction's
+radial transform, together with the exterior Yukawa tail, accounts for the `O(Dt)`/`O(Dt²)`
+amplitude terms of `|1 − ρQ̂(ik)|²`.  This is the `hcore` closure-recovery identity consumed by
+`factorization_of_core`.
+
+**Certified in sympy** (`msaexact6_cert.py`, parent repo): the difference `Δ` equals
+`m29·r29 + m33·r33` exactly (polynomial-division remainder 0), where `r29`, `r33` are the two
+Blum–Høye constraints and `m29`, `m33` the recovered multipliers.  The Lean
+`ring`/`linear_combination` proof is validated at `Dt⁰` (`Cert_dt0_full.lean` compiles axiom-clean),
+but the `Dt¹`/`Dt²` per-order assembly is a single ~3000-monomial `ring` that exceeds a 30-minute
+budget and does not decompose; the identity is recorded here as an axiom pending a faster/decomposable
+assembly.  ⚠ This is a *physics-computation* axiom (a specific verified polynomial identity), not a
+new mathematical assumption. -/
+axiom msaexact6_hcore (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0)
+    (h29 : Dt * bhF xi z (Dt, G) - 2 * π * K / z = 0)
+    (h33 : 2 * π * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0) :
+    rhoOf xi * (radial_fourier (msaCoreCorr xi z Dt G K) k
+        + radial_fourier (cMSAtail K z 1) k)
+      = 2 * Dt * ((1 - msaQre xi z 0 G k) * msaRez xi z G k
+            - msaQim xi z 0 G k * msaImz xi z G k)
+        - Dt ^ 2 * (msaRez xi z G k ^ 2 + msaImz xi z G k ^ 2)
+
+/-- ⭐ **MSAEXACT.1 — the non-compact MSA Baxter factorisation.**  At the Blum–Høye root,
+`|1 − ρQ̂(ik)|² = 1 − ρĉ_MSA(k)` with `ĉ_MSA = 𝓕[c_HS] + 𝓕[c_core] + 𝓕[c_tail]` — the physical MSA
+direct correlation function.  Combines the purely-algebraic `factorization_of_core` with the
+closure-recovery input `msaexact6_hcore`. -/
+theorem msaexact1_factorization (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hxi : xi < 1)
+    (h29 : Dt * bhF xi z (Dt, G) - 2 * π * K / z = 0)
+    (h33 : 2 * π * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0) :
+    (1 - msaQre xi z Dt G k) ^ 2 + msaQim xi z Dt G k ^ 2
+      = 1 - rhoOf xi * (radial_fourier (c_HS xi 1) k
+          + radial_fourier (msaCoreCorr xi z Dt G K) k
+          + radial_fourier (cMSAtail K z 1) k) :=
+  factorization_of_core xi z Dt G K (msaCoreCorr xi z Dt G K) hk hxi
+    (msaexact6_hcore xi z Dt G K hk h29 h33)
 
 end FMSA.MSAExact
