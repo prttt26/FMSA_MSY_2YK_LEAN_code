@@ -170,6 +170,7 @@ import LeanCode.YukawaOZMix.MSAMixtureCancellation
 import LeanCode.YukawaOZMix.MSAMixtureSelection
 import LeanCode.YukawaOZMix.MSAEMixFactorization
 import LeanCode.YukawaOZMix.MSAEMixConcrete
+import LeanCode.YukawaOZMix.MSAEMixBreakpointOrders
 import LeanCode.YukawaOZMix.MixtureClosedForm
 import LeanCode.YukawaOZMix.MixtureConvolution
 import LeanCode.YukawaOZMix.MixtureDCFSmooth
