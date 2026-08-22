@@ -69,4 +69,30 @@ theorem jump_all_orders_vanish
   rw [hx0ev.iteratedDeriv_eq n]
   exact iteratedDeriv_zero_fun n x₀
 
+/-- ⭐ **BRK.9 (Step 2) — abstract core, the non-MSEMIX half.**  If the coupling `K` enters a
+piecewise function only through the scalar coefficients `c k` — the `r`-basis `b k` **fixed** and
+smooth on an open piece `s` — then every `K`-derivative `∂ⁿ_K (Σ_k c k(K)·b k(r))` is, in `r`,
+still `ContDiffOn ℝ ⊤ s`.  *Differentiating in the parameter cannot create a knot:* `K` moves the
+coefficients, never a piece boundary.
+
+This is the reusable heart of BRK.7 Step 2, decoupled from the concrete Baxter factor.  The CONCRETE
+input — that the exact-MSA `Q_ij` really has this form `Σ_k coreC_k(K)·basis_k(r)` on `[λ_ji, σ_ij]`
+with `K`-free boundaries, at unequal σ / general `N` — is **MSAEMIX.4 Stage 3** (task BRK.9); this
+lemma discharges everything on the BRK side once that form is supplied. -/
+theorem contDiffOn_paramDeriv_coeffBasis {ι : Type*} (I : Finset ι) (c b : ι → ℝ → ℝ) {s : Set ℝ}
+    (hc : ∀ k ∈ I, ContDiff ℝ ⊤ (c k)) (hb : ∀ k ∈ I, ContDiffOn ℝ ⊤ (b k) s)
+    (n : ℕ) (K₀ : ℝ) :
+    ContDiffOn ℝ ⊤ (fun r => iteratedDeriv n (fun K => ∑ k ∈ I, c k K * b k r) K₀) s := by
+  have hcompute : (fun r => iteratedDeriv n (fun K => ∑ k ∈ I, c k K * b k r) K₀)
+      = (fun r => ∑ k ∈ I, b k r * iteratedDeriv n (c k) K₀) := by
+    funext r
+    have hca : ∀ k ∈ I, ContDiffAt ℝ (n : WithTop ℕ∞) (fun K => c k K * b k r) K₀ := fun k hk =>
+      ((hc k hk).contDiffAt.mul contDiffAt_const).of_le le_top
+    rw [iteratedDeriv_fun_sum hca]
+    refine Finset.sum_congr rfl (fun k hk => ?_)
+    have hcomm : (fun K => c k K * b k r) = (b k r * c k ·) := by funext K; ring
+    rw [hcomm, iteratedDeriv_const_mul (b k r) ((hc k hk).contDiffAt.of_le le_top)]
+  rw [hcompute]
+  exact ContDiffOn.sum (fun k hk => (hb k hk).mul contDiffOn_const)
+
 end FMSA.MSAExact.BRK

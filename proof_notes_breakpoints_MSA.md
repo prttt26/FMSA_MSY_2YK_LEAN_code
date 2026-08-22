@@ -188,6 +188,144 @@ discontinuity being looked for.
 
 ---
 
+### Task BRK.6 ⭐⭐ — Discharge `hzero`: `J(K) ≡ 0` as a theorem, not a measurement
+
+`jump_all_orders_vanish` (BRK.4, landed) takes `hzero : EqOn J 0 (Ioo a b)` as a
+**hypothesis**. Everything downstream — the all-orders claim, and hence the paper's
+§`sec:breakpoints` rewrite — rests on that premise, which is currently carried by
+MSAEMIX.5's *numerics*. BRK.6 is to prove it.
+
+**The route, and why it should be short.** BRK.2's cancellation is pure `σ`-arithmetic:
+
+```
+λ_li − λ_lj = λ_ji        σ_il − σ_jl = λ_ij
+σ_il − λ_lj = σ_ij        λ_li − σ_jl = −σ_ij
+```
+
+⭐ **No `K` appears anywhere in it.** The crossing set is `{±λ_ij, ±σ_ij}` at *every*
+coupling, not at the couplings that happened to be tested. If the knot set is `K`-free, then
+there is no mediated knot at any `K`, so `J(K)` is identically zero because **there is no
+jump for it to measure** — `hzero` follows with no interval, no sweep, and no appeal to
+MSAEMIX.5's numerics.
+
+⇒ If this works, BRK.6 supersedes the `K`-range question entirely and **BRK.5 drops from
+prerequisite to confirmation**.
+
+⚠ **What still has to be shown, and it is not nothing.** BRK.2 gives the *candidate crossing
+set*. Going from "`r*` is not in the crossing set" to "`c_ij` is smooth at `r*`" needs the
+crossing set to be the **complete** set of knots, not merely to contain them — i.e. BRK.1's
+closure lemma applied so that no knot can arise from anywhere else in the convolution.
+Without that, BRK.6 proves the mediated distance is not among a list, which is weaker than
+what `hzero` needs.
+
+⚠ **Degenerate coincidences must be handled explicitly.** `r* = (σ_i + 2σ_a + σ_b)/2` is
+`σ_a`-dependent and the crossing set is not, so generically `r* ∉ {±λ_ij, ±σ_ij}` — but for
+special diameters they can coincide numerically. At such a point there IS a knot at `r*`; it
+simply is not a *mediated* one, and the statement must be phrased so that this is not a
+counterexample. (Same class of trap as `σ = [1, 1.5, 2]` in BRK.5, where `σ₁₃ = σ₂₂`.)
+
+⚠ If BRK.6 lands, the weakened form of BRK.4 noted below is also available — with `hzero`
+holding on **every** interval including one containing `K = 0`, the analyticity,
+connectedness and openness hypotheses of `jump_all_orders_vanish` are not needed, and the
+result follows from smoothness at the origin alone.
+
+---
+
+## ⭐⭐⭐ BRK.7 — THE COMPLETE SCHEME: every order, directly, with no `K`-analysis
+
+**This supersedes the BRK.4/BRK.6 route for the all-orders claim.** That route reasons about
+the resummed `J(K)` and therefore drags in analyticity, a `K`-interval and an identity
+theorem. None of it is necessary. The right statement is structural:
+
+> **Piece BOUNDARIES are geometric; piece COEFFICIENTS are dynamical.**
+> `K` moves the coefficients and can never move a boundary.
+
+Differentiating in `K` therefore cannot create a knot, and the whole thing falls out order by
+order with no analysis at all.
+
+### Step 1 — Geometric support/knot lemma for the Baxter factor
+
+For every coupling, `Q_ab(·)` is supported on `[λ_ba, ∞)`, is smooth on `(λ_ba, σ_ab)` and on
+`(σ_ab, ∞)`, and its only possible knots are `λ_ba` and `σ_ab` — **both pure functions of the
+diameters**. This is Wiener–Hopf/Baxter structure, not closure-specific.
+
+*Existing material:* `MatBaxterFactorization`, `matFourierFactor`, the mixture-RDF WH atoms;
+`msaemix_uneq_core.py` validated the real-space `Q_ij` (support `[λ_ji,∞)`, poly on
+`[λ_ji,σ_ij]` of width `σ_i`, C̃ box) to ~1e-8.
+
+### Step 2 ⭐ — `K`-independence of the knot set (the crux)
+
+`Q_ab(r;K)` has the parametric form
+
+```
+[ poly(r) + W_ab e^{−zr} + Ct_ab ] · 1_{[λ_ba, σ_ab]}(r)   +   [ tail ] · 1_{[σ_ab, ∞)}(r)
+```
+
+with `K` entering **only** through the scalar amplitudes (`A_j`, `q'_ij`, `W`, `Ct`, `Gt`).
+The indicators carry no `K`. Hence `∂ⁿ_K Q_ab` has knots ⊆ `{λ_ba, σ_ab}` for every `n`.
+
+⚠ **This is where the actual work is.** Steps 1, 3, 4, 5 are bookkeeping; Step 2 is the
+theorem. In a development that *defines* `Q` by this form (as `MSAEMixCore` does via
+`coreC1..coreC5`) it is close to definitional — but then the content moves to showing the
+BH root really has that form at unequal `σ`, general `N`, which is MSAEMIX.4 Stage 3's job.
+**Do not let Step 2 be assumed on one side and proved on the other.**
+
+⚠ Guard the endpoints at `σ ≠ 1`: the poly piece has width `σ_i` *shifted by* `λ_ji`. The
+`σ=1` masking bug (commit 5ded95d, spurious `σ` in the C̃ box) came from exactly this class.
+
+### Step 3 — Convolution knot closure  ⟵ **BRK.1**
+
+`knots(f ⋆ g) ⊆ knots(f) + knots(g)`, endpoints included.
+
+### Step 4 — The `σ_l` cancellation  ⟵ **BRK.2**
+
+Feed Step 1's knot sets into Step 3 for `Σ_l ρ_l ∫ Q'_il(t+r) Q_jl(t) dt`: the four crossings
+collapse to `{±λ_ij, ±σ_ij}`, with every `σ_l` gone.
+
+### Step 5 — Assembly by Leibniz  ⟵ **MA.16 `ConvolutionLeibniz`**
+
+`c^(n)_ij = (1/n!) ∂ⁿ_K c_ij`. Differentiate the Baxter relation `n` times; by Leibniz,
+`∂ⁿ_K` of the convolution is a **finite sum** of convolutions of `∂ᵖ_K Q'_il` with
+`∂^q_K Q_jl`, `p+q=n`. Every factor has knots ⊆ `{λ, σ}` by Step 2, so every term has knots
+⊆ `{±λ_ij, ±σ_ij}` by Steps 3–4. Finite sums do not enlarge a knot set.
+
+⇒ **For every `n`, every `N`, every `(i,j)`: the interior knot of `c^(n)_ij` on `(0,σ_ij)` is
+`|λ_ij|` and nothing else.** No mediated distance can appear at any order, because no object
+in the chain ever had a `σ_l`-dependent boundary to begin with.
+
+### What this buys, and what it costs
+
+- **No `hzero`, no `K`-range sweep, no analyticity, no `IsPreconnected`.** BRK.4 and BRK.6
+  are no longer on the critical path for this claim (BRK.4 stays useful as a general lemma).
+- **BRK.5 becomes a pure sanity check** — worth running anyway, since a kink at `r*` in
+  `c^(2)` would mean Step 2 is false and the scheme has a hole.
+- **The whole load moves onto Step 2**, which is the honest place for it: it is the one
+  statement that is about the MSA solution rather than about convolution bookkeeping.
+
+⚠ Degenerate `σ` where `r*` coincides with `σ_ij` numerically are not counterexamples — there
+is a knot there, but it is not a *mediated* one. Phrase the theorem as "the knot set is
+`{±λ_ij, ±σ_ij}`", never as "`r*` is not a knot".
+
+---
+
+### BRK.8–12 — BRK.7's five steps as concrete tasks (Step `k` → BRK.`7+k`)
+
+| task | step | discharged by | status |
+|---|---|---|---|
+| **BRK.8** | Step 1 — geometric support/knot lemma for `Q_ab` (supported on `[λ_ba,∞)`, smooth on `(λ_ba,σ_ab)` and `(σ_ab,∞)`; knots ⊆ `{λ_ba,σ_ab}`) | material in `YukawaOZMix/MSAEMixCore` (`coreC1..coreC5`, `matMSACoreCorr`); real-space `Q_ij` validated in `msaemix_uneq_core.py` | ◑ material exists; the `ContDiffOn`-on-pieces + knot statement is not yet a standalone lemma |
+| **BRK.9** ⭐⭐ | Step 2 — `K`-independence of the knot set (`K` enters only the amplitudes; the indicators `1_{[λ,σ]}` carry no `K`, so `∂ⁿ_K Q` keeps knots ⊆ `{λ,σ}`) | **abstract half DONE** (`MSAEMixBreakpointOrders.contDiffOn_paramDeriv_coeffBasis`, std-3): `K` in coefficients only ⇒ every `∂ⁿ_K (Σ_k c_k(K)·b_k)` is `ContDiffOn` on the basis's smooth set — no new knot. **CONCRETE half** (the BH root really has `Q = Σ coreC_k(K)·basis_k(r)` on `[λ,σ]`, K-free boundaries, at unequal σ/general N) = **MSAEMIX.4 Stage 3** | ◑ **abstract half DONE (non-MSEMIX); concrete half = THE GAP (needs MSEMIX).** "Do not let Step 2 be assumed on one side and proved on the other." |
+| **BRK.10** | Step 3 — convolution knot closure `knots(f⋆g) ⊆ knots f + knots g` (⟵ BRK.1) | Mathlib `support_convolution_subset` (+ mixture's `*_contDiffOn_*` for endpoints) | ✓ point |
+| **BRK.11** | Step 4 — the `σ_l` cancellation (⟵ BRK.2) | `MSAEMixBreakpoints.breakpoints_sigma_l_free` (std-3) | ✓ done, point |
+| **BRK.12** | Step 5 — Leibniz assembly: `∂ⁿ_K` conv = finite Σ of `∂ᵖ_K Q'` ⋆ `∂^q_K Q` (⟵ MA.16) | `Analysis/ConvolutionLeibniz.hasDerivAt_intervalIntegral_convolution` (`n=1`) | ◑ `n=1` base exists; the `n`-fold iteration is bookkeeping |
+
+**Completable now:** BRK.10, BRK.11 (pointers to existing green lemmas), BRK.12's `n=1` base — recorded
+above. **The gap left for MSEMIX:** BRK.9 (Step 2), the K-independence of the *concrete* BH-root `Q` at
+unequal σ / general N = MSAEMIX.4 Stage 3. The full assembly (BRK.10+11+12 ⇒ all-orders knot set,
+*conditional on* BRK.8+9) is the remaining new Lean, gated on BRK.9 — write it once Stage 3 supplies
+the piecewise-with-`K`-free-boundaries form of `Q`, so Step 2 is proved, not assumed, on both sides.
+
+---
+
 ## ⏸ PENDING: the paper's §`sec:breakpoints` rewrite — GATED ON BRK.4
 
 **Do not start this until BRK.4 is settled.** Recorded here so the plan survives the wait.
@@ -217,6 +355,11 @@ section stays as it is, and MSAEMIX.5's scope narrows to the parameter values ac
 tested. That outcome is also worth a sentence in the paper, since "no mediated knot at first
 order, but they return at second" is a sharper statement about the truncation than silence.
 
-⚠ **Do this regardless of BRK.4, and do it first**: establish the `K`/`z`/`ρ` range
-`msaemix_uneq_n3.py` actually swept. It is a `grep` and a read, it decides whether BRK.4 is
-reachable at all, and every branch above depends on the answer.
+⚠ **Try BRK.6 first, and the range check only if it fails.** BRK.6 discharges `hzero`
+outright from `K`-free arithmetic; if it lands, the `K`-range question disappears and the
+rewrite is unblocked with no numerical premise anywhere in the chain. If BRK.6 stalls on the
+completeness step, fall back to establishing the `K`/`z`/`ρ` range `msaemix_uneq_n3.py`
+actually swept — a `grep` and a read — and note that what matters is **whether it reaches
+`K = 0`**, not how wide it is: an interval containing the origin makes BRK.4 need only
+smoothness, while one sitting at physical couplings keeps the full analytic statement and the
+fold-straddling caveat.
