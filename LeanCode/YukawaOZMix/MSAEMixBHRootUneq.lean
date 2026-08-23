@@ -76,6 +76,15 @@ noncomputable def FtMSAuneq (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt : Matrix (
 noncomputable def Ft1uneq (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt : Matrix (Fin N) (Fin N) ℝ)
     (s : ℂ) : Matrix (Fin N) (Fin N) ℂ := FtMSAuneq z rho σ Gt Dt s - FtHSuneq z rho σ s
 
+/-- The unequal-σ **core-DCF correction** = `matCoreUneq` at the MSA amplitudes minus at the HS
+amplitudes (`qp0, A0, Wt=Ct=0`).  Kernels are σ_l-free (shared by MSA and HS) so this is exactly the
+MSA−HS increment core (the exp part has no HS piece).  Unequal-σ analog of `matMSACoreCorr`. -/
+noncomputable def matCoreCorrUneq (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt : Matrix (Fin N) (Fin N) ℝ)
+    (i j : Fin N) : ℝ → ℝ := fun r =>
+  MSAEMixCoreUneq.matCoreUneq z rho σ (AVec z rho σ Gt Dt) (qpMat z rho σ Gt Dt)
+      (Wt z rho Gt Dt) (Ct z rho σ Gt Dt) i j r
+    - MSAEMixCoreUneq.matCoreUneq z rho σ (A0Vec rho σ) (qp0Mat rho σ) 0 0 i j r
+
 /-! ### The unequal-σ BH-root gate -/
 
 /-- The unequal-σ mixture MSA Blum–Høye root: (29′)/(33′) with the unequal-σ real Baxter factor
@@ -94,7 +103,8 @@ def MixBHRootUneq (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (
 /-! ### The unequal-σ closure-recovery axiom and MSAEMIX.1 at unequal diameter -/
 
 /-- ⭐ **MSAEMIX.4 (axiom, unequal σ).**  At the unequal-σ MSA Blum–Høye root (`MixBHRootUneq`) the
-Baxter product's coupling increment equals `−√(ρ_iρ_j)(𝓕[matCoreUneq]ᵢⱼ + 𝓕[matMSAtail]ᵢⱼ)`.
+Baxter product's coupling increment equals `−√(ρ_iρ_j)(𝓕[matCoreCorrUneq]ᵢⱼ + 𝓕[matMSAtail]ᵢⱼ)`
+(the MSA−HS core increment).
 
 **Certified** (`symbolic_{outer,inner}.py`, `verify_{outer,inner}.py`, parent repo): every per-piece
 kernel of `matCoreUneq` is the EXACT closed form from the case-split-free symbolic-σ Baxter
@@ -108,8 +118,7 @@ axiom matMSAexactUneq_hcore (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Matrix
       + (Ft1uneq z rho σ Gt Dt (Complex.I * k)
           * (Ft1uneq z rho σ Gt Dt (-(Complex.I * k))).transpose) i j
       = -(Real.sqrt (rho i * rho j) : ℂ)
-          * ((radial_fourier (MSAEMixCoreUneq.matCoreUneq z rho σ (AVec z rho σ Gt Dt)
-                (qpMat z rho σ Gt Dt) (Wt z rho Gt Dt) (Ct z rho σ Gt Dt) i j) k : ℂ)
+          * ((radial_fourier (matCoreCorrUneq z rho σ Gt Dt i j) k : ℂ)
             + (radial_fourier (matMSAtail K z σ i j) k : ℂ))
 
 /-- ⭐ **MSAEMIX.1 at unequal diameter.**  Given the unequal-σ hard-sphere symmetric factorization
@@ -127,15 +136,13 @@ theorem matMSAemix1_unequalDiam (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Ma
             + Ft1uneq z rho σ Gt Dt (-(Complex.I * k))).transpose) i j
       = (if i = j then (1 : ℂ) else 0)
         - (cHShat i j + (Real.sqrt (rho i * rho j) : ℂ)
-            * ((radial_fourier (MSAEMixCoreUneq.matCoreUneq z rho σ (AVec z rho σ Gt Dt)
-                  (qpMat z rho σ Gt Dt) (Wt z rho Gt Dt) (Ct z rho σ Gt Dt) i j) k : ℂ)
+            * ((radial_fourier (matCoreCorrUneq z rho σ Gt Dt i j) k : ℂ)
               + (radial_fourier (matMSAtail K z σ i j) k : ℂ))) := by
   have h := matEMIXfactorization_of_core (FtHSuneq z rho σ (Complex.I * k))
     (Ft1uneq z rho σ Gt Dt (Complex.I * k)) (FtHSuneq z rho σ (-(Complex.I * k)))
     (Ft1uneq z rho σ Gt Dt (-(Complex.I * k))) 1 cHShat
     (fun i j => cHShat i j + (Real.sqrt (rho i * rho j) : ℂ)
-      * ((radial_fourier (MSAEMixCoreUneq.matCoreUneq z rho σ (AVec z rho σ Gt Dt)
-            (qpMat z rho σ Gt Dt) (Wt z rho Gt Dt) (Ct z rho σ Gt Dt) i j) k : ℂ)
+      * ((radial_fourier (matCoreCorrUneq z rho σ Gt Dt i j) k : ℂ)
         + (radial_fourier (matMSAtail K z σ i j) k : ℂ)))
     (by intro i j; simpa using hHS i j)
     (by
