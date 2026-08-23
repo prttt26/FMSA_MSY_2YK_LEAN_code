@@ -324,6 +324,30 @@ unequal σ / general N = MSAEMIX.4 Stage 3. The full assembly (BRK.10+11+12 ⇒ 
 *conditional on* BRK.8+9) is the remaining new Lean, gated on BRK.9 — write it once Stage 3 supplies
 the piecewise-with-`K`-free-boundaries form of `Q`, so Step 2 is proved, not assumed, on both sides.
 
+### ⭐ Connected to the concrete Stage-3 core `matCoreUneq` (2026-08-22)
+
+The BRK.8/9/12 lemmas above are about the *abstract* piece form `gForm` / `gForm/(2π r)`. With
+MSAEMIX.4 Stage 3 now complete (`MSAEMixCoreUneq.matCoreUneq` = the concrete 2-piece exact-MSA core,
+`K`-free geometric split at `lamA σ i j = |λ_ij|`), they are discharged **against the actual core**
+in `MSAEMixBreakpointScheme.lean` (all std-3 `[propext, Classical.choice, Quot.sound]`):
+
+* `matCoreUneq_contDiffOn_inner` / `_outer` — value level: `matCoreUneq` is `ContDiffOn ℝ ⊤` on
+  `(0,|λ_ij|)` and on `(|λ_ij|,σ_ij)` (each piece reduces to `gForm/(2π r)`, `r ≠ 0`).
+* `matCoreUneq_smooth_off_absLam` ⭐ — capstone: for `σ_i,σ_j>0`, `σ_i≠σ_j`, `matCoreUneq` is smooth
+  on all of `(0,σ_ij)` except at the single interior breakpoint `|λ_ij|`, which MSAEMIX.5's
+  `interior_breakpoint_eq_absLam` shows is the **unique** `σ_l`-free interior crossing.
+* `matCoreUneq_paramDeriv_contDiffOn_inner` / `_outer` ⭐ — all orders: with every amplitude
+  `ContDiff` in `K` (BH root, explicit hyps), every `∂ⁿ_K matCoreUneq` is `ContDiffOn ℝ ⊤` on each
+  side of `|λ_ij|`. So no order, and no intermediate species, adds a knot beyond `|λ_ij|`, **about
+  the actual Stage-3 core** — not just the abstract `gForm`. (The amplitude-`ContDiff`-in-`K` facts
+  reduce to `unfold cC*; fun_prop`.)
+
+⚠ **The one link still carried numerically:** that this closed-form `matCoreUneq` *equals* the Baxter
+convolution `−Q'_ij + Σ_l ρ_l Q'_il ⋆ Q_jl` — MSAEMIX.4 Stage 3's symbolic-`σ` derivation, validated
+to `1e-14`. A Lean proof of that identity is a separate piecewise-convolution task (define real `Q`,
+its supports, differentiate under the integral) and is *not* what BRK closes; BRK now gives the knot
+structure **of `matCoreUneq` as defined**.
+
 ---
 
 ## ⏸ PENDING: the paper's §`sec:breakpoints` rewrite — GATED ON BRK.4
