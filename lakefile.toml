@@ -24,3 +24,11 @@ name = "LeanCode"
 [[lean_lib]]
 name = "MSAExactCertificate"
 roots = ["LeanCode.YukawaOZ.MSAExactCertificate"]
+
+# Matrix equal-diameter analog: same Fourier-layer discharge for MSAEMIX.4's
+# `matMSAexactEqualDiam_hcore`, reducing it to one pure-k-space sympy residual axiom.  Also OUT of
+# `defaultTargets` and not imported by the `LeanCode` root.
+# Build it on demand with:  lake build MatMSAExactEqualDiamCertificate
+[[lean_lib]]
+name = "MatMSAExactEqualDiamCertificate"
+roots = ["LeanCode.YukawaOZMix.MatMSAExactEqualDiamCertificate"]
