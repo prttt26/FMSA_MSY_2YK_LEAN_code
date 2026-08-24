@@ -17,12 +17,12 @@ root, so a normal `lake build` never compiles it; build it on demand only.
 
 ## What this file does
 
-`MSAFullFactorization.msaexact6_hcore` is stated with two `radial_fourier` integrals on its left.
+`MSAFullFactorization.msaexact_hcore` is stated with two `radial_fourier` integrals on its left.
 This file **discharges that Fourier/definitional layer** — the genuinely provable part — reducing
 the whole of MSAEXACT.6 to one **pure cos/sin/exp polynomial identity**
-(`msaexact6_kspace_residual`), which carries *no* `radial_fourier`.  Concretely:
+(`msaexact_kspace_residual`), which carries *no* `radial_fourier`.  Concretely:
 
-* `msaexact6_hcore_of_residual` proves the *exact statement* of `msaexact6_hcore` from the
+* `msaexact_hcore_of_residual` proves the *exact statement* of `msaexact_hcore` from the
   pure-algebra
   residual, by rewriting both transforms into closed form
   (`radial_fourier_coreCorrection` + `psi1/2/4_formula` + `one_sub_exp_sin_integral` +
@@ -72,7 +72,7 @@ formulas; the right side is the `Dt`-amplitude bracket of `|1 − ρQ̂(ik)|²`.
 **Certified in sympy** (`msaexact6_cert.py`, parent repo): `Δ = m29·r29 + m33·r33` exactly.
 **Ring-infeasible in Lean** (see module docstring): a 323-monomial slice already costs `ring`
 3 h/23 GB; the full per-order reassembly is a weeks-long, ~200 GB normalization. -/
-axiom msaexact6_kspace_residual (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hz : 0 < z)
+axiom msaexact_kspace_residual (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hz : 0 < z)
     (hzk : z ^ 2 + k ^ 2 ≠ 0)
     (h29 : Dt * bhF xi z (Dt, G) - 2 * π * K / z = 0)
     (h33 : 2 * π * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0) :
@@ -105,12 +105,12 @@ axiom msaexact6_kspace_residual (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hz : 0 
         Dt ^ 2 * (msaRez xi z G k ^ 2 + msaImz xi z G k ^ 2)
 
 /-- ⭐ **MSAEXACT.6 — the hcore identity, Fourier layer fully formalized.**  This is the *exact*
-statement of `MSAFullFactorization.msaexact6_hcore`, here **derived** from the pure-algebra
-`msaexact6_kspace_residual`: the two `radial_fourier` integrals are rewritten into closed form by
+statement of `MSAFullFactorization.msaexact_hcore`, here **derived** from the pure-algebra
+`msaexact_kspace_residual`: the two `radial_fourier` integrals are rewritten into closed form by
 the interval-transform lemmas, isolating the remaining gap to the single polynomial identity.
-(Requires the physical `0 < z`, which `msaexact6_hcore` leaves implicit; `z²+k² ≠ 0` follows from
+(Requires the physical `0 < z`, which `msaexact_hcore` leaves implicit; `z²+k² ≠ 0` follows from
 `k ≠ 0`.) -/
-theorem msaexact6_hcore_of_residual (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hz : 0 < z)
+theorem msaexact_hcore_of_residual (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hz : 0 < z)
     (h29 : Dt * bhF xi z (Dt, G) - 2 * π * K / z = 0)
     (h33 : 2 * π * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0) :
     rhoOf xi * (radial_fourier (msaCoreCorr xi z Dt G K) k
@@ -125,6 +125,6 @@ theorem msaexact6_hcore_of_residual (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hz 
       psi1_formula hk 1, psi2_formula hk 1, psi4_formula hk 1,
       one_sub_exp_sin_integral hzk hk, coshRatio_sin_integral hzk hk]
   simp only [mul_one, one_pow]
-  exact msaexact6_kspace_residual xi z Dt G K hk hz hzk h29 h33
+  exact msaexact_kspace_residual xi z Dt G K hk hz hzk h29 h33
 
 end FMSA.MSAExact.Certificate

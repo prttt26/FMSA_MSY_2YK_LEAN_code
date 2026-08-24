@@ -20,7 +20,7 @@ name = "LeanCode"
 # MSAEXACT.6 certificate: deliberately OUT of `defaultTargets`, so a normal `lake build` never
 # compiles it (it holds a ring-infeasible axiom + its Fourier-layer bridge; see the file's docstring).
 # It is not imported by the `LeanCode` root either, so nothing pulls it into the default build.
-# Build it on demand with:  lake build MSAExact6Certificate
+# Build it on demand with:  lake build MSAExactCertificate
 [[lean_lib]]
-name = "MSAExact6Certificate"
-roots = ["LeanCode.YukawaOZ.MSAExact6Certificate"]
+name = "MSAExactCertificate"
+roots = ["LeanCode.YukawaOZ.MSAExactCertificate"]

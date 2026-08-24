@@ -19,8 +19,8 @@ The unequal-σ analog of `MSAEMixBHRoot.lean`.  The unequal-σ mixture Baxter fa
 the Laplace transform of the real-space `Q_ij` (poly on `[λ_ij, σ_ij]` with the `λ_ij=(σ_j−σ_i)/2`
 support shift and row width `σ_i`, plus the Yukawa tail); at equal σ (`σ_i=σ_j`) it collapses to the
 equal-σ `qhatMixC` (`λ_ij=0`, common `σ`).  With the unequal-σ HS / MSA / increment factors, the
-BH-root gate `MixBHRootUneq`, and the closure-recovery axiom `matMSAexactUneq_hcore` (whose core is
-the exactly-derived, validated `MSAEMixCoreUneq.matCoreUneq`), MSAEMIX.1 closes at unequal
+BH-root gate `MixBHRootUneq`, and the closure-recovery axiom `matMSAexactUnequalDiam_hcore` (whose
+core is the exactly-derived, validated `MSAEMixCoreUneq.matCoreUneq`), MSAEMIX.1 closes at unequal
 diameter through the abstract `matEMIXfactorization_of_core` — mirroring `matMSAemix1_equalDiam`.
 -/
 
@@ -109,8 +109,9 @@ Baxter product's coupling increment equals `−√(ρ_iρ_j)(𝓕[matCoreCorrUne
 **Certified** (`symbolic_{outer,inner}.py`, `verify_{outer,inner}.py`, parent repo): every per-piece
 kernel of `matCoreUneq` is the EXACT closed form from the case-split-free symbolic-σ Baxter
 convolution (σ_l-independent), reproducing the numerical convolution to `1e-14` on both pieces.  A
-*physics-computation* axiom at the physical root (unequal-σ analog of `matMSAexact6_hcore`). -/
-axiom matMSAexactUneq_hcore (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
+*physics-computation* axiom at the physical root (unequal-σ analog of
+`matMSAexactEqualDiam_hcore`). -/
+axiom matMSAexactUnequalDiam_hcore (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
     (k : ℝ) (hroot : MixBHRootUneq z rho σ Gt Dt K) (i j : Fin N) :
     (FtHSuneq z rho σ (Complex.I * k) * (Ft1uneq z rho σ Gt Dt (-(Complex.I * k))).transpose) i j
       + (Ft1uneq z rho σ Gt Dt (Complex.I * k)
@@ -147,7 +148,7 @@ theorem matMSAemix1_unequalDiam (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Ma
     (by intro i j; simpa using hHS i j)
     (by
       intro i j
-      have hc := matMSAexactUneq_hcore z rho σ Gt Dt K k hroot i j
+      have hc := matMSAexactUnequalDiam_hcore z rho σ Gt Dt K k hroot i j
       simpa using hc) i j
   simpa using h
 

@@ -18,7 +18,7 @@ import LeanCode.HSMixture.MixtureNoSpinodalN1
 Group **MSAEMIX**.  `matMSAemix1_equalDiam_WH` reduces the HS symmetric factorization to the shared
 WH atoms.  At `N = 1` those atoms are **fully proved** — the scalar Baxter Wiener–Hopf
 (`baxter_wiener_hopf_complex`) — so this file lands the `N = 1` MSAEMIX.1 factorization depending
-only on `MixBHRoot` and the physics axiom `matMSAexact6_hcore`, with **no** HS hypothesis.
+only on `MixBHRoot` and the physics axiom `matMSAexactEqualDiam_hcore`, with **no** HS hypothesis.
 
 The one bridge: the `N = 1` symmetric HS factor `FtHS` (√-weighted complex-Laplace `qhatMixC`)
 equals the scalar HS Baxter factor `1 − Q̂_complex(k)` (real-space cosine/sine).  Both are the same
@@ -62,8 +62,8 @@ theorem sqrt_rho_qhatMixC_HS_fin_one (rho sigma : Fin 1 → ℝ) (z : ℝ) {k : 
 /-! ### The `N = 1` HS symmetric factorization, fully discharged -/
 
 /-- The `N = 1` hard-sphere symmetric Baxter factorization, PROVED (no hypothesis): the `FtHS`
-product is `1 − ρ₀·𝓕[c_HS]`, from the scalar complex Wiener–Hopf `baxter_wiener_hopf_complex` via the
-bridge `sqrt_rho_qhatMixC_HS_fin_one` and `Chat_complex_eq_radial_fourier`. -/
+product is `1 − ρ₀·𝓕[c_HS]`, from the scalar complex Wiener–Hopf `baxter_wiener_hopf_complex`
+via the bridge `sqrt_rho_qhatMixC_HS_fin_one` and `Chat_complex_eq_radial_fourier`. -/
 theorem FtHS_mul_fin_one (rho sigma : Fin 1 → ℝ) (z : ℝ) {k : ℝ} (hk : k ≠ 0)
     (hsig : 0 < sigma 0) (hrho : 0 ≤ rho 0) (hlt : etaMix rho sigma < 1) (i j : Fin 1) :
     (FtHS z (sigma 0) rho sigma (Complex.I * k)
@@ -98,7 +98,7 @@ theorem FtHS_mul_fin_one (rho sigma : Fin 1 → ℝ) (z : ℝ) {k : ℝ} (hk : k
 Blum–Høye root `MixBHRoot` (and `η < 1`, `σ > 0`, `ρ ≥ 0`), the MSA symmetric Baxter factorization
 holds with the physical HS DCF `ρ₀·𝓕[c_HS]` — **no** `hHS`/`hWH`/`hKDEF`/`hbridge` hypothesis (the
 scalar Baxter WH `baxter_wiener_hopf_complex` discharges them).  Its only physics axiom is
-`matMSAexact6_hcore`; `#print axioms` = the standard three + that axiom. -/
+`matMSAexactEqualDiam_hcore`; `#print axioms` = the standard three + that axiom. -/
 theorem matMSAemix1_fin_one (rho sigma : Fin 1 → ℝ) (z : ℝ) (Gt Dt K : Matrix (Fin 1) (Fin 1) ℝ)
     {k : ℝ} (hk : k ≠ 0) (hsig : 0 < sigma 0) (hrho : 0 ≤ rho 0) (hlt : etaMix rho sigma < 1)
     (hroot : MixBHRoot z (sigma 0) rho sigma Gt Dt K) (i j : Fin 1) :

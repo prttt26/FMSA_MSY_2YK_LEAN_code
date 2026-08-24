@@ -27,7 +27,8 @@ physics-computation axiom, then closes MSAEMIX.1 at equal diameter.
   MSA instances, `Ft1` the coupling increment.
 * `MixBHRoot` — Blum–Høye (29′)/(33′) at equal σ: the physical-solution gate (the matrix analog of
   the scalar `h29`/`h33`).  This is what makes the `hcore` **true** (it is false off-root).
-* `matMSAexact6_hcore` — ⭐ the axiom: at a `MixBHRoot`, the Baxter-product coupling increment matches
+* `matMSAexactEqualDiam_hcore` — ⭐ the axiom: at a `MixBHRoot`, the Baxter-product coupling
+  increment matches
   `−√(ρ_iρ_j)(𝓕[matMSACoreCorr] + 𝓕[matMSAtail])`.  Certified in `msaemix_core_coeffs.py`
   (all-five closed-form, no fitting, held-out `~1e-12`, binary/ternary/unequal ρ).  A
   *physics-computation* axiom, not a new mathematical assumption.
@@ -127,14 +128,15 @@ def MixBHRoot (z sig : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt K : Matrix (Fin N
 /-- ⭐ **MSAEMIX.4 (axiom).**  At the equal-σ mixture MSA Blum–Høye root (`MixBHRoot`), the Baxter
 product's coupling increment `(F̃₀ F̃₁ⁿᵀ + F̃₁ F̃₀ⁿᵀ + F̃₁ F̃₁ⁿᵀ)ᵢⱼ` equals
 `−√(ρ_iρ_j)(𝓕[matMSACoreCorr]ᵢⱼ + 𝓕[matMSAtail]ᵢⱼ)` — the matrix closure-recovery ring, the matrix
-analog of `msaexact6_hcore`.
+analog of `msaexact_hcore`.
 
 **Certified** in `msaemix_core_coeffs.py` (parent repo): all five equal-σ core coefficients
 `c₁..c₅` are closed forms (derived from the Baxter real-space convolution) matching the exact
 factor-product extraction with held-out residual `~1e-12` (binary/ternary, unequal ρ, `z∈[1.5,2.6]`),
 and reducing to the scalar `msaCoreCorr` at `N = 1`.  A *physics-computation* axiom (a specific
 verified polynomial identity gated by the physical root), not a new mathematical assumption. -/
-axiom matMSAexact6_hcore (z sig : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
+axiom matMSAexactEqualDiam_hcore (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
     (k : ℝ) (hσ : ∀ i, sigma i = sig) (hroot : MixBHRoot z sig rho sigma Gt Dt K) (i j : Fin N) :
     (FtHS z sig rho sigma (Complex.I * k)
         * (Ft1 z sig rho sigma Gt Dt (-(Complex.I * k))).transpose) i j
@@ -176,7 +178,7 @@ theorem matMSAemix1_equalDiam (z sig : ℝ) (rho sigma : Fin N → ℝ)
     (by intro i j; simpa using hHS i j)
     (by
       intro i j
-      have hc := matMSAexact6_hcore z sig rho sigma Gt Dt K k hσ hroot i j
+      have hc := matMSAexactEqualDiam_hcore z sig rho sigma Gt Dt K k hσ hroot i j
       simpa using hc) i j
   simpa using h
 
@@ -188,7 +190,7 @@ and produces the full MSA factorization through `matEMIXfactorization_of_baxterF
 discharges the HS part via `matSF_of_baxterFourierWH`).  So the HS factorization is no longer an
 ad-hoc hypothesis but the same shared WH machinery the mixture-RDF/OZ★ work rests on (symmetric
 √-weight, `ρ := 1`, `Φ` the √-weighted HS DCF).  The `hcore` fed to it is exactly
-`matMSAexact6_hcore`. -/
+`matMSAexactEqualDiam_hcore`. -/
 theorem matMSAemix1_equalDiam_WH (z sig : ℝ) (rho sigma : Fin N → ℝ)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (k : ℝ)
     (cHSker qbax PhiHS : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (hsig1 : 0 < sig)
@@ -213,8 +215,8 @@ theorem matMSAemix1_equalDiam_WH (z sig : ℝ) (rho sigma : Fin N → ℝ)
         + (radial_fourier (matMSAtail K z sigma i j) k : ℂ)))
     (by
       intro i j
-      have hc := matMSAexact6_hcore z sig rho sigma Gt Dt K k hσ hroot i j
-      simp only [Complex.ofReal_one, one_mul]
+      have hc := matMSAexactEqualDiam_hcore z sig rho sigma Gt Dt K k hσ hroot i j
+      simp only [Complex.ofReal_one]
       linear_combination hc) i j
   simpa using h
 
