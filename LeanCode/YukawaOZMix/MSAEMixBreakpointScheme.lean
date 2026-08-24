@@ -278,4 +278,72 @@ theorem matCoreUneq_paramDeriv_contDiffOn_outer (z : ℝ) (σ : Fin N → ℝ) (
     rw [if_neg (not_le.mpr hr.1)]
   rw [hFG]
 
+/-! ### BRK closure scaffolding — plug in the Stage-3 sympy identity
+
+The theorems above are about the closed form `matCoreUneq`.  To close BRK *about the physical
+exact-MSA core* one supplies the **only remaining link**: that this closed form equals the actual
+Baxter-convolution core `c = −Q'_ij + Σ_l ρ_l Q'_il ⋆ Q_jl` (divided by `2π r`) on the core
+interval — MSAEMIX.4 Stage 3's symbolic-`σ` identity, validated to `1e-14`.  Fed as the `EqOn`
+hypotheses `hc_in`/`hc_out` (or the `K`-family `hcK`), that link transfers *all* of BRK's smoothness
+to the physical core `c` by `ContDiffOn.congr`.  So this is the theorem group that lets BRK close:
+the sympy identity is its single input, exactly as the k-space residual is for the `hcore`
+certificates.  (Stating that identity itself as a Lean axiom needs the real-space Baxter `Q` and its
+convolution defined — a faithful-transcription task kept outside this file.) -/
+
+/-- ⭐ **BRK closure (value level).**  Any core `c` agreeing with `matCoreUneq` on the two pieces of
+`(0, σ_ij)` inherits its smoothness: `c` is `ContDiffOn ℝ ⊤` on each side of `|λ_ij|`. -/
+theorem contDiffOn_off_absLam_of_eqOn (z : ℝ) (ρ σ A : Fin N → ℝ)
+    (qp Wt Ct : Fin N → Fin N → ℝ) (i j : Fin N) (c : ℝ → ℝ)
+    (hc_in : Set.EqOn c (fun r => matCoreUneq z ρ σ A qp Wt Ct i j r) (Set.Ioo 0 (lamA σ i j)))
+    (hc_out : Set.EqOn c (fun r => matCoreUneq z ρ σ A qp Wt Ct i j r)
+        (Set.Ioo (lamA σ i j) (edgeHi σ i j))) :
+    ContDiffOn ℝ ⊤ c (Set.Ioo 0 (lamA σ i j))
+    ∧ ContDiffOn ℝ ⊤ c (Set.Ioo (lamA σ i j) (edgeHi σ i j)) :=
+  ⟨(matCoreUneq_contDiffOn_inner z ρ σ A qp Wt Ct i j).congr (fun _ hr => hc_in hr),
+   (matCoreUneq_contDiffOn_outer z ρ σ A qp Wt Ct i j).congr (fun _ hr => hc_out hr)⟩
+
+/-- ⭐ **BRK closed (value level).**  With the Stage-3 identity supplied, the physical exact-MSA core
+`c` is smooth on all of `(0, σ_ij)` except at the single interior breakpoint `|λ_ij|`, which
+MSAEMIX.5 pins as the unique `σ_l`-free interior crossing — no other breakpoint. -/
+theorem exactCore_smooth_off_unique_breakpoint_of_eqOn (z : ℝ) (ρ σ A : Fin N → ℝ)
+    (qp Wt Ct : Fin N → Fin N → ℝ) (i j : Fin N) (c : ℝ → ℝ)
+    (hc_in : Set.EqOn c (fun r => matCoreUneq z ρ σ A qp Wt Ct i j r) (Set.Ioo 0 (lamA σ i j)))
+    (hc_out : Set.EqOn c (fun r => matCoreUneq z ρ σ A qp Wt Ct i j r)
+        (Set.Ioo (lamA σ i j) (edgeHi σ i j)))
+    (hi : 0 < σ i) (hj : 0 < σ j) (hne : σ i ≠ σ j) :
+    lamA σ i j ∈ Set.Ioo (0 : ℝ) (edgeHi σ i j)
+    ∧ ContDiffOn ℝ ⊤ c (Set.Ioo 0 (lamA σ i j))
+    ∧ ContDiffOn ℝ ⊤ c (Set.Ioo (lamA σ i j) (edgeHi σ i j)) := by
+  obtain ⟨h1, h2⟩ := contDiffOn_off_absLam_of_eqOn z ρ σ A qp Wt Ct i j c hc_in hc_out
+  exact ⟨(interior_breakpoint_eq_absLam σ i j hi hj hne).1, h1, h2⟩
+
+/-- ⭐ **BRK closed (all orders, inner piece).**  A `K`-family `cK` agreeing with the `matCoreUneq`
+`K`-family (the Stage-3 identity, as a function of `K`) inherits the all-orders smoothness: every
+`K`-derivative of `cK` is `ContDiffOn ℝ ⊤` on `(0, |λ_ij|)`. -/
+theorem paramDeriv_contDiffOn_inner_of_eqOn (z : ℝ) (σ : Fin N → ℝ) (ρ A : ℝ → Fin N → ℝ)
+    (qp Wt Ct : ℝ → Fin N → Fin N → ℝ) (i j : Fin N) (cK : ℝ → ℝ → ℝ)
+    (hρ : ∀ l, ContDiff ℝ ⊤ (fun K => ρ K l)) (hA : ∀ l, ContDiff ℝ ⊤ (fun K => A K l))
+    (hqp : ∀ a b, ContDiff ℝ ⊤ (fun K => qp K a b)) (hWt : ∀ a b, ContDiff ℝ ⊤ (fun K => Wt K a b))
+    (hCt : ∀ a b, ContDiff ℝ ⊤ (fun K => Ct K a b))
+    (hcK : ∀ r, (fun K => cK K r)
+      = (fun K => matCoreUneq z (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j r)) (n : ℕ) (K₀ : ℝ) :
+    ContDiffOn ℝ ⊤ (fun r => iteratedDeriv n (fun K => cK K r) K₀) (Set.Ioo 0 (lamA σ i j)) := by
+  refine (matCoreUneq_paramDeriv_contDiffOn_inner z σ ρ A qp Wt Ct i j hρ hA hqp hWt hCt n K₀).congr
+    ?_
+  intro r _; rw [hcK r]
+
+/-- ⭐ **BRK closed (all orders, outer piece).**  Same, on `(|λ_ij|, σ_ij)`. -/
+theorem paramDeriv_contDiffOn_outer_of_eqOn (z : ℝ) (σ : Fin N → ℝ) (ρ A : ℝ → Fin N → ℝ)
+    (qp Wt Ct : ℝ → Fin N → Fin N → ℝ) (i j : Fin N) (cK : ℝ → ℝ → ℝ)
+    (hρ : ∀ l, ContDiff ℝ ⊤ (fun K => ρ K l)) (hA : ∀ l, ContDiff ℝ ⊤ (fun K => A K l))
+    (hqp : ∀ a b, ContDiff ℝ ⊤ (fun K => qp K a b)) (hWt : ∀ a b, ContDiff ℝ ⊤ (fun K => Wt K a b))
+    (hCt : ∀ a b, ContDiff ℝ ⊤ (fun K => Ct K a b))
+    (hcK : ∀ r, (fun K => cK K r)
+      = (fun K => matCoreUneq z (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j r)) (n : ℕ) (K₀ : ℝ) :
+    ContDiffOn ℝ ⊤ (fun r => iteratedDeriv n (fun K => cK K r) K₀)
+      (Set.Ioo (lamA σ i j) (edgeHi σ i j)) := by
+  refine (matCoreUneq_paramDeriv_contDiffOn_outer z σ ρ A qp Wt Ct i j hρ hA hqp hWt hCt n K₀).congr
+    ?_
+  intro r _; rw [hcK r]
+
 end FMSA.MSAExact.BRK
