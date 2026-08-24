@@ -81,9 +81,15 @@ amplitudes (`qp0, A0, Wt=Ct=0`).  Kernels are σ_l-free (shared by MSA and HS) s
 MSA−HS increment core (the exp part has no HS piece).  Unequal-σ analog of `matMSACoreCorr`. -/
 noncomputable def matCoreCorrUneq (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt : Matrix (Fin N) (Fin N) ℝ)
     (i j : Fin N) : ℝ → ℝ := fun r =>
-  MSAEMixCoreUneq.matCoreUneq z rho σ (AVec z rho σ Gt Dt) (qpMat z rho σ Gt Dt)
-      (Wt z rho Gt Dt) (Ct z rho σ Gt Dt) i j r
-    - MSAEMixCoreUneq.matCoreUneq z rho σ (A0Vec rho σ) (qp0Mat rho σ) 0 0 i j r
+  -- orient by σ (larger-diameter row; `c` symmetric) so this is correct for BOTH `(i,j)` orderings,
+  -- and cut off at `σ_ij` (exterior = tail `matMSAtail`; `radial_fourier` must stop there).
+  let a := if σ j ≤ σ i then i else j
+  let b := if σ j ≤ σ i then j else i
+  if r ≤ edgeHi σ i j then
+    MSAEMixCoreUneq.matCoreUneq z rho σ (AVec z rho σ Gt Dt) (qpMat z rho σ Gt Dt)
+        (Wt z rho Gt Dt) (Ct z rho σ Gt Dt) a b r
+      - MSAEMixCoreUneq.matCoreUneq z rho σ (A0Vec rho σ) (qp0Mat rho σ) 0 0 a b r
+  else 0
 
 /-! ### The unequal-σ BH-root gate -/
 

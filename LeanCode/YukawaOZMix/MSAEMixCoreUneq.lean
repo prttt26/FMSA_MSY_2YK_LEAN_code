@@ -187,26 +187,19 @@ noncomputable def cEpi (z : ℝ) (ρ σ A : Fin N → ℝ) (qp Wt Ct : Fin N →
     + (-Real.exp (-z * (a + b) / 2) / 2) * (Ct i l * Wt j l)
     + (-Real.exp (-z * (a - b) / 2) / 2) * (Ct i l * Ct j l))
 
-/-- ⭐ The assembled unequal-σ exact-MSA core-correction `c_ij(r) = g/(2π r)` — SYMMETRIC in `(i,j)`
-(row/col oriented internally by `σ`, since the kernels are for `σ_row ≥ σ_col` and `c_ij = c_ji`),
-**compactly supported on `(0, σ_ij]`** (like the scalar `coreCorrection`: `else 0` for
-`r > σ_ij`, the exterior being the Yukawa tail `matMSAtail`); 2-piece inside at `|λ_ij|`, with the
-EXACT σ_l-free kernels of both pieces.  (The `1/r` cancels the radial-Fourier weight, so `r→0` and a
-free-amplitude `g(0)≠0` are harmless under `radial_fourier`.) -/
+/-- ⭐ The assembled unequal-σ exact-MSA core `c_ij(r) = g/(2π r)` on the core interval, in the
+**correct orientation `σ_i ≥ σ_j`** (2-piece at `|λ_ij|`, EXACT σ_l-free kernels).  This is the RAW
+per-orientation piecewise form (its extension past `σ_ij` is `don't-care`; the physical, symmetric,
+compactly-supported core-CORRECTION used by the factorization is `matCoreCorrUneq` in
+`MSAEMixBHRootUneq`, which orients by `σ` and cuts off at `σ_ij`). -/
 noncomputable def matCoreUneq (z : ℝ) (ρ σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ)
     (i j : Fin N) (r : ℝ) : ℝ :=
-  -- kernels are derived for the LARGER-diameter row (σ_a ≥ σ_b); `c` is symmetric (`c_ij = c_ji`),
-  -- so orient by `σ` here to make `matCoreUneq i j` correct for BOTH orderings of `(i,j)`.
-  let a := if σ j ≤ σ i then i else j
-  let b := if σ j ≤ σ i then j else i
-  if r ≤ edgeHi σ a b then
-    (if r ≤ lamA σ a b then
-        gForm (cC0i z ρ σ A qp Wt Ct a b) (cC1i z ρ σ A qp Wt Ct a b) 0 0 0
-          (cEmi z ρ σ A qp Wt Ct a b) (cEpi z ρ σ A qp Wt Ct a b) z r
-      else
-        gForm (cC0o z ρ σ A qp Wt Ct a b) (cC1o z ρ σ A qp Wt Ct a b) (cC2o z ρ σ A qp Wt Ct a b)
-          (cC3o z ρ σ A qp Wt Ct a b) (cC4o z ρ σ A qp Wt Ct a b) (cEmo z ρ σ A qp Wt Ct a b)
-          (cEpo z ρ σ A qp Wt Ct a b) z r) / (2 * Real.pi * r)
-  else 0
+  (if r ≤ lamA σ i j then
+      gForm (cC0i z ρ σ A qp Wt Ct i j) (cC1i z ρ σ A qp Wt Ct i j) 0 0 0
+        (cEmi z ρ σ A qp Wt Ct i j) (cEpi z ρ σ A qp Wt Ct i j) z r
+    else
+      gForm (cC0o z ρ σ A qp Wt Ct i j) (cC1o z ρ σ A qp Wt Ct i j) (cC2o z ρ σ A qp Wt Ct i j)
+        (cC3o z ρ σ A qp Wt Ct i j) (cC4o z ρ σ A qp Wt Ct i j) (cEmo z ρ σ A qp Wt Ct i j)
+        (cEpo z ρ σ A qp Wt Ct i j) z r) / (2 * Real.pi * r)
 
 end MSAEMixCoreUneq
