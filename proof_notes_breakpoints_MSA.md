@@ -56,6 +56,9 @@ measurement drift apart, and the one in the file nobody runs is the one that goe
 | **BRK.3** | first order as an *instance*: IB.9 / `dcfOdd_contDiffOn_*` from BRK.1+BRK.2 | ✓ **DONE — point (owner = IB.9).** `MixtureConvolution.pbp_breakpoints_subset` (breakpoint set `{±λ_ij, ±R_ij}`, `m,n` cancel, all N) + `MixtureDCFSmooth.dcfOdd_contDiffOn_upper/_lower/_like` |
 | **BRK.4** | order-by-order corollary: `J(K) ≡ 0` on an interval ⇒ every `J_n = 0` | ✓ **DONE 2026-08-22, std-3** — `YukawaOZMix/MSAEMixBreakpointOrders.jump_all_orders_vanish` (`#print axioms` = `[propext, Classical.choice, Quot.sound]`): `J` real-analytic on a preconnected open coupling-domain `U` and `= 0` on a subinterval `(a,b) ⊆ U` ⇒ `iteratedDeriv n J x₀ = 0` for all `n` at every `x₀ ∈ U` (every Taylor coeff `J_n = 0`), via Mathlib's identity theorem `AnalyticOnNhd.eqOn_zero_of_preconnected_of_eventuallyEq_zero`. Physics input (analyticity in `K` + `J = 0` on an interval) = BRK.5 + BRK.2's `K`-independence; not re-proved here (BRK.4 predicts the cancellation, does not exhibit `c^{(2)}`) |
 | **BRK.5** | the `n = 2` witness (numerical) — falsification test for BRK.4 | ◑ **witnessed 2026-08-22** (`brk5_witness.py`, parent repo): exact-MSA `c_ij` from the Baxter `Q`. ⭐ **correct mediated candidate `r* = R[a,b] + R[i,a]`** (TWO intermediates a,b), active INSIDE the core iff **(A) `2σ_a+σ_b < σ_j`** and **(B) `σ_j < 3σ_b`** (`verify_mediated_breakpoints.py`) — so it genuinely CAN sit inside `(0,σ_ij)`, where the FMSA/stepwise term kinks. Tested 3 σ-sets: `[1,4,8]` (1 distinct + 1 degenerate), `[1,2,3,6]` (3 distinct), `[1,2,4,10]` (4 distinct) = **8 distinct active intra-core `r*`; exact MSA SMOOTH at EVERY one** (single-piece straddle within the enclosing piece, worst **1.9e-14** rel) ⇒ the FMSA mediated kink is ABSENT — BRK.4 cancellation witnessed **non-vacuously**. ⚠ `[1,4,8]` alone is a WEAK test (only 1 distinct); N=4 activates more. ⚠ caught a quad lower-limit bug (support starts at `λ=(min σ−max σ)/2`, below the old `−3`). ⚠ still fixed-`K` points, but breakpoint *locations* are geometric/`K`-independent (BRK.2) ⇒ robust in `K` |
+| **BRK.6** ⭐⭐ | discharge `hzero`: `J(K) ≡ 0` as a theorem | ✓ **COMPLETENESS HALF CLOSED 2026-08-25** — the enumeration is exhaustive **by counting** (below), and confirmed by a kink scan that looks for breakpoints *wherever they are* rather than testing predicted ones (`brk_completeness.py`): **25 `(i,j)` pairs over `σ = [1,4,8]` and `[1,2,3,6]`, every detected kink in `{\|λ_ij\|, R_ij}`, ZERO unexplained**. ⇒ `hzero` no longer rests on MSAEMIX.5's numerics and **BRK.5 drops to confirmation**, exactly as this group predicted. Remaining = the Lean assembly, which is BRK.8–12, not new mathematics |
+| **BRK.7** | the complete scheme (Steps 1–5), superseding the `K`-analysis route | ◑ **argument COMPLETE, Lean assembly open** — Steps 1–5 are stated below; Step 2 is the only theorem, the rest is bookkeeping. Tracked as BRK.8–12 |
+
 
 ---
 
@@ -211,14 +214,52 @@ MSAEMIX.5's numerics.
 ⇒ If this works, BRK.6 supersedes the `K`-range question entirely and **BRK.5 drops from
 prerequisite to confirmation**.
 
-⚠ **What still has to be shown, and it is not nothing.** BRK.2 gives the *candidate crossing
-set*. Going from "`r*` is not in the crossing set" to "`c_ij` is smooth at `r*`" needs the
-crossing set to be the **complete** set of knots, not merely to contain them — i.e. BRK.1's
-closure lemma applied so that no knot can arise from anywhere else in the convolution.
-Without that, BRK.6 proves the mediated distance is not among a list, which is weaker than
-what `hzero` needs.
+### ✓ The completeness gap is closed (2026-08-25)
 
-⚠ **Degenerate coincidences must be handled explicitly.** `r* = (σ_i + 2σ_a + σ_b)/2` is
+The caveat that used to stand here — *"BRK.2 gives the candidate crossing set; going from
+'`r*` is not in the crossing set' to '`c_ij` is smooth at `r*`' needs the crossing set to be
+the **complete** set of knots, not merely to contain them"* — is answered twice over.
+
+**(a) Exhaustive by counting.** The DCF is
+
+    c_ij(r) = −Q′_ij(r) + Σ_l ρ_l ∫ dt Q′_il(t+r) Q_jl(t)
+
+`Q_jl(t)` is piecewise with **exactly two** knots — `t = λ_jl` and `t = R_jl` (zero below the
+first, poly+exp between, pure exp above). `Q′_il(t+r)` carries the same two, shifted:
+`t = λ_il − r` and `t = R_il − r`. By BRK.1 a convolution kinks only where a **moving** knot
+meets a **fixed** one, so the integral's knot set is exactly the `2 × 2 = 4` crossings — and
+BRK.2 evaluates *all four*:
+
+    λ_il − r = λ_jl  ⇒  r = λ_ij        R_il − r = R_jl   ⇒  r = λ_ij
+    R_il − r = λ_jl  ⇒  r = R_ij        λ_il − r = R_jl   ⇒  r = −R_ij
+
+There is no fifth crossing to miss: the count is `2 × 2`, not "the ones we thought of". The
+direct term `−Q′_ij(r)` contributes its own two knots at the same `{λ_ij, R_ij}`. ⇒ no `σ_l`
+survives anywhere, so **no mediated knot exists at any coupling** — which is precisely
+`hzero`, with no interval, no sweep and no appeal to MSAEMIX.5.
+
+**(b) Confirmed by a scan that does not know the answer.** `brk_completeness.py` samples
+`c_ij(r)` on a uniform grid across the whole support and flags kinks by the raw 4th finite
+difference (`O(h⁴)` where `c` is smooth, `O(jump)` at a break of any order ≤ 3 — deliberately
+*not* divided by `h⁴`, which would restore the noise the small `h` suppresses). It then asks
+whether every peak lies in `{|λ_ij|, R_ij}`:
+
+| case | pairs | unexplained kinks |
+|---|---|---|
+| `σ = [1, 4, 8]`, `N = 3` | 9 | **0** |
+| `σ = [1, 2, 3, 6]`, `N = 4` | 16 | **0** |
+
+⚠ This is a different test from BRK.5. BRK.5 evaluates smoothness **at predicted `r*`**; this
+scans for breakpoints **wherever they are**. Only the second can falsify completeness, and it
+is the one the old caveat was asking for.
+
+⇒ **BRK.5 drops from prerequisite to confirmation**, as this section anticipated, and the
+`K`-range question disappears. What remains is the *Lean assembly* of Steps 1–5 (BRK.8–12) —
+bookkeeping around Step 2, not new mathematics.
+
+⚠ **Still live — degenerate coincidences must be handled explicitly.** (Unaffected by the
+closure above: the counting argument bounds *where* knots can be, not whether two of the
+allowed locations collide.) `r* = (σ_i + 2σ_a + σ_b)/2` is
 `σ_a`-dependent and the crossing set is not, so generically `r* ∉ {±λ_ij, ±σ_ij}` — but for
 special diameters they can coincide numerically. At such a point there IS a knot at `r*`; it
 simply is not a *mediated* one, and the statement must be phrased so that this is not a
@@ -293,6 +334,61 @@ collapse to `{±λ_ij, ±σ_ij}`, with every `σ_l` gone.
 `|λ_ij|` and nothing else.** No mediated distance can appear at any order, because no object
 in the chain ever had a `σ_l`-dependent boundary to begin with.
 
+### ⚠⚠ BRK.9 IS MIS-SIZED — scope span-membership before conceding it to sympy
+
+**Do not write BRK.9 off as "too large for Lean" until this has been scoped.** The deferral
+was priced against the wrong target.
+
+`contDiffOn_paramDeriv_coeffBasis` (landed) requires only
+
+```lean
+(hc : ∀ k ∈ I, ContDiff ℝ ⊤ (c k))      -- c_k smooth in K
+(hb : ∀ k ∈ I, ContDiffOn ℝ ⊤ (b k) s)  -- b_k smooth in r on the piece
+```
+
+⭐⭐ **The VALUES of `c₁..c₅` never enter.** Step 2 needs only that *some* decomposition
+`Σ_k c_k(K)·b_k(r)` exists with `K`-free boundaries. So the Lean obligation is **not**
+MSAEMIX.4 Stage 3's closed-form coefficient derivation. It is the weaker structural claim:
+
+> on each piece the Baxter factor lies in the **span of a fixed, `K`-independent finite
+> basis** in `r` — `{1, r, r², r⁴, e^{±zr}}` — with boundaries `λ_ji`, `σ_ij` functions of
+> `σ` alone.
+
+Two different jobs, and only the second is on the breakpoint critical path:
+
+| | needed by | cost |
+|---|---|---|
+| **which** element of the span (`c₁..c₅` closed forms) | MSAEMIX.4, the physics | large — sympy's, and reasonably so |
+| **that** it lies in the span, boundaries `K`-free | BRK.7 Step 2 | ☐ **unscoped** — plausibly small |
+
+Span-membership and boundary-freeness are statements about the **form** of the Baxter
+equations — they produce `Q` from polynomial and exponential data on fixed intervals — so
+they may be provable without ever solving for the coefficients.
+
+⚠ **The project's own record says price this before believing it.** Effort-justified gaps
+have repeatedly fallen here: MA.10/11/12 were all deferred as too large and all fell in about
+six hours (`feedback_effort_vs_gap_axioms`: an axiom justified by *effort* is a retirement
+target; only genuine-Mathlib-gap arguments stay). "Derive a multi-hundred-term closed form in
+Lean" is genuinely infeasible; "show membership in a five-element span" is a different task,
+and the deferral was priced against the first.
+
+**Scope task:** establish whether span-membership + `K`-free boundaries can be proved from
+the Baxter/WH structure already in the tree (`MatBaxterFactorization`, `matFourierFactor`,
+`MSAEMixCore`'s basis) without the coefficient derivation. Outcome decides the paper's
+wording:
+
+- **small** ⇒ the breakpoint claim becomes fully Lean; sympy keeps the coefficients, which
+  the breakpoint result never needed.
+- **large** ⇒ the seam is real, and the paper says so explicitly: *the `σ_l`-cancellation and
+  the order-lifting are machine-checked in Lean; the closed form of the Baxter factor is
+  established by exact symbolic computation.* Still stronger provenance than any comparable
+  paper — but never under an umbrella "formally verified".
+
+⚠ Whichever way it goes, the general-`N` step needs checking too: sympy does not handle `Σ_l`
+over an unspecified index range, so "general `N`" rests on the recorded argument *"one generic
+pairwise `(i,l),(j,l)`, summed over `l`"* plus instantiation at `N = 2, 3`. That is a human
+argument between two machine-checked links, and it is the step carrying "for all `N`".
+
 ### What this buys, and what it costs
 
 - **No `hzero`, no `K`-range sweep, no analyticity, no `IsPreconnected`.** BRK.4 and BRK.6
@@ -347,6 +443,268 @@ convolution `−Q'_ij + Σ_l ρ_l Q'_il ⋆ Q_jl` — MSAEMIX.4 Stage 3's symbol
 to `1e-14`. A Lean proof of that identity is a separate piecewise-convolution task (define real `Q`,
 its supports, differentiate under the integral) and is *not* what BRK closes; BRK now gives the knot
 structure **of `matCoreUneq` as defined**.
+
+---
+
+## ⭐⭐ POLICY (2026-08-24, user): one consolidated axiom, everything else a **seam**
+
+> *能归约到的公理全部归约到一起，其他的全部用 seam。*
+
+Two rules, and they are not the same rule:
+
+1. **Reducible ⇒ reduce.** If axiom `B` is a specialisation of axiom `A`, `B` is *deleted* and
+   re-proved from `A`. The footprint shrinks to one entry, not two related ones.
+2. **Irreducible ⇒ seam, not axiom.** Anything else is carried as an **explicit hypothesis**
+   on the theorems that need it, with the external certificate named in the docstring.
+   `#print axioms` then stays std-3 and the assumption is visible in the *signature* rather
+   than hidden in the environment.
+
+⭐ **Rule 2 already has precedent in this very group.** BRK.8–12 need "the BH-root amplitudes
+are `ContDiff` in `K`" and carry it as an explicit hyp — `MSAEMixBreakpointScheme` is std-3
+throughout. That is the pattern to generalise, not a special case.
+
+**Test for a new `axiom`:** it is admissible only if the statement is needed by *many*
+downstream results *and* cannot be threaded as a hypothesis without infecting every signature
+in the file. Failing either test, it is a seam.
+
+### ⛔ DECLINED (user, 2026-08-24): the equal-σ / unequal-σ pair is **kept as two**
+
+*……算了，等径-不等径这两个我还真不打算彻底归约到一起……*
+
+Rule 1 is **not** applied to this pair. The sizing below is retained as reference — it is
+correct, and it is what makes the cross-check in the next section cheap — but AXCON.1–3 are
+**not scheduled**. Reasons to keep them separate, recorded so this is not revisited blindly:
+
+- **The two axioms have independent certificates.** Equal σ rests on `msaemix_core_coeffs.py`
+  (five coefficients, held-out residual ~1e-12); unequal σ on `symbolic_{outer,inner}.py`
+  (per-piece kernels, 1e-14). Deriving one from the other **spends** that independence instead
+  of banking it: a common-mode error in the unequal-σ derivation would then be invisible
+  everywhere.
+- **It would re-route the clean chain through the fragile one.** `MSAEMixFinOne`'s `N = 1`
+  results currently reduce to the scalar `msaCoreCorr` directly. Under consolidation they would
+  travel through a 2-piece 7-basis object whose inner piece is *empty* at equal σ — strictly
+  more machinery to reach a strictly weaker-stated result.
+- **The count is not the point.** Two axioms of the *same kind*, each root-gated and each
+  separately certified, are not "over-adding axioms" in the sense rule 1 targets. Rule 1 exists
+  to stop a family from growing one axiom per special case; it is not a mandate to minimise the
+  integer.
+
+⇒ Both stay. Rule 2 (seam, not axiom, for everything new) is **unaffected** and remains in force.
+
+### Reference only — how the reduction would go, and the cross-check it makes cheap
+
+`MSAEMixBHRoot.lean:137`  `axiom matMSAexact6_hcore   … (hσ : ∀ i, sigma i = sig) …`
+`MSAEMixBHRootUneq.lean:113`  `axiom matMSAexactUneq_hcore … ` — **no `hσ`**, fully general in σ
+
+Same statement, two σ-generalities; the unequal-σ one is strictly stronger. **Not being done**
+— see the DECLINED box above. What survives is the *last clause*: the reduction's algebra is
+also a cross-check of two independently derived coefficient sets, and that check is worth
+running on its own, **in sympy, with no Lean and no consolidation**. Kept as the single live
+item of Group AXCON in `todo/to_Lean.md`.
+
+### The algebra (reference), and the part still worth running
+
+At `∀ i, σ i = sig`: `lamA σ i j = |edgeLo σ i j| = 0`, so `matCoreUneq`'s `if r ≤ lamA` is
+**false for every `r > 0`** — the inner piece is empty and only the OUTER `gForm` survives on
+`(0, σ_ij)`. Both sides are then single-piece and the whole reduction is one algebraic identity.
+Clearing the `1/(2π r)`:
+
+```
+cC0o + cC1o·r + cC2o·r² + cC3o·r³ + cC4o·r⁴ + cEmo·e^{−zr} + cEpo·e^{zr}
+  = 2π[ c₁·r + c₂·r² + c₃·r⁴ + c₄(1−e^{−zr}) + c₅·coshRatio(z,r) ]
+```
+
+Matching in the 7-basis `{1, r, r², r³, r⁴, e^{∓zr}}` (independent on an interval):
+
+| basis element | obligation |
+|---|---|
+| `r³` | ⭐ **`cC3o = 0` at `a = b`** — the one with content |
+| `r`, `r²`, `r⁴` | `cC1o = 2π c₁`, `cC2o = 2π c₂`, `cC4o = 2π c₃` |
+| `1`, `e^{−zr}`, `e^{+zr}` | `c₄(1−e^{−zr}) + c₅·coshRatio` reproduces `cC0o, cEmo, cEpo` |
+
+⚠⚠ **The K-elimination is unavoidable.** `matMSACoreCorr` takes `K` **explicitly** (`coreC5 =
+−(8π²/z²) Σ_l Σ_m ρ_l ρ_m Gt_il K_lm Gt_jm`); `matCoreCorrUneq` has **no `K` argument** — `K`
+reaches it only through `AVec`/`qpMat`/`Wt`/`Ct`. So the two can only agree *at a root*, with
+`K` eliminated by (29′) `Σ_l Dt_il(δ_lj − ρ_l Q̂_jl(z)) = 2πK_ij/z`. Same gating the axioms
+already carry, so nothing new is assumed — but it means the identity is not a free-variable
+`ring` identity even in sympy: `K` must be substituted out first.
+
+### ⛔⛔ RESULT (2026-08-24): the cross-check FOUND A BUG — `matMSAexact6_hcore` is FALSE for `sig ≠ 1`
+
+**Script:** [`../check_core_sigma_powers.py`](../check_core_sigma_powers.py) (3 stages, self-contained).
+
+The corroboration check was expected to agree. It did not. Two independent `σ = 1` hardcodes:
+
+| # | defect | file | status |
+|---|---|---|---|
+| 1 ⭐⭐ | `coshRatio` has **σ hardcoded to 1** | `YukawaOZ/MSACoreTransform.lean:78` | **SCALAR layer** — not a mixture bug |
+| 2 | `c1pair`/`coreC1` short **three σ powers** | `MSAEMixCore.lean:64` | mixture layer |
+
+**(1)** `coshRatio z r := ½(e^{z(r−1)} + e^{−z(r+1))}) − e^{−z}`. Correct is
+`½(e^{z(r−σ)} + e^{−z(r+σ)}) − e^{−zσ} = e^{−zσ}(cosh zr − 1)` — the published form is off by the
+constant `e^{−z(σ−1)}`. ⭐ **Visible structurally, with no numerics:** `coreCorrection (c1..c5 z
+sigma) r` *takes* `sigma`, uses it for the `if r ≤ sigma` support boundary, and then calls
+`coshRatio z r` **without passing it**. Python carries the identical hardcode in
+`msaemix_hcore_cert.basis_transforms` term `I5` (`np.exp(-z)` where `sig` belongs) — which is
+exactly why the two implementations agree with each other and both pass at `σ = 1`.
+
+**(2)** In `c1pair`: `A_l²` has `1/6` (should be `σ³/6`), `A_l q'_jl` has `−1/2` (should be
+`−σ²/2`), `A_l C̃_jl` has `1` (should be `σ`). Residual against `cC1o` is
+`Σ_l ρ_l[(s³−1)(A²−A₀²)/6 − (s²−1)(Aq'_j − A₀q'⁰_j)/2 + (s−1)AC̃_j]`, ≡ 0 at `σ = 1`.
+
+**`c2, c3, c4, c5` are correct at every σ** — `c2`/`c3` by exact symbolic match against
+`cC2o`/`cC4o`; `c4`/`c5` by least-squares fit. `c5`'s ratio published/fitted reproduces
+`e^{z(σ−1)}` to six digits at σ = 1.4 and 2.0, pinning the whole `c5` discrepancy on the basis
+function rather than on `c5`'s formula.
+
+**Measured** (the equal-σ certificate's *own* held-out harness, N = 2 and 3):
+
+| σ | published | c1 fixed | basis fixed | **both** |
+|---|---|---|---|---|
+| 1.0 | 8.5e-12 | 8.5e-12 | 8.5e-12 | 8.5e-12 |
+| 0.8 | 3.6e-01 | 1.8e-01 | 1.8e-01 | **4.4e-09** |
+| 1.4 | 2.2e+00 | 9.5e-01 | 1.3e+00 | **9.6e-11** |
+| 2.0 | 9.0e+00 | 4.1e+00 | 4.9e+00 | **3.5e-09** |
+
+⚠ **Neither repair alone suffices; both together restore it.** A half-fix would have looked
+like progress and still left an O(1) error.
+
+#### ⭐⭐ It is a SCOPING problem, on a different axis from the `fff009a` rename
+
+`fff009a` renamed the pair `matMSAexact6_hcore → matMSAexactEqualDiam_hcore`,
+`matMSAexactUneq_hcore → matMSAexactUnequalDiam_hcore`, flagging the **equal vs unequal**
+diameter axis. The defect is on the orthogonal axis — **unit vs general** diameter — so the
+rename does not close it:
+
+- `matMSAexactEqualDiam_hcore` still binds `sig : ℝ` **free**; nothing in the chain pins it.
+- `matMSAexactEqualDiam_kspace_residual` (`MatMSAExactEqualDiamCertificate.lean:59`, new in
+  a159cf3) binds `(z sig : ℝ)` too ⇒ **inherits the same defect one layer down.**
+
+⭐ **And `coshRatio` is not a bug in its own layer.** The scalar development is unit-diameter *by
+construction*: `msaCoreCorr (Dt G K : ℝ)` takes **no σ argument at all**, and `msaexact_hcore`
+uses `cMSAtail K z 1` — a literal `1`. So `coshRatio z r` is a correct **unit-diameter** object
+whose *name and signature do not say so*, and the fault is that the mixture's `coreCorrection`
+— which does carry `sigma`, and uses it for the support boundary — consumes it at free `sig`.
+A σ=1-only helper reached by a σ-general caller.
+
+#### ⭐⭐⭐ BEST FIX (user, 2026-08-24): a SCALING LEMMA — no pinning, no coverage gap
+
+*等径情况应该是可以约化为 sigma=1 的，相当于选定直径作为单位长度……应该可以用单位分析完美解决.*
+
+At equal diameters σ is a free choice of length unit, so the general-`sig` statement is the
+σ = 1 statement **pulled back**, and every σ-power found above is a unit conversion. Read off
+`coreCorrection` directly with `c̃(r̃) = c(σ r̃)`, `z̃ = zσ`, `ρ̃ = ρσ³`, `K̃ = K/σ`:
+
+```
+c̃₁ = c₁      c̃₂ = σ c₂      c̃₃ = σ³ c₃      c̃₄ = c₄/σ      c̃₅ = c₅/σ
+```
+
+⭐ **The corrected `coshRatio` is exactly the scale-INVARIANT one:**
+`e^{−zσ}(cosh zr − 1) ↦ e^{−z̃}(cosh z̃ r̃ − 1)`. The published `e^{−z}(cosh zr − 1)` is not.
+So the defect is not an arithmetic slip — it is a **broken covariance**, and dimensional
+analysis determines the repair uniquely rather than by guesswork.
+
+**Verified** (same reduced system re-expressed at three diameters; ratio of each coefficient to
+its predicted rescaling, corrected basis):
+
+| σ | c₁ | c₂ | c₃ | c₄ | c₅ | |
+|---|---|---|---|---|---|---|
+| 1.4 | 1.0000 | 1.0001 | 0.9998 | 1.0000 | 0.9997 | true core |
+| 1.4 | **0.9082** | 1.0001 | 0.9998 | 1.0000 | 0.9997 | published |
+| 2.0 | **0.8175** | 1.0001 | 0.9998 | 1.0000 | 0.9997 | published |
+| 2.0 | 1.0000 | 1.0001 | 0.9998 | 1.0000 | 0.9997 | c₁-repaired |
+
+⇒ **`c₂..c₅` are already scale-covariant**; `c1pair` is the sole formula that breaks it.
+⭐ **Two independent routes agree:** the `c₁` correction derived from `cC1o` (the unequal-σ
+kernels) is exactly the one the scaling law demands — the three σ-powers are over-determined.
+
+**The resulting plan, strictly better than pinning:**
+
+1. Give `coshRatio` its `σ` (or replace it by the scale-invariant form) and thread it from
+   `coreCorrection`; fix `c1pair`'s three kernels. ⚠ Without these the scaling lemma is **false
+   as the code stands** — it is the prerequisite, not an alternative.
+2. State the axiom at **σ = 1** (matching the scalar layer, which is unit-diameter by
+   construction — honest, and the narrowest thing actually certified).
+3. **Derive** the general-`sig` equal-diameter statement from it as a *theorem* via the scaling
+   lemma. No coverage gap, and — importantly — **no dependence on the in-progress
+   unequal-diameter development**.
+
+⚠ Still true regardless: `radial_fourier_coreCorrection`'s closed form integrates this basis
+function, so its σ-dependence must be re-derived, not re-typechecked. The scaling lemma is
+also the cheapest way to *check* that re-derivation.
+
+#### The fallback if the scaling lemma stalls: pin the equal-diameter axioms to UNIT diameter
+
+Rename `EqualDiam → UnitDiam` on both axioms and add `hsig : sig = 1` (or drop `sig` and use `1`),
+matching the scalar layer's convention. This removes the false statement immediately, which is
+the part that cannot wait.
+
+**What it costs: the equal-but-non-unit-σ case, TEMPORARILY.** `matMSAexactUnequalDiam_hcore`
+carries no `hσ` and so covers that case in principle — `lamA σ i j = 0`, inner piece empty on
+`r > 0`, outer kernels live — ⚠ **but the unequal-diameter development is still in progress
+(user, 2026-08-24)**, so this is *deferred* coverage, not free coverage. Do not write the
+pinning up as lossless; write it as "σ ≠ 1 at equal diameters is carried by the unequal-diameter
+route once that lands".
+
+⭐ **The deferred coverage is at least verified to be sound** — by this very check. `c1-fixed`
+*is* `cC1o` at `a = b = σ`, and it matches the exact factor-product core to 7 digits at σ = 1.4
+and 2.0 (stage 3, `fit/fixed = 1.0000`); `cC2o`, `cC4o` match `coreC2`, `coreC3` symbolically at
+general `a = b = s`. So the unequal-diameter *kernels* are demonstrably right at equal σ ≠ 1;
+what is outstanding is the Lean development around them, not their correctness.
+
+⚠ **Nothing downstream is waiting on it.** The paper cites none of these declarations (`grep`
+over all `.tex`: no `msaexact6`, `coreCorrection`, `coshRatio`, `msaCoreCorr`, `matMSACoreCorr`),
+and every numerical result in the tree is in reduced units with σ = 1. So the gap is real but
+currently unloaded.
+
+Repairing `coshRatio`/`c1pair` to be σ-general (option B) is the alternative, but it touches the
+scalar layer and forces `radial_fourier_coreCorrection`'s closed form to be re-derived. Pinning
+is strictly cheaper and leaves no false statement anywhere.
+
+#### ⚠⚠ What this means for the axiom
+
+`matMSAexact6_hcore` is stated for an **arbitrary** common diameter `sig` (`hσ : ∀ i, sigma i =
+sig`, with `sig` a free variable) and its RHS is `radial_fourier (matMSACoreCorr …)`. With
+either defect present the identity is **false for `sig ≠ 1`**. So it is not an unproven-but-true
+axiom: **as stated it is refuted**, and anything derived from it is unsound off `sig = 1`.
+Sound options: add `sig = 1` to the axiom, or land both repairs.
+
+⭐ **The unequal-σ axiom `matMSAexactUneq_hcore` is NOT affected.** `cC0o..cEpo` carry `a`, `b`
+explicitly in every kernel and `matCoreUneq` never calls `coshRatio`. This is precisely why the
+comparison worked: the two derivations were genuinely independent.
+
+⚠ **Blast radius of (1) reaches the scalar layer.** `coshRatio`/`coreCorrection` are used by
+`YukawaOZ/MSAFullFactorization.lean` (`msaCoreCorr`, the `N = 1` core), `MSAExactCertificate.lean`,
+`MatMSAExactEqualDiamCertificate.lean`, `MSAEMixCore.lean`. Whether the scalar results are
+affected depends on whether their σ is free or pinned to 1 — **check before repairing**, and check
+`radial_fourier_coreCorrection`'s closed form too, since it integrates this basis function.
+
+⚠ **This is the exact failure `feedback_sigma_one_masks_bugs` was written about**, one commit
+after it caught a spurious σ-factor in `qhatMixC`'s C̃ box (5ded95d). The note says: validate every
+term at σ ≠ 1 and at unequal σ. The equal-σ certificate ran `sigma=[1,1]`, `[1,1,1]`, `[1,1]`.
+
+### ⭐ Why the cross-check was the right instrument (retained)
+
+`coreC1..coreC5` (`msaemix_core_coeffs.py`, held-out residual ~1e-12) and `cC*o`
+(`symbolic_outer.py`, 1e-14) are **two independent symbolic derivations of the same object**.
+Each was validated against its own numerical target; **neither has ever been compared to the
+other.** Keeping the axioms separate is precisely what makes that comparison informative — it
+stays a genuine second opinion rather than a tautology.
+
+Specialise `cC3o` to `a = b` and confirm it vanishes, then `cC1o/2π` against `coreC1`. Minutes.
+
+- **agree** ⇒ the two certificates corroborate each other, and *that* is the thing to say in
+  the paper — stronger than either residual alone, and it costs no Lean.
+- **disagree** ⇒ a discrepancy between two certified derivations, which must be resolved before
+  either axiom is trusted further. ⚠ This outcome is not hypothetical enough to skip the check:
+  the two agree only up to the `K`-elimination via (29′), so a sign or factor error in that
+  substitution would show up here and nowhere else.
+
+### What stays a seam, explicitly
+
+`matCoreUneq` = the Baxter convolution `−Q'_ij + Σ_l ρ_l Q'_il ⋆ Q_jl` — MSAEMIX.4 Stage 3's
+symbolic-σ derivation, validated to 1e-14. Under rule 2 this does **not** become a third axiom.
+It is the certificate *behind* `matMSAexactUneq_hcore`, and the paper says so in words.
 
 ---
 
