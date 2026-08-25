@@ -60,10 +60,13 @@ noncomputable def AMSA (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt : Matrix (Fi
 /-! ### The five core-DCF coefficients (equal σ, general `N`) -/
 
 /-- The pairwise `(i,l),(j,l)` contribution to the constant coefficient `c₁`, from the symbolic
-Baxter convolution. -/
-noncomputable def c1pair (z Al qil qjl Wil Wjl Ctil Ctjl : ℝ) : ℝ :=
+Baxter convolution.  ⚠ The `σ^k` factors on the poly-amplitude terms (`A²→σ³`, `A·C̃jl→σ`,
+`A·q'jl→σ²`) were DROPPED by the old `σ=1` derivation (`0<r<1`) and RESTORED here
+(`eqsig_symbolic.py`): correct for general `σ` (the tail-amplitude terms are `σ`-independent). -/
+noncomputable def c1pair (z Al qil qjl Wil Wjl Ctil Ctjl sigma : ℝ) : ℝ :=
   (6 * Al * Ctil + 6 * Al * Wjl
-    + z * (Al ^ 2 + 6 * Al * Ctjl - 3 * Al * qjl + 6 * Ctil * qjl - 6 * Ctjl * qil))
+    + z * (sigma ^ 3 * Al ^ 2 + 6 * sigma * Al * Ctjl - 3 * sigma ^ 2 * Al * qjl
+        + 6 * Ctil * qjl - 6 * Ctjl * qil))
   / (12 * Real.pi * z)
 
 /-- `c₁` (constant term): linear `−(A_j − A_j⁰)/2π = −mixDA/2π` plus the `Σ_l ρ_l` pairwise
@@ -73,8 +76,9 @@ noncomputable def coreC1 (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt K : Matrix
   -(mixDA z rho sigma Gt Dt j) / (2 * Real.pi)
     + ∑ l, rho l * (c1pair z (AMSA z rho sigma Gt Dt l) (qpMSA z rho sigma Gt Dt i l)
           (qpMSA z rho sigma Gt Dt j l) (Wt z rho Gt Dt i l) (Wt z rho Gt Dt j l)
-          (Ct z rho sigma Gt Dt i l) (Ct z rho sigma Gt Dt j l)
-        - c1pair z (Qppphys rho sigma l l) (Q0phys rho sigma i l) (Q0phys rho sigma j l) 0 0 0 0)
+          (Ct z rho sigma Gt Dt i l) (Ct z rho sigma Gt Dt j l) (sigMix sigma i j)
+        - c1pair z (Qppphys rho sigma l l) (Q0phys rho sigma i l) (Q0phys rho sigma j l) 0 0 0 0
+            (sigMix sigma i j))
 
 /-- `c₂` (coeff of `r`): `(1/4π)[Σ_l ρ_l(q'q' − q'⁰q'⁰) − Σ_l ρ_l A_l(C̃_il + C̃_jl)]`. -/
 noncomputable def coreC2 (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
@@ -96,10 +100,14 @@ noncomputable def coreC4 (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt K : Matrix
     (i j : Fin N) : ℝ :=
   -(2 * Real.pi / z) * ∑ l, rho l * (K i l * Gt j l + Gt i l * K j l)
 
-/-- `c₅` (coeff of `coshRatio/r`): `−(8π²/z²) Σ_{l,m} ρ_l ρ_m Gt_il K_lm Gt_jm`. -/
+/-- `c₅` (coeff of `coshRatio/r`): `−(8π²/z²) Σ_{l,m} ρ_lρ_m Gt_il K_lm Gt_jm × e^{−z(σ_ij−1)}`.
+⚠ the scalar `coshRatio z r = e^{−z}(cosh zr−1)` (in `coreCorrection`) HARDCODES `σ=1`; the mixture
+reuses it at `σ_ij`, so `c₅` carries `e^{−z(σ_ij−1)} = e^{−zσ_ij}/e^{−z}` to restore the true
+`e^{−zσ_ij}` factor (`eqsig_symbolic.py`; `σ=1 ⇒ 1`, so equal-1 is unchanged). -/
 noncomputable def coreC5 (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
     (i j : Fin N) : ℝ :=
-  -(8 * Real.pi ^ 2 / z ^ 2) * ∑ l, ∑ m, rho l * rho m * Gt i l * K l m * Gt j m
+  Real.exp (-z * (sigMix sigma i j - 1))
+    * (-(8 * Real.pi ^ 2 / z ^ 2) * ∑ l, ∑ m, rho l * rho m * Gt i l * K l m * Gt j m)
 
 /-! ### The matrix core correction and its radial transform -/
 
