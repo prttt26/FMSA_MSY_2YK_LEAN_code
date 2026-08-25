@@ -158,4 +158,109 @@ theorem matMSAemix1_unequalDiam (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Ma
       simpa using hc) i j
   simpa using h
 
+/-! ### Discharging `hHS` at unequal σ by pure `ftilde` algebra (no axiom) -/
+
+/-- **Pure `Matrix` algebra: the symmetric Baxter product in Baxter-factor form.**  For any complex
+matrices `A`, `B` and nonnegative densities `ρ`,
+`((F̃(A))·(F̃(B))ᵀ)ᵢⱼ = δᵢⱼ − √(ρᵢρⱼ)·(Aᵢⱼ + Bⱼᵢ − Σₗ ρₗ Aᵢₗ Bⱼₗ)`.  The cross term uses the
+collapse `√(ρᵢρₗ)·√(ρⱼρₗ) = √(ρᵢρⱼ)·ρₗ` (needs `ρ ≥ 0`).  This is the algebraic heart of the
+symmetric factorization — it holds for the HS factor `F̃_HS`, the MSA factor `F̃_MSA`, any `s`. -/
+theorem ftilde_mul_transpose_apply (rho : Fin N → ℝ) (hrho : ∀ l, 0 ≤ rho l)
+    (A B : Matrix (Fin N) (Fin N) ℂ) (i j : Fin N) :
+    ((ftilde rho A) * (ftilde rho B).transpose) i j
+      = (if i = j then (1 : ℂ) else 0)
+        - (Real.sqrt (rho i * rho j) : ℂ)
+            * (A i j + B j i - ∑ l, (rho l : ℂ) * (A i l * B j l)) := by
+  simp only [Matrix.mul_apply, Matrix.transpose_apply, ftilde]
+  have hterm : ∀ l, ((if i = l then (1:ℂ) else 0) - (Real.sqrt (rho i * rho l):ℂ) * A i l)
+        * ((if j = l then (1:ℂ) else 0) - (Real.sqrt (rho j * rho l):ℂ) * B j l)
+      = (if i = l then (1:ℂ) else 0) * (if j = l then (1:ℂ) else 0)
+        - (if i = l then (1:ℂ) else 0) * ((Real.sqrt (rho j * rho l):ℂ) * B j l)
+        - (Real.sqrt (rho i * rho l):ℂ) * A i l * (if j = l then (1:ℂ) else 0)
+        + (Real.sqrt (rho i * rho l):ℂ) * A i l * ((Real.sqrt (rho j * rho l):ℂ) * B j l) := by
+    intro l; ring
+  simp only [hterm, Finset.sum_add_distrib, Finset.sum_sub_distrib]
+  have hs1 : (∑ l, (if i = l then (1:ℂ) else 0) * (if j = l then (1:ℂ) else 0))
+      = (if i = j then (1:ℂ) else 0) := by
+    simp only [ite_mul, one_mul, zero_mul]
+    rw [Finset.sum_ite_eq Finset.univ i (fun l => if j = l then (1:ℂ) else 0)]
+    simp only [Finset.mem_univ, if_true]
+    by_cases h : i = j
+    · subst h; simp
+    · have h' : j ≠ i := fun hh => h hh.symm
+      simp [h, h']
+  have hs2 : (∑ l, (if i = l then (1:ℂ) else 0) * ((Real.sqrt (rho j * rho l):ℂ) * B j l))
+      = (Real.sqrt (rho j * rho i):ℂ) * B j i := by
+    simp only [ite_mul, one_mul, zero_mul]
+    rw [Finset.sum_ite_eq Finset.univ i (fun l => (Real.sqrt (rho j * rho l):ℂ) * B j l)]
+    simp
+  have hs3 : (∑ l, (Real.sqrt (rho i * rho l):ℂ) * A i l * (if j = l then (1:ℂ) else 0))
+      = (Real.sqrt (rho i * rho j):ℂ) * A i j := by
+    simp only [mul_ite, mul_one, mul_zero]
+    rw [Finset.sum_ite_eq Finset.univ j (fun l => (Real.sqrt (rho i * rho l):ℂ) * A i l)]
+    simp
+  have hs4 : (∑ l, (Real.sqrt (rho i * rho l):ℂ) * A i l
+        * ((Real.sqrt (rho j * rho l):ℂ) * B j l))
+      = (Real.sqrt (rho i * rho j):ℂ) * ∑ l, (rho l : ℂ) * (A i l * B j l) := by
+    rw [Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro l _
+    have hsqrt : (Real.sqrt (rho i * rho l):ℂ) * (Real.sqrt (rho j * rho l):ℂ)
+        = (Real.sqrt (rho i * rho j):ℂ) * (rho l : ℂ) := by
+      rw [← Complex.ofReal_mul, ← Complex.ofReal_mul]
+      congr 1
+      rw [← Real.sqrt_mul (mul_nonneg (hrho i) (hrho l)),
+        show rho i * rho l * (rho j * rho l) = rho i * rho j * rho l ^ 2 by ring,
+        Real.sqrt_mul (mul_nonneg (hrho i) (hrho j)), Real.sqrt_sq (hrho l)]
+    calc (Real.sqrt (rho i * rho l):ℂ) * A i l * ((Real.sqrt (rho j * rho l):ℂ) * B j l)
+        = ((Real.sqrt (rho i * rho l):ℂ) * (Real.sqrt (rho j * rho l):ℂ)) * (A i l * B j l) := by
+          ring
+      _ = ((Real.sqrt (rho i * rho j):ℂ) * (rho l : ℂ)) * (A i l * B j l) := by rw [hsqrt]
+      _ = (Real.sqrt (rho i * rho j):ℂ) * ((rho l : ℂ) * (A i l * B j l)) := by ring
+  rw [hs1, hs2, hs3, hs4, show (Real.sqrt (rho j * rho i):ℂ) = (Real.sqrt (rho i * rho j):ℂ) by
+    rw [mul_comm]]
+  ring
+
+/-- The unequal-σ HS-mixture DCF transform in **Baxter-factor form** (no axiom): the `ftilde`
+expansion of `F̃_HS(ik)·F̃_HS(−ik)ᵀ` gives it explicitly as
+`√(ρᵢρⱼ)·(Q̂_HS,ij(ik) + Q̂_HS,ji(−ik) − Σₗ ρₗ Q̂_HS,il(ik)·Q̂_HS,jl(−ik))`. -/
+noncomputable def cHShatUneq (z : ℝ) (rho σ : Fin N → ℝ) (k : ℝ) (i j : Fin N) : ℂ :=
+  (Real.sqrt (rho i * rho j) : ℂ) *
+    (qhatMixCuneq z σ (qp0Mat rho σ) 0 0 (A0Vec rho σ) (Complex.I * k) i j
+      + qhatMixCuneq z σ (qp0Mat rho σ) 0 0 (A0Vec rho σ) (-(Complex.I * k)) j i
+      - ∑ l, (rho l : ℂ)
+          * (qhatMixCuneq z σ (qp0Mat rho σ) 0 0 (A0Vec rho σ) (Complex.I * k) i l
+              * qhatMixCuneq z σ (qp0Mat rho σ) 0 0 (A0Vec rho σ) (-(Complex.I * k)) j l))
+
+/-- **`hHS` at unequal σ, DISCHARGED by pure `ftilde` algebra.**  `F̃_HS(ik)·F̃_HS(−ik)ᵀ = δ − Ĉ_HS`
+with `Ĉ_HS = cHShatUneq` — no axiom, no Wiener–Hopf hypothesis; the HS symmetric factorization at
+unequal σ is free `Matrix` algebra (only `ρ ≥ 0`). -/
+theorem FtHSuneq_mul_transpose (z : ℝ) (rho σ : Fin N → ℝ) (hrho : ∀ l, 0 ≤ rho l) (k : ℝ)
+    (i j : Fin N) :
+    (FtHSuneq z rho σ (Complex.I * k)
+        * (FtHSuneq z rho σ (-(Complex.I * k))).transpose) i j
+      = (if i = j then (1 : ℂ) else 0) - cHShatUneq z rho σ k i j := by
+  rw [FtHSuneq, FtHSuneq, ftilde_mul_transpose_apply rho hrho]
+  simp only [cHShatUneq]
+
+/-- ⭐⭐ **MSAEMIX.1 at unequal diameter, `hHS` DISCHARGED (no HS hypothesis).**  The hard-sphere
+symmetric factorization is now supplied by the pure `ftilde`-algebra `FtHSuneq_mul_transpose` (the
+HS DCF in Baxter-factor form `cHShatUneq`), so the only remaining input is the closure axiom
+`matMSAexactUnequalDiam_hcore` at the `MixBHRootUneq` gate.  This mirrors how the equal-σ
+`matMSAemix1_equalDiam_WH` removes the ad-hoc `hHS` — but here with NO Wiener–Hopf atoms
+(`hKDEF`/`hbridge`/`hWH`): at unequal σ the HS factorization is free algebra, so `#print axioms`
+carries only `matMSAexactUnequalDiam_hcore` (std-3 + the one physics axiom). -/
+theorem matMSAemix1_unequalDiam_of_hcore (z : ℝ) (rho σ : Fin N → ℝ) (hrho : ∀ l, 0 ≤ rho l)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (k : ℝ) (hroot : MixBHRootUneq z rho σ Gt Dt K)
+    (i j : Fin N) :
+    ((FtHSuneq z rho σ (Complex.I * k) + Ft1uneq z rho σ Gt Dt (Complex.I * k))
+        * (FtHSuneq z rho σ (-(Complex.I * k))
+            + Ft1uneq z rho σ Gt Dt (-(Complex.I * k))).transpose) i j
+      = (if i = j then (1 : ℂ) else 0)
+        - (cHShatUneq z rho σ k i j + (Real.sqrt (rho i * rho j) : ℂ)
+            * ((radial_fourier (matCoreCorrUneq z rho σ Gt Dt i j) k : ℂ)
+              + (radial_fourier (matMSAtail K z σ i j) k : ℂ))) :=
+  matMSAemix1_unequalDiam z rho σ Gt Dt K k hroot (cHShatUneq z rho σ k)
+    (fun i j => FtHSuneq_mul_transpose z rho σ hrho k i j) i j
+
 end MSAEMix
