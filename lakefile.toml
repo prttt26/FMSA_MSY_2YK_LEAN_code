@@ -32,3 +32,13 @@ roots = ["LeanCode.YukawaOZ.MSAExactCertificate"]
 [[lean_lib]]
 name = "MatMSAExactEqualDiamCertificate"
 roots = ["LeanCode.YukawaOZMix.MatMSAExactEqualDiamCertificate"]
+
+# BRK.13 closure seam: the real-space Baxter `Q` + convolution core `c`, and MSAEMIX.4 Stage 3's
+# identity `c = matCoreUneq` as one sympy-backed convolution-identity axiom (real-space analog of
+# `matMSAexactUnequalDiam_hcore`).  Feeds BRK's hypothesis-parametrised lemmas so the *physical*
+# exact-MSA core inherits the smoothness/knot structure.  OUT of `defaultTargets`, not imported by
+# the `LeanCode` root, so a normal `lake build` stays std-3.
+# Build it on demand with:  lake build MSAEMixBaxterConvCertificate
+[[lean_lib]]
+name = "MSAEMixBaxterConvCertificate"
+roots = ["LeanCode.YukawaOZMix.MSAEMixBaxterConv"]
