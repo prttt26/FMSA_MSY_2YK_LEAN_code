@@ -37,7 +37,7 @@ core (the "large algebraic verification with the Pythagorean identity") and is t
 
 open Real MeasureTheory
 
-namespace FMSA.MSAExact
+namespace FMSA.ExactMSA
 
 open FMSA.HardSphere
 
@@ -63,7 +63,7 @@ theorem msa_factor_split (Dt G : ℝ) {k : ℝ} (hk : k ≠ 0) (hxi : xi < 1) :
   rw [msaQre_eq xi z Dt G k, msaQim_eq xi z Dt G k, msa_lhs_split, hHS]
 
 /-- ⭐ **MSAEXACT.1, reduced to the closure-recovery core** (the correct, non-compact analog of the
-compact `msaexact1_iff_core`).  Given that the MSA direct correlation function's *core* and *tail*
+compact `exactMSA_iff_core`).  Given that the MSA direct correlation function's *core* and *tail*
 transforms account for the `O(Dt)`/`O(Dt²)` amplitude terms —
 
     ρ(𝓕[c_core] + 𝓕[c_tail]) = 2Dt·X − Dt²·Y
@@ -94,7 +94,7 @@ coefficients `c₁ = −da`, `c₂ = −db`, `c₃ = −½ξ·da`, `c₄ = −v/
 `db = bb−b_HS`, and
 `bb = (q′+zγDt)/2π − K − a − ½ξa − v(1−e^{−z})/z − v²(1−e^{−z})²/(4Kz²)`.
 These are the Blum–Høye MSA closure values; the resulting `hcore` identity is verified in sympy
-(`msaexact6_cert.py`). -/
+(`exactMSA_cert.py`). -/
 noncomputable def msaCoreCorr (Dt G K : ℝ) : ℝ → ℝ :=
   let A := msaA xi z Dt G
   let qp := msaQp xi z Dt G
@@ -115,7 +115,7 @@ radial transform, together with the exterior Yukawa tail, accounts for the `O(Dt
 amplitude terms of `|1 − ρQ̂(ik)|²`.  This is the `hcore` closure-recovery identity consumed by
 `factorization_of_core`.
 
-**Certified in sympy** (`msaexact6_cert.py`, parent repo): the difference `Δ` equals
+**Certified in sympy** (`exactMSA_cert.py`, parent repo): the difference `Δ` equals
 `m29·r29 + m33·r33` exactly (polynomial-division remainder 0), where `r29`, `r33` are the two
 Blum–Høye constraints and `m29`, `m33` the recovered multipliers.  The Lean
 `ring`/`linear_combination` proof is validated at `Dt⁰` (`Cert_dt0_full.lean` compiles axiom-clean),
@@ -124,11 +124,11 @@ clean `(cos,sin,exp)`-graded `Dt²` coefficient — 323 monomials, degree ≈22 
 **3 h 12 m / 23 GB**, and the per-order reassembly extrapolates to weeks / ~200 GB; `native_decide`
 is blocked (`MvPolynomial` semiring noncomputable).  So this is recorded as an axiom because `ring`
 cannot normalize the identity, **not** for want of a bigger budget.  The Fourier/definitional layer
-around it is discharged in `MSAExactCertificate.lean` (an out-of-`defaultTargets` lib), which
-derives this exact statement from a pure-cos/sin/exp axiom `msaexact_kspace_residual`.  ⚠ This is a
+around it is discharged in `ExactMSACertificate.lean` (an out-of-`defaultTargets` lib), which
+derives this exact statement from a pure-cos/sin/exp axiom `exactMSA_kspace_residual`.  ⚠ This is a
 *physics-computation* axiom (a specific externally-verified polynomial identity), not a new
 mathematical assumption. -/
-axiom msaexact_hcore (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0)
+axiom exactMSA_hcore (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0)
     (h29 : Dt * bhF xi z (Dt, G) - 2 * π * K / z = 0)
     (h33 : 2 * π * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0) :
     rhoOf xi * (radial_fourier (msaCoreCorr xi z Dt G K) k
@@ -140,8 +140,8 @@ axiom msaexact_hcore (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0)
 /-- ⭐ **MSAEXACT.1 — the non-compact MSA Baxter factorisation.**  At the Blum–Høye root,
 `|1 − ρQ̂(ik)|² = 1 − ρĉ_MSA(k)` with `ĉ_MSA = 𝓕[c_HS] + 𝓕[c_core] + 𝓕[c_tail]` — the physical MSA
 direct correlation function.  Combines the purely-algebraic `factorization_of_core` with the
-closure-recovery input `msaexact_hcore`. -/
-theorem msaexact1_factorization (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hxi : xi < 1)
+closure-recovery input `exactMSA_hcore`. -/
+theorem exactMSA_factorization (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hxi : xi < 1)
     (h29 : Dt * bhF xi z (Dt, G) - 2 * π * K / z = 0)
     (h33 : 2 * π * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0) :
     (1 - msaQre xi z Dt G k) ^ 2 + msaQim xi z Dt G k ^ 2
@@ -149,6 +149,6 @@ theorem msaexact1_factorization (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hxi : x
           + radial_fourier (msaCoreCorr xi z Dt G K) k
           + radial_fourier (cMSAtail K z 1) k) :=
   factorization_of_core xi z Dt G K (msaCoreCorr xi z Dt G K) hk hxi
-    (msaexact_hcore xi z Dt G K hk h29 h33)
+    (exactMSA_hcore xi z Dt G K hk h29 h33)
 
-end FMSA.MSAExact
+end FMSA.ExactMSA

@@ -48,7 +48,7 @@ interval-integral unfolding.  The `C¹`-vs-jump distinction at `λ_ij` (curvatur
 read at the edge.
 
 This file only **reads** the stable `FMSA.InnerDecomp.Mix` / `FMSA.WHSupports.q0MixEntry`
-interfaces; it does not touch `MixtureRealSpace.lean` (`FMSA.MRS`, MRS.6/7/8, actively developed).
+interfaces; it does not touch `MixtureRealSpace.lean` (`FMSA.MixtureBaxterCore`, MRS.6/7/8, actively developed).
 -/
 
 set_option linter.style.longLine false

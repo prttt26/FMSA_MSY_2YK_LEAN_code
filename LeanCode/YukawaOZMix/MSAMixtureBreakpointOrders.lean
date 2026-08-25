@@ -15,7 +15,7 @@ Group **BRK** (`proof_notes_breakpoints_MSA.md`).
 
 Let `J K` be the jump of the exact-MSA `c_ij` at a candidate mediated knot `r*`, as a function of
 the coupling `K`, with Taylor expansion `J K = Σ_n K^n J_n` — `J_n` the jump carried by the `n`-th
-order `c^{(n)}`.  BRK.2 (`MSAEMixBreakpoints.breakpoints_sigma_l_free`, fully Lean, std-3) shows the
+order `c^{(n)}`.  BRK.2 (`MSAMixtureBreakpoints.breakpoints_sigma_l_free`, fully Lean, std-3) shows the
 breakpoint *locations* `{±λ_ij, ±σ_ij}` are `σ_l`- **and** `K`-independent — geometric — so `r*` is
 never among them and `J K = 0` on a whole interval of couplings; BRK.5 witnesses this numerically at
 8 distinct active intra-core `r*` (`brk5_witness.py`, ≤1.9e-14).
@@ -33,7 +33,7 @@ re-proved here (BRK.4 predicts the cancellation, it does not exhibit `c^{(2)}`'s
 
 open Set Filter Topology
 
-namespace FMSA.MSAExact.BRK
+namespace FMSA.ExactMSA.Breakpoint
 
 /-- The iterated derivative of the zero function is zero (helper). -/
 private lemma iteratedDeriv_zero_fun (n : ℕ) (x : ℝ) :
@@ -95,4 +95,4 @@ theorem contDiffOn_paramDeriv_coeffBasis {ι : Type*} (I : Finset ι) (c b : ι 
   rw [hcompute]
   exact ContDiffOn.sum (fun k hk => (hb k hk).mul contDiffOn_const)
 
-end FMSA.MSAExact.BRK
+end FMSA.ExactMSA.Breakpoint

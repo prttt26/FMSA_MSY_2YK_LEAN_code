@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaOZMix.MSAEMixConcrete
+import LeanCode.YukawaOZMix.MSAMixtureConcrete
 import LeanCode.YukawaOZ.MSACoreTransform
 
 /-!
@@ -38,9 +38,9 @@ inputs `Gt` (Laplace moment), `Dt`, `K` (contact-normalised Yukawa amplitudes).
 -/
 
 open Real
-open FMSA.Q0Complex FMSA.MSAExact FMSA.HardSphere FMSA.MatrixQ0
+open FMSA.Q0Complex FMSA.ExactMSA FMSA.HardSphere FMSA.MatrixQ0
 
-namespace MSAEMix
+namespace MSAMixture
 
 variable {N : ℕ}
 
@@ -139,4 +139,4 @@ theorem radial_fourier_matMSACoreCorr (z : ℝ) (rho sigma : Fin N → ℝ)
   unfold matMSACoreCorr
   exact radial_fourier_coreCorrection _ _ _ _ _ z (sigMix sigma i j) k hsij
 
-end MSAEMix
+end MSAMixture

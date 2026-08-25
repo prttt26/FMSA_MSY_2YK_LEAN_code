@@ -7,14 +7,14 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaOZMix.MSAEMixBreakpointScheme
+import LeanCode.YukawaOZMix.MSAMixtureBreakpointScheme
 
 /-!
 # BRK.13 — the closure seam: real-space Baxter `Q`, its convolution core `c`, and `c = matCoreUneq`
 
 Group **BRK** (`proof_notes_breakpoints_MSA.md`, §PENDING BRK.13).  This file discharges the *one*
 link BRK could not close on its own — the "faithful-transcription task kept outside" flagged in
-`MSAEMixBreakpointScheme.lean`'s closure-scaffolding docstring: it defines the real-space Baxter
+`MSAMixtureBreakpointScheme.lean`'s closure-scaffolding docstring: it defines the real-space Baxter
 factor `Q_ab(r)` and the physical exact-MSA core
 
     c_ij(r) = ( −Q'_ij(r) + Σ_l ρ_l ∫ Q'_il(t+r) Q_jl(t) dt ) / (2π r)               (r > 0)
@@ -32,11 +32,11 @@ validated to `1e-14` (`msaemix_uneq_symconv.py`, `symbolic_{inner,outer}.py`,
 `verify_{inner,outer}.py`, parent repo; correct orientation `σ_i ≥ σ_j`, row = larger diameter).
 Proving it in Lean (grade 1) is a piecewise-convolution integral identity of the same class as the
 scalar MSAEXACT.6 hcore ring, which a dedicated attempt measured to be impractically large
-(`project_msaexact6_ring_infeasible`).  So this file takes the documented grade-2 route: the seam is
+(`project_exactMSA_ring_infeasible`).  So this file takes the documented grade-2 route: the seam is
 collapsed to a single named numerical fact, exactly mirroring the k-space
-`matMSAexactUnequalDiam_hcore` / `matMSAexactEqualDiam_kspace_residual` that the `hcore`
+`matExactMSAUnequalDiam_hcore` / `matExactMSAEqualDiam_kspace_residual` that the `hcore`
 certificates carry.  Kept OUT of `defaultTargets` (own `[[lean_lib]]`, not imported by root) so a
-normal `lake build` stays std-3; build on demand with `lake build MSAEMixBaxterConvCertificate`.
+normal `lake build` stays std-3; build on demand with `lake build MSAMixtureBaxterConvCertificate`.
 
 Transcription is faithful to the sympy `Qn`/`Qpn` (`msaemix_uneq_symconv.py`): with
 `λ_ab = edgeLo σ a b = (σ_b − σ_a)/2`, `σ_ab = edgeHi σ a b = (σ_a + σ_b)/2`, poly argument
@@ -45,9 +45,9 @@ their support edge — which can be negative when `σ_l < σ_j` — decaying lik
 Stage 3's `convterm` and the numeric `gnum`.
 -/
 
-open MSAEMix MSAEMixCoreUneq
+open MSAMixture MSAMixtureCoreUneq
 
-namespace FMSA.MSAExact.BRK
+namespace FMSA.ExactMSA.Breakpoint
 
 variable {N : ℕ}
 
@@ -101,7 +101,7 @@ noncomputable def baxterConvCoreK (z : ℝ) (σ : Fin N → ℝ) (ρ A : ℝ →
 larger diameter), the physical Baxter-convolution core equals the closed form `matCoreUneq` on the
 two open pieces of the core interval `(0, σ_ij)` (i.e. off the endpoints and the interior breakpoint
 `|λ_ij|`).  This is MSAEMIX.4 Stage 3, validated to `1e-14` (`verify_{inner,outer}.py`); it is the
-real-space analog of the k-space `matMSAexactUnequalDiam_hcore`, and the single input that closes
+real-space analog of the k-space `matExactMSAUnequalDiam_hcore`, and the single input that closes
 BRK about the physical core. -/
 axiom baxterConvCore_eq_matCoreUneq (z : ℝ) (ρ σ A : Fin N → ℝ)
     (qp Wt Ct : Fin N → Fin N → ℝ) (i j : Fin N) (hori : σ j ≤ σ i) :
@@ -167,4 +167,4 @@ theorem baxterConvCoreK_paramDeriv_contDiffOn_outer (z : ℝ) (σ : Fin N → �
         (Set.mem_union_right _ hr)
   rw [hfun]
 
-end FMSA.MSAExact.BRK
+end FMSA.ExactMSA.Breakpoint

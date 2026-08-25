@@ -13,7 +13,7 @@ import LeanCode.HardSphere.BaxterWienerHopf
 /-!
 # MSAEXACT.1 — the `k`-space (non-compact) Baxter factor `Q̂(ik)` and its `Dt`-affine split
 
-Group **MSAEXACT** (`proof_notes_msa_exact.md`).  Numerical partner: `msaexact1_cside_check.py`.
+Group **MSAEXACT** (`proof_notes_msa_exact.md`).  Numerical partner: `exactMSA_cside_check.py`.
 
 The physical Baxter factor of hard-core Yukawa MSA is `Q̂(s) = φ₂(s)A + φ₁(s)q′ + tail(s)` (Blum &
 Høye, `msa_exact.baxter_F`), with `A`, `q′` the amplitude-shifted moments and `tail` the Yukawa part
@@ -24,7 +24,7 @@ carrying the pole at `s = −z`.  At `σ = 1` and `s = ik`, `e^{−ik} = cos k �
 
 ⭐ **`Q̂(ik)` is affine in `Dt`** (every one of `A`, `q′`, `tail` is `Dt`-linear; `γ` has no `Dt`), so
 `msaQre = ρReQh₀ + Dt·(…)` and likewise `msaQim`.  That is what lets the generic
-`FMSA.MSAExact.msa_lhs_split` organise `|1 − ρQ̂(ik)|²` into its `Dt⁰` part (the hard-sphere factor,
+`FMSA.ExactMSA.msa_lhs_split` organise `|1 − ρQ̂(ik)|²` into its `Dt⁰` part (the hard-sphere factor,
 `baxter_wiener_hopf_factorization`), an `O(Dt)` term, and an `O(Dt²)` term — the staged route to the
 factorization, replacing the (provably impossible) compact single-`D` ansatz.
 
@@ -34,7 +34,7 @@ factorization, replacing the (provably impossible) compact single-`D` ansatz.
 
 open Real
 
-namespace FMSA.MSAExact
+namespace FMSA.ExactMSA
 
 variable (xi z : ℝ)
 
@@ -150,4 +150,4 @@ theorem msaQim_zero (G : ℝ) {k : ℝ} (hk : k ≠ 0) :
   field_simp
   ring
 
-end FMSA.MSAExact
+end FMSA.ExactMSA

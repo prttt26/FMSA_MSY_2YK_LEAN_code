@@ -20,25 +20,25 @@ name = "LeanCode"
 # MSAEXACT.6 certificate: deliberately OUT of `defaultTargets`, so a normal `lake build` never
 # compiles it (it holds a ring-infeasible axiom + its Fourier-layer bridge; see the file's docstring).
 # It is not imported by the `LeanCode` root either, so nothing pulls it into the default build.
-# Build it on demand with:  lake build MSAExactCertificate
+# Build it on demand with:  lake build ExactMSACertificate
 [[lean_lib]]
-name = "MSAExactCertificate"
-roots = ["LeanCode.YukawaOZ.MSAExactCertificate"]
+name = "ExactMSACertificate"
+roots = ["LeanCode.YukawaOZ.ExactMSACertificate"]
 
 # Matrix equal-diameter analog: same Fourier-layer discharge for MSAEMIX.4's
-# `matMSAexactEqualDiam_hcore`, reducing it to one pure-k-space sympy residual axiom.  Also OUT of
+# `matExactMSAEqualDiam_hcore`, reducing it to one pure-k-space sympy residual axiom.  Also OUT of
 # `defaultTargets` and not imported by the `LeanCode` root.
-# Build it on demand with:  lake build MatMSAExactEqualDiamCertificate
+# Build it on demand with:  lake build MatExactMSAEqualDiamCertificate
 [[lean_lib]]
-name = "MatMSAExactEqualDiamCertificate"
-roots = ["LeanCode.YukawaOZMix.MatMSAExactEqualDiamCertificate"]
+name = "MatExactMSAEqualDiamCertificate"
+roots = ["LeanCode.YukawaOZMix.MatExactMSAEqualDiamCertificate"]
 
 # BRK.13 closure seam: the real-space Baxter `Q` + convolution core `c`, and MSAEMIX.4 Stage 3's
 # identity `c = matCoreUneq` as one sympy-backed convolution-identity axiom (real-space analog of
-# `matMSAexactUnequalDiam_hcore`).  Feeds BRK's hypothesis-parametrised lemmas so the *physical*
+# `matExactMSAUnequalDiam_hcore`).  Feeds BRK's hypothesis-parametrised lemmas so the *physical*
 # exact-MSA core inherits the smoothness/knot structure.  OUT of `defaultTargets`, not imported by
 # the `LeanCode` root, so a normal `lake build` stays std-3.
-# Build it on demand with:  lake build MSAEMixBaxterConvCertificate
+# Build it on demand with:  lake build MSAMixtureBaxterConvCertificate
 [[lean_lib]]
-name = "MSAEMixBaxterConvCertificate"
-roots = ["LeanCode.YukawaOZMix.MSAEMixBaxterConv"]
+name = "MSAMixtureBaxterConvCertificate"
+roots = ["LeanCode.YukawaOZMix.MSAMixtureBaxterConv"]

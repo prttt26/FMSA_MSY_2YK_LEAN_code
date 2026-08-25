@@ -42,7 +42,7 @@ base equation, whose hard-sphere content `2π·ĝ_PY(z)e^z·(1−ρQ̂₀) = (A�
 directly from the closed forms.
 -/
 
-namespace FMSA.MSAExact
+namespace FMSA.ExactMSA
 
 open Real
 open scoped ContDiff
@@ -242,4 +242,4 @@ theorem bhF_base_ne_zero {xi z : ℝ} (hxi : xi ∈ Set.Ioo (0 : ℝ) 1) (hz : 0
   rw [hF0, mul_zero, mul_zero] at hbase
   exact (ne_of_lt hpos) hbase
 
-end FMSA.MSAExact
+end FMSA.ExactMSA

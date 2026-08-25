@@ -43,7 +43,7 @@ several points) is **not** formalised: factoring a quartic over ℚ(E) is outsid
 full "exactly one physical root below `βK ≈ 3`" (MSAEXACT.3 in `K`) is likewise open.
 -/
 
-namespace FMSA.MSAExact
+namespace FMSA.ExactMSA
 
 variable (a b w E : ℝ)
 
@@ -137,4 +137,4 @@ every `E > 0` (its coefficients in `E` are all positive), so `F₄` really is de
 theorem F4_leadingCoeff_pos {E : ℝ} (hE : 0 < E) : 0 < 7203*E^4 + 12348*E^3 + 7938*E^2 + 2268*E + 243 := by
   positivity
 
-end FMSA.MSAExact
+end FMSA.ExactMSA

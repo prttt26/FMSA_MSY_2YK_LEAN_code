@@ -981,7 +981,7 @@ formalized" (`:1600`). Numerical partner: `numerical_notes/theory/waisman_msa_cl
 **Purpose, in one line: remove Theorem I.1's hypothesis. Not weaken it, not witness it.**
 
 > **Status 2026-08-19 — MSAFAM.1–4 LANDED, axiom-clean, full build 8784 jobs.** Homes:
-> `YukawaOZ/MSABlumHoyeSystem.lean` (MSAFAM.1–2, ns `FMSA.MSAExact`),
+> `YukawaOZ/MSABlumHoyeSystem.lean` (MSAFAM.1–2, ns `FMSA.ExactMSA`),
 > `Closures/MSASolutionFamily.lean` (MSAFAM.3 + the `γ=1` payoff, ns `FMSA.MSASolutionFamily`),
 > `Closures/FirstOrderEquivalence.lean` edited in place (MSAFAM.4). Gaps (A) transcription and
 > (B) order are **closed**; FOEQ.5 is hypothesis-free at `N=1, γ=1`. **The group is NOT closed:**
@@ -1053,7 +1053,7 @@ the bullet's subject is the hypothesis as a whole.
 | MSAFAM.6 ⭐⭐ | Theorem I.1 with **no hypothesis**: `oz_msa_taylor_eq_hierarchy` applied to the constructed family, `N = 1` | MSAFAM.2/3/4/5 | ◑ **abstract form DONE 2026-08-19** (`MSASolutionFamily.msaFamily_taylor_eq_hierarchy`, axiom-clean); **⭐ concrete form BUILT 2026-08-20** (`MSAFamilyConcrete.msaFamily_taylor_eq_hierarchy_concrete`, axiom-clean): the physical MSA Baxter family (built from the BH root `ψ`) satisfies OZ `∀ᶠ` + the hierarchy at **every** `m≥1` with **no abstract hypothesis**. ⚠ this is still construction-(B) — `C̃=1−Q̂Q̂` obeys OZ *by definition*; certifying it is the **MSA closure DCF** is MSAEXACT.1's factorisation, the **sole remaining input**. Capstone (bullet-retiring) lands when that single ring is discharged |
 | MSAFAM.7 | the same at general `N` | **gated on MSAEMIX**, deliberately | ☐ |
 
-Home: `YukawaOZ/MSABlumHoyeSystem.lean` (L3, namespace `FMSA.MSAExact`, beside `MSAClosedForm.lean`)
+Home: `YukawaOZ/MSABlumHoyeSystem.lean` (L3, namespace `FMSA.ExactMSA`, beside `MSAClosedForm.lean`)
 for MSAFAM.1–2; `Closures/MSASolutionFamily.lean` (L5, new namespace `FMSA.MSASolutionFamily`) for
 MSAFAM.3–6. MSAFAM.4 edits `Closures/FirstOrderEquivalence.lean` in place.
 

@@ -49,7 +49,7 @@ Verified numerically before formalising: the residuals vanish to `3.8e-13` over 
   that Waisman's `y₀` really is `g(1⁺)`.
 -/
 
-namespace FMSA.MSAExact
+namespace FMSA.ExactMSA
 
 open Real
 
@@ -309,5 +309,5 @@ theorem exact_vs_firstOrder_compressibility_wall (A : ℝ → ℝ) (a₀ s : ℝ
     (∀ K, 0 ≤ (A K) ^ 2) ∧ (∀ K, a₀ < s * K → a₀ - s * K < 0) :=
   ⟨fun K => sq_nonneg _, fun _ hK => by linarith⟩
 
-end FMSA.MSAExact
+end FMSA.ExactMSA
 

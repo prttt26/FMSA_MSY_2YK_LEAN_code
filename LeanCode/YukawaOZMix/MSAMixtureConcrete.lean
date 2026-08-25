@@ -17,7 +17,7 @@ import LeanCode.YukawaOZMix.MSAMixtureCancellation
 
 Group **MSAEMIX** (`proof_notes_msa_exact.md`).
 
-`matEMIXfactorization_of_core` reduces the mixture MSA factorisation to a matrix `hcore` from an
+`matMixtureFactorization_of_core` reduces the mixture MSA factorisation to a matrix `hcore` from an
 *abstract* coupling-`0` factor `Q₀` and increment `Q₁`.  This file makes
 those concrete, reusing the validated mixture Baxter entry `Q0_mat_c` (`HSMixture/Q0Complex.lean`) —
 the matrix Baxter factor `Q̂₀,ᵢⱼ(s) = δᵢⱼ − ρgeoᵢⱼ e^{−λᵢⱼs}(q′ᵢⱼ φ₁(s,σᵢ) + q″ᵢⱼ φ₂(s,σᵢ))`.
@@ -42,9 +42,9 @@ analytic core, the matrix analog of MSAEXACT.6.
 -/
 
 open Real
-open FMSA.Q0Complex FMSA.MSAExact FMSA.HardSphere
+open FMSA.Q0Complex FMSA.ExactMSA FMSA.HardSphere
 
-namespace MSAEMix
+namespace MSAMixture
 
 variable {N : ℕ}
 
@@ -151,4 +151,4 @@ theorem mixDA_zero_of_Dt_zero (z : ℝ) (rho sigma : Fin N → ℝ) (Gt : Matrix
     (j : Fin N) : mixDA z rho sigma Gt 0 j = 0 := by
   simp [mixDA, mixM, mixN, Wt_zero_of_Dt_zero, Ct_zero_of_Dt_zero]
 
-end MSAEMix
+end MSAMixture

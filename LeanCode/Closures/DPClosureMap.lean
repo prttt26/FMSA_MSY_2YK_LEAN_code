@@ -213,7 +213,7 @@ theorem starConj_entry_norm_le {N : ℕ} (Qm X : Matrix (Fin N) (Fin N) ℂ) (i 
     calc ‖Qm i p‖ * ‖X p q‖ * ‖Qm j q‖
         ≤ Qb * Xb * Qb := mul_le_mul h1 (hQ j q) (norm_nonneg _) (by positivity)
       _ = Qb ^ 2 * Xb := by ring
-  rw [FMSA.MRS.star_entry_eq]
+  rw [FMSA.MixtureBaxterCore.star_entry_eq]
   calc ‖∑ q, ∑ p, Qm i p * X p q * Qm j q‖
       ≤ ∑ q, ‖∑ p, Qm i p * X p q * Qm j q‖ := norm_sum_le _ _
     _ ≤ ∑ _q : Fin N, ∑ _p : Fin N, (Qb ^ 2 * Xb) := by
@@ -304,7 +304,7 @@ theorem dp_sub_py_first_order_eq_conj_residual {N : ℕ}
     (hB1 : B1py = Qpᵀ * H1 * Qp) :
     starConjLinear Qm B1fit - C1py = starConjLinear Qm (B1fit - B1py) := by
   have hpy : C1py = Qm * B1py * Qmᵀ :=
-    FMSA.MRS.star_of_first_order_oz Qp Qm T0 S0 H1 C1py B1py hoz hTS hfact hT0symm hB1
+    FMSA.MixtureBaxterCore.star_of_first_order_oz Qp Qm T0 S0 H1 C1py B1py hoz hTS hfact hT0symm hB1
   rw [map_sub]
   simp only [starConjLinear_apply]
   rw [← hpy]
@@ -361,7 +361,7 @@ theorem dpDCF_entry_tendsto {N : ℕ} {ι : Type*} {l : Filter ι} (Qm : Matrix 
     {B1fam : ι → Matrix (Fin N) (Fin N) ℂ} {B1lim : Matrix (Fin N) (Fin N) ℂ}
     (h : TailFitWHConvergent l B1fam B1lim) (i j : Fin N) :
     Tendsto (fun n => (starConjLinear Qm (B1fam n)) i j) l (𝓝 ((starConjLinear Qm B1lim) i j)) := by
-  simp only [starConjLinear_apply, FMSA.MRS.star_entry_eq]
+  simp only [starConjLinear_apply, FMSA.MixtureBaxterCore.star_entry_eq]
   refine tendsto_finsetSum _ fun q _ => tendsto_finsetSum _ fun p _ => ?_
   exact ((h p q).const_mul (Qm i p)).mul_const (Qm j q)
 
@@ -379,7 +379,7 @@ theorem dp_tendsto_py_first_order {N : ℕ} {ι : Type*} {l : Filter ι}
     (hconv : TailFitWHConvergent l B1fam B1py) (i j : Fin N) :
     Tendsto (fun n => (starConjLinear Qm (B1fam n)) i j) l (𝓝 (C1py i j)) := by
   have hpy : C1py = Qm * B1py * Qmᵀ :=
-    FMSA.MRS.star_of_first_order_oz Qp Qm T0 S0 H1 C1py B1py hoz hTS hfact hT0symm hB1
+    FMSA.MixtureBaxterCore.star_of_first_order_oz Qp Qm T0 S0 H1 C1py B1py hoz hTS hfact hT0symm hB1
   have h := dpDCF_entry_tendsto Qm hconv i j
   rwa [starConjLinear_apply, ← hpy] at h
 
@@ -1267,7 +1267,7 @@ MRS.8 (`shellForcing_eq_cMixDCFN`, general `N`) together with `Cmix0 = 𝓕(matD
 
 section PYE6GeneralN
 
-open FMSA.MixtureNoSpinodal FMSA.MRS FMSA.MatrixQ0 FMSA.MixtureBaxter
+open FMSA.MixtureNoSpinodal FMSA.MixtureBaxterCore FMSA.MatrixQ0 FMSA.MixtureBaxter
 
 variable {N : ℕ} (sigma rho : Fin N → ℝ)
 

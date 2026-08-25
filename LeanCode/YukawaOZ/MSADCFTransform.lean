@@ -14,7 +14,7 @@ import LeanCode.YukawaOZ.MSABaxterTransform
 # MSAEXACT.1 — the `c`-side, and the reduction to one core identity
 
 Group **MSAEXACT** (`proof_notes_msa_exact.md`).  Numerical partner:
-`msaexact1_cside_check.py`.
+`exactMSA_cside_check.py`.
 
 `MSAFactorizationSplit.lean` reduced MSAEXACT.1 to matching the `O(D)`/`O(D²)` increments of the
 factorization's left side against `−ρ(ĉ_MSA − ĉ_HS)(k)`.  That match needs the right side, and the
@@ -28,11 +28,11 @@ right side has two halves of very different character:
   would be formalizing a false statement.
 
 Hence the shape of this file: everything except the core transform is discharged, and what remains
-is isolated as a **single scalar unknown** `cCore` in `msaexact1_iff_core`.  The identity that
+is isolated as a **single scalar unknown** `cCore` in `exactMSA_iff_core`.  The identity that
 `cCore` has to satisfy is fully explicit — no integrals of unknown functions on the right — so it
 can be, and has been, checked numerically before anyone formalizes Eq. (2).
 
-⭐ **That check is worth stating.**  `msaexact1_cside_check.py` evaluates the factorization
+⭐ **That check is worth stating.**  `exactMSA_cside_check.py` evaluates the factorization
 `F(ik)F(−ik) = 1 − ρĉ(k)` with the left side from the Baxter factor and the right side assembled
 from Eq. (2) plus this file's tail.  With the `1/x` repair it holds to `1e-15` (`1e-10` at the
 smallest `k`, which is the quadrature's own floor) across eight states; with Eq. (2) as printed it
@@ -46,16 +46,16 @@ that found it, and now at every `k` rather than at `r = σ`.
   `(hard-sphere) + D·(exponential)`, so `msa_lhs_split` applies to `msaBaxterFn` itself.
 * `yukawa_tail_sine_integral` — `∫_σ^∞ e^{−z(r−σ)}sin(kr) dr = (k cos kσ + z sin kσ)/(z²+k²)`.
 * `cMSAtail`, `radial_fourier_cMSAtail` — the exterior MSA DCF and its radial Fourier transform.
-* ⭐ `msaexact1_iff_core` — **the reduction**: given the split of `ĉ_MSA` into hard-sphere, core
+* ⭐ `exactMSA_iff_core` — **the reduction**: given the split of `ĉ_MSA` into hard-sphere, core
   correction, and exterior tail, the MSA factorization holds **iff** the core correction's transform
   equals an explicit closed form.  Nothing about the core is assumed; it is the one unknown.
-* `msaexact1_core_at_zero_coupling` — at `K = 0`, `D = 0` the required core correction is `0`,
+* `exactMSA_core_at_zero_coupling` — at `K = 0`, `D = 0` the required core correction is `0`,
   i.e. the reduction is consistent with the hard-sphere case it must contain.
 -/
 
 open MeasureTheory intervalIntegral Real Set Filter Topology
 
-namespace FMSA.MSAExact
+namespace FMSA.ExactMSA
 
 open FMSA.HardSphere
 
@@ -247,8 +247,8 @@ Everything on the right is closed form: the hard-sphere transforms `Re₀`, `Im�
 of MSAEXACT.1 that is left is: *show Waisman's Eq. (2) has this transform.*
 
 ⚠ Which is why the statement is an `iff` and not a theorem about Eq. (2): Eq. (2) as printed does
-**not** satisfy it — see the module docstring and `msaexact1_cside_check.py`. -/
-theorem msaexact1_iff_core
+**not** satisfy it — see the module docstring and `exactMSA_cside_check.py`. -/
+theorem exactMSA_iff_core
     (eta sigma rho z K D k cCore chatMSA : ℝ)
     (hsigma : 0 < sigma) (hk : k ≠ 0) (hz : 0 < z)
     (heta : eta < 1) (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6)
@@ -275,7 +275,7 @@ theorem msaexact1_iff_core
 
 /-- Consistency: with no Yukawa (`K = 0`, `D = 0`) the required core correction is `0`, i.e. the
 reduction contains the hard-sphere factorization rather than merely resembling it. -/
-theorem msaexact1_core_at_zero_coupling
+theorem exactMSA_core_at_zero_coupling
     (eta sigma rho z k cCore chatMSA : ℝ)
     (hsigma : 0 < sigma) (hk : k ≠ 0) (hz : 0 < z)
     (heta : eta < 1) (heta_def : eta = Real.pi * rho * sigma ^ 3 / 6) (hrho : rho ≠ 0)
@@ -285,11 +285,11 @@ theorem msaexact1_core_at_zero_coupling
         + (∫ r in (0 : ℝ)..sigma, msaBaxterFn eta sigma rho z 0 r * Real.sin (k * r)) ^ 2
         = 1 - rho * chatMSA
       ↔ cCore = 0 := by
-  rw [msaexact1_iff_core eta sigma rho z 0 0 k cCore chatMSA hsigma hk hz heta heta_def hsplit]
+  rw [exactMSA_iff_core eta sigma rho z 0 0 k cCore chatMSA hsigma hk hz heta heta_def hsplit]
   constructor
   · intro h
     have : rho * cCore = 0 := by rw [h]; ring
     exact (mul_eq_zero.mp this).resolve_left hrho
   · intro h; rw [h]; ring
 
-end FMSA.MSAExact
+end FMSA.ExactMSA

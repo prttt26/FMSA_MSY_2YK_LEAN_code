@@ -11,15 +11,15 @@ Full inventory: `todo_lean.md`'s
 Axioms table. Lean home: `LeanCode/Analysis/`.
 
 **Distinct third category — one *computation* axiom (not a math or physics assumption).**
-`msaexact6_hcore` (`YukawaOZ/MSAFullFactorization.lean`) is a *specific, externally-certified
-polynomial identity* — the Blum–Høye MSA closure-recovery ring, sympy-verified in `msaexact6_cert.py`
+`exactMSA_hcore` (`YukawaOZ/MSAFullFactorization.lean`) is a *specific, externally-certified
+polynomial identity* — the Blum–Høye MSA closure-recovery ring, sympy-verified in `exactMSA_cert.py`
 (`Δ = m29·r29 + m33·r33`, remainder 0). It is **not** a mathematical assumption: it is provable in
 principle, but `ring`/`linear_combination` cannot normalize it in practice — **measured 2026-08-22**,
 a clean 323-monomial degree-≈22 slice costs `ring` **3 h 12 m / 23 GB**, and the per-order reassembly
 extrapolates to weeks / ~200 GB (`native_decide` blocked: `MvPolynomial` semiring noncomputable). Its
-Fourier/definitional layer *is* discharged: `YukawaOZ/MSAExact6Certificate.lean` (an
-out-of-`defaultTargets` lib) derives the exact `msaexact6_hcore` statement from a single pure-cos/sin
-/exp axiom `msaexact6_kspace_residual`, so the only residual is the polynomial identity itself.
+Fourier/definitional layer *is* discharged: `YukawaOZ/ExactMSA6Certificate.lean` (an
+out-of-`defaultTargets` lib) derives the exact `exactMSA_hcore` statement from a single pure-cos/sin
+/exp axiom `exactMSA_kspace_residual`, so the only residual is the polynomial identity itself.
 Detail: `proof_notes_msa_exact.md` Group MSAEXACT.6. This does **not** change the physics-axiom count.
 
 **Admissibility.** (a) a *named* classical theorem, true independently of this project; (b)

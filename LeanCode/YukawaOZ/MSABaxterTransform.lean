@@ -42,7 +42,7 @@ on the exterior — is the remaining analytic core of MSAEXACT.1: it re-runs
 
 open MeasureTheory intervalIntegral Real Set
 
-namespace FMSA.MSAExact
+namespace FMSA.ExactMSA
 
 /-- The single-component MSA Baxter function on the core: the hard-sphere Baxter function `q0_poly`
 plus one Yukawa exponential (theory note §4). -/
@@ -94,5 +94,5 @@ theorem yukawa_tail_laplace {s z : ℝ} (hsz : 0 < s + z) :
     mul_one, neg_div_neg_eq, ← mul_div_assoc, ← Real.exp_add,
     show z + -(s + z) = -s from by ring]
 
-end FMSA.MSAExact
+end FMSA.ExactMSA
 

@@ -7,14 +7,14 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaOZMix.MSAEMixBreakpoints
+import LeanCode.YukawaOZMix.MSAMixtureBreakpoints
 
 /-!
 # MSAEMIX.4 Stage 3 — the piecewise unequal-σ exact-MSA mixture core (EXACT kernels)
 
 The exact-MSA mixture direct-correlation core `c_ij(r)` on `(0, σ_ij)` (correct orientation
 `σ_i ≥ σ_j`) is **2-piece** with the interior breakpoint `|λ_ij| = |σ_i−σ_j|/2` (MSAEMIX.5,
-`MSAEMixBreakpoints.lean`).  With `g := 2π r c_ij` and `a := σ_i`, `b := σ_j`:
+`MSAMixtureBreakpoints.lean`).  With `g := 2π r c_ij` and `a := σ_i`, `b := σ_j`:
 * OUTER `(|λ_ij| < r < σ_ij)`: `g = c0 + c1 r + c2 r² + c3 r³ + c4 r⁴ + cEm e^{-zr} + cEp e^{zr}`.
 * INNER `(0 < r < |λ_ij|)`:  `g = c0 + c1 r + cEm e^{-zr} + cEp e^{zr}`  (`c2=c3=c4=0`).
 
@@ -32,9 +32,9 @@ support `[λ_ij, σ_ij]`) contributes `(-qp_ij + A_j σ_ij)` to `c0`, `-A_j` to 
 (standalone, C++-translatable).  `σ_ij = edgeHi σ i j`, `|λ_ij| = |edgeLo σ i j| = lamA σ i j`.
 -/
 
-namespace MSAEMixCoreUneq
+namespace MSAMixtureCoreUneq
 
-open MSAEMix
+open MSAMixture
 open scoped BigOperators
 
 variable {N : ℕ}
@@ -191,7 +191,7 @@ noncomputable def cEpi (z : ℝ) (ρ σ A : Fin N → ℝ) (qp Wt Ct : Fin N →
 **correct orientation `σ_i ≥ σ_j`** (2-piece at `|λ_ij|`, EXACT σ_l-free kernels).  This is the RAW
 per-orientation piecewise form (its extension past `σ_ij` is `don't-care`; the physical, symmetric,
 compactly-supported core-CORRECTION used by the factorization is `matCoreCorrUneq` in
-`MSAEMixBHRootUneq`, which orients by `σ` and cuts off at `σ_ij`). -/
+`MSAMixtureBHRootUneq`, which orients by `σ` and cuts off at `σ_ij`). -/
 noncomputable def matCoreUneq (z : ℝ) (ρ σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ)
     (i j : Fin N) (r : ℝ) : ℝ :=
   (if r ≤ lamA σ i j then
@@ -202,4 +202,4 @@ noncomputable def matCoreUneq (z : ℝ) (ρ σ A : Fin N → ℝ) (qp Wt Ct : Fi
         (cC3o z ρ σ A qp Wt Ct i j) (cC4o z ρ σ A qp Wt Ct i j) (cEmo z ρ σ A qp Wt Ct i j)
         (cEpo z ρ σ A qp Wt Ct i j) z r) / (2 * Real.pi * r)
 
-end MSAEMixCoreUneq
+end MSAMixtureCoreUneq

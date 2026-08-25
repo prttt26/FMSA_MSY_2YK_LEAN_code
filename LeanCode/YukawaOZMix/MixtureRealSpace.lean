@@ -65,7 +65,7 @@ set_option linter.style.longLine false
 open Filter Topology
 open scoped Matrix
 
-namespace FMSA.MRS
+namespace FMSA.MixtureBaxterCore
 
 /-! ### MRS.3 — the (★) identity -/
 
@@ -807,4 +807,4 @@ theorem phys_sum (sigma rho Qpp1 : Fin N → ℂ) (Q0 Qpp rho_geo : Fin N → Fi
     (fun l => Bbra_prod sigma Qpp1 Q0 Qpp c k i j l (hK1 i l) (hK1 j l) (hQI i l) (hQI j l))
 
 
-end FMSA.MRS
+end FMSA.MixtureBaxterCore

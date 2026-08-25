@@ -41,7 +41,7 @@ first-order mediated terms (`_compute_mediated`, whose breakpoints are genuinely
   basis is MSAEMIX.4 Stage 3.
 -/
 
-namespace MSAEMix
+namespace MSAMixture
 
 variable {N : ℕ}
 
@@ -142,4 +142,4 @@ theorem interior_breakpoint_eq_absLam (σ : Fin N → ℝ) (i j : Fin N)
   · exact absurd h1 (by have : (0:ℝ) < edgeHi σ i j := by simp only [edgeHi]; linarith
                         linarith)
 
-end MSAEMix
+end MSAMixture

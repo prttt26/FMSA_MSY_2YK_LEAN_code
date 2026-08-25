@@ -14,9 +14,9 @@ import LeanCode.HardSphere.RadialFourier
 /-!
 # MSAEXACT.1 — the core-DCF sine transforms (steps 1–2 of the core identity)
 
-Group **MSAEXACT** (`proof_notes_msa_exact.md`).  Numerical partner: `msaexact1_cside_check.py`.
+Group **MSAEXACT** (`proof_notes_msa_exact.md`).  Numerical partner: `exactMSA_cside_check.py`.
 
-`msaexact1_iff_core` (`MSADCFTransform.lean`) reduces MSAEXACT.1 to matching a single scalar `cCore`
+`exactMSA_iff_core` (`MSADCFTransform.lean`) reduces MSAEXACT.1 to matching a single scalar `cCore`
 — the radial (sine) transform of the **core** correction of the MSA DCF — against an explicit
 `D`-side closed form.  The core correction (theory note §7f, `msa_exact.minus_C`, with the `1/x`
 repair) is
@@ -36,7 +36,7 @@ monomial pieces are `HardSphere.psi{0,1,2,4}_formula`, already public.
 
 open MeasureTheory intervalIntegral
 
-namespace FMSA.MSAExact
+namespace FMSA.ExactMSA
 
 open FMSA.HardSphere
 
@@ -239,4 +239,4 @@ theorem radial_fourier_coreCorrection (c1 c2 c3 c4 c5 z sigma k : ℝ) (hsigma :
   · simp only [coreCorrection, if_pos hr.2]
     field_simp
 
-end FMSA.MSAExact
+end FMSA.ExactMSA

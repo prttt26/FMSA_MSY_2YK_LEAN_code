@@ -26,17 +26,17 @@ coupling-`0` part is the hard-sphere mixture Wiener–Hopf factorization
   factor `Q₀` plus the `O(K)` increment `Q₁`, and likewise `Qneg`), the Baxter product entrywise is
   `(Q₀ Q₀ⁿᵀ)ᵢⱼ + [(Q₀ Q₁ⁿᵀ) + (Q₁ Q₀ⁿᵀ) + (Q₁ Q₁ⁿᵀ)]ᵢⱼ`.  The matrix analog of the scalar
   `msa_lhs_split`.
-* `matEMIXfactorization_of_core` — the matrix analog of `factorization_of_core`: given the
+* `matMixtureFactorization_of_core` — the matrix analog of `factorization_of_core`: given the
   coupling-`0` factorization `hHS` and that the increment matches `−ρ(Ĉ_MSA − Ĉ_HS)` (the matrix
   `hcore`), the full MSA matrix Baxter factorization `(Q Qnegᵀ)ᵢⱼ = δᵢⱼ − ρ Ĉ_MSA` holds.
-* `matEMIXfactorization_of_baxterFourierWH` — discharges `hHS` through the HS-mixture Fourier
+* `matMixtureFactorization_of_baxterFourierWH` — discharges `hHS` through the HS-mixture Fourier
   Wiener–Hopf (`matSF_of_baxterFourierWH`: KDEF + shell bridge + `MatBaxterFourierWH`), so the
   **sole** remaining input is the matrix `hcore`.  This is the concrete statement that MSAEMIX.1
   "pushes to the same gap" as MSAEXACT.6.
 
 ⚠ **What is still open (the gap).** As at `N = 1`, the matrix `hcore` for the *specific* MSA Baxter
 factor — the increment `Q₁` assembled from Blum & Høye's `M_j, N_j` (via the (★) cancellation,
-`MSAEMixture`/`cancellation_star`) and the Yukawa tails, matched against the mixture core+tail DCF
+`MSAMixtureture`/`cancellation_star`) and the Yukawa tails, matched against the mixture core+tail DCF
 transforms — is the analytic core, not discharged here.  It is the matrix analog of MSAEXACT.6's
 `hcore` ring; the scalar one already has no small-multiplier route, so the matrix one is at least as
 hard.  This file establishes the reduction, not the ring.
@@ -45,7 +45,7 @@ hard.  This file establishes the reduction, not the ring.
 open MeasureTheory
 open FMSA.MixtureOzStar FMSA.HardSphere
 
-namespace MSAEMix
+namespace MSAMixture
 
 variable {N : ℕ}
 
@@ -73,7 +73,7 @@ theorem matBaxterProd_split (Q0 Q1 Q0neg Q1neg : Matrix (Fin N) (Fin N) ℂ) (i 
 the full MSA matrix Baxter factorization `((Q₀+Q₁)(Q₀ⁿ+Q₁ⁿ)ᵀ)ᵢⱼ = δᵢⱼ − ρ Ĉ_MSA,ᵢⱼ` holds.  Pure
 algebra on top of `matBaxterProd_split`, exactly as the scalar `factorization_of_core` sits on
 `msa_factor_split`. -/
-theorem matEMIXfactorization_of_core (Q0 Q1 Q0neg Q1neg : Matrix (Fin N) (Fin N) ℂ)
+theorem matMixtureFactorization_of_core (Q0 Q1 Q0neg Q1neg : Matrix (Fin N) (Fin N) ℂ)
     (rho : ℝ) (cHShat cMSAhat : Fin N → Fin N → ℂ)
     (hHS : ∀ i j, (Q0 * Q0neg.transpose) i j
       = (if i = j then (1 : ℂ) else 0) - (rho : ℂ) * cHShat i j)
@@ -90,7 +90,7 @@ given by `matSF_of_baxterFourierWH` (the mixture Wiener–Hopf: matrix Baxter fa
 shell `hbridge` + the pure-`q` core identity `hWH`), the full MSA matrix factorization reduces
 to the **single** matrix `hcore` — the matrix analog of MSAEXACT.6's closure-recovery ring, with the
 hard-sphere part no longer assumed but produced. -/
-theorem matEMIXfactorization_of_baxterFourierWH
+theorem matMixtureFactorization_of_baxterFourierWH
     (Q Qneg Q1 Q1neg : Matrix (Fin N) (Fin N) ℂ)
     (K q Phi : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (rho sigma k : ℝ) (hsigma : 0 < sigma)
     (hKDEF : MatBaxterFactorization K q rho sigma)
@@ -104,22 +104,22 @@ theorem matEMIXfactorization_of_baxterFourierWH
     (i j : Fin N) :
     ((Q + Q1) * (Qneg + Q1neg).transpose) i j
       = (if i = j then (1 : ℂ) else 0) - (rho : ℂ) * cMSAhat i j :=
-  matEMIXfactorization_of_core Q Q1 Qneg Q1neg rho
+  matMixtureFactorization_of_core Q Q1 Qneg Q1neg rho
     (fun i j => (radial_fourier (Phi i j) k : ℂ)) cMSAhat
     (fun i j => matSF_of_baxterFourierWH Q Qneg K q Phi rho sigma k hsigma hKDEF hbridge hWH i j)
     hcore i j
 
 /-- Non-vacuity: at coupling `0` (`Q₁ = Q₁ⁿ = 0`, `Ĉ_MSA = Ĉ_HS`) the matrix `hcore`
-is `0 = 0` and `matEMIXfactorization_of_core` returns the coupling-`0` factorization itself — so the
+is `0 = 0` and `matMixtureFactorization_of_core` returns the coupling-`0` factorization itself — so the
 implication is not vacuously satisfied by an unsatisfiable `hcore`. -/
-theorem matEMIXfactorization_of_core_zero_coupling
+theorem matMixtureFactorization_of_core_zero_coupling
     (Q0 Q0neg : Matrix (Fin N) (Fin N) ℂ) (rho : ℝ) (cHShat : Fin N → Fin N → ℂ)
     (hHS : ∀ i j, (Q0 * Q0neg.transpose) i j
       = (if i = j then (1 : ℂ) else 0) - (rho : ℂ) * cHShat i j)
     (i j : Fin N) :
     ((Q0 + 0) * (Q0neg + 0).transpose) i j
       = (if i = j then (1 : ℂ) else 0) - (rho : ℂ) * cHShat i j :=
-  matEMIXfactorization_of_core Q0 0 Q0neg 0 rho cHShat cHShat hHS
+  matMixtureFactorization_of_core Q0 0 Q0neg 0 rho cHShat cHShat hHS
     (by intro i j; simp) i j
 
 /-! ### MSAEMIX.2 (factorization half) — the `N = 1` specialisation is the scalar Baxter modulus -/
@@ -130,7 +130,7 @@ component the matrix factorization `(Qf · Qnegfᵀ)₀₀ = 1 − ρ·ĉ` for a
 the shape of `MSAEXACT.1`'s `factorization_of_core` conclusion `(1 − ρReQ̂)² + (ρImQ̂)² = 1 − ρĉ`
 (take `A = 1 − ρReQ̂`, `B = ρImQ̂`).  So the matrix statement is the right generalisation of the
 scalar one — the non-vacuity/consistency gate (the `AppendixBridgeN1` role) for the matrix group. -/
-theorem matEMIX_factorization_fin_one_iff (A B c rho : ℝ)
+theorem matMixtureFactorization_fin_one_iff (A B c rho : ℝ)
     (Qf Qnegf : Matrix (Fin 1) (Fin 1) ℂ)
     (hQf : Qf 0 0 = (A : ℂ) - Complex.I * (B : ℂ))
     (hQnegf : Qnegf 0 0 = (A : ℂ) + Complex.I * (B : ℂ)) :
@@ -142,10 +142,10 @@ theorem matEMIX_factorization_fin_one_iff (A B c rho : ℝ)
   rw [hmul, show (1 : ℂ) - (rho : ℂ) * (c : ℂ) = ((1 - rho * c : ℝ) : ℂ) by push_cast; ring]
   exact Complex.ofReal_inj
 
-/-- `matEMIXfactorization_of_core` at `N = 1`, chained through the scalar bridge: given the
+/-- `matMixtureFactorization_of_core` at `N = 1`, chained through the scalar bridge: given the
 coupling-`0` factorization `hHS`, the matrix `hcore`, and that the full conjugate-pair factor is
 `A ∓ iB` with real target `ĉ = c`, the scalar Baxter modulus identity `A² + B² = 1 − ρc` holds. -/
-theorem matEMIXfactorization_of_core_fin_one (A B c rho : ℝ)
+theorem matMixtureFactorization_of_core_fin_one (A B c rho : ℝ)
     (Q0 Q1 Q0neg Q1neg : Matrix (Fin 1) (Fin 1) ℂ) (cHShat cMSAhat : Fin 1 → Fin 1 → ℂ)
     (hHS : ∀ i j, (Q0 * Q0neg.transpose) i j
       = (if i = j then (1 : ℂ) else 0) - (rho : ℂ) * cHShat i j)
@@ -155,9 +155,9 @@ theorem matEMIXfactorization_of_core_fin_one (A B c rho : ℝ)
     (hfullneg : (Q0neg + Q1neg) 0 0 = (A : ℂ) + Complex.I * (B : ℂ))
     (hcMSA : cMSAhat 0 0 = (c : ℂ)) :
     A ^ 2 + B ^ 2 = 1 - rho * c := by
-  refine (matEMIX_factorization_fin_one_iff A B c rho (Q0 + Q1) (Q0neg + Q1neg)
+  refine (matMixtureFactorization_fin_one_iff A B c rho (Q0 + Q1) (Q0neg + Q1neg)
     hfull hfullneg).mp ?_
-  have h := matEMIXfactorization_of_core Q0 Q1 Q0neg Q1neg rho cHShat cMSAhat hHS hcore 0 0
+  have h := matMixtureFactorization_of_core Q0 Q1 Q0neg Q1neg rho cHShat cMSAhat hHS hcore 0 0
   simpa [hcMSA] using h
 
-end MSAEMix
+end MSAMixture

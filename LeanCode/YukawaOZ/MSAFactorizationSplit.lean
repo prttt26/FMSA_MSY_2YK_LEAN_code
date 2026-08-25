@@ -56,7 +56,7 @@ MSAEXACT.1, and it is not attempted here.
 
 open MeasureTheory intervalIntegral Real Set
 
-namespace FMSA.MSAExact
+namespace FMSA.ExactMSA
 
 /-- `∫₀^σ e^{−zr}cos(kr) dr = [z − e^{−zσ}(z cos kσ − k sin kσ)]/(z² + k²)`.
 
@@ -176,4 +176,4 @@ theorem msa_lhs_split_at_zero (eta sigma rho k : ℝ) (hsigma : 0 < sigma) (hk :
   simpa using
     FMSA.HardSphere.baxter_wiener_hopf_factorization eta sigma rho k hsigma hk heta heta_def
 
-end FMSA.MSAExact
+end FMSA.ExactMSA

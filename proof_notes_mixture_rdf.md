@@ -3025,7 +3025,7 @@ object (`matCorr`) was the wrong one.
 
 **Obstruction (b) DISCHARGED in momentum space via `swap_offdiag` (2026-08-03, `MixtureRealSpace.lean`,
 axiom-clean, build 8719).**  The correct symmetric object is the momentum DCF `Cmix0 = I − Q̂₀(k)Q̂₀(−k)ᵀ`
-(NOT the function-part `matSelfConv`/`matCorr`).  Shipped in `FMSA.MRS`:
+(NOT the function-part `matSelfConv`/`matCorr`).  Shipped in `FMSA.MixtureBaxterCore`:
 * `Cmix0_symm_of_swap` — general: the swap identity `Q̂₀(−k)Q̂₀ᵀ(k) = Q̂₀(k)Q̂₀ᵀ(−k)` ⇒ `Ĉ₀ᵀ = Ĉ₀`
   (one direction of `Cmix0_isSymm_iff`).
 * `Qphys_Cmix0_symm` — physical N=2: `Ĉ₀ᵀ = Ĉ₀` from `Qphys_T0_isSymm` (`transpose_mul`+`transpose_transpose`
@@ -3041,7 +3041,7 @@ sits only on the diagonal), so `Ĉ₀ᵢₖ = q̂ᵢₖ(z) + q̂ₖᵢ(−z) −
 `hfact` — the seed must produce `Ĉ₀` (linear `q̂` terms included), NOT `matSelfConv` alone.**
 
 **Corrected `hfact` — `Ĉ₀ = linear − self-conv` (2026-08-04, axiom-clean, build 8719).**  The precise
-decomposition, in momentum space (`MixtureRealSpace.lean`, `FMSA.MRS`):
+decomposition, in momentum space (`MixtureRealSpace.lean`, `FMSA.MixtureBaxterCore`):
 * `Cmix0_linear_selfconv` — `Ĉ₀(k) = W(k) + W(−k)ᵀ − W(k)·W(−k)ᵀ` with `W = I − Q̂₀` (the weighted Baxter
   function transform `ρ_geo·q̂`); pure matrix algebra `1−(1−A)(1−B)=A+B−AB` (`noncomm_ring`).  So the
   seed's target `Ĉ₀` carries the **linear `q̂` terms** `W(k)+W(−k)ᵀ`; the bare self-conv `W(k)W(−k)ᵀ` (≈
@@ -4148,7 +4148,7 @@ missing fact was already in the tree, merely never exported to the group that ne
 tracks had each done half of this and neither knew.**
 
 Layering respected (`HSMixture/` may not import `YukawaDCF/`), so the statement stops at the
-`Q0_mat_c` level; an `FMSA.MRS`-side restatement in terms of the literal `Qphys` alias is a one-liner
+`Q0_mat_c` level; an `FMSA.MixtureBaxterCore`-side restatement in terms of the literal `Qphys` alias is a one-liner
 whenever someone wants it.
 
 ---

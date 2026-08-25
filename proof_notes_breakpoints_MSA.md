@@ -38,7 +38,7 @@ substance stays where it is:
 
 | BRK slot | is the Lean half of | owner file | status there |
 |---|---|---|---|
-| **BRK.2** (exact MSA) | **MSAEMIX.5** | [proof_notes_msa_exact.md](proof_notes_msa_exact.md) | ✓ DONE 2026-08-22, **fully Lean** (`MSAEMixBreakpoints.lean`, std-3) |
+| **BRK.2** (exact MSA) | **MSAEMIX.5** | [proof_notes_msa_exact.md](proof_notes_msa_exact.md) | ✓ DONE 2026-08-22, **fully Lean** (`MSAMixtureBreakpoints.lean`, std-3) |
 | **BRK.3** (first order) | **IB.9** | [proof_notes_breakpoints.md](proof_notes_breakpoints.md) | ✓ DONE — `MixtureConvolution.pbp_breakpoints_subset` + `MixtureDCFSmooth.dcfOdd_contDiffOn_*` |
 
 ⚠ **Edit the owner, not the copy.** If MSAEMIX.5's numbers or scope change, they change in
@@ -52,9 +52,9 @@ measurement drift apart, and the one in the file nobody runs is the one that goe
 | task | statement | status |
 |---|---|---|
 | **BRK.1** | convolution knot-closure: knots of `f ⋆ g` ⊆ sums of knots of `f`, `g` | ✓ **COVERED — point, no new development.** Mathlib `support_convolution_subset` + the reusable Minkowski helpers `Ici_add_Icc_subset` / `Icc_add_Ici_subset` (`YukawaOZMix/MixtureConvolution.lean`) already provide it; the mixture uses them at `bConvP_support_subset` / `pbpConv_support_subset` |
-| **BRK.2** ⭐ | the four `t`-kink crossings are `σ_l`-**independent** | ✓ **DONE — fully Lean, std-3; point (owner = MSAEMIX.5).** The four crossings + capstone are `MSAEMixBreakpoints.{bp_loLo_indep, bp_hiHi_indep, bp_hiLo_indep, bp_loHi_indep, breakpoints_sigma_l_free}` (`#print axioms` = `[propext, Classical.choice, Quot.sound]`). Same `ring` cancellation as the first-order `MixtureConvolution.lean` edge identities |
+| **BRK.2** ⭐ | the four `t`-kink crossings are `σ_l`-**independent** | ✓ **DONE — fully Lean, std-3; point (owner = MSAEMIX.5).** The four crossings + capstone are `MSAMixtureBreakpoints.{bp_loLo_indep, bp_hiHi_indep, bp_hiLo_indep, bp_loHi_indep, breakpoints_sigma_l_free}` (`#print axioms` = `[propext, Classical.choice, Quot.sound]`). Same `ring` cancellation as the first-order `MixtureConvolution.lean` edge identities |
 | **BRK.3** | first order as an *instance*: IB.9 / `dcfOdd_contDiffOn_*` from BRK.1+BRK.2 | ✓ **DONE — point (owner = IB.9).** `MixtureConvolution.pbp_breakpoints_subset` (breakpoint set `{±λ_ij, ±R_ij}`, `m,n` cancel, all N) + `MixtureDCFSmooth.dcfOdd_contDiffOn_upper/_lower/_like` |
-| **BRK.4** | order-by-order corollary: `J(K) ≡ 0` on an interval ⇒ every `J_n = 0` | ✓ **DONE 2026-08-22, std-3** — `YukawaOZMix/MSAEMixBreakpointOrders.jump_all_orders_vanish` (`#print axioms` = `[propext, Classical.choice, Quot.sound]`): `J` real-analytic on a preconnected open coupling-domain `U` and `= 0` on a subinterval `(a,b) ⊆ U` ⇒ `iteratedDeriv n J x₀ = 0` for all `n` at every `x₀ ∈ U` (every Taylor coeff `J_n = 0`), via Mathlib's identity theorem `AnalyticOnNhd.eqOn_zero_of_preconnected_of_eventuallyEq_zero`. Physics input (analyticity in `K` + `J = 0` on an interval) = BRK.5 + BRK.2's `K`-independence; not re-proved here (BRK.4 predicts the cancellation, does not exhibit `c^{(2)}`) |
+| **BRK.4** | order-by-order corollary: `J(K) ≡ 0` on an interval ⇒ every `J_n = 0` | ✓ **DONE 2026-08-22, std-3** — `YukawaOZMix/MSAMixtureBreakpointOrders.jump_all_orders_vanish` (`#print axioms` = `[propext, Classical.choice, Quot.sound]`): `J` real-analytic on a preconnected open coupling-domain `U` and `= 0` on a subinterval `(a,b) ⊆ U` ⇒ `iteratedDeriv n J x₀ = 0` for all `n` at every `x₀ ∈ U` (every Taylor coeff `J_n = 0`), via Mathlib's identity theorem `AnalyticOnNhd.eqOn_zero_of_preconnected_of_eventuallyEq_zero`. Physics input (analyticity in `K` + `J = 0` on an interval) = BRK.5 + BRK.2's `K`-independence; not re-proved here (BRK.4 predicts the cancellation, does not exhibit `c^{(2)}`) |
 | **BRK.5** | the `n = 2` witness (numerical) — falsification test for BRK.4 | ◑ **witnessed 2026-08-22** (`brk5_witness.py`, parent repo): exact-MSA `c_ij` from the Baxter `Q`. ⭐ **correct mediated candidate `r* = R[a,b] + R[i,a]`** (TWO intermediates a,b), active INSIDE the core iff **(A) `2σ_a+σ_b < σ_j`** and **(B) `σ_j < 3σ_b`** (`verify_mediated_breakpoints.py`) — so it genuinely CAN sit inside `(0,σ_ij)`, where the FMSA/stepwise term kinks. Tested 3 σ-sets: `[1,4,8]` (1 distinct + 1 degenerate), `[1,2,3,6]` (3 distinct), `[1,2,4,10]` (4 distinct) = **8 distinct active intra-core `r*`; exact MSA SMOOTH at EVERY one** (single-piece straddle within the enclosing piece, worst **1.9e-14** rel) ⇒ the FMSA mediated kink is ABSENT — BRK.4 cancellation witnessed **non-vacuously**. ⚠ `[1,4,8]` alone is a WEAK test (only 1 distinct); N=4 activates more. ⚠ caught a quad lower-limit bug (support starts at `λ=(min σ−max σ)/2`, below the old `−3`). ⚠ still fixed-`K` points, but breakpoint *locations* are geometric/`K`-independent (BRK.2) ⇒ robust in `K` |
 | **BRK.6** ⭐⭐ | discharge `hzero`: `J(K) ≡ 0` as a theorem | ✓ **COMPLETENESS HALF CLOSED 2026-08-25** — the enumeration is exhaustive **by counting** (below), and confirmed by a kink scan that looks for breakpoints *wherever they are* rather than testing predicted ones (`brk_completeness.py`): **25 `(i,j)` pairs over `σ = [1,4,8]` and `[1,2,3,6]`, every detected kink in `{\|λ_ij\|, R_ij}`, ZERO unexplained**. ⇒ `hzero` no longer rests on MSAEMIX.5's numerics and **BRK.5 drops to confirmation**, exactly as this group predicted. Remaining = the Lean assembly, which is BRK.8–12, not new mathematics |
 | **BRK.7** | the complete scheme (Steps 1–5), superseding the `K`-analysis route | ◑ **argument COMPLETE, Lean assembly open** — Steps 1–5 are stated below; Step 2 is the only theorem, the rest is bookkeeping. Tracked as BRK.8–12 |
@@ -139,7 +139,7 @@ Decide which before either is written, or the tree ends up with two proofs of on
 
 ### Task BRK.4 — Every order, not just the first
 
-> ✓ **DONE 2026-08-22, std-3** — `YukawaOZMix/MSAEMixBreakpointOrders.jump_all_orders_vanish`.
+> ✓ **DONE 2026-08-22, std-3** — `YukawaOZMix/MSAMixtureBreakpointOrders.jump_all_orders_vanish`.
 > The identity-theorem corollary is now Lean: `J` analytic on a preconnected open `U`, `= 0` on a
 > subinterval `⇒ iteratedDeriv n J x₀ = 0` ∀`n` (every `J_n = 0`). The `K`-range worry below is
 > resolved two ways: BRK.5 witnesses `J = 0` on a range numerically (8 distinct active intra-core
@@ -306,7 +306,7 @@ with `K` entering **only** through the scalar amplitudes (`A_j`, `q'_ij`, `W`, `
 The indicators carry no `K`. Hence `∂ⁿ_K Q_ab` has knots ⊆ `{λ_ba, σ_ab}` for every `n`.
 
 ⚠ **This is where the actual work is.** Steps 1, 3, 4, 5 are bookkeeping; Step 2 is the
-theorem. In a development that *defines* `Q` by this form (as `MSAEMixCore` does via
+theorem. In a development that *defines* `Q` by this form (as `MSAMixtureCore` does via
 `coreC1..coreC5`) it is close to definitional — but then the content moves to showing the
 BH root really has that form at unequal `σ`, general `N`, which is MSAEMIX.4 Stage 3's job.
 **Do not let Step 2 be assumed on one side and proved on the other.**
@@ -374,7 +374,7 @@ and the deferral was priced against the first.
 
 **Scope task:** establish whether span-membership + `K`-free boundaries can be proved from
 the Baxter/WH structure already in the tree (`MatBaxterFactorization`, `matFourierFactor`,
-`MSAEMixCore`'s basis) without the coefficient derivation. Outcome decides the paper's
+`MSAMixtureCore`'s basis) without the coefficient derivation. Outcome decides the paper's
 wording:
 
 - **small** ⇒ the breakpoint claim becomes fully Lean; sympy keeps the coefficients, which
@@ -408,11 +408,11 @@ is a knot there, but it is not a *mediated* one. Phrase the theorem as "the knot
 
 | task | step | discharged by | status |
 |---|---|---|---|
-| **BRK.8** | Step 1 — geometric smoothness of a core piece | ✓ **DONE, std-3** — `MSAEMixBreakpointScheme.contDiff_gForm`: each core piece `gForm` (polynomial + exponentials) is `ContDiff ℝ ⊤` (entire), so the core's only interior knot is the geometric `|λ_ij|` where `matCoreUneq` switches pieces |
-| **BRK.9** ⭐⭐ | Step 2 — `K`-independence of the knot set (`K` enters only the amplitudes; the indicators `1_{[λ,σ]}` carry no `K`, so `∂ⁿ_K Q` keeps knots ⊆ `{λ,σ}`) | **abstract half DONE** (`MSAEMixBreakpointOrders.contDiffOn_paramDeriv_coeffBasis`, std-3): `K` in coefficients only ⇒ every `∂ⁿ_K (Σ_k c_k(K)·b_k)` is `ContDiffOn` on the basis's smooth set — no new knot. **CONCRETE half DONE** (`MSAEMixBreakpointScheme.gForm_paramDeriv_contDiffOn`, std-3): now that MSAEMIX.4 Stage 3 (`MSAEMixCoreUneq`) supplies both pieces as the single form `gForm` in the shared 7-basis `{1,r,r²,r³,r⁴,e^{∓zr}}` with K-free boundaries (inner = `c2=c3=c4=0`), the abstract lemma instantiates on that basis ⇒ every `∂ⁿ_K` of the core form is `ContDiffOn` on each piece — no interior knot beyond `|λ_ij|` at any order. Only residual input = amplitudes `ContDiff` in `K` (BH root, carried as an explicit hyp) | ✓ **DONE — both halves, std-3.** Step 2 proved, not assumed, on both sides (abstract `contDiffOn_paramDeriv_coeffBasis` + concrete against Stage 3's `MSAEMixCoreUneq`) |
+| **BRK.8** | Step 1 — geometric smoothness of a core piece | ✓ **DONE, std-3** — `MSAMixtureBreakpointScheme.contDiff_gForm`: each core piece `gForm` (polynomial + exponentials) is `ContDiff ℝ ⊤` (entire), so the core's only interior knot is the geometric `|λ_ij|` where `matCoreUneq` switches pieces |
+| **BRK.9** ⭐⭐ | Step 2 — `K`-independence of the knot set (`K` enters only the amplitudes; the indicators `1_{[λ,σ]}` carry no `K`, so `∂ⁿ_K Q` keeps knots ⊆ `{λ,σ}`) | **abstract half DONE** (`MSAMixtureBreakpointOrders.contDiffOn_paramDeriv_coeffBasis`, std-3): `K` in coefficients only ⇒ every `∂ⁿ_K (Σ_k c_k(K)·b_k)` is `ContDiffOn` on the basis's smooth set — no new knot. **CONCRETE half DONE** (`MSAMixtureBreakpointScheme.gForm_paramDeriv_contDiffOn`, std-3): now that MSAEMIX.4 Stage 3 (`MSAMixtureCoreUneq`) supplies both pieces as the single form `gForm` in the shared 7-basis `{1,r,r²,r³,r⁴,e^{∓zr}}` with K-free boundaries (inner = `c2=c3=c4=0`), the abstract lemma instantiates on that basis ⇒ every `∂ⁿ_K` of the core form is `ContDiffOn` on each piece — no interior knot beyond `|λ_ij|` at any order. Only residual input = amplitudes `ContDiff` in `K` (BH root, carried as an explicit hyp) | ✓ **DONE — both halves, std-3.** Step 2 proved, not assumed, on both sides (abstract `contDiffOn_paramDeriv_coeffBasis` + concrete against Stage 3's `MSAMixtureCoreUneq`) |
 | **BRK.10** | Step 3 — convolution knot closure `knots(f⋆g) ⊆ knots f + knots g` (⟵ BRK.1) | Mathlib `support_convolution_subset` (+ mixture's `*_contDiffOn_*` for endpoints) | ✓ point |
-| **BRK.11** | Step 4 — the `σ_l` cancellation (⟵ BRK.2) | `MSAEMixBreakpoints.breakpoints_sigma_l_free` (std-3) | ✓ done, point |
-| **BRK.12** | Step 5 — every order: `∂ⁿ_K c` keeps its knot set `{|λ_ij|}` | ✓ **DONE, std-3** — `MSAEMixBreakpointScheme.coreForm_paramDeriv_contDiffOn`: `∂ⁿ_K` of the core `c = gForm/(2π r)` (`matCoreUneq`) is `ContDiffOn` away from `r=0`, every order ⇒ no interior knot beyond `|λ_ij|`. ⭐ **the closed-form core (Stage 3) makes the `n`-fold convolution/Leibniz resummation UNNECESSARY** — it follows from BRK.9 + the smooth `1/(2π r)` factor, not MA.16's `∂ⁿ` of a convolution |
+| **BRK.11** | Step 4 — the `σ_l` cancellation (⟵ BRK.2) | `MSAMixtureBreakpoints.breakpoints_sigma_l_free` (std-3) | ✓ done, point |
+| **BRK.12** | Step 5 — every order: `∂ⁿ_K c` keeps its knot set `{|λ_ij|}` | ✓ **DONE, std-3** — `MSAMixtureBreakpointScheme.coreForm_paramDeriv_contDiffOn`: `∂ⁿ_K` of the core `c = gForm/(2π r)` (`matCoreUneq`) is `ContDiffOn` away from `r=0`, every order ⇒ no interior knot beyond `|λ_ij|`. ⭐ **the closed-form core (Stage 3) makes the `n`-fold convolution/Leibniz resummation UNNECESSARY** — it follows from BRK.9 + the smooth `1/(2π r)` factor, not MA.16's `∂ⁿ` of a convolution |
 
 **Completable now:** BRK.10, BRK.11 (pointers to existing green lemmas), BRK.12's `n=1` base — recorded
 above. **The gap left for MSEMIX:** BRK.9 (Step 2), the K-independence of the *concrete* BH-root `Q` at
@@ -423,9 +423,9 @@ the piecewise-with-`K`-free-boundaries form of `Q`, so Step 2 is proved, not ass
 ### ⭐ Connected to the concrete Stage-3 core `matCoreUneq` (2026-08-22)
 
 The BRK.8/9/12 lemmas above are about the *abstract* piece form `gForm` / `gForm/(2π r)`. With
-MSAEMIX.4 Stage 3 now complete (`MSAEMixCoreUneq.matCoreUneq` = the concrete 2-piece exact-MSA core,
+MSAEMIX.4 Stage 3 now complete (`MSAMixtureCoreUneq.matCoreUneq` = the concrete 2-piece exact-MSA core,
 `K`-free geometric split at `lamA σ i j = |λ_ij|`), they are discharged **against the actual core**
-in `MSAEMixBreakpointScheme.lean` (all std-3 `[propext, Classical.choice, Quot.sound]`):
+in `MSAMixtureBreakpointScheme.lean` (all std-3 `[propext, Classical.choice, Quot.sound]`):
 
 * `matCoreUneq_contDiffOn_inner` / `_outer` — value level: `matCoreUneq` is `ContDiffOn ℝ ⊤` on
   `(0,|λ_ij|)` and on `(|λ_ij|,σ_ij)` (each piece reduces to `gForm/(2π r)`, `r ≠ 0`).
@@ -460,7 +460,7 @@ Two rules, and they are not the same rule:
    than hidden in the environment.
 
 ⭐ **Rule 2 already has precedent in this very group.** BRK.8–12 need "the BH-root amplitudes
-are `ContDiff` in `K`" and carry it as an explicit hyp — `MSAEMixBreakpointScheme` is std-3
+are `ContDiff` in `K`" and carry it as an explicit hyp — `MSAMixtureBreakpointScheme` is std-3
 throughout. That is the pattern to generalise, not a special case.
 
 **Test for a new `axiom`:** it is admissible only if the statement is needed by *many*
@@ -480,7 +480,7 @@ correct, and it is what makes the cross-check in the next section cheap — but 
   (per-piece kernels, 1e-14). Deriving one from the other **spends** that independence instead
   of banking it: a common-mode error in the unequal-σ derivation would then be invisible
   everywhere.
-- **It would re-route the clean chain through the fragile one.** `MSAEMixFinOne`'s `N = 1`
+- **It would re-route the clean chain through the fragile one.** `MSAMixtureFinOne`'s `N = 1`
   results currently reduce to the scalar `msaCoreCorr` directly. Under consolidation they would
   travel through a 2-piece 7-basis object whose inner piece is *empty* at equal σ — strictly
   more machinery to reach a strictly weaker-stated result.
@@ -493,8 +493,8 @@ correct, and it is what makes the cross-check in the next section cheap — but 
 
 ### Reference only — how the reduction would go, and the cross-check it makes cheap
 
-`MSAEMixBHRoot.lean:137`  `axiom matMSAexact6_hcore   … (hσ : ∀ i, sigma i = sig) …`
-`MSAEMixBHRootUneq.lean:113`  `axiom matMSAexactUneq_hcore … ` — **no `hσ`**, fully general in σ
+`MSAMixtureBHRoot.lean:137`  `axiom matExactMSA6_hcore   … (hσ : ∀ i, sigma i = sig) …`
+`MSAMixtureBHRootUneq.lean:113`  `axiom matExactMSAUneq_hcore … ` — **no `hσ`**, fully general in σ
 
 Same statement, two σ-generalities; the unequal-σ one is strictly stronger. **Not being done**
 — see the DECLINED box above. What survives is the *last clause*: the reduction's algebra is
@@ -529,7 +529,7 @@ reaches it only through `AVec`/`qpMat`/`Wt`/`Ct`. So the two can only agree *at 
 already carry, so nothing new is assumed — but it means the identity is not a free-variable
 `ring` identity even in sympy: `K` must be substituted out first.
 
-### ⛔⛔ RESULT (2026-08-24): the cross-check FOUND A BUG — `matMSAexact6_hcore` is FALSE for `sig ≠ 1`
+### ⛔⛔ RESULT (2026-08-24): the cross-check FOUND A BUG — `matExactMSA6_hcore` is FALSE for `sig ≠ 1`
 
 **Script:** [`../check_core_sigma_powers.py`](../check_core_sigma_powers.py) (3 stages, self-contained).
 
@@ -538,7 +538,7 @@ The corroboration check was expected to agree. It did not. Two independent `σ =
 | # | defect | file | status |
 |---|---|---|---|
 | 1 ⭐⭐ | `coshRatio` has **σ hardcoded to 1** | `YukawaOZ/MSACoreTransform.lean:78` | **SCALAR layer** — not a mixture bug |
-| 2 | `c1pair`/`coreC1` short **three σ powers** | `MSAEMixCore.lean:64` | mixture layer |
+| 2 | `c1pair`/`coreC1` short **three σ powers** | `MSAMixtureCore.lean:64` | mixture layer |
 
 **(1)** `coshRatio z r := ½(e^{z(r−1)} + e^{−z(r+1))}) − e^{−z}`. Correct is
 `½(e^{z(r−σ)} + e^{−z(r+σ)}) − e^{−zσ} = e^{−zσ}(cosh zr − 1)` — the published form is off by the
@@ -571,17 +571,17 @@ like progress and still left an O(1) error.
 
 #### ⭐⭐ It is a SCOPING problem, on a different axis from the `fff009a` rename
 
-`fff009a` renamed the pair `matMSAexact6_hcore → matMSAexactEqualDiam_hcore`,
-`matMSAexactUneq_hcore → matMSAexactUnequalDiam_hcore`, flagging the **equal vs unequal**
+`fff009a` renamed the pair `matExactMSA6_hcore → matExactMSAEqualDiam_hcore`,
+`matExactMSAUneq_hcore → matExactMSAUnequalDiam_hcore`, flagging the **equal vs unequal**
 diameter axis. The defect is on the orthogonal axis — **unit vs general** diameter — so the
 rename does not close it:
 
-- `matMSAexactEqualDiam_hcore` still binds `sig : ℝ` **free**; nothing in the chain pins it.
-- `matMSAexactEqualDiam_kspace_residual` (`MatMSAExactEqualDiamCertificate.lean:59`, new in
+- `matExactMSAEqualDiam_hcore` still binds `sig : ℝ` **free**; nothing in the chain pins it.
+- `matExactMSAEqualDiam_kspace_residual` (`MatExactMSAEqualDiamCertificate.lean:59`, new in
   a159cf3) binds `(z sig : ℝ)` too ⇒ **inherits the same defect one layer down.**
 
 ⭐ **And `coshRatio` is not a bug in its own layer.** The scalar development is unit-diameter *by
-construction*: `msaCoreCorr (Dt G K : ℝ)` takes **no σ argument at all**, and `msaexact_hcore`
+construction*: `msaCoreCorr (Dt G K : ℝ)` takes **no σ argument at all**, and `exactMSA_hcore`
 uses `cMSAtail K z 1` — a literal `1`. So `coshRatio z r` is a correct **unit-diameter** object
 whose *name and signature do not say so*, and the fault is that the mixture's `coreCorrection`
 — which does carry `sigma`, and uses it for the support boundary — consumes it at free `sig`.
@@ -639,7 +639,7 @@ Rename `EqualDiam → UnitDiam` on both axioms and add `hsig : sig = 1` (or drop
 matching the scalar layer's convention. This removes the false statement immediately, which is
 the part that cannot wait.
 
-**What it costs: the equal-but-non-unit-σ case, TEMPORARILY.** `matMSAexactUnequalDiam_hcore`
+**What it costs: the equal-but-non-unit-σ case, TEMPORARILY.** `matExactMSAUnequalDiam_hcore`
 carries no `hσ` and so covers that case in principle — `lamA σ i j = 0`, inner piece empty on
 `r > 0`, outer kernels live — ⚠ **but the unequal-diameter development is still in progress
 (user, 2026-08-24)**, so this is *deferred* coverage, not free coverage. Do not write the
@@ -653,7 +653,7 @@ general `a = b = s`. So the unequal-diameter *kernels* are demonstrably right at
 what is outstanding is the Lean development around them, not their correctness.
 
 ⚠ **Nothing downstream is waiting on it.** The paper cites none of these declarations (`grep`
-over all `.tex`: no `msaexact6`, `coreCorrection`, `coshRatio`, `msaCoreCorr`, `matMSACoreCorr`),
+over all `.tex`: no `exactMSA`, `coreCorrection`, `coshRatio`, `msaCoreCorr`, `matMSACoreCorr`),
 and every numerical result in the tree is in reduced units with σ = 1. So the gap is real but
 currently unloaded.
 
@@ -663,19 +663,19 @@ is strictly cheaper and leaves no false statement anywhere.
 
 #### ⚠⚠ What this means for the axiom
 
-`matMSAexact6_hcore` is stated for an **arbitrary** common diameter `sig` (`hσ : ∀ i, sigma i =
+`matExactMSA6_hcore` is stated for an **arbitrary** common diameter `sig` (`hσ : ∀ i, sigma i =
 sig`, with `sig` a free variable) and its RHS is `radial_fourier (matMSACoreCorr …)`. With
 either defect present the identity is **false for `sig ≠ 1`**. So it is not an unproven-but-true
 axiom: **as stated it is refuted**, and anything derived from it is unsound off `sig = 1`.
 Sound options: add `sig = 1` to the axiom, or land both repairs.
 
-⭐ **The unequal-σ axiom `matMSAexactUneq_hcore` is NOT affected.** `cC0o..cEpo` carry `a`, `b`
+⭐ **The unequal-σ axiom `matExactMSAUneq_hcore` is NOT affected.** `cC0o..cEpo` carry `a`, `b`
 explicitly in every kernel and `matCoreUneq` never calls `coshRatio`. This is precisely why the
 comparison worked: the two derivations were genuinely independent.
 
 ⚠ **Blast radius of (1) reaches the scalar layer.** `coshRatio`/`coreCorrection` are used by
-`YukawaOZ/MSAFullFactorization.lean` (`msaCoreCorr`, the `N = 1` core), `MSAExactCertificate.lean`,
-`MatMSAExactEqualDiamCertificate.lean`, `MSAEMixCore.lean`. Whether the scalar results are
+`YukawaOZ/MSAFullFactorization.lean` (`msaCoreCorr`, the `N = 1` core), `ExactMSACertificate.lean`,
+`MatExactMSAEqualDiamCertificate.lean`, `MSAMixtureCore.lean`. Whether the scalar results are
 affected depends on whether their σ is free or pinned to 1 — **check before repairing**, and check
 `radial_fourier_coreCorrection`'s closed form too, since it integrates this basis function.
 
@@ -704,7 +704,7 @@ Specialise `cC3o` to `a = b` and confirm it vanishes, then `cC1o/2π` against `c
 
 `matCoreUneq` = the Baxter convolution `−Q'_ij + Σ_l ρ_l Q'_il ⋆ Q_jl` — MSAEMIX.4 Stage 3's
 symbolic-σ derivation, validated to 1e-14. Under rule 2 this does **not** become a third axiom.
-It is the certificate *behind* `matMSAexactUneq_hcore`, and the paper says so in words.
+It is the certificate *behind* `matExactMSAUneq_hcore`, and the paper says so in words.
 
 ---
 
@@ -749,8 +749,8 @@ fold-straddling caveat.
 ## ✅ DONE (BRK.13) — the closure seam, discharged by the MSAEMIX group (grade 2)
 
 **✅ DONE (grade 2) — MSAEMIX supplied the hypothesis; BRK is closed about the physical core.**
-Discharged 2026-08-24 (commit `175b6cc`, `MSAEMixBaxterConv.lean`, out-of-`defaultTargets` lib
-`MSAEMixBaxterConvCertificate`). It defines the real-space `baxterQ` / `baxterQ'` and the physical
+Discharged 2026-08-24 (commit `175b6cc`, `MSAMixtureBaxterConv.lean`, out-of-`defaultTargets` lib
+`MSAMixtureBaxterConvCertificate`). It defines the real-space `baxterQ` / `baxterQ'` and the physical
 core `baxterConvCore = (−Q'_ij + Σ_l ρ_l ∫ Q'_il(t+r) Q_jl(t) dt)/(2π r)`, states the grade-2 seam
 axiom `baxterConvCore_eq_matCoreUneq` (`c = matCoreUneq` on the two open pieces, orientation
 `σ_j ≤ σ_i`), and feeds it into the scaffolding below. Verified — independent `#print axioms` of
@@ -758,14 +758,14 @@ axiom `baxterConvCore_eq_matCoreUneq` (`c = matCoreUneq` on the two open pieces,
 `baxterConvCoreK_paramDeriv_contDiffOn_{inner,outer}` =
 `[propext, Classical.choice, Quot.sound, baxterConvCore_eq_matCoreUneq]`; a normal `lake build`
 stays std-3 (the lib is out of the `LeanCode` root). The two-grade record below is the plan; grade
-2 was taken (grade 1 = the msaexact6-class infeasible convolution ring).
+2 was taken (grade 1 = the exactMSA-class infeasible convolution ring).
 
 **The hypothesis.** That the physical exact-MSA core `c` — the real-space Baxter convolution
 `(−Q'_ij + Σ_l ρ_l Q'_il ⋆ Q_jl)/(2π r)` — equals the closed form `matCoreUneq` on `(0, σ_ij)`.
 This is MSAEMIX.4 Stage 3's symbolic-`σ` derivation, validated to `1e-14`
 (`symbolic_{inner,outer}.py` / `verify_{inner,outer}.py`).
 
-**What BRK already ships against it** — `MSAEMixBreakpointScheme.lean`, all std-3
+**What BRK already ships against it** — `MSAMixtureBreakpointScheme.lean`, all std-3
 `[propext, Classical.choice, Quot.sound]`; the hypothesis enters as a *typed argument*, never an
 axiom:
 
@@ -784,7 +784,7 @@ axiom:
 1. **Prove** `c = matCoreUneq` — define `Q`, its supports, differentiate under the integral ⇒ BRK
    closes **unconditional std-3**. Heavy: a piecewise-convolution integral identity.
 2. **Or** assert it as one sympy-backed axiom, mirroring the `hcore` certificate's
-   `matMSAexactEqualDiam_kspace_residual` ⇒ BRK closes **std-3 + one convolution-identity axiom**
+   `matExactMSAEqualDiam_kspace_residual` ⇒ BRK closes **std-3 + one convolution-identity axiom**
    (the seam collapsed to a single named numerical fact — the POLICY's "one consolidated axiom").
 
 **Wiring cost on the BRK side once supplied: one line** — feed the discharged hypothesis into

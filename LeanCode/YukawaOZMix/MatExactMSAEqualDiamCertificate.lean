@@ -7,30 +7,30 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaOZMix.MSAEMixBHRoot
+import LeanCode.YukawaOZMix.MSAMixtureBHRoot
 
 /-!
 # MSAEMIX.4 equal-diameter `hcore`, Fourier layer discharged (out-of-build certificate)
 
 Group **MSAEMIX** (`proof_notes_msa_exact.md`).  This file is **not** imported by the `LeanCode`
 root, so a normal `lake build` never compiles it; build it on demand only
-(`lake build MatMSAExactEqualDiamCertificate`).
+(`lake build MatExactMSAEqualDiamCertificate`).
 
 ## What this file does
 
-`MSAEMixBHRoot.matMSAexactEqualDiam_hcore` (the equal-σ matrix closure-recovery axiom) is stated
+`MSAMixtureBHRoot.matExactMSAEqualDiam_hcore` (the equal-σ matrix closure-recovery axiom) is stated
 with two `radial_fourier` integrals on its right (`𝓕[matMSACoreCorr]ᵢⱼ`, `𝓕[matMSAtail]ᵢⱼ`).  This
 file **discharges that Fourier/definitional layer** — the genuinely provable part — reducing the
 equal-diameter `hcore` to one **pure cos/sin/exp k-space identity**
-(`matMSAexactEqualDiam_kspace_residual`), which carries *no* `radial_fourier` and *no* integral.
-Concretely, `matMSAexactEqualDiam_hcore_of_residual` proves the *exact statement* of the axiom from
+(`matExactMSAEqualDiam_kspace_residual`), which carries *no* `radial_fourier` and *no* integral.
+Concretely, `matExactMSAEqualDiam_hcore_of_residual` proves the *exact statement* of the axiom from
 the residual by rewriting both transforms into closed form via the matrix Fourier bridges
 `radial_fourier_matMSACoreCorr` / `radial_fourier_matMSAtail` and then the five scalar interval
 formulas `psi1/2/4_formula` / `one_sub_exp_sin_integral` / `coshRatio_sin_integral` (both at the
 per-entry upper limit `σ_ij = sigMix σ i j`).  This part compiles.
 
 So the *only* thing left axiomatic is the k-space polynomial identity itself — the direct matrix
-analog of the scalar `MSAExactCertificate.msaexact_hcore_of_residual` reduction.
+analog of the scalar `ExactMSACertificate.exactMSA_hcore_of_residual` reduction.
 
 ## Why the residual stays an axiom
 
@@ -39,13 +39,13 @@ The residual is the matrix closure-recovery relation
 (equal σ), gated by `hroot`/`hσ` and false off-root.  It is **certified in sympy**
 (`msaemix_core_coeffs.py`, parent repo): all five closed-form core coefficients `c₁..c₅` match the
 exact factor-product extraction (held-out `~1e-12`, binary/ternary, unequal ρ).  Its Lean discharge
-is the same `ring`-infeasible high-degree normalization as the scalar `msaexact_kspace_residual`
+is the same `ring`-infeasible high-degree normalization as the scalar `exactMSA_kspace_residual`
 (measured weeks/~200 GB), asserted here as one explicit sympy-computation axiom.
 -/
 
-open MSAEMix Real FMSA.HardSphere FMSA.MSAExact
+open MSAMixture Real FMSA.HardSphere FMSA.ExactMSA
 
-namespace FMSA.MSAExact.MatEqualDiamCertificate
+namespace FMSA.ExactMSA.MatEqualDiamCertificate
 
 variable {N : ℕ}
 
@@ -56,7 +56,7 @@ closure-recovery identity with *both* radial transforms in closed `cos/sin/exp` 
 transforms evaluated by the `psi1/2/4`/`one_sub_exp`/`coshRatio` interval formulas at `σ_ij`.  Gated
 by the physical root `hroot` and equal-σ `hσ` (false off-root).  **Certified in sympy**
 (`msaemix_core_coeffs.py`); ring-infeasible in Lean (see module docstring). -/
-axiom matMSAexactEqualDiam_kspace_residual (z sig : ℝ) (rho sigma : Fin N → ℝ)
+axiom matExactMSAEqualDiam_kspace_residual (z sig : ℝ) (rho sigma : Fin N → ℝ)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (k : ℝ) (hk : k ≠ 0) (hz : 0 < z) (hsig1 : 0 < sig)
     (hσ : ∀ i, sigma i = sig) (hroot : MixBHRoot z sig rho sigma Gt Dt K) (i j : Fin N) :
     (FtHS z sig rho sigma (Complex.I * k)
@@ -100,11 +100,11 @@ axiom matMSAexactEqualDiam_kspace_residual (z sig : ℝ) (rho sigma : Fin N → 
                   / (z ^ 2 + k ^ 2)) : ℝ) : ℂ))
 
 /-- ⭐ **MSAEMIX.4 equal-diameter `hcore`, Fourier layer fully formalized.**  The *exact* statement
-of `MSAEMixBHRoot.matMSAexactEqualDiam_hcore`, here **derived** from the pure-k-space
-`matMSAexactEqualDiam_kspace_residual`: the two `radial_fourier` transforms are rewritten into
+of `MSAMixtureBHRoot.matExactMSAEqualDiam_hcore`, here **derived** from the pure-k-space
+`matExactMSAEqualDiam_kspace_residual`: the two `radial_fourier` transforms are rewritten into
 closed form by the matrix bridges + interval formulas, isolating the remaining gap to the single
 identity.  (Requires the physical `0 < z`, `0 < sig`, which the axiom leaves implicit.) -/
-theorem matMSAexactEqualDiam_hcore_of_residual (z sig : ℝ) (rho sigma : Fin N → ℝ)
+theorem matExactMSAEqualDiam_hcore_of_residual (z sig : ℝ) (rho sigma : Fin N → ℝ)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (k : ℝ) (hk : k ≠ 0) (hz : 0 < z) (hsig1 : 0 < sig)
     (hσ : ∀ i, sigma i = sig) (hroot : MixBHRoot z sig rho sigma Gt Dt K) (i j : Fin N) :
     (FtHS z sig rho sigma (Complex.I * k)
@@ -123,6 +123,6 @@ theorem matMSAexactEqualDiam_hcore_of_residual (z sig : ℝ) (rho sigma : Fin N 
       psi1_formula hk (sigMix sigma i j), psi2_formula hk (sigMix sigma i j),
       psi4_formula hk (sigMix sigma i j),
       one_sub_exp_sin_integral hzk hk, coshRatio_sin_integral hzk hk]
-  exact matMSAexactEqualDiam_kspace_residual z sig rho sigma Gt Dt K k hk hz hsig1 hσ hroot i j
+  exact matExactMSAEqualDiam_kspace_residual z sig rho sigma Gt Dt K k hk hz hsig1 hσ hroot i j
 
-end FMSA.MSAExact.MatEqualDiamCertificate
+end FMSA.ExactMSA.MatEqualDiamCertificate

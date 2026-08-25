@@ -53,7 +53,7 @@ reproducing MZERO.2's recorded `Δ Im ≈ π` GO gate.
 
 Layering: `HSMixture/`, so the statement is given at the `detC` / `Q0_mat_c` level.  The
 `YukawaDCF/MixtureRealSpace.lean` alias `Qphys` is *definitionally* the matrix appearing in
-`Q0_mat_c_phys_det_zeros_infinite`, so an `FMSA.MRS`-side restatement is a one-liner if
+`Q0_mat_c_phys_det_zeros_infinite`, so an `FMSA.MixtureBaxterCore`-side restatement is a one-liner if
 ever wanted (it cannot live here — `HSMixture/` may not import `YukawaDCF/`).
 
 Status: ✓ axiom-clean.

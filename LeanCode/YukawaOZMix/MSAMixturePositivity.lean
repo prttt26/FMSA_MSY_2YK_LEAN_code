@@ -56,7 +56,7 @@ returns a strictly positive compressibility there.
 No new axiom: everything is `Matrix.det_mul`, `Matrix.det_transpose` and `Finset.sum_nonneg`.
 -/
 
-namespace MSAEMix
+namespace MSAMixture
 
 open Matrix Finset
 
@@ -159,4 +159,4 @@ example : ((stabilityMat (!![2, 1; 1, 2] : Matrix (Fin 2) (Fin 2) ℝ)).det = 9)
   · rw [mixStability_eq_det_sq]; norm_num [Matrix.det_fin_two_of]
   · norm_num [mixCompressibility, colSum, Fin.sum_univ_two]
 
-end MSAEMix
+end MSAMixture

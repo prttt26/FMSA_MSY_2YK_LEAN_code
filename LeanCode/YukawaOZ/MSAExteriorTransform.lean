@@ -12,14 +12,14 @@ import LeanCode.YukawaOZ.MSADCFTransform
 /-!
 # MSAEXACT.1 — the exterior (non-compact) Yukawa transforms of the Baxter factor
 
-Group **MSAEXACT** (`proof_notes_msa_exact.md`).  Numerical partner: `msaexact1_cside_check.py`.
+Group **MSAEXACT** (`proof_notes_msa_exact.md`).  Numerical partner: `exactMSA_cside_check.py`.
 
 The physical hard-core Yukawa MSA has an **infinite-range** direct correlation function
 (`c = −βu = K e^{−z(r−σ)}/r` outside the core), so its Baxter factorisation function `q(r)` is
 **not** compactly supported — it carries a Yukawa tail `∝ e^{−zr}` on all of `(0, ∞)`.  Concretely
 `Q̂(s)` has a genuine simple pole at `s = −z` (residue the amplitude `D = D̃ e^{z}`), which a
 transform over `[0, σ]` — being entire in `k` — can never reproduce.  (This is exactly why the
-compact ansatz `q0_poly + D e^{−zr}` of `msaexact1_iff_core` cannot equal the physical factor: an
+compact ansatz `q0_poly + D e^{−zr}` of `exactMSA_iff_core` cannot equal the physical factor: an
 entire function cannot equal one with poles.)
 
 The two half-line transforms this file supplies are the ones the *non-compact* Baxter factor needs:
@@ -32,7 +32,7 @@ route (an explicit antiderivative that decays because the exponential does).
 
 open MeasureTheory intervalIntegral Real Set Filter Topology
 
-namespace FMSA.MSAExact
+namespace FMSA.ExactMSA
 
 /-- The half-line integrand `e^{−zr}cos(kr)` decays exponentially, so it is integrable on `(0, ∞)`.
 -/
@@ -122,4 +122,4 @@ theorem exp_sin_integral_Ioi {z : ℝ} (hz : 0 < z) (k : ℝ) :
     add_zero] at h
   exact h
 
-end FMSA.MSAExact
+end FMSA.ExactMSA

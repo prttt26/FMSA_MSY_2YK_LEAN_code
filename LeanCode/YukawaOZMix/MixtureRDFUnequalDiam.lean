@@ -850,7 +850,7 @@ end FMSA.MixtureBaxter
 
 namespace FMSA.MixtureBaxter
 
-open FMSA.MatrixQ0 FMSA.MixtureHSDCF FMSA.HardSphere FMSA.MRS MeasureTheory
+open FMSA.MatrixQ0 FMSA.MixtureHSDCF FMSA.HardSphere FMSA.MixtureBaxterCore MeasureTheory
 
 variable {N : ℕ}
 
@@ -971,7 +971,7 @@ end FMSA.MixtureBaxter
 
 namespace FMSA.MixtureBaxter
 
-open FMSA.MatrixQ0 FMSA.MixtureHSDCF FMSA.HardSphere FMSA.MRS MeasureTheory
+open FMSA.MatrixQ0 FMSA.MixtureHSDCF FMSA.HardSphere FMSA.MixtureBaxterCore MeasureTheory
 
 variable {N : ℕ}
 
@@ -1089,7 +1089,7 @@ end FMSA.MixtureBaxter
 
 namespace FMSA.MixtureBaxter
 
-open FMSA.MatrixQ0 FMSA.MixtureHSDCF FMSA.HardSphere FMSA.MRS FMSA.MixtureOzStar MeasureTheory
+open FMSA.MatrixQ0 FMSA.MixtureHSDCF FMSA.HardSphere FMSA.MixtureBaxterCore FMSA.MixtureOzStar MeasureTheory
 
 variable {N : ℕ}
 
@@ -1245,7 +1245,7 @@ end FMSA.MixtureBaxter
 
 namespace FMSA.MixtureBaxter
 
-open FMSA.MatrixQ0 FMSA.MixtureHSDCF FMSA.HardSphere FMSA.MRS FMSA.MixtureOzStar MeasureTheory
+open FMSA.MatrixQ0 FMSA.MixtureHSDCF FMSA.HardSphere FMSA.MixtureBaxterCore FMSA.MixtureOzStar MeasureTheory
 
 variable {N : ℕ}
 

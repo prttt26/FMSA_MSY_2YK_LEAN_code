@@ -54,7 +54,7 @@ that the matrix ansatz *recovers* the MSA closure `c_ij = −βu_ij` on the exte
 MSAEXACT.1, and is not attempted here.
 -/
 
-namespace MSAEMix
+namespace MSAMixture
 
 open Finset Real
 
@@ -160,4 +160,4 @@ theorem cancellation_star_fin_one (z : ℝ) (ρ σ : Fin 1 → ℝ)
   have := cancellation_star z ρ σ Gt Dt 0 0
   simpa [Wt] using this
 
-end MSAEMix
+end MSAMixture

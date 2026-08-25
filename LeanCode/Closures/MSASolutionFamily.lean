@@ -67,7 +67,7 @@ theorem exists_contDiffAt_root_of_prodDomain_ift {n : ℕ∞ω} (hn : n ≠ 0)
 
 /-! ## The `γ = 1` payoff — FOEQ.5 hypothesis-free for the concrete Yukawa system -/
 
-open FMSA.MSAExact FMSA.FirstOrderEquivalence in
+open FMSA.ExactMSA FMSA.FirstOrderEquivalence in
 /-- ⭐⭐ **MSAFAM.2, assembled — FOEQ.5's capstone, hypothesis-free at `γ = 1`.**  For the *concrete*
 Blum–Høye system `bhF`/`bhP` at `N = 1` and its PY base point `G₀ = G0 ξ z`, all four hypotheses of
 `msa_amplitude_differentiable_of_bh_shape` are discharged (MSAFAM.2): the `C^∞` smoothness, the

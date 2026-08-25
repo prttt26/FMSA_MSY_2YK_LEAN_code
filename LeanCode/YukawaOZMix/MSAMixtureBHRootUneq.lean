@@ -7,27 +7,27 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaOZMix.MSAEMixBHRoot
-import LeanCode.YukawaOZMix.MSAEMixConcrete
-import LeanCode.YukawaOZMix.MSAEMixFactorization
-import LeanCode.YukawaOZMix.MSAEMixCoreUneq
+import LeanCode.YukawaOZMix.MSAMixtureBHRoot
+import LeanCode.YukawaOZMix.MSAMixtureConcrete
+import LeanCode.YukawaOZMix.MSAMixtureFactorization
+import LeanCode.YukawaOZMix.MSAMixtureCoreUneq
 
 /-!
 # MSAEMIX.4 — the UNEQUAL-σ matrix `hcore` axiom (BH-root gated) and MSAEMIX.1 at unequal diameter
 
-The unequal-σ analog of `MSAEMixBHRoot.lean`.  The unequal-σ mixture Baxter factor `qhatMixCuneq` is
+The unequal-σ analog of `MSAMixtureBHRoot.lean`.  The unequal-σ mixture Baxter factor `qhatMixCuneq` is
 the Laplace transform of the real-space `Q_ij` (poly on `[λ_ij, σ_ij]` with the `λ_ij=(σ_j−σ_i)/2`
 support shift and row width `σ_i`, plus the Yukawa tail); at equal σ (`σ_i=σ_j`) it collapses to the
 equal-σ `qhatMixC` (`λ_ij=0`, common `σ`).  With the unequal-σ HS / MSA / increment factors, the
-BH-root gate `MixBHRootUneq`, and the closure-recovery axiom `matMSAexactUnequalDiam_hcore` (whose
-core is the exactly-derived, validated `MSAEMixCoreUneq.matCoreUneq`), MSAEMIX.1 closes at unequal
-diameter through the abstract `matEMIXfactorization_of_core` — mirroring `matMSAemix1_equalDiam`.
+BH-root gate `MixBHRootUneq`, and the closure-recovery axiom `matExactMSAUnequalDiam_hcore` (whose
+core is the exactly-derived, validated `MSAMixtureCoreUneq.matCoreUneq`), MSAEMIX.1 closes at unequal
+diameter through the abstract `matMixtureFactorization_of_core` — mirroring `matMSAmixture_equalDiam`.
 -/
 
 open Real MeasureTheory
-open FMSA.Q0Complex FMSA.MSAExact FMSA.HardSphere FMSA.MatrixQ0 FMSA.MixtureOzStar
+open FMSA.Q0Complex FMSA.ExactMSA FMSA.HardSphere FMSA.MatrixQ0 FMSA.MixtureOzStar
 
-namespace MSAEMix
+namespace MSAMixture
 
 open scoped BigOperators
 
@@ -86,9 +86,9 @@ noncomputable def matCoreCorrUneq (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt : Ma
   let a := if σ j ≤ σ i then i else j
   let b := if σ j ≤ σ i then j else i
   if r ≤ edgeHi σ i j then
-    MSAEMixCoreUneq.matCoreUneq z rho σ (AVec z rho σ Gt Dt) (qpMat z rho σ Gt Dt)
+    MSAMixtureCoreUneq.matCoreUneq z rho σ (AVec z rho σ Gt Dt) (qpMat z rho σ Gt Dt)
         (Wt z rho Gt Dt) (Ct z rho σ Gt Dt) a b r
-      - MSAEMixCoreUneq.matCoreUneq z rho σ (A0Vec rho σ) (qp0Mat rho σ) 0 0 a b r
+      - MSAMixtureCoreUneq.matCoreUneq z rho σ (A0Vec rho σ) (qp0Mat rho σ) 0 0 a b r
   else 0
 
 /-! ### The unequal-σ BH-root gate -/
@@ -116,8 +116,8 @@ Baxter product's coupling increment equals `−√(ρ_iρ_j)(𝓕[matCoreCorrUne
 kernel of `matCoreUneq` is the EXACT closed form from the case-split-free symbolic-σ Baxter
 convolution (σ_l-independent), reproducing the numerical convolution to `1e-14` on both pieces.  A
 *physics-computation* axiom at the physical root (unequal-σ analog of
-`matMSAexactEqualDiam_hcore`). -/
-axiom matMSAexactUnequalDiam_hcore (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
+`matExactMSAEqualDiam_hcore`). -/
+axiom matExactMSAUnequalDiam_hcore (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
     (k : ℝ) (hroot : MixBHRootUneq z rho σ Gt Dt K) (i j : Fin N) :
     (FtHSuneq z rho σ (Complex.I * k) * (Ft1uneq z rho σ Gt Dt (-(Complex.I * k))).transpose) i j
       + (Ft1uneq z rho σ Gt Dt (Complex.I * k)
@@ -131,9 +131,9 @@ axiom matMSAexactUnequalDiam_hcore (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K :
 /-- ⭐ **MSAEMIX.1 at unequal diameter.**  Given the unequal-σ hard-sphere symmetric factorization
 `hHS` and the closure-recovery axiom at a `MixBHRootUneq`, the full MSA factorization holds:
 `((F̃₀+F̃₁)(F̃₀ⁿ+F̃₁ⁿ)ᵀ)ᵢⱼ = δᵢⱼ − √(ρ_iρ_j)(ĉ_HS,ij + 𝓕[c_core]ᵢⱼ + 𝓕[c_tail]ᵢⱼ)`, the physical
-unequal-σ MSA mixture DCF.  Pure algebra on the abstract `matEMIXfactorization_of_core` (√-weight
-folded into the DCFs, `ρ := 1`), mirroring `matMSAemix1_equalDiam`. -/
-theorem matMSAemix1_unequalDiam (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
+unequal-σ MSA mixture DCF.  Pure algebra on the abstract `matMixtureFactorization_of_core` (√-weight
+folded into the DCFs, `ρ := 1`), mirroring `matMSAmixture_equalDiam`. -/
+theorem matMSAmixture_unequalDiam (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
     (k : ℝ) (hroot : MixBHRootUneq z rho σ Gt Dt K) (cHShat : Fin N → Fin N → ℂ)
     (hHS : ∀ i j, (FtHSuneq z rho σ (Complex.I * k)
         * (FtHSuneq z rho σ (-(Complex.I * k))).transpose) i j
@@ -145,7 +145,7 @@ theorem matMSAemix1_unequalDiam (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Ma
         - (cHShat i j + (Real.sqrt (rho i * rho j) : ℂ)
             * ((radial_fourier (matCoreCorrUneq z rho σ Gt Dt i j) k : ℂ)
               + (radial_fourier (matMSAtail K z σ i j) k : ℂ))) := by
-  have h := matEMIXfactorization_of_core (FtHSuneq z rho σ (Complex.I * k))
+  have h := matMixtureFactorization_of_core (FtHSuneq z rho σ (Complex.I * k))
     (Ft1uneq z rho σ Gt Dt (Complex.I * k)) (FtHSuneq z rho σ (-(Complex.I * k)))
     (Ft1uneq z rho σ Gt Dt (-(Complex.I * k))) 1 cHShat
     (fun i j => cHShat i j + (Real.sqrt (rho i * rho j) : ℂ)
@@ -154,7 +154,7 @@ theorem matMSAemix1_unequalDiam (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Ma
     (by intro i j; simpa using hHS i j)
     (by
       intro i j
-      have hc := matMSAexactUnequalDiam_hcore z rho σ Gt Dt K k hroot i j
+      have hc := matExactMSAUnequalDiam_hcore z rho σ Gt Dt K k hroot i j
       simpa using hc) i j
   simpa using h
 
@@ -246,11 +246,11 @@ theorem FtHSuneq_mul_transpose (z : ℝ) (rho σ : Fin N → ℝ) (hrho : ∀ l,
 /-- ⭐⭐ **MSAEMIX.1 at unequal diameter, `hHS` DISCHARGED (no HS hypothesis).**  The hard-sphere
 symmetric factorization is now supplied by the pure `ftilde`-algebra `FtHSuneq_mul_transpose` (the
 HS DCF in Baxter-factor form `cHShatUneq`), so the only remaining input is the closure axiom
-`matMSAexactUnequalDiam_hcore` at the `MixBHRootUneq` gate.  This mirrors how the equal-σ
-`matMSAemix1_equalDiam_WH` removes the ad-hoc `hHS` — but here with NO Wiener–Hopf atoms
+`matExactMSAUnequalDiam_hcore` at the `MixBHRootUneq` gate.  This mirrors how the equal-σ
+`matMSAmixture_equalDiam_WH` removes the ad-hoc `hHS` — but here with NO Wiener–Hopf atoms
 (`hKDEF`/`hbridge`/`hWH`): at unequal σ the HS factorization is free algebra, so `#print axioms`
-carries only `matMSAexactUnequalDiam_hcore` (std-3 + the one physics axiom). -/
-theorem matMSAemix1_unequalDiam_of_hcore (z : ℝ) (rho σ : Fin N → ℝ) (hrho : ∀ l, 0 ≤ rho l)
+carries only `matExactMSAUnequalDiam_hcore` (std-3 + the one physics axiom). -/
+theorem matMSAmixture_unequalDiam_of_hcore (z : ℝ) (rho σ : Fin N → ℝ) (hrho : ∀ l, 0 ≤ rho l)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (k : ℝ) (hroot : MixBHRootUneq z rho σ Gt Dt K)
     (i j : Fin N) :
     ((FtHSuneq z rho σ (Complex.I * k) + Ft1uneq z rho σ Gt Dt (Complex.I * k))
@@ -260,7 +260,7 @@ theorem matMSAemix1_unequalDiam_of_hcore (z : ℝ) (rho σ : Fin N → ℝ) (hrh
         - (cHShatUneq z rho σ k i j + (Real.sqrt (rho i * rho j) : ℂ)
             * ((radial_fourier (matCoreCorrUneq z rho σ Gt Dt i j) k : ℂ)
               + (radial_fourier (matMSAtail K z σ i j) k : ℂ))) :=
-  matMSAemix1_unequalDiam z rho σ Gt Dt K k hroot (cHShatUneq z rho σ k)
+  matMSAmixture_unequalDiam z rho σ Gt Dt K k hroot (cHShatUneq z rho σ k)
     (fun i j => FtHSuneq_mul_transpose z rho σ hrho k i j) i j
 
 /-! ### The physical `radial_fourier(Φ_HS)` form — the unequal-σ HS Wiener–Hopf identity -/
@@ -272,28 +272,28 @@ noncomputable def matCoreHSuneq (z : ℝ) (rho σ : Fin N → ℝ) (i j : Fin N)
   let a := if σ j ≤ σ i then i else j
   let b := if σ j ≤ σ i then j else i
   if r ≤ edgeHi σ i j then
-    MSAEMixCoreUneq.matCoreUneq z rho σ (A0Vec rho σ) (qp0Mat rho σ) 0 0 a b r
+    MSAMixtureCoreUneq.matCoreUneq z rho σ (A0Vec rho σ) (qp0Mat rho σ) 0 0 a b r
   else 0
 
 /-- ⭐ **The unequal-σ HS Baxter–Fourier–Wiener–Hopf identity (sympy-backed axiom).**  The
 Baxter-`Q̂`-combo HS DCF `cHShatUneq` equals `√(ρᵢρⱼ)·𝓕[Φ_HS]` — the radial Fourier transform of the
 physical real-space HS-mixture DCF `matCoreHSuneq`.  I.e. the HS Baxter factorization's `k`-space
 product is the transform of the real-space HS DCF: `Q̂_ij(ik)+Q̂_ji(−ik)−Σₗρₗ Q̂_il(ik)Q̂_jl(−ik) =
-radial_fourier(Φ_HS,ij)`.  This is the coupling-`0` sibling of `matMSAexactUnequalDiam_hcore` (same
+radial_fourier(Φ_HS,ij)`.  This is the coupling-`0` sibling of `matExactMSAUnequalDiam_hcore` (same
 Baxter-Fourier class, `verify_{inner,outer}.py` / `msaemix_hcore_cert.py` at HS amps, `1e-14`);
 the equal-σ analog is `matSF_of_baxterFourierWH` (scalar-σ, does not transfer to per-pair supports).
-A direct Lean proof is the msaexact6-class ring, measured infeasible — hence the one named axiom. -/
+A direct Lean proof is the exactMSA-class ring, measured infeasible — hence the one named axiom. -/
 axiom matHSexactUnequalDiam_kspace (z : ℝ) (rho σ : Fin N → ℝ) (k : ℝ) (i j : Fin N) :
     cHShatUneq z rho σ k i j
       = (Real.sqrt (rho i * rho j) : ℂ) * (radial_fourier (matCoreHSuneq z rho σ i j) k : ℂ)
 
 /-- ⭐⭐⭐ **MSAEMIX.1 at unequal σ in the physical `radial_fourier` form — matches the equal-σ
 grade.**  Substituting the HS Baxter–Fourier identity `matHSexactUnequalDiam_kspace` into
-`matMSAemix1_unequalDiam_of_hcore`, the full unequal-σ MSA mixture DCF is the radial Fourier
+`matMSAmixture_unequalDiam_of_hcore`, the full unequal-σ MSA mixture DCF is the radial Fourier
 transform of a real-space function: HS core `Φ_HS` + increment core + Yukawa tail — the shape of the
-equal-σ `matMSAemix1_equalDiam_WH`.  `#print axioms` carries std-3 + the two Baxter-Fourier axioms
-`matMSAexactUnequalDiam_hcore` (increment) and `matHSexactUnequalDiam_kspace` (HS anchor). -/
-theorem matMSAemix1_unequalDiam_physical (z : ℝ) (rho σ : Fin N → ℝ) (hrho : ∀ l, 0 ≤ rho l)
+equal-σ `matMSAmixture_equalDiam_WH`.  `#print axioms` carries std-3 + the two Baxter-Fourier axioms
+`matExactMSAUnequalDiam_hcore` (increment) and `matHSexactUnequalDiam_kspace` (HS anchor). -/
+theorem matMSAmixture_unequalDiam_physical (z : ℝ) (rho σ : Fin N → ℝ) (hrho : ∀ l, 0 ≤ rho l)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (k : ℝ) (hroot : MixBHRootUneq z rho σ Gt Dt K)
     (i j : Fin N) :
     ((FtHSuneq z rho σ (Complex.I * k) + Ft1uneq z rho σ Gt Dt (Complex.I * k))
@@ -304,8 +304,8 @@ theorem matMSAemix1_unequalDiam_physical (z : ℝ) (rho σ : Fin N → ℝ) (hrh
             * ((radial_fourier (matCoreHSuneq z rho σ i j) k : ℂ)
               + (radial_fourier (matCoreCorrUneq z rho σ Gt Dt i j) k : ℂ)
               + (radial_fourier (matMSAtail K z σ i j) k : ℂ)) := by
-  rw [matMSAemix1_unequalDiam_of_hcore z rho σ hrho Gt Dt K k hroot i j,
+  rw [matMSAmixture_unequalDiam_of_hcore z rho σ hrho Gt Dt K k hroot i j,
     matHSexactUnequalDiam_kspace z rho σ k i j]
   ring
 
-end MSAEMix
+end MSAMixture

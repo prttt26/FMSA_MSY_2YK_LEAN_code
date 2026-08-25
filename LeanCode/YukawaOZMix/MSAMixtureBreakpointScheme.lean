@@ -7,24 +7,24 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaOZMix.MSAEMixCoreUneq
-import LeanCode.YukawaOZMix.MSAEMixBreakpointOrders
+import LeanCode.YukawaOZMix.MSAMixtureCoreUneq
+import LeanCode.YukawaOZMix.MSAMixtureBreakpointOrders
 
 /-!
 # BRK.8/9/12 — the exact-MSA core knot scheme, discharged against MSAEMIX.4 Stage 3
 
 This file (1) discharges the abstract BRK.8/9/12 lemmas (piece smoothness, `K`-parameter
 smoothness, and the `1/(2π r)`-divided core), then (2) **connects them to the concrete Stage-3 core
-`MSAEMixCoreUneq.matCoreUneq`** (the `matCoreUneq_*` theorems at the end): the actual core is
+`MSAMixtureCoreUneq.matCoreUneq`** (the `matCoreUneq_*` theorems at the end): the actual core is
 `ContDiffOn`, at every `K`-order, on each side of its single interior breakpoint `|λ_ij|` — which
 MSAEMIX.5 pins as the unique `σ_l`-free interior crossing.
 
 Group **BRK** (`proof_notes_breakpoints_MSA.md`).  BRK.9 (Step 2 of the BRK.7 scheme) is the
 `K`-independence of the exact-MSA core's knot set.  The *abstract* half is
-`MSAEMixBreakpointOrders.contDiffOn_paramDeriv_coeffBasis` (K in coefficients only ⇒ K-derivatives
+`MSAMixtureBreakpointOrders.contDiffOn_paramDeriv_coeffBasis` (K in coefficients only ⇒ K-derivatives
 keep the fixed basis, no new knot).  The *concrete* half needs the exact-MSA core to actually have
 that form — a finite sum `Σ_k coeff_k(K)·basis_k(r)` with **`K`-free piece boundaries and fixed
-basis** — which is **MSAEMIX.4 Stage 3** (`MSAEMixCoreUneq`): the core is 2-piece on `(0, σ_ij)` at
+basis** — which is **MSAEMIX.4 Stage 3** (`MSAMixtureCoreUneq`): the core is 2-piece on `(0, σ_ij)` at
 the geometric breakpoint `|λ_ij|`, and *both* pieces are the single form `gForm` in the shared
 7-basis `{1, r, r², r³, r⁴, e^{−zr}, e^{zr}}` (the inner piece is `gForm` with `c2 = c3 = c4 = 0`),
 with `K` entering only through the coefficients (`c0,…,cEp`), never the fixed basis.
@@ -36,10 +36,10 @@ The only remaining input is that the amplitudes are themselves `ContDiff` in `K`
 as an explicit hypothesis, not baked in.
 -/
 
-open MSAEMix
-open MSAEMixCoreUneq
+open MSAMixture
+open MSAMixtureCoreUneq
 
-namespace FMSA.MSAExact.BRK
+namespace FMSA.ExactMSA.Breakpoint
 
 variable {N : ℕ}
 
@@ -120,7 +120,7 @@ theorem coreForm_paramDeriv_contDiffOn (c0 c1 c2 c3 c4 cEm cEp : ℝ → ℝ) (z
 /-! ### Connecting the scheme to the concrete Stage-3 core `matCoreUneq`
 
 The BRK.8/9/12 lemmas above are about the abstract piece form `gForm` / `gForm / (2π r)`.
-Discharging them against MSAEMIX.4 Stage 3 (`MSAEMixCoreUneq.matCoreUneq`, the concrete 2-piece
+Discharging them against MSAEMIX.4 Stage 3 (`MSAMixtureCoreUneq.matCoreUneq`, the concrete 2-piece
 exact-MSA core with `K`-free geometric split at `lamA σ i j = |λ_ij|`) gives the statement **about
 the actual core**: `matCoreUneq` is `ContDiffOn` — at every `K`-order — on each side of the interior
 `|λ_ij|`, which MSAEMIX.5 (`interior_breakpoint_eq_absLam`) pins as the unique `σ_l`-free interior
@@ -346,4 +346,4 @@ theorem paramDeriv_contDiffOn_outer_of_eqOn (z : ℝ) (σ : Fin N → ℝ) (ρ A
     ?_
   intro r _; rw [hcK r]
 
-end FMSA.MSAExact.BRK
+end FMSA.ExactMSA.Breakpoint

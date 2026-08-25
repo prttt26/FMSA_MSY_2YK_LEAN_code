@@ -47,7 +47,7 @@ had to supply a different rule (`MSAEXACT.3`'s `physical_baxter_factor_unique`, 
 No new axiom: `ring`, `field_simp` and `Finset` cardinality only.
 -/
 
-namespace MSAEMix
+namespace MSAMixture
 
 open Matrix Finset
 
@@ -152,4 +152,4 @@ theorem bh41_conditions_card_two :
 theorem bh41_conditions_card_three :
     ((Finset.univ : Finset (Fin 3 × Fin 3)).filter fun p => p.1 < p.2).card = 3 := by decide
 
-end MSAEMix
+end MSAMixture

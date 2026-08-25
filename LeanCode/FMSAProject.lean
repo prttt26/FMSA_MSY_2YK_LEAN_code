@@ -45,17 +45,17 @@ Measured 2026-08-12 against Mathlib `v4.31.0` (rev `fabf563a7c95`).
 
 /-! ## Axiom-clean: the standard three only (twenty results) -/
 
-/-- info: 'FMSA.MRS.star_of_first_order_oz' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'FMSA.MixtureBaxterCore.star_of_first_order_oz' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
-#print axioms FMSA.MRS.star_of_first_order_oz
+#print axioms FMSA.MixtureBaxterCore.star_of_first_order_oz
 
-/-- info: 'FMSA.MRS.star_of_oz1_baxter' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'FMSA.MixtureBaxterCore.star_of_oz1_baxter' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
-#print axioms FMSA.MRS.star_of_oz1_baxter
+#print axioms FMSA.MixtureBaxterCore.star_of_oz1_baxter
 
-/-- info: 'FMSA.MRS.star_entry_differentiableAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'FMSA.MixtureBaxterCore.star_entry_differentiableAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
-#print axioms FMSA.MRS.star_entry_differentiableAt
+#print axioms FMSA.MixtureBaxterCore.star_entry_differentiableAt
 
 /-- info: 'FMSA.MixtureHSPoles.detC_zeros_infinite_phys' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in

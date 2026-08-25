@@ -153,7 +153,7 @@ throwaway. See MRS.6/7/8.
 
 ### Task MRS.6 — WH factorization *frame* (ex-MRS.1a)
 
-**Done (2026-07-17), axiom-clean** — `YukawaOZMix/MixtureRealSpace.lean` (ns `FMSA.MRS`). Take the
+**Done (2026-07-17), axiom-clean** — `YukawaOZMix/MixtureRealSpace.lean` (ns `FMSA.MixtureBaxterCore`). Take the
 factorization as the *definition* of the zeroth-order DCF matrix and reduce the remaining symmetry
 obligation to a clean swap identity:
 - `Cmix0 Qfun k := 1 − Qfun k · (Qfun (−k))ᵀ` — the zeroth-order DCF matrix `Ĉ₀`.
@@ -268,7 +268,7 @@ of MRS.3.
 **Route.** Follows from the first-order OZ equation plus MRS.1's factorization. Check whether a
 usable form already falls out of Y1's chain before re-deriving from scratch.
 
-**Lean (`YukawaOZMix/MixtureRealSpace.lean`, ns `FMSA.MRS`) — ◑ physical route to (★) DONE 2026-07-17, axiom-clean.**  Rather than assume (a), (★) is derived from the physical inputs:
+**Lean (`YukawaOZMix/MixtureRealSpace.lean`, ns `FMSA.MixtureBaxterCore`) — ◑ physical route to (★) DONE 2026-07-17, axiom-clean.**  Rather than assume (a), (★) is derived from the physical inputs:
 - `oz1_C1_eq` — the first-order OZ step (pure algebra): `Ĥ₁·T₀ = S₀·Ĉ₁` + `T₀·S₀ = I` ⇒ `Ĉ₁ = T₀·Ĥ₁·T₀`
   (`T₀ := I−Ĉ₀`, `S₀ := I+Ĥ₀ = T₀⁻¹`; left-multiply by `T₀`, one line).
 - **`star_of_first_order_oz`** — the full (★) from five clean matrix-identity hypotheses: `hoz`
@@ -312,7 +312,7 @@ MML.8's premise (see the box there) and dissolves its blockers for the DCF.
 **Why it matters.** The pivot of the group: it converts the inner DCF from an
 (unprovable-without-circularity) infinite pole sum into a finite closed form.
 
-**Lean (`YukawaOZMix/MixtureRealSpace.lean`, ns `FMSA.MRS`) — ✓ DONE 2026-07-17, axiom-clean.**
+**Lean (`YukawaOZMix/MixtureRealSpace.lean`, ns `FMSA.MixtureBaxterCore`) — ✓ DONE 2026-07-17, axiom-clean.**
 - `star_of_oz1_baxter` — the algebra: `Qm⁻¹·C₁·(Qmᵀ)⁻¹ = B₁` with `IsUnit Qm.det` ⇒
   `C₁ = Qm·B₁·Qmᵀ`. (Instantiate `Qm := Q̂₀(−k)`.) Proof mirrors `Hhat1_spec`'s style:
   `Matrix.mul_nonsing_inv` / `nonsing_inv_mul` + one `mul_assoc` reassociation. `IsUnit (Qmᵀ).det`
@@ -409,7 +409,7 @@ directly beneath it.)*
 
 ---
 
-**Lean (`YukawaOZMix/MixtureRealSpace.lean`, ns `FMSA.MRS`) — ◑ first piece DONE 2026-07-17, axiom-clean.**
+**Lean (`YukawaOZMix/MixtureRealSpace.lean`, ns `FMSA.MixtureBaxterCore`) — ◑ first piece DONE 2026-07-17, axiom-clean.**
 The **delta amplitude is now proved**, with the concrete Lebowitz/Baxter PY coefficients
 (`Q0phys`/`Qppphys`, `HSMixture/MatrixQ0.lean` — they are concrete, not abstract `Mix` fields):
 - `lam_sub_R_eq` — `λᵢⱼ − Rᵢⱼ = −σᵢ` (the left endpoint offset; trivial but load-bearing).

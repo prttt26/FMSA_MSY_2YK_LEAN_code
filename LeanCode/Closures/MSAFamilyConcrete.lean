@@ -42,7 +42,7 @@ here is built from the Baxter factor of the physical root; it obeys OZ and the h
 *unconditionally*.
 Certifying it as **the MSA solution** — i.e. that `1 − C̃ = 1 − ρĉ_MSA(k)` with `ĉ_MSA` the MSA
 closure DCF — is exactly MSAEXACT.1's factorisation `|1 − ρQ̂(ik)|² = 1 − ρĉ_MSA`
-(`FMSA.MSAExact.factorization_of_core` once its `hcore` closure-recovery ring is discharged).  That
+(`FMSA.ExactMSA.factorization_of_core` once its `hcore` closure-recovery ring is discharged).  That
 identity is the *sole* input separating this concrete family from the unconditional Theorem I.1 at
 `N = 1`; per proof-note gap (C) it is consumed, not attempted, here.  Landing this file does **not**
 license editing the paper's §"What is not formalized" Theorem-I.1 bullet.
@@ -53,7 +53,7 @@ open scoped ContDiff
 
 namespace FMSA.MSASolutionFamily
 
-open FMSA.MSAExact FMSA.FirstOrderEquivalence FMSA.HardSphere
+open FMSA.ExactMSA FMSA.FirstOrderEquivalence FMSA.HardSphere
 
 /-! ### `ℝ → ℂ` smoothness helper and the complex conjugate-factor product identity -/
 
@@ -168,7 +168,7 @@ conclusion, for a *constructed* family with **no abstract hypothesis**.
 
 ⚠ Still open (proof-note gap (C)): this certifies the family obeys OZ + the hierarchy, but *that*
 the built `C̃ = 1 − Q̂Q̂` is the **MSA closure DCF** is MSAEXACT.1's factorisation
-(`FMSA.MSAExact.factorization_of_core` + its `hcore` ring) — the sole remaining input. -/
+(`FMSA.ExactMSA.factorization_of_core` + its `hcore` ring) — the sole remaining input. -/
 theorem msaFamily_taylor_eq_hierarchy_concrete {xi z : ℝ} (hxi : xi ∈ Set.Ioo (0 : ℝ) 1)
     (hz : 0 < z) {k : ℝ} (hk : k ≠ 0) :
     ∃ H C : ℝ → ℂ,

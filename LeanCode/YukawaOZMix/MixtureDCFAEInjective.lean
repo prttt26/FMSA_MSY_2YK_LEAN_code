@@ -56,7 +56,7 @@ theorem ae_eq_of_zOfW_transform_eq {f g : ℝ → ℂ} (hf : Integrable f) (hg :
   funext w
   rw [fourier_eq_zOfW f w, fourier_eq_zOfW g w, heq w]
 
-open FMSA.MRS Matrix in
+open FMSA.MixtureBaxterCore Matrix in
 /-- **`Cmix0` entry expansion — the identity/`δ` cancels, leaving a pure function.**  If the Baxter
 matrix has the `q0_entry_c` shape `Q(s)ᵢⱼ = δᵢⱼ − ρ_geoᵢⱼ·B(s)ᵢⱼ` (which `Qphys` has by definition,
 `B = e^{−λs}(Q0·p₁ + Qpp·p₂)`), then
@@ -94,7 +94,7 @@ physical zeroth-order mixture DCF is symmetric for ANY number of components — 
 `Qphys_Cmix0_entry_symm`, coefficient-free given the two `KEY` relations (`Q0phys`/`Qppphys`) + the
 `ρ_geo` symmetry & product relations. -/
 
-open FMSA.MRS in
+open FMSA.MixtureBaxterCore in
 /-- **Reduction of a physical `Cmix0` entry.**  `Cmix0ᵢⱼ = ρgᵢⱼ·e^{−λᵢⱼk}·(Tᵢⱼ(k) + Tⱼᵢ(−k) − Sᵢⱼ)`
 with `Tᵢⱼ(k) = pP(σᵢ,k)·Qpp1 j + pQ(σᵢ,k)·c·σⱼ` (rank-2, KEY 1) and `Sᵢⱼ` the moment form — via
 `Cmix0_entry_of_id_sub` + `phys_sum` + the two linear terms (`Bbra_sep`). -/
@@ -124,7 +124,7 @@ theorem Cmix0_phys_reduce {N : ℕ} (sigma rho Qpp1 : Fin N → ℂ) (Q0 Qpp rho
         = Complex.exp (-(((sigma j - sigma i) / 2) * k)) from by ring_nf]
   ring
 
-open FMSA.MRS in
+open FMSA.MixtureBaxterCore in
 /-- **The general-`N` physical swap** `Cmix0ᵢⱼ = Cmix0ⱼᵢ` (momentum-space DCF symmetry, any `N`).
 `Cmix0_phys_reduce` (twice) + `ρ_geo` symmetry factor out `ρgᵢⱼ`, leaving the per-pair bracket
 identity — closed by the `swap_pair_core` `field_simp;ring` inlined via `Ei = exp(kσᵢ/2)` (so
@@ -163,7 +163,7 @@ theorem Cmix0_phys_swap {N : ℕ} (sigma rho Qpp1 : Fin N → ℂ) (Q0 Qpp rho_g
   field_simp
   ring
 
-open FMSA.MRS FMSA.Q0Complex FMSA.MatrixQ0 in
+open FMSA.MixtureBaxterCore FMSA.Q0Complex FMSA.MatrixQ0 in
 /-- The bare (unweighted) Baxter bracket `B(s)ᵢⱼ = e^{−λᵢⱼs}(Q0phys·p₁(σᵢ) + Qppphys·p₂(σᵢ))` — the
 function part of `q0_entry_c`, i.e. `(δᵢⱼ − Qphys(s)ᵢⱼ)/ρ_geoᵢⱼ`. -/
 noncomputable def BbarePhys (rho sigma : Fin 2 → ℝ) (s : ℂ) (i j : Fin 2) : ℂ :=
@@ -174,7 +174,7 @@ noncomputable def BbarePhys (rho sigma : Fin 2 → ℝ) (s : ℂ) (i j : Fin 2) 
         * ((1 - s * (sigma i : ℂ) + (s * (sigma i : ℂ)) ^ 2 / 2
               - Complex.exp (-(s * (sigma i : ℂ)))) / s ^ 3))
 
-open FMSA.MRS FMSA.Q0Complex FMSA.MatrixQ0 in
+open FMSA.MixtureBaxterCore FMSA.Q0Complex FMSA.MatrixQ0 in
 /-- **`Qphys` has the `q0_entry_c` id-sub shape** `Qphys(s)ᵢⱼ = δᵢⱼ − ρ_geoᵢⱼ·B(s)ᵢⱼ` — by the
 definition of `q0_entry_c`.  Discharges `Cmix0_entry_of_id_sub`'s `hQ` for the physical matrix. -/
 theorem Qphys_id_sub (rho sigma : Fin 2 → ℝ) (s : ℂ) (a b : Fin 2) :
@@ -183,7 +183,7 @@ theorem Qphys_id_sub (rho sigma : Fin 2 → ℝ) (s : ℂ) (a b : Fin 2) :
         - ((rhoGeoPhys rho a b : ℝ) : ℂ) * BbarePhys rho sigma s a b := by
   simp only [Qphys, Q0_mat_c, q0_entry_c, BbarePhys]; ring
 
-open FMSA.MRS FMSA.MatrixQ0 in
+open FMSA.MixtureBaxterCore FMSA.MatrixQ0 in
 /-- **Physical `Cmix0` closed form.**  `Cmix0(Qphys)(k)ᵢⱼ = ρ_geoᵢⱼ·B(k)ᵢⱼ + ρ_geoⱼᵢ·B(−k)ⱼᵢ −
 ∑ₗ ρ_geoᵢₗρ_geoⱼₗ·B(k)ᵢₗ·B(−k)ⱼₗ` — the momentum-side target for the weighted real-space DCF
 (`Cmix0_entry_of_id_sub` at `Qphys_id_sub`). -/
@@ -196,7 +196,7 @@ theorem Cmix0_Qphys_eq (rho sigma : Fin 2 → ℝ) (k : ℂ) (i j : Fin 2) :
   Cmix0_entry_of_id_sub (Qphys sigma rho) (BbarePhys rho sigma)
     (fun a b => ((rhoGeoPhys rho a b : ℝ) : ℂ)) k i j (Qphys_id_sub rho sigma)
 
-open FMSA.MRS FMSA.Q0Complex FMSA.MatrixQ0 in
+open FMSA.MixtureBaxterCore FMSA.Q0Complex FMSA.MatrixQ0 in
 /-- **Hermitian reality of the bare Baxter bracket** — `BbarePhys(s̄)ᵢⱼ = conj(BbarePhys(s)ᵢⱼ)`.
 The coefficients `Q0phys`/`Qppphys`/`σ` are all real, and complex conjugation commutes with `exp`
 and the `s`-powers, so it commutes with `BbarePhys`.  On the imaginary axis (`s = i·k`) this is
@@ -207,7 +207,7 @@ theorem BbarePhys_conj (rho sigma : Fin 2 → ℝ) (s : ℂ) (i j : Fin 2) :
   simp only [BbarePhys, map_mul, map_add, map_sub, map_div₀, map_pow, map_one, map_neg,
     map_ofNat, Complex.conj_ofReal, ← Complex.exp_conj]
 
-open FMSA.MRS FMSA.Q0Complex FMSA.MatrixQ0 in
+open FMSA.MixtureBaxterCore FMSA.Q0Complex FMSA.MatrixQ0 in
 /-- **Hermitian reality of the Baxter factor** — `Qphys(s̄)ᵢⱼ = conj(Qphys(s)ᵢⱼ)`.  From the
 `id-sub` `Qphys = δ − ρ_geo·BbarePhys` (`Qphys_id_sub`) with `δ`/`ρ_geo` real and `BbarePhys_conj`.
 On `s = i·k` this gives `Q̂₀(−k) = conj(Q̂₀(k))`, so `vᵀ·Q̂₀(k)·Q̂₀(−k)ᵀ·v = ∑ₗ |(Q̂₀(k)ᵀ·v)ₗ|²` —
@@ -350,7 +350,7 @@ noncomputable def matDCFfull (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigm
     + (rhoGeoPhys rho j i : ℂ) * ((physMix rho sigma hsig).q0MixEntry j i (-v) : ℂ)
     - matCorrW (physMix rho sigma hsig) (rhoGeoPhys rho) i j v
 
-open FMSA.InnerDecomp FMSA.WHSupports FMSA.MatrixQ0 FMSA.MRS in
+open FMSA.InnerDecomp FMSA.WHSupports FMSA.MatrixQ0 FMSA.MixtureBaxterCore in
 /-- **Step (iv) — `𝓕(matDCFfull) = Cmix0(Qphys)`.**  `∫_ℝ matDCFfull·e^{−zv} = Cmix0(Qphys)(z)ᵢⱼ`
 for `z ≠ 0` — assembles ii-full (`q0MixEntry_physMix_fullline`, the two linear terms, the reflected
 one via `integral_neg_eq_self`) + `matCorrW_laplace` (double product) + `Cmix0_Qphys_eq`.  So the
@@ -531,7 +531,7 @@ theorem matDCFfull_ae_continuous (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < 
     exact (c1.add c2).sub (matCorrW_continuous X (rhoGeoPhys rho) i j).continuousAt
   · exact (Set.toFinite _).measure_zero volume
 
-open FMSA.MRS in
+open FMSA.MixtureBaxterCore in
 /-- The `zOfW` transform `w ↦ ∫ f·e^{−(2πi w)v}` of an integrable `f` is continuous in `w`
 (dominated convergence; the kernel has unit modulus). -/
 theorem zOfW_transform_continuous {f : ℝ → ℂ} (hf : Integrable f) :
@@ -576,7 +576,7 @@ theorem ae_eq_of_zOfW_transform_offdiag {f g : ℝ → ℂ} (hf : Integrable f) 
     exact hoff x (Set.mem_compl_singleton_iff.mp hx)
   exact congrFun hall w
 
-open FMSA.MatrixQ0 FMSA.MRS in
+open FMSA.MatrixQ0 FMSA.MixtureBaxterCore in
 /-- **Off-diagonal (`w ≠ 0`) transform symmetry.**  The `zOfW` transforms of `matDCFfull i j`
 and `matDCFfull j i` coincide away from `w = 0`, straight from `matDCFfull_laplace`
 + the momentum-space DCF entry symmetry `Qphys_Cmix0_entry_symm`. -/
@@ -590,7 +590,7 @@ theorem matDCFfull_transform_offdiag (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 
     matDCFfull_laplace rho sigma hsig (zOfW w) hzw j i]
   exact Qphys_Cmix0_entry_symm sigma rho (zOfW w) hrhoC0 hrhoC1 hzw hvac i j
 
-open FMSA.MatrixQ0 FMSA.MRS in
+open FMSA.MatrixQ0 FMSA.MixtureBaxterCore in
 /-- **Obstruction (b), discharged: the real-space zeroth-order mixture DCF is a.e.-symmetric.**
 `Ĉ₀ᵢⱼ(v) = Ĉ₀ⱼᵢ(v)` for a.e. `v` — the `hCsym` input for MML.8's collapse at unequal diameters.
 Route: `ae_eq_of_zOfW_transform_eq` needs the transform equality at **every** `w`; off `w = 0` it
@@ -632,7 +632,7 @@ theorem matDCFfull_reflect_swap (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < s
   rw [matCorrW_reflect_swap (physMix rho sigma hsig) (rhoGeoPhys rho) i j v]
   ring
 
-open FMSA.MatrixQ0 FMSA.MRS MeasureTheory in
+open FMSA.MatrixQ0 FMSA.MixtureBaxterCore MeasureTheory in
 /-- **⭐ Transform fold — `Cmix0` onto the half-line.**  On the imaginary axis `z = i·k` (`k ≠ 0`) the
 full-line DCF transform folds to two half-line (`Ioi 0`) integrals:
 `Cmix0(i·k)ᵢⱼ = ∫₀^∞ matDCFfullᵢⱼ·e^{−ikv} + ∫₀^∞ matDCFfullⱼᵢ·e^{ikv}`.  Route:
@@ -674,7 +674,7 @@ theorem Cmix0_physMix_fold (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma 
   push_cast
   ring_nf
 
-open FMSA.MatrixQ0 FMSA.MRS MeasureTheory in
+open FMSA.MatrixQ0 FMSA.MixtureBaxterCore MeasureTheory in
 /-- **Integrable-on-`Ioi 0` for `matDCFfull·(bounded)`** — helper for the cosine reduction. -/
 theorem matDCFfull_mul_integrableOn_Ioi (rho sigma : Fin 2 → ℝ) (hsig : ∀ k, 0 < sigma k)
     (i j : Fin 2) (g : ℝ → ℂ) (hg : Continuous g) (c : ℝ) (hgb : ∀ v, ‖g v‖ ≤ c) :
@@ -682,7 +682,7 @@ theorem matDCFfull_mul_integrableOn_Ioi (rho sigma : Fin 2 → ℝ) (hsig : ∀ 
   ((matDCFfull_integrable rho sigma hsig i j).mul_bdd hg.aestronglyMeasurable
     (Filter.Eventually.of_forall hgb)).integrableOn
 
-open FMSA.MatrixQ0 FMSA.MRS MeasureTheory in
+open FMSA.MatrixQ0 FMSA.MixtureBaxterCore MeasureTheory in
 /-- **⭐⭐ Quadratic-form cosine reduction of `Cmix0`.**  The coercivity uses the symmetric quadratic
 form `∑ᵢⱼ Cmix0(i·k)ᵢⱼ uᵢuⱼ`; the fold + index-swap collapse its two half-line integrals into a
   single
@@ -968,7 +968,7 @@ since `matDCFfull`'s transform IS `Ĉ₀ = Cmix0` (`matDCFfull_laplace`), the se
 matDCFfull` — OZ★ with the full-line a.e.-symmetric DCF, dissolving the windowed↔full-line gap.
 -/
 
-open FMSA.MRS Matrix in
+open FMSA.MixtureBaxterCore Matrix in
 /-- **Momentum factorization via the full-line DCF transform — the Fourier-route linchpin.**  The
 Baxter-factor product `T₀ = Q̂₀(z)·Q̂₀ᵀ(−z)` equals `I` minus the (bilateral-Laplace) transform of
 the full-line real-space DCF `matDCFfull` (`(Q̂₀·Q̂₀ᵀ(−z))ᵢⱼ = δᵢⱼ − ∫_ℝ matDCFfullᵢⱼ(v)e^{−zv}`).
@@ -986,7 +986,7 @@ theorem Qphys_prod_eq_one_sub_dcf_transform (rho sigma : Fin 2 → ℝ) (hsig : 
   rw [Matrix.sub_apply, ← matDCFfull_laplace rho sigma hsig z hz i j] at h
   exact h
 
-open FMSA.MRS in
+open FMSA.MixtureBaxterCore in
 open scoped Matrix in
 /-- **Extended (full-line) DCF shell operator = multiplication by the DCF symbol.**  With the
 FULL-LINE kernel `matDCFfull` (the fix for the `[0,σ]`-windowing loss: it integrates the Baxter
@@ -1027,7 +1027,7 @@ bypassing the `Fin 2`-only `Cmix0_Qphys_eq`. -/
 
 section GeneralNDCF
 
-open FMSA.InnerDecomp FMSA.WHSupports FMSA.MatrixQ0 FMSA.MRS
+open FMSA.InnerDecomp FMSA.WHSupports FMSA.MatrixQ0 FMSA.MixtureBaxterCore
 
 variable {N : ℕ}
 
