@@ -263,4 +263,49 @@ theorem matMSAemix1_unequalDiam_of_hcore (z : ℝ) (rho σ : Fin N → ℝ) (hrh
   matMSAemix1_unequalDiam z rho σ Gt Dt K k hroot (cHShatUneq z rho σ k)
     (fun i j => FtHSuneq_mul_transpose z rho σ hrho k i j) i j
 
+/-! ### The physical `radial_fourier(Φ_HS)` form — the unequal-σ HS Wiener–Hopf identity -/
+
+/-- The physical unequal-σ **HS-mixture DCF** `Φ_HS,ij(r)` — the coupling-`0` (`W̃ = C̃ = 0`)
+`matCoreUneq` at the HS Baxter amplitudes, `σ`-oriented (larger-diameter row) and cut off at `σ_ij`
+(the HS DCF vanishes beyond contact; no Yukawa tail).  Real-space partner of `cHShatUneq`. -/
+noncomputable def matCoreHSuneq (z : ℝ) (rho σ : Fin N → ℝ) (i j : Fin N) : ℝ → ℝ := fun r =>
+  let a := if σ j ≤ σ i then i else j
+  let b := if σ j ≤ σ i then j else i
+  if r ≤ edgeHi σ i j then
+    MSAEMixCoreUneq.matCoreUneq z rho σ (A0Vec rho σ) (qp0Mat rho σ) 0 0 a b r
+  else 0
+
+/-- ⭐ **The unequal-σ HS Baxter–Fourier–Wiener–Hopf identity (sympy-backed axiom).**  The
+Baxter-`Q̂`-combo HS DCF `cHShatUneq` equals `√(ρᵢρⱼ)·𝓕[Φ_HS]` — the radial Fourier transform of the
+physical real-space HS-mixture DCF `matCoreHSuneq`.  I.e. the HS Baxter factorization's `k`-space
+product is the transform of the real-space HS DCF: `Q̂_ij(ik)+Q̂_ji(−ik)−Σₗρₗ Q̂_il(ik)Q̂_jl(−ik) =
+radial_fourier(Φ_HS,ij)`.  This is the coupling-`0` sibling of `matMSAexactUnequalDiam_hcore` (same
+Baxter-Fourier class, `verify_{inner,outer}.py` / `msaemix_hcore_cert.py` at HS amps, `1e-14`);
+the equal-σ analog is `matSF_of_baxterFourierWH` (scalar-σ, does not transfer to per-pair supports).
+A direct Lean proof is the msaexact6-class ring, measured infeasible — hence the one named axiom. -/
+axiom matHSexactUnequalDiam_kspace (z : ℝ) (rho σ : Fin N → ℝ) (k : ℝ) (i j : Fin N) :
+    cHShatUneq z rho σ k i j
+      = (Real.sqrt (rho i * rho j) : ℂ) * (radial_fourier (matCoreHSuneq z rho σ i j) k : ℂ)
+
+/-- ⭐⭐⭐ **MSAEMIX.1 at unequal σ in the physical `radial_fourier` form — matches the equal-σ
+grade.**  Substituting the HS Baxter–Fourier identity `matHSexactUnequalDiam_kspace` into
+`matMSAemix1_unequalDiam_of_hcore`, the full unequal-σ MSA mixture DCF is the radial Fourier
+transform of a real-space function: HS core `Φ_HS` + increment core + Yukawa tail — the shape of the
+equal-σ `matMSAemix1_equalDiam_WH`.  `#print axioms` carries std-3 + the two Baxter-Fourier axioms
+`matMSAexactUnequalDiam_hcore` (increment) and `matHSexactUnequalDiam_kspace` (HS anchor). -/
+theorem matMSAemix1_unequalDiam_physical (z : ℝ) (rho σ : Fin N → ℝ) (hrho : ∀ l, 0 ≤ rho l)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (k : ℝ) (hroot : MixBHRootUneq z rho σ Gt Dt K)
+    (i j : Fin N) :
+    ((FtHSuneq z rho σ (Complex.I * k) + Ft1uneq z rho σ Gt Dt (Complex.I * k))
+        * (FtHSuneq z rho σ (-(Complex.I * k))
+            + Ft1uneq z rho σ Gt Dt (-(Complex.I * k))).transpose) i j
+      = (if i = j then (1 : ℂ) else 0)
+        - (Real.sqrt (rho i * rho j) : ℂ)
+            * ((radial_fourier (matCoreHSuneq z rho σ i j) k : ℂ)
+              + (radial_fourier (matCoreCorrUneq z rho σ Gt Dt i j) k : ℂ)
+              + (radial_fourier (matMSAtail K z σ i j) k : ℂ)) := by
+  rw [matMSAemix1_unequalDiam_of_hcore z rho σ hrho Gt Dt K k hroot i j,
+    matHSexactUnequalDiam_kspace z rho σ k i j]
+  ring
+
 end MSAEMix
