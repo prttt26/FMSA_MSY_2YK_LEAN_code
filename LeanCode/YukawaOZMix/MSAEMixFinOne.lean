@@ -114,4 +114,31 @@ theorem matMSAemix1_fin_one (rho sigma : Fin 1 → ℝ) (z : ℝ) (Gt Dt K : Mat
     (fun _ _ => ((rho 0 * radial_fourier (c_HS (etaMix rho sigma) (sigma 0)) k : ℝ) : ℂ))
     (FtHS_mul_fin_one rho sigma z hk hsig hrho hlt) i j
 
+/-- ⭐⭐ **MSAEMIX.2 — the `N = 1` mixture MSA factorization IS the scalar MSAEXACT.1 Baxter
+modulus.**  Writing the (conjugate-pair) mixture factor as `(F̃_HS + F̃₁)(±ik)₀₀ = A ∓ iB` (real
+`A, B`), the fully-discharged `N = 1` factorization `matMSAemix1_fin_one` collapses — through the
+scalar bridge `matEMIX_factorization_fin_one_iff` and `√(ρ₀ρ₀) = ρ₀` — to the **scalar Baxter
+modulus** `A² + B² = 1 − ρ₀·ĉ`, `ĉ = 𝓕[c_HS] + 𝓕[c_core] + 𝓕[c_tail]`.  This is exactly the shape of
+`MSAEXACT.1`'s `factorization_of_core` conclusion (`A = 1 − ρReQ̂`, `B = ρImQ̂`), so the
+one-component mixture *is* the scalar exact-MSA.  Positivity half: `mixCompressibility_fin_one` /
+`mixStability_fin_one` (`MSAMixturePositivity.lean`) reduce the matrix `(39)` / stability det to the
+scalar `ρB²` / `B²`.  Footprint = std-3 + `matMSAexactEqualDiam_hcore` (inherited). -/
+theorem msaMixture_reduces_to_scalar_at_fin_one (rho sigma : Fin 1 → ℝ) (z : ℝ)
+    (Gt Dt K : Matrix (Fin 1) (Fin 1) ℝ) {k : ℝ} (hk : k ≠ 0) (hsig : 0 < sigma 0)
+    (hrho : 0 ≤ rho 0) (hlt : etaMix rho sigma < 1)
+    (hroot : MixBHRoot z (sigma 0) rho sigma Gt Dt K) (A B : ℝ)
+    (hfull : (FtHS z (sigma 0) rho sigma (Complex.I * k)
+        + Ft1 z (sigma 0) rho sigma Gt Dt (Complex.I * k)) 0 0 = (A : ℂ) - Complex.I * (B : ℂ))
+    (hfullneg : (FtHS z (sigma 0) rho sigma (-(Complex.I * k))
+        + Ft1 z (sigma 0) rho sigma Gt Dt (-(Complex.I * k))) 0 0 = (A : ℂ) + Complex.I * (B : ℂ)) :
+    A ^ 2 + B ^ 2
+      = 1 - rho 0 * (radial_fourier (c_HS (etaMix rho sigma) (sigma 0)) k
+          + radial_fourier (matMSACoreCorr z rho sigma Gt Dt K 0 0) k
+          + radial_fourier (matMSAtail K z sigma 0 0) k) := by
+  refine (matEMIX_factorization_fin_one_iff A B _ (rho 0) _ _ hfull hfullneg).mp ?_
+  rw [matMSAemix1_fin_one rho sigma z Gt Dt K hk hsig hrho hlt hroot 0 0,
+    Real.sqrt_mul_self hrho, if_pos rfl]
+  push_cast
+  ring
+
 end MSAEMix
