@@ -388,11 +388,19 @@ actually swept — a `grep` and a read — and note that what matters is **wheth
 smoothness, while one sitting at physical couplings keeps the full analytic statement and the
 fold-straddling caveat.
 
-## ⏸ PENDING (BRK.13) — the closure seam, assigned to the MSAEMIX group
+## ✅ DONE (BRK.13) — the closure seam, discharged by the MSAEMIX group (grade 2)
 
-**BRK side DONE (std-3, hypothesis-parametrised); waiting on MSAEMIX to supply the hypothesis.**
-The one link BRK cannot close on its own, recorded as a numbered task so the seam is explicit
-(cf. the POLICY section above: irreducible ⇒ carried as a hypothesis, not an axiom).
+**✅ DONE (grade 2) — MSAEMIX supplied the hypothesis; BRK is closed about the physical core.**
+Discharged 2026-08-24 (commit `175b6cc`, `MSAEMixBaxterConv.lean`, out-of-`defaultTargets` lib
+`MSAEMixBaxterConvCertificate`). It defines the real-space `baxterQ` / `baxterQ'` and the physical
+core `baxterConvCore = (−Q'_ij + Σ_l ρ_l ∫ Q'_il(t+r) Q_jl(t) dt)/(2π r)`, states the grade-2 seam
+axiom `baxterConvCore_eq_matCoreUneq` (`c = matCoreUneq` on the two open pieces, orientation
+`σ_j ≤ σ_i`), and feeds it into the scaffolding below. Verified — independent `#print axioms` of
+`baxterConvCore_smooth_off_unique_breakpoint` /
+`baxterConvCoreK_paramDeriv_contDiffOn_{inner,outer}` =
+`[propext, Classical.choice, Quot.sound, baxterConvCore_eq_matCoreUneq]`; a normal `lake build`
+stays std-3 (the lib is out of the `LeanCode` root). The two-grade record below is the plan; grade
+2 was taken (grade 1 = the msaexact6-class infeasible convolution ring).
 
 **The hypothesis.** That the physical exact-MSA core `c` — the real-space Baxter convolution
 `(−Q'_ij + Σ_l ρ_l Q'_il ⋆ Q_jl)/(2π r)` — equals the closed form `matCoreUneq` on `(0, σ_ij)`.
