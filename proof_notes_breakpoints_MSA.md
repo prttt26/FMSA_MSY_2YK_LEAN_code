@@ -387,3 +387,42 @@ actually swept — a `grep` and a read — and note that what matters is **wheth
 `K = 0`**, not how wide it is: an interval containing the origin makes BRK.4 need only
 smoothness, while one sitting at physical couplings keeps the full analytic statement and the
 fold-straddling caveat.
+
+## ⏸ PENDING (BRK.13) — the closure seam, assigned to the MSAEMIX group
+
+**BRK side DONE (std-3, hypothesis-parametrised); waiting on MSAEMIX to supply the hypothesis.**
+The one link BRK cannot close on its own, recorded as a numbered task so the seam is explicit
+(cf. the POLICY section above: irreducible ⇒ carried as a hypothesis, not an axiom).
+
+**The hypothesis.** That the physical exact-MSA core `c` — the real-space Baxter convolution
+`(−Q'_ij + Σ_l ρ_l Q'_il ⋆ Q_jl)/(2π r)` — equals the closed form `matCoreUneq` on `(0, σ_ij)`.
+This is MSAEMIX.4 Stage 3's symbolic-`σ` derivation, validated to `1e-14`
+(`symbolic_{inner,outer}.py` / `verify_{inner,outer}.py`).
+
+**What BRK already ships against it** — `MSAEMixBreakpointScheme.lean`, all std-3
+`[propext, Classical.choice, Quot.sound]`; the hypothesis enters as a *typed argument*, never an
+axiom:
+
+- `contDiffOn_off_absLam_of_eqOn` — value level. Consumes
+  `hc_in : EqOn c matCoreUneq (Ioo 0 (lamA σ i j))` and
+  `hc_out : EqOn c matCoreUneq (Ioo (lamA σ i j) (edgeHi σ i j))`.
+- `exactCore_smooth_off_unique_breakpoint_of_eqOn` ⭐ — same two, plus MSAEMIX.5's
+  `interior_breakpoint_eq_absLam`: `c` smooth on `(0, σ_ij)` except the *unique* interior
+  breakpoint `|λ_ij|`.
+- `paramDeriv_contDiffOn_{inner,outer}_of_eqOn` — all orders. Consumes the `K`-family identity
+  `hcK : ∀ r, (fun K => cK K r) = (fun K => matCoreUneq z (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j r)`
+
+**What discharges it** (this task, MSAEMIX-owned): define the real-space Baxter `Q` + the core `c`
+(and its `K`-family `cK`), then close `hc_in` / `hc_out` / `hcK`. Two grades, matching the POLICY:
+
+1. **Prove** `c = matCoreUneq` — define `Q`, its supports, differentiate under the integral ⇒ BRK
+   closes **unconditional std-3**. Heavy: a piecewise-convolution integral identity.
+2. **Or** assert it as one sympy-backed axiom, mirroring the `hcore` certificate's
+   `matMSAexactEqualDiam_kspace_residual` ⇒ BRK closes **std-3 + one convolution-identity axiom**
+   (the seam collapsed to a single named numerical fact — the POLICY's "one consolidated axiom").
+
+**Wiring cost on the BRK side once supplied: one line** — feed the discharged hypothesis into
+`exactCore_smooth_off_unique_breakpoint_of_eqOn` / `paramDeriv_..._of_eqOn`. ⚠ Do **not** define a
+parallel `Q` / `c` on the BRK side: that duplicates MSAEMIX.4 Stage 3's object and carries
+false-axiom risk (`feedback_mirror_reference_semantics` — a wrong `def` + `= matCoreUneq` builds
+green, only reading the sympy reference catches it). The `Q` / convolution `def` is Stage 3's.
