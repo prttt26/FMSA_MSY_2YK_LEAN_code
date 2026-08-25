@@ -74,8 +74,8 @@ theorem one_sub_exp_sin_integral {z k sigma : ℝ} (hzk : z ^ 2 + k ^ 2 ≠ 0) (
 /-! ### The `coshRatio` piece -/
 
 /-- `coshRatio z σ r = e^{−zσ}(cosh(zr) − 1)`, in the exp form that avoids forming `cosh`.  ⚠ NOW
-`σ`-aware (was hardcoded `σ=1`, `e^{−z}`, which was correct for the single-component σ=1 but WRONG when
-the mixture `coreCorrection` reuses it at `σ_ij≠1`; `σ=1` recovers the old value). -/
+`σ`-aware (was hardcoded `σ=1`/`e^{−z}` — fine for single-component σ=1, WRONG when the mixture
+`coreCorrection` reuses it at `σ_ij≠1`; `σ=1` recovers the old value). -/
 noncomputable def coshRatio (z sigma r : ℝ) : ℝ :=
   1 / 2 * (Real.exp (z * (r - sigma)) + Real.exp (-z * (r + sigma))) - Real.exp (-z * sigma)
 
