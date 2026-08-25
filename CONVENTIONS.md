@@ -118,17 +118,24 @@ for `∀ N`, `intro N`, `fun N`, `induction N` — a species count is never intr
 ## Identifier naming: content-descriptive, never group- or task-coded
 
 Lean **identifier names** (theorems, lemmas, `def`s, namespaces) and **file names** must describe
-the mathematical *content*, never the organizational group letter or task number.  Do **not** prefix
-a theorem with its task ID (`b5_degree_bound`, `mml3_…`) or name a file after a group (`B5MixturePoly.lean`,
-`PathB`).  Name by what the object *is* (`q0_entry_degree_bound`, `MixturePolyCoeffs.lean`).
+the mathematical *content*, never a task number or a **content-unrelated group tag**.  Do **not** put
+a task ID in a name (`b5_degree_bound`, `mml3_…`, `msaexact6_hcore`, `matMSAemix1_…`) or an opaque
+group acronym / mash (`FMSA.MRS`, `…BRK`, `MSAEMix`, `matEMIX…`).  Name by what the object *is*
+(`q0_entry_degree_bound`, `MixturePolyCoeffs.lean`).  A token that also happens to be a group's name is
+fine **iff it describes the content** — keep `MSA` (mean-spherical), `exact`, `mixture`, `Baxter`,
+`pole`, `Yukawa`, `HS`; drop the bookkeeping wrapper (`MSAEXACT`→`ExactMSA`, `MSAEMIX`→`MSAMixture`,
+`BRK`→`Breakpoint`, `MRS`→`MixtureBaxterCore`).
 
 **Why:** group membership and task IDs live only in the docs (`proof_notes_*.md`, `todo_lean.md`).
 Code named by content stays correct when a task is re-grouped, a group is renamed, or a group is
 split across files — none of which should force a Lean rename.  (Legacy `b<N>_`/`FMSA.PathB` names
 from the old flat numbering were cleaned up on 2026-07-17: Group B → Group GAP, files
 `B4OriginBC`/`B5MixturePoly` → `InnerOriginBC`/`MixturePolyCoeffs`, theorems `b4_*`–`b10_*` →
-content names.)  Docstrings may cite the task ID (`**Task GAP.5**`) for cross-reference; the
-*identifier* may not.
+content names.  A second pass on 2026-08-25 stripped the residual MSA-layer tags: `msaexact*` + task#s
+→ `exactMSA*`, `MSAEMix*`/`matMSAemix1`/`matEMIX…` → `MSAMixture*`/`matMSAmixture`/`matMixtureFactorization`,
+namespaces `FMSA.MSAExact.BRK`→`FMSA.ExactMSA.Breakpoint` and `FMSA.MRS`→`FMSA.MixtureBaxterCore`, with 13
+files renamed to match — pure rename, `lake build LeanCode` green and unchanged.)  Docstrings may cite the
+task ID (`**Task GAP.5**`, `MSAEMIX.4`) for cross-reference; the *identifier* may not.
 
 ## Identifier naming: ASCII-only
 
