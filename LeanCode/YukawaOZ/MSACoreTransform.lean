@@ -73,22 +73,23 @@ theorem one_sub_exp_sin_integral {z k sigma : ℝ} (hzk : z ^ 2 + k ^ 2 ≠ 0) (
 
 /-! ### The `coshRatio` piece -/
 
-/-- `coshRatio z r = (cosh(zr) − 1)/e^z`, in the exp form that avoids forming `cosh` (matches
-`msa_exact._cosh_ratio`). -/
-noncomputable def coshRatio (z r : ℝ) : ℝ :=
-  1 / 2 * (Real.exp (z * (r - 1)) + Real.exp (-z * (r + 1))) - Real.exp (-z)
+/-- `coshRatio z σ r = e^{−zσ}(cosh(zr) − 1)`, in the exp form that avoids forming `cosh`.  ⚠ NOW
+`σ`-aware (was hardcoded `σ=1`, `e^{−z}`, which was correct for the single-component σ=1 but WRONG when
+the mixture `coreCorrection` reuses it at `σ_ij≠1`; `σ=1` recovers the old value). -/
+noncomputable def coshRatio (z sigma r : ℝ) : ℝ :=
+  1 / 2 * (Real.exp (z * (r - sigma)) + Real.exp (-z * (r + sigma))) - Real.exp (-z * sigma)
 
-/-- `∫₀^σ coshRatio z r · sin(kr) dr` — the `quad_t` term's radial transform.  Assembled from
+/-- `∫₀^σ coshRatio z sigma r · sin(kr) dr` — the `quad_t` term's radial transform.  Assembled from
 `exp_pos_sin_integral`, `exp_sin_integral` and `psi0_formula`. -/
 theorem coshRatio_sin_integral {z k sigma : ℝ} (hzk : z ^ 2 + k ^ 2 ≠ 0) (hk : k ≠ 0) :
-    ∫ r in (0 : ℝ)..sigma, coshRatio z r * Real.sin (k * r)
-      = 1 / 2 * Real.exp (-z) *
+    ∫ r in (0 : ℝ)..sigma, coshRatio z sigma r * Real.sin (k * r)
+      = 1 / 2 * Real.exp (-z * sigma) *
           ((k - Real.exp (z * sigma) * (k * Real.cos (k * sigma) - z * Real.sin (k * sigma)))
             / (z ^ 2 + k ^ 2))
-        + 1 / 2 * Real.exp (-z) *
+        + 1 / 2 * Real.exp (-z * sigma) *
           ((k - Real.exp (-z * sigma) * (k * Real.cos (k * sigma) + z * Real.sin (k * sigma)))
             / (z ^ 2 + k ^ 2))
-        - Real.exp (-z) * ((1 - Real.cos (k * sigma)) / k) := by
+        - Real.exp (-z * sigma) * ((1 - Real.cos (k * sigma)) / k) := by
   have hep : IntervalIntegrable (fun r => Real.exp (z * r) * Real.sin (k * r)) volume 0 sigma :=
     ((Real.continuous_exp.comp (by fun_prop)).mul
       (Real.continuous_sin.comp (by fun_prop))).intervalIntegrable 0 sigma
@@ -98,15 +99,15 @@ theorem coshRatio_sin_integral {z k sigma : ℝ} (hzk : z ^ 2 + k ^ 2 ≠ 0) (hk
   have hs : IntervalIntegrable (fun r => Real.sin (k * r)) volume 0 sigma :=
     (Real.continuous_sin.comp (by fun_prop)).intervalIntegrable 0 sigma
   -- Rewrite the integrand into `½e^{−z}·(e^{zr}sin) + ½e^{−z}·(e^{−zr}sin) − e^{−z}·sin`.
-  have hcongr : ∫ r in (0 : ℝ)..sigma, coshRatio z r * Real.sin (k * r)
+  have hcongr : ∫ r in (0 : ℝ)..sigma, coshRatio z sigma r * Real.sin (k * r)
       = ∫ r in (0 : ℝ)..sigma,
-          (1 / 2 * Real.exp (-z) * (Real.exp (z * r) * Real.sin (k * r))
-            + 1 / 2 * Real.exp (-z) * (Real.exp (-z * r) * Real.sin (k * r))
-            - Real.exp (-z) * Real.sin (k * r)) := by
+          (1 / 2 * Real.exp (-z * sigma) * (Real.exp (z * r) * Real.sin (k * r))
+            + 1 / 2 * Real.exp (-z * sigma) * (Real.exp (-z * r) * Real.sin (k * r))
+            - Real.exp (-z * sigma) * Real.sin (k * r)) := by
     refine intervalIntegral.integral_congr (fun r _ => ?_)
     simp only [coshRatio]
-    rw [show z * (r - 1) = z * r + -z by ring, show -z * (r + 1) = -z * r + -z by ring,
-      Real.exp_add, Real.exp_add]
+    rw [show z * (r - sigma) = z * r + -z * sigma by ring,
+      show -z * (r + sigma) = -z * r + -z * sigma by ring, Real.exp_add, Real.exp_add]
     ring
   rw [hcongr,
     intervalIntegral.integral_sub ((hep.const_mul _).add (hem.const_mul _)) (hs.const_mul _),
@@ -160,12 +161,12 @@ sign. -/
 theorem coreCorr_sine_integral (c1 c2 c3 c4 c5 z sigma k : ℝ) :
     ∫ r in (0 : ℝ)..sigma,
         (c1 * r + c2 * r ^ 2 + c3 * r ^ 4 + c4 * (1 - Real.exp (-z * r))
-          + c5 * coshRatio z r) * Real.sin (k * r)
+          + c5 * coshRatio z sigma r) * Real.sin (k * r)
       = c1 * (∫ r in (0 : ℝ)..sigma, r * Real.sin (k * r))
         + c2 * (∫ r in (0 : ℝ)..sigma, r ^ 2 * Real.sin (k * r))
         + c3 * (∫ r in (0 : ℝ)..sigma, r ^ 4 * Real.sin (k * r))
         + c4 * (∫ r in (0 : ℝ)..sigma, (1 - Real.exp (-z * r)) * Real.sin (k * r))
-        + c5 * (∫ r in (0 : ℝ)..sigma, coshRatio z r * Real.sin (k * r)) := by
+        + c5 * (∫ r in (0 : ℝ)..sigma, coshRatio z sigma r * Real.sin (k * r)) := by
   have h1 : IntervalIntegrable (fun r => c1 * (r * Real.sin (k * r))) volume 0 sigma :=
     (continuous_const.mul (continuous_id.mul
       (Real.continuous_sin.comp (by fun_prop)))).intervalIntegrable 0 sigma
@@ -179,18 +180,18 @@ theorem coreCorr_sine_integral (c1 c2 c3 c4 c5 z sigma k : ℝ) :
       (fun r => c4 * ((1 - Real.exp (-z * r)) * Real.sin (k * r))) volume 0 sigma :=
     (continuous_const.mul (((continuous_const.sub (Real.continuous_exp.comp (by fun_prop))).mul
       (Real.continuous_sin.comp (by fun_prop))))).intervalIntegrable 0 sigma
-  have h5 : IntervalIntegrable (fun r => c5 * (coshRatio z r * Real.sin (k * r)))
+  have h5 : IntervalIntegrable (fun r => c5 * (coshRatio z sigma r * Real.sin (k * r)))
       volume 0 sigma := by
     apply Continuous.intervalIntegrable
     unfold coshRatio; fun_prop
   have hcongr : ∫ r in (0 : ℝ)..sigma,
         (c1 * r + c2 * r ^ 2 + c3 * r ^ 4 + c4 * (1 - Real.exp (-z * r))
-          + c5 * coshRatio z r) * Real.sin (k * r)
+          + c5 * coshRatio z sigma r) * Real.sin (k * r)
       = ∫ r in (0 : ℝ)..sigma,
           (c1 * (r * Real.sin (k * r)) + c2 * (r ^ 2 * Real.sin (k * r))
             + c3 * (r ^ 4 * Real.sin (k * r))
             + c4 * ((1 - Real.exp (-z * r)) * Real.sin (k * r))
-            + c5 * (coshRatio z r * Real.sin (k * r))) :=
+            + c5 * (coshRatio z sigma r * Real.sin (k * r))) :=
     intervalIntegral.integral_congr (fun r _ => by ring)
   rw [hcongr,
     intervalIntegral.integral_add (((h1.add h2).add h3).add h4) h5,
@@ -209,7 +210,7 @@ theorem coreCorr_sine_integral (c1 c2 c3 c4 c5 z sigma k : ℝ) :
 harmless — the radial weight `r` and the `sin(kr)` factor both vanish there. -/
 noncomputable def coreCorrection (c1 c2 c3 c4 c5 z sigma : ℝ) (r : ℝ) : ℝ :=
   if r ≤ sigma then
-    c1 + c2 * r + c3 * r ^ 3 + c4 * (1 - Real.exp (-z * r)) / r + c5 * coshRatio z r / r
+    c1 + c2 * r + c3 * r ^ 3 + c4 * (1 - Real.exp (-z * r)) / r + c5 * coshRatio z sigma r / r
   else 0
 
 /-- **Step 3 glue — the closed form of `radial_fourier(coreCorrection)`.**  The support collapse
@@ -225,7 +226,7 @@ theorem radial_fourier_coreCorrection (c1 c2 c3 c4 c5 z sigma k : ℝ) (hsigma :
             + c2 * (∫ r in (0 : ℝ)..sigma, r ^ 2 * Real.sin (k * r))
             + c3 * (∫ r in (0 : ℝ)..sigma, r ^ 4 * Real.sin (k * r))
             + c4 * (∫ r in (0 : ℝ)..sigma, (1 - Real.exp (-z * r)) * Real.sin (k * r))
-            + c5 * (∫ r in (0 : ℝ)..sigma, coshRatio z r * Real.sin (k * r))) := by
+            + c5 * (∫ r in (0 : ℝ)..sigma, coshRatio z sigma r * Real.sin (k * r))) := by
   rw [radial_fourier_of_core_support _ hsigma
     (fun r hr => by simp only [coreCorrection, if_neg (not_le.mpr hr)])]
   rw [← coreCorr_sine_integral c1 c2 c3 c4 c5 z sigma k]

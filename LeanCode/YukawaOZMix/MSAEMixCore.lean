@@ -100,14 +100,11 @@ noncomputable def coreC4 (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt K : Matrix
     (i j : Fin N) : ℝ :=
   -(2 * Real.pi / z) * ∑ l, rho l * (K i l * Gt j l + Gt i l * K j l)
 
-/-- `c₅` (coeff of `coshRatio/r`): `−(8π²/z²) Σ_{l,m} ρ_lρ_m Gt_il K_lm Gt_jm × e^{−z(σ_ij−1)}`.
-⚠ the scalar `coshRatio z r = e^{−z}(cosh zr−1)` (in `coreCorrection`) HARDCODES `σ=1`; the mixture
-reuses it at `σ_ij`, so `c₅` carries `e^{−z(σ_ij−1)} = e^{−zσ_ij}/e^{−z}` to restore the true
-`e^{−zσ_ij}` factor (`eqsig_symbolic.py`; `σ=1 ⇒ 1`, so equal-1 is unchanged). -/
+/-- `c₅` (coeff of `coshRatio/r`): `−(8π²/z²) Σ_{l,m} ρ_l ρ_m Gt_il K_lm Gt_jm`.  (The `σ_ij` tail
+factor `e^{−zσ_ij}` now lives in the σ-aware `coshRatio z σ_ij r`, not in this coefficient.) -/
 noncomputable def coreC5 (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
     (i j : Fin N) : ℝ :=
-  Real.exp (-z * (sigMix sigma i j - 1))
-    * (-(8 * Real.pi ^ 2 / z ^ 2) * ∑ l, ∑ m, rho l * rho m * Gt i l * K l m * Gt j m)
+  -(8 * Real.pi ^ 2 / z ^ 2) * ∑ l, ∑ m, rho l * rho m * Gt i l * K l m * Gt j m
 
 /-! ### The matrix core correction and its radial transform -/
 
@@ -135,7 +132,8 @@ theorem radial_fourier_matMSACoreCorr (z : ℝ) (rho sigma : Fin N → ℝ)
             + coreC4 z rho sigma Gt Dt K i j
                 * (∫ r in (0 : ℝ)..sigMix sigma i j, (1 - Real.exp (-z * r)) * Real.sin (k * r))
             + coreC5 z rho sigma Gt Dt K i j
-                * (∫ r in (0 : ℝ)..sigMix sigma i j, coshRatio z r * Real.sin (k * r))) := by
+                * (∫ r in (0 : ℝ)..sigMix sigma i j,
+                    coshRatio z (sigMix sigma i j) r * Real.sin (k * r))) := by
   have hsij : 0 < sigMix sigma i j := by
     have h1 := hsig i; have h2 := hsig j; unfold sigMix; linarith
   unfold matMSACoreCorr
