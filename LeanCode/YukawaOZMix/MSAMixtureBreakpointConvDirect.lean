@@ -434,4 +434,57 @@ theorem integral_tailtail (z : ℝ) (hz : 0 < z) (Wil Ctil Wjl Ctjl Li Hi Lj Hj 
   rw [show -2 * z = -(2 * z) by ring]
   field_simp
 
+/-! ### BRK.16b part (b) — the canonical bounded-region integral
+
+Every BOUNDED region (`core·core`, `core'·tail`, `tail'·core`) expands — after rewriting each
+`e^{−z(t−·)}` to the `e^{−zt}` atom — into `cubic + quadratic·e^{−zt} + K·e^{−2zt}`.  Its
+antiderivative and FTC value are packaged once here; each region proof rewrites its branch product
+into this canonical form (specific `cᵢ`/`dᵢ`/`K`) and applies `integral_canonical`. -/
+
+/-- Antiderivative of `cubic + quadratic·e^{−zt} + K·e^{−2zt}` (`z ≠ 0` used at the value level). -/
+noncomputable def canonAntider (z c0 c1 c2 c3 d0 d1 d2 K : ℝ) (t : ℝ) : ℝ :=
+  c0 * t + c1 * t ^ 2 / 2 + c2 * t ^ 3 / 3 + c3 * t ^ 4 / 4
+    + ((-d0 / z - d1 / z ^ 2 - 2 * d2 / z ^ 3) + (-d1 / z - 2 * d2 / z ^ 2) * t
+        + (-d2 / z) * t ^ 2) * Real.exp (-z * t)
+    + (-K / (2 * z)) * Real.exp (-2 * z * t)
+
+/-- `canonAntider' = cubic + quadratic·e^{−zt} + K·e^{−2zt}` (the integrating-factor check). -/
+theorem canonAntider_hasDerivAt (z c0 c1 c2 c3 d0 d1 d2 K : ℝ) (hz : 0 < z) (t : ℝ) :
+    HasDerivAt (canonAntider z c0 c1 c2 c3 d0 d1 d2 K)
+      (c0 + c1 * t + c2 * t ^ 2 + c3 * t ^ 3
+        + (d0 + d1 * t + d2 * t ^ 2) * Real.exp (-z * t) + K * Real.exp (-2 * z * t)) t := by
+  have hz' : z ≠ 0 := ne_of_gt hz
+  have hE : HasDerivAt (fun s => Real.exp (-z * s)) (-z * Real.exp (-z * t)) t := by
+    have h := (Real.hasDerivAt_exp (-z * t)).comp t ((hasDerivAt_id t).const_mul (-z))
+    simp only [Function.comp_def, mul_one] at h
+    rwa [mul_comm (Real.exp (-z * t)) (-z)] at h
+  have hE2 : HasDerivAt (fun s => Real.exp (-2 * z * s)) (-2 * z * Real.exp (-2 * z * t)) t := by
+    have h := (Real.hasDerivAt_exp (-2 * z * t)).comp t ((hasDerivAt_id t).const_mul (-2 * z))
+    simp only [Function.comp_def, mul_one] at h
+    rwa [mul_comm (Real.exp (-2 * z * t)) (-2 * z)] at h
+  have hpoly := ((((hasDerivAt_id t).const_mul c0).add
+      (((hasDerivAt_pow 2 t).const_mul c1).div_const 2)).add
+      (((hasDerivAt_pow 3 t).const_mul c2).div_const 3)).add
+      (((hasDerivAt_pow 4 t).const_mul c3).div_const 4)
+  have hquad := (((hasDerivAt_const t (-d0 / z - d1 / z ^ 2 - 2 * d2 / z ^ 3)).add
+      ((hasDerivAt_id t).const_mul (-d1 / z - 2 * d2 / z ^ 2))).add
+      ((hasDerivAt_pow 2 t).const_mul (-d2 / z)))
+  have hsum := (hpoly.add (hquad.mul hE)).add (hE2.const_mul (-K / (2 * z)))
+  refine hsum.congr_deriv ?_
+  norm_num
+  set E := Real.exp (-z * t)
+  set F := Real.exp (-2 * z * t)
+  field_simp
+  ring
+
+/-- **Canonical bounded-region integral.**  `∫_a^b (cubic + quadratic·e^{−zt} + K·e^{−2zt}) =
+canonAntider b − canonAntider a` (FTC, `z > 0`). -/
+theorem integral_canonical (a b z c0 c1 c2 c3 d0 d1 d2 K : ℝ) (hz : 0 < z) :
+    (∫ t in a..b, c0 + c1 * t + c2 * t ^ 2 + c3 * t ^ 3
+        + (d0 + d1 * t + d2 * t ^ 2) * Real.exp (-z * t) + K * Real.exp (-2 * z * t))
+      = canonAntider z c0 c1 c2 c3 d0 d1 d2 K b - canonAntider z c0 c1 c2 c3 d0 d1 d2 K a := by
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt
+    (fun t _ => canonAntider_hasDerivAt z c0 c1 c2 c3 d0 d1 d2 K hz t)
+    (Continuous.intervalIntegrable (by fun_prop) a b)]
+
 end FMSA.ExactMSA.Breakpoint
