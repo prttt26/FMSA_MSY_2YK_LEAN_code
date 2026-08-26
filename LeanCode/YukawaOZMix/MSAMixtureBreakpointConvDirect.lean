@@ -390,4 +390,48 @@ theorem integral_sq_mul_exp (a b c : ℝ) (hc : c ≠ 0) :
   · exact ((continuous_pow 2).mul
       (Real.continuous_exp.comp (continuous_const.mul continuous_id))).intervalIntegrable _ _
 
+/-! ### BRK.16b part (b) — the four region-integrand closed forms
+
+Each region of the convolution is a product of two explicit branch formulas; here is its closed form
+as a function of the interval limits.  `Li := edgeLo σ i l`, `Hi := edgeHi σ i l`, `Lj/Hj` likewise.
+The per-piece assembly (inner/outer) plugs the region limits into these and sums.  First the
+`tail·tail` region — the improper `(c,∞)` tail, pure `exp·exp` collapsing to one `e^{−2zt}`. -/
+
+/-- **Region `tail·tail`.**  `∫_c^∞ tail(Q'_il)(t+r)·tail(Q_jl)(t) dt`.  Both factors are pure
+two-exponential tails, so the product is `K·e^{−2zt}` (one exponential); the improper integral is
+`K·e^{−2zc}/(2z)` (`integral_exp_mul_Ioi`, `z > 0`).  `K` folds the four shift constants. -/
+theorem integral_tailtail (z : ℝ) (hz : 0 < z) (Wil Ctil Wjl Ctjl Li Hi Lj Hj r c : ℝ) :
+    (∫ t in Ioi c,
+      (-z * Wil * Real.exp (-z * (t + r - Li)) - z * Ctil * Real.exp (-z * (t + r - Hi)))
+      * (Wjl * Real.exp (-z * (t - Lj)) + Ctjl * Real.exp (-z * (t - Hj))))
+    = (-z * (Wil * Wjl * Real.exp (-z * (r - Li - Lj))
+          + Wil * Ctjl * Real.exp (-z * (r - Li - Hj))
+          + Ctil * Wjl * Real.exp (-z * (r - Hi - Lj))
+          + Ctil * Ctjl * Real.exp (-z * (r - Hi - Hj))))
+      * (Real.exp (-2 * z * c) / (2 * z)) := by
+  set K := -z * (Wil * Wjl * Real.exp (-z * (r - Li - Lj))
+          + Wil * Ctjl * Real.exp (-z * (r - Li - Hj))
+          + Ctil * Wjl * Real.exp (-z * (r - Hi - Lj))
+          + Ctil * Ctjl * Real.exp (-z * (r - Hi - Hj))) with hK
+  have hpt : ∀ t : ℝ,
+      (-z * Wil * Real.exp (-z * (t + r - Li)) - z * Ctil * Real.exp (-z * (t + r - Hi)))
+        * (Wjl * Real.exp (-z * (t - Lj)) + Ctjl * Real.exp (-z * (t - Hj)))
+      = K * Real.exp (-2 * z * t) := by
+    intro t
+    have s1 : ∀ w : ℝ, Real.exp (-z * (t + r - w))
+        = Real.exp (-z * t) * Real.exp (-z * r) * Real.exp (z * w) := fun w => by
+      rw [show -z * (t + r - w) = -z * t + -z * r + z * w by ring, Real.exp_add, Real.exp_add]
+    have s2 : ∀ w : ℝ, Real.exp (-z * (t - w)) = Real.exp (-z * t) * Real.exp (z * w) := fun w => by
+      rw [show -z * (t - w) = -z * t + z * w by ring, Real.exp_add]
+    have s3 : ∀ x y : ℝ, Real.exp (-z * (r - x - y))
+        = Real.exp (-z * r) * Real.exp (z * x) * Real.exp (z * y) := fun x y => by
+      rw [show -z * (r - x - y) = -z * r + z * x + z * y by ring, Real.exp_add, Real.exp_add]
+    have s4 : Real.exp (-2 * z * t) = Real.exp (-z * t) * Real.exp (-z * t) := by
+      rw [← Real.exp_add]; ring_nf
+    rw [hK]; simp only [s1, s2, s3, s4]; ring
+  rw [setIntegral_congr_fun measurableSet_Ioi (fun t _ => hpt t),
+    integral_const_mul, integral_exp_mul_Ioi (show -2 * z < 0 by linarith) c]
+  rw [show -2 * z = -(2 * z) by ring]
+  field_simp
+
 end FMSA.ExactMSA.Breakpoint
