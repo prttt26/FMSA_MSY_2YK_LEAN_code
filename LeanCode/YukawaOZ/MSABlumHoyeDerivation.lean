@@ -41,10 +41,12 @@ Yukawa rate (§6, the "exact-MSA self-consistency").
 2. ◑ the **exterior non-compact-`q` Baxter relation** (the RHS of Eq. 8 at `r > 1` for
    `q = q0_poly + Dt·e^{−zr}`) — STARTED: `tail_tail_conv` computes the tail–tail self-overlap
    `∫_{t>0} e^{−zt}·e^{−z(r+t)} = e^{−zr}/(2z)`, the source of the `Dt²` (doubly-propagated) term.
-   Remaining: the poly–tail cross integral, the full exterior relation (`baxter_factorization_inner`
-   technique + exp antiderivatives), AND the `Q̂` integral↔closed-form faithfulness bridge (`Q̂ =
-   φ₁q′+φ₂A` is a closed form in `MSABlumHoyeSystem`, not an integral — that bridge is currently
-   validated only numerically).  This is the substantive step.
+   plus `exp_shift_factor` reduces the poly–tail cross overlap to a core Laplace moment.  ⚠ The two
+   overlap integrals are the *convention-independent* components.  The **assembly** — the exact
+   exterior Baxter relation (Eq. 8) form, and whether the ansatz's Yukawa exp extends past `σ`
+   (needed for the `s=−z` pole) or is core-only — must be pinned before combining them, and the `Q̂`
+   integral↔closed-form faithfulness bridge (`Q̂ = φ₁q′+φ₂A` is closed-form in `MSABlumHoyeSystem`,
+   not an integral; validated only numerically) is a further piece.  This is the substantive step.
 3. ☐ **match the `e^{−zr}` coefficient** ⟹ `h29 : Dt·bhF(z) = 2πK/z` as a theorem.
 4. ☐ the **Laplace moment `ĝ(z)`** ⟹ `h33`, carrying the `Dt`/`γ` terms onto the proved base
    `bh_base_eq`.
@@ -101,5 +103,20 @@ theorem tail_tail_conv {z : ℝ} (hz : 0 < z) (r : ℝ) :
     integral_exp_mul_Ioi (by linarith : -(2 * z) < 0) 0]
   rw [mul_zero, Real.exp_zero, neg_div_neg_eq]
   ring
+
+/-- **Milestone 2 building block — the exterior shift factors out.**  The other convolution overlap
+in Baxter's exterior relation is the core polynomial against the tail: `∫ g(t)·e^{−z(r+t)} dt`.  The
+exterior point's `e^{−zr}` pulls straight out of any such integrand, `= e^{−zr}·∫ g(t)·e^{−zt} dt`
+— reducing the poly–tail cross term to the core Laplace moment `∫ g(t)e^{−zt} dt`.  Convention-
+independent (pure shift algebra), so it holds for any `g` and interval. -/
+theorem exp_shift_factor (g : ℝ → ℝ) (z r a b : ℝ) :
+    ∫ t in a..b, g t * Real.exp (-z * (r + t))
+      = Real.exp (-z * r) * ∫ t in a..b, g t * Real.exp (-z * t) := by
+  rw [← intervalIntegral.integral_const_mul]
+  apply intervalIntegral.integral_congr
+  intro t _
+  have hsplit : Real.exp (-z * (r + t)) = Real.exp (-z * r) * Real.exp (-z * t) := by
+    rw [← Real.exp_add]; congr 1; ring
+  simp only [hsplit]; ring
 
 end FMSA.ExactMSA
