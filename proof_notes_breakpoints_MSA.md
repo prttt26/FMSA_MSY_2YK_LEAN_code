@@ -891,8 +891,24 @@ ALREADY EXIST as the concurrent session's `MixtureRealSpace.lean` (`integral_pol
 - ✅ BRK.16b item 1 — integrability: `baxterQ_integrable`, `baxterQ'_bounded`, `baxterQ'_measurable`,
   `baxterConvIntegrand_integrable` (exp-tail handled; each `∫_l` well-defined).
 - ✅ BRK.16b diagonal half — `neg_baxterQ'_eq_diag` (part (a) above).
-- ☐ BRK.16b part (b) — the per-`l` convolution closed form: σ_l-dependent 4-breakpoint interval
-  decomposition (edges `edgeLo/edgeHi σ i l − r`, `edgeLo/edgeHi σ j l`), per-sub-integral eval via
-  the MRS.5 primitives, then `field_simp;ring` on exp atoms where the σ_l-dependence CANCELS
-  (σ_l-free kernel).  Bounded but large (× inner/outer); multi-session.  ⚠ overlaps the concurrent
-  MSAEMIX Group MRS real-space DCF layer — coordinate to avoid duplication.
+- ◐ BRK.16b part (b) — the per-`l` convolution closed form.  The whole EVALUATION INFRASTRUCTURE is
+  now BUILT + validated (all std-3, `MSAMixtureBreakpointConvDirect.lean`):
+  - ✅ `baxterConv_eq_setIntegral_Ici` — support reduction `∫_ℝ = ∫_{[edgeLo σ j l,∞)}`.
+  - ✅ ordering lemmas (`edgeLo_lt_edgeHi`, `edgeLo_lt_edgeHi_sub_r`, `edgeHi_lt_edgeHi_sub_r_inner`,
+    `edgeHi_sub_r_lt_edgeHi_outer`, `lamA_eq_of_le`) — the inner/outer 3-region geometry
+    (`Lj < Hj < Hi−r` inner, `Lj < Hi−r < Hj` outer; middle flips at `r = |λ_ij|`).
+  - ✅ `setIntegral_Ici_split3` — the 3-way split (two bounded pieces + improper tail).
+  - ✅ interval primitives `integral_exp_linear`/`integral_id_mul_exp`/`integral_sq_mul_exp`
+    (`∫ tᵏe^{ct}`, k=0,1,2, antiderivative+FTC).
+  - ✅ `integral_tailtail` — the `tail·tail` region closed form (pure `e^{−2zt}` → `integral_exp_mul_Ioi`).
+  - ✅ `canonAntider`/`canonAntider_hasDerivAt`/`integral_canonical` — the canonical bounded-region
+    integral `∫_a^b (cubic + quadratic·e^{−zt} + K·e^{−2zt})`; the single evaluator all 3 bounded
+    regions reduce to.  (`HasDerivAt.congr_deriv` sidesteps the convert/instance plumbing.)
+  - ☐ REMAINING: (i) the 3 bounded-region reductions — pointwise-rewrite each branch product into the
+    canonical integrand (atom-basis split + `ring`, à la `integral_tailtail`'s `hpt`), giving explicit
+    `cᵢ/dᵢ/K`, then `integral_canonical`; (ii) 2 assembly theorems (inner/outer) — `setIntegral_Ici_split3`
+    + `Ioc/Icc → a..b` + sum the 3 region values; (iii) the final `= gForm(kernel_l)(r)` match where the
+    σ_l-dependence CANCELS (`field_simp;ring`, exp atoms); (iv) wrap `∑_l` (`sum_congr`) + diagonal
+    (`neg_baxterQ'_eq_diag`) + `/2πr` ⇒ `baxterConvCore = matCoreUneq`, retiring the axiom.
+  Mechanical/downhill now (infra done, technique validated on `tail·tail`); still multi-session for the
+  coefficient bookkeeping.  ⚠ overlaps concurrent MSAEMIX Group MRS — coordinate.
