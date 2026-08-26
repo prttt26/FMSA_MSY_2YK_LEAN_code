@@ -860,5 +860,39 @@ exactly the BRK.7-Step-5 route the closed form was introduced to avoid.
 - BRK.16d — `∂ⁿ_K` all orders (amplitude/geometry separation, BRK.14-style) + `breakpoints_sigma_l_free`
   (BRK.2, std-3) ⇒ interior knot `= |λ_ij|` only, std-3.
 
-**Status: SCOPED, not started.**  Research-scale (BRK.16b = the bypassed hard route, made harder by
-the exponential tail).  Drops one axiom from the breakpoint sub-result only.
+**Status (smoothness route): SCOPED.**  Research-scale; drops the axiom from the breakpoint
+sub-result only.  SUPERSEDED as the primary target by the VALUE-identity route below, which retires
+the axiom ENTIRELY (value ⇒ smoothness).
+
+### BRK.16 — the VALUE-identity route (retire the axiom entirely, 2026-08-26)
+
+**Goal (stronger).**  Prove `baxterConvCore = matCoreUneq` on the two core pieces DIRECTLY, retiring
+the sympy axiom `baxterConvCore_eq_matCoreUneq` completely (not just its breakpoint corollary) —
+`baxterConvCore_smooth_off_unique_breakpoint` and all downstream then become std-3.
+
+**Key reduction (per-`l`, load-bearing insight).**  `matCoreUneq` KEEPS `∑_l ρ_l·(…)` EXPLICIT with
+**σ_l-free per-`l` kernels** (`MSAMixtureCoreUneq.lean` docstring, lines 21–25).  So the seam splits
+by `Finset.sum_congr` into:
+- **(a) diagonal** `−Q'_ij(r) = gForm(diagonal coeffs)(r)` — ✅ **DONE** (`neg_baxterQ'_eq_diag`,
+  std-3).  Matches `cC0i`/`cC1i`/`cEmi` diagonal terms exactly on the core support; NO integral.
+- **(b) per-`l` convolution** `∫ Q'_il(t+r) Q_jl(t) dt = gForm(kernel_l)(r)` — the SOLE remaining
+  seam, ONE identity (parametrised by amplitudes `qp_il,A_l,Wt_il,Ct_il / qp_jl,A_l,Wt_jl,Ct_jl` and
+  diameters `σ_i,σ_j,σ_l`), on each piece.  The `∑_l` and `ρ_l`-weights wrap trivially.
+
+**Feasibility CORRECTION.**  The `MSAMixtureBaxterConv.lean` docstring calls this "the same class as
+the MSAEXACT.6 hcore ring (measured infeasible)".  That conflates two objects: the infeasible one is
+the **k-space degree-22** ring reassembly (`project_msaexact6_ring_infeasible`).  The **real-space**
+per-`l` convolution (b) is instead the **MML.8/MRS.5 class** — poly⋆exp closed forms whose primitives
+ALREADY EXIST as the concurrent session's `MixtureRealSpace.lean` (`integral_poly_exp_conv`,
+`integral_quadratic_exp_conv`; poly⋆poly = `integral_quad_mul_quad`).  Tractable, not ring-infeasible.
+
+**Progress.**
+- ✅ BRK.16a — `baxterQ`/`baxterQ'` piecewise `ContDiffOn ⊤` (foundation).
+- ✅ BRK.16b item 1 — integrability: `baxterQ_integrable`, `baxterQ'_bounded`, `baxterQ'_measurable`,
+  `baxterConvIntegrand_integrable` (exp-tail handled; each `∫_l` well-defined).
+- ✅ BRK.16b diagonal half — `neg_baxterQ'_eq_diag` (part (a) above).
+- ☐ BRK.16b part (b) — the per-`l` convolution closed form: σ_l-dependent 4-breakpoint interval
+  decomposition (edges `edgeLo/edgeHi σ i l − r`, `edgeLo/edgeHi σ j l`), per-sub-integral eval via
+  the MRS.5 primitives, then `field_simp;ring` on exp atoms where the σ_l-dependence CANCELS
+  (σ_l-free kernel).  Bounded but large (× inner/outer); multi-session.  ⚠ overlaps the concurrent
+  MSAEMIX Group MRS real-space DCF layer — coordinate to avoid duplication.
