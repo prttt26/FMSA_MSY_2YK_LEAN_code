@@ -187,4 +187,23 @@ theorem baxterQ'_bounded (z : ℝ) (hz : 0 < z) (σ A : Fin N → ℝ)
       _ ≤ _ := by nlinarith [abs_nonneg (qp a b), mul_nonneg (abs_nonneg (A b)) (hσ a),
             mul_nonneg hz.le (abs_nonneg (Wt a b))]
 
+/-- **`baxterQ'` is measurable** (piecewise, via `Measurable.ite`). -/
+theorem baxterQ'_measurable (z : ℝ) (σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ) (a b : Fin N) :
+    Measurable (baxterQ' z σ A qp Wt Ct a b) := by
+  unfold baxterQ'
+  refine Measurable.ite (measurableSet_lt measurable_id measurable_const) measurable_const ?_
+  refine Measurable.ite (measurableSet_le measurable_id measurable_const) ?_ ?_ <;> fun_prop
+
+/-- ⭐ **BRK.16b (item 1) — the convolution integrand is integrable.**  `t ↦ Q'_il(t+r)·Q_jl(t)` is
+`Integrable` (`z>0`): `baxterQ'(·+r)` is bounded + measurable and `baxterQ_jl ∈ L¹`, so the product
+is `bdd · L¹` (`Integrable.bdd_mul`).  This makes each `∫ Q'_il(t+r) Q_jl(t) dt` in `baxterConvCore`
+well-defined — the prerequisite for the interval-form smoothness (item 2). -/
+theorem baxterConvIntegrand_integrable (z : ℝ) (hz : 0 < z) (σ A : Fin N → ℝ)
+    (qp Wt Ct : Fin N → Fin N → ℝ) (i j l : Fin N) (r : ℝ) (hσ : ∀ i, 0 ≤ σ i) :
+    Integrable (fun t => baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t) := by
+  obtain ⟨C, hC⟩ := baxterQ'_bounded z hz σ A qp Wt Ct i l hσ
+  exact (baxterQ_integrable z hz σ A qp Wt Ct j l hσ).bdd_mul
+    ((baxterQ'_measurable z σ A qp Wt Ct i l).comp (measurable_id.add_const r)).aestronglyMeasurable
+    (Filter.Eventually.of_forall (fun t => by rw [Real.norm_eq_abs]; exact hC (t + r)))
+
 end FMSA.ExactMSA.Breakpoint
