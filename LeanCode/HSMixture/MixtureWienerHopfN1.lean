@@ -32,7 +32,7 @@ matrix **structure-factor identity** `hSF`: `(Q̂₀·Q̂₀(−·)ᵀ)ᵢⱼ = 
 (Hermitian reality on the axis).  `hfack_fin_one_via_reduction` then feeds this `hSF` through the
 general-`N` reduction (`matWH_hfack_of_structureFactor`), reproducing the `N = 1` Gram input — a
 consistency check that the general mechanics specialize to the proven scalar case.  The general-`N`
-`hSF` (`matShellKernel` ⟷ `Q̂₀`) remains the sole open piece.
+`hSF` (`matShellKernel` ⟷ `Q̂₀`) was the sole open piece — since landed (see the Update below).
 
 **Update (2026-08-19).**  The general-`N` `hSF` Fourier factorization has since landed as
 `matDCFfullN_laplace` (`MixtureDCFAEInjective.lean`): `𝓛(matDCFfullN)(i·k) = Cmix0 = I − Q̂₀Q̂₀ᵀ`.

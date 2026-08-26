@@ -285,7 +285,8 @@ theorem det_meromorphicOn (sigma : Fin 2 → ℂ) (rho_geo Qp Qpp : Fin 2 → Fi
 The generic chord-Newton engine (MZERO.3/MZERO.4/MZERO.6) and the **shared** `ChordPoleFamily` predicate +
 `zeros_infinite_of_chordPoleFamily` (MZERO.7's infinitude) now live in
 `LeanCode/Analysis/BanachPoleFamily.lean` (`open`ed above), so that **`det(Q̂₀_c)` (MZERO.5) and
-`G_baxter` (POLE.3) instantiate the same predicate** and their remaining gaps close together (see
+`G_baxter` (POLE.3) instantiate the same predicate** and their gaps have since closed together
+(MZERO.5 unconditionally via `MixtureChordFamily.detC_zeros_infinite_unconditional`; see
 `todo_lean.md` Conditional-hypotheses table). This section only instantiates `F = detC`. The
 quantitative MZERO.5 bounds (`‖1 − det′/Fp1‖ ≤ K`, `hstep`) enter as explicit hypotheses. -/
 
