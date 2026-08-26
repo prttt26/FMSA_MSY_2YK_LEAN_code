@@ -31,7 +31,8 @@ open MeasureTheory Set
 
 namespace FMSA.MixtureBaxter
 
-open FMSA.MatrixQ0 FMSA.MixtureHSDCF FMSA.HardSphere MeasureTheory intervalIntegral
+open FMSA.MatrixQ0 FMSA.MixtureHSDCF FMSA.HardSphere FMSA.MixtureBaxterCore FMSA.MixtureOzStar
+open MeasureTheory intervalIntegral
 
 variable {N : ℕ}
 
@@ -87,5 +88,85 @@ theorem matDCFfullN_eq_shellIntegral (rho sigma : Fin N → ℝ) (hsig : ∀ k, 
           * ∫ s in w..((sigma i + sigma k) / 2), s * cMixDCFN rho sigma i k s : ℝ) : ℂ) := by
   rw [matDCFfullN_eq_ofReal,
     matDCFreCoreN_eq_shellIntegral rho sigma hsig hrho hvac i k hlt hw0 hwR hwne]
+
+/-! ### The k-space transform companion: `Cmix0 = ρ·radial_fourier(DCF)` (quadratic-form level) -/
+
+/-- ⭐ **MRS.8 transform companion.**  The Baxter zeroth-order DCF matrix `Cmix0 = I − Q̂₀Q̂₀ᵀ`
+equals `ρ` times the radial Fourier transform of the (symmetrised, ρ-weighted, truncated) physical
+DCF `PhiSymN`, at the quadratic-form level:
+`∑ᵢⱼ Cmix0(ik)ᵢⱼ vᵢvⱼ = ↑(ρ·∑ᵢⱼ radial_fourier(PhiSymN)ᵢⱼ(k) vᵢvⱼ)`.  Both sides reduce to
+`2·∑ᵢⱼ Tᵢⱼ vᵢvⱼ` with `Tᵢⱼ = ∫₀^∞ matDCFreCoreN·cos`: the RHS via `radial_fourier_PhiSymN`
+(`𝓕(PhiSymN) = (2/ρ)·T`), the LHS via `Cmix0_quadForm_cosN` + `matDCFfullN_eq_ofReal`.  This is the
+k-space form of `matDCFfullN_eq_shellIntegral` — the "Baxter reconstruction = radial-FT of the ODE
+Lebowitz DCF" identity, completing MRS.8's transform statement. -/
+theorem Cmix0_quadForm_eq_rho_radial_fourier (rho sigma : Fin N → ℝ) (hsig : ∀ k, 0 < sigma k)
+    (hrho : ∀ n, 0 ≤ rho n) (hvac : vacMix rho sigma ≠ 0) {rho_s : ℝ} (hrho_s : rho_s ≠ 0)
+    {k : ℝ} (hk : k ≠ 0) (v : Fin N → ℝ) :
+    (∑ i, ∑ j, Cmix0 (QphysN rho sigma) (Complex.I * (k : ℂ)) i j * (v i : ℂ) * (v j : ℂ))
+      = ((rho_s * ∑ i, ∑ j,
+          radial_fourier (PhiSymN rho sigma rho_s i j) k * v i * v j : ℝ) : ℂ) := by
+  set T : Fin N → Fin N → ℝ :=
+    fun i j => ∫ w in Set.Ioi (0:ℝ), matDCFreCoreN rho sigma hsig i j w * Real.cos (k * w) with hT
+  have hRHS : (rho_s * ∑ i, ∑ j, radial_fourier (PhiSymN rho sigma rho_s i j) k * v i * v j)
+      = 2 * ∑ i, ∑ j, T i j * v i * v j := by
+    have hper : ∀ i j, rho_s * radial_fourier (PhiSymN rho sigma rho_s i j) k = 2 * T i j := by
+      intro i j
+      simp only [hT]
+      rw [radial_fourier_PhiSymN rho sigma hsig hrho hvac i j hrho_s hk]
+      field_simp
+    rw [Finset.mul_sum, Finset.mul_sum]
+    refine Finset.sum_congr rfl (fun i _ => ?_)
+    rw [Finset.mul_sum, Finset.mul_sum]
+    refine Finset.sum_congr rfl (fun j _ => ?_)
+    linear_combination (v i * v j) * hper i j
+  rw [Cmix0_quadForm_cosN rho sigma hsig k hk v]
+  have hcast : (∫ w in Set.Ioi (0:ℝ),
+        (∑ i, ∑ j, matDCFfullN rho sigma hsig i j w * (v i : ℂ) * (v j : ℂ))
+          * (2 * Complex.cos ((k : ℂ) * w)))
+      = ((∫ w in Set.Ioi (0:ℝ),
+        (∑ i, ∑ j, matDCFreCoreN rho sigma hsig i j w * v i * v j) * (2 * Real.cos (k * w))
+          : ℝ) : ℂ) := by
+    rw [← integral_complex_ofReal]
+    refine setIntegral_congr_fun measurableSet_Ioi (fun w _ => ?_)
+    simp only [matDCFfullN_eq_ofReal]
+    push_cast [Complex.ofReal_cos]
+    ring
+  have hreal : (∫ w in Set.Ioi (0:ℝ),
+        (∑ i, ∑ j, matDCFreCoreN rho sigma hsig i j w * v i * v j) * (2 * Real.cos (k * w)))
+      = 2 * ∑ i, ∑ j, T i j * v i * v j := by
+    have hstep : (∫ w in Set.Ioi (0:ℝ),
+          (∑ i, ∑ j, matDCFreCoreN rho sigma hsig i j w * v i * v j) * (2 * Real.cos (k * w)))
+        = ∫ w in Set.Ioi (0:ℝ),
+          ∑ i, ∑ j, (matDCFreCoreN rho sigma hsig i j w * Real.cos (k * w)) * (2 * v i * v j) := by
+      refine setIntegral_congr_fun measurableSet_Ioi (fun w _ => ?_)
+      rw [Finset.sum_mul]
+      refine Finset.sum_congr rfl (fun i _ => ?_)
+      rw [Finset.sum_mul]
+      refine Finset.sum_congr rfl (fun j _ => ?_)
+      ring
+    rw [hstep]
+    have hout : (∫ w in Set.Ioi (0:ℝ),
+          ∑ i, ∑ j, (matDCFreCoreN rho sigma hsig i j w * Real.cos (k * w)) * (2 * v i * v j))
+        = ∑ i, ∫ w in Set.Ioi (0:ℝ),
+          ∑ j, (matDCFreCoreN rho sigma hsig i j w * Real.cos (k * w)) * (2 * v i * v j) :=
+      integral_finset_sum _ (fun i _ => integrable_finset_sum _ (fun j _ =>
+        ((matDCFreCoreN_cos_integrable rho sigma hsig i j k).mul_const
+          (2 * v i * v j)).integrableOn))
+    rw [hout]
+    simp only [hT]
+    rw [Finset.mul_sum]
+    refine Finset.sum_congr rfl (fun i _ => ?_)
+    have hin : (∫ w in Set.Ioi (0:ℝ),
+          ∑ j, (matDCFreCoreN rho sigma hsig i j w * Real.cos (k * w)) * (2 * v i * v j))
+        = ∑ j, ∫ w in Set.Ioi (0:ℝ),
+          (matDCFreCoreN rho sigma hsig i j w * Real.cos (k * w)) * (2 * v i * v j) :=
+      integral_finset_sum _ (fun j _ =>
+        ((matDCFreCoreN_cos_integrable rho sigma hsig i j k).mul_const
+          (2 * v i * v j)).integrableOn)
+    rw [hin, Finset.mul_sum]
+    refine Finset.sum_congr rfl (fun j _ => ?_)
+    rw [MeasureTheory.integral_mul_const]
+    ring
+  rw [hcast, hreal, hRHS]
 
 end FMSA.MixtureBaxter

@@ -53,9 +53,10 @@ DCF; the DCF is its derivative `cMixDCFN = −matDCFreCoreN'/(2π·rg·v)` (the 
 them would force a Gaussian.  The **correct** identity — the core is the *shell-integral* of the
 DCF — is now **PROVED** (`MixtureDCFShellForm.lean`, std-3): for `σᵢ<σₖ`, `w ∈ (0,Rᵢₖ)`,
 `matDCFfullN(w) = ↑(2π·rgᵢₖ·∫_w^{Rᵢₖ} s·cMixDCFN(s) ds)` (`matDCFfullN_eq_shellIntegral`), a
-corollary of `hShellDCF_uneq`.  The remaining transform step
-`𝓛(matDCFfullN)(i·k) = ρ·radial_fourier(cMixDCFN)(k)` is a Fourier IBP on that with
-`matDCFfullN_laplace`.  Everything else downstream (det ≠ 0, tail `matSymbol_tail_bound`,
+corollary of `hShellDCF_uneq`.  The **k-space transform companion**
+`∑ᵢⱼ Cmix0(ik)ᵢⱼvᵢvⱼ = ρ·∑ᵢⱼ radial_fourier(PhiSymN)ᵢⱼ(k)vᵢvⱼ` (quadratic form) is likewise now
+**PROVED** (`Cmix0_quadForm_eq_rho_radial_fourier`, std-3), via `Cmix0_quadForm_cosN` +
+`radial_fourier_PhiSymN`.  Everything else downstream (det ≠ 0, tail `matSymbol_tail_bound`,
 continuity `matDCFfullN_ae_continuous`, the coercivity assembly
 `matSymbolCoercive_of_gramFactors`, and `matOzStar_unique`) is in hand.
 -/
