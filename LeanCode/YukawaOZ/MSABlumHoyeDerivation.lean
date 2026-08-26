@@ -87,10 +87,10 @@ theorem cMSAtail_lhs_laplace (K : ℝ) {s z : ℝ} (hsz : 0 < s + z) :
 /-! ### Milestone 2 (in progress) — the exterior non-compact-`q` Baxter convolution -/
 
 /-- **Milestone 2 building block — the tail–tail self-overlap.**  In Baxter's exterior relation the
-convolution `∫ q′(t) q(r+t) dt` (with the non-compact `q = q0_poly + Dt·e^{−zr}`) picks up, at
-`r > σ`, the tail-against-tail overlap `∫_{t>0} e^{−zt}·e^{−z(r+t)} dt = e^{−zr}/(2z)`.  Multiplied by the
-tail's `−z Dt` derivative and the `Dt` shift this is the `−Dt²/2·e^{−zr}` **doubly-propagated**
-term of the exterior relation — the same `Dt²` structure that makes `(29)` degree-2. -/
+convolution `∫ q′(t) q(r+t) dt` for the non-compact `q = q0_poly + Dt·e^{−zr}` picks up, at `r > σ`,
+the tail-against-tail overlap `∫_{t>0} e^{−zt}·e^{−z(r+t)} dt = e^{−zr}/(2z)`.  Times the tail's
+`−z Dt` derivative and the `Dt` shift, this is the `−Dt²/2·e^{−zr}` **doubly-propagated** `Dt²` term
+of the exterior relation — the structure that makes `(29)` degree-2. -/
 theorem tail_tail_conv {z : ℝ} (hz : 0 < z) (r : ℝ) :
     ∫ t in Ioi (0 : ℝ), Real.exp (-z * t) * Real.exp (-z * (r + t))
       = Real.exp (-z * r) / (2 * z) := by
