@@ -45,14 +45,19 @@ bridge for both the middle (`hfack`) and the origin (`hfac0`).
 Fourier END has landed at general `N`: `matDCFfullN_laplace` (`MixtureDCFAEInjective.lean`) proves
 `𝓛(matDCFfullN)(i·k) = Cmix0(Q̂₀, i·k) = I − Q̂₀(i·k)Q̂₀(−i·k)ᵀ`, where `matDCFfullN` is the Baxter
 reconstruction `ρgeo·q₀(v) + ρgeo·q₀ᵀ(−v) − (q₀⋆q₀)` (= `q + q̃ − q⋆q`).  Sub-fact 2 (Hermitian
-reality) is proved: `Q0_mat_c_phys_neg_axis`.  So the SOLE remaining open piece is the **real-space
-identification** `matDCFfullN(v) = ` the physical two-piece Lebowitz DCF `cMixDCFN(v)` on `v > 0`
-(with `matDCFfullN` even), whence `𝓛(matDCFfullN)(i·k) = ρ·radial_fourier(cMixDCFN)(k)` bridges the
-Baxter 1D transform to the coercivity symbol `matRadialSymbol Φ`.  That identity is "Baxter
-reconstruction = ODE Lebowitz DCF", the MRS.8 companion of `shellForcing_eq_cMixDCFN` — genuine
-Wertheim content, still unproved (grep: no `matDCFfullN`↔`cMixDCFN` theorem).  Everything downstream
-(det ≠ 0, tail `matSymbol_tail_bound`, continuity `matDCFfullN_ae_continuous`, the coercivity
-assembly `matSymbolCoercive_of_gramFactors`, and `matOzStar_unique`) is in hand.
+reality) is proved: `Q0_mat_c_phys_neg_axis`.
+
+⚠ **CORRECTION (2026-08-25): `matDCFfullN(v) = cMixDCFN(v)` was a MIS-STATEMENT.**  In fact
+`matDCFfullN = (matDCFreCoreN : ℂ)` (`matDCFfullN_eq_ofReal`) — the reconstruction *core* — not the
+DCF; the DCF is its derivative `cMixDCFN = −matDCFreCoreN'/(2π·rg·v)` (the MRS.8 ODE), so equating
+them would force a Gaussian.  The **correct** identity — the core is the *shell-integral* of the
+DCF — is now **PROVED** (`MixtureDCFShellForm.lean`, std-3): for `σᵢ<σₖ`, `w ∈ (0,Rᵢₖ)`,
+`matDCFfullN(w) = ↑(2π·rgᵢₖ·∫_w^{Rᵢₖ} s·cMixDCFN(s) ds)` (`matDCFfullN_eq_shellIntegral`), a
+corollary of `hShellDCF_uneq`.  The remaining transform step
+`𝓛(matDCFfullN)(i·k) = ρ·radial_fourier(cMixDCFN)(k)` is a Fourier IBP on that with
+`matDCFfullN_laplace`.  Everything else downstream (det ≠ 0, tail `matSymbol_tail_bound`,
+continuity `matDCFfullN_ae_continuous`, the coercivity assembly
+`matSymbolCoercive_of_gramFactors`, and `matOzStar_unique`) is in hand.
 -/
 
 open MeasureTheory Set

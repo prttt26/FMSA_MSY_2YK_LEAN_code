@@ -36,9 +36,11 @@ consistency check that the general mechanics specialize to the proven scalar cas
 
 **Update (2026-08-19).**  The general-`N` `hSF` Fourier factorization has since landed as
 `matDCFfullN_laplace` (`MixtureDCFAEInjective.lean`): `𝓛(matDCFfullN)(i·k) = Cmix0 = I − Q̂₀Q̂₀ᵀ`.
-What is still open is only the real-space identification `matDCFfullN(v) = cMixDCFN(v)` on `v > 0`
-(Baxter reconstruction = ODE Lebowitz DCF), needed to rewrite `𝓛(matDCFfullN)` as
-`ρ·radial_fourier(cMixDCFN)` = the coercivity symbol.  See `MixtureSymbolBridge.lean`'s header.
+⚠ `matDCFfullN(v) = cMixDCFN(v)` was a MIS-STATEMENT: `matDCFfullN = (matDCFreCoreN : ℂ)`, the
+reconstruction *core*, not the DCF.  The correct identity — the core is the shell-integral of the
+DCF, `matDCFfullN(w) = ↑(2π·rg·∫_w^{Rᵢₖ} s·cMixDCFN)` — is PROVED in `MixtureDCFShellForm.lean`
+(`matDCFfullN_eq_shellIntegral`, std-3).  The remaining transform step to
+`ρ·radial_fourier(cMixDCFN)` = the coercivity symbol is a Fourier IBP.  See `MixtureSymbolBridge`.
 -/
 
 open MeasureTheory
