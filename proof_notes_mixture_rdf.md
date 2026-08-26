@@ -2324,7 +2324,7 @@ below (MML.15).
 
 ---
 
-### Task MML.15 — matrix OZ★: the mixture real-space OZ identity (foundation / START)
+### Task MML.15 — matrix OZ★: the mixture real-space OZ identity (foundation DONE; remainder REDUNDANT — cleared 2026-08-25)
 
 **The last unbuilt piece of MML.8's infrastructure, launched.** The three calculus rungs (Rung 1
 summability, Rung 2 `CoreSeriesClosure`, Rung 3 IBP) are complete; they all **consume** the matrix
@@ -4293,11 +4293,11 @@ branch-safety) — the payoff of the MZERO.2 chord-Newton choice.
 
 ---
 
-### Task MZERO.5 — magnitude bounds (`ChordPoleFamily det_c`) — the residual gap
+### Task MZERO.5 — magnitude bounds (`ChordPoleFamily det_c`) — ✅ CLOSED (cleared 2026-08-25)
 
 *(Route A, the one remaining piece — now UNIFIED with POLE.3.)* Construct a `ChordPoleFamily det_c`: the
 chord-Lipschitz bound `∀ s ∈ ball, ‖1 − det′(s)/Fp1‖ ≤ K` (`K<1`) + the good-guess
-`hstep : ‖det(s₁)/Fp1‖ ≤ r(1−K)` + the asymptotic pole locations. ◑ Two things pin it down:
+`hstep : ‖det(s₁)/Fp1‖ ≤ r(1−K)` + the asymptotic pole locations. ✅ CLOSED unconditionally by `MixtureChordFamily.detC_zeros_infinite_unconditional` (the ChordPoleFamily obligation discharged); the two pieces that pinned it down:
 - **Shared predicate** `ChordPoleFamily F` (`Analysis/BanachPoleFamily.lean`) — the *same* obligation
   `G_baxter` (POLE.3) carries; `Q0_det_c_zeros_infinite` and `G_baxter_zeros_infinite_of_chordPoleFamily`
   both consume it. So MZERO.5 ≡ POLE.3-`hstep`, and one asymptotic-family lemma closes **both**. (**POLE.5 is
