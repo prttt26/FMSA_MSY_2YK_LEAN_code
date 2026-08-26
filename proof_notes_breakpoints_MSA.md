@@ -827,3 +827,38 @@ bookkeeping explicit (base + step) instead of delegating to `iteratedDeriv_fun_s
 requested induction-form demonstration.  (The genuinely *different* induction would be the
 Leibniz/convolution route — `knots(f⋆g) ⊆ knots f + knots g` (BRK.1) applied `n` times to the raw
 Baxter convolution, BRK.7 Step 5 — which the closed form made unnecessary, BRK.12.)
+
+---
+
+## ☐ BRK.16 — axiom-REDUCTION: prove `baxterConvCore`'s breakpoints DIRECTLY (drop the sympy axiom)
+
+**Goal.**  `baxterConvCore_smooth_off_unique_breakpoint` currently = std-3 + the sympy axiom
+`baxterConvCore_eq_matCoreUneq` (breakpoints transferred from the closed form).  Prove the SAME
+breakpoint structure DIRECTLY from the convolution `baxterConvCore = (−Q'_ij + Σ_l ρ_l Q'_il ⋆
+Q_jl)/(2π r)`, making the breakpoint claim **std-3**.  Legitimate because the breakpoint is
+*structural* — interior knot `= |λ_ij|`, a support-edge geometric fact, independent of the
+coefficient VALUES; the closed form is not needed for it.  (The axiom stays for the value claims.)
+
+**Structural reduction (key).**  `baxterQ' = d/dr baxterQ`, so `∫ Q'_il(t+r) Q_jl(t) dt =
+d/dr ∫ Q_il(t+r) Q_jl(t) dt` (differentiate under the integral, MA.16).  Hence `baxterConvCore·2π r`
+is the `r`-derivative of a `Q⋆Q` convolution; ContDiffOn on a piece follows from the `Q⋆Q`
+convolution being ContDiffOn there (a `deriv` of `ContDiffOn ⊤` is `ContDiffOn ⊤`).
+
+**⚠ Feasibility (2026-08-26): the FULL hard route — existing infra does NOT reuse.**  The MML.8/DCF
+convolution smoothness (`qpConv_contDiffOn_upper/_lower`, `matCorrFull_contDiffOn_*`) is for
+`q0MixEntry` — the PY-HS factor, a QUADRATIC of COMPACT support `[λ,R]`, no exponential.  But
+`baxterConvCore` uses `baxterQ` — the exact-MSA factor with an EXPONENTIAL tail (→∞).  So the `Q⋆Q`
+smoothness must be re-proved for the exp-tailed `baxterQ` from scratch (infinite-tail integrals) —
+exactly the BRK.7-Step-5 route the closed form was introduced to avoid.
+
+**Sub-tasks.**
+- BRK.16a — `baxterQ`/`baxterQ'` piecewise smoothness (ContDiffOn on each open piece; `fun_prop`).
+- BRK.16b ⭐⭐ **(load-bearing)** — `∫ Q_il(t+r) Q_jl(t) dt` ContDiffOn on `(0,λ_ij)` and
+  `(λ_ij,σ_ij)`: split the exp-tailed integrand at the knots; differentiate under the integral off
+  the knot-alignment `r`-values.  The hard analytic core (no existing infra).
+- BRK.16c — `Q'⋆Q = d/dr(Q⋆Q)` (MA.16) ⇒ `baxterConvCore` ContDiffOn off `|λ_ij|`.
+- BRK.16d — `∂ⁿ_K` all orders (amplitude/geometry separation, BRK.14-style) + `breakpoints_sigma_l_free`
+  (BRK.2, std-3) ⇒ interior knot `= |λ_ij|` only, std-3.
+
+**Status: SCOPED, not started.**  Research-scale (BRK.16b = the bypassed hard route, made harder by
+the exponential tail).  Drops one axiom from the breakpoint sub-result only.
