@@ -38,10 +38,13 @@ Yukawa rate (§6, the "exact-MSA self-consistency").
    and `cMSAtail_lhs_laplace` — `2πr·c(r>1)` is the pure Yukawa `2πK·e^{−z(r−1)}`, whose Laplace
    `∫_{r>1}(…)e^{−sr} = 2πK·e^{−s}/(s+z)` carries the `1/(s+z)` pole with residue ∝ K.  This is the
    **K-side** of the coefficient match.
-2. ☐ the **exterior non-compact-`q` Baxter relation** (the RHS of Eq. 8 at `r > 1` for
-   `q = q0_poly + Dt·e^{−zr}`) — the `baxter_factorization_inner` (`BaxterRealSpace.lean`) technique
-   (explicit antiderivative + FTC + `ring`) extended with the Yukawa tail's exponential
-   antiderivatives (`yukawa_laplace_unit`, `yukawa_tail_laplace`).  This is the substantive step.
+2. ◑ the **exterior non-compact-`q` Baxter relation** (the RHS of Eq. 8 at `r > 1` for
+   `q = q0_poly + Dt·e^{−zr}`) — STARTED: `tail_tail_conv` computes the tail–tail self-overlap
+   `∫_{t>0} e^{−zt}·e^{−z(r+t)} = e^{−zr}/(2z)`, the source of the `Dt²` (doubly-propagated) term.
+   Remaining: the poly–tail cross integral, the full exterior relation (`baxter_factorization_inner`
+   technique + exp antiderivatives), AND the `Q̂` integral↔closed-form faithfulness bridge (`Q̂ =
+   φ₁q′+φ₂A` is a closed form in `MSABlumHoyeSystem`, not an integral — that bridge is currently
+   validated only numerically).  This is the substantive step.
 3. ☐ **match the `e^{−zr}` coefficient** ⟹ `h29 : Dt·bhF(z) = 2πK/z` as a theorem.
 4. ☐ the **Laplace moment `ĝ(z)`** ⟹ `h33`, carrying the `Dt`/`γ` terms onto the proved base
    `bh_base_eq`.
@@ -80,5 +83,23 @@ theorem cMSAtail_lhs_laplace (K : ℝ) {s z : ℝ} (hsz : 0 < s + z) :
       = (2 * Real.pi * K) * (Real.exp (-z * (r - 1)) * Real.exp (-s * r)) := fun r => by ring
   simp only [hcm]
   rw [MeasureTheory.integral_const_mul, yukawa_tail_laplace hsz]
+
+/-! ### Milestone 2 (in progress) — the exterior non-compact-`q` Baxter convolution -/
+
+/-- **Milestone 2 building block — the tail–tail self-overlap.**  In Baxter's exterior relation the
+convolution `∫ q′(t) q(r+t) dt` (with the non-compact `q = q0_poly + Dt·e^{−zr}`) picks up, at `r > σ`,
+the tail-against-tail overlap `∫_{t>0} e^{−zt}·e^{−z(r+t)} dt = e^{−zr}/(2z)`.  Multiplied by the
+tail's `−z Dt` derivative and the `Dt` shift this is the `−Dt²/2·e^{−zr}` **doubly-propagated**
+term of the exterior relation — the same `Dt²` structure that makes `(29)` degree-2. -/
+theorem tail_tail_conv {z : ℝ} (hz : 0 < z) (r : ℝ) :
+    ∫ t in Ioi (0 : ℝ), Real.exp (-z * t) * Real.exp (-z * (r + t))
+      = Real.exp (-z * r) / (2 * z) := by
+  have hcomb : (fun t => Real.exp (-z * t) * Real.exp (-z * (r + t)))
+      = fun t => Real.exp (-z * r) * Real.exp (-(2 * z) * t) := by
+    funext t; rw [← Real.exp_add, ← Real.exp_add]; congr 1; ring
+  rw [hcomb, MeasureTheory.integral_const_mul,
+    integral_exp_mul_Ioi (by linarith : -(2 * z) < 0) 0]
+  rw [mul_zero, Real.exp_zero, neg_div_neg_eq]
+  ring
 
 end FMSA.ExactMSA
