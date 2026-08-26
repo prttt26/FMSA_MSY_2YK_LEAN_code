@@ -10,6 +10,7 @@ import Mathlib
 import LeanCode.YukawaOZ.MSADCFTransform
 import LeanCode.YukawaOZ.MSABaxterTransform
 import LeanCode.YukawaOZ.MSABlumHoyeSystem
+import LeanCode.HardSphere.BaxterDiluteDecay
 
 /-!
 # Deriving the Blum–Høye MSA equations (29)/(33) — leg 3 (`N = 1`)
@@ -50,7 +51,14 @@ Yukawa rate (§6, the "exact-MSA self-consistency").
    Eq. (10) has `Q(r) = Q⁰(r) + Σ D e^{−zr}` with `Q⁰` compact and the exp tail over the full
    half-line (it is what generates the `s=−z` pole).  What remains is the **assembly** of the two
    overlaps into the exterior Eq. (8) — the substantive step.
-3. ☐ **match the `e^{−zr}` coefficient** ⟹ `h29 : Dt·bhF(z) = 2πK/z` as a theorem.
+3. ◑ **the exterior convolution, assembled** (milestone 3 below).  `poly_tail_conv` +
+   `tail_tail_conv` collapse the exterior `∫₀^∞ P(t)·P'(t+r) dt` (`P = msaBaxterFn`; past σ, `P'`
+   is the pure tail); with `−P'(r)` (`msaBaxterFn_hasDerivAt_exterior`) the exterior Baxter RHS is
+   `z Dt e^{−zr}·F₀ − Dt²e^{−zr}/2` (`msaBaxter_exterior_rhs`), the `F₀ = 1−ρQ̂₀` factor manifest.
+   Matching the MSA closure gives the **first-order/DP** (29) `z Dt F₀ − Dt²/2 = 2πρ K e^{z}`.
+   ⚠ Landing the *exact* `bhF` (with its `G`-coupling via `M`,`N`,`γ`, Blum–Høye Eqs. 20–27) needs
+   the *dressed* polynomial — `msaBaxterFn = q0_poly + Dt·e^{−zr}` uses the **undressed** `q0_poly`,
+   so this derives the first-order cut, not the full self-consistent `bhFRest(G)`.
 4. ☐ the **Laplace moment `ĝ(z)`** ⟹ `h33`, carrying the `Dt`/`γ` terms onto the proved base
    `bh_base_eq`.
 5. ☐ wire the derived `h29`/`h33` back into `MSAFullFactorization.exactMSA_factorization`, retiring
@@ -181,6 +189,126 @@ theorem qhat0_eq_laplace_q0poly (xi z : ℝ) (hz : z ≠ 0) :
       intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
       phi1_laplace_moment hz, phi2_laplace_moment hz]
   simp only [Qhat0, qp0, bA0, FMSA.HardSphere.q_prime_py, FMSA.HardSphere.q_doubleprime_py]
+  ring
+
+/-! ### Milestone 3 — the exterior Baxter convolution, assembled
+
+Baxter's real-space relation (`HardSphere.baxter_factorization_inner`) is
+`2πρ r c(r) = −P'(r) + ∫ P(t)·P'(t+r) dt`.  On the exterior `r > σ = 1` the polynomial part of `P`
+and `P'` vanishes, so `P'(t+r) = −z Dt e^{−z(t+r)}` and the convolution collapses onto the two
+overlap integrals `poly_tail_conv` (poly–tail, `= e^{−zr} ρ Q̂₀`) and `tail_tail_conv` (tail–tail,
+`= e^{−zr}/(2z)`).  The result is the closed-form exterior right side carrying the hard-sphere
+Baxter factor `F₀ = 1 − ρ Q̂₀` and the doubly-propagated `Dt²/2`.  This is the first-order/DP
+derivation of Blum–Høye (29); the exact `bhF` additionally dresses the polynomial (see the
+roadmap ⚠). -/
+
+/-- **Poly–tail overlap on the improper `(0,∞)`.**  Because `q0_poly` is supported on `[0,1]`, the
+half-line integral reduces to the core one, and `exp_shift_factor` + `qhat0_eq_laplace_q0poly` give
+`∫₀^∞ q0_poly(t) e^{−z(r+t)} dt = e^{−zr} · ρ Q̂₀`. -/
+theorem poly_tail_conv (xi z : ℝ) (hz : z ≠ 0) (r : ℝ) :
+    ∫ t in Set.Ioi (0:ℝ), FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) t * Real.exp (-z * (r + t))
+      = Real.exp (-z * r) * (rhoOf xi * Qhat0 xi z) := by
+  have hZero : ∀ t ∈ Set.Ioi (1:ℝ),
+      FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) t * Real.exp (-z * (r + t)) = 0 := by
+    intro t ht
+    rw [FMSA.HardSphere.q0_poly_eq_zero_of_ge (le_of_lt (Set.mem_Ioi.mp ht)), zero_mul]
+  have hInt_Ioc : MeasureTheory.IntegrableOn
+      (fun t => FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) t * Real.exp (-z * (r + t)))
+      (Set.Ioc (0:ℝ) 1) := by
+    apply Continuous.integrableOn_Ioc
+    exact (FMSA.HardSphere.q0_poly_continuous xi 1 (rhoOf xi)).mul (by fun_prop)
+  have hInt_Ioi : MeasureTheory.IntegrableOn
+      (fun t => FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) t * Real.exp (-z * (r + t)))
+      (Set.Ioi (1:ℝ)) := by
+    rw [MeasureTheory.integrableOn_congr_fun hZero measurableSet_Ioi]
+    exact MeasureTheory.integrableOn_zero
+  rw [← Set.Ioc_union_Ioi_eq_Ioi (by norm_num : (0:ℝ) ≤ 1),
+      MeasureTheory.setIntegral_union (Set.Ioc_disjoint_Ioi le_rfl) measurableSet_Ioi
+        hInt_Ioc hInt_Ioi,
+      MeasureTheory.setIntegral_eq_zero_of_forall_eq_zero hZero, add_zero,
+      ← intervalIntegral.integral_of_le (by norm_num : (0:ℝ) ≤ 1),
+      exp_shift_factor _ z r 0 1, qhat0_eq_laplace_q0poly xi z hz]
+
+/-- **The exterior convolution, in closed form.**  For `P = msaBaxterFn` and `P'(t+r) = −z Dt
+e^{−z(t+r)}` (its exterior form), `∫₀^∞ P(t)·P'(t+r) dt = −z Dt e^{−zr} ρ Q̂₀ − Dt² e^{−zr}/2`. -/
+theorem msaBaxter_exterior_conv (xi z Dt : ℝ) (hz : 0 < z) (r : ℝ) :
+    ∫ t in Set.Ioi (0:ℝ),
+        msaBaxterFn xi 1 (rhoOf xi) z Dt t * (-z * Dt * Real.exp (-z * (r + t)))
+      = -z * Dt * Real.exp (-z * r) * (rhoOf xi * Qhat0 xi z)
+        - Dt ^ 2 * Real.exp (-z * r) / 2 := by
+  have hz' : z ≠ 0 := hz.ne'
+  have hZero : ∀ t ∈ Set.Ioi (1:ℝ),
+      FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) t * Real.exp (-z * (r + t)) = 0 := by
+    intro t ht
+    rw [FMSA.HardSphere.q0_poly_eq_zero_of_ge (le_of_lt (Set.mem_Ioi.mp ht)), zero_mul]
+  have hI1 : MeasureTheory.IntegrableOn
+      (fun t => FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) t * Real.exp (-z * (r + t)))
+      (Set.Ioi (0:ℝ)) := by
+    have hIoc : MeasureTheory.IntegrableOn
+        (fun t => FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) t * Real.exp (-z * (r + t)))
+        (Set.Ioc (0:ℝ) 1) := by
+      apply Continuous.integrableOn_Ioc
+      exact (FMSA.HardSphere.q0_poly_continuous xi 1 (rhoOf xi)).mul (by fun_prop)
+    have hIoi1 : MeasureTheory.IntegrableOn
+        (fun t => FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) t * Real.exp (-z * (r + t)))
+        (Set.Ioi (1:ℝ)) := by
+      rw [MeasureTheory.integrableOn_congr_fun hZero measurableSet_Ioi]
+      exact MeasureTheory.integrableOn_zero
+    rw [← Set.Ioc_union_Ioi_eq_Ioi (by norm_num : (0:ℝ) ≤ 1)]
+    exact hIoc.union hIoi1
+  have hI2 : MeasureTheory.IntegrableOn
+      (fun t => Real.exp (-z * t) * Real.exp (-z * (r + t))) (Set.Ioi (0:ℝ)) := by
+    have h2 : (fun t => Real.exp (-z * t) * Real.exp (-z * (r + t)))
+        = (fun t => Real.exp (-z * r) * Real.exp (-(2 * z) * t)) := by
+      funext t; rw [← Real.exp_add, ← Real.exp_add]; congr 1; ring
+    rw [h2]
+    exact (exp_neg_integrableOn_Ioi 0 (by linarith : (0:ℝ) < 2 * z)).const_mul _
+  have hcongr : (∫ t in Set.Ioi (0:ℝ),
+        msaBaxterFn xi 1 (rhoOf xi) z Dt t * (-z * Dt * Real.exp (-z * (r + t))))
+      = ∫ t in Set.Ioi (0:ℝ),
+          ((-z * Dt) * (FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) t * Real.exp (-z * (r + t)))
+         + (-z * Dt ^ 2) * (Real.exp (-z * t) * Real.exp (-z * (r + t)))) := by
+    apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
+    intro t _
+    simp only [msaBaxterFn]
+    ring
+  rw [hcongr,
+      MeasureTheory.integral_add (hI1.const_mul _) (hI2.const_mul _),
+      MeasureTheory.integral_const_mul, MeasureTheory.integral_const_mul,
+      poly_tail_conv xi z hz' r, tail_tail_conv hz r]
+  field_simp
+  ring
+
+/-- **The Baxter function's exterior derivative.**  At `r > σ = 1` the polynomial part `q0_poly`
+is locally zero, so `P'(r)` is the pure Yukawa `−z Dt e^{−zr}`. -/
+theorem msaBaxterFn_hasDerivAt_exterior (xi z Dt : ℝ) {r : ℝ} (hr : 1 < r) :
+    HasDerivAt (fun s => msaBaxterFn xi 1 (rhoOf xi) z Dt s) (-z * Dt * Real.exp (-z * r)) r := by
+  have hq0 : HasDerivAt (fun s => FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) s) 0 r := by
+    apply (hasDerivAt_const r (0:ℝ)).congr_of_eventuallyEq
+    filter_upwards [Ioi_mem_nhds hr] with s hs
+    exact FMSA.HardSphere.q0_poly_eq_zero_of_ge (le_of_lt (Set.mem_Ioi.mp hs))
+  have hexp : HasDerivAt (fun s => Dt * Real.exp (-z * s)) (-z * Dt * Real.exp (-z * r)) r := by
+    have hg : HasDerivAt (fun s => Real.exp (-z * s)) (Real.exp (-z * r) * -z) r := by
+      have h : HasDerivAt (fun s => -z * s) (-z) r := by
+        simpa using (hasDerivAt_id r).const_mul (-z)
+      exact h.exp
+    exact (hg.const_mul Dt).congr_deriv (by ring)
+  have hadd := hq0.add hexp
+  rw [zero_add] at hadd
+  exact hadd
+
+/-- **Milestone 3 capstone — the exterior Baxter RHS in `F₀` form.**  Baxter's relation
+`2πρ r c = −P'(r) + ∫ P·P'(·+r)` has exterior right side `z Dt e^{−zr}·F₀ − Dt²e^{−zr}/2`, with
+`F₀ = 1 − ρ Q̂₀` the hard-sphere Baxter factor and the `Dt²` term doubly-propagated.  Matching the
+MSA closure `2πρ r c = 2πρ K e^{z} e^{−zr}` and dividing by `e^{−zr}` gives first-order
+Blum–Høye (29) `z Dt F₀ − Dt²/2 = 2πρ K e^{z}` — the `Dt·(F₀ + Dt·(−1/2z)) ∝ K` shape. -/
+theorem msaBaxter_exterior_rhs (xi z Dt : ℝ) (hz : 0 < z) {r : ℝ} (hr : 1 < r) :
+    -deriv (fun s => msaBaxterFn xi 1 (rhoOf xi) z Dt s) r
+      + ∫ t in Set.Ioi (0:ℝ),
+          msaBaxterFn xi 1 (rhoOf xi) z Dt t * (-z * Dt * Real.exp (-z * (r + t)))
+      = z * Dt * Real.exp (-z * r) * F0 xi z - Dt ^ 2 * Real.exp (-z * r) / 2 := by
+  rw [(msaBaxterFn_hasDerivAt_exterior xi z Dt hr).deriv,
+      msaBaxter_exterior_conv xi z Dt hz r, F0]
   ring
 
 end FMSA.ExactMSA
