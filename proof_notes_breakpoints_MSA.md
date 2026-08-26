@@ -792,3 +792,38 @@ axiom:
 parallel `Q` / `c` on the BRK side: that duplicates MSAEMIX.4 Stage 3's object and carries
 false-axiom risk (`feedback_mirror_reference_semantics` — a wrong `def` + `= matCoreUneq` builds
 green, only reading the sympy reference catches it). The `Q` / convolution `def` is Stage 3's.
+
+---
+
+## ⭐ BRK.14 / BRK.15 — the all-orders result by MATHEMATICAL INDUCTION (alternative proof, 2026-08-26)
+
+The all-orders "in-core breakpoints all at `|λ_ij|`, no other breakpoints" result
+(`matCoreUneq_paramDeriv_contDiffOn_{inner,outer}`, BRK.9/12) is proved above via the
+**coefficient/basis separation** — a *one-shot* (`contDiffOn_paramDeriv_coeffBasis`) that cites
+Mathlib's `iteratedDeriv_fun_sum` / `iteratedDeriv_const_mul`, with no explicit induction.  On
+request, this is the **explicit-induction** proof of the same result, new file
+`YukawaOZMix/MSAMixtureBreakpointInduction.lean` (all std-3, `#print axioms` verified; wired into
+`LeanCode.lean`, build green).
+
+- **BRK.14 ✅ — `iteratedDeriv_coeffBasis_eq` (the crux, by induction on `n`).**  For a `K`-free
+  `r`-basis `b k`: `∂ⁿ_K (Σ_k c k(K)·b k(r)) = Σ_k (∂ⁿ_K c k)(K)·b k(r)`.  **Base** `n=0`:
+  `iteratedDeriv 0 = id`.  **Step** `n→n+1`: `∂^{n+1}=∂∘∂ⁿ` (`iteratedDeriv_succ`), then `∂`
+  distributes over the finite sum (`deriv_fun_sum`; each summand differentiable via
+  `ContDiff.differentiable_iteratedDeriv`) and past the `K`-constant `b k r` (`deriv_mul_const`),
+  giving `∂^{n+1}_K c k`.  Re-derives, by hand, exactly what the one-shot delegates to Mathlib.
+
+- **BRK.15 ✅ — the chain, by induction.**  `contDiffOn_paramDeriv_coeffBasis_byInduction` (abstract
+  Step 2, same statement as the one-shot but built on BRK.14) →
+  `gForm_paramDeriv_contDiffOn_byInduction` (the 7-basis `{1,r,r²,r³,r⁴,e^{∓zr}}` instantiation) →
+  `coreForm_paramDeriv_contDiffOn_byInduction` (÷ `2π r`) →
+  `matCoreUneq_paramDeriv_contDiffOn_{inner,outer}_byInduction` (the actual BRK result, off each side
+  of `|λ_ij|`).  Same statements as the scheme's, std-3.
+
+**Verdict.**  Induction WORKS and is clean here — precisely because `K` enters only the amplitudes
+`c k(K)`, never the `r`-basis or the boundary `|λ_ij|`, so the inductive step never moves a knot.
+That is the *same* structural reason the one-shot works; the induction just makes the amplitude
+bookkeeping explicit (base + step) instead of delegating to `iteratedDeriv_fun_sum`.  ⚠ This is an
+**alternative** proof of an already-`DONE` result (BRK.9/12) — redundant for the theorem, kept as the
+requested induction-form demonstration.  (The genuinely *different* induction would be the
+Leibniz/convolution route — `knots(f⋆g) ⊆ knots f + knots g` (BRK.1) applied `n` times to the raw
+Baxter convolution, BRK.7 Step 5 — which the closed form made unnecessary, BRK.12.)
