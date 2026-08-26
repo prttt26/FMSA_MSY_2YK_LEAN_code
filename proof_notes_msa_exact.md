@@ -54,6 +54,14 @@ a step appears to need one, the algebraic route was abandoned somewhere; go back
 
 ## Group MSAEXACT — single component
 
+> **✅ GROUP FULLY CLOSED (2026-08-25).** Content name in code = `ExactMSA` (task IDs kept only in these
+> docs). All tasks discharged: **.1** `exactMSA_factorization`, **.2** elimination/quartics, **.3**
+> `msaRoot_unique_of_coupling_lt`, **.4** `pyA_pyB_satisfy_zero_coupling`, **.5**
+> `firstOrder_amplitude_eq_hardSphere_dressed` — all **axiom-clean**; **.6** (the closure-recovery ring)
+> is the one accepted **grade-2 sympy-backed axiom** `exactMSA_hcore` (`ring` MEASURED infeasible,
+> ~weeks/~200GB; Fourier layer discharged to `exactMSA_kspace_residual` via `ExactMSACertificate`).
+> **No open math item remains** — only the documented physics-input axiom.
+
 Opens with MSAX.1. **MSAEXACT.1 cannot start before MSAX.1's gate 0** (reproduce the elimination
 degree in this project's conventions) — the Lean statement has to quantify over the *right*
 algebraic system, and the theory note flags the degree as unsettled.
@@ -386,6 +394,16 @@ map is not linear.
 ---
 
 ## Group MSAEMIX — mixture
+
+> **✅ GROUP FULLY CLOSED (2026-08-25).** The matrix (mixture) exact-MSA; content name in code =
+> `MSAMixture`. **.0/.3** positivity + root selection axiom-clean; **.1** matrix factorization CLOSED at
+> equal σ (`matMSAmixture_equalDiam`), unequal σ (`matMSAmixture_unequalDiam_of_hcore`, `hHS` discharged
+> by pure `ftilde` algebra), and in the physical `radial_fourier(Φ_HS)` form
+> (`matMSAmixture_unequalDiam_physical`); **.2** the N=1-is-scalar capstone
+> (`msaMixture_reduces_to_scalar_at_fin_one`); **.4/.5** the core + breakpoint structure. **No open math
+> item remains** — only the accepted grade-2 Baxter-Fourier axioms (`matExactMSAEqualDiam_hcore`,
+> `matExactMSAUnequalDiam_hcore`, `matHSexactUnequalDiam_kspace`, `baxterConvCore_eq_matCoreUneq`); their
+> grade-1 proof is the exactMSA-class ring, measured infeasible.
 
 **⭐ UNGATED 2026-08-19.** The gate was "MSAX.5 returns GO". MSAX.5's go/no-go was **bypassed
 deliberately** when MSAX.6 closed (2026-08-13, `todo/waisman_msa_plan.md`): two of its three criteria
