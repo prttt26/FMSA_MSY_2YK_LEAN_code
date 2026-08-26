@@ -41,7 +41,8 @@ r·c(1)(r)/K = (1-g^2)·e^{-z(r-1)} - a^2·e^{+z(r-1)} + poly4(r)/D^2
    `(D^2-S^2)·Em - M^2·Ep = D^2·(1-(S/D)^2)·Em - D^2·(M/D)^2·Ep`
    Proof: field_simp + ring.
 
-**Status of full Eq. 41→42 reduction:** sorry (requires I1/I2 integral lemmas, Tasks 1.1/1.2).
+**Status of full Eq. 41→42 reduction:** N/A — Task 4.4 established [chsY] Eq. 41 does **not**
+reduce to Eq. 42 at N=1 (see below), so there is no reduction to prove (earlier "sorry" cleared).
 -/
 
 set_option linter.style.longLine false

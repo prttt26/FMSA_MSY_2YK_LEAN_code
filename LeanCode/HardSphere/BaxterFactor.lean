@@ -175,8 +175,8 @@ one computes (for `q > 0`)
 by `sin u ≤ u` for `u ≥ 0`. Hence
   `Re Q0(iq) = 1 - 12eta · Re(iq·φ1 + (iq)^2·φ2) / sigma`
              `= 1 + 24eta · (qsigma - sin qsigma) / (qsigma) ≥ 1 > 0`,
-so `Q0(iq) ≠ 0`. Formal proof requires `Complex.sin_le` and Lean `Complex` arithmetic;
-marked sorry pending that formalisation.
+so `Q0(iq) ≠ 0`. This is now **PROVED** below (`Q0_imaginary_axis_ne_zero`) — the `Complex`
+arithmetic + `sin u ≤ u` bound were formalised; the earlier "sorry pending" note is cleared.
 -/
 
 /-- **[LN] Eq. 16 (reformulated on the imaginary axis):**
