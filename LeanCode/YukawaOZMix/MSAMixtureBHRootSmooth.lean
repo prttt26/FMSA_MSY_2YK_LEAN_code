@@ -101,7 +101,7 @@ is a continuous linear map) and `contDiff_matrix_of` (a matrix built from `ContD
 `ContDiff`, via the `∑ᵢⱼ (·)ᵢⱼ • Eᵢⱼ` basis decomposition). -/
 
 section Smooth
-attribute [local instance] Matrix.frobeniusNormedAddCommGroup Matrix.frobeniusNormedSpace
+open scoped Matrix.Norms.Frobenius
 
 /-- Each matrix-entry projection is `ContDiff` (it is a continuous linear map). -/
 theorem contDiff_matrix_entry (i j : Fin N) :
@@ -296,6 +296,122 @@ theorem exists_contDiffAt_matBhRoot_of_blockJacobian (z sig : ℝ) (rho sigma : 
       ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 :=
   exists_contDiffAt_matBhRoot z sig rho sigma Kdir Gt₀ hroot0
     (hshape ▸ matBhJacobianCLM_isInvertible Cpl h₁ h₂)
+
+/-! ### Item 5 transcription — the residual is the Blum–Høye shape, and its Fréchet derivative is
+the block-triangular Jacobian
+
+The final piece: the partial derivative of `matBhResidual` at the base point really *is*
+`matBhJacobianCLM N₁ N₂ Cpl`.  We factor it through a structural lemma (matrix analogue of the
+`N = 1` `bhResidualShape_hasFDerivAt`): for a residual of shape `(Dt·G, 2π·(Gt·H) − D)`, where the
+dressing matrices `G, H, D` enter the coupling only through `Dt` (so their `Gt`-partials vanish at
+`Dt = 0`), the Fréchet derivative at `(0, Gt₀)` is block lower-triangular. -/
+
+/-- ⭐ **Item 5 core — the block-triangular Fréchet derivative from the Blum–Høye shape.**  For a
+residual `p ↦ (p.1 · G p, 2π·(p.2 · H p) − D p)` whose dressing matrices `G, H, D` are
+differentiable at the base point `(0, Gt₀)`, with `G(0,Gt₀) = N₁`, `H(0,Gt₀) = N₂`, and whose
+`H`, `D` have
+vanishing `Gt`-directional derivative there (`H' ∘L inr = 0`, `D' ∘L inr = 0` — the fact that the
+dressing enters only through `Dt`), the derivative is the block lower-triangular Jacobian
+`matBhJacobianCLM N₁ N₂ Cpl`.  `p.1 = Dt = 0` at base kills the `Dt·G'` term of the first component;
+the `Gt`-partial vanishing collapses the second component's off-diagonal to a pure-`Dt` coupling. -/
+theorem matBhResidualShape_hasFDerivAt
+    {Gmat Hmat Dmat :
+      (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) → Matrix (Fin N) (Fin N) ℝ}
+    {Gt₀ N₁ N₂ : Matrix (Fin N) (Fin N) ℝ}
+    {Gmat' Hmat' Dmat' :
+      (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) →L[ℝ] Matrix (Fin N) (Fin N) ℝ}
+    (hG : HasFDerivAt Gmat Gmat' (0, Gt₀)) (hH : HasFDerivAt Hmat Hmat' (0, Gt₀))
+    (hD : HasFDerivAt Dmat Dmat' (0, Gt₀))
+    (hGval : Gmat (0, Gt₀) = N₁) (hHval : Hmat (0, Gt₀) = N₂)
+    (hHinr : Hmat' ∘L ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ)
+        (Matrix (Fin N) (Fin N) ℝ) = 0)
+    (hDinr : Dmat' ∘L ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ)
+        (Matrix (Fin N) (Fin N) ℝ) = 0) :
+    HasFDerivAt
+      (fun p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ =>
+        (p.1 * Gmat p, (2 * Real.pi) • (p.2 * Hmat p) - Dmat p))
+      (matBhJacobianCLM N₁ N₂
+        (((2 * Real.pi) • (Gt₀ • Hmat') - Dmat') ∘L
+          ContinuousLinearMap.inl ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ)))
+      (0, Gt₀) := by
+  -- first component: p.1 * G p, deriv matMulRightCLM N₁ ∘L fst (the p.1 • G' term dies at p.1 = 0)
+  have hc1 : HasFDerivAt
+      (fun p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ => p.1 * Gmat p)
+      (matMulRightCLM N₁ ∘L ContinuousLinearMap.fst ℝ (Matrix (Fin N) (Fin N) ℝ)
+        (Matrix (Fin N) (Fin N) ℝ)) (0, Gt₀) := by
+    have hmul := (hasFDerivAt_fst (p := ((0 : Matrix (Fin N) (Fin N) ℝ), Gt₀))).mul' hG
+    have heq : ((0 : Matrix (Fin N) (Fin N) ℝ) • Gmat' + MulOpposite.op (Gmat (0, Gt₀))
+          • ContinuousLinearMap.fst ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ))
+        = matMulRightCLM N₁ ∘L ContinuousLinearMap.fst ℝ (Matrix (Fin N) (Fin N) ℝ)
+            (Matrix (Fin N) (Fin N) ℝ) := by
+      rw [zero_smul, zero_add, hGval]
+      refine ContinuousLinearMap.ext (fun p => ?_)
+      simp [matMulRightCLM_apply, MulOpposite.smul_eq_mul_unop]
+    exact heq ▸ hmul
+  -- second component: 2π·(p.2 * H p) − D p; split off the linear p.2 * N₂ so no op-smul survives
+  have hlin : HasFDerivAt
+      (fun p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ => p.2 * N₂)
+      (matMulRightCLM N₂ ∘L ContinuousLinearMap.snd ℝ (Matrix (Fin N) (Fin N) ℝ)
+        (Matrix (Fin N) (Fin N) ℝ)) (0, Gt₀) :=
+    (matMulRightCLM N₂ ∘L ContinuousLinearMap.snd ℝ (Matrix (Fin N) (Fin N) ℝ)
+      (Matrix (Fin N) (Fin N) ℝ)).hasFDerivAt
+  have hcorr : HasFDerivAt
+      (fun p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ => p.2 * (Hmat p - N₂))
+      (Gt₀ • Hmat') (0, Gt₀) := by
+    have hmul := (hasFDerivAt_snd (p := ((0 : Matrix (Fin N) (Fin N) ℝ), Gt₀))).mul'
+      (hH.sub_const N₂)
+    have hz : Hmat (0, Gt₀) - N₂ = 0 := by rw [hHval]; abel
+    rw [show ((0 : Matrix (Fin N) (Fin N) ℝ), Gt₀).2 = Gt₀ from rfl] at hmul
+    simp only [hz, MulOpposite.op_zero, zero_smul, add_zero] at hmul
+    exact hmul
+  -- The dressing block `2π·(Gt₀·H') − D'` kills the `Gt`-direction (`H', D'` vanish on `inr`), so
+  -- it factors through `fst`: `((2π·(Gt₀·H') − D')∘L inl)∘L fst`, the pure-`Dt` coupling `Cpl`.
+  have hMR : ((2 * Real.pi) • (Gt₀ • Hmat') - Dmat') ∘L
+      ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ) = 0 := by
+    simp only [ContinuousLinearMap.sub_comp, ContinuousLinearMap.smul_comp, hHinr, hDinr,
+      smul_zero, sub_zero]
+  have hid : ContinuousLinearMap.inl ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ) ∘L
+        ContinuousLinearMap.fst ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ)
+      + ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ) ∘L
+        ContinuousLinearMap.snd ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ)
+      = ContinuousLinearMap.id ℝ (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) := by
+    refine ContinuousLinearMap.ext (fun q => ?_); simp
+  have hMM : ((2 * Real.pi) • (Gt₀ • Hmat') - Dmat')
+      = (((2 * Real.pi) • (Gt₀ • Hmat') - Dmat') ∘L
+          ContinuousLinearMap.inl ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ))
+        ∘L ContinuousLinearMap.fst ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ) := by
+    conv_lhs => rw [← ContinuousLinearMap.comp_id ((2 * Real.pi) • (Gt₀ • Hmat') - Dmat'), ← hid,
+      ContinuousLinearMap.comp_add, ← ContinuousLinearMap.comp_assoc,
+      ← ContinuousLinearMap.comp_assoc, hMR, ContinuousLinearMap.zero_comp, add_zero]
+  -- correction block: `2π·(p.2·(H p − N₂)) − D p`, derivative `Cpl` (via `hMM`, no per-point work)
+  have hpiece2 : HasFDerivAt
+      (fun p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ =>
+        (2 * Real.pi) • (p.2 * (Hmat p - N₂)) - Dmat p)
+      ((((2 * Real.pi) • (Gt₀ • Hmat') - Dmat') ∘L
+          ContinuousLinearMap.inl ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ))
+        ∘L ContinuousLinearMap.fst ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ))
+      (0, Gt₀) :=
+    ((hcorr.const_smul (2 * Real.pi)).sub hD).congr_fderiv hMM
+  -- linear block: `2π·(p.2·N₂)`, derivative `2π·(matMulRightCLM N₂ ∘L snd)`
+  have hpiece1 : HasFDerivAt
+      (fun p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ => (2 * Real.pi) • (p.2 * N₂))
+      ((2 * Real.pi) • (matMulRightCLM N₂ ∘L ContinuousLinearMap.snd ℝ
+        (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ))) (0, Gt₀) :=
+    hlin.const_smul (2 * Real.pi)
+  -- their sum has derivative `Cpl ∘L fst + 2π·(matMulRightCLM N₂ ∘L snd)` = the second block of the
+  -- Jacobian; the function equals the second residual component (`2π·(p.2·H p) − D p`).
+  have hc2' : HasFDerivAt
+      (fun p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ =>
+        (2 * Real.pi) • (p.2 * Hmat p) - Dmat p)
+      ((((2 * Real.pi) • (Gt₀ • Hmat') - Dmat') ∘L
+          ContinuousLinearMap.inl ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ))
+        ∘L ContinuousLinearMap.fst ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ)
+        + (2 * Real.pi) • (matMulRightCLM N₂ ∘L ContinuousLinearMap.snd ℝ
+            (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ))) (0, Gt₀) := by
+    refine (hpiece2.add hpiece1).congr_of_eventuallyEq ?_
+    filter_upwards with p
+    simp only [Pi.add_apply, mul_sub, smul_sub]; abel
+  exact hc1.prodMk hc2'
 
 end Smooth
 
