@@ -73,4 +73,40 @@ theorem matBhResidual_eq_zero_iff (z sig : ℝ) (rho sigma : Fin N → ℝ)
   rw [matBhResidual, MixBHRoot, Prod.mk_eq_zero, ← Matrix.ext_iff, ← Matrix.ext_iff]
   simp only [Matrix.of_apply, Matrix.zero_apply, sub_eq_zero, Matrix.smul_apply, smul_eq_mul]
 
+/-! ### Item 3 foundation — `ContDiff` building blocks under the Frobenius matrix norm
+
+`Matrix (Fin N) (Fin N) ℝ` has no global normed-space instance; we activate the Frobenius one
+(entrywise `L²`) locally.  All amplitudes (`Wt`, `Ct`, `qpMat`, `AVec`, `qhatMixR`, …) are
+**polynomials in the entries of `(Gt, Dt)`** with constant coefficients (`ρ`, `σ`, `z`, `exp` of
+constants, division by the constant `z`/`s+z`) — no matrix inverse — so each is `ContDiff ℝ ⊤`.
+The two lemmas here reduce that to scalar `ContDiff`: `contDiff_matrix_entry` (each entry projection
+is a continuous linear map) and `contDiff_matrix_of` (a matrix built from `ContDiff` entries is
+`ContDiff`, via the `∑ᵢⱼ (·)ᵢⱼ • Eᵢⱼ` basis decomposition). -/
+
+section Smooth
+attribute [local instance] Matrix.frobeniusNormedAddCommGroup Matrix.frobeniusNormedSpace
+
+/-- Each matrix-entry projection is `ContDiff` (it is a continuous linear map). -/
+theorem contDiff_matrix_entry (i j : Fin N) :
+    ContDiff ℝ (⊤ : ℕ∞) (fun M : Matrix (Fin N) (Fin N) ℝ => M i j) :=
+  (Matrix.entryLinearMap ℝ ℝ i j).toContinuousLinearMap.contDiff
+
+/-- A matrix assembled from `ContDiff` scalar entries is `ContDiff`, via the standard-basis
+decomposition `M = ∑ᵢⱼ Mᵢⱼ • Eᵢⱼ`. -/
+theorem contDiff_matrix_of {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {f : E → Fin N → Fin N → ℝ} (h : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (fun q => f q i j)) :
+    ContDiff ℝ (⊤ : ℕ∞)
+      (fun q => (Matrix.of (fun i j => f q i j) : Matrix (Fin N) (Fin N) ℝ)) := by
+  have key : (fun q => (Matrix.of (fun i j => f q i j) : Matrix (Fin N) (Fin N) ℝ))
+      = fun q => ∑ i, ∑ j,
+          f q i j • (Matrix.of (fun k l => if k = i ∧ l = j then (1 : ℝ) else 0)) := by
+    funext q; ext k l
+    simp only [Matrix.of_apply, Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul, mul_ite,
+      mul_one, mul_zero, ite_and]
+    simp
+  rw [key]
+  exact ContDiff.sum fun i _ => ContDiff.sum fun j _ => (h i j).smul contDiff_const
+
+end Smooth
+
 end MSAMixture
