@@ -107,6 +107,38 @@ theorem contDiff_matrix_of {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E
   rw [key]
   exact ContDiff.sum fun i _ => ContDiff.sum fun j _ => (h i j).smul contDiff_const
 
+/-- The `Dt`-entry projection `(τ, (Dt, Gt)) ↦ Dtᵢⱼ` is `ContDiff` (for `fun_prop`). -/
+@[fun_prop] theorem contDiff_Dt_entry (i j : Fin N) :
+    ContDiff ℝ (⊤ : ℕ∞)
+      (fun q : ℝ × (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) => q.2.1 i j) :=
+  (contDiff_matrix_entry i j).comp (contDiff_fst.comp contDiff_snd)
+
+/-- The `Gt`-entry projection `(τ, (Dt, Gt)) ↦ Gtᵢⱼ` is `ContDiff` (for `fun_prop`). -/
+@[fun_prop] theorem contDiff_Gt_entry (i j : Fin N) :
+    ContDiff ℝ (⊤ : ℕ∞)
+      (fun q : ℝ × (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) => q.2.2 i j) :=
+  (contDiff_matrix_entry i j).comp (contDiff_snd.comp contDiff_snd)
+
+/-- ⭐⭐ **MSAEMIX.6 item 3.**  The matrix Blum–Høye residual map is `C^∞`.  Every amplitude
+(`Wt`, `Ct`, `qpMat`, `AVec`, `qhatMixR`, `mixM/N/DA/Dqp`) is a **polynomial in the entries of
+`(Dt, Gt)`** with constant coefficients (no matrix inverse; divisions only by the nonzero constants
+`z`, `s + z`), so `fun_prop` discharges each entry after `simp` unfolds the definitions, and the two
+matrix components assemble via `contDiff_matrix_of`. -/
+theorem contDiff_matBhResidual (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Kdir : Matrix (Fin N) (Fin N) ℝ) :
+    ContDiff ℝ (⊤ : ℕ∞) (matBhResidual z sig rho sigma Kdir) := by
+  have h1 : ContDiff ℝ (⊤ : ℕ∞) (fun q => (matBhResidual z sig rho sigma Kdir q).1) := by
+    simp only [matBhResidual]; apply contDiff_matrix_of; intro i j
+    simp only [qhatMixR, qpMat, AVec, qpMSA, AMSA, mixDqp, mixDA, mixM, mixN, Wt, Ct, gam,
+      Matrix.smul_apply, smul_eq_mul]
+    fun_prop
+  have h2 : ContDiff ℝ (⊤ : ℕ∞) (fun q => (matBhResidual z sig rho sigma Kdir q).2) := by
+    simp only [matBhResidual]; apply contDiff_matrix_of; intro i j
+    simp only [qhatMixR, qpMat, AVec, qpMSA, AMSA, mixDqp, mixDA, mixM, mixN, Wt, Ct, gam,
+      Matrix.smul_apply, smul_eq_mul]
+    fun_prop
+  exact h1.prodMk h2
+
 end Smooth
 
 end MSAMixture
