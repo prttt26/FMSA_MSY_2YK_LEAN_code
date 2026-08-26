@@ -181,6 +181,32 @@ theorem firstOrder_amplitude_eq_hardSphere_dressed
   field_simp
   exact this
 
+/-- ⭐ **MSAEXACT.5 — the matrix / mixture analog.**  The same forcedness for the *matrix* Baxter
+factors of the mixture, stated over any normed algebra `𝔸` (so it applies to
+`Matrix (Fin N) (Fin N) ℝ` with an operator norm).  The self-consistency is `D(K)·F(K) = G(K)` with
+the right side `G` vanishing at `K = 0` (`G 0 = 0`) — physically `G K = K • C`, the linear
+Blum–Høye source, so `G' = C` — and `F 0` a **unit** (the hard-sphere factor is invertible).  Then
+the first-order slope obeys `D' · F 0 = G'`: it sees `F 0` (hard sphere) alone.  `F'`, the tail's
+back-reaction on the Baxter factor, **cannot appear** — it is multiplied by `D 0 = 0`, itself forced
+by the relation at `K = 0` (`D 0 · F 0 = G 0 = 0`) and `F 0` a unit.  So freezing the propagator at
+hard sphere is forced at first order in the mixture, exactly as in the scalar
+`firstOrder_amplitude_eq_hardSphere_dressed` (`𝔸 = ℝ`, `G K = c·K`, `D' = G'/F 0 = c/F 0`). -/
+theorem firstOrder_amplitude_eq_hardSphere_dressed_matrix
+    {𝔸 : Type*} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸]
+    (D F G : ℝ → 𝔸) (D' F' G' : 𝔸)
+    (hrel : ∀ K, D K * F K = G K)
+    (hD : HasDerivAt D D' 0) (hF : HasDerivAt F F' 0) (hG : HasDerivAt G G' 0)
+    (hG0 : G 0 = 0) (hF0 : IsUnit (F 0)) :
+    D' * F 0 = G' := by
+  have hD0 : D 0 = 0 := by
+    have h := hrel 0
+    rw [hG0] at h
+    exact (hF0.mul_left_eq_zero).mp h
+  have hprod : HasDerivAt (fun K => D K * F K) (D' * F 0 + D 0 * F') 0 := hD.mul hF
+  rw [funext hrel] at hprod
+  have huniq := hprod.unique hG
+  rwa [hD0, zero_mul, add_zero] at huniq
+
 /-- Non-vacuity for `MSAEXACT.5`: the hypotheses are satisfiable away from the degenerate point.
 Guards against the `b4_origin_bc_abstract` / GAP.8 failure mode. -/
 example : (2 : ℝ) / 4 = 1 / 2 := by norm_num
