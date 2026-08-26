@@ -9,6 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.YukawaOZMix.MSAMixtureBHRoot
 import LeanCode.Closures.MSASolutionFamily
+import LeanCode.HSMixture.Q0DetRankTwo
 
 /-!
 # MSAEMIX.6 — the matrix Blum–Høye root is `C^∞` at `K = 0` (general `N`)
@@ -700,6 +701,26 @@ theorem exists_contDiffAt_matBhRoot_of_diag_dom (z sig : ℝ) (rho sigma : Fin N
       ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 :=
   exists_contDiffAt_matBhRoot_of_Q0 z sig rho sigma Kdir Gt₀ hσ hρ hroot0
     (Q0_mat_phys_isUnit_det_of_diag_dom hdom)
+
+/-- ⭐⭐⭐ **MSAEMIX.6 — fully discharged, no det hypothesis at all.**  At any physical equal-σ mixture
+(`z > 0`, `vacMix > 0`, `ρ ≥ 0`, `σ > 0`) with a hard-sphere seed `MixBHRoot … Gt₀ 0 0`, the mixture
+MSA amplitudes `(Dt, Gt)` are a `C^∞` family of the coupling near `K = 0`.  The physical HS-block
+determinant condition is discharged **unconditionally** by `FMSA.MatrixQ0.Q0_mat_phys_isUnit_det`
+(M.4, general `N`, std-3 — the rank-two Weinstein–Aronszajn positivity `Q0_moment_det_pos`), so
+nothing about invertibility is left to assume.  This is the exact general-`N` matrix analogue of the
+`N = 1` `exists_contDiffAt_bhRoot` (whose only non-degeneracy input is the physical `η ∈ (0,1)`,
+`z > 0`); the sole remaining grade is the transcription faithfulness of the Blum–Høye system, as at
+`N = 1`. -/
+theorem exists_contDiffAt_matBhRoot_of_physical (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Kdir Gt₀ : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ i, sigma i = sig)
+    (hz : 0 < z) (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i) (hsigma : ∀ i, 0 < sigma i)
+    (hroot0 : MixBHRoot z sig rho sigma Gt₀ 0 0) :
+    ∃ ψ : ℝ → Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ,
+      ψ 0 = (0, Gt₀) ∧
+      (∀ᶠ τ in nhds (0 : ℝ), MixBHRoot z sig rho sigma (ψ τ).2 (ψ τ).1 (τ • Kdir)) ∧
+      ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 :=
+  exists_contDiffAt_matBhRoot_of_Q0 z sig rho sigma Kdir Gt₀ hσ hrho hroot0
+    (Q0_mat_phys_isUnit_det hz hvac hrho hsigma)
 
 end Smooth
 
