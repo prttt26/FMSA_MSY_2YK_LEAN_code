@@ -11,6 +11,7 @@ import LeanCode.YukawaOZ.MSADCFTransform
 import LeanCode.YukawaOZ.MSABaxterTransform
 import LeanCode.YukawaOZ.MSABlumHoyeSystem
 import LeanCode.HardSphere.BaxterDiluteDecay
+import LeanCode.YukawaOZ.MSABaxterKSpace
 
 /-!
 # Deriving the Blum–Høye MSA equations (29)/(33) — leg 3 (`N = 1`)
@@ -61,9 +62,16 @@ Yukawa rate (§6, the "exact-MSA self-consistency").
    `G`-entangled (measured: varies with `G`, `≠ 1/(2z)`), so the exact Baxter tail couples to the
    RDF moment `G` via continuity — reconstructing it is the full Blum–Høye reduction, not a
    mechanical dressing of `q0_poly`.
-4. ☐ the **Laplace moment `ĝ(z)`** ⟹ `h33`, carrying the `Dt`/`γ` terms onto the proved base
+4. ◑ **the exact `bhF` faithfulness bridge** (milestone 4 below).  `bhF_eq_one_sub_dressed_moment`:
+   `bhF = 1 − (∫₀¹ q₀ᵈʳᵉˢˢᵉᵈ e^{−zt} + Dt·ρ·tailtil)`, the exact Baxter factor as `1` minus the full
+   Laplace moment of the DRESSED Baxter function (coefficients `msaQp`/`msaA`, Eqs. 23/24).
+   The polynomial half is a genuine integral theorem; the `Dt·ρ·tailtil` closed form is the residual
+   (`G`-entangled) tail transcription.  This discharges the poly half of exact `h29`; the exterior
+   match to the closure and the tail's `Dt`-vs-amplitude relation remain (the deep BH continuity
+   content, see ⚠ above).
+5. ☐ the **Laplace moment `ĝ(z)`** ⟹ `h33`, carrying the `Dt`/`γ` terms onto the proved base
    `bh_base_eq`.
-5. ☐ wire the derived `h29`/`h33` back into `MSAFullFactorization.exactMSA_factorization`, retiring
+6. ☐ wire the derived `h29`/`h33` back into `MSAFullFactorization.exactMSA_factorization`, retiring
    the hypotheses.
 
 Each `(29)/(33)` is only degree-2 in `(Dt,G)` — so unlike the `hcore` closure-recovery ring
@@ -314,6 +322,52 @@ theorem msaBaxter_exterior_rhs (xi z Dt : ℝ) (hz : 0 < z) {r : ℝ} (hr : 1 < 
         (fun t ht => FMSA.HardSphere.q0_poly_eq_zero_of_ge (le_of_lt ht))
         (FMSA.HardSphere.q0_poly_continuous xi 1 (rhoOf xi)) hr,
       qhat0_eq_laplace_q0poly xi z hz.ne', F0]
+  field_simp
+  ring
+
+/-! ### Milestone 4 — the exact `bhF` faithfulness bridge (dressed Baxter function)
+
+M2b's bridge (`qhat0_eq_laplace_q0poly`) proved `ρ Q̂₀ = ∫₀¹ q0_poly e^{−zt}` for the HARD-SPHERE
+Baxter polynomial.  The exact Blum–Høye Baxter factor `bhF = 1 − ρ Q̂` dresses that polynomial: its
+coefficients become `msaQp = q⁰′(1+M) + A⁰N` and `msaA = A⁰(1+M) − 4B⁰N` (`MSABaxterKSpace`, Eqs.
+23/24), with `M = Dt·Mtil`, `N = Dt·Ntil`.  `bhF_eq_one_sub_dressed_moment` proves the exact bridge
+`bhF = 1 − (∫₀¹ q₀ᵈʳᵉˢˢᵉᵈ e^{−zt} + Dt·ρ·tailtil)`: the exact factor is `1` minus the full Laplace
+moment of the DRESSED Baxter function.  The polynomial half is a genuine integral (via the M2b
+moment lemmas); `Dt·ρ·tailtil` is the `G`-entangled tail closed form (numerically confirmed
+`tailtil ≠ 1/(2z)`), the residual transcription the exterior route cannot supply. -/
+
+/-- **General two-coefficient Baxter poly moment.**  `∫₀¹ (c₁(t−1) + c₂(t−1)²/2) e^{−zt} =
+c₁ φ₁ + c₂ φ₂` — the linear + quadratic core basis against the exterior weight, via the M2b moment
+lemmas.  With `c₁ = ρ·msaQp`, `c₂ = ρ·msaA` this is the dressed polynomial's Laplace moment. -/
+theorem baxter_poly_moment (c1 c2 z : ℝ) (hz : z ≠ 0) :
+    ∫ t in (0:ℝ)..1, (c1 * (t - 1) + c2 * ((t - 1) ^ 2 / 2)) * Real.exp (-z * t)
+      = c1 * phi1 z + c2 * phi2 z := by
+  have hcongr : (∫ t in (0:ℝ)..1, (c1 * (t - 1) + c2 * ((t - 1) ^ 2 / 2)) * Real.exp (-z * t))
+      = ∫ t in (0:ℝ)..1,
+          (c1 * ((t - 1) * Real.exp (-z * t)) + c2 * (((t - 1) ^ 2 / 2) * Real.exp (-z * t))) := by
+    apply intervalIntegral.integral_congr; intro t _; ring
+  rw [hcongr, intervalIntegral.integral_add
+        (by apply Continuous.intervalIntegrable; fun_prop)
+        (by apply Continuous.intervalIntegrable; fun_prop),
+      intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
+      phi1_laplace_moment hz, phi2_laplace_moment hz]
+
+/-- **Exact `bhF` faithfulness bridge.**  The exact Blum–Høye Baxter factor is `1` minus the full
+Laplace moment of the DRESSED Baxter function: `bhF = 1 − (∫₀¹ q₀ᵈʳᵉˢˢᵉᵈ e^{−zt} + Dt·ρ·tailtil)`,
+with dressed polynomial `ρ(msaQp·(t−1) + msaA·(t−1)²/2)` (coupling-dressed coefficients, Eqs. 23/24)
+and `tailtil` the `G`-entangled tail moment.  The integral (polynomial half) is discharged as a
+theorem via the M2b moment lemmas; the closed-form `Dt·ρ·tailtil` is the residual tail term.
+Extends `qhat0_eq_laplace_q0poly` from the hard-sphere `q0_poly` to the full dressed Baxter function
+— the exact analog of the M2b bridge for the interacting factor. -/
+theorem bhF_eq_one_sub_dressed_moment (xi z Dt G : ℝ) (hz : z ≠ 0) (hxi : (1 - xi) ≠ 0) :
+    bhF xi z (Dt, G)
+      = 1 - ((∫ t in (0:ℝ)..1,
+                (rhoOf xi * msaQp xi z Dt G * (t - 1)
+                 + rhoOf xi * msaA xi z Dt G * ((t - 1) ^ 2 / 2)) * Real.exp (-z * t))
+             + Dt * rhoOf xi * tailtil xi z G) := by
+  rw [baxter_poly_moment (rhoOf xi * msaQp xi z Dt G) (rhoOf xi * msaA xi z Dt G) z hz]
+  simp only [bhF, F0, bhFRest, msaQp, msaA, Mtil, Ntil, tailtil, gam, Qhat0, phi1, phi2,
+    rhoOf, qp0, bA0, bB0]
   field_simp
   ring
 
