@@ -53,11 +53,12 @@ This is the smoothness-preserving upgrade of FOEQ.5's `exists_hasDerivAt_root_of
 `ContDiffAt.contDiffAt_implicitFunction`.  It is what carries Theorem I.1's `γ = 1`
 differentiability to the `∀ γ`-fold differentiability FOEQ.7/.8 consume: because the Blum–Høye map
 is `C^∞`, its root is `C^∞` at `τ = 0` (gap (B)). -/
-theorem exists_contDiffAt_root_of_prodDomain_ift {n : ℕ∞ω} (hn : n ≠ 0)
-    {g : ℝ × (ℝ × ℝ) → (ℝ × ℝ)} {p₀ : ℝ × ℝ}
+theorem exists_contDiffAt_root_of_prodDomain_ift {E : Type*} [NormedAddCommGroup E]
+    [NormedSpace ℝ E] [CompleteSpace E] {n : ℕ∞ω} (hn : n ≠ 0)
+    {g : ℝ × E → E} {p₀ : E}
     (cg : ContDiffAt ℝ n g (0, p₀)) (hbase : g (0, p₀) = 0)
-    (hinv : (fderiv ℝ g (0, p₀) ∘L ContinuousLinearMap.inr ℝ ℝ (ℝ × ℝ)).IsInvertible) :
-    ∃ ψ : ℝ → ℝ × ℝ,
+    (hinv : (fderiv ℝ g (0, p₀) ∘L ContinuousLinearMap.inr ℝ ℝ E).IsInvertible) :
+    ∃ ψ : ℝ → E,
       ψ 0 = p₀ ∧ (∀ᶠ K in 𝓝 (0 : ℝ), g (K, ψ K) = 0) ∧ ContDiffAt ℝ n ψ 0 := by
   refine ⟨cg.implicitFunction hn hinv, ?_, ?_, ?_⟩
   · simpa using cg.implicitFunction_apply_self hn hinv
