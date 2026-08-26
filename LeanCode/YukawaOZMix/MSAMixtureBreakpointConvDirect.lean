@@ -293,4 +293,101 @@ theorem edgeHi_sub_r_lt_edgeHi_outer (σ : Fin N → ℝ) (i j l : Fin N) (r : �
     (hori : σ j ≤ σ i) (hr : lamA σ i j < r) : edgeHi σ i l - r < edgeHi σ j l := by
   rw [lamA_eq_of_le σ i j hori] at hr; unfold edgeHi; linarith
 
+/-! ### BRK.16b part (b) — the interval-integral primitives (reusable, generic)
+
+The 3-way split of `∫` over `[a,∞)`, and the elementary interval integrals the per-region evaluation
+needs.  The convolution's exp terms are all `e^{−z(t−c)} = const·e^{−zt}`, atoms `tᵏe^{ct}`
+(`k ≤ 2`) and pure `tᵏ` (`integral_pow`).  These are the fixed-exponential integrals (distinct from
+MRS.5's `integral_poly_exp_conv`, which is the moving-endpoint convolution kernel). -/
+
+/-- Generic 3-way split of `∫` over `[a,∞)`: two bounded pieces `[a,m1]`, `(m1,m2]`, and the tail
+tail `(m2,∞)`, for `a ≤ m1 ≤ m2` (integrand integrable on `[a,∞)`). -/
+theorem setIntegral_Ici_split3 (f : ℝ → ℝ) (a m1 m2 : ℝ) (h1 : a ≤ m1) (h2 : m1 ≤ m2)
+    (hf : IntegrableOn f (Ici a)) :
+    (∫ t in Ici a, f t)
+      = (∫ t in Icc a m1, f t) + (∫ t in Ioc m1 m2, f t) + ∫ t in Ioi m2, f t := by
+  have ha2 : a ≤ m2 := h1.trans h2
+  have sIoi : Ioi m2 ⊆ Ici a := fun x hx => le_of_lt (lt_of_le_of_lt ha2 hx)
+  have sIoc : Ioc m1 m2 ⊆ Ici a := fun x hx => h1.trans hx.1.le
+  have hd1 : Disjoint (Icc a m2) (Ioi m2) :=
+    Set.disjoint_left.mpr (fun x hx hx' => absurd hx.2 (not_le.mpr hx'))
+  have hd2 : Disjoint (Icc a m1) (Ioc m1 m2) :=
+    Set.disjoint_left.mpr (fun x hx hx' => absurd hx.2 (not_le.mpr hx'.1))
+  have e1 : (∫ t in Ici a, f t) = (∫ t in Icc a m2, f t) + ∫ t in Ioi m2, f t := by
+    rw [← Icc_union_Ioi_eq_Ici ha2, setIntegral_union hd1 measurableSet_Ioi
+        (hf.mono_set Icc_subset_Ici_self) (hf.mono_set sIoi)]
+  have e2 : (∫ t in Icc a m2, f t) = (∫ t in Icc a m1, f t) + ∫ t in Ioc m1 m2, f t := by
+    rw [← Icc_union_Ioc_eq_Icc h1 h2, setIntegral_union hd2 measurableSet_Ioc
+        (hf.mono_set Icc_subset_Ici_self) (hf.mono_set sIoc)]
+  rw [e1, e2]
+
+/-- `∫_a^b e^{ct} = (e^{cb} − e^{ca})/c` (`c ≠ 0`). -/
+theorem integral_exp_linear (a b c : ℝ) (hc : c ≠ 0) :
+    ∫ t in a..b, Real.exp (c * t) = (Real.exp (c * b) - Real.exp (c * a)) / c := by
+  have hderiv : ∀ t : ℝ, HasDerivAt (fun t => Real.exp (c * t) / c) (Real.exp (c * t)) t := by
+    intro t
+    have h0 := ((Real.hasDerivAt_exp (c * t)).comp t ((hasDerivAt_id t).const_mul c)).div_const c
+    have heq : Real.exp (c * t) * (c * 1) / c = Real.exp (c * t) := by
+      rw [mul_one, mul_div_assoc, div_self hc, mul_one]
+    rwa [heq] at h0
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun t _ => hderiv t)
+    ((Real.continuous_exp.comp (continuous_const.mul continuous_id)).intervalIntegrable _ _)]
+  ring
+
+/-- `∫_a^b t·e^{ct}` (`c ≠ 0`), antiderivative `(ct−1)e^{ct}/c²`. -/
+theorem integral_id_mul_exp (a b c : ℝ) (hc : c ≠ 0) :
+    ∫ t in a..b, t * Real.exp (c * t)
+      = ((c * b - 1) * Real.exp (c * b) - (c * a - 1) * Real.exp (c * a)) / c ^ 2 := by
+  have hderiv : ∀ t : ℝ,
+      HasDerivAt (fun s => (c * s - 1) * Real.exp (c * s) / c ^ 2) (t * Real.exp (c * t)) t := by
+    intro t
+    have hu : HasDerivAt (fun s => c * s - 1) c t := by
+      simpa using ((hasDerivAt_id t).const_mul c).sub_const 1
+    have hv : HasDerivAt (fun s => Real.exp (c * s)) (c * Real.exp (c * t)) t := by
+      have h := (Real.hasDerivAt_exp (c * t)).comp t ((hasDerivAt_id t).const_mul c)
+      simp only [Function.comp_def, mul_one] at h
+      rwa [mul_comm (Real.exp (c * t)) c] at h
+    have h0 := (hu.mul hv).div_const (c ^ 2)
+    have heq : (c * Real.exp (c * t) + (c * t - 1) * (c * Real.exp (c * t))) / c ^ 2
+        = t * Real.exp (c * t) := by
+      have hc2 : c ^ 2 ≠ 0 := pow_ne_zero 2 hc
+      field_simp; ring
+    rwa [heq] at h0
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun t _ => hderiv t)]
+  · ring
+  · exact (continuous_id.mul
+      (Real.continuous_exp.comp (continuous_const.mul continuous_id))).intervalIntegrable _ _
+
+/-- `∫_a^b t²·e^{ct}` (`c ≠ 0`), antiderivative `(c²t²−2ct+2)e^{ct}/c³`. -/
+theorem integral_sq_mul_exp (a b c : ℝ) (hc : c ≠ 0) :
+    ∫ t in a..b, t ^ 2 * Real.exp (c * t)
+      = ((c ^ 2 * b ^ 2 - 2 * c * b + 2) * Real.exp (c * b)
+          - (c ^ 2 * a ^ 2 - 2 * c * a + 2) * Real.exp (c * a)) / c ^ 3 := by
+  have hderiv : ∀ t : ℝ,
+      HasDerivAt (fun s => (c ^ 2 * s ^ 2 - 2 * c * s + 2) * Real.exp (c * s) / c ^ 3)
+        (t ^ 2 * Real.exp (c * t)) t := by
+    intro t
+    have hu : HasDerivAt (fun s => c ^ 2 * s ^ 2 - 2 * c * s + 2)
+        (c ^ 2 * (2 * t) - 2 * c) t := by
+      have hs2 : HasDerivAt (fun s => s ^ 2) (2 * t) t := by simpa using hasDerivAt_pow 2 t
+      have hcs2 := hs2.const_mul (c ^ 2)
+      have hlin : HasDerivAt (fun s => 2 * c * s) (2 * c) t := by
+        simpa using (hasDerivAt_id t).const_mul (2 * c)
+      exact (hcs2.sub hlin).add_const 2
+    have hv : HasDerivAt (fun s => Real.exp (c * s)) (c * Real.exp (c * t)) t := by
+      have h := (Real.hasDerivAt_exp (c * t)).comp t ((hasDerivAt_id t).const_mul c)
+      simp only [Function.comp_def, mul_one] at h
+      rwa [mul_comm (Real.exp (c * t)) c] at h
+    have h0 := (hu.mul hv).div_const (c ^ 3)
+    have heq : ((c ^ 2 * (2 * t) - 2 * c) * Real.exp (c * t)
+        + (c ^ 2 * t ^ 2 - 2 * c * t + 2) * (c * Real.exp (c * t))) / c ^ 3
+        = t ^ 2 * Real.exp (c * t) := by
+      have hc3 : c ^ 3 ≠ 0 := pow_ne_zero 3 hc
+      field_simp; ring
+    rwa [heq] at h0
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun t _ => hderiv t)]
+  · ring
+  · exact ((continuous_pow 2).mul
+      (Real.continuous_exp.comp (continuous_const.mul continuous_id))).intervalIntegrable _ _
+
 end FMSA.ExactMSA.Breakpoint
