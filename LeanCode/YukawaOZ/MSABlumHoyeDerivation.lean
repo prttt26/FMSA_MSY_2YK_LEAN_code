@@ -9,6 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.YukawaOZ.MSADCFTransform
 import LeanCode.YukawaOZ.MSABaxterTransform
+import LeanCode.YukawaOZ.MSABlumHoyeSystem
 
 /-!
 # Deriving the Blum–Høye MSA equations (29)/(33) — leg 3 (`N = 1`)
@@ -41,12 +42,14 @@ Yukawa rate (§6, the "exact-MSA self-consistency").
 2. ◑ the **exterior non-compact-`q` Baxter relation** (the RHS of Eq. 8 at `r > 1` for
    `q = q0_poly + Dt·e^{−zr}`) — STARTED: `tail_tail_conv` computes the tail–tail self-overlap
    `∫_{t>0} e^{−zt}·e^{−z(r+t)} = e^{−zr}/(2z)`, the source of the `Dt²` (doubly-propagated) term.
-   plus `exp_shift_factor` reduces the poly–tail cross overlap to a core Laplace moment.  ⚠ The two
-   overlap integrals are the *convention-independent* components.  The **assembly** — the exact
-   exterior Baxter relation (Eq. 8) form, and whether the ansatz's Yukawa exp extends past `σ`
-   (needed for the `s=−z` pole) or is core-only — must be pinned before combining them, and the `Q̂`
-   integral↔closed-form faithfulness bridge (`Q̂ = φ₁q′+φ₂A` is closed-form in `MSABlumHoyeSystem`,
-   not an integral; validated only numerically) is a further piece.  This is the substantive step.
+   plus `exp_shift_factor` reduces the poly–tail cross overlap to a core Laplace moment.  These two
+   overlap integrals are the *convention-independent* components.  ✅ the `Q̂` integral↔closed-form
+   **faithfulness bridge is now a theorem** (milestone 2b below): `qhat0_eq_laplace_q0poly` proves
+   `ρ·Q̂₀ = ∫₀¹ q0_poly·e^{−zr}` — the closed-form `Q̂₀ = φ₁q′+φ₂A` (`MSABlumHoyeSystem`) IS the
+   real-space Baxter transform, not just numerically so.  The convention is also pinned: Blum & Høye
+   Eq. (10) has `Q(r) = Q⁰(r) + Σ D e^{−zr}` with `Q⁰` compact and the exp tail over the full
+   half-line (it is what generates the `s=−z` pole).  What remains is the **assembly** of the two
+   overlaps into the exterior Eq. (8) — the substantive step.
 3. ☐ **match the `e^{−zr}` coefficient** ⟹ `h29 : Dt·bhF(z) = 2πK/z` as a theorem.
 4. ☐ the **Laplace moment `ĝ(z)`** ⟹ `h33`, carrying the `Dt`/`γ` terms onto the proved base
    `bh_base_eq`.
@@ -118,5 +121,66 @@ theorem exp_shift_factor (g : ℝ → ℝ) (z r a b : ℝ) :
   have hsplit : Real.exp (-z * (r + t)) = Real.exp (-z * r) * Real.exp (-z * t) := by
     rw [← Real.exp_add]; congr 1; ring
   simp only [hsplit]; ring
+
+/-! ### Milestone 2b — the `Q̂` integral ↔ closed-form faithfulness bridge
+
+The scalar exact-MSA transcription carries `Q̂₀(z) = φ₁(z) q⁰′ + φ₂(z) A⁰`
+(`MSABlumHoyeSystem.Qhat0`) as a *closed form*.  For the leg-3 derivation to touch Baxter's
+real-space Eq. (8) it must be the Laplace transform of the real-space Baxter polynomial `q0_poly`.
+That was previously only a
+numerical check; the two moment corollaries and `qhat0_eq_laplace_q0poly` make it a theorem, reusing
+the already-proved `phi1_real_laplace`/`phi2_real_laplace`. -/
+
+/-- **φ₁ as a core Laplace moment.**  Corollary of `phi1_real_laplace` at `σ = 1`: the closed-form
+Baxter coefficient factor `φ₁(z)` is the one-sided transform of the linear basis element `(r−1)`. -/
+theorem phi1_laplace_moment {z : ℝ} (hz : z ≠ 0) :
+    ∫ r in (0:ℝ)..1, (r - 1) * Real.exp (-z * r) = phi1 z := by
+  rw [show phi1 z = (1 - z * 1 - Real.exp (-z * 1)) / z ^ 2 from by simp only [phi1, mul_one],
+      ← FMSA.HardSphere.phi1_real_laplace hz (by norm_num : (0:ℝ) ≤ 1)]
+  apply intervalIntegral.integral_congr
+  intro r hr
+  simp only [Set.uIcc_of_le (by norm_num : (0:ℝ) ≤ 1), Set.mem_Icc] at hr
+  simp [FMSA.HardSphere.phi1_real, hr.2]
+
+/-- **φ₂ as a core Laplace moment.**  Corollary of `phi2_real_laplace` at `σ = 1`: `φ₂(z)` is the
+one-sided transform of the quadratic basis element `½(r−1)²`. -/
+theorem phi2_laplace_moment {z : ℝ} (hz : z ≠ 0) :
+    ∫ r in (0:ℝ)..1, ((r - 1) ^ 2 / 2) * Real.exp (-z * r) = phi2 z := by
+  rw [show phi2 z = (1 - z * 1 + (z * 1) ^ 2 / 2 - Real.exp (-z * 1)) / z ^ 3 from by
+        simp only [phi2, mul_one],
+      ← FMSA.HardSphere.phi2_real_laplace hz (by norm_num : (0:ℝ) ≤ 1)]
+  apply intervalIntegral.integral_congr
+  intro r hr
+  simp only [Set.uIcc_of_le (by norm_num : (0:ℝ) ≤ 1), Set.mem_Icc] at hr
+  simp [FMSA.HardSphere.phi2_real, hr.2]
+
+/-- **Faithfulness bridge (integral ↔ closed form).**  The closed-form PY Baxter transform
+`ρ·Q̂₀(z) = ρ(φ₁ q⁰′ + φ₂ A⁰)` is *literally* the one-sided Laplace transform of the real-space
+Baxter polynomial `q0_poly` over the core `[0,1]`.  This discharges — as a theorem, no longer a
+numerical check — the "the closed form is the integral" gap in the exact-MSA transcription.  It uses
+the already-proved `phi1_real_laplace`/`phi2_real_laplace` and the coefficient identities
+`qp0 = q_prime_py σ=1`, `bA0 = q_doubleprime_py` (both discharged inside by `ring`). -/
+theorem qhat0_eq_laplace_q0poly (xi z : ℝ) (hz : z ≠ 0) :
+    ∫ r in (0:ℝ)..1, FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) r * Real.exp (-z * r)
+      = rhoOf xi * Qhat0 xi z := by
+  have hcongr :
+      (∫ r in (0:ℝ)..1, FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) r * Real.exp (-z * r))
+      = ∫ r in (0:ℝ)..1,
+          ((rhoOf xi * FMSA.HardSphere.q_prime_py xi 1) * ((r - 1) * Real.exp (-z * r))
+         + (rhoOf xi * FMSA.HardSphere.q_doubleprime_py xi)
+             * ((r - 1) ^ 2 / 2 * Real.exp (-z * r))) := by
+    apply intervalIntegral.integral_congr
+    intro r hr
+    simp only [Set.uIcc_of_le (by norm_num : (0:ℝ) ≤ 1), Set.mem_Icc] at hr
+    show FMSA.HardSphere.q0_poly xi 1 (rhoOf xi) r * Real.exp (-z * r) = _
+    rw [FMSA.HardSphere.q0_poly_inner (show r ≤ (1:ℝ) from hr.2)]
+    ring
+  rw [hcongr, intervalIntegral.integral_add
+        (by apply Continuous.intervalIntegrable; fun_prop)
+        (by apply Continuous.intervalIntegrable; fun_prop),
+      intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
+      phi1_laplace_moment hz, phi2_laplace_moment hz]
+  simp only [Qhat0, qp0, bA0, FMSA.HardSphere.q_prime_py, FMSA.HardSphere.q_doubleprime_py]
+  ring
 
 end FMSA.ExactMSA
