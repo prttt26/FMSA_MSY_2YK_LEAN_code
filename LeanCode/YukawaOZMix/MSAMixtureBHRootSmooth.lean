@@ -594,6 +594,113 @@ theorem exists_contDiffAt_matBhRoot_physical (z sig : ℝ) (rho sigma : Fin N �
   exact exists_contDiffAt_matBhRoot_of_blockJacobian z sig rho sigma Kdir Gt₀ _ _ _ hroot0 hshape
     h₁ h₂
 
+/-! ### Item 5 — discharging the physical HS-block det conditions onto `Q0_mat_phys`
+
+`resG/resH (0,Gt₀)` are the physical hard-sphere OZ blocks `1 − D_ρ·C` and `1 − D_ρ·Cᵀ` with the
+equal-σ Baxter core `C = p₁·Q0phys + p₂·Qppphys` (`resH_eq_baxter`, `resG_eq_baxter`); the
+recognised
+`Q0_mat_phys = 1 − D_√ρ·C·D_√ρ` uses geometric weighting (`Q0phys_eq_baxter`).  Plain-ρ vs
+geometric-√ρ
+drops out under Sylvester `det (1 − AB) = det (1 − BA)`, so `det resG = det resH = det Q0_mat_phys`
+(`detG_eq_Q0`, `detH_eq_Q0`).  Hence the two abstract det hypotheses of
+`exists_contDiffAt_matBhRoot_physical`
+reduce to `Q0_mat_phys` nonsingular, discharged by `Q0_mat_phys_isUnit_det_of_diag_dom` (diagonal
+dominance — the mixture analogue of `N = 1`'s `η ∈ (0,1)`). -/
+open FMSA.MatrixQ0
+
+noncomputable def hsCore (z sig : ℝ) (rho sigma : Fin N → ℝ) : Matrix (Fin N) (Fin N) ℝ :=
+  Matrix.of fun l j =>
+    (1 - z * sig - Real.exp (-(z * sig))) / z ^ 2 * Q0phys rho sigma l j
+    + (1 - z * sig + (z * sig) ^ 2 / 2 - Real.exp (-(z * sig))) / z ^ 3 * Qppphys rho sigma l j
+
+theorem resH_eq_baxter (z sig : ℝ) (rho sigma : Fin N → ℝ) (Gt₀ : Matrix (Fin N) (Fin N) ℝ) :
+    resH z sig rho sigma (0, Gt₀) = 1 - Matrix.diagonal rho * hsCore z sig rho sigma := by
+  ext l j
+  simp only [resH, qpMat_zero_Dt, Wt_zero_Dt, Ct_zero_Dt, AVec_zero_Dt, qhatMixR, qp0Mat, A0Vec,
+    hsCore, Matrix.of_apply, Matrix.sub_apply, Matrix.one_apply, Matrix.diagonal_mul,
+    Matrix.zero_apply, Pi.zero_apply, Qppphys, zero_div, zero_mul, add_zero]
+
+theorem resG_eq_baxter (z sig : ℝ) (rho sigma : Fin N → ℝ) (Gt₀ : Matrix (Fin N) (Fin N) ℝ) :
+    resG z sig rho sigma (0, Gt₀)
+      = 1 - Matrix.diagonal rho * (hsCore z sig rho sigma).transpose := by
+  ext l j
+  simp only [resG, qpMat_zero_Dt, Wt_zero_Dt, Ct_zero_Dt, AVec_zero_Dt, qhatMixR, qp0Mat, A0Vec,
+    hsCore, Matrix.transpose_apply, Matrix.of_apply, Matrix.sub_apply, Matrix.one_apply,
+    Matrix.diagonal_mul, Matrix.zero_apply, Pi.zero_apply, Qppphys, zero_div, zero_mul, add_zero]
+
+theorem Q0phys_eq_baxter (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (hσ : ∀ i, sigma i = sig) (hρ : ∀ i, 0 ≤ rho i) :
+    Q0_mat_phys z sigma rho
+      = 1 - Matrix.diagonal (fun i => Real.sqrt (rho i)) * hsCore z sig rho sigma
+          * Matrix.diagonal (fun i => Real.sqrt (rho i)) := by
+  ext l j
+  simp only [Q0_mat_phys, Q0_mat, q0_entry, rhoGeoPhys, hsCore, hσ l, hσ j, sub_self, zero_div,
+    neg_zero, mul_zero, zero_mul, Real.exp_zero, one_mul, Matrix.of_apply, Matrix.sub_apply,
+    Matrix.one_apply, Matrix.diagonal_mul, Matrix.mul_diagonal]
+  rw [Real.sqrt_mul (hρ l)]
+  ring
+
+/-- ⭐ The two abstract HS-OZ blocks `resG/resH (0,Gt₀)` and the recognised physical Baxter matrix
+`Q0_mat_phys` all share the determinant (equal σ): plain-ρ vs geometric-√ρ weighting drops out under
+Sylvester's `det (1 − AB) = det (1 − BA)`. -/
+theorem detH_eq_Q0 (z sig : ℝ) (rho sigma : Fin N → ℝ) (Gt₀ : Matrix (Fin N) (Fin N) ℝ)
+    (hσ : ∀ i, sigma i = sig) (hρ : ∀ i, 0 ≤ rho i) :
+    (resH z sig rho sigma (0, Gt₀)).det = (Q0_mat_phys z sigma rho).det := by
+  have hd : Matrix.diagonal (fun i => Real.sqrt (rho i) * Real.sqrt (rho i))
+      = (Matrix.diagonal rho : Matrix (Fin N) (Fin N) ℝ) := by
+    congr 1; ext i; exact Real.mul_self_sqrt (hρ i)
+  rw [resH_eq_baxter, Q0phys_eq_baxter z sig rho sigma hσ hρ,
+    Matrix.det_one_sub_mul_comm (Matrix.diagonal rho) (hsCore z sig rho sigma),
+    mul_assoc (Matrix.diagonal (fun i => Real.sqrt (rho i))) (hsCore z sig rho sigma),
+    Matrix.det_one_sub_mul_comm (Matrix.diagonal (fun i => Real.sqrt (rho i)))
+      (hsCore z sig rho sigma * Matrix.diagonal (fun i => Real.sqrt (rho i))),
+    mul_assoc, Matrix.diagonal_mul_diagonal, hd]
+
+theorem detG_eq_Q0 (z sig : ℝ) (rho sigma : Fin N → ℝ) (Gt₀ : Matrix (Fin N) (Fin N) ℝ)
+    (hσ : ∀ i, sigma i = sig) (hρ : ∀ i, 0 ≤ rho i) :
+    (resG z sig rho sigma (0, Gt₀)).det = (Q0_mat_phys z sigma rho).det := by
+  rw [resG_eq_baxter,
+    ← Matrix.det_transpose (1 - Matrix.diagonal rho * (hsCore z sig rho sigma).transpose),
+    Matrix.transpose_sub, Matrix.transpose_one, Matrix.transpose_mul, Matrix.transpose_transpose,
+    Matrix.diagonal_transpose,
+    Matrix.det_one_sub_mul_comm (hsCore z sig rho sigma) (Matrix.diagonal rho),
+    ← resH_eq_baxter z sig rho sigma Gt₀, detH_eq_Q0 z sig rho sigma Gt₀ hσ hρ]
+
+
+/-- ⭐⭐⭐ MSAEMIX.6 with the physical HS-block det conditions discharged onto `Q0_mat_phys`: at
+equal σ and `ρ ≥ 0`, the mixture MSA amplitudes are a `C^∞` family near `K = 0` provided the
+physical
+hard-sphere Baxter matrix `Q0_mat_phys` is nonsingular.  Both abstract blocks `resG/resH (0,Gt₀)`
+have
+the same determinant as `Q0_mat_phys` (`detG_eq_Q0`/`detH_eq_Q0`). -/
+theorem exists_contDiffAt_matBhRoot_of_Q0 (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Kdir Gt₀ : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ i, sigma i = sig) (hρ : ∀ i, 0 ≤ rho i)
+    (hroot0 : MixBHRoot z sig rho sigma Gt₀ 0 0) (hQ0 : IsUnit (Q0_mat_phys z sigma rho).det) :
+    ∃ ψ : ℝ → Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ,
+      ψ 0 = (0, Gt₀) ∧
+      (∀ᶠ τ in nhds (0 : ℝ), MixBHRoot z sig rho sigma (ψ τ).2 (ψ τ).1 (τ • Kdir)) ∧
+      ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 :=
+  exists_contDiffAt_matBhRoot_physical z sig rho sigma Kdir Gt₀ hroot0
+    (by rw [detG_eq_Q0 z sig rho sigma Gt₀ hσ hρ]; exact hQ0)
+    (by rw [detH_eq_Q0 z sig rho sigma Gt₀ hσ hρ]; exact hQ0)
+
+/-- ⭐⭐⭐ MSAEMIX.6 fully unconditional-modulo-diagonal-dominance: the physical det conditions are
+discharged from strict row diagonal dominance of `Q0_mat_phys`
+(`Q0_mat_phys_isUnit_det_of_diag_dom`),
+the mixture analogue of the `N = 1` `η ∈ (0,1)` non-degeneracy.  Nothing is left as a Baxter-block
+hypothesis — only the checkable physical inequalities `hσ`, `hρ`, `hdom`. -/
+theorem exists_contDiffAt_matBhRoot_of_diag_dom (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Kdir Gt₀ : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ i, sigma i = sig) (hρ : ∀ i, 0 ≤ rho i)
+    (hroot0 : MixBHRoot z sig rho sigma Gt₀ 0 0)
+    (hdom : ∀ k, ∑ j ∈ Finset.univ.erase k, |Q0_mat_phys z sigma rho k j|
+      < |Q0_mat_phys z sigma rho k k|) :
+    ∃ ψ : ℝ → Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ,
+      ψ 0 = (0, Gt₀) ∧
+      (∀ᶠ τ in nhds (0 : ℝ), MixBHRoot z sig rho sigma (ψ τ).2 (ψ τ).1 (τ • Kdir)) ∧
+      ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 :=
+  exists_contDiffAt_matBhRoot_of_Q0 z sig rho sigma Kdir Gt₀ hσ hρ hroot0
+    (Q0_mat_phys_isUnit_det_of_diag_dom hdom)
+
 end Smooth
 
 end MSAMixture
