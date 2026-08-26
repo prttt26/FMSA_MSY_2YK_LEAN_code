@@ -11,28 +11,35 @@ import LeanCode.YukawaOZMix.MSAMixtureBHRoot
 import LeanCode.Closures.MSASolutionFamily
 
 /-!
-# MSAEMIX.6 — the matrix Blum–Høye residual map (item 2) and the assembly plan
+# MSAEMIX.6 — the matrix Blum–Høye root is `C^∞` at `K = 0` (general `N`)
 
 The general-`N` analogue of the `N = 1` `exists_contDiffAt_bhRoot`: the physical mixture MSA
 amplitudes `(Dt, Gt)` are a `C^∞` family of the coupling near `K = 0`.  Route: the implicit function
 theorem `exists_contDiffAt_root_of_prodDomain_ift` (generalised in item 1 to any complete normed
 space `E`, here `E = Matrix × Matrix`) applied to the **residual map** with zero set `MixBHRoot`.
 
-This file lands **item 2**: the residual map `matBhResidual` and the proof that its zero set is
-exactly `MixBHRoot` (`matBhResidual_eq_zero_iff`).  Both are std-3, purely algebraic — no analysis.
+Items landed here (all std-3; `Matrix` needs the Frobenius normed instance activated locally, since
+Mathlib gives it no global norm):
 
-Remaining items (scoped in `proof_notes_msa_exact.md`):
+* **item 2** — `matBhResidual` + `matBhResidual_eq_zero_iff` (zero set = `MixBHRoot`), pure algebra;
+* **item 3** — `contDiff_matBhResidual` (`ContDiff ℝ ⊤`); amplitudes are polynomial in `(Dt, Gt)`;
+* **item 4** — `matBhResidual_base_eq` (base point is a root iff `Gt₀` is a zero-coupling BH root);
+* **capstone** — `exists_contDiffAt_matBhRoot`, the smooth family, taking item-5 `hjac` as input;
+* **item 5 engine** — `matMulRightCLM`, `matBhJacobianCLM`, `matBhJacobianCLM_isInvertible` (units
+  `N₁, N₂` ⇒ the block lower-triangular Jacobian is invertible, `Cpl` drops out) — the general-`N`
+  analogue of `bhJacobianCLM_isInvertible`; `exists_contDiffAt_matBhRoot_of_blockJacobian`
+  discharges the capstone's `hjac` from the fderiv **shape** `fderiv g ∘L inr = matBhJacobianCLM …`
+  plus `IsUnit N₁.det`, `IsUnit N₂.det`.
 
-* item 3 — `ContDiffAt` of `matBhResidual` at the base point (matrix-valued smoothness of
-  `qpMat/Wt/Ct/AVec/qhatMixR` in `(Dt, Gt)`); no reusable infrastructure exists yet;
-* item 4 — the base equation `matBhResidual (0, (0, Gt₀)) = 0`;
-* item 5 — the partial Jacobian in `(Dt, Gt)` is invertible (block-triangular, diagonal blocks
-  = multiplication by `Q̂₀`, discharged with `FMSA.MatrixQ0.Q0_mat_phys_isUnit_det`).
-
-⚠ Items 3–5 and the IFT capstone need `Matrix (Fin N) (Fin N) ℝ` **as a normed space** — Mathlib
-gives `Matrix` no global norm (only opt-in Frobenius/`linfty` instances), so the capstone must first
-activate one (`Matrix.frobeniusNormedAddCommGroup` / `…NormedSpace`) before `ContDiffAt` / `fderiv`
-even typecheck.  That analytic assembly is the substantial remaining work.
+⚠ **Remaining = the item-5 fderiv transcription**: proving `fderiv (matBhResidual …) ∘L inr` really
+is `matBhJacobianCLM N₁ N₂ Cpl` for the concrete hard-sphere OZ blocks `N₁_lj = δ_lj − ρ_l Q̂₀_jl`,
+`N₂_lj = δ_lj − ρ_l Q̂₀_lj`.  Informally block-triangular: R1's `Dt·dG` term vanishes at `Dt = 0`,
+and R2's `Gt`-directional derivative is exactly `2π·dGt·N₂` because every dressing deviation is
+`∝ Dt` (its `Gt`-partial vanishes at base).  Formalising it is the matrix analogue of
+`bhResidualShape_hasFDerivAt` + the concrete amplitude fderivs (`MSABlumHoyeSystem.lean`) — a
+dedicated-file effort, at the acknowledged transcription grade.  The block invertibility itself is
+**conditional** (`Q0_mat_phys_isUnit_det_of_diag_dom`); the unconditional `Q0_mat_phys_isUnit_det`
+was retired as **false**.
 -/
 
 open scoped BigOperators
