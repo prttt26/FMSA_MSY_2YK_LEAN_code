@@ -128,4 +128,63 @@ theorem baxterQ_integrable (z : ℝ) (hz : 0 < z) (σ A : Fin N → ℝ)
     have hxi : edgeHi σ a b < x := hx
     unfold baxterQ; rw [if_neg (by linarith : ¬ x < edgeLo σ a b), if_neg (not_le.mpr hxi)]
 
+/-- **`baxterQ'` is globally bounded** (`z > 0`): `0` below `λ_ab`; on the core the poly argument
+`x − λ_ab − σ_a ∈ [−σ_a, 0]` is bounded and `e^{−z(x−λ)} ≤ 1`; on the tail both exponentials `≤ 1`.
+Feeds the product-integrand integrability (`bdd · L¹`). -/
+theorem baxterQ'_bounded (z : ℝ) (hz : 0 < z) (σ A : Fin N → ℝ)
+    (qp Wt Ct : Fin N → Fin N → ℝ) (a b : Fin N) (hσ : ∀ i, 0 ≤ σ i) :
+    ∃ C, ∀ x, |baxterQ' z σ A qp Wt Ct a b x| ≤ C := by
+  have hEH : edgeHi σ a b - edgeLo σ a b = σ a := by simp only [edgeLo, edgeHi]; ring
+  have hnn : (0:ℝ) ≤ |qp a b| + |A b| * σ a + z * |Wt a b| + z * |Wt a b| + z * |Ct a b| := by
+    have := hσ a
+    positivity
+  refine ⟨|qp a b| + |A b| * σ a + z * |Wt a b| + z * |Wt a b| + z * |Ct a b|, fun x => ?_⟩
+  unfold baxterQ'
+  split_ifs with h1 h2
+  · rw [abs_zero]; exact hnn
+  · have hxlo : edgeLo σ a b ≤ x := not_lt.mp h1
+    have he1 : Real.exp (-z * (x - edgeLo σ a b)) ≤ 1 :=
+      Real.exp_le_one_iff.mpr (by nlinarith [hxlo])
+    have he0 : (0:ℝ) ≤ Real.exp (-z * (x - edgeLo σ a b)) := (Real.exp_pos _).le
+    have hpoly : |A b * (x - edgeLo σ a b - σ a)| ≤ |A b| * σ a := by
+      rw [abs_mul]; apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
+      rw [abs_le]; constructor <;> nlinarith [hxlo, h2, hEH, hσ a]
+    have hexp : |z * Wt a b * Real.exp (-z * (x - edgeLo σ a b))| ≤ z * |Wt a b| := by
+      rw [abs_mul, abs_mul, abs_of_pos hz, abs_of_nonneg he0]
+      nlinarith [mul_nonneg hz.le (abs_nonneg (Wt a b)), abs_nonneg (Wt a b), he1, he0]
+    have step1 : |qp a b + A b * (x - edgeLo σ a b - σ a)| ≤ |qp a b| + |A b| * σ a :=
+      (abs_add_le _ _).trans (by gcongr)
+    calc |qp a b + A b * (x - edgeLo σ a b - σ a)
+            - z * Wt a b * Real.exp (-z * (x - edgeLo σ a b))|
+        = |(qp a b + A b * (x - edgeLo σ a b - σ a))
+            + -(z * Wt a b * Real.exp (-z * (x - edgeLo σ a b)))| := by ring_nf
+      _ ≤ |qp a b + A b * (x - edgeLo σ a b - σ a)|
+            + |z * Wt a b * Real.exp (-z * (x - edgeLo σ a b))| := by
+          rw [← abs_neg (z * Wt a b * _)]; exact abs_add_le _ _
+      _ ≤ (|qp a b| + |A b| * σ a) + z * |Wt a b| := add_le_add step1 hexp
+      _ ≤ _ := by nlinarith [mul_nonneg hz.le (abs_nonneg (Wt a b)),
+            mul_nonneg hz.le (abs_nonneg (Ct a b))]
+  · have hxlo : edgeLo σ a b ≤ x := not_lt.mp h1
+    have hxhi : edgeHi σ a b < x := not_le.mp h2
+    have he1 : Real.exp (-z * (x - edgeLo σ a b)) ≤ 1 :=
+      Real.exp_le_one_iff.mpr (by nlinarith [hxlo])
+    have he2 : Real.exp (-z * (x - edgeHi σ a b)) ≤ 1 :=
+      Real.exp_le_one_iff.mpr (by nlinarith [hxhi])
+    have he0a : (0:ℝ) ≤ Real.exp (-z * (x - edgeLo σ a b)) := (Real.exp_pos _).le
+    have he0b : (0:ℝ) ≤ Real.exp (-z * (x - edgeHi σ a b)) := (Real.exp_pos _).le
+    have hA : |(-z * Wt a b) * Real.exp (-z * (x - edgeLo σ a b))| ≤ z * |Wt a b| := by
+      rw [abs_mul, abs_mul, abs_neg, abs_of_pos hz, abs_of_nonneg he0a]
+      nlinarith [mul_nonneg hz.le (abs_nonneg (Wt a b)), he1, he0a]
+    have hB : |z * Ct a b * Real.exp (-z * (x - edgeHi σ a b))| ≤ z * |Ct a b| := by
+      rw [abs_mul, abs_mul, abs_of_pos hz, abs_of_nonneg he0b]
+      nlinarith [mul_nonneg hz.le (abs_nonneg (Ct a b)), he2, he0b]
+    calc |(-z * Wt a b) * Real.exp (-z * (x - edgeLo σ a b))
+            - z * Ct a b * Real.exp (-z * (x - edgeHi σ a b))|
+        ≤ |(-z * Wt a b) * Real.exp (-z * (x - edgeLo σ a b))|
+            + |z * Ct a b * Real.exp (-z * (x - edgeHi σ a b))| := by
+          rw [← abs_neg (z * Ct a b * _)]; exact abs_add_le _ _
+      _ ≤ z * |Wt a b| + z * |Ct a b| := add_le_add hA hB
+      _ ≤ _ := by nlinarith [abs_nonneg (qp a b), mul_nonneg (abs_nonneg (A b)) (hσ a),
+            mul_nonneg hz.le (abs_nonneg (Wt a b))]
+
 end FMSA.ExactMSA.Breakpoint
