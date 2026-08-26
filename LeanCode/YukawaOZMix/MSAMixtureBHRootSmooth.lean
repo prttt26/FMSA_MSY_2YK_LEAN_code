@@ -73,6 +73,16 @@ theorem matBhResidual_eq_zero_iff (z sig : ℝ) (rho sigma : Fin N → ℝ)
   rw [matBhResidual, MixBHRoot, Prod.mk_eq_zero, ← Matrix.ext_iff, ← Matrix.ext_iff]
   simp only [Matrix.of_apply, Matrix.zero_apply, sub_eq_zero, Matrix.smul_apply, smul_eq_mul]
 
+/-- **Item 4 — the base equation.**  The HS point `(0, Gt₀)` at coupling `τ = 0` is a root of the
+residual iff `Gt₀` is a zero-coupling Blum–Høye root (`MixBHRoot … Gt₀ 0 0`) — the HS seed relation.
+At `Dt = 0` every amplitude (`Wt`, `Ct`, `mixM/N/DA/Dqp`) vanishes (all are `∝ Dt`), so the factor
+reduces to hard sphere and the `Dt`-equation is trivially `0 = 0`; only the `Gt` equation (the HS
+Baxter relation for `Gt₀`) remains.  Follows from `matBhResidual_eq_zero_iff` and `0 • Kdir = 0`. -/
+theorem matBhResidual_base_eq (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Kdir Gt₀ : Matrix (Fin N) (Fin N) ℝ) (hroot0 : MixBHRoot z sig rho sigma Gt₀ 0 0) :
+    matBhResidual z sig rho sigma Kdir (0, (0, Gt₀)) = 0 :=
+  (matBhResidual_eq_zero_iff z sig rho sigma Kdir 0 0 Gt₀).mpr (by simpa using hroot0)
+
 /-! ### Item 3 foundation — `ContDiff` building blocks under the Frobenius matrix norm
 
 `Matrix (Fin N) (Fin N) ℝ` has no global normed-space instance; we activate the Frobenius one
@@ -138,6 +148,30 @@ theorem contDiff_matBhResidual (z sig : ℝ) (rho sigma : Fin N → ℝ)
       Matrix.smul_apply, smul_eq_mul]
     fun_prop
   exact h1.prodMk h2
+
+/-- ⭐⭐⭐ **MSAEMIX.6 capstone (assembly).**  Given the HS seed `Gt₀` (`MixBHRoot … Gt₀ 0 0`, item 4)
+and the partial-Jacobian invertibility `hjac` (item 5), the mixture MSA amplitudes form a `C^∞`
+family
+`ψ` of the coupling scale `τ` with `ψ 0 = (0, Gt₀)` and `MixBHRoot` along it — the general-`N`
+analogue of `exists_contDiffAt_bhRoot`.  Items 1–4 (`exists_contDiffAt_root_of_prodDomain_ift`,
+`matBhResidual`, `contDiff_matBhResidual`, `matBhResidual_base_eq`) are discharged; only `hjac`
+remains open.  "What the mixture still lacks is the assembly" retires with this theorem. -/
+theorem exists_contDiffAt_matBhRoot (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Kdir Gt₀ : Matrix (Fin N) (Fin N) ℝ) (hroot0 : MixBHRoot z sig rho sigma Gt₀ 0 0)
+    (hjac : (fderiv ℝ (matBhResidual z sig rho sigma Kdir) (0, (0, Gt₀)) ∘L
+        ContinuousLinearMap.inr ℝ ℝ
+          (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ)).IsInvertible) :
+    ∃ ψ : ℝ → Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ,
+      ψ 0 = (0, Gt₀) ∧
+      (∀ᶠ τ in nhds (0 : ℝ), MixBHRoot z sig rho sigma (ψ τ).2 (ψ τ).1 (τ • Kdir)) ∧
+      ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 := by
+  obtain ⟨ψ, h0, hroot, hcd⟩ :=
+    FMSA.MSASolutionFamily.exists_contDiffAt_root_of_prodDomain_ift (by simp)
+    (contDiff_matBhResidual z sig rho sigma Kdir).contDiffAt
+    (matBhResidual_base_eq z sig rho sigma Kdir Gt₀ hroot0) hjac
+  refine ⟨ψ, h0, ?_, hcd⟩
+  filter_upwards [hroot] with τ hτ
+  exact (matBhResidual_eq_zero_iff z sig rho sigma Kdir τ (ψ τ).1 (ψ τ).2).mp hτ
 
 end Smooth
 
