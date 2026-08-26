@@ -79,8 +79,10 @@ state point (rather than an opaque `‖C‖ < 1` operator-norm bound).
 Everything below except the final scalar inequality is a **proved theorem**, no `sorry`/
 `axiom`: `Umat`, `Vmat`, `Q0_mat_phys_eq_one_sub_mul` (the `1-U*V` factorization),
 `Q0_mat_phys_det_eq_two_by_two` (Sylvester reduction to the 2×2 `det`), and `fFun_neg`/
-`gFun_neg` (the sign facts below). The one remaining gap is stated as an explicit hypothesis
-on `Q0_mat_phys_isUnit_det_of_two_by_two` — see that file for the final theorem.
+`gFun_neg` (the sign facts below). ✅ **M.4 CLOSED unconditionally (2026-08-26).** The scalar
+inequality below was PROVED as `Q0DetRankTwo.Q0_moment_det_pos` (`det ≥ 1` via `moment_key`, std-3),
+so `Q0_mat_phys_isUnit_det` needs no hypothesis. The roadmap text below is kept for provenance but
+SUPERSEDED — its "still open" / "smallest remaining gap" notes are stale.
 
 `Q0_mat_phys(z)` is exactly a **rank-2 perturbation of the identity** for every `n`. Writing
 `u := σ ↦ 2π/vac` etc. for brevity, define (per species `i`, at fixed `z`):
@@ -121,15 +123,13 @@ goal is the fully explicit, `n`-independent inequality:
 ```
 (1+a)(1+d) > b·c
 ```
-**Not yet closed:** this is NOT simple Cauchy-Schwarz on the moment sums (checked: `b·c` can
-exceed `a·d`, e.g. `a=0.232,d=1.068,ad=0.248` vs `b=0.643,c=0.408,bc=0.262 > ad`), so it needs
-a sharper relation between `f` and `g` specifically (not just their common sign). Numerically
-very robust (20,000 random physical trials, `η` up to 0.999, `z ∈ [10⁻³,10⁴]`: smallest
-`|det|` found was `1.0000013`, no zero crossing), but the exact algebraic reason is still
-open. `Q0DetRankTwo.lean`'s `Q0_mat_phys_isUnit_det_of_two_by_two` takes this inequality as
-an explicit hypothesis (in terms of `(Vmat*Umat) k l`, not `a,b,c,d`, but the same content)
-rather than a `sorry` — this is the smallest honest remaining gap for M.4: one scalar
-inequality between four finite species-sums, not an n×n claim.
+**✅ CLOSED (2026-08-26 — was "not yet closed").** Simple Cauchy-Schwarz DOES fail (`b·c` can
+exceed `a·d`, e.g. `a=0.232,d=1.068,ad=0.248` vs `b=0.643,c=0.408,bc=0.262 > ad`), but the sharper
+relation `b·c − a·d ≤ a + d` (`Q0DetRankTwo.moment_key`, a THEOREM) gives
+`det = 1 + (a+d) − (bc−ad) ≥ 1 > 0` (`Q0_moment_det_pos`, std-3). So `Q0_mat_phys_isUnit_det` is
+unconditional and `Q0_mat_phys_isUnit_det_of_two_by_two` is subsumed. Numerically
+corroborated (20,000 random physical trials, `η` up to 0.999, `z ∈ [10⁻³,10⁴]`: smallest `|det|` =
+1.0000013, no zero crossing) — the corroboration stands; the "still open" conclusion did not.
 -/
 
 set_option linter.style.longLine false

@@ -876,8 +876,8 @@ theorem Q0_moment_det_pos {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
 /-- **Task M.4 (unconditional) — and Task M.3 (unconditional).** `Q0_mat_phys` is invertible for
 every physical mixture, from `Q0_moment_det_pos`. This is the unconditional `det(Q̂₀) ≠ 0` that M.3
 sought (no diagonal-dominance side hypothesis — see `MatrixQ0.lean`'s conditional
-`Q0_mat_phys_isUnit_det_of_diag_dom`) *and* the unconditional M.4. Depends on the `Q0_moment_det_pos`
-axiom; retiring that axiom makes this theorem axiom-clean. -/
+`Q0_mat_phys_isUnit_det_of_diag_dom`) *and* the unconditional M.4. `Q0_moment_det_pos` is now a
+THEOREM (not an axiom), so this is axiom-clean — `#print axioms` = the standard three (std-3). -/
 theorem Q0_mat_phys_isUnit_det {N : ℕ} {z : ℝ} {sigma rho : Fin N → ℝ}
     (hz : 0 < z) (hvac : 0 < vacMix rho sigma) (hrho : ∀ i, 0 ≤ rho i)
     (hsigma : ∀ i, 0 < sigma i) :
