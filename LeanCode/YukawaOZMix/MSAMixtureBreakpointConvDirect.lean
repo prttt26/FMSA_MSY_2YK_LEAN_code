@@ -206,4 +206,33 @@ theorem baxterConvIntegrand_integrable (z : ℝ) (hz : 0 < z) (σ A : Fin N → 
     ((baxterQ'_measurable z σ A qp Wt Ct i l).comp (measurable_id.add_const r)).aestronglyMeasurable
     (Filter.Eventually.of_forall (fun t => by rw [Real.norm_eq_abs]; exact hC (t + r)))
 
+/-! ### BRK.16b (item 2, the diagonal half) — the `−Q'_ij` term matches `matCoreUneq`'s diagonal
+
+`baxterConvCore = (−Q'_ij + Σ_l ρ_l ∫_l)/(2π r)` and `matCoreUneq = g/(2π r)` with each `g`-coeff
+`= (diagonal −Q'_ij term) + Σ_l ρ_l·kernel_l` (`MSAMixtureCoreUneq.lean` docstring).  Because the
+per-`l` kernels are σ_l-free, `baxterConvCore = matCoreUneq` splits into (a) the diagonal
+`−Q'_ij(r) = gForm(diag coeffs)(r)` — proved below, no integral — and (b) the per-`l` convolution
+`∫_l = gForm(kernel_l)(r)`, wrapped by `Finset.sum_congr`.  This lemma discharges (a): the whole
+NON-integral content of the seam axiom, confirming the `cC0i/cC1i/cEmi` diagonal transcription. -/
+
+/-- **BRK.16b (diagonal half) — `−Q'_ij(r)` equals `matCoreUneq`'s diagonal `g`-part.**  On the core
+support `edgeLo σ i j ≤ r ≤ edgeHi σ i j` the negated derivative equals the diagonal (non-`∑`)
+terms of `matCoreUneq`'s `g` read off `cC0i`/`cC1i`/`cEmi`: constant `−qp_ij + A_j·σ_ij`, `r`-slope
+`−A_j`, and `e^{−zr}`-amplitude `z·Wt_ij·e^{−z(σ_i−σ_j)/2}` (`σ_ij = (σ_i+σ_j)/2`, `|λ_ij|` split).
+This is the integral-free half of the seam `baxterConvCore = matCoreUneq`; the remaining content is
+the per-`l` convolution `∫ Q'_il(t+r) Q_jl(t) dt`. -/
+theorem neg_baxterQ'_eq_diag (z : ℝ) (σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ)
+    (i j : Fin N) (r : ℝ) (hlo : edgeLo σ i j ≤ r) (hhi : r ≤ edgeHi σ i j) :
+    - baxterQ' z σ A qp Wt Ct i j r
+      = (- qp i j + A j * ((σ i + σ j) / 2)) + (- A j) * r
+        + (z * Wt i j * Real.exp (-z * (σ i - σ j) / 2)) * Real.exp (-z * r) := by
+  unfold baxterQ'
+  rw [if_neg (not_lt.mpr hlo), if_pos hhi]
+  simp only [edgeLo]
+  have hExp : Real.exp (-z * (r - (σ j - σ i) / 2))
+      = Real.exp (-z * (σ i - σ j) / 2) * Real.exp (-z * r) := by
+    rw [← Real.exp_add]; ring_nf
+  rw [hExp]
+  ring
+
 end FMSA.ExactMSA.Breakpoint
