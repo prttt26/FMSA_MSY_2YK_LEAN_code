@@ -173,6 +173,123 @@ theorem exists_contDiffAt_matBhRoot (z sig : ℝ) (rho sigma : Fin N → ℝ)
   filter_upwards [hroot] with τ hτ
   exact (matBhResidual_eq_zero_iff z sig rho sigma Kdir τ (ψ τ).1 (ψ τ).2).mp hτ
 
+/-! ### Item 5 — the block-triangular Jacobian invertibility engine
+
+At the base point (coupling `τ = 0`, `Dt = 0`) the partial Fréchet derivative of `matBhResidual` in
+`(Dt, Gt)` is **block lower-triangular**: every dressing amplitude (`Wt`, `Ct`, `mixM/N/DA/Dqp`) is
+`∝ Dt`, so its `Gt`-derivative vanishes and the `(Dt-equation, Gt)` block is zero.  The two diagonal
+blocks are right-multiplication by the physical hard-sphere OZ matrices
+`N₁_lj = δ_lj − ρ_l Q̂₀_jl` and `N₂_lj = δ_lj − ρ_l Q̂₀_lj`.  This section builds the reusable
+invertibility engine for exactly that shape — the general-`N` matrix analogue of
+`bhJacobianCLM_isInvertible`, discharged from the two blocks being units. -/
+
+/-- Right-multiplication by a fixed matrix `Nm`, as a continuous linear map on the
+(Frobenius-normed, finite-dimensional) matrix space: `M ↦ M * Nm`. -/
+noncomputable def matMulRightCLM (Nm : Matrix (Fin N) (Fin N) ℝ) :
+    Matrix (Fin N) (Fin N) ℝ →L[ℝ] Matrix (Fin N) (Fin N) ℝ :=
+  (LinearMap.mulRight ℝ Nm).toContinuousLinearMap
+
+@[simp] theorem matMulRightCLM_apply (Nm M : Matrix (Fin N) (Fin N) ℝ) :
+    matMulRightCLM Nm M = M * Nm := rfl
+
+/-- The block lower-triangular Jacobian continuous linear map on `Matrix × Matrix`:
+`(dDt, dGt) ↦ (dDt * N₁, Cpl dDt + 2π · (dGt * N₂))`.  `N₁`, `N₂` are the two diagonal blocks and
+`Cpl` the off-diagonal `∂R₂/∂Dt` coupling — which never affects invertibility. -/
+noncomputable def matBhJacobianCLM (N₁ N₂ : Matrix (Fin N) (Fin N) ℝ)
+    (Cpl : Matrix (Fin N) (Fin N) ℝ →L[ℝ] Matrix (Fin N) (Fin N) ℝ) :
+    (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) →L[ℝ]
+      (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) :=
+  ((matMulRightCLM N₁).comp (ContinuousLinearMap.fst ℝ _ _)).prod
+    (Cpl.comp (ContinuousLinearMap.fst ℝ _ _)
+      + (2 * Real.pi) • (matMulRightCLM N₂).comp (ContinuousLinearMap.snd ℝ _ _))
+
+@[simp] theorem matBhJacobianCLM_apply (N₁ N₂ : Matrix (Fin N) (Fin N) ℝ)
+    (Cpl : Matrix (Fin N) (Fin N) ℝ →L[ℝ] Matrix (Fin N) (Fin N) ℝ)
+    (p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) :
+    matBhJacobianCLM N₁ N₂ Cpl p = (p.1 * N₁, Cpl p.1 + (2 * Real.pi) • (p.2 * N₂)) := by
+  simp [matBhJacobianCLM]
+
+/-- The explicit inverse of `matBhJacobianCLM`, valid when `N₁`, `N₂` are units:
+`(u, v) ↦ (u * N₁⁻¹, (2π)⁻¹ · ((v − Cpl (u * N₁⁻¹)) * N₂⁻¹))`. -/
+noncomputable def matBhJacobianInvCLM (N₁ N₂ : Matrix (Fin N) (Fin N) ℝ)
+    (Cpl : Matrix (Fin N) (Fin N) ℝ →L[ℝ] Matrix (Fin N) (Fin N) ℝ) :
+    (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) →L[ℝ]
+      (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) :=
+  ((matMulRightCLM N₁⁻¹).comp (ContinuousLinearMap.fst ℝ _ _)).prod
+    ((1 / (2 * Real.pi)) •
+      (matMulRightCLM N₂⁻¹).comp (ContinuousLinearMap.snd ℝ _ _
+        - Cpl.comp ((matMulRightCLM N₁⁻¹).comp (ContinuousLinearMap.fst ℝ _ _))))
+
+@[simp] theorem matBhJacobianInvCLM_apply (N₁ N₂ : Matrix (Fin N) (Fin N) ℝ)
+    (Cpl : Matrix (Fin N) (Fin N) ℝ →L[ℝ] Matrix (Fin N) (Fin N) ℝ)
+    (p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) :
+    matBhJacobianInvCLM N₁ N₂ Cpl p =
+      (p.1 * N₁⁻¹, (1 / (2 * Real.pi)) • ((p.2 - Cpl (p.1 * N₁⁻¹)) * N₂⁻¹)) := by
+  simp [matBhJacobianInvCLM, sub_mul]
+
+/-- ⭐⭐ **MSAEMIX.6 item 5 — the invertibility engine.**  When both diagonal blocks `N₁`, `N₂` are
+units (their determinants invertible), the block lower-triangular Jacobian `matBhJacobianCLM` is an
+invertible continuous linear map — the off-diagonal coupling `Cpl` drops out entirely.  This is the
+general-`N` matrix analogue of `bhJacobianCLM_isInvertible`; the hypothesis the implicit function
+theorem needs, reduced to the physical hard-sphere Baxter blocks being nonsingular. -/
+theorem matBhJacobianCLM_isInvertible {N₁ N₂ : Matrix (Fin N) (Fin N) ℝ}
+    (Cpl : Matrix (Fin N) (Fin N) ℝ →L[ℝ] Matrix (Fin N) (Fin N) ℝ)
+    (h₁ : IsUnit N₁.det) (h₂ : IsUnit N₂.det) :
+    (matBhJacobianCLM N₁ N₂ Cpl).IsInvertible := by
+  have hπ : (2 : ℝ) * Real.pi ≠ 0 := mul_ne_zero two_ne_zero Real.pi_ne_zero
+  have hππ : (1 / (2 * Real.pi)) * (2 * Real.pi) = 1 := by field_simp
+  have hππ' : (2 * Real.pi) * (1 / (2 * Real.pi)) = 1 := by field_simp
+  refine ⟨ContinuousLinearEquiv.equivOfInverse (matBhJacobianCLM N₁ N₂ Cpl)
+      (matBhJacobianInvCLM N₁ N₂ Cpl) ?_ ?_, rfl⟩
+  · intro p
+    simp only [matBhJacobianCLM_apply, matBhJacobianInvCLM_apply]
+    have e1 : p.1 * N₁ * N₁⁻¹ = p.1 := by
+      rw [mul_assoc, Matrix.mul_nonsing_inv _ h₁, mul_one]
+    refine Prod.ext_iff.mpr ⟨?_, ?_⟩
+    · exact e1
+    · change (1 / (2 * Real.pi)) •
+        ((Cpl p.1 + (2 * Real.pi) • (p.2 * N₂) - Cpl (p.1 * N₁ * N₁⁻¹)) * N₂⁻¹) = p.2
+      rw [e1, add_sub_cancel_left, smul_mul_assoc, mul_assoc,
+        Matrix.mul_nonsing_inv _ h₂, mul_one, smul_smul, hππ, one_smul]
+  · intro p
+    simp only [matBhJacobianInvCLM_apply, matBhJacobianCLM_apply]
+    have e2 : p.1 * N₁⁻¹ * N₁ = p.1 := by
+      rw [mul_assoc, Matrix.nonsing_inv_mul _ h₁, mul_one]
+    refine Prod.ext_iff.mpr ⟨?_, ?_⟩
+    · exact e2
+    · change Cpl (p.1 * N₁⁻¹)
+        + (2 * Real.pi) • (((1 / (2 * Real.pi)) • ((p.2 - Cpl (p.1 * N₁⁻¹)) * N₂⁻¹)) * N₂) = p.2
+      rw [smul_mul_assoc, mul_assoc, Matrix.nonsing_inv_mul _ h₂, mul_one, smul_smul, hππ',
+        one_smul]
+      abel
+
+/-- ⭐⭐⭐ **MSAEMIX.6 capstone via the block-triangular Jacobian (item 5 wired in).**  If the partial
+Fréchet derivative of `matBhResidual` at the base point `(0, (0, Gt₀))` has the block
+lower-triangular shape `matBhJacobianCLM N₁ N₂ Cpl` — the general-`N` matrix Blum–Høye Jacobian —
+with both hard-sphere OZ diagonal blocks `N₁`, `N₂` nonsingular, then the MSA amplitudes are a `C^∞`
+family of the
+coupling near `0`.  The raw invertibility hypothesis `hjac` of `exists_contDiffAt_matBhRoot` is
+discharged here by the engine `matBhJacobianCLM_isInvertible`; what remains is only the *shape*
+hypothesis `hshape` (the transcription that the derivative is this block-triangular map) and the two
+physical determinant conditions — the exact matrix analogue of the `N = 1`
+`msa_amplitude_differentiable_of_bh_system` (which likewise takes `f₂ 0 p₀ = bhJacobianCLM F₀ c` and
+`F₀ ≠ 0`). -/
+theorem exists_contDiffAt_matBhRoot_of_blockJacobian (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Kdir Gt₀ N₁ N₂ : Matrix (Fin N) (Fin N) ℝ)
+    (Cpl : Matrix (Fin N) (Fin N) ℝ →L[ℝ] Matrix (Fin N) (Fin N) ℝ)
+    (hroot0 : MixBHRoot z sig rho sigma Gt₀ 0 0)
+    (hshape : (fderiv ℝ (matBhResidual z sig rho sigma Kdir) (0, (0, Gt₀)) ∘L
+        ContinuousLinearMap.inr ℝ ℝ
+          (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ))
+      = matBhJacobianCLM N₁ N₂ Cpl)
+    (h₁ : IsUnit N₁.det) (h₂ : IsUnit N₂.det) :
+    ∃ ψ : ℝ → Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ,
+      ψ 0 = (0, Gt₀) ∧
+      (∀ᶠ τ in nhds (0 : ℝ), MixBHRoot z sig rho sigma (ψ τ).2 (ψ τ).1 (τ • Kdir)) ∧
+      ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 :=
+  exists_contDiffAt_matBhRoot z sig rho sigma Kdir Gt₀ hroot0
+    (hshape ▸ matBhJacobianCLM_isInvertible Cpl h₁ h₂)
+
 end Smooth
 
 end MSAMixture
