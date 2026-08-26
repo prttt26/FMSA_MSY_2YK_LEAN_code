@@ -33,6 +33,12 @@ single closed endpoint `r=σ` itself — `oz_fixed_pt_unique`'s literal hypothes
 `ContinuousOn h (Set.Ici σ)` (closed at `σ`), but `h_explicit`'s own series is only known
 summable/continuous for `r>σ` strictly (the same genuine `σ`-boundary gap flagged in `OZFIX.4`'s
 `hint` and `OZFIX.6`'s scoping finding — not attempted here, not a quick corollary of the above).
+
+**⛔ The closed endpoint is SKIPPED by decision (2026-08-25) — do not re-attempt.** `h_explicit`'s
+series needs `r>σ` strictly to be `Summable` (at σ the bound is harmonic `n⁻¹`), and `tsum→0` on a
+non-summable family makes `ContinuousWithinAt … (Ici σ) σ` likely FALSE. It would feed only
+`OZFIX.8`'s conditional theorem (already axiom-blocked). Full rationale: `proof_notes_ozfix.md`,
+Task OZFIX.7.
 -/
 
 open MeasureTheory Set Real intervalIntegral Filter Topology

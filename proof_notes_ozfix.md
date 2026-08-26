@@ -397,8 +397,26 @@ of the two results above. `OZFIX.8`'s final assembly will need to either dischar
 (likely requiring the same machinery as `OZFIX.4`'s `hint`) or take it as a further explicit
 hypothesis, matching this project's established pattern.
 
-**Status:** ✓ **DONE** on `(σ,∞)`/`[r0,∞)`; the closed-endpoint extension to `[σ,∞)` remains open,
-tied to the same `σ`-boundary difficulty as `OZFIX.4`/`OZFIX.6`.
+**⛔ SKIP — do NOT re-attempt the closed endpoint `r=σ` (`hcont_sigma`). DECIDED 2026-08-25.**
+A future gap-survey should treat this as *closed-by-decision*, not *open*. Three reasons:
+1. **The easy route provably cannot reach σ.** `h_explicit_summable` (`BaxterResidue.lean`) needs
+   the term exponent `1−2r/σ < −1`, i.e. `r > σ` *strictly*; at `r = σ` it is exactly `−1`
+   (harmonic), so the `Summable` uniform bound that powers `continuousOn_tsum` does not exist there.
+2. **Likely FALSE as literally stated.** Lean's `tsum` of a non-`Summable` family is `0`, so unless
+   the paired residues decay strictly faster than `n⁻¹` (unknown — needs a sharper residue
+   asymptotics at σ), `h_explicit σ` collapses to junk `0` and `ContinuousWithinAt h_explicit
+   (Ici σ) σ` is false — the σ-endpoint junk-`tsum` trap this project has caught before
+   (cf. `radial_inversion_antideriv` vacuity, MA.9 bug 4).
+3. **Zero payoff even if proved.** `hcont_sigma` feeds ONLY `OZFIX.8`'s *conditional*
+   `oz_h_eq_spliced_h_explicit`, already blocked on BOTH the `oz_fixed_pt_unique` axiom (OZ.10)
+   AND the separate `hcollapse` gap (OZFIX.6). Discharging it makes nothing unconditional.
+
+**If ever genuinely needed**, the only routes are hard and out of scope: (a) a sharper `r=σ`
+residue-decay bound giving absolute summability at the endpoint, or (b) proving the *unbuilt*
+pole-series = Baxter-renewal identity `h_explicit = baxterPsiOuter/·`, then transferring the known
+`baxterPsiOuter_continuousOn_Ici` (closed at σ).
+
+**Status:** ✓ DONE on `(σ,∞)`/`[r0,∞)` (std-3); closed endpoint `[σ,∞)` **SKIPPED by decision** (above).
 
 ---
 
