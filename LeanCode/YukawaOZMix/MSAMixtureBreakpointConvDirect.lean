@@ -235,4 +235,62 @@ theorem neg_baxterQ'_eq_diag (z : ℝ) (σ A : Fin N → ℝ) (qp Wt Ct : Fin N 
   rw [hExp]
   ring
 
+/-! ### BRK.16b part (b) — the per-`l` convolution: support & interval structure
+
+The per-`l` seam `∫ Q'_il(t+r) Q_jl(t) dt = gForm(kernel_l)(r)`.  The geometry: the integrand's
+support is `[edgeLo σ j l, ∞)` (the `Q_jl` factor), and inside it the four factor-branch edges
+order into a **3-region** split whose middle region flips at `r = |λ_ij|` — the source of the
+inner/outer split. `Lj := edgeLo σ j l`, `Hj := edgeHi σ j l`, `Hi := edgeHi σ i l`.
+* INNER `r < |λ_ij|`: `Lj < Hj < Hi−r` → regions `core·core`, `core'·tail`, `tail'·tail`.
+* OUTER `r > |λ_ij|`: `Lj < Hi−r < Hj` → regions `core·core`, `tail'·core`, `tail'·tail`.
+(`core'/tail'` = the `Q'_il(·+r)` branch; the tail·tail region is an improper `Ioi` integral.) -/
+
+/-- **Support reduction.**  The convolution integrand `Q'_il(t+r)·Q_jl(t)` vanishes for
+`t < edgeLo σ j l` (the `Q_jl` factor is `0` below its support edge), so `∫_ℝ = ∫` over
+`[edgeLo σ j l, ∞)`.  Unconditional (only `z > 0`, `σ ≥ 0` for integrability). -/
+theorem baxterConv_eq_setIntegral_Ici (z : ℝ) (hz : 0 < z) (σ A : Fin N → ℝ)
+    (qp Wt Ct : Fin N → Fin N → ℝ) (i j l : Fin N) (r : ℝ) (hσ : ∀ i, 0 ≤ σ i) :
+    (∫ (t : ℝ), baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t)
+      = ∫ t in Ici (edgeLo σ j l),
+          baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t := by
+  have hint := baxterConvIntegrand_integrable z hz σ A qp Wt Ct i j l r hσ
+  have hdisj : Disjoint (Iio (edgeLo σ j l)) (Ici (edgeLo σ j l)) := by
+    rw [Set.disjoint_iff_inter_eq_empty, Iio_inter_Ici, Set.Ico_self]
+  rw [← setIntegral_univ (μ := volume), ← Set.Iio_union_Ici (a := edgeLo σ j l),
+    setIntegral_union hdisj measurableSet_Ici hint.integrableOn hint.integrableOn]
+  have hzero : ∫ t in Iio (edgeLo σ j l),
+      baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t = 0 := by
+    rw [setIntegral_congr_fun measurableSet_Iio (g := fun _ => 0) ?_, integral_zero]
+    intro t ht
+    show baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t = 0
+    have hb : baxterQ z σ A qp Wt Ct j l t = 0 := by
+      unfold baxterQ; rw [if_pos (Set.mem_Iio.mp ht)]
+    rw [hb, mul_zero]
+  rw [hzero, zero_add]
+
+/-- `|λ_ij| = (σ_i − σ_j)/2` in the orientation `σ_j ≤ σ_i` (`lamA = |edgeLo σ i j|`). -/
+theorem lamA_eq_of_le (σ : Fin N → ℝ) (i j : Fin N) (hori : σ j ≤ σ i) :
+    lamA σ i j = (σ i - σ j) / 2 := by
+  unfold lamA edgeLo; rw [abs_of_nonpos (by linarith)]; ring
+
+/-- `Lj < Hj` (from `σ_j > 0`): the `Q_jl` core interval `[edgeLo σ j l, edgeHi σ j l]` is
+non-degenerate. -/
+theorem edgeLo_lt_edgeHi (σ : Fin N → ℝ) (j l : Fin N) (hj : 0 < σ j) :
+    edgeLo σ j l < edgeHi σ j l := by unfold edgeLo edgeHi; linarith
+
+/-- `Lj < Hi − r` for `r < σ_ij = edgeHi σ i j`: `Q'_il`'s core-end is right of `Q_jl`'s
+support-edge, so the `core·core` region is non-empty. -/
+theorem edgeLo_lt_edgeHi_sub_r (σ : Fin N → ℝ) (i j l : Fin N) (r : ℝ) (hr : r < edgeHi σ i j) :
+    edgeLo σ j l < edgeHi σ i l - r := by unfold edgeLo edgeHi at *; linarith
+
+/-- INNER (`r < |λ_ij|`): `Hj < Hi − r` — the `Q_jl` tail starts before the `Q'_il` tail. -/
+theorem edgeHi_lt_edgeHi_sub_r_inner (σ : Fin N → ℝ) (i j l : Fin N) (r : ℝ)
+    (hori : σ j ≤ σ i) (hr : r < lamA σ i j) : edgeHi σ j l < edgeHi σ i l - r := by
+  rw [lamA_eq_of_le σ i j hori] at hr; unfold edgeHi; linarith
+
+/-- OUTER (`r > |λ_ij|`): `Hi − r < Hj` — the `Q'_il` tail starts before the `Q_jl` tail. -/
+theorem edgeHi_sub_r_lt_edgeHi_outer (σ : Fin N → ℝ) (i j l : Fin N) (r : ℝ)
+    (hori : σ j ≤ σ i) (hr : lamA σ i j < r) : edgeHi σ i l - r < edgeHi σ j l := by
+  rw [lamA_eq_of_le σ i j hori] at hr; unfold edgeHi; linarith
+
 end FMSA.ExactMSA.Breakpoint
