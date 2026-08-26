@@ -29,17 +29,22 @@ Mathlib gives it no global norm):
   `N₁, N₂` ⇒ the block lower-triangular Jacobian is invertible, `Cpl` drops out) — the general-`N`
   analogue of `bhJacobianCLM_isInvertible`; `exists_contDiffAt_matBhRoot_of_blockJacobian`
   discharges the capstone's `hjac` from the fderiv **shape** `fderiv g ∘L inr = matBhJacobianCLM …`
-  plus `IsUnit N₁.det`, `IsUnit N₂.det`.
+  plus `IsUnit N₁.det`, `IsUnit N₂.det`;
+* **item 5 transcription** — `matBhResidualShape_hasFDerivAt` (matrix analogue of the `N = 1`
+  `bhResidualShape_hasFDerivAt`) computes the block-triangular Fréchet derivative from the Blum–Høye
+  shape, and the concrete dressing matrices `resG/resH/resD` (with `matBhResidual_zero_eq`,
+  `contDiff_res{G,H,D}`, `res{H,D}_fderiv_inr`) discharge its hypotheses.  ⭐ **The whole thing
+  assembles in `exists_contDiffAt_matBhRoot_physical`**: the mixture MSA amplitudes are a `C^∞`
+  family near `K = 0`, from a `MixBHRoot` seed plus the two physical hard-sphere OZ blocks
+  `resG (0,Gt₀)`, `resH (0,Gt₀)` being nonsingular — the exact matrix analogue of the `N = 1`
+  `F₀ ≠ 0`.  Item 5's fderiv transcription is proved internally; nothing is left as a hypothesis
+  except the two physical determinant conditions.
 
-⚠ **Remaining = the item-5 fderiv transcription**: proving `fderiv (matBhResidual …) ∘L inr` really
-is `matBhJacobianCLM N₁ N₂ Cpl` for the concrete hard-sphere OZ blocks `N₁_lj = δ_lj − ρ_l Q̂₀_jl`,
-`N₂_lj = δ_lj − ρ_l Q̂₀_lj`.  Informally block-triangular: R1's `Dt·dG` term vanishes at `Dt = 0`,
-and R2's `Gt`-directional derivative is exactly `2π·dGt·N₂` because every dressing deviation is
-`∝ Dt` (its `Gt`-partial vanishes at base).  Formalising it is the matrix analogue of
-`bhResidualShape_hasFDerivAt` + the concrete amplitude fderivs (`MSABlumHoyeSystem.lean`) — a
-dedicated-file effort, at the acknowledged transcription grade.  The block invertibility itself is
-**conditional** (`Q0_mat_phys_isUnit_det_of_diag_dom`); the unconditional `Q0_mat_phys_isUnit_det`
-was retired as **false**.
+The block invertibility of the diagonal HS-OZ blocks is **conditional**
+(`Q0_mat_phys_isUnit_det_of_diag_dom`, the mixture analogue of `Q0_ne_zero_at_yukawa`); the
+unconditional `Q0_mat_phys_isUnit_det` was retired as **false**.  As at `N = 1`, this proves the
+statement for the *transcribed* Blum–Høye system — transcription faithfulness stays the acknowledged
+"two of three parts" grade.
 -/
 
 open scoped BigOperators
@@ -412,6 +417,182 @@ theorem matBhResidualShape_hasFDerivAt
     filter_upwards with p
     simp only [Pi.add_apply, mul_sub, smul_sub]; abel
   exact hc1.prodMk hc2'
+
+/-! ### Item 5 concrete layer — the residual's dressing matrices and the physical capstone
+
+`resG`, `resH`, `resD` are the concrete dressing matrices of `matBhResidual (0, ·)`: the residual
+equals `(p.1 · resG p, 2π·(p.2 · resH p) − resD p)` (`matBhResidual_zero_eq`).  They are `C^∞`
+(polynomial in `(Dt, Gt)` entries, `contDiff_res{G,H,D}`), and along the `Dt = 0` slice they are
+constant in `Gt` (every amplitude is `∝ Dt`), so their `Gt`-directional derivatives vanish
+(`res{H,D}_fderiv_inr`).  Feeding these into `matBhResidualShape_hasFDerivAt` and threading the
+result through the chain rule gives the fderiv shape, discharging item 5. -/
+
+noncomputable def resG (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) : Matrix (Fin N) (Fin N) ℝ :=
+  Matrix.of fun l j => (if l = j then (1 : ℝ) else 0) - rho l *
+    qhatMixR z sig (qpMat z rho sigma p.2 p.1) (Wt z rho p.2 p.1) (Ct z rho sigma p.2 p.1)
+      (AVec z rho sigma p.2 p.1) z j l
+
+noncomputable def resH (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) : Matrix (Fin N) (Fin N) ℝ :=
+  Matrix.of fun l j => (if l = j then (1 : ℝ) else 0) - rho l *
+    qhatMixR z sig (qpMat z rho sigma p.2 p.1) (Wt z rho p.2 p.1) (Ct z rho sigma p.2 p.1)
+      (AVec z rho sigma p.2 p.1) z l j
+
+noncomputable def resD (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) : Matrix (Fin N) (Fin N) ℝ :=
+  Matrix.of fun i j => (AVec z rho sigma p.2 p.1 j + z * qpMat z rho sigma p.2 p.1 i j
+      + z ^ 2 * Ct z rho sigma p.2 p.1 i j / 2) / z ^ 2
+
+-- amplitude Dt=0 (matrix/function level)
+theorem qpMat_zero_Dt (z : ℝ) (rho sigma : Fin N → ℝ) (Gt : Matrix (Fin N) (Fin N) ℝ) :
+    qpMat z rho sigma Gt 0 = qp0Mat rho sigma := by
+  ext i j; simp [qpMat, qpMSA, qp0Mat, mixDqp_zero_of_Dt_zero]
+
+theorem AVec_zero_Dt (z : ℝ) (rho sigma : Fin N → ℝ) (Gt : Matrix (Fin N) (Fin N) ℝ) :
+    AVec z rho sigma Gt 0 = A0Vec rho sigma := by
+  ext j; simp [AVec, AMSA, A0Vec, mixDA_zero_of_Dt_zero]
+
+theorem Wt_zero_Dt (z : ℝ) (rho : Fin N → ℝ) (Gt : Matrix (Fin N) (Fin N) ℝ) :
+    Wt z rho Gt 0 = 0 := by ext i j; simp [Wt_zero_of_Dt_zero]
+
+theorem Ct_zero_Dt (z : ℝ) (rho sigma : Fin N → ℝ) (Gt : Matrix (Fin N) (Fin N) ℝ) :
+    Ct z rho sigma Gt 0 = 0 := by ext i j; simp [Ct_zero_of_Dt_zero]
+
+-- shape identity
+theorem matBhResidual_zero_eq (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Kdir : Matrix (Fin N) (Fin N) ℝ) (p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) :
+    matBhResidual z sig rho sigma Kdir (0, p)
+      = (p.1 * resG z sig rho sigma p,
+         (2 * Real.pi) • (p.2 * resH z sig rho sigma p) - resD z sig rho sigma p) := by
+  rw [matBhResidual]
+  refine Prod.ext ?_ ?_
+  · ext i j
+    simp only [Matrix.of_apply, zero_smul, Matrix.zero_apply, mul_zero, zero_div, sub_zero,
+      Matrix.mul_apply, resG]
+  · ext i j
+    simp only [Matrix.of_apply, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul, Matrix.mul_apply,
+      resH, resD, Finset.mul_sum]
+
+
+@[fun_prop] theorem contDiff_p1_entry (i j : Fin N) :
+    ContDiff ℝ (⊤ : ℕ∞)
+      (fun p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ => p.1 i j) :=
+  (contDiff_matrix_entry i j).comp contDiff_fst
+
+@[fun_prop] theorem contDiff_p2_entry (i j : Fin N) :
+    ContDiff ℝ (⊤ : ℕ∞)
+      (fun p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ => p.2 i j) :=
+  (contDiff_matrix_entry i j).comp contDiff_snd
+
+theorem contDiff_resG (z sig : ℝ) (rho sigma : Fin N → ℝ) :
+    ContDiff ℝ (⊤ : ℕ∞) (resG z sig rho sigma) := by
+  unfold resG; apply contDiff_matrix_of; intro i j
+  simp only [qhatMixR, qpMat, AVec, qpMSA, AMSA, mixDqp, mixDA, mixM, mixN, Wt, Ct, gam,
+    Matrix.smul_apply, smul_eq_mul]
+  fun_prop
+
+theorem contDiff_resH (z sig : ℝ) (rho sigma : Fin N → ℝ) :
+    ContDiff ℝ (⊤ : ℕ∞) (resH z sig rho sigma) := by
+  unfold resH; apply contDiff_matrix_of; intro i j
+  simp only [qhatMixR, qpMat, AVec, qpMSA, AMSA, mixDqp, mixDA, mixM, mixN, Wt, Ct, gam,
+    Matrix.smul_apply, smul_eq_mul]
+  fun_prop
+
+theorem contDiff_resD (z sig : ℝ) (rho sigma : Fin N → ℝ) :
+    ContDiff ℝ (⊤ : ℕ∞) (resD z sig rho sigma) := by
+  unfold resD; apply contDiff_matrix_of; intro i j
+  simp only [qpMat, AVec, qpMSA, AMSA, mixDqp, mixDA, mixM, mixN, Wt, Ct, gam,
+    Matrix.smul_apply, smul_eq_mul]
+  fun_prop
+
+
+-- constancy of resH/resD on the Dt=0 slice (dressing depends on Gt only through Dt)
+theorem resH_zero_const (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Gt Gt' : Matrix (Fin N) (Fin N) ℝ) :
+    resH z sig rho sigma (0, Gt) = resH z sig rho sigma (0, Gt') := by
+  simp only [resH, qpMat_zero_Dt, Wt_zero_Dt, Ct_zero_Dt, AVec_zero_Dt]
+
+theorem resD_zero_const (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Gt Gt' : Matrix (Fin N) (Fin N) ℝ) :
+    resD z sig rho sigma (0, Gt) = resD z sig rho sigma (0, Gt') := by
+  simp only [resD, qpMat_zero_Dt, Ct_zero_Dt, AVec_zero_Dt]
+
+-- Gt-directional derivative vanishes on the Dt=0 slice
+theorem resH_fderiv_inr (z sig : ℝ) (rho sigma : Fin N → ℝ) (Gt₀ : Matrix (Fin N) (Fin N) ℝ) :
+    fderiv ℝ (resH z sig rho sigma) (0, Gt₀) ∘L
+      ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ) = 0 := by
+  have hcd : HasFDerivAt (resH z sig rho sigma)
+      (fderiv ℝ (resH z sig rho sigma) (0, Gt₀)) (0, Gt₀) :=
+    ((contDiff_resH z sig rho sigma).differentiable (by simp)).differentiableAt.hasFDerivAt
+  have hcomp : HasFDerivAt (fun Gt => resH z sig rho sigma (0, Gt))
+      (fderiv ℝ (resH z sig rho sigma) (0, Gt₀) ∘L
+        ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ)) Gt₀ :=
+    hcd.comp Gt₀ (ContinuousLinearMap.hasFDerivAt
+      (ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ)))
+  have hconst : HasFDerivAt (fun Gt => resH z sig rho sigma (0, Gt))
+      (0 : Matrix (Fin N) (Fin N) ℝ →L[ℝ] Matrix (Fin N) (Fin N) ℝ) Gt₀ := by
+    have he : (fun Gt => resH z sig rho sigma (0, Gt))
+        = fun _ => resH z sig rho sigma (0, Gt₀) := by
+      funext Gt; exact resH_zero_const z sig rho sigma Gt Gt₀
+    rw [he]; exact hasFDerivAt_const _ _
+  exact hcomp.unique hconst
+
+theorem resD_fderiv_inr (z sig : ℝ) (rho sigma : Fin N → ℝ) (Gt₀ : Matrix (Fin N) (Fin N) ℝ) :
+    fderiv ℝ (resD z sig rho sigma) (0, Gt₀) ∘L
+      ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ) = 0 := by
+  have hcd : HasFDerivAt (resD z sig rho sigma)
+      (fderiv ℝ (resD z sig rho sigma) (0, Gt₀)) (0, Gt₀) :=
+    ((contDiff_resD z sig rho sigma).differentiable (by simp)).differentiableAt.hasFDerivAt
+  have hcomp : HasFDerivAt (fun Gt => resD z sig rho sigma (0, Gt))
+      (fderiv ℝ (resD z sig rho sigma) (0, Gt₀) ∘L
+        ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ)) Gt₀ :=
+    hcd.comp Gt₀ (ContinuousLinearMap.hasFDerivAt
+      (ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ)))
+  have hconst : HasFDerivAt (fun Gt => resD z sig rho sigma (0, Gt))
+      (0 : Matrix (Fin N) (Fin N) ℝ →L[ℝ] Matrix (Fin N) (Fin N) ℝ) Gt₀ := by
+    have he : (fun Gt => resD z sig rho sigma (0, Gt))
+        = fun _ => resD z sig rho sigma (0, Gt₀) := by
+      funext Gt; exact resD_zero_const z sig rho sigma Gt Gt₀
+    rw [he]; exact hasFDerivAt_const _ _
+  exact hcomp.unique hconst
+
+
+/-- ⭐⭐⭐ MSAEMIX.6 fully discharged (modulo the physical HS-block dets): the mixture MSA amplitudes
+are a `C^∞` family of the coupling near `0`, from `MixBHRoot` seed + the two hard-sphere OZ blocks
+`resG (0,Gt₀)`, `resH (0,Gt₀)` being nonsingular.  The fderiv transcription is proved internally. -/
+theorem exists_contDiffAt_matBhRoot_physical (z sig : ℝ) (rho sigma : Fin N → ℝ)
+    (Kdir Gt₀ : Matrix (Fin N) (Fin N) ℝ) (hroot0 : MixBHRoot z sig rho sigma Gt₀ 0 0)
+    (h₁ : IsUnit (resG z sig rho sigma (0, Gt₀)).det)
+    (h₂ : IsUnit (resH z sig rho sigma (0, Gt₀)).det) :
+    ∃ ψ : ℝ → Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ,
+      ψ 0 = (0, Gt₀) ∧
+      (∀ᶠ τ in nhds (0 : ℝ), MixBHRoot z sig rho sigma (ψ τ).2 (ψ τ).1 (τ • Kdir)) ∧
+      ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 := by
+  have hstruct := matBhResidualShape_hasFDerivAt
+    (Gmat := resG z sig rho sigma) (Hmat := resH z sig rho sigma) (Dmat := resD z sig rho sigma)
+    (N₁ := resG z sig rho sigma (0, Gt₀)) (N₂ := resH z sig rho sigma (0, Gt₀))
+    (((contDiff_resG z sig rho sigma).differentiable (by simp)).differentiableAt.hasFDerivAt)
+    (((contDiff_resH z sig rho sigma).differentiable (by simp)).differentiableAt.hasFDerivAt)
+    (((contDiff_resD z sig rho sigma).differentiable (by simp)).differentiableAt.hasFDerivAt)
+    rfl rfl (resH_fderiv_inr z sig rho sigma Gt₀) (resD_fderiv_inr z sig rho sigma Gt₀)
+  -- transport to `fun p => matBhResidual (0, p)` via the shape identity (derivative `D` inferred)
+  have hpart := hstruct.congr_of_eventuallyEq
+    (Filter.Eventually.of_forall (fun p => matBhResidual_zero_eq z sig rho sigma Kdir p))
+  -- the same partial derivative is `fderiv (matBhResidual) (0,(0,Gt₀)) ∘L inr` (chain rule)
+  have hmatcd : HasFDerivAt (matBhResidual z sig rho sigma Kdir)
+      (fderiv ℝ (matBhResidual z sig rho sigma Kdir) (0, (0, Gt₀))) (0, (0, Gt₀)) :=
+    ((contDiff_matBhResidual z sig rho sigma Kdir).differentiable
+      (by simp)).differentiableAt.hasFDerivAt
+  have hcomp : HasFDerivAt (fun p => matBhResidual z sig rho sigma Kdir (0, p))
+      (fderiv ℝ (matBhResidual z sig rho sigma Kdir) (0, (0, Gt₀)) ∘L
+        ContinuousLinearMap.inr ℝ ℝ
+          (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ)) (0, Gt₀) :=
+    hmatcd.comp (0, Gt₀) (ContinuousLinearMap.hasFDerivAt
+      (ContinuousLinearMap.inr ℝ ℝ (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ)))
+  have hshape := hcomp.unique hpart
+  exact exists_contDiffAt_matBhRoot_of_blockJacobian z sig rho sigma Kdir Gt₀ _ _ _ hroot0 hshape
+    h₁ h₂
 
 end Smooth
 
