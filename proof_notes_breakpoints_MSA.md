@@ -945,3 +945,15 @@ ALREADY EXIST as the concurrent session's `MixtureRealSpace.lean` (`integral_pol
      pointwise with fewer atoms was 7 s).  So NOTHING in the axiom-free path is unproven — only wiring.
   3. wrap: `∑_l ρ_l` (`Finset.sum_congr`) + diagonal (`neg_baxterQ'_eq_diag`) + `/2πr` ⇒
      `baxterConvCore = matCoreUneq`, retiring the axiom (whole physical core → std-3).
+
+  **⭐⭐ ALL DONE (2026-08-27) — the axiom is now a THEOREM, std-3, ZERO physics/sympy axioms:**
+  - ✅ `perL_conv_inner` / `perL_conv_outer` (the two per-`l` convolution theorems; final-match ring
+    ~14–23 s each, `maxHeartbeats 4000000`).
+  - ✅ `gForm_split_inner/_outer`, `gForm_sum_inner/_sum`, `numerator_inner/_outer` (gForm-linearity +
+    diagonal + `Finset.sum_congr(perL)`; perL-target ⇔ bracket exp-normalization in
+    `{e^(zσᵢ/2),e^(zσⱼ/2),e^(zr)}`).
+  - ✅ `baxterConvCore_eq_matCoreUneq_proved` — the AXIOM DERIVED (`#print axioms` = std-3).  Physical
+    hyps `z>0`, `σ≥0`, `σ_j>0` explicit (axiom left them implicit).  **BRK.16 axiom-free path CLOSED.**
+  - ☐ (bookkeeping only) delete the `axiom` keyword in `MSAMixtureBaxterConv.lean` by rewiring its
+    in-file consumers (`baxterConvCore_smooth_off_unique_breakpoint`, K-order) to the proved theorem
+    (thread the extra physical hyps) — a mechanical refactor of a shared file.
