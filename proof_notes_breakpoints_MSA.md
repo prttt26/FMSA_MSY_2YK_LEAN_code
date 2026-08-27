@@ -912,3 +912,13 @@ ALREADY EXIST as the concurrent session's `MixtureRealSpace.lean` (`integral_pol
     (`neg_baxterQ'_eq_diag`) + `/2πr` ⇒ `baxterConvCore = matCoreUneq`, retiring the axiom.
   Mechanical/downhill now (infra done, technique validated on `tail·tail`); still multi-session for the
   coefficient bookkeeping.  ⚠ overlaps concurrent MSAEMIX Group MRS — coordinate.
+
+  **⭐ END-TO-END SYMBOLIC VALIDATION (`scripts/verify_baxterconv_decomposition.py`, 2026-08-26).**
+  The 3-region decomposition sums EXACTLY to the `matCoreUneq` per-`l` kernel on BOTH pieces
+  (`INNER diff = 0`, `OUTER diff = 0`, `sympy.simplify`), with the σ_l dependence CANCELLING.  So the
+  Lean identity `baxterConvCore = matCoreUneq` is a TRUE, `ring`-closable identity region-by-region;
+  the pins are: INNER `[Lj,Hj]`,`[Hj,Hi−r]`,`[Hi−r,∞)`; OUTER `[Lj,Hi−r]`,`[Hi−r,Hj]`,`[Hj,∞)`.
+  Also measured: the core·core pointwise `ring` (full ~20-term canonical coeffs) closes in 7 s ⇒ the
+  Lean region reductions are computationally feasible (NOT k-space-ring-infeasible).  The remaining is
+  pure transcription/assembly of a validated identity: state each region's pointwise-to-canonical
+  (`integral_canonical`) / tail (`integral_tailtail`), sum over the 3 regions, `ring`-match the kernel.
