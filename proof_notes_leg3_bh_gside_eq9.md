@@ -71,6 +71,41 @@ repo's consistent normalization via the real-space route (like `h29`), NOT by ma
 (33)/(34). Both residuals vanish on the solution manifold (both are the same constraint there), but
 only the repo `bhP` is trustworthy off it.
 
+## ⭐ The poly/C split — worked out (2026-08-27): the poly part is CLEAN, the C-term is the obstruction
+
+Eq. (33) at `s = z`, `N=1`, `σ=1` reads `2πĝ(z)·bhF = L_z[((r−σ)q'' + q' − zC e^{−zr})·Θ(r>σ)]`, the
+Laplace transform of the exterior g-source (the OZ convolution having folded into the LHS via the
+convolution theorem `L[(rg)∗Q] = ĝ·Q̂`). Working out each piece with `ĝ(z)=G e^{−z}`, `q''=msaA`,
+`q'=msaQp`, `C=−gam·Dt` (Eq 27):
+
+* **LHS** `= 2πĝ(z)·bhF = 2π G e^{−z}·bhF`.
+* **poly part** `L_z[((r−1)msaA + msaQp)Θ(r>1)] = msaA·e^{−z}/z² + msaQp·e^{−z}/z`
+  (exterior transforms: `∫_1^∞(r−1)e^{−zr}=e^{−z}/z²`, `∫_1^∞ e^{−zr}=e^{−z}/z`).
+* **C-term** `L_z[−zC e^{−zr}·Θ(r>1)] = −zC·e^{−2z}/(2z) = (gam·Dt)·e^{−2z}/2`.
+
+Dividing the whole relation by `e^{−z}`:
+
+    2πG·bhF  =  msaA/z² + msaQp/z + (gam·Dt/2)·e^{−z}          (derived from Eq 33)
+
+versus the **repo target**
+
+    bhP      =  msaA/z² + msaQp/z +  gam·Dt/2                  (h33 : 2πG·bhF = bhP)
+
+**⇒ the polynomial part (`msaA/z² + msaQp/z`) matches EXACTLY and is cleanly derivable** — it is
+`e^z ·` the exterior Laplace of `(r−σ)q'' + q'`, an FTC computation (Mathlib
+`integral_Ioi_of_hasDerivAt_of_tendsto`, modulo an `Ioi` poly×exp integrability lemma). **Only the
+C-term differs, by a factor `e^{−z}`** (`(gam Dt/2)e^{−z}` derived vs `gam Dt/2` in the repo). This is
+exactly BH's known print-error zone (memory `fmsa_is_first_order_msa`: "z-power in (36), z-inversion
+in (35), e^{zσ} in (29)") — the `γ`/`C`/`e^{±zσ}` normalization of the tail term. So:
+
+> **h33 is derivable EXCEPT for the C/γ tail term, whose correct normalization the printed BH
+> equations do not reliably give.** Resolving it needs the g-side derivation carried through in the
+> repo's consistent normalization (re-deriving Eq 32→33's tail contribution), NOT transcription.
+
+This mirrors Phase 4 exactly: there the poly moment was a genuine integral and the tail (`Dt·ρ·tailtil`)
+was the residual closed form; here the poly Laplace is clean and the `gam·Dt/2` tail is the residual —
+but for `h29` the residual was pinned by the exterior closure, while for `h33` no g-closure pins it.
+
 ## Roadmap for `h33` (the real build)
 
 1. Define the RDF moment `ĝ(z)` (Eq 28) as a Lean object, and `Q̂(s)` (Eq 16) at general `s` (extend
