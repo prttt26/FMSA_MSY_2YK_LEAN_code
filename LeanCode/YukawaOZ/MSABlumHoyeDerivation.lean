@@ -481,4 +481,160 @@ theorem bhF_eq_one_sub_full_integral (xi z Dt G : ℝ) (hz : z ≠ 0) (hxi : (1 
                    (Real.exp (-z * t) - Real.exp (-z)) * Real.exp (-z * t))))) := by
   rw [bhF_eq_one_sub_dressed_moment xi z Dt G hz hxi, tailtil_eq_integral_form xi z G hz]
 
+/-! ### Phase 4 — the exact Yukawa Baxter function and `h29` from the exterior OZ relation (Eq. 8)
+
+The pieces above show `bhF = 1 − ρQ̂(z)` as a genuine Laplace integral.  This section builds the
+concrete **exact Yukawa Baxter function** `Q(r)` (Blum–Høye Eqs. 10–12, `N = 1`, `σ = 1`) as a Lean
+object and reads off Blum–Høye Eq. (29) from Baxter's real-space factorization identity (Eq. 8).
+
+Writing the interior continuity-enforcing exponential as `C·(e^{−zr} − e^{−zσ})` with
+`C = −ρ·γ·Dt·e^{z}` (`γ = gam`, the Eq.-27 bracket, Phase 3) and the exterior tail amplitude as
+`D = ρ·Dt·e^{z}`, the exact Baxter function is `Q = p + D·e^{−z·}` where the **core** part
+`p = bhCoreFn` (dressed polynomial `ρ·msaQp·(r−1) + ρ·msaA·(r−1)²/2` plus `C·(e^{−zr}−e^{−zσ})`) is
+continuous and supported on `[0,1]` — exactly the shape milestone 3 (`baxter_exterior_moment_form`)
+consumes.  So its exterior right side is `z D e^{−zr}·(1 − M_full)`, and `1 − M_full = bhF` (Phase 3,
+`bhF_eq_one_sub_bhCore_moment`), giving `bh_exterior_baxter_relation`.  Matching the MSA closure
+`2πρ r c(r) = 2πρ K e^{z} e^{−zr}` (milestone 1) then yields **`Dt·bhF = 2πK/z`** — Eq. (29) as a
+theorem, from Baxter's Eq. (8) + the exterior closure, no longer a posited constraint. -/
+
+/-- **The exact Baxter function's continuity-enforcing exponential**, supported on the core:
+`(e^{−zr} − e^{−zσ})·𝟙[r ≤ σ]` (`σ = 1`).  It vanishes at contact (`e^{−z} − e^{−z} = 0`), so the
+two branches agree and the whole is continuous. -/
+noncomputable def bhCexpCore (z : ℝ) (r : ℝ) : ℝ :=
+  if r ≤ 1 then Real.exp (-z * r) - Real.exp (-z) else 0
+
+/-- **The core part of the exact Yukawa Baxter function** (Blum–Høye Eq. 11, `N = 1`, `σ = 1`): the
+coupling-dressed hard-sphere polynomial `ρ·msaQp·(r−1) + ρ·msaA·(r−1)²/2` (via `phi1_real`/
+`phi2_real`) plus the continuity exponential `C·(e^{−zr}−e^{−zσ})`, `C = −ρ·γ·Dt·e^{z}`.  Supported
+on `[0,1]` and continuous — the compactly-supported half of the non-compact Baxter function. -/
+noncomputable def bhCoreFn (xi z Dt G : ℝ) (r : ℝ) : ℝ :=
+  rhoOf xi * msaQp xi z Dt G * FMSA.HardSphere.phi1_real 1 r
+  + rhoOf xi * msaA xi z Dt G * FMSA.HardSphere.phi2_real 1 r
+  + (- rhoOf xi * gam xi z G * Dt * Real.exp z) * bhCexpCore z r
+
+/-- **The exact Yukawa Baxter function** `Q(r) = p(r) + D·e^{−zr}` (Blum–Høye Eqs. 10–12), core part
+`p = bhCoreFn` and exterior tail amplitude `D = ρ·Dt·e^{z}`.  For `r > σ` the core vanishes and
+`Q = D e^{−zr}`; for `r ≤ σ` it carries the dressed polynomial and the continuity exponential.  This
+is the concrete object whose real-space Baxter factorization (Eq. 8) delivers Eq. (29). -/
+noncomputable def bhBaxterFn (xi z Dt G : ℝ) (r : ℝ) : ℝ :=
+  bhCoreFn xi z Dt G r + (rhoOf xi * Dt * Real.exp z) * Real.exp (-z * r)
+
+/-- `bhCexpCore` is continuous: the two branches agree at contact `r = 1`. -/
+theorem bhCexpCore_continuous (z : ℝ) : Continuous (bhCexpCore z) := by
+  unfold bhCexpCore
+  exact Continuous.if_le (by fun_prop) continuous_const continuous_id continuous_const
+    (fun x hx => by rw [hx]; simp)
+
+/-- `bhCoreFn` is continuous (linear combination of `phi1_real`/`phi2_real`/`bhCexpCore`). -/
+theorem bhCoreFn_continuous (xi z Dt G : ℝ) : Continuous (bhCoreFn xi z Dt G) := by
+  unfold bhCoreFn
+  exact (((FMSA.HardSphere.phi1_real_continuous 1).const_mul _).add
+    ((FMSA.HardSphere.phi2_real_continuous 1).const_mul _)).add
+    ((bhCexpCore_continuous z).const_mul _)
+
+/-- `bhCoreFn` vanishes outside the core: `bhCoreFn ... r = 0` for `r > 1` — the compact support that
+makes `bhBaxterFn` a `p + D e^{−z·}` Baxter function milestone 3 can consume. -/
+theorem bhCoreFn_eq_zero_of_gt (xi z Dt G : ℝ) {r : ℝ} (hr : 1 < r) :
+    bhCoreFn xi z Dt G r = 0 := by
+  have h1 : ¬ (r ≤ 1) := not_le.mpr hr
+  simp only [bhCoreFn, bhCexpCore, FMSA.HardSphere.phi1_real, FMSA.HardSphere.phi2_real, if_neg h1]
+  ring
+
+/-- `bhCoreFn` in explicit polynomial-plus-exponential form on the core `r ≤ 1`. -/
+theorem bhCoreFn_inner (xi z Dt G : ℝ) {r : ℝ} (hr : r ≤ 1) :
+    bhCoreFn xi z Dt G r
+      = rhoOf xi * msaQp xi z Dt G * (r - 1)
+        + rhoOf xi * msaA xi z Dt G * ((r - 1) ^ 2 / 2)
+        + (- rhoOf xi * gam xi z G * Dt * Real.exp z) * (Real.exp (-z * r) - Real.exp (-z)) := by
+  simp only [bhCoreFn, bhCexpCore, FMSA.HardSphere.phi1_real, FMSA.HardSphere.phi2_real, if_pos hr]
+
+/-- **The core Laplace moment, split into the dressed-polynomial and continuity-exponential parts.**
+`∫₀¹ bhCoreFn·e^{−zt} = (dressed-poly moment) + C·(continuity-exp moment)`, keeping both as integrals
+so no `e^z e^{−z}` cancellation is needed downstream. -/
+theorem bhCore_moment_split (xi z Dt G : ℝ) :
+    ∫ t in (0:ℝ)..1, bhCoreFn xi z Dt G t * Real.exp (-z * t)
+      = (∫ t in (0:ℝ)..1,
+          (rhoOf xi * msaQp xi z Dt G * (t - 1)
+           + rhoOf xi * msaA xi z Dt G * ((t - 1) ^ 2 / 2)) * Real.exp (-z * t))
+        + (- rhoOf xi * gam xi z G * Dt * Real.exp z)
+            * (∫ t in (0:ℝ)..1, (Real.exp (-z * t) - Real.exp (-z)) * Real.exp (-z * t)) := by
+  rw [← intervalIntegral.integral_const_mul,
+      ← intervalIntegral.integral_add
+          (by apply Continuous.intervalIntegrable; fun_prop)
+          (by apply Continuous.intervalIntegrable; fun_prop)]
+  apply intervalIntegral.integral_congr
+  intro t ht
+  rw [Set.uIcc_of_le (by norm_num : (0:ℝ) ≤ 1)] at ht
+  show bhCoreFn xi z Dt G t * Real.exp (-z * t)
+      = (rhoOf xi * msaQp xi z Dt G * (t - 1)
+         + rhoOf xi * msaA xi z Dt G * ((t - 1) ^ 2 / 2)) * Real.exp (-z * t)
+        + (- rhoOf xi * gam xi z G * Dt * Real.exp z)
+            * ((Real.exp (-z * t) - Real.exp (-z)) * Real.exp (-z * t))
+  rw [bhCoreFn_inner xi z Dt G ht.2]
+  ring
+
+/-- **`bhF = 1 − M_full` for the exact Baxter function.**  The full Laplace moment `M_full` of
+`bhBaxterFn` — core moment `∫₀¹ bhCoreFn·e^{−zt}` plus the tail–tail `D/(2z)` — is exactly `1 − bhF`.
+Reduces to `bhF_eq_one_sub_full_integral` (Phase 3) plus the moment split; pure rearrangement. -/
+theorem bhF_eq_one_sub_bhCore_moment (xi z Dt G : ℝ) (hz : z ≠ 0) (hxi : (1 - xi) ≠ 0) :
+    bhF xi z (Dt, G)
+      = 1 - ((∫ t in (0:ℝ)..1, bhCoreFn xi z Dt G t * Real.exp (-z * t))
+             + (rhoOf xi * Dt * Real.exp z) / (2 * z)) := by
+  rw [bhF_eq_one_sub_full_integral xi z Dt G hz hxi, bhCore_moment_split xi z Dt G]
+  ring
+
+/-- **The exterior Yukawa real-space Baxter relation (Blum–Høye Eq. 8) in closed form.**  For the
+exact Baxter function `Q = bhBaxterFn` and `r > σ = 1`, Baxter's right side `−Q'(r) + ∫₀^∞ Q(t)·Q'(t+r)`
+— with `Q'(t+r) = −z D e^{−z(t+r)}` the exterior tail derivative (`t + r > 1`) — equals
+`z D e^{−zr}·bhF`, `D = ρ Dt e^{z}`.  This is milestone 3 (`baxter_exterior_moment_form`) instantiated
+at the exact `p = bhCoreFn`, with `1 − M_full = bhF` (Phase 3).  Matching the MSA closure gives
+Eq. (29). -/
+theorem bh_exterior_baxter_relation (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0)
+    {r : ℝ} (hr : 1 < r) :
+    -deriv (fun s => bhBaxterFn xi z Dt G s) r
+      + ∫ t in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G t
+          * (-z * (rhoOf xi * Dt * Real.exp z) * Real.exp (-z * (r + t)))
+      = z * (rhoOf xi * Dt * Real.exp z) * Real.exp (-z * r) * bhF xi z (Dt, G) := by
+  simp only [bhBaxterFn]
+  rw [baxter_exterior_moment_form z (rhoOf xi * Dt * Real.exp z) hz (bhCoreFn xi z Dt G)
+        (fun t ht => bhCoreFn_eq_zero_of_gt xi z Dt G ht) (bhCoreFn_continuous xi z Dt G) hr,
+      ← bhF_eq_one_sub_bhCore_moment xi z Dt G hz.ne' hxi]
+
+/-- **Blum–Høye Eq. (29), derived** — `Dt·bhF = 2πK/z`.  Given Baxter's real-space factorization
+identity (Eq. 8) equating `2πρ r c(r)` (the MSA closure's Yukawa tail on the exterior) with the
+Baxter convolution right side of the exact Baxter function, Eq. (29) follows by matching the
+`e^{−zr}` coefficient: `2πρ K e^{z} = z ρ Dt e^{z} · bhF`, i.e. `Dt·bhF = 2πK/z`.  This reduces the
+formerly-posited constraint `h29` to the OZ/Baxter primitive `hbax` (Eq. 8) plus the MSA exterior
+closure `cMSAtail` — the recognised statistical-mechanics inputs. -/
+theorem h29_of_baxter_exterior (xi z Dt G K : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0)
+    (hxipos : 0 < xi)
+    (hbax : ∀ r, 1 < r →
+      2 * Real.pi * rhoOf xi * r * cMSAtail K z 1 r
+        = -deriv (fun s => bhBaxterFn xi z Dt G s) r
+          + ∫ t in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G t
+              * (-z * (rhoOf xi * Dt * Real.exp z) * Real.exp (-z * (r + t)))) :
+    Dt * bhF xi z (Dt, G) - 2 * Real.pi * K / z = 0 := by
+  have hrho : 0 < rhoOf xi := by rw [rhoOf]; exact div_pos (by linarith) Real.pi_pos
+  have hzne : z ≠ 0 := hz.ne'
+  have key := hbax 2 (by norm_num)
+  rw [bh_exterior_baxter_relation xi z Dt G hz hxi (by norm_num : (1:ℝ) < 2),
+      show 2 * Real.pi * rhoOf xi * 2 * cMSAtail K z 1 2
+        = rhoOf xi * (2 * Real.pi * 2 * cMSAtail K z 1 2) from by ring,
+      cMSAtail_exterior_lhs K z (by norm_num : (1:ℝ) < 2)] at key
+  -- key : ρ·(2πK e^{−z(2−1)}) = z·(ρ Dt e^z)·e^{−z·2}·bhF
+  have e2 : Real.exp z * Real.exp (-z * 2) = Real.exp (-z) := by
+    rw [← Real.exp_add]; congr 1; ring
+  have hmain : 2 * Real.pi * K = z * Dt * bhF xi z (Dt, G) := by
+    apply mul_left_cancel₀ (mul_ne_zero hrho.ne' (Real.exp_ne_zero (-z)))
+    rw [show rhoOf xi * Real.exp (-z) * (2 * Real.pi * K)
+          = rhoOf xi * (2 * Real.pi * K * Real.exp (-z * (2 - 1))) from by
+            rw [show Real.exp (-z * (2 - 1)) = Real.exp (-z) from by congr 1; ring]; ring,
+        key,
+        show z * (rhoOf xi * Dt * Real.exp z) * Real.exp (-z * 2) * bhF xi z (Dt, G)
+          = rhoOf xi * (Real.exp z * Real.exp (-z * 2)) * (z * Dt * bhF xi z (Dt, G)) from by ring,
+        e2]
+  have hdiv : 2 * Real.pi * K / z = Dt * bhF xi z (Dt, G) := by
+    rw [hmain]; field_simp
+  rw [hdiv]; ring
+
 end FMSA.ExactMSA
