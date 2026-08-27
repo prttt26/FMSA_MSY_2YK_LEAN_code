@@ -400,17 +400,20 @@ theorem msaCoeff_continuity_18 (xi z Dt G : ℝ) (hz : z ≠ 0) (hxi : (1 - xi) 
   field_simp
   ring
 
-/-! ### Phase 3 (building block) — the C-exp basis Laplace moment
+/-! ### Phase 3 — `tailtil` from the C-exp basis moment (normalization pinned)
 
 Phase 0 pinned the exact Baxter function's continuity-enforcing exponential piece
 `C·(e^{−zr} − e^{−zσ})` (Blum–Høye Eq. 11), whose Laplace moment is the physical origin of the
-`G`-entangled `tailtil` (via `C` ← the RDF moment through Eq. 27).  This lemma computes that basis
-moment in closed form; assembling it into `Dt·ρ·tailtil` still needs the exact `C ↔ (Dt, G)`
-relation (Eq. 27 + the `ĝ(z) ↔ G` normalization), part of the OZ derivation (not yet pinned — a
-first numerical assembly with a guessed normalization did not match). -/
+`G`-entangled `tailtil`.  The `C ↔ (Dt, G)` normalization is now RESOLVED: the repo's `gam` is the
+Blum–Høye **Eq. (27) bracket** `1 − 2πρĝ/z` (not the Eq. 35 `γ`), so `ĝ(z) = G e^{−z}` (matching the
+`G₀ = ĝ_PY e^z` convention), `C = −gam·D`, and the exterior tail amplitude is `D = Dt·e^{z}` (the
+`e^{zσ}` contact factor — verified numerically `D/Dt = e^z` to `1e-6`).  With this, `tailtil` is
+exactly the C-exp basis moment combination (`tailtil_cexp_form`), and — via
+`cexp_basis_laplace_moment` — the actual Laplace integral of the continuity piece
+(`tailtil_eq_cexp_integral`).  This discharges the physical origin of the `G`-entangled tail. -/
 
 /-- **The C-exp basis Laplace moment.**  `∫₀¹ (e^{−zt} − e^{−z})·e^{−zt} dt = (1−e^{−z})²/(2z)`.
-The one-sided moment of the exact Baxter function's continuity term `(e^{−zr} − e^{−zσ})`, `σ=1`. -/
+The one-sided moment of the exact Baxter continuity term `(e^{−zr} − e^{−zσ})`, `σ=1`. -/
 theorem cexp_basis_laplace_moment {z : ℝ} (hz : z ≠ 0) :
     ∫ t in (0:ℝ)..1, (Real.exp (-z * t) - Real.exp (-z)) * Real.exp (-z * t)
       = (1 - Real.exp (-z)) ^ 2 / (2 * z) := by
@@ -431,5 +434,25 @@ theorem cexp_basis_laplace_moment {z : ℝ} (hz : z ≠ 0) :
   simp only [mul_one, mul_zero, Real.exp_zero, one_pow]
   field_simp
   ring
+
+/-- **`tailtil` is the C-exp moment combination.**  `e^{−z}·tailtil = 1/(2z) − γ·(1−e^{−z})²/(2z)`,
+with `(1−e^{−z})²/(2z)` the C-exp basis moment and `γ = gam` the Blum–Høye Eq. (27) bracket
+`1 − 2πρĝ/z` (`ĝ = G e^{−z}`).  Ring identity (reduces to `e^z(1−γ) = 2πρG/z`). -/
+theorem tailtil_cexp_form (xi z G : ℝ) (hz : z ≠ 0) :
+    tailtil xi z G * Real.exp (-z)
+      = 1 / (2 * z) - gam xi z G * ((1 - Real.exp (-z)) ^ 2 / (2 * z)) := by
+  simp only [tailtil, gam, rhoOf]
+  field_simp
+  ring
+
+/-- **Phase 3 capstone — `tailtil` via the C-exp Laplace integral.**  The `G`-entangled tail closed
+form `tailtil` is, up to the contact factor `e^{−z}` and the Eq. (27) bracket `γ = gam`, exactly the
+one-sided Laplace transform of the exact Baxter function's continuity piece `(e^{−zr} − e^{−zσ})`.
+Combines `tailtil_cexp_form` with `cexp_basis_laplace_moment`. -/
+theorem tailtil_eq_cexp_integral (xi z G : ℝ) (hz : z ≠ 0) :
+    tailtil xi z G * Real.exp (-z)
+      = 1 / (2 * z) - gam xi z G
+          * (∫ t in (0:ℝ)..1, (Real.exp (-z * t) - Real.exp (-z)) * Real.exp (-z * t)) := by
+  rw [cexp_basis_laplace_moment hz, tailtil_cexp_form xi z G hz]
 
 end FMSA.ExactMSA
