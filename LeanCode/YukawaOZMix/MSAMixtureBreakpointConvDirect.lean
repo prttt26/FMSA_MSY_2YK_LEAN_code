@@ -1158,4 +1158,67 @@ theorem baxterConvCore_eq_matCoreUneq_proved (z : ℝ) (hz : 0 < z) (ρ σ A : F
       numerator_outer z hz ρ σ A qp Wt Ct i j r hσ hjpos hori
         (lt_of_le_of_lt (by unfold lamA; positivity) hout.1) hout.1 hout.2 hlo hout.2.le]
 
+/-! ### BRK.16b — the physical-core capstones (moved here, now std-3, axiom retired)
+
+The value/smoothness/all-orders results that used to sit in `MSAMixtureBaxterConv.lean` gated on the
+sympy axiom.  Rewired to `baxterConvCore_eq_matCoreUneq_proved` (physical hyps `z>0`,`σ≥0`,`σ_j>0`
+threaded through), they are now std-3. -/
+
+/-- ⭐ **BRK closed (value level, physical core), std-3.**  The physical exact-MSA core
+`baxterConvCore` is `ContDiffOn ℝ ⊤` on all of `(0, σ_ij)` except at the single interior breakpoint
+`|λ_ij|`. -/
+theorem baxterConvCore_smooth_off_unique_breakpoint (z : ℝ) (hz : 0 < z) (ρ σ A : Fin N → ℝ)
+    (qp Wt Ct : Fin N → Fin N → ℝ) (i j : Fin N) (hσ : ∀ i, 0 ≤ σ i)
+    (hi : 0 < σ i) (hj : 0 < σ j) (hne : σ i ≠ σ j) (hori : σ j ≤ σ i) :
+    lamA σ i j ∈ Set.Ioo (0 : ℝ) (edgeHi σ i j)
+    ∧ ContDiffOn ℝ ⊤ (baxterConvCore z ρ σ A qp Wt Ct i j) (Set.Ioo 0 (lamA σ i j))
+    ∧ ContDiffOn ℝ ⊤ (baxterConvCore z ρ σ A qp Wt Ct i j)
+        (Set.Ioo (lamA σ i j) (edgeHi σ i j)) :=
+  let hEq := baxterConvCore_eq_matCoreUneq_proved z hz ρ σ A qp Wt Ct i j hσ hj hori
+  exactCore_smooth_off_unique_breakpoint_of_eqOn z ρ σ A qp Wt Ct i j
+    (baxterConvCore z ρ σ A qp Wt Ct i j)
+    (hEq.mono Set.subset_union_left) (hEq.mono Set.subset_union_right) hi hj hne
+
+/-- ⭐ **BRK closed (all orders, inner piece, physical core), std-3.**  Every `K`-derivative of the
+physical core `baxterConvCoreK` is `ContDiffOn ℝ ⊤` on `(0, |λ_ij|)`. -/
+theorem baxterConvCoreK_paramDeriv_contDiffOn_inner (z : ℝ) (hz : 0 < z) (σ : Fin N → ℝ)
+    (ρ A : ℝ → Fin N → ℝ) (qp Wt Ct : ℝ → Fin N → Fin N → ℝ) (i j : Fin N) (hσ : ∀ i, 0 ≤ σ i)
+    (hjpos : 0 < σ j) (hρ : ∀ l, ContDiff ℝ ⊤ (fun K => ρ K l))
+    (hA : ∀ l, ContDiff ℝ ⊤ (fun K => A K l)) (hqp : ∀ a b, ContDiff ℝ ⊤ (fun K => qp K a b))
+    (hWt : ∀ a b, ContDiff ℝ ⊤ (fun K => Wt K a b)) (hCt : ∀ a b, ContDiff ℝ ⊤ (fun K => Ct K a b))
+    (hori : σ j ≤ σ i) (n : ℕ) (K₀ : ℝ) :
+    ContDiffOn ℝ ⊤ (fun r => iteratedDeriv n (fun K => baxterConvCoreK z σ ρ A qp Wt Ct i j K r) K₀)
+      (Set.Ioo 0 (lamA σ i j)) := by
+  refine (matCoreUneq_paramDeriv_contDiffOn_inner z σ ρ A qp Wt Ct i j hρ hA hqp hWt hCt n K₀).congr
+    ?_
+  intro r hr
+  have hfun : (fun K => baxterConvCoreK z σ ρ A qp Wt Ct i j K r)
+      = (fun K => matCoreUneq z (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j r) := by
+    funext K
+    simpa [baxterConvCoreK] using
+      baxterConvCore_eq_matCoreUneq_proved z hz (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j hσ hjpos hori
+        (Set.mem_union_left _ hr)
+  rw [hfun]
+
+/-- ⭐ **BRK closed (all orders, outer piece, physical core), std-3.**  Same on `(|λ_ij|, σ_ij)`. -/
+theorem baxterConvCoreK_paramDeriv_contDiffOn_outer (z : ℝ) (hz : 0 < z) (σ : Fin N → ℝ)
+    (ρ A : ℝ → Fin N → ℝ) (qp Wt Ct : ℝ → Fin N → Fin N → ℝ) (i j : Fin N) (hσ : ∀ i, 0 ≤ σ i)
+    (hjpos : 0 < σ j) (hρ : ∀ l, ContDiff ℝ ⊤ (fun K => ρ K l))
+    (hA : ∀ l, ContDiff ℝ ⊤ (fun K => A K l)) (hqp : ∀ a b, ContDiff ℝ ⊤ (fun K => qp K a b))
+    (hWt : ∀ a b, ContDiff ℝ ⊤ (fun K => Wt K a b)) (hCt : ∀ a b, ContDiff ℝ ⊤ (fun K => Ct K a b))
+    (hori : σ j ≤ σ i) (n : ℕ) (K₀ : ℝ) :
+    ContDiffOn ℝ ⊤ (fun r => iteratedDeriv n (fun K => baxterConvCoreK z σ ρ A qp Wt Ct i j K r) K₀)
+      (Set.Ioo (lamA σ i j) (edgeHi σ i j)) := by
+  refine (matCoreUneq_paramDeriv_contDiffOn_outer z σ ρ A qp Wt Ct i j hρ hA hqp hWt hCt n K₀).congr
+    ?_
+  intro r hr
+  have hfun : (fun K => baxterConvCoreK z σ ρ A qp Wt Ct i j K r)
+      = (fun K => matCoreUneq z (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j r) := by
+    funext K
+    simpa [baxterConvCoreK] using
+      baxterConvCore_eq_matCoreUneq_proved z hz (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j hσ hjpos hori
+        (Set.mem_union_right _ hr)
+  rw [hfun]
+
+
 end FMSA.ExactMSA.Breakpoint
