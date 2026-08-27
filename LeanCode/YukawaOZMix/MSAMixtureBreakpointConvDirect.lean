@@ -581,4 +581,95 @@ theorem region_corecore_pointwise (z r Li Lj si sj qi Al Wi qj Wj Cj t : ℝ) :
     rw [← Real.exp_add]; ring_nf
   rw [hI, hJ, hEE]; ring
 
+set_option maxHeartbeats 800000 in
+/-- **Region `coretail` (pointwise)** — canonical `cubic + quadratic·e^(−zt) + K·e^(−2zt)` form
+(coefficients: `scripts/verify_baxterconv_decomposition.py`). -/
+theorem region_coretail_pointwise (z r Li Lj Hj si qi Al Wi Wj Cj t : ℝ) :
+    (qi + Al * (t + r - Li - si) - z * Wi * Real.exp (-z * (t + r - Li)))
+        * (Wj * Real.exp (-z * (t - Lj)) + Cj * Real.exp (-z * (t - Hj)))
+      =
+      (0)
+      + (
+        (0)) * t
+      + (
+        (0)) * t ^ 2
+      + (0) * t ^ 3
+      + ((
+        (-Al*Cj*(Real.exp (z*Hj))*Li + Al*Cj*(Real.exp (z*Hj))*r - Al*Cj*(Real.exp (z*Hj))*si
+            - Al*(Real.exp (z*Lj))*Li*Wj + Al*(Real.exp (z*Lj))*Wj*r
+            - Al*(Real.exp (z*Lj))*Wj*si + Cj*(Real.exp (z*Hj))*qi + (Real.exp (z*Lj))*Wj*qi))
+        + (
+          (Al*Cj*(Real.exp (z*Hj)) + Al*(Real.exp (z*Lj))*Wj)) * t
+        + (
+          (0)) * t ^ 2) * Real.exp (-z * t)
+      + (
+        (-Cj*(Real.exp (z*Hj))*(Real.exp (z*Li))*(Real.exp (-z*r))*Wi*z
+            - (Real.exp (z*Li))*(Real.exp (z*Lj))*(Real.exp (-z*r))*Wi*Wj*z))
+        * Real.exp (-2 * z * t) := by
+  have hI : Real.exp (-z * (t + r - Li))
+      = Real.exp (-z * t) * Real.exp (-z * r) * Real.exp (z * Li) := by
+    rw [show -z * (t + r - Li) = -z * t + -z * r + z * Li by ring,
+      Real.exp_add, Real.exp_add]
+  have hJ : Real.exp (-z * (t - Lj)) = Real.exp (-z * t) * Real.exp (z * Lj) := by
+    rw [show -z * (t - Lj) = -z * t + z * Lj by ring, Real.exp_add]
+  have hG : Real.exp (-z * (t - Hj)) = Real.exp (-z * t) * Real.exp (z * Hj) := by
+    rw [show -z * (t - Hj) = -z * t + z * Hj by ring, Real.exp_add]
+  have hEE : Real.exp (-2 * z * t) = Real.exp (-z * t) * Real.exp (-z * t) := by
+    rw [← Real.exp_add]; ring_nf
+  rw [hI, hJ, hG, hEE]; ring
+
+set_option maxHeartbeats 800000 in
+/-- **Region `tailcore` (pointwise)** — canonical `cubic + quadratic·e^(−zt) + K·e^(−2zt)` form
+(coefficients: `scripts/verify_baxterconv_decomposition.py`). -/
+theorem region_tailcore_pointwise (z r Li Hi Lj sj qj Al Wi Ci Wj Cj t : ℝ) :
+    (-z * Wi * Real.exp (-z * (t + r - Li)) - z * Ci * Real.exp (-z * (t + r - Hi)))
+        * (qj * (t - Lj - sj) + Al / 2 * (t - Lj - sj) ^ 2 + Wj * Real.exp (-z * (t - Lj)) + Cj)
+      =
+      (0)
+      + (
+        (0)) * t
+      + (
+        (0)) * t ^ 2
+      + (0) * t ^ 3
+      + ((
+        (-Al*Ci*(Real.exp (z*Hi))*(Real.exp (-z*r))*Lj^2*z/2
+            - Al*Ci*(Real.exp (z*Hi))*(Real.exp (-z*r))*Lj*sj*z
+            - Al*Ci*(Real.exp (z*Hi))*(Real.exp (-z*r))*sj^2*z/2
+            - Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Lj^2*Wi*z/2
+            - Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Lj*Wi*sj*z
+            - Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Wi*sj^2*z/2
+            - Ci*Cj*(Real.exp (z*Hi))*(Real.exp (-z*r))*z
+            + Ci*(Real.exp (z*Hi))*(Real.exp (-z*r))*Lj*qj*z
+            + Ci*(Real.exp (z*Hi))*(Real.exp (-z*r))*qj*sj*z
+            - Cj*(Real.exp (z*Li))*(Real.exp (-z*r))*Wi*z
+            + (Real.exp (z*Li))*(Real.exp (-z*r))*Lj*Wi*qj*z
+            + (Real.exp (z*Li))*(Real.exp (-z*r))*Wi*qj*sj*z))
+        + (
+          (Al*Ci*(Real.exp (z*Hi))*(Real.exp (-z*r))*Lj*z
+              + Al*Ci*(Real.exp (z*Hi))*(Real.exp (-z*r))*sj*z
+              + Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Lj*Wi*z
+              + Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Wi*sj*z
+              - Ci*(Real.exp (z*Hi))*(Real.exp (-z*r))*qj*z
+              - (Real.exp (z*Li))*(Real.exp (-z*r))*Wi*qj*z)) * t
+        + (
+          (-Al*Ci*(Real.exp (z*Hi))*(Real.exp (-z*r))*z/2
+              - Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Wi*z/2)) * t ^ 2) * Real.exp (-z * t)
+      + (
+        (-Ci*(Real.exp (z*Hi))*(Real.exp (z*Lj))*(Real.exp (-z*r))*Wj*z
+            - (Real.exp (z*Li))*(Real.exp (z*Lj))*(Real.exp (-z*r))*Wi*Wj*z))
+        * Real.exp (-2 * z * t) := by
+  have hI : Real.exp (-z * (t + r - Li))
+      = Real.exp (-z * t) * Real.exp (-z * r) * Real.exp (z * Li) := by
+    rw [show -z * (t + r - Li) = -z * t + -z * r + z * Li by ring,
+      Real.exp_add, Real.exp_add]
+  have hIH : Real.exp (-z * (t + r - Hi))
+      = Real.exp (-z * t) * Real.exp (-z * r) * Real.exp (z * Hi) := by
+    rw [show -z * (t + r - Hi) = -z * t + -z * r + z * Hi by ring,
+      Real.exp_add, Real.exp_add]
+  have hJ : Real.exp (-z * (t - Lj)) = Real.exp (-z * t) * Real.exp (z * Lj) := by
+    rw [show -z * (t - Lj) = -z * t + z * Lj by ring, Real.exp_add]
+  have hEE : Real.exp (-2 * z * t) = Real.exp (-z * t) * Real.exp (-z * t) := by
+    rw [← Real.exp_add]; ring_nf
+  rw [hI, hIH, hJ, hEE]; ring
+
 end FMSA.ExactMSA.Breakpoint
