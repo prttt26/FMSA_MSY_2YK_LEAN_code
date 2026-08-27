@@ -847,4 +847,185 @@ theorem perL_conv_inner (z : ℝ) (hz : 0 < z) (σ A : Fin N → ℝ) (qp Wt Ct 
   field_simp
   ring
 
+/-! ### BRK.16b part (b) — the OUTER per-`l` convolution
+
+Same wiring as inner, with the OUTER region order (`Lj < Hi−r < Hj`): core·core, tail·core
+(`region_tailcore_pointwise`), tail·tail; the 7-basis `matCoreUneq` OUTER kernel, for
+`|λ_ij| < r < σ_ij`. -/
+
+set_option maxHeartbeats 4000000 in
+theorem perL_conv_outer (z : ℝ) (hz : 0 < z) (σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ)
+    (i j l : Fin N) (r : ℝ) (hσ : ∀ i, 0 ≤ σ i) (hjpos : 0 < σ j) (hori : σ j ≤ σ i)
+    (hr0 : 0 < r) (hrlam : lamA σ i j < r) (hrsig : r < edgeHi σ i j) :
+    (∫ t, baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t)
+      =
+      (-A l^2*σ i^4/384 + A l^2*σ i^3*σ j/96 - A l^2*σ i^2*σ j^2/64 - 7*A l^2*σ i*σ j^3/96
+          - 17*A l^2*σ j^4/384 - A l*Ct i l*σ i^2/8 + A l*Ct i l*σ i*σ j/4
+          - A l*Ct i l*σ i/(2*z) - A l*Ct i l*σ j^2/8 + A l*Ct i l*σ j/(2*z) - A l*Ct i l/z^2
+          - A l*Ct j l*σ i^2/8 - A l*Ct j l*σ i*σ j/4 - A l*Ct j l*σ j^2/8
+          - A l*Wt j l*σ i/(2*z) - A l*Wt j l*σ j/(2*z) + A l*Wt j l/z^2 + A l*qp i l*σ i^3/48
+          - A l*qp i l*σ i^2*σ j/16 + A l*qp i l*σ i*σ j^2/16 + 7*A l*qp i l*σ j^3/48
+          - A l*qp j l*σ i^3/48 + A l*qp j l*σ i^2*σ j/16 + 3*A l*qp j l*σ i*σ j^2/16
+          + 5*A l*qp j l*σ j^3/48 - Ct i l*Ct j l - Ct i l*qp j l*σ i/2 + Ct i l*qp j l*σ j/2
+          - Ct i l*qp j l/z + Ct j l*qp i l*σ i/2 + Ct j l*qp i l*σ j/2 + Wt j l*qp i l/z
+          + qp i l*qp j l*σ i^2/8 - qp i l*qp j l*σ i*σ j/4 - 3*qp i l*qp j l*σ j^2/8)
+      + (
+        (A l^2*σ i^3/48 - A l^2*σ i^2*σ j/16 + A l^2*σ i*σ j^2/16 + 7*A l^2*σ j^3/48
+            + A l*Ct i l*σ i/2 - A l*Ct i l*σ j/2 + A l*Ct i l/z + A l*Ct j l*σ i/2
+            + A l*Ct j l*σ j/2 + A l*Wt j l/z - A l*qp i l*σ i^2/8 + A l*qp i l*σ i*σ j/4
+            - A l*qp i l*σ j^2/8 + A l*qp j l*σ i^2/8 - A l*qp j l*σ i*σ j/4
+            - 3*A l*qp j l*σ j^2/8 + Ct i l*qp j l - Ct j l*qp i l - qp i l*qp j l*σ i/2
+            + qp i l*qp j l*σ j/2)) * r
+      + (
+        (-A l^2*σ i^2/16 + A l^2*σ i*σ j/8 - A l^2*σ j^2/16 - A l*Ct i l/2 - A l*Ct j l/2
+            + A l*qp i l*σ i/4 - A l*qp i l*σ j/4 - A l*qp j l*σ i/4 + A l*qp j l*σ j/4
+            + qp i l*qp j l/2)) * r ^ 2
+      + (
+        (A l^2*σ i/12 - A l^2*σ j/12 - A l*qp i l/6 + A l*qp j l/6)) * r ^ 3
+      + (-A l^2/24) * r ^ 4
+      + (
+        (A l*Ct i l*Real.exp (σ i*z/2)*Real.exp (-σ j*z/2)/z^2
+            - A l*Wt i l*σ j^2*Real.exp (-σ i*z/2)*Real.exp (σ j*z/2)/2
+            + A l*Wt i l*σ j*Real.exp (-σ i*z/2)*Real.exp (σ j*z/2)/z
+            - A l*Wt i l*Real.exp (-σ i*z/2)*Real.exp (σ j*z/2)/z^2
+            + A l*Wt i l*Real.exp (-σ i*z/2)*Real.exp (-σ j*z/2)/z^2
+            + Ct i l*Ct j l*Real.exp (σ i*z/2)*Real.exp (-σ j*z/2)/2
+            + Ct i l*qp j l*Real.exp (σ i*z/2)*Real.exp (-σ j*z/2)/z
+            - Ct j l*Wt i l*Real.exp (-σ i*z/2)*Real.exp (σ j*z/2)
+            + Ct j l*Wt i l*Real.exp (-σ i*z/2)*Real.exp (-σ j*z/2)/2
+            - Wt i l*Wt j l*Real.exp (-σ i*z/2)*Real.exp (σ j*z/2)/2
+            + Wt i l*qp j l*σ j*Real.exp (-σ i*z/2)*Real.exp (σ j*z/2)
+            - Wt i l*qp j l*Real.exp (-σ i*z/2)*Real.exp (σ j*z/2)/z
+            + Wt i l*qp j l*Real.exp (-σ i*z/2)*Real.exp (-σ j*z/2)/z)) * Real.exp (-z * r)
+      + (
+        (-A l*Wt j l*Real.exp (-σ i*z/2)*Real.exp (-σ j*z/2)/z^2
+            - Ct i l*Wt j l*Real.exp (-σ i*z/2)*Real.exp (-σ j*z/2)/2
+            - Wt j l*qp i l*Real.exp (-σ i*z/2)*Real.exp (-σ j*z/2)/z)) * Real.exp (z * r) := by
+  have hLjHi : edgeLo σ j l ≤ edgeHi σ i l - r := (edgeLo_lt_edgeHi_sub_r σ i j l r hrsig).le
+  have hHiHj : edgeHi σ i l - r ≤ edgeHi σ j l :=
+    (edgeHi_sub_r_lt_edgeHi_outer σ i j l r hori hrlam).le
+  have hLiLj : edgeLo σ i l - r < edgeLo σ j l := edgeLo_sub_r_lt_edgeLo σ i j l r hori hr0
+  have hint : IntegrableOn (fun t => baxterQ' z σ A qp Wt Ct i l (t + r)
+      * baxterQ z σ A qp Wt Ct j l t) (Ici (edgeLo σ j l)) :=
+    (baxterConvIntegrand_integrable z hz σ A qp Wt Ct i j l r hσ).integrableOn
+  rw [baxterConv_eq_setIntegral_Ici z hz σ A qp Wt Ct i j l r hσ,
+    setIntegral_Ici_split3 _ (edgeLo σ j l) (edgeHi σ i l - r) (edgeHi σ j l) hLjHi hHiHj hint]
+  -- REGION 1 : Icc Lj (Hi-r), core·core
+  have hbr1 : Set.EqOn (fun t => baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t)
+      (fun t => (qp i l + A l * (t + r - edgeLo σ i l - σ i)
+          - z * Wt i l * Real.exp (-z * (t + r - edgeLo σ i l)))
+        * (qp j l * (t - edgeLo σ j l - σ j) + A l / 2 * (t - edgeLo σ j l - σ j) ^ 2
+            + Wt j l * Real.exp (-z * (t - edgeLo σ j l)) + Ct j l))
+      (Set.uIcc (edgeLo σ j l) (edgeHi σ i l - r)) := by
+    intro t ht
+    rw [Set.uIcc_of_le hLjHi] at ht
+    simp only
+    rw [baxterQ_core_eq z σ A qp Wt Ct j l t ht.1 (le_trans ht.2 hHiHj),
+      baxterQ'_shift_core_eq z σ A qp Wt Ct i l t r (by linarith [ht.1]) (by linarith [ht.2])]
+  rw [setIntegral_Icc_eq_uIcc _ (edgeLo σ j l) (edgeHi σ i l - r) hLjHi,
+    intervalIntegral.integral_congr hbr1,
+    intervalIntegral.integral_congr (g := fun t => _)
+      (fun t _ => region_corecore_pointwise z r (edgeLo σ i l) (edgeLo σ j l) (σ i) (σ j)
+        (qp i l) (A l) (Wt i l) (qp j l) (Wt j l) (Ct j l) t),
+    integral_canonical _ _ z _ _ _ _ _ _ _ _ hz]
+  -- REGION 2 : Ioc (Hi-r) Hj, tail·core
+  have hbr2 : Set.EqOn (fun t => baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t)
+      (fun t => (-z * Wt i l * Real.exp (-z * (t + r - edgeLo σ i l))
+          - z * Ct i l * Real.exp (-z * (t + r - edgeHi σ i l)))
+        * (qp j l * (t - edgeLo σ j l - σ j) + A l / 2 * (t - edgeLo σ j l - σ j) ^ 2
+            + Wt j l * Real.exp (-z * (t - edgeLo σ j l)) + Ct j l))
+      (Ioc (edgeHi σ i l - r) (edgeHi σ j l)) := by
+    intro t ht
+    simp only
+    rw [baxterQ_core_eq z σ A qp Wt Ct j l t (by linarith [ht.1]) ht.2,
+      baxterQ'_shift_tail_eq z σ A qp Wt Ct i l t r hσ (by linarith [ht.1])]
+  rw [setIntegral_congr_fun measurableSet_Ioc hbr2,
+    setIntegral_Ioc_eq_uIcc _ (edgeHi σ i l - r) (edgeHi σ j l) hHiHj,
+    intervalIntegral.integral_congr (g := fun t => _)
+      (fun t _ => region_tailcore_pointwise z r (edgeLo σ i l) (edgeHi σ i l) (edgeLo σ j l) (σ j)
+        (qp j l) (A l) (Wt i l) (Ct i l) (Wt j l) (Ct j l) t),
+    integral_canonical _ _ z _ _ _ _ _ _ _ _ hz]
+  -- REGION 3 : Ioi Hj, tail·tail
+  have hbr3 : Set.EqOn (fun t => baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t)
+      (fun t => (-z * Wt i l * Real.exp (-z * (t + r - edgeLo σ i l))
+          - z * Ct i l * Real.exp (-z * (t + r - edgeHi σ i l)))
+        * (Wt j l * Real.exp (-z * (t - edgeLo σ j l))
+            + Ct j l * Real.exp (-z * (t - edgeHi σ j l))))
+      (Ioi (edgeHi σ j l)) := by
+    intro t ht
+    simp only [Set.mem_Ioi] at ht
+    simp only
+    rw [baxterQ_tail_eq z σ A qp Wt Ct j l t hσ ht,
+      baxterQ'_shift_tail_eq z σ A qp Wt Ct i l t r hσ (by linarith)]
+  rw [setIntegral_congr_fun measurableSet_Ioi hbr3,
+    integral_tailtail z hz (Wt i l) (Ct i l) (Wt j l) (Ct j l) (edgeLo σ i l) (edgeHi σ i l)
+      (edgeLo σ j l) (edgeHi σ j l) r (edgeHi σ j l)]
+  simp only [canonAntider, edgeLo, edgeHi]
+  set p := Real.exp (z * σ i / 2) with hp
+  set q := Real.exp (z * σ j / 2) with hq
+  set w := Real.exp (z * σ l / 2) with hw
+  set e := Real.exp (z * r) with he
+  have he0 : Real.exp (-2 * z * ((σ i + σ l) / 2 - r)) = p⁻¹ * p⁻¹ * w⁻¹ * w⁻¹ * e * e := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he1 : Real.exp (-2 * z * ((σ j + σ l) / 2)) = q⁻¹ * q⁻¹ * w⁻¹ * w⁻¹ := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he2 : Real.exp (-2 * z * ((σ l - σ j) / 2)) = q * q * w⁻¹ * w⁻¹ := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he3 : Real.exp (-z * ((σ i + σ l) / 2 - r)) = p⁻¹ * w⁻¹ * e := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he4 : Real.exp (-z * ((σ j + σ l) / 2)) = q⁻¹ * w⁻¹ := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he5 : Real.exp (-z * ((σ l - σ j) / 2)) = q * w⁻¹ := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he6 : Real.exp (-z * (r - (σ i + σ l) / 2 - (σ j + σ l) / 2)) = p * q * w * w * e⁻¹ := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he7 : Real.exp (-z * (r - (σ i + σ l) / 2 - (σ l - σ j) / 2)) = p * q⁻¹ * w * w * e⁻¹ := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he8 : Real.exp (-z * (r - (σ l - σ i) / 2 - (σ j + σ l) / 2)) = p⁻¹ * q * w * w * e⁻¹ := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he9 : Real.exp (-z * (r - (σ l - σ i) / 2 - (σ l - σ j) / 2)) = p⁻¹ * q⁻¹ * w * w * e⁻¹ := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he10 : Real.exp (-z * r) = e⁻¹ := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he11 : Real.exp (-σ i * z / 2) = p⁻¹ := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he12 : Real.exp (-σ j * z / 2) = q⁻¹ := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he13 : Real.exp (z * ((σ i + σ l) / 2)) = p * w := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he14 : Real.exp (z * ((σ l - σ i) / 2)) = p⁻¹ * w := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he15 : Real.exp (z * ((σ l - σ j) / 2)) = q⁻¹ * w := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he16 : Real.exp (σ i * z / 2) = p := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  have he17 : Real.exp (σ j * z / 2) = q := by
+    simp only [hp, hq, hw, he, ← Real.exp_neg, ← Real.exp_add]
+    try (congr 1; ring)
+  rw [he0, he1, he2, he3, he4, he5, he6, he7, he8,
+    he9, he10, he11, he12, he13, he14, he15, he16, he17]
+  have hp0 : p ≠ 0 := by rw [hp]; exact Real.exp_ne_zero _
+  have hq0 : q ≠ 0 := by rw [hq]; exact Real.exp_ne_zero _
+  have hw0 : w ≠ 0 := by rw [hw]; exact Real.exp_ne_zero _
+  have he0 : e ≠ 0 := by rw [he]; exact Real.exp_ne_zero _
+  field_simp
+  ring
+
 end FMSA.ExactMSA.Breakpoint
