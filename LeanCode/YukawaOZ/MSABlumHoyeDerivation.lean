@@ -455,4 +455,30 @@ theorem tailtil_eq_cexp_integral (xi z G : ℝ) (hz : z ≠ 0) :
           * (∫ t in (0:ℝ)..1, (Real.exp (-z * t) - Real.exp (-z)) * Real.exp (-z * t)) := by
   rw [cexp_basis_laplace_moment hz, tailtil_cexp_form xi z G hz]
 
+/-- **`tailtil` in integral form.**  `tailtil = e^z·(1/(2z) − γ·∫₀¹ (e^{−zt}−e^{−z}) e^{−zt})` — the
+`e^z`-lifted form of `tailtil_eq_cexp_integral`, ready to substitute into the `bhF` bridge. -/
+theorem tailtil_eq_integral_form (xi z G : ℝ) (hz : z ≠ 0) :
+    tailtil xi z G
+      = Real.exp z * (1 / (2 * z) - gam xi z G
+          * (∫ t in (0:ℝ)..1, (Real.exp (-z * t) - Real.exp (-z)) * Real.exp (-z * t))) := by
+  have he : Real.exp z * Real.exp (-z) = 1 := by
+    rw [← Real.exp_add, add_neg_cancel, Real.exp_zero]
+  rw [← tailtil_eq_cexp_integral xi z G hz,
+      show Real.exp z * (tailtil xi z G * Real.exp (-z))
+        = tailtil xi z G * (Real.exp z * Real.exp (-z)) from by ring, he, mul_one]
+
+/-- **Full `bhF` faithfulness bridge (integral form).**  `bhF = 1 − (dressed-poly moment + tail
+moment)` with BOTH halves as genuine Laplace integrals of the exact Baxter function's pieces: the
+dressed polynomial and (via `e^z`/`γ`) the continuity term `(e^{−zr}−e^{−zσ})`.  Upgrades
+`bhF_eq_one_sub_dressed_moment` (M4) with the Phase-3 `tailtil_eq_integral_form`. -/
+theorem bhF_eq_one_sub_full_integral (xi z Dt G : ℝ) (hz : z ≠ 0) (hxi : (1 - xi) ≠ 0) :
+    bhF xi z (Dt, G)
+      = 1 - ((∫ t in (0:ℝ)..1,
+                (rhoOf xi * msaQp xi z Dt G * (t - 1)
+                 + rhoOf xi * msaA xi z Dt G * ((t - 1) ^ 2 / 2)) * Real.exp (-z * t))
+             + Dt * rhoOf xi * (Real.exp z * (1 / (2 * z) - gam xi z G *
+                 (∫ t in (0:ℝ)..1,
+                   (Real.exp (-z * t) - Real.exp (-z)) * Real.exp (-z * t))))) := by
+  rw [bhF_eq_one_sub_dressed_moment xi z Dt G hz hxi, tailtil_eq_integral_form xi z G hz]
+
 end FMSA.ExactMSA
