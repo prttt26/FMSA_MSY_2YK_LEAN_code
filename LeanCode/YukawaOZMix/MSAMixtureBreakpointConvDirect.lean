@@ -529,4 +529,56 @@ theorem baxterQ'_shift_tail_eq (z : ℝ) (σ A : Fin N → ℝ) (qp Wt Ct : Fin 
   unfold baxterQ'
   rw [if_neg (by linarith : ¬ t + r < edgeLo σ i l), if_neg (not_le.mpr h)]
 
+/-! ### BRK.16b part (b) — region pointwise-to-canonical identities
+
+Each bounded region's branch product, rewritten into the canonical `cubic + quadratic·e^(−zt) +
+K·e^(−2zt)` form fed to `integral_canonical`.  Coefficients are the validated
+`scripts/verify_baxterconv_decomposition.py` output (LHS exps split to the `e^(zLi),e^(zLj),e^(−zr)`
+atom basis, then `ring`). -/
+
+set_option maxHeartbeats 800000 in
+/-- **Region `core·core` (pointwise).**  `Q'_il(t+r)|core · Q_jl(t)|core` in canonical
+`cubic + quadratic·e^(−zt) + K·e^(−2zt)` form (atoms `e^(zLi),e^(zLj),e^(−zr)`), the input to
+`integral_canonical`.  Coefficients: `scripts/verify_baxterconv_decomposition.py`. -/
+theorem region_corecore_pointwise (z r Li Lj si sj qi Al Wi qj Wj Cj t : ℝ) :
+    (qi + Al * (t + r - Li - si) - z * Wi * Real.exp (-z * (t + r - Li)))
+        * (qj * (t - Lj - sj) + Al / 2 * (t - Lj - sj) ^ 2
+            + Wj * Real.exp (-z * (t - Lj)) + Cj)
+      =
+      (-Al^2*Li*Lj^2/2 - Al^2*Li*Lj*sj - Al^2*Li*sj^2/2 + Al^2*Lj^2*r/2 - Al^2*Lj^2*si/2
+          + Al^2*Lj*r*sj - Al^2*Lj*si*sj + Al^2*r*sj^2/2 - Al^2*si*sj^2/2 - Al*Cj*Li + Al*Cj*r
+          - Al*Cj*si + Al*Li*Lj*qj + Al*Li*qj*sj + Al*Lj^2*qi/2 + Al*Lj*qi*sj - Al*Lj*qj*r
+          + Al*Lj*qj*si + Al*qi*sj^2/2 - Al*qj*r*sj + Al*qj*si*sj + Cj*qi - Lj*qi*qj - qi*qj*sj)
+      + (
+        (Al^2*Li*Lj + Al^2*Li*sj + Al^2*Lj^2/2 - Al^2*Lj*r + Al^2*Lj*si + Al^2*Lj*sj - Al^2*r*sj
+            + Al^2*si*sj + Al^2*sj^2/2 + Al*Cj - Al*Li*qj - Al*Lj*qi - Al*Lj*qj - Al*qi*sj
+            + Al*qj*r - Al*qj*si - Al*qj*sj + qi*qj)) * t
+      + (
+        (-Al^2*Li/2 - Al^2*Lj + Al^2*r/2 - Al^2*si/2 - Al^2*sj + Al*qi/2 + Al*qj)) * t ^ 2
+      + (Al^2/2) * t ^ 3
+      + ((
+        (-Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Lj^2*Wi*z/2
+            - Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Lj*Wi*sj*z
+            - Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Wi*sj^2*z/2 - Al*(Real.exp (z*Lj))*Li*Wj
+            + Al*(Real.exp (z*Lj))*Wj*r - Al*(Real.exp (z*Lj))*Wj*si
+            - Cj*(Real.exp (z*Li))*(Real.exp (-z*r))*Wi*z
+            + (Real.exp (z*Li))*(Real.exp (-z*r))*Lj*Wi*qj*z
+            + (Real.exp (z*Li))*(Real.exp (-z*r))*Wi*qj*sj*z + (Real.exp (z*Lj))*Wj*qi))
+        + (
+          (Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Lj*Wi*z
+              + Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Wi*sj*z + Al*(Real.exp (z*Lj))*Wj
+              - (Real.exp (z*Li))*(Real.exp (-z*r))*Wi*qj*z)) * t
+        + (-Al*(Real.exp (z*Li))*(Real.exp (-z*r))*Wi*z/2) * t ^ 2) * Real.exp (-z * t)
+      + (-(Real.exp (z*Li)) * (Real.exp (z*Lj)) * (Real.exp (-z*r)) * Wi * Wj * z)
+        * Real.exp (-2 * z * t) := by
+  have hI : Real.exp (-z * (t + r - Li))
+      = Real.exp (-z * t) * Real.exp (-z * r) * Real.exp (z * Li) := by
+    rw [show -z * (t + r - Li) = -z * t + -z * r + z * Li by ring,
+      Real.exp_add, Real.exp_add]
+  have hJ : Real.exp (-z * (t - Lj)) = Real.exp (-z * t) * Real.exp (z * Lj) := by
+    rw [show -z * (t - Lj) = -z * t + z * Lj by ring, Real.exp_add]
+  have hEE : Real.exp (-2 * z * t) = Real.exp (-z * t) * Real.exp (-z * t) := by
+    rw [← Real.exp_add]; ring_nf
+  rw [hI, hJ, hEE]; ring
+
 end FMSA.ExactMSA.Breakpoint
