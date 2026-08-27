@@ -33,12 +33,8 @@ roots = ["LeanCode.YukawaOZ.ExactMSACertificate"]
 name = "MatExactMSAEqualDiamCertificate"
 roots = ["LeanCode.YukawaOZMix.MatExactMSAEqualDiamCertificate"]
 
-# BRK.13 closure seam: the real-space Baxter `Q` + convolution core `c`, and MSAEMIX.4 Stage 3's
-# identity `c = matCoreUneq` as one sympy-backed convolution-identity axiom (real-space analog of
-# `matExactMSAUnequalDiam_hcore`).  Feeds BRK's hypothesis-parametrised lemmas so the *physical*
-# exact-MSA core inherits the smoothness/knot structure.  OUT of `defaultTargets`, not imported by
-# the `LeanCode` root, so a normal `lake build` stays std-3.
-# Build it on demand with:  lake build MSAMixtureBaxterConvCertificate
-[[lean_lib]]
-name = "MSAMixtureBaxterConvCertificate"
-roots = ["LeanCode.YukawaOZMix.MSAMixtureBaxterConv"]
+# (BRK.13/16) `MSAMixtureBaxterConv.lean` — real-space Baxter `Q` + convolution core `c`.  It once
+# carried the `c = matCoreUneq` seam as a sympy-backed axiom in its own out-of-default certificate lib;
+# that axiom is now PROVED std-3 (`baxterConvCore_eq_matCoreUneq_proved`, `MSAMixtureBreakpointConvDirect`),
+# so the file is a plain definitions module built as part of the default `LeanCode` root — no separate
+# certificate lib is needed.

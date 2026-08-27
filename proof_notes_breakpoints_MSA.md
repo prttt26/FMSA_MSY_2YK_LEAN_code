@@ -792,3 +792,171 @@ axiom:
 parallel `Q` / `c` on the BRK side: that duplicates MSAEMIX.4 Stage 3's object and carries
 false-axiom risk (`feedback_mirror_reference_semantics` — a wrong `def` + `= matCoreUneq` builds
 green, only reading the sympy reference catches it). The `Q` / convolution `def` is Stage 3's.
+
+---
+
+## ⭐ BRK.14 / BRK.15 — the all-orders result by MATHEMATICAL INDUCTION (alternative proof, 2026-08-26)
+
+The all-orders "in-core breakpoints all at `|λ_ij|`, no other breakpoints" result
+(`matCoreUneq_paramDeriv_contDiffOn_{inner,outer}`, BRK.9/12) is proved above via the
+**coefficient/basis separation** — a *one-shot* (`contDiffOn_paramDeriv_coeffBasis`) that cites
+Mathlib's `iteratedDeriv_fun_sum` / `iteratedDeriv_const_mul`, with no explicit induction.  On
+request, this is the **explicit-induction** proof of the same result, new file
+`YukawaOZMix/MSAMixtureBreakpointInduction.lean` (all std-3, `#print axioms` verified; wired into
+`LeanCode.lean`, build green).
+
+- **BRK.14 ✅ — `iteratedDeriv_coeffBasis_eq` (the crux, by induction on `n`).**  For a `K`-free
+  `r`-basis `b k`: `∂ⁿ_K (Σ_k c k(K)·b k(r)) = Σ_k (∂ⁿ_K c k)(K)·b k(r)`.  **Base** `n=0`:
+  `iteratedDeriv 0 = id`.  **Step** `n→n+1`: `∂^{n+1}=∂∘∂ⁿ` (`iteratedDeriv_succ`), then `∂`
+  distributes over the finite sum (`deriv_fun_sum`; each summand differentiable via
+  `ContDiff.differentiable_iteratedDeriv`) and past the `K`-constant `b k r` (`deriv_mul_const`),
+  giving `∂^{n+1}_K c k`.  Re-derives, by hand, exactly what the one-shot delegates to Mathlib.
+
+- **BRK.15 ✅ — the chain, by induction.**  `contDiffOn_paramDeriv_coeffBasis_byInduction` (abstract
+  Step 2, same statement as the one-shot but built on BRK.14) →
+  `gForm_paramDeriv_contDiffOn_byInduction` (the 7-basis `{1,r,r²,r³,r⁴,e^{∓zr}}` instantiation) →
+  `coreForm_paramDeriv_contDiffOn_byInduction` (÷ `2π r`) →
+  `matCoreUneq_paramDeriv_contDiffOn_{inner,outer}_byInduction` (the actual BRK result, off each side
+  of `|λ_ij|`).  Same statements as the scheme's, std-3.
+
+**Verdict.**  Induction WORKS and is clean here — precisely because `K` enters only the amplitudes
+`c k(K)`, never the `r`-basis or the boundary `|λ_ij|`, so the inductive step never moves a knot.
+That is the *same* structural reason the one-shot works; the induction just makes the amplitude
+bookkeeping explicit (base + step) instead of delegating to `iteratedDeriv_fun_sum`.  ⚠ This is an
+**alternative** proof of an already-`DONE` result (BRK.9/12) — redundant for the theorem, kept as the
+requested induction-form demonstration.  (The genuinely *different* induction would be the
+Leibniz/convolution route — `knots(f⋆g) ⊆ knots f + knots g` (BRK.1) applied `n` times to the raw
+Baxter convolution, BRK.7 Step 5 — which the closed form made unnecessary, BRK.12.)
+
+---
+
+## ☐ BRK.16 — axiom-REDUCTION: prove `baxterConvCore`'s breakpoints DIRECTLY (drop the sympy axiom)
+
+**Goal.**  `baxterConvCore_smooth_off_unique_breakpoint` currently = std-3 + the sympy axiom
+`baxterConvCore_eq_matCoreUneq` (breakpoints transferred from the closed form).  Prove the SAME
+breakpoint structure DIRECTLY from the convolution `baxterConvCore = (−Q'_ij + Σ_l ρ_l Q'_il ⋆
+Q_jl)/(2π r)`, making the breakpoint claim **std-3**.  Legitimate because the breakpoint is
+*structural* — interior knot `= |λ_ij|`, a support-edge geometric fact, independent of the
+coefficient VALUES; the closed form is not needed for it.  (The axiom stays for the value claims.)
+
+**Structural reduction (key).**  `baxterQ' = d/dr baxterQ`, so `∫ Q'_il(t+r) Q_jl(t) dt =
+d/dr ∫ Q_il(t+r) Q_jl(t) dt` (differentiate under the integral, MA.16).  Hence `baxterConvCore·2π r`
+is the `r`-derivative of a `Q⋆Q` convolution; ContDiffOn on a piece follows from the `Q⋆Q`
+convolution being ContDiffOn there (a `deriv` of `ContDiffOn ⊤` is `ContDiffOn ⊤`).
+
+**⚠ Feasibility (2026-08-26): the FULL hard route — existing infra does NOT reuse.**  The MML.8/DCF
+convolution smoothness (`qpConv_contDiffOn_upper/_lower`, `matCorrFull_contDiffOn_*`) is for
+`q0MixEntry` — the PY-HS factor, a QUADRATIC of COMPACT support `[λ,R]`, no exponential.  But
+`baxterConvCore` uses `baxterQ` — the exact-MSA factor with an EXPONENTIAL tail (→∞).  So the `Q⋆Q`
+smoothness must be re-proved for the exp-tailed `baxterQ` from scratch (infinite-tail integrals) —
+exactly the BRK.7-Step-5 route the closed form was introduced to avoid.
+
+**Sub-tasks.**
+- BRK.16a — `baxterQ`/`baxterQ'` piecewise smoothness (ContDiffOn on each open piece; `fun_prop`).
+- BRK.16b ⭐⭐ **(load-bearing)** — `∫ Q_il(t+r) Q_jl(t) dt` ContDiffOn on `(0,λ_ij)` and
+  `(λ_ij,σ_ij)`: split the exp-tailed integrand at the knots; differentiate under the integral off
+  the knot-alignment `r`-values.  The hard analytic core (no existing infra).
+- BRK.16c — `Q'⋆Q = d/dr(Q⋆Q)` (MA.16) ⇒ `baxterConvCore` ContDiffOn off `|λ_ij|`.
+- BRK.16d — `∂ⁿ_K` all orders (amplitude/geometry separation, BRK.14-style) + `breakpoints_sigma_l_free`
+  (BRK.2, std-3) ⇒ interior knot `= |λ_ij|` only, std-3.
+
+**Status (smoothness route): SCOPED.**  Research-scale; drops the axiom from the breakpoint
+sub-result only.  SUPERSEDED as the primary target by the VALUE-identity route below, which retires
+the axiom ENTIRELY (value ⇒ smoothness).
+
+### BRK.16 — the VALUE-identity route (retire the axiom entirely, 2026-08-26)
+
+**Goal (stronger).**  Prove `baxterConvCore = matCoreUneq` on the two core pieces DIRECTLY, retiring
+the sympy axiom `baxterConvCore_eq_matCoreUneq` completely (not just its breakpoint corollary) —
+`baxterConvCore_smooth_off_unique_breakpoint` and all downstream then become std-3.
+
+**Key reduction (per-`l`, load-bearing insight).**  `matCoreUneq` KEEPS `∑_l ρ_l·(…)` EXPLICIT with
+**σ_l-free per-`l` kernels** (`MSAMixtureCoreUneq.lean` docstring, lines 21–25).  So the seam splits
+by `Finset.sum_congr` into:
+- **(a) diagonal** `−Q'_ij(r) = gForm(diagonal coeffs)(r)` — ✅ **DONE** (`neg_baxterQ'_eq_diag`,
+  std-3).  Matches `cC0i`/`cC1i`/`cEmi` diagonal terms exactly on the core support; NO integral.
+- **(b) per-`l` convolution** `∫ Q'_il(t+r) Q_jl(t) dt = gForm(kernel_l)(r)` — the SOLE remaining
+  seam, ONE identity (parametrised by amplitudes `qp_il,A_l,Wt_il,Ct_il / qp_jl,A_l,Wt_jl,Ct_jl` and
+  diameters `σ_i,σ_j,σ_l`), on each piece.  The `∑_l` and `ρ_l`-weights wrap trivially.
+
+**Feasibility CORRECTION.**  The `MSAMixtureBaxterConv.lean` docstring calls this "the same class as
+the MSAEXACT.6 hcore ring (measured infeasible)".  That conflates two objects: the infeasible one is
+the **k-space degree-22** ring reassembly (`project_msaexact6_ring_infeasible`).  The **real-space**
+per-`l` convolution (b) is instead the **MML.8/MRS.5 class** — poly⋆exp closed forms whose primitives
+ALREADY EXIST as the concurrent session's `MixtureRealSpace.lean` (`integral_poly_exp_conv`,
+`integral_quadratic_exp_conv`; poly⋆poly = `integral_quad_mul_quad`).  Tractable, not ring-infeasible.
+
+**Progress.**
+- ✅ BRK.16a — `baxterQ`/`baxterQ'` piecewise `ContDiffOn ⊤` (foundation).
+- ✅ BRK.16b item 1 — integrability: `baxterQ_integrable`, `baxterQ'_bounded`, `baxterQ'_measurable`,
+  `baxterConvIntegrand_integrable` (exp-tail handled; each `∫_l` well-defined).
+- ✅ BRK.16b diagonal half — `neg_baxterQ'_eq_diag` (part (a) above).
+- ◐ BRK.16b part (b) — the per-`l` convolution closed form.  The whole EVALUATION INFRASTRUCTURE is
+  now BUILT + validated (all std-3, `MSAMixtureBreakpointConvDirect.lean`):
+  - ✅ `baxterConv_eq_setIntegral_Ici` — support reduction `∫_ℝ = ∫_{[edgeLo σ j l,∞)}`.
+  - ✅ ordering lemmas (`edgeLo_lt_edgeHi`, `edgeLo_lt_edgeHi_sub_r`, `edgeHi_lt_edgeHi_sub_r_inner`,
+    `edgeHi_sub_r_lt_edgeHi_outer`, `lamA_eq_of_le`) — the inner/outer 3-region geometry
+    (`Lj < Hj < Hi−r` inner, `Lj < Hi−r < Hj` outer; middle flips at `r = |λ_ij|`).
+  - ✅ `setIntegral_Ici_split3` — the 3-way split (two bounded pieces + improper tail).
+  - ✅ interval primitives `integral_exp_linear`/`integral_id_mul_exp`/`integral_sq_mul_exp`
+    (`∫ tᵏe^{ct}`, k=0,1,2, antiderivative+FTC).
+  - ✅ `integral_tailtail` — the `tail·tail` region closed form (pure `e^{−2zt}` → `integral_exp_mul_Ioi`).
+  - ✅ `canonAntider`/`canonAntider_hasDerivAt`/`integral_canonical` — the canonical bounded-region
+    integral `∫_a^b (cubic + quadratic·e^{−zt} + K·e^{−2zt})`; the single evaluator all 3 bounded
+    regions reduce to.  (`HasDerivAt.congr_deriv` sidesteps the convert/instance plumbing.)
+  - ☐ REMAINING: (i) the 3 bounded-region reductions — pointwise-rewrite each branch product into the
+    canonical integrand (atom-basis split + `ring`, à la `integral_tailtail`'s `hpt`), giving explicit
+    `cᵢ/dᵢ/K`, then `integral_canonical`; (ii) 2 assembly theorems (inner/outer) — `setIntegral_Ici_split3`
+    + `Ioc/Icc → a..b` + sum the 3 region values; (iii) the final `= gForm(kernel_l)(r)` match where the
+    σ_l-dependence CANCELS (`field_simp;ring`, exp atoms); (iv) wrap `∑_l` (`sum_congr`) + diagonal
+    (`neg_baxterQ'_eq_diag`) + `/2πr` ⇒ `baxterConvCore = matCoreUneq`, retiring the axiom.
+  Mechanical/downhill now (infra done, technique validated on `tail·tail`); still multi-session for the
+  coefficient bookkeeping.  ⚠ overlaps concurrent MSAEMIX Group MRS — coordinate.
+
+  **⭐ END-TO-END SYMBOLIC VALIDATION (`scripts/verify_baxterconv_decomposition.py`, 2026-08-26).**
+  The 3-region decomposition sums EXACTLY to the `matCoreUneq` per-`l` kernel on BOTH pieces
+  (`INNER diff = 0`, `OUTER diff = 0`, `sympy.simplify`), with the σ_l dependence CANCELLING.  So the
+  Lean identity `baxterConvCore = matCoreUneq` is a TRUE, `ring`-closable identity region-by-region;
+  the pins are: INNER `[Lj,Hj]`,`[Hj,Hi−r]`,`[Hi−r,∞)`; OUTER `[Lj,Hi−r]`,`[Hi−r,Hj]`,`[Hj,∞)`.
+  Also measured: the core·core pointwise `ring` (full ~20-term canonical coeffs) closes in 7 s ⇒ the
+  Lean region reductions are computationally feasible (NOT k-space-ring-infeasible).  The remaining is
+  pure transcription/assembly of a validated identity: state each region's pointwise-to-canonical
+  (`integral_canonical`) / tail (`integral_tailtail`), sum over the 3 regions, `ring`-match the kernel.
+
+  **BUILT since (all std-3, committed):**
+  - ✅ ALL 3 bounded-region pointwise-to-canonical identities: `region_corecore_pointwise`,
+    `region_coretail_pointwise`, `region_tailcore_pointwise` (branch product = `cubic + quadratic·e^(−zt)
+    + K·e^(−2zt)`; sympy coeffs, atom-split + `ring`, ~7 s each; `set_option maxHeartbeats 800000`).
+  - ✅ branch-eval lemmas (`baxterQ_core_eq`, `baxterQ_tail_eq`, `baxterQ'_shift_core_eq`,
+    `baxterQ'_shift_tail_eq`) + `edgeLo_sub_r_lt_edgeLo` + `setIntegral_Icc_eq_uIcc`/`_Ioc_eq_uIcc`.
+  - ✅ **region-evaluation chain validated END-TO-END** on core·core with the real `baxterQ`/`baxterQ'`:
+    `∫_{Icc Lj Hj} baxterQ'·baxterQ` → (Icc→interval) → (branch congr) → (`region_..._pointwise` congr)
+    → `integral_canonical` (coefficients inferred by unification, no re-typing).  The `rw` chain works.
+  - ✅ `scripts/verify_baxterconv_decomposition.py`: `R1+R2+R3 − target = 0` via the ACTUAL
+    `sympy.integrate` region integrals (not just the kernel form).
+
+  **REMAINING (mechanical wiring of validated pieces):**
+  1. inner/outer per-`l` theorems: `baxterConv_eq_setIntegral_Ici` → `setIntegral_Ici_split3` → the 3
+     region evals (R1 core·core, R2 core/tail, R3 tail·tail via `integral_tailtail`) → sum.
+  2. the final-match `ring`: `simp only [canonAntider]`, split all `e^(±z·edge)` to the half-atom basis
+     `{e^(zσᵢ/2),e^(zσⱼ/2),e^(zσₗ/2),e^(zr/2)}`, `field_simp; ring`.  **CONFIRMED ring-closable**: in that
+     atom basis `R1+R2+R3 − target` is a Laurent identity that `sympy.simplify`→0 (script's atom check),
+     i.e. a genuine polynomial identity ⇒ `field_simp; ring` closes it (raise `maxHeartbeats`; core·core
+     pointwise with fewer atoms was 7 s).  So NOTHING in the axiom-free path is unproven — only wiring.
+  3. wrap: `∑_l ρ_l` (`Finset.sum_congr`) + diagonal (`neg_baxterQ'_eq_diag`) + `/2πr` ⇒
+     `baxterConvCore = matCoreUneq`, retiring the axiom (whole physical core → std-3).
+
+  **⭐⭐ ALL DONE (2026-08-27) — the axiom is now a THEOREM, std-3, ZERO physics/sympy axioms:**
+  - ✅ `perL_conv_inner` / `perL_conv_outer` (the two per-`l` convolution theorems; final-match ring
+    ~14–23 s each, `maxHeartbeats 4000000`).
+  - ✅ `gForm_split_inner/_outer`, `gForm_sum_inner/_sum`, `numerator_inner/_outer` (gForm-linearity +
+    diagonal + `Finset.sum_congr(perL)`; perL-target ⇔ bracket exp-normalization in
+    `{e^(zσᵢ/2),e^(zσⱼ/2),e^(zr)}`).
+  - ✅ `baxterConvCore_eq_matCoreUneq_proved` — the AXIOM DERIVED (`#print axioms` = std-3).  Physical
+    hyps `z>0`, `σ≥0`, `σ_j>0` explicit (axiom left them implicit).  **BRK.16 axiom-free path CLOSED.**
+  - ✅ AXIOM RETIRED (commit `3904769`): deleted `axiom baxterConvCore_eq_matCoreUneq` + its 3
+    in-file consumers from `MSAMixtureBaxterConv.lean` (now a plain definitions module); moved the
+    consumers (`baxterConvCore_smooth_off_unique_breakpoint`, `baxterConvCoreK_paramDeriv_contDiffOn_
+    {inner,outer}`) downstream to `MSAMixtureBreakpointConvDirect.lean` rewired to `…_proved` (physical
+    hyps threaded), all std-3; removed the redundant out-of-default `MSAMixtureBaxterConvCertificate`
+    lakefile lib.  Full `lake build` GREEN, zero sympy/physics axioms reachable.  **BRK.16 fully done.**

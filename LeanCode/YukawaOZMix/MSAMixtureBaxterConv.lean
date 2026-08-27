@@ -19,24 +19,19 @@ factor `Q_ab(r)` and the physical exact-MSA core
 
     c_ij(r) = ( −Q'_ij(r) + Σ_l ρ_l ∫ Q'_il(t+r) Q_jl(t) dt ) / (2π r)               (r > 0)
 
-then states MSAEMIX.4 Stage 3's symbolic-`σ` identity `c = matCoreUneq` on the two open pieces of
-`(0, σ_ij)` as **one sympy-backed convolution-identity axiom** and feeds it into BRK's
-hypothesis-parametrised lemmas.  With that seam supplied, the *physical* core inherits all of BRK's
-smoothness/knot structure: `c` is `ContDiffOn ℝ ⊤` on each side of its unique interior breakpoint
-`|λ_ij|`, at every `K`-order.
+then the symbolic-`σ` identity `c = matCoreUneq` on the two open pieces of `(0, σ_ij)` — MSAEMIX.4
+Stage 3 — closes BRK about the *physical* core: `c` is `ContDiffOn ℝ ⊤` on each side of its unique
+interior breakpoint `|λ_ij|`, at every `K`-order.
 
-## Why an axiom (grade 2, the POLICY-conformant closure)
+## The identity is a THEOREM (BRK.16) — the former axiom is RETIRED
 
-The identity `c = matCoreUneq` is MSAEMIX.4 Stage 3's region-split symbolic Baxter convolution,
-validated to `1e-14` (`msaemix_uneq_symconv.py`, `symbolic_{inner,outer}.py`,
-`verify_{inner,outer}.py`, parent repo; correct orientation `σ_i ≥ σ_j`, row = larger diameter).
-Proving it in Lean (grade 1) is a piecewise-convolution integral identity of the same class as the
-scalar MSAEXACT.6 hcore ring, which a dedicated attempt measured to be impractically large
-(`project_exactMSA_ring_infeasible`).  So this file takes the documented grade-2 route: the seam is
-collapsed to a single named numerical fact, exactly mirroring the k-space
-`matExactMSAUnequalDiam_hcore` / `matExactMSAEqualDiam_kspace_residual` that the `hcore`
-certificates carry.  Kept OUT of `defaultTargets` (own `[[lean_lib]]`, not imported by root) so a
-normal `lake build` stays std-3; build on demand with `lake build MSAMixtureBaxterConvCertificate`.
+`c = matCoreUneq` is DERIVED in Lean, std-3, in `MSAMixtureBreakpointConvDirect.lean`
+(`baxterConvCore_eq_matCoreUneq_proved`): the per-`l` convolution is computed explicitly (region
+decomposition + `integral_canonical`/`integral_tailtail` + `gForm`-linearity), so NO sympy axiom is
+needed.  (Earlier this file collapsed the seam to a grade-2 axiom on the — incorrect — premise that
+grade 1 was "the same class as the ring-infeasible `MSAEXACT.6` hcore"; that infeasibility is the
+k-space degree-22 ring, whereas the REAL-space convolution here is the tractable MML.8/MRS.5 class.)
+This file now supplies only DEFINITIONS; the physical-core capstones live downstream and are std-3.
 
 Transcription is faithful to the sympy `Qn`/`Qpn` (`msaemix_uneq_symconv.py`): with
 `λ_ab = edgeLo σ a b = (σ_b − σ_a)/2`, `σ_ab = edgeHi σ a b = (σ_a + σ_b)/2`, poly argument
@@ -95,76 +90,13 @@ noncomputable def baxterConvCoreK (z : ℝ) (σ : Fin N → ℝ) (ρ A : ℝ →
     (qp Wt Ct : ℝ → Fin N → Fin N → ℝ) (i j : Fin N) : ℝ → ℝ → ℝ :=
   fun K r => baxterConvCore z (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j r
 
-/-! ### The Stage-3 convolution identity (the sympy-backed seam axiom) -/
+/-! ### The Stage-3 convolution identity — now a PROVED THEOREM (not an axiom)
 
-/-- ⭐ **BRK.13 seam — the Stage-3 convolution identity.**  In the orientation `σ_j ≤ σ_i` (row =
-larger diameter), the physical Baxter-convolution core equals the closed form `matCoreUneq` on the
-two open pieces of the core interval `(0, σ_ij)` (i.e. off the endpoints and the interior breakpoint
-`|λ_ij|`).  This is MSAEMIX.4 Stage 3, validated to `1e-14` (`verify_{inner,outer}.py`); it is the
-real-space analog of the k-space `matExactMSAUnequalDiam_hcore`, and the single input that closes
-BRK about the physical core. -/
-axiom baxterConvCore_eq_matCoreUneq (z : ℝ) (ρ σ A : Fin N → ℝ)
-    (qp Wt Ct : Fin N → Fin N → ℝ) (i j : Fin N) (hori : σ j ≤ σ i) :
-    Set.EqOn (baxterConvCore z ρ σ A qp Wt Ct i j)
-      (fun r => matCoreUneq z ρ σ A qp Wt Ct i j r)
-      (Set.Ioo 0 (lamA σ i j) ∪ Set.Ioo (lamA σ i j) (edgeHi σ i j))
-
-/-! ### BRK closed about the physical core -/
-
-/-- ⭐ **BRK closed (value level, physical core).**  With the Stage-3 seam supplied, the physical
-exact-MSA core `baxterConvCore` is `ContDiffOn ℝ ⊤` on all of `(0, σ_ij)` except at the single
-interior breakpoint `|λ_ij|`, which MSAEMIX.5 pins as the unique `σ_l`-free interior crossing. -/
-theorem baxterConvCore_smooth_off_unique_breakpoint (z : ℝ) (ρ σ A : Fin N → ℝ)
-    (qp Wt Ct : Fin N → Fin N → ℝ) (i j : Fin N)
-    (hi : 0 < σ i) (hj : 0 < σ j) (hne : σ i ≠ σ j) (hori : σ j ≤ σ i) :
-    lamA σ i j ∈ Set.Ioo (0 : ℝ) (edgeHi σ i j)
-    ∧ ContDiffOn ℝ ⊤ (baxterConvCore z ρ σ A qp Wt Ct i j) (Set.Ioo 0 (lamA σ i j))
-    ∧ ContDiffOn ℝ ⊤ (baxterConvCore z ρ σ A qp Wt Ct i j)
-        (Set.Ioo (lamA σ i j) (edgeHi σ i j)) :=
-  let hEq := baxterConvCore_eq_matCoreUneq z ρ σ A qp Wt Ct i j hori
-  exactCore_smooth_off_unique_breakpoint_of_eqOn z ρ σ A qp Wt Ct i j
-    (baxterConvCore z ρ σ A qp Wt Ct i j)
-    (hEq.mono Set.subset_union_left) (hEq.mono Set.subset_union_right) hi hj hne
-
-/-- ⭐ **BRK closed (all orders, inner piece, physical core).**  Every `K`-derivative of the physical
-core `baxterConvCoreK` is `ContDiffOn ℝ ⊤` on `(0, |λ_ij|)`: the amplitudes are `ContDiff` in `K`,
-and the Stage-3 identity carries BRK's abstract all-orders smoothness to the physical object. -/
-theorem baxterConvCoreK_paramDeriv_contDiffOn_inner (z : ℝ) (σ : Fin N → ℝ) (ρ A : ℝ → Fin N → ℝ)
-    (qp Wt Ct : ℝ → Fin N → Fin N → ℝ) (i j : Fin N)
-    (hρ : ∀ l, ContDiff ℝ ⊤ (fun K => ρ K l)) (hA : ∀ l, ContDiff ℝ ⊤ (fun K => A K l))
-    (hqp : ∀ a b, ContDiff ℝ ⊤ (fun K => qp K a b)) (hWt : ∀ a b, ContDiff ℝ ⊤ (fun K => Wt K a b))
-    (hCt : ∀ a b, ContDiff ℝ ⊤ (fun K => Ct K a b)) (hori : σ j ≤ σ i) (n : ℕ) (K₀ : ℝ) :
-    ContDiffOn ℝ ⊤ (fun r => iteratedDeriv n (fun K => baxterConvCoreK z σ ρ A qp Wt Ct i j K r) K₀)
-      (Set.Ioo 0 (lamA σ i j)) := by
-  refine (matCoreUneq_paramDeriv_contDiffOn_inner z σ ρ A qp Wt Ct i j hρ hA hqp hWt hCt n K₀).congr
-    ?_
-  intro r hr
-  have hfun : (fun K => baxterConvCoreK z σ ρ A qp Wt Ct i j K r)
-      = (fun K => matCoreUneq z (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j r) := by
-    funext K
-    simpa [baxterConvCoreK] using
-      baxterConvCore_eq_matCoreUneq z (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j hori
-        (Set.mem_union_left _ hr)
-  rw [hfun]
-
-/-- ⭐ **BRK closed (all orders, outer piece, physical core).**  Same as the inner piece, on
-`(|λ_ij|, σ_ij)`. -/
-theorem baxterConvCoreK_paramDeriv_contDiffOn_outer (z : ℝ) (σ : Fin N → ℝ) (ρ A : ℝ → Fin N → ℝ)
-    (qp Wt Ct : ℝ → Fin N → Fin N → ℝ) (i j : Fin N)
-    (hρ : ∀ l, ContDiff ℝ ⊤ (fun K => ρ K l)) (hA : ∀ l, ContDiff ℝ ⊤ (fun K => A K l))
-    (hqp : ∀ a b, ContDiff ℝ ⊤ (fun K => qp K a b)) (hWt : ∀ a b, ContDiff ℝ ⊤ (fun K => Wt K a b))
-    (hCt : ∀ a b, ContDiff ℝ ⊤ (fun K => Ct K a b)) (hori : σ j ≤ σ i) (n : ℕ) (K₀ : ℝ) :
-    ContDiffOn ℝ ⊤ (fun r => iteratedDeriv n (fun K => baxterConvCoreK z σ ρ A qp Wt Ct i j K r) K₀)
-      (Set.Ioo (lamA σ i j) (edgeHi σ i j)) := by
-  refine (matCoreUneq_paramDeriv_contDiffOn_outer z σ ρ A qp Wt Ct i j hρ hA hqp hWt hCt n K₀).congr
-    ?_
-  intro r hr
-  have hfun : (fun K => baxterConvCoreK z σ ρ A qp Wt Ct i j K r)
-      = (fun K => matCoreUneq z (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j r) := by
-    funext K
-    simpa [baxterConvCoreK] using
-      baxterConvCore_eq_matCoreUneq z (ρ K) σ (A K) (qp K) (Wt K) (Ct K) i j hori
-        (Set.mem_union_right _ hr)
-  rw [hfun]
+The identity `baxterConvCore = matCoreUneq` (BRK.16) is DERIVED in Lean, std-3, in
+`MSAMixtureBreakpointConvDirect.lean` (`baxterConvCore_eq_matCoreUneq_proved`), together with the
+physical-core capstones (`baxterConvCore_smooth_off_unique_breakpoint`,
+`baxterConvCoreK_paramDeriv_contDiffOn_{inner,outer}`).  This file now supplies only the DEFINITIONS
+(`baxterQ`, `baxterQ'`, `baxterConvCore`, `baxterConvCoreK`); the former sympy-backed seam axiom and
+its consumers moved downstream and are retired. -/
 
 end FMSA.ExactMSA.Breakpoint

@@ -172,6 +172,8 @@ import LeanCode.YukawaOZMix.MSAMixtureFactorization
 import LeanCode.YukawaOZMix.MSAMixtureConcrete
 import LeanCode.YukawaOZMix.MSAMixtureBreakpointOrders
 import LeanCode.YukawaOZMix.MSAMixtureBreakpointScheme
+import LeanCode.YukawaOZMix.MSAMixtureBreakpointInduction
+import LeanCode.YukawaOZMix.MSAMixtureBreakpointConvDirect
 import LeanCode.YukawaOZMix.MixtureClosedForm
 import LeanCode.YukawaOZMix.MixtureConvolution
 import LeanCode.YukawaOZMix.MixtureDCFSmooth
