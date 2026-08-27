@@ -954,6 +954,9 @@ ALREADY EXIST as the concurrent session's `MixtureRealSpace.lean` (`integral_pol
     `{e^(zσᵢ/2),e^(zσⱼ/2),e^(zr)}`).
   - ✅ `baxterConvCore_eq_matCoreUneq_proved` — the AXIOM DERIVED (`#print axioms` = std-3).  Physical
     hyps `z>0`, `σ≥0`, `σ_j>0` explicit (axiom left them implicit).  **BRK.16 axiom-free path CLOSED.**
-  - ☐ (bookkeeping only) delete the `axiom` keyword in `MSAMixtureBaxterConv.lean` by rewiring its
-    in-file consumers (`baxterConvCore_smooth_off_unique_breakpoint`, K-order) to the proved theorem
-    (thread the extra physical hyps) — a mechanical refactor of a shared file.
+  - ✅ AXIOM RETIRED (commit `3904769`): deleted `axiom baxterConvCore_eq_matCoreUneq` + its 3
+    in-file consumers from `MSAMixtureBaxterConv.lean` (now a plain definitions module); moved the
+    consumers (`baxterConvCore_smooth_off_unique_breakpoint`, `baxterConvCoreK_paramDeriv_contDiffOn_
+    {inner,outer}`) downstream to `MSAMixtureBreakpointConvDirect.lean` rewired to `…_proved` (physical
+    hyps threaded), all std-3; removed the redundant out-of-default `MSAMixtureBaxterConvCertificate`
+    lakefile lib.  Full `lake build` GREEN, zero sympy/physics axioms reachable.  **BRK.16 fully done.**
