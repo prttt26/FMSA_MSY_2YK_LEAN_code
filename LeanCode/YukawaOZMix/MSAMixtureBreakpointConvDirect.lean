@@ -1028,4 +1028,134 @@ theorem perL_conv_outer (z : ℝ) (hz : 0 < z) (σ A : Fin N → ℝ) (qp Wt Ct 
   field_simp
   ring
 
+/-! ### BRK.16b — the WRAP: `baxterConvCore = matCoreUneq` (retires the sympy axiom)
+
+`gForm`-linearity (`gForm_split_inner/_outer`, `gForm_sum_inner`, `gForm_sum`) splits the `g` of
+`g` into the `−Q'_ij` diagonal (`neg_baxterQ'_eq_diag`) + the `∑_l ρ_l` term, which `perL_conv`
+supplies (per-`l`, with the perL-target ⇔ matCoreUneq-bracket exp-normalization in the
+`{e^(zσᵢ/2),e^(zσⱼ/2),e^(zr)}` atoms).  Result: the physical core equals the closed form, std-3. -/
+
+
+theorem gForm_split_inner (a0 s0 a1 s1 aEm sEm sEp z r : ℝ) :
+    gForm (a0 + s0) (a1 + s1) 0 0 0 (aEm + sEm) sEp z r
+      = gForm a0 a1 0 0 0 aEm 0 z r + gForm s0 s1 0 0 0 sEm sEp z r := by
+  simp only [gForm]; ring
+
+theorem gForm_sum_inner (ρ f0 f1 fEm fEp : Fin N → ℝ) (z r : ℝ) :
+    gForm (∑ l, ρ l * f0 l) (∑ l, ρ l * f1 l) 0 0 0 (∑ l, ρ l * fEm l) (∑ l, ρ l * fEp l) z r
+      = ∑ l, ρ l * gForm (f0 l) (f1 l) 0 0 0 (fEm l) (fEp l) z r := by
+  simp only [gForm, mul_zero, add_zero, zero_mul, mul_add, ← mul_assoc, Finset.sum_add_distrib,
+    ← Finset.sum_mul]
+
+set_option maxHeartbeats 2000000 in
+theorem numerator_inner (z : ℝ) (hz : 0 < z) (ρ σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ)
+    (i j : Fin N) (r : ℝ) (hσ : ∀ i, 0 ≤ σ i) (hjpos : 0 < σ j) (hori : σ j ≤ σ i)
+    (hr0 : 0 < r) (hrlam : r < lamA σ i j) (hlo : edgeLo σ i j ≤ r) (hhi : r ≤ edgeHi σ i j) :
+    -baxterQ' z σ A qp Wt Ct i j r
+        + ∑ l, ρ l * ∫ (t : ℝ), baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t
+      = gForm (cC0i z ρ σ A qp Wt Ct i j) (cC1i z ρ σ A qp Wt Ct i j) 0 0 0
+          (cEmi z ρ σ A qp Wt Ct i j) (cEpi z ρ σ A qp Wt Ct i j) z r := by
+  simp only [cC0i, cC1i, cEmi, cEpi]
+  rw [gForm_split_inner, gForm_sum_inner, neg_baxterQ'_eq_diag z σ A qp Wt Ct i j r hlo hhi]
+  congr 1
+  · simp only [gForm]; ring
+  · refine Finset.sum_congr rfl (fun l _ => ?_)
+    rw [perL_conv_inner z hz σ A qp Wt Ct i j l r hσ hjpos hori hr0 hrlam]
+    simp only [gForm]
+    set P := Real.exp (z * σ i / 2) with hP
+    set Q := Real.exp (z * σ j / 2) with hQ
+    set Er := Real.exp (z * r) with hEr
+    have e0 : Real.exp (-σ i * z / 2) = P⁻¹ := by simp only [hP, ← Real.exp_neg]; congr 1; ring
+    have e1 : Real.exp (-σ j * z / 2) = Q⁻¹ := by simp only [hQ, ← Real.exp_neg]; congr 1; ring
+    have e2 : Real.exp (σ j * z / 2) = Q := by rw [hQ]; congr 1; ring
+    have e3 : Real.exp (-z * r) = Er⁻¹ := by simp only [hEr, ← Real.exp_neg]; congr 1; ring
+    have e4 : Real.exp (σ j * z) = Q * Q := by simp only [hQ, ← Real.exp_add]; congr 1; ring
+    have e5 : Real.exp (-z * (σ i + σ j) / 2) = P⁻¹ * Q⁻¹ := by
+      simp only [hP, hQ, ← Real.exp_neg, ← Real.exp_add]; congr 1; ring
+    have e6 : Real.exp (-z * (σ i - σ j) / 2) = P⁻¹ * Q := by
+      simp only [hP, hQ, ← Real.exp_neg, ← Real.exp_add]; congr 1; ring
+    rw [e0, e1, e2, e3, e4, e5, e6]
+    have hP0 : P ≠ 0 := by rw [hP]; exact Real.exp_ne_zero _
+    have hQ0 : Q ≠ 0 := by rw [hQ]; exact Real.exp_ne_zero _
+    field_simp
+    ring
+
+theorem gForm_split_outer (a0 s0 a1 s1 s2 s3 s4 aEm sEm sEp z r : ℝ) :
+    gForm (a0 + s0) (a1 + s1) s2 s3 s4 (aEm + sEm) sEp z r
+      = gForm a0 a1 0 0 0 aEm 0 z r + gForm s0 s1 s2 s3 s4 sEm sEp z r := by
+  simp only [gForm]; ring
+
+theorem gForm_sum (ρ f0 f1 f2 f3 f4 fEm fEp : Fin N → ℝ) (z r : ℝ) :
+    gForm (∑ l, ρ l * f0 l) (∑ l, ρ l * f1 l) (∑ l, ρ l * f2 l) (∑ l, ρ l * f3 l)
+        (∑ l, ρ l * f4 l) (∑ l, ρ l * fEm l) (∑ l, ρ l * fEp l) z r
+      = ∑ l, ρ l * gForm (f0 l) (f1 l) (f2 l) (f3 l) (f4 l) (fEm l) (fEp l) z r := by
+  simp only [gForm, mul_zero, add_zero, zero_mul, mul_add, ← mul_assoc, Finset.sum_add_distrib,
+    ← Finset.sum_mul]
+
+set_option maxHeartbeats 2000000 in
+theorem numerator_outer (z : ℝ) (hz : 0 < z) (ρ σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ)
+    (i j : Fin N) (r : ℝ) (hσ : ∀ i, 0 ≤ σ i) (hjpos : 0 < σ j) (hori : σ j ≤ σ i)
+    (hr0 : 0 < r) (hrlam : lamA σ i j < r) (hrsig : r < edgeHi σ i j)
+    (hlo : edgeLo σ i j ≤ r) (hhi : r ≤ edgeHi σ i j) :
+    -baxterQ' z σ A qp Wt Ct i j r
+        + ∑ l, ρ l * ∫ (t : ℝ), baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t
+      = gForm (cC0o z ρ σ A qp Wt Ct i j) (cC1o z ρ σ A qp Wt Ct i j) (cC2o z ρ σ A qp Wt Ct i j)
+          (cC3o z ρ σ A qp Wt Ct i j) (cC4o z ρ σ A qp Wt Ct i j) (cEmo z ρ σ A qp Wt Ct i j)
+          (cEpo z ρ σ A qp Wt Ct i j) z r := by
+  simp only [cC0o, cC1o, cC2o, cC3o, cC4o, cEmo, cEpo]
+  rw [gForm_split_outer, gForm_sum, neg_baxterQ'_eq_diag z σ A qp Wt Ct i j r hlo hhi]
+  congr 1
+  · simp only [gForm]; ring
+  · refine Finset.sum_congr rfl (fun l _ => ?_)
+    rw [perL_conv_outer z hz σ A qp Wt Ct i j l r hσ hjpos hori hr0 hrlam hrsig]
+    simp only [gForm]
+    set P := Real.exp (z * σ i / 2) with hP
+    set Q := Real.exp (z * σ j / 2) with hQ
+    set Er := Real.exp (z * r) with hEr
+    have e0 : Real.exp (-σ i * z / 2) = P⁻¹ := by simp only [hP, ← Real.exp_neg]; congr 1; ring
+    have e1 : Real.exp (-σ j * z / 2) = Q⁻¹ := by simp only [hQ, ← Real.exp_neg]; congr 1; ring
+    have e2 : Real.exp (σ j * z / 2) = Q := by rw [hQ]; congr 1; ring
+    have e2b : Real.exp (σ i * z / 2) = P := by rw [hP]; congr 1; ring
+    have e3 : Real.exp (-z * r) = Er⁻¹ := by simp only [hEr, ← Real.exp_neg]; congr 1; ring
+    have e4 : Real.exp (σ j * z) = Q * Q := by simp only [hQ, ← Real.exp_add]; congr 1; ring
+    have e5 : Real.exp (-z * (σ i + σ j) / 2) = P⁻¹ * Q⁻¹ := by
+      simp only [hP, hQ, ← Real.exp_neg, ← Real.exp_add]; congr 1; ring
+    have e6 : Real.exp (-z * (σ i - σ j) / 2) = P⁻¹ * Q := by
+      simp only [hP, hQ, ← Real.exp_neg, ← Real.exp_add]; congr 1; ring
+    have e7 : Real.exp (z * (σ i - σ j) / 2) = P * Q⁻¹ := by
+      simp only [hP, hQ, ← Real.exp_neg, ← Real.exp_add]; congr 1; ring
+    rw [e0, e1, e2, e2b, e3, e4, e5, e6, e7]
+    have hP0 : P ≠ 0 := by rw [hP]; exact Real.exp_ne_zero _
+    have hQ0 : Q ≠ 0 := by rw [hQ]; exact Real.exp_ne_zero _
+    field_simp
+    ring
+
+/-- ⭐ **BRK.16 CAPSTONE — the axiom `baxterConvCore_eq_matCoreUneq`, now a THEOREM (std-3).**
+The physical Baxter-convolution core equals the closed form `matCoreUneq` on the two open core
+pieces, derived from `perL_conv_inner`/`perL_conv_outer` + the diagonal + gForm-linearity — no
+sympy axiom.  (Physical hypotheses `z>0`, `σ≥0`, `σ_j>0` made explicit; the axiom left them
+implicit.) -/
+theorem baxterConvCore_eq_matCoreUneq_proved (z : ℝ) (hz : 0 < z) (ρ σ A : Fin N → ℝ)
+    (qp Wt Ct : Fin N → Fin N → ℝ) (i j : Fin N) (hσ : ∀ i, 0 ≤ σ i) (hjpos : 0 < σ j)
+    (hori : σ j ≤ σ i) :
+    Set.EqOn (baxterConvCore z ρ σ A qp Wt Ct i j)
+      (fun r => matCoreUneq z ρ σ A qp Wt Ct i j r)
+      (Set.Ioo 0 (lamA σ i j) ∪ Set.Ioo (lamA σ i j) (edgeHi σ i j)) := by
+  intro r hr
+  show baxterConvCore z ρ σ A qp Wt Ct i j r = matCoreUneq z ρ σ A qp Wt Ct i j r
+  have hlo : edgeLo σ i j ≤ r := by
+    rcases hr with h | h
+    · unfold edgeLo; linarith [h.1]
+    · have hr0 : 0 < r := lt_of_le_of_lt (by unfold lamA; positivity) h.1
+      unfold edgeLo; linarith
+  unfold baxterConvCore matCoreUneq
+  rcases hr with hin | hout
+  · have hhi : r ≤ edgeHi σ i j := by
+      have h2 := hin.2; rw [lamA_eq_of_le σ i j hori] at h2; unfold edgeHi; linarith [hσ j]
+    rw [if_pos (le_of_lt hin.2),
+      numerator_inner z hz ρ σ A qp Wt Ct i j r hσ hjpos hori hin.1 hin.2 hlo hhi]
+  · rw [if_neg (not_le.mpr hout.1),
+      numerator_outer z hz ρ σ A qp Wt Ct i j r hσ hjpos hori
+        (lt_of_le_of_lt (by unfold lamA; positivity) hout.1) hout.1 hout.2 hlo hout.2.le]
+
 end FMSA.ExactMSA.Breakpoint
