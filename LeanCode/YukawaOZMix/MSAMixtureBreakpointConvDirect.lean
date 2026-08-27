@@ -293,6 +293,20 @@ theorem edgeHi_sub_r_lt_edgeHi_outer (σ : Fin N → ℝ) (i j l : Fin N) (r : �
     (hori : σ j ≤ σ i) (hr : lamA σ i j < r) : edgeHi σ i l - r < edgeHi σ j l := by
   rw [lamA_eq_of_le σ i j hori] at hr; unfold edgeHi; linarith
 
+/-- `Li − r < Lj`: `Q'_il`'s support-edge (shifted) is left of `Q_jl`'s support-edge (`r > 0`,
+`σ_j ≤ σ_i`), so on `[Lj,∞)` the `Q'_il(·+r)` factor is already past its support edge. -/
+theorem edgeLo_sub_r_lt_edgeLo (σ : Fin N → ℝ) (i j l : Fin N) (r : ℝ) (hori : σ j ≤ σ i)
+    (hr0 : 0 < r) : edgeLo σ i l - r < edgeLo σ j l := by unfold edgeLo; linarith
+
+/-- `∫` over `Icc a b` as an interval integral (`a ≤ b`). -/
+theorem setIntegral_Icc_eq_uIcc (f : ℝ → ℝ) (a b : ℝ) (h : a ≤ b) :
+    (∫ t in Icc a b, f t) = ∫ t in a..b, f t := by
+  rw [MeasureTheory.integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le h]
+
+/-- `∫` over `Ioc a b` as an interval integral (`a ≤ b`). -/
+theorem setIntegral_Ioc_eq_uIcc (f : ℝ → ℝ) (a b : ℝ) (h : a ≤ b) :
+    (∫ t in Ioc a b, f t) = ∫ t in a..b, f t := (intervalIntegral.integral_of_le h).symm
+
 /-! ### BRK.16b part (b) — the interval-integral primitives (reusable, generic)
 
 The 3-way split of `∫` over `[a,∞)`, and the elementary interval integrals the per-region evaluation
