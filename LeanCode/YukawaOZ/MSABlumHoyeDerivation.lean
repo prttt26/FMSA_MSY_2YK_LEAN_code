@@ -371,4 +371,33 @@ theorem bhF_eq_one_sub_dressed_moment (xi z Dt G : ℝ) (hz : z ≠ 0) (hxi : (1
   field_simp
   ring
 
+/-! ### Phase 2 — the σ-continuity linear system (Blum–Høye Eqs. 17/18)
+
+Phase 0 (`proof_notes_leg3_bh_phase0.md`) pinned the exact Baxter function and identified the two
+core-matching equations Blum–Høye (17)/(18) — the constant- and `r`-coefficient match of the OZ
+equation (9) at `r < σ`, whose 2×2 solution is the dressed `(A, q') = (msaA, msaQp)` (Eqs. 23/24).
+These two lemmas discharge the **linear-algebra half** of Phase 2: the dressed coefficients
+*satisfy* that continuity system (`B = q' − A` from Eq. 14, `M = Dt·Mtil`, `N = Dt·Ntil`, `σ = 1`).
+They reduce to `field_simp; ring`; the base (`M=N=0`) case is the PY identity `(1−4ξ)A⁰−6ξB⁰ = 2π`,
+`2π(1−ξ)²/(1−ξ)²`.  (The remaining half — *deriving* (17)/(18) from the OZ equation (9) itself —
+needs the real-space OZ integral equation, tracked separately.) -/
+
+/-- **Blum–Høye continuity system, Eq. (17)** (σ = 1, `B = q' − A` via Eq. 14).  The dressed Baxter
+coefficients satisfy the first core-matching equation: `(1−4ξ)A − 6ξB = 2π(1+M)`, `M = Dt·Mtil`. -/
+theorem msaCoeff_continuity_17 (xi z Dt G : ℝ) (hz : z ≠ 0) (hxi : (1 - xi) ≠ 0) :
+    (1 - 4 * xi) * msaA xi z Dt G - 6 * xi * (msaQp xi z Dt G - msaA xi z Dt G)
+      = 2 * π * (1 + Dt * Mtil xi z G) := by
+  simp only [msaA, msaQp, Mtil, Ntil, gam, qp0, bA0, bB0, rhoOf]
+  field_simp
+  ring
+
+/-- **Blum–Høye continuity system, Eq. (18)** (σ = 1).  The second core-matching equation:
+`(3/2)ξA + (1+2ξ)B = 2πN`, `N = Dt·Ntil`. -/
+theorem msaCoeff_continuity_18 (xi z Dt G : ℝ) (hz : z ≠ 0) (hxi : (1 - xi) ≠ 0) :
+    (3 / 2) * xi * msaA xi z Dt G + (1 + 2 * xi) * (msaQp xi z Dt G - msaA xi z Dt G)
+      = 2 * π * (Dt * Ntil xi z G) := by
+  simp only [msaA, msaQp, Mtil, Ntil, gam, qp0, bA0, bB0, rhoOf]
+  field_simp
+  ring
+
 end FMSA.ExactMSA
