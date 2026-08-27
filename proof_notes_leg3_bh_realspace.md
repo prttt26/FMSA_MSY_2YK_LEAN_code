@@ -66,7 +66,12 @@ machinery + a few gap lemmas suffice, and whether γ/M/N are *derivable* from th
 conditions or are themselves irreducible transcriptions (relocating vs eliminating the spec
 boundary). Either outcome is worth knowing before committing to Phases 1–6.
 
-**Key references:** `MSABlumHoyeDerivation.lean` (M1–M4), `MSABlumHoyeSystem.lean` (`gam`/`Mtil`/
+**g-side (Eq. 9) spec for `h33` + the coefficient equations:**
+[`proof_notes_leg3_bh_gside_eq9.md`](proof_notes_leg3_bh_gside_eq9.md) — exact BH Eqs (8)–(36)
+transcribed from source, the roadmap, and the ⚠ measured caveat that BH's printed (33)/(34) ≠ repo
+`h33` off-manifold (so `h33` must be derived through the repo normalization, not by transcription).
+
+**Key references:** `MSABlumHoyeDerivation.lean` (M1–M4 + Phase 4), `MSABlumHoyeSystem.lean` (`gam`/`Mtil`/
 `Ntil`/`tailtil`/`bhF`/`bhP`/`bh_base_eq`), `MSABaxterKSpace.lean` (`msaA`/`msaQp`), `MSAFullFactorization.lean`
 (`exactMSA_factorization`, the wire-in target), `HardSphere/BaxterRealSpace.lean`
 (`baxter_factorization_inner` template), `lecture_notes_OZ_Yukawa_poly.pdf`, BH-mixture PDF in
