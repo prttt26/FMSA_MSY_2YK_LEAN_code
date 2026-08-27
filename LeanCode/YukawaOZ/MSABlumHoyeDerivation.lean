@@ -400,4 +400,36 @@ theorem msaCoeff_continuity_18 (xi z Dt G : ℝ) (hz : z ≠ 0) (hxi : (1 - xi) 
   field_simp
   ring
 
+/-! ### Phase 3 (building block) — the C-exp basis Laplace moment
+
+Phase 0 pinned the exact Baxter function's continuity-enforcing exponential piece
+`C·(e^{−zr} − e^{−zσ})` (Blum–Høye Eq. 11), whose Laplace moment is the physical origin of the
+`G`-entangled `tailtil` (via `C` ← the RDF moment through Eq. 27).  This lemma computes that basis
+moment in closed form; assembling it into `Dt·ρ·tailtil` still needs the exact `C ↔ (Dt, G)`
+relation (Eq. 27 + the `ĝ(z) ↔ G` normalization), part of the OZ derivation (not yet pinned — a
+first numerical assembly with a guessed normalization did not match). -/
+
+/-- **The C-exp basis Laplace moment.**  `∫₀¹ (e^{−zt} − e^{−z})·e^{−zt} dt = (1−e^{−z})²/(2z)`.
+The one-sided moment of the exact Baxter function's continuity term `(e^{−zr} − e^{−zσ})`, `σ=1`. -/
+theorem cexp_basis_laplace_moment {z : ℝ} (hz : z ≠ 0) :
+    ∫ t in (0:ℝ)..1, (Real.exp (-z * t) - Real.exp (-z)) * Real.exp (-z * t)
+      = (1 - Real.exp (-z)) ^ 2 / (2 * z) := by
+  have key : ∀ t : ℝ, HasDerivAt
+      (fun t => -(Real.exp (-z * t) ^ 2 / (2 * z)) + Real.exp (-z) / z * Real.exp (-z * t))
+      ((Real.exp (-z * t) - Real.exp (-z)) * Real.exp (-z * t)) t := by
+    intro t
+    have hg : HasDerivAt (fun t => Real.exp (-z * t)) (Real.exp (-z * t) * -z) t := by
+      have h : HasDerivAt (fun t => -z * t) (-z) t := by
+        simpa using (hasDerivAt_id t).const_mul (-z)
+      exact h.exp
+    have hF := (((hg.pow 2).div_const (2 * z)).neg).add (hg.const_mul (Real.exp (-z) / z))
+    refine hF.congr_deriv ?_
+    field_simp
+    ring
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun t _ => key t)
+        (by apply Continuous.intervalIntegrable; fun_prop)]
+  simp only [mul_one, mul_zero, Real.exp_zero, one_pow]
+  field_simp
+  ring
+
 end FMSA.ExactMSA
