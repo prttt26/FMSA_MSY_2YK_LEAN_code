@@ -4,6 +4,24 @@ Lean 4 + Mathlib formalization of the First-order Mean Spherical Approximation (
 fluids with Yukawa interaction tails, covering both the hard-sphere Yukawa (HSY) and
 two-Yukawa-tail (2YK) cases.
 
+## Project organization — four content tracks
+
+The development is organized around four logical tracks. Each *claim* track carries a scope + axiom
+gate `.lean` file (a `#guard_msgs`-checked ledger of what it proves and its exact axiom footprint —
+the build fails if either drifts) and a task-status file; the **Foundations** track is depended-upon
+by all three claim tracks and therefore has no gate file of its own.
+
+| Track | What it is | Task status | Scope gate | Dominant `LeanCode/` layers |
+|---|---|---|---|---|
+| **Foundations** (非闭包依赖基础) | HS / OZ / Baxter / Wiener–Hopf / thermodynamics infrastructure, independent of *which* closure | [todo_foundations.md](todo_foundations.md) | — (depended-upon) | L0 `Analysis/`, `FMSAPoly/` · L1 `HardSphere/` · L2 `HSMixture/` · `FreeEnergy/` |
+| **FMSA** | the FMSA-DP first-order DCF/RDF construction | [todo_fmsa.md](todo_fmsa.md) | [FMSAProject.lean](LeanCode/FMSAProject.lean) | L3 `YukawaOZ/` · L4 `YukawaOZMix/` |
+| **Exact MSA** (+ FMSA↔Exact-MSA bridge) | Waisman/Blum–Høye/Ginoza exact closed form; the FOEQ / MSAFAM / leg-3 bridge; the BRK mixture core (axiom-free) | [todo_exact_msa.md](todo_exact_msa.md) | [ExactMSAProject.lean](LeanCode/ExactMSAProject.lean) | L3/L4 + L5 `Closures/` |
+| **Other closures** (其他闭包) | PYE (`pullback_passes=0` ≡ first-order PY); HNCB | [todo_closures_other.md](todo_closures_other.md) | [ClosuresProject.lean](LeanCode/ClosuresProject.lean) | L5 `Closures/` |
+
+`todo_lean.md` remains the thin top-level index (layer map + project-wide axiom/sorry ledger +
+category index → the four task files above). Detailed per-group proof records live in the
+`proof_notes_*.md` cluster (see the Structure section).
+
 ## What this repository proves
 
 The proofs are organized around the derivation of the direct correlation function (DCF)
@@ -94,8 +112,17 @@ authoritative group↔file map):
   proof_notes_failures.md    — Groups chsY, P, GA (method-failure analysis)
   proof_notes_free_energy.md — Groups F, FW (free energy; White-Bear FMT/BMCSL)
 
+Scope + axiom gates — one #guard_msgs-checked ledger per claim track (see "four content tracks"):
+  LeanCode/FMSAProject.lean     — FMSA-DP first-order construction (the paper's chain)
+  LeanCode/ExactMSAProject.lean — exact MSA closed form + FMSA↔ExactMSA bridge (FOEQ/MSAFAM/BRK)
+  LeanCode/ClosuresProject.lean — PYE / HNCB (the non-FMSA, non-exact-MSA closures)
+
 Reference:
-  todo_lean.md   — task status index (open sorries, axioms, completed/started tasks)
+  todo_lean.md          — thin top-level index: layer map, project-wide axiom/sorry ledger, category index
+  todo_foundations.md   — task status: Foundations track (非闭包依赖基础)
+  todo_fmsa.md          — task status: FMSA track
+  todo_exact_msa.md     — task status: Exact MSA (+ FMSA↔ExactMSA bridge) track
+  todo_closures_other.md— task status: Other closures track (PYE / HNCB)
   MATH_AXIOMS.md — registry of named mathematical axioms used across the proofs
   CONVENTIONS.md — naming and notation conventions
   to_python.md   — Lean results → Python implications (analysis-session handoff notes)

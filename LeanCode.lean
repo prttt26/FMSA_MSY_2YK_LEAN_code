@@ -229,11 +229,12 @@ import LeanCode.Closures.FirstOrderEquivalence
 import LeanCode.Closures.MSASolutionFamily
 import LeanCode.Closures.MSAFamilyConcrete
 
--- The FMSA-DP paper's scope and axiom gate.  Imported last, and deliberately:
--- it contains no mathematics, only #guard_msgs blocks asserting the axiom set of
--- each result the paper cites.  `lake build` therefore FAILS if the paper's
--- central verification claim stops being true, instead of that being discovered
--- by re-auditing the ledger by hand.
+-- Scope + axiom gates, one per claim track (see README "four content tracks").  Imported last,
+-- and deliberately: they contain no mathematics, only #guard_msgs blocks asserting the axiom set of
+-- each result the track cites.  `lake build` therefore FAILS if a track's central verification claim
+-- stops being true, instead of that being discovered by re-auditing the ledger by hand.
 --
--- If a guard here fails, the fix is normally the PAPER, not the guard.
+-- If a guard here fails, the fix is normally the CLAIM (paper / track ledger), not the guard.
 import LeanCode.FMSAProject
+import LeanCode.ExactMSAProject
+import LeanCode.ClosuresProject
