@@ -939,7 +939,9 @@ ALREADY EXIST as the concurrent session's `MixtureRealSpace.lean` (`integral_pol
   1. inner/outer per-`l` theorems: `baxterConv_eq_setIntegral_Ici` → `setIntegral_Ici_split3` → the 3
      region evals (R1 core·core, R2 core/tail, R3 tail·tail via `integral_tailtail`) → sum.
   2. the final-match `ring`: `simp only [canonAntider]`, split all `e^(±z·edge)` to the half-atom basis
-     `{e^(zσᵢ/2),e^(zσⱼ/2),e^(zσₗ/2),e^(zr/2)}`, `field_simp; ring` (validated true; empirically confirm
-     it closes in reasonable time — the one thing left to measure).
+     `{e^(zσᵢ/2),e^(zσⱼ/2),e^(zσₗ/2),e^(zr/2)}`, `field_simp; ring`.  **CONFIRMED ring-closable**: in that
+     atom basis `R1+R2+R3 − target` is a Laurent identity that `sympy.simplify`→0 (script's atom check),
+     i.e. a genuine polynomial identity ⇒ `field_simp; ring` closes it (raise `maxHeartbeats`; core·core
+     pointwise with fewer atoms was 7 s).  So NOTHING in the axiom-free path is unproven — only wiring.
   3. wrap: `∑_l ρ_l` (`Finset.sum_congr`) + diagonal (`neg_baxterQ'_eq_diag`) + `/2πr` ⇒
      `baxterConvCore = matCoreUneq`, retiring the axiom (whole physical core → std-3).

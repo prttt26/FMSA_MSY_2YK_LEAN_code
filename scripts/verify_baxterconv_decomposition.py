@@ -86,10 +86,31 @@ def outer_target():
             + cEmo*sp.exp(-z*r) + cEpo*sp.exp(z*r))
 
 
+
+
+def atom_basis_check():
+    """The final-match `ring` feasibility: R1+R2+R3 - inner_target, with every exp rewritten to the
+    half-atom basis {Ei=e^(zσi/2), Ej, El, Er=e^(zr/2)}, is a Laurent identity that simplifies to 0
+    (a genuine polynomial identity), so Lean `field_simp; ring` closes the assembly's final match."""
+    import sympy as _sp
+    Ei, Ej, El, Er = _sp.symbols('Ei Ej El Er', positive=True)
+    diff = _sp.expand(inner_conv() - inner_target())
+    subs = {}
+    for at in diff.atoms(_sp.exp):
+        arg = _sp.expand(at.args[0])
+        pi = _sp.nsimplify(arg.coeff(si) / (z / 2)); pj = _sp.nsimplify(arg.coeff(sj) / (z / 2))
+        pl = _sp.nsimplify(arg.coeff(sl) / (z / 2)); pr = _sp.nsimplify(arg.coeff(r) / (z / 2))
+        subs[at] = Ei**pi * Ej**pj * El**pl * Er**pr
+    return _sp.simplify(_sp.expand(diff.subs(subs)))
+
+
 if __name__ == '__main__':
     di = sp.simplify(inner_conv() - inner_target())
     do = sp.simplify(outer_conv() - outer_target())
     print("INNER diff =", di)
     print("OUTER diff =", do)
     assert di == 0 and do == 0, "decomposition MISMATCH"
-    print("OK: 3-region decomposition == matCoreUneq per-l kernel, both pieces (sigma_l cancels).")
+    ab = atom_basis_check()
+    print("ATOM-BASIS final-match diff =", ab)
+    assert ab == 0, "atom-basis identity MISMATCH"
+    print("OK: decomposition == kernel (both pieces); final match is a ring-closable atom identity.")
