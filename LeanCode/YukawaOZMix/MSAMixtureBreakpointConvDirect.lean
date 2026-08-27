@@ -487,4 +487,46 @@ theorem integral_canonical (a b z c0 c1 c2 c3 d0 d1 d2 K : ℝ) (hz : 0 < z) :
     (fun t _ => canonAntider_hasDerivAt z c0 c1 c2 c3 d0 d1 d2 K hz t)
     (Continuous.intervalIntegrable (by fun_prop) a b)]
 
+/-! ### BRK.16b part (b) — branch-evaluation lemmas (which formula each factor takes per region)
+
+On each region both factors sit in a definite branch; these rewrite `baxterQ`/`baxterQ'(·+r)` to that
+branch's explicit formula, so the region integrand becomes a plain product (fed to `integral_canonical`
+/ `integral_tailtail`).  The region membership + ordering lemmas discharge the branch conditions. -/
+
+/-- `Q_jl(t)` on its core `[edgeLo σ j l, edgeHi σ j l]`. -/
+theorem baxterQ_core_eq (z : ℝ) (σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ) (j l : Fin N)
+    (t : ℝ) (h1 : edgeLo σ j l ≤ t) (h2 : t ≤ edgeHi σ j l) :
+    baxterQ z σ A qp Wt Ct j l t
+      = qp j l * (t - edgeLo σ j l - σ j) + A l / 2 * (t - edgeLo σ j l - σ j) ^ 2
+        + Wt j l * Real.exp (-z * (t - edgeLo σ j l)) + Ct j l := by
+  unfold baxterQ; rw [if_neg (not_lt.mpr h1), if_pos h2]
+
+/-- `Q_jl(t)` on its tail `(edgeHi σ j l, ∞)`. -/
+theorem baxterQ_tail_eq (z : ℝ) (σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ) (j l : Fin N)
+    (t : ℝ) (hσ : ∀ i, 0 ≤ σ i) (h : edgeHi σ j l < t) :
+    baxterQ z σ A qp Wt Ct j l t
+      = Wt j l * Real.exp (-z * (t - edgeLo σ j l))
+        + Ct j l * Real.exp (-z * (t - edgeHi σ j l)) := by
+  have hle : edgeLo σ j l ≤ edgeHi σ j l := by simp only [edgeLo, edgeHi]; linarith [hσ j, hσ l]
+  unfold baxterQ
+  rw [if_neg (by linarith : ¬ t < edgeLo σ j l), if_neg (not_le.mpr h)]
+
+/-- `Q'_il(t+r)` on its core `edgeLo σ i l ≤ t+r ≤ edgeHi σ i l`. -/
+theorem baxterQ'_shift_core_eq (z : ℝ) (σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ)
+    (i l : Fin N) (t r : ℝ) (h1 : edgeLo σ i l ≤ t + r) (h2 : t + r ≤ edgeHi σ i l) :
+    baxterQ' z σ A qp Wt Ct i l (t + r)
+      = qp i l + A l * (t + r - edgeLo σ i l - σ i)
+        - z * Wt i l * Real.exp (-z * (t + r - edgeLo σ i l)) := by
+  unfold baxterQ'; rw [if_neg (not_lt.mpr h1), if_pos h2]
+
+/-- `Q'_il(t+r)` on its tail `edgeHi σ i l < t+r`. -/
+theorem baxterQ'_shift_tail_eq (z : ℝ) (σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ)
+    (i l : Fin N) (t r : ℝ) (hσ : ∀ i, 0 ≤ σ i) (h : edgeHi σ i l < t + r) :
+    baxterQ' z σ A qp Wt Ct i l (t + r)
+      = -z * Wt i l * Real.exp (-z * (t + r - edgeLo σ i l))
+        - z * Ct i l * Real.exp (-z * (t + r - edgeHi σ i l)) := by
+  have hle : edgeLo σ i l ≤ edgeHi σ i l := by simp only [edgeLo, edgeHi]; linarith [hσ i, hσ l]
+  unfold baxterQ'
+  rw [if_neg (by linarith : ¬ t + r < edgeLo σ i l), if_neg (not_le.mpr h)]
+
 end FMSA.ExactMSA.Breakpoint
