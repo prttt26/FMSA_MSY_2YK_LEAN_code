@@ -489,8 +489,8 @@ theorem integral_canonical (a b z c0 c1 c2 c3 d0 d1 d2 K : ℝ) (hz : 0 < z) :
 
 /-! ### BRK.16b part (b) — branch-evaluation lemmas (which formula each factor takes per region)
 
-On each region both factors sit in a definite branch; these rewrite `baxterQ`/`baxterQ'(·+r)` to that
-branch's formula, so the region integrand becomes a plain product (fed to `integral_canonical` /
+On each region both factors sit in a definite branch; these rewrite `baxterQ`/`baxterQ'(·+r)` to
+that branch's formula, so the region integrand is a plain product (fed to `integral_canonical` /
 `integral_tailtail`).  The region membership + ordering lemmas discharge the branch conditions. -/
 
 /-- `Q_jl(t)` on its core `[edgeLo σ j l, edgeHi σ j l]`. -/
