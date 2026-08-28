@@ -108,8 +108,10 @@ but for `h29` the residual was pinned by the exterior closure, while for `h33` n
 
 ## Roadmap for `h33` (the real build)
 
-1. Define the RDF moment `ĝ(z)` (Eq 28) as a Lean object, and `Q̂(s)` (Eq 16) at general `s` (extend
-   the Phase-4 core-moment lemmas from `s=z` to symbolic `s`; pure FTC).
+1. ✅ **DONE** — `Q̂(s)` (Eq 16) at general `s` is built: `bhBaxter_transform` (axiom-clean),
+   `∫₀^∞ bhBaxterFn·e^{−sr} = <closed form>` for `s > −z`, via `baxter_poly_moment_gen` +
+   `bhCexp_moment_gen` (general-`s` core moments) + the pure-exp tail `D/(s+z)`. Its moments
+   `T_n = (−∂/∂s)ⁿ Q̂|₀` give Eqs (13)/(14). Still TODO: the RDF moment `ĝ(z)` (Eq 28) as a Lean object.
 2. State Eq. (9)/(32) as the physical hypothesis `hbax_g` (the g-side OZ relation), analogous to `h29`'s
    `hbax`. Its Laplace transform at `s=z` is the input.
 3. Compute the Laplace transform of (32)'s RHS from `bhBaxterFn` in the repo normalization — this is

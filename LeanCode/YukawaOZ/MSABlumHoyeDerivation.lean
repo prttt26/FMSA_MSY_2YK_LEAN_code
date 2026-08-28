@@ -637,4 +637,132 @@ theorem h29_of_baxter_exterior (xi z Dt G K : ℝ) (hz : 0 < z) (hxi : (1 - xi) 
     rw [hmain]; field_simp
   rw [hdiv]; ring
 
+/-! ### The general-`s` Baxter transform `Q̂(s)` (Blum–Høye Eq. 16)
+
+`Q̂(s) = ∫₀^∞ Q(r) e^{−sr} dr` for the exact Baxter function `Q = bhBaxterFn`, at general `s`
+(`bhBaxter_transform`).  The only improper integral is the **pure-exponential tail** `D·e^{−z·}`
+(via `integral_exp_mul_Ioi`); the core part is compactly supported on `[0,1]`, so it reduces to an
+interval integral resolved by the general-`s` polynomial (`phi*_real_laplace`) and continuity-
+exponential (`bhCexp_moment_gen`) moments.  This is the reusable Eq-16 object appearing in Eqs (27),
+(29), (33); its moments `T_n = (−∂/∂s)ⁿ Q̂(s)|₀` (Eq 15) feed the coefficient equations (13)/(14), and
+at `s = z` it is `1 − bhF` (Phase 3). -/
+
+/-- **General-`s` two-coefficient polynomial moment.**  `∫₀¹ (c₁(r−1) + c₂(r−1)²/2) e^{−sr}` in
+closed form, via the already-proved forward transforms `phi1_real_laplace`/`phi2_real_laplace` (the
+general-`s` analog of `baxter_poly_moment`, which was fixed at `s = z`). -/
+theorem baxter_poly_moment_gen (c1 c2 s : ℝ) (hs : s ≠ 0) :
+    ∫ r in (0:ℝ)..1, (c1 * (r - 1) + c2 * ((r - 1) ^ 2 / 2)) * Real.exp (-s * r)
+      = c1 * ((1 - s - Real.exp (-s)) / s ^ 2)
+        + c2 * ((1 - s + s ^ 2 / 2 - Real.exp (-s)) / s ^ 3) := by
+  have hc : (∫ r in (0:ℝ)..1, (c1 * (r - 1) + c2 * ((r - 1) ^ 2 / 2)) * Real.exp (-s * r))
+      = ∫ r in (0:ℝ)..1, c1 * (FMSA.HardSphere.phi1_real 1 r * Real.exp (-s * r))
+          + c2 * (FMSA.HardSphere.phi2_real 1 r * Real.exp (-s * r)) := by
+    apply intervalIntegral.integral_congr; intro r hr
+    rw [Set.uIcc_of_le (by norm_num : (0:ℝ) ≤ 1)] at hr
+    simp only [FMSA.HardSphere.phi1_real, FMSA.HardSphere.phi2_real, if_pos hr.2]; ring
+  rw [hc, intervalIntegral.integral_add
+        (by apply Continuous.intervalIntegrable
+            exact continuous_const.mul ((FMSA.HardSphere.phi1_real_continuous 1).mul (by fun_prop)))
+        (by apply Continuous.intervalIntegrable
+            exact continuous_const.mul ((FMSA.HardSphere.phi2_real_continuous 1).mul (by fun_prop))),
+      intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
+      FMSA.HardSphere.phi1_real_laplace hs (by norm_num : (0:ℝ) ≤ 1),
+      FMSA.HardSphere.phi2_real_laplace hs (by norm_num : (0:ℝ) ≤ 1)]
+  simp only [mul_one]
+
+/-- **General-`s` continuity-exponential moment.**  `∫₀¹ (e^{−zr} − e^{−z}) e^{−sr}` in closed form
+(the general-`s` analog of `cexp_basis_laplace_moment`, which was fixed at `s = z`), via
+`yukawa_laplace_unit`. -/
+theorem bhCexp_moment_gen {z s : ℝ} (hs : s ≠ 0) (hsz : s + z ≠ 0) :
+    ∫ r in (0:ℝ)..1, (Real.exp (-z * r) - Real.exp (-z)) * Real.exp (-s * r)
+      = (1 - Real.exp (-(s + z))) / (s + z) - Real.exp (-z) * ((1 - Real.exp (-s)) / s) := by
+  have hunit0 : ∫ r in (0:ℝ)..1, Real.exp (-s * r) = (1 - Real.exp (-s)) / s := by
+    have h := yukawa_laplace_unit (s := s) (z := 0) (by simpa using hs)
+    simpa using h
+  have hc : (∫ r in (0:ℝ)..1, (Real.exp (-z * r) - Real.exp (-z)) * Real.exp (-s * r))
+      = (∫ r in (0:ℝ)..1, Real.exp (-z * r) * Real.exp (-s * r))
+        - Real.exp (-z) * (∫ r in (0:ℝ)..1, Real.exp (-s * r)) := by
+    rw [← intervalIntegral.integral_const_mul,
+        ← intervalIntegral.integral_sub
+            (by apply Continuous.intervalIntegrable; fun_prop)
+            (by apply Continuous.intervalIntegrable; fun_prop)]
+    apply intervalIntegral.integral_congr; intro r _; ring
+  rw [hc, yukawa_laplace_unit hsz, hunit0]
+
+/-- **The core moment at general `s`.**  `∫₀¹ bhCoreFn·e^{−sr}` in closed form — dressed polynomial
+(`baxter_poly_moment_gen`) plus the continuity-exponential (`bhCexp_moment_gen`). -/
+theorem bhCore_moment_gen (xi z Dt G s : ℝ) (hs : s ≠ 0) (hsz : s + z ≠ 0) :
+    ∫ r in (0:ℝ)..1, bhCoreFn xi z Dt G r * Real.exp (-s * r)
+      = rhoOf xi * msaQp xi z Dt G * ((1 - s - Real.exp (-s)) / s ^ 2)
+        + rhoOf xi * msaA xi z Dt G * ((1 - s + s ^ 2 / 2 - Real.exp (-s)) / s ^ 3)
+        + (- rhoOf xi * gam xi z G * Dt * Real.exp z)
+            * ((1 - Real.exp (-(s + z))) / (s + z)
+               - Real.exp (-z) * ((1 - Real.exp (-s)) / s)) := by
+  have hc : (∫ r in (0:ℝ)..1, bhCoreFn xi z Dt G r * Real.exp (-s * r))
+      = (∫ r in (0:ℝ)..1, (rhoOf xi * msaQp xi z Dt G * (r - 1)
+            + rhoOf xi * msaA xi z Dt G * ((r - 1) ^ 2 / 2)) * Real.exp (-s * r))
+        + (- rhoOf xi * gam xi z G * Dt * Real.exp z)
+            * (∫ r in (0:ℝ)..1, (Real.exp (-z * r) - Real.exp (-z)) * Real.exp (-s * r)) := by
+    rw [← intervalIntegral.integral_const_mul,
+        ← intervalIntegral.integral_add
+            (by apply Continuous.intervalIntegrable; fun_prop)
+            (by apply Continuous.intervalIntegrable; fun_prop)]
+    apply intervalIntegral.integral_congr; intro r hr
+    rw [Set.uIcc_of_le (by norm_num : (0:ℝ) ≤ 1)] at hr
+    simp only [bhCoreFn_inner xi z Dt G hr.2]; ring
+  rw [hc, baxter_poly_moment_gen _ _ s hs, bhCexp_moment_gen hs hsz]
+
+/-- **The Baxter transform `Q̂(s) = ∫₀^∞ bhBaxterFn·e^{−sr}`** (Blum–Høye Eq. 16), general `s > −z`.
+Core moment (`bhCore_moment_gen`) plus the pure-exponential tail `D/(s+z)`, `D = ρ Dt e^z`. -/
+theorem bhBaxter_transform (xi z Dt G s : ℝ) (hs : s ≠ 0) (hsz : 0 < s + z) :
+    ∫ r in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G r * Real.exp (-s * r)
+      = rhoOf xi * msaQp xi z Dt G * ((1 - s - Real.exp (-s)) / s ^ 2)
+        + rhoOf xi * msaA xi z Dt G * ((1 - s + s ^ 2 / 2 - Real.exp (-s)) / s ^ 3)
+        + (- rhoOf xi * gam xi z G * Dt * Real.exp z)
+            * ((1 - Real.exp (-(s + z))) / (s + z)
+               - Real.exp (-z) * ((1 - Real.exp (-s)) / s))
+        + (rhoOf xi * Dt * Real.exp z) * (1 / (s + z)) := by
+  -- support facts for the compactly-supported core
+  have hZ : ∀ r ∈ Set.Ioi (1:ℝ), bhCoreFn xi z Dt G r * Real.exp (-s * r) = 0 :=
+    fun r hr => by rw [bhCoreFn_eq_zero_of_gt xi z Dt G (Set.mem_Ioi.mp hr), zero_mul]
+  have hIoc : MeasureTheory.IntegrableOn
+      (fun r => bhCoreFn xi z Dt G r * Real.exp (-s * r)) (Set.Ioc (0:ℝ) 1) := by
+    apply Continuous.integrableOn_Ioc; exact (bhCoreFn_continuous xi z Dt G).mul (by fun_prop)
+  have hIoi1 : MeasureTheory.IntegrableOn
+      (fun r => bhCoreFn xi z Dt G r * Real.exp (-s * r)) (Set.Ioi (1:ℝ)) := by
+    rw [MeasureTheory.integrableOn_congr_fun hZ measurableSet_Ioi]
+    exact MeasureTheory.integrableOn_zero
+  have hIcore : MeasureTheory.IntegrableOn
+      (fun r => bhCoreFn xi z Dt G r * Real.exp (-s * r)) (Set.Ioi (0:ℝ)) := by
+    rw [← Set.Ioc_union_Ioi_eq_Ioi (by norm_num : (0:ℝ) ≤ 1)]; exact hIoc.union hIoi1
+  have hItail : MeasureTheory.IntegrableOn
+      (fun r => Real.exp (-z * r) * Real.exp (-s * r)) (Set.Ioi (0:ℝ)) := by
+    have h2 : (fun r => Real.exp (-z * r) * Real.exp (-s * r))
+        = fun r => Real.exp (-(s + z) * r) := by
+      funext r; rw [← Real.exp_add]; congr 1; ring
+    rw [h2]; exact exp_neg_integrableOn_Ioi 0 hsz
+  -- split Q = core + tail, reduce core to [0,1], evaluate the tail
+  have hcoreI : (∫ r in Set.Ioi (0:ℝ), bhCoreFn xi z Dt G r * Real.exp (-s * r))
+      = ∫ r in (0:ℝ)..1, bhCoreFn xi z Dt G r * Real.exp (-s * r) := by
+    rw [← Set.Ioc_union_Ioi_eq_Ioi (by norm_num : (0:ℝ) ≤ 1),
+        MeasureTheory.setIntegral_union (Set.Ioc_disjoint_Ioi le_rfl) measurableSet_Ioi hIoc hIoi1,
+        MeasureTheory.setIntegral_eq_zero_of_forall_eq_zero hZ, add_zero,
+        ← intervalIntegral.integral_of_le (by norm_num : (0:ℝ) ≤ 1)]
+  have htailI : (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * Real.exp (-s * r)) = 1 / (s + z) := by
+    have h2 : (fun r => Real.exp (-z * r) * Real.exp (-s * r))
+        = fun r => Real.exp (-(s + z) * r) := by
+      funext r; rw [← Real.exp_add]; congr 1; ring
+    rw [h2, integral_exp_mul_Ioi (show -(s + z) < 0 by linarith) 0,
+        mul_zero, Real.exp_zero, neg_div_neg_eq]
+  have hsum : (∫ r in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G r * Real.exp (-s * r))
+      = (∫ r in Set.Ioi (0:ℝ), bhCoreFn xi z Dt G r * Real.exp (-s * r))
+        + (rhoOf xi * Dt * Real.exp z)
+            * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * Real.exp (-s * r)) := by
+    rw [← MeasureTheory.integral_const_mul,
+        ← MeasureTheory.integral_add hIcore
+            (MeasureTheory.Integrable.const_mul hItail (rhoOf xi * Dt * Real.exp z))]
+    apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
+    intro r _; simp only [bhBaxterFn]; ring
+  rw [hsum, hcoreI, htailI, bhCore_moment_gen xi z Dt G s hs hsz.ne']
+
 end FMSA.ExactMSA
