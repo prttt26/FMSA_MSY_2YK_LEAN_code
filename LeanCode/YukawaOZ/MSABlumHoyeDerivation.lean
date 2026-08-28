@@ -787,4 +787,71 @@ theorem bhBaxter_transform_at_z (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) �
       bhF_eq_one_sub_bhCore_moment xi z Dt G hz.ne' hxi]
   ring
 
+/-! ### Blum–Høye Eq. (13) — the constant-coefficient (zeroth-moment) equation
+
+Matching the constant term of Baxter's g-side equation (9) at `r < σ` gives Eq. (13)
+`A_j = q''_ij = 2π[1 − Σρ_l T₀]`, with the zeroth moment `T₀ = ∫ Q dr` (Eq. 15, `n=0`).  Here
+`bhBaxterFn` carries `ρ`, so `T₀ = ρ·(BH's T₀)` and the identity reads `msaA = 2π(1 − T₀)`.  Verified
+numerically to be exact, and proved here directly from the Baxter zeroth moment (unlike the algebraic
+`msaCoeff_continuity_17/18`, this ties the coefficient to a genuine integral of the Baxter function).
+The tail is pure-exponential (`D/z`), so no `Ioi` poly×exp integrability is needed. -/
+
+/-- **Blum–Høye Eq. (13), derived** — `msaA = 2π(1 − T₀)`, `T₀ = ∫₀^∞ bhBaxterFn dr` the Baxter
+zeroth moment. The constant-term coefficient match of Eq. (9), from the exact Baxter function. -/
+theorem msaA_eq_baxter_zeroth_moment (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0) :
+    msaA xi z Dt G = 2 * Real.pi * (1 - ∫ r in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G r) := by
+  have e_lin : ∫ r in (0:ℝ)..1, (r - 1) = -(1/2 : ℝ) := by
+    have hd : ∀ r : ℝ, HasDerivAt (fun x => (x - 1) ^ 2 / 2) (r - 1) r := fun r =>
+      ((((hasDerivAt_id r).sub_const 1).pow 2).div_const 2).congr_deriv
+        (by simp only [id_eq]; push_cast; ring)
+    rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun r _ => hd r)
+          (by apply Continuous.intervalIntegrable; fun_prop)]
+    norm_num
+  have e_quad : ∫ r in (0:ℝ)..1, (r - 1) ^ 2 / 2 = (1/6 : ℝ) := by
+    have hd : ∀ r : ℝ, HasDerivAt (fun x => (x - 1) ^ 3 / 6) ((r - 1) ^ 2 / 2) r := fun r =>
+      ((((hasDerivAt_id r).sub_const 1).pow 3).div_const 6).congr_deriv
+        (by simp only [id_eq]; push_cast; ring)
+    rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun r _ => hd r)
+          (by apply Continuous.intervalIntegrable; fun_prop)]
+    norm_num
+  have e_exp : ∫ r in (0:ℝ)..1, (Real.exp (-z * r) - Real.exp (-z))
+      = (1 - Real.exp (-z)) / z - Real.exp (-z) := by
+    have hexp : ∫ r in (0:ℝ)..1, Real.exp (-z * r) = (1 - Real.exp (-z)) / z := by
+      have h := yukawa_laplace_unit (s := 0) (z := z) (by simpa using hz.ne')
+      simpa using h
+    rw [intervalIntegral.integral_sub (by apply Continuous.intervalIntegrable; fun_prop)
+          intervalIntegrable_const, hexp, intervalIntegral.integral_const]
+    simp
+  have hT0 : (∫ r in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G r)
+      = (∫ r in (0:ℝ)..1, bhCoreFn xi z Dt G r) + (rhoOf xi * Dt * Real.exp z) * (1 / z) := by
+    have h := bhBaxter_transform_split xi z Dt G 0 (by linarith : (0:ℝ) < 0 + z)
+    simpa using h
+  have hcore : (∫ r in (0:ℝ)..1, bhCoreFn xi z Dt G r)
+      = rhoOf xi * msaQp xi z Dt G * (-(1/2))
+        + rhoOf xi * msaA xi z Dt G * (1/6)
+        + (- rhoOf xi * gam xi z G * Dt * Real.exp z)
+            * ((1 - Real.exp (-z)) / z - Real.exp (-z)) := by
+    have hcongr : (∫ r in (0:ℝ)..1, bhCoreFn xi z Dt G r)
+        = ∫ r in (0:ℝ)..1,
+            (rhoOf xi * msaQp xi z Dt G * (r - 1)
+             + rhoOf xi * msaA xi z Dt G * ((r - 1) ^ 2 / 2)
+             + (- rhoOf xi * gam xi z G * Dt * Real.exp z)
+                 * (Real.exp (-z * r) - Real.exp (-z))) := by
+      apply intervalIntegral.integral_congr; intro r hr
+      rw [Set.uIcc_of_le (by norm_num : (0:ℝ) ≤ 1)] at hr
+      simp only [bhCoreFn_inner xi z Dt G hr.2]
+    rw [hcongr, intervalIntegral.integral_add
+          (by apply Continuous.intervalIntegrable; fun_prop)
+          (by apply Continuous.intervalIntegrable; fun_prop),
+        intervalIntegral.integral_add
+          (by apply Continuous.intervalIntegrable; fun_prop)
+          (by apply Continuous.intervalIntegrable; fun_prop),
+        intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
+        intervalIntegral.integral_const_mul, e_lin, e_quad, e_exp]
+  rw [hT0, hcore]
+  simp only [msaA, msaQp, gam, Mtil, Ntil, rhoOf, bA0, bB0, qp0]
+  rw [show Real.exp z = (Real.exp (-z))⁻¹ from by rw [Real.exp_neg, inv_inv]]
+  field_simp
+  ring
+
 end FMSA.ExactMSA
