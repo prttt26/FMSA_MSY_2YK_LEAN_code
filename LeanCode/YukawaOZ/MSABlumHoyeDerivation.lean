@@ -82,6 +82,35 @@ open MeasureTheory Set Real
 
 namespace FMSA.ExactMSA
 
+/-! ### A reusable improper moment — `∫₀^∞ r·e^{−zr} = 1/z²`
+
+The first-moment Yukawa integral (Blum–Høye moment `T₁`, Eq. 15 `n=1`), via the change of variables
+`u = zr` (`integral_comp_mul_left_Ioi`) reducing to `∫₀^∞ u e^{−u} = Γ(2) = 1`.  Unblocks the
+first-moment coefficient equation (14) and the polynomial part of the g-side (Eq. 9) Laplace source
+— the `Ioi` poly×exp integral that the pure-exp `Q̂(s)` tail did not need. -/
+theorem integral_Ioi_id_mul_exp_neg {z : ℝ} (hz : 0 < z) :
+    ∫ r in Set.Ioi (0:ℝ), r * Real.exp (-z * r) = 1 / z ^ 2 := by
+  have hgamma : ∫ u in Set.Ioi (0:ℝ), u * Real.exp (-u) = 1 := by
+    have h := Real.Gamma_eq_integral (s := 2) (by norm_num)
+    rw [Real.Gamma_two] at h
+    rw [show (∫ x in Set.Ioi (0:ℝ), Real.exp (-x) * x ^ ((2:ℝ) - 1))
+          = ∫ x in Set.Ioi (0:ℝ), x * Real.exp (-x) from by
+        apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
+        intro x _
+        simp only [show ((2:ℝ) - 1) = (1:ℝ) by norm_num, Real.rpow_one]; ring] at h
+    exact h.symm
+  have hcov := integral_comp_mul_left_Ioi (fun u => u * Real.exp (-u)) 0 hz
+  simp only [mul_zero] at hcov
+  rw [hgamma, smul_eq_mul, mul_one] at hcov
+  rw [show (∫ r in Set.Ioi (0:ℝ), z * r * Real.exp (-(z * r)))
+        = z * ∫ r in Set.Ioi (0:ℝ), r * Real.exp (-z * r) from by
+      rw [← MeasureTheory.integral_const_mul]
+      apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
+      intro r _; simp only [neg_mul]; ring] at hcov
+  have hzne : z ≠ 0 := hz.ne'
+  field_simp [hzne] at hcov ⊢
+  linear_combination hcov
+
 /-! ### Milestone 1 — the exterior-closure (`K`-side) of Baxter's Eq. (8) -/
 
 /-- **(29) LHS, real space.**  On the exterior `r > 1`, the MSA closure's `2πr·c(r)` is the pure
@@ -849,6 +878,124 @@ theorem msaA_eq_baxter_zeroth_moment (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - 
         intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
         intervalIntegral.integral_const_mul, e_lin, e_quad, e_exp]
   rw [hT0, hcore]
+  simp only [msaA, msaQp, gam, Mtil, Ntil, rhoOf, bA0, bB0, qp0]
+  rw [show Real.exp z = (Real.exp (-z))⁻¹ from by rw [Real.exp_neg, inv_inv]]
+  field_simp
+  ring
+
+/-- **Blum–Høye Eq. (14), derived** — `msaQp − msaA = 2π·T₁`, `T₁ = ∫₀^∞ r·bhBaxterFn dr` the Baxter
+first moment (Eq. 15, `n=1`).  With `B = q' − A` (Eq. 14 at `σ=1`) this is BH's `B = 2π Σρ T₁`.  The
+`r`-coefficient match of Eq. (9); its tail `∫₀^∞ r·D e^{−zr} = D/z²` uses `integral_Ioi_id_mul_exp_neg`
+(the poly×exp `Ioi` moment).  Completes the coefficient pair (13)/(14) from the Baxter moments. -/
+theorem msaQp_sub_msaA_eq_baxter_first_moment (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0) :
+    msaQp xi z Dt G - msaA xi z Dt G
+      = 2 * Real.pi * ∫ r in Set.Ioi (0:ℝ), r * bhBaxterFn xi z Dt G r := by
+  have e_lin : ∫ r in (0:ℝ)..1, r * (r - 1) = -(1/6 : ℝ) := by
+    have hd : ∀ r : ℝ, HasDerivAt (fun x => x ^ 3 / 3 - x ^ 2 / 2) (r * (r - 1)) r := fun r =>
+      ((((hasDerivAt_id r).pow 3).div_const 3).sub
+        (((hasDerivAt_id r).pow 2).div_const 2)).congr_deriv (by simp only [id_eq]; push_cast; ring)
+    rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun r _ => hd r)
+          (by apply Continuous.intervalIntegrable; fun_prop)]
+    norm_num
+  have e_quad : ∫ r in (0:ℝ)..1, r * ((r - 1) ^ 2 / 2) = (1/24 : ℝ) := by
+    have hd : ∀ r : ℝ, HasDerivAt (fun x => x ^ 4 / 8 - x ^ 3 / 3 + x ^ 2 / 4)
+        (r * ((r - 1) ^ 2 / 2)) r := fun r =>
+      (((((hasDerivAt_id r).pow 4).div_const 8).sub (((hasDerivAt_id r).pow 3).div_const 3)).add
+        (((hasDerivAt_id r).pow 2).div_const 4)).congr_deriv (by simp only [id_eq]; push_cast; ring)
+    rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun r _ => hd r)
+          (by apply Continuous.intervalIntegrable; fun_prop)]
+    norm_num
+  have e_rexp : ∫ r in (0:ℝ)..1, r * Real.exp (-z * r)
+      = -(1/z + 1/z ^ 2) * Real.exp (-z) + 1/z ^ 2 := by
+    have hd : ∀ r : ℝ,
+        HasDerivAt (fun x => -(x/z + 1/z ^ 2) * Real.exp (-z * x)) (r * Real.exp (-z * r)) r := by
+      intro r
+      have hlin : HasDerivAt (fun x : ℝ => -(x/z + 1/z ^ 2)) (-(1/z)) r :=
+        (((hasDerivAt_id r).div_const z).add_const (1/z ^ 2)).neg
+      have hexp : HasDerivAt (fun x => Real.exp (-z * x)) (Real.exp (-z * r) * (-z)) r := by
+        have h : HasDerivAt (fun x : ℝ => -z * x) (-z) r := by
+          simpa using (hasDerivAt_id r).const_mul (-z)
+        exact h.exp
+      exact (hlin.mul hexp).congr_deriv (by field_simp; ring)
+    rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun r _ => hd r)
+          (by apply Continuous.intervalIntegrable; fun_prop)]
+    simp only [mul_one, mul_zero, Real.exp_zero, zero_div, zero_add]; ring
+  have e_id : ∫ r in (0:ℝ)..1, r = (1/2 : ℝ) := by rw [integral_id]; norm_num
+  have hT1 : (∫ r in Set.Ioi (0:ℝ), r * bhBaxterFn xi z Dt G r)
+      = (∫ r in (0:ℝ)..1, r * bhCoreFn xi z Dt G r)
+        + (rhoOf xi * Dt * Real.exp z) * (1 / z ^ 2) := by
+    have hZ : ∀ r ∈ Set.Ioi (1:ℝ), r * bhCoreFn xi z Dt G r = 0 :=
+      fun r hr => by rw [bhCoreFn_eq_zero_of_gt xi z Dt G (Set.mem_Ioi.mp hr), mul_zero]
+    have hIoc : MeasureTheory.IntegrableOn
+        (fun r => r * bhCoreFn xi z Dt G r) (Set.Ioc (0:ℝ) 1) := by
+      apply Continuous.integrableOn_Ioc; exact continuous_id.mul (bhCoreFn_continuous xi z Dt G)
+    have hIoi1 : MeasureTheory.IntegrableOn
+        (fun r => r * bhCoreFn xi z Dt G r) (Set.Ioi (1:ℝ)) := by
+      rw [MeasureTheory.integrableOn_congr_fun hZ measurableSet_Ioi]
+      exact MeasureTheory.integrableOn_zero
+    have hIcore : MeasureTheory.IntegrableOn
+        (fun r => r * bhCoreFn xi z Dt G r) (Set.Ioi (0:ℝ)) := by
+      rw [← Set.Ioc_union_Ioi_eq_Ioi (by norm_num : (0:ℝ) ≤ 1)]; exact hIoc.union hIoi1
+    have hItail : MeasureTheory.IntegrableOn
+        (fun r => r * Real.exp (-z * r)) (Set.Ioi (0:ℝ)) := by
+      have htend : Filter.Tendsto (fun r : ℝ => r * Real.exp (-(z / 2) * r))
+          Filter.atTop (nhds 0) := by
+        have h := tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero 1 (z / 2) (by linarith)
+        simp only [Real.rpow_one] at h; exact h
+      apply integrable_of_isBigO_exp_neg (b := z / 2) (by linarith) (by fun_prop)
+      rw [show (fun r : ℝ => r * Real.exp (-z * r))
+            = fun r => r * Real.exp (-(z / 2) * r) * Real.exp (-(z / 2) * r) from by
+          funext r
+          rw [mul_assoc, ← Real.exp_add, show -(z / 2) * r + -(z / 2) * r = -z * r from by ring]]
+      simpa using (htend.isBigO_one (F := ℝ)).mul
+        (Asymptotics.isBigO_refl (fun r : ℝ => Real.exp (-(z / 2) * r)) Filter.atTop)
+    have hcoreI : (∫ r in Set.Ioi (0:ℝ), r * bhCoreFn xi z Dt G r)
+        = ∫ r in (0:ℝ)..1, r * bhCoreFn xi z Dt G r := by
+      rw [← Set.Ioc_union_Ioi_eq_Ioi (by norm_num : (0:ℝ) ≤ 1),
+          MeasureTheory.setIntegral_union (Set.Ioc_disjoint_Ioi le_rfl) measurableSet_Ioi
+            hIoc hIoi1, MeasureTheory.setIntegral_eq_zero_of_forall_eq_zero hZ, add_zero,
+          ← intervalIntegral.integral_of_le (by norm_num : (0:ℝ) ≤ 1)]
+    have hsplit : (∫ r in Set.Ioi (0:ℝ), r * bhBaxterFn xi z Dt G r)
+        = (∫ r in Set.Ioi (0:ℝ), r * bhCoreFn xi z Dt G r)
+          + (rhoOf xi * Dt * Real.exp z)
+              * (∫ r in Set.Ioi (0:ℝ), r * Real.exp (-z * r)) := by
+      rw [← MeasureTheory.integral_const_mul,
+          ← MeasureTheory.integral_add hIcore
+              (MeasureTheory.Integrable.const_mul hItail (rhoOf xi * Dt * Real.exp z))]
+      apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
+      intro r _; simp only [bhBaxterFn]; ring
+    rw [hsplit, hcoreI, integral_Ioi_id_mul_exp_neg hz]
+  have hcore : (∫ r in (0:ℝ)..1, r * bhCoreFn xi z Dt G r)
+      = rhoOf xi * msaQp xi z Dt G * (-(1/6))
+        + rhoOf xi * msaA xi z Dt G * (1/24)
+        + (- rhoOf xi * gam xi z G * Dt * Real.exp z)
+            * (-(1/z + 1/z ^ 2) * Real.exp (-z) + 1/z ^ 2 - Real.exp (-z) * (1/2)) := by
+    have hcongr : (∫ r in (0:ℝ)..1, r * bhCoreFn xi z Dt G r)
+        = ∫ r in (0:ℝ)..1,
+            (rhoOf xi * msaQp xi z Dt G * (r * (r - 1))
+             + rhoOf xi * msaA xi z Dt G * (r * ((r - 1) ^ 2 / 2))
+             + (- rhoOf xi * gam xi z G * Dt * Real.exp z)
+                 * (r * (Real.exp (-z * r) - Real.exp (-z)))) := by
+      apply intervalIntegral.integral_congr; intro r hr
+      rw [Set.uIcc_of_le (by norm_num : (0:ℝ) ≤ 1)] at hr
+      simp only [bhCoreFn_inner xi z Dt G hr.2]; ring
+    have hsub : (∫ r in (0:ℝ)..1, r * (Real.exp (-z * r) - Real.exp (-z)))
+        = (-(1/z + 1/z ^ 2) * Real.exp (-z) + 1/z ^ 2) - Real.exp (-z) * (1/2) := by
+      rw [show (fun r : ℝ => r * (Real.exp (-z * r) - Real.exp (-z)))
+            = fun r => r * Real.exp (-z * r) - Real.exp (-z) * r from by funext r; ring,
+          intervalIntegral.integral_sub
+            (by apply Continuous.intervalIntegrable; fun_prop)
+            (by apply Continuous.intervalIntegrable; fun_prop),
+          e_rexp, intervalIntegral.integral_const_mul, e_id]
+    rw [hcongr, intervalIntegral.integral_add
+          (by apply Continuous.intervalIntegrable; fun_prop)
+          (by apply Continuous.intervalIntegrable; fun_prop),
+        intervalIntegral.integral_add
+          (by apply Continuous.intervalIntegrable; fun_prop)
+          (by apply Continuous.intervalIntegrable; fun_prop),
+        intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
+        intervalIntegral.integral_const_mul, e_lin, e_quad, hsub]
+  rw [hT1, hcore]
   simp only [msaA, msaQp, gam, Mtil, Ntil, rhoOf, bA0, bB0, qp0]
   rw [show Real.exp z = (Real.exp (-z))⁻¹ from by rw [Real.exp_neg, inv_inv]]
   field_simp
