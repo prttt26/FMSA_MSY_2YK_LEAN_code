@@ -712,15 +712,13 @@ theorem bhCore_moment_gen (xi z Dt G s : ℝ) (hs : s ≠ 0) (hsz : s + z ≠ 0)
     simp only [bhCoreFn_inner xi z Dt G hr.2]; ring
   rw [hc, baxter_poly_moment_gen _ _ s hs, bhCexp_moment_gen hs hsz]
 
-/-- **The Baxter transform `Q̂(s) = ∫₀^∞ bhBaxterFn·e^{−sr}`** (Blum–Høye Eq. 16), general `s > −z`.
-Core moment (`bhCore_moment_gen`) plus the pure-exponential tail `D/(s+z)`, `D = ρ Dt e^z`. -/
-theorem bhBaxter_transform (xi z Dt G s : ℝ) (hs : s ≠ 0) (hsz : 0 < s + z) :
+/-- **The Baxter transform, core + tail split.**  `∫₀^∞ bhBaxterFn·e^{−sr}` splits into the
+compactly-supported core (as an interval integral over `[0,1]`) plus the pure-exponential tail
+`D·∫₀^∞ e^{−(s+z)r} = D/(s+z)`, `D = ρ Dt e^z`.  The reusable half of `bhBaxter_transform`; also the
+route to `bhBaxter_transform_at_z`. -/
+theorem bhBaxter_transform_split (xi z Dt G s : ℝ) (hsz : 0 < s + z) :
     ∫ r in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G r * Real.exp (-s * r)
-      = rhoOf xi * msaQp xi z Dt G * ((1 - s - Real.exp (-s)) / s ^ 2)
-        + rhoOf xi * msaA xi z Dt G * ((1 - s + s ^ 2 / 2 - Real.exp (-s)) / s ^ 3)
-        + (- rhoOf xi * gam xi z G * Dt * Real.exp z)
-            * ((1 - Real.exp (-(s + z))) / (s + z)
-               - Real.exp (-z) * ((1 - Real.exp (-s)) / s))
+      = (∫ r in (0:ℝ)..1, bhCoreFn xi z Dt G r * Real.exp (-s * r))
         + (rhoOf xi * Dt * Real.exp z) * (1 / (s + z)) := by
   -- support facts for the compactly-supported core
   have hZ : ∀ r ∈ Set.Ioi (1:ℝ), bhCoreFn xi z Dt G r * Real.exp (-s * r) = 0 :=
@@ -763,6 +761,30 @@ theorem bhBaxter_transform (xi z Dt G s : ℝ) (hs : s ≠ 0) (hsz : 0 < s + z) 
             (MeasureTheory.Integrable.const_mul hItail (rhoOf xi * Dt * Real.exp z))]
     apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
     intro r _; simp only [bhBaxterFn]; ring
-  rw [hsum, hcoreI, htailI, bhCore_moment_gen xi z Dt G s hs hsz.ne']
+  rw [hsum, hcoreI, htailI]
+
+/-- **The Baxter transform `Q̂(s) = ∫₀^∞ bhBaxterFn·e^{−sr}`** (Blum–Høye Eq. 16), general `s > −z`,
+in closed form: the core moment (`bhCore_moment_gen`) plus the pure-exponential tail `D/(s+z)`,
+`D = ρ Dt e^z`. -/
+theorem bhBaxter_transform (xi z Dt G s : ℝ) (hs : s ≠ 0) (hsz : 0 < s + z) :
+    ∫ r in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G r * Real.exp (-s * r)
+      = rhoOf xi * msaQp xi z Dt G * ((1 - s - Real.exp (-s)) / s ^ 2)
+        + rhoOf xi * msaA xi z Dt G * ((1 - s + s ^ 2 / 2 - Real.exp (-s)) / s ^ 3)
+        + (- rhoOf xi * gam xi z G * Dt * Real.exp z)
+            * ((1 - Real.exp (-(s + z))) / (s + z)
+               - Real.exp (-z) * ((1 - Real.exp (-s)) / s))
+        + (rhoOf xi * Dt * Real.exp z) * (1 / (s + z)) := by
+  rw [bhBaxter_transform_split xi z Dt G s hsz, bhCore_moment_gen xi z Dt G s hs hsz.ne']
+
+/-- **`Q̂(z) = 1 − bhF`** — the Baxter transform at the Yukawa rate `s = z` equals `1` minus the
+Blum–Høye Baxter factor.  This is the consistency check tying the general-`s` transform
+(`bhBaxter_transform`) to the Phase-3 factor `bhF = 1 − ρQ̂(z)` (here `bhBaxterFn` already carries the
+`ρ`, so the identity is `Q̂(z) = 1 − bhF`).  Via the split at `s = z` (tail `1/(2z)`) and
+`bhF_eq_one_sub_bhCore_moment`. -/
+theorem bhBaxter_transform_at_z (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0) :
+    ∫ r in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G r * Real.exp (-z * r) = 1 - bhF xi z (Dt, G) := by
+  rw [bhBaxter_transform_split xi z Dt G z (by linarith : 0 < z + z),
+      bhF_eq_one_sub_bhCore_moment xi z Dt G hz.ne' hxi]
+  ring
 
 end FMSA.ExactMSA
