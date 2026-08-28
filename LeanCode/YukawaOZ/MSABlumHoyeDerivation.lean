@@ -1001,4 +1001,16 @@ theorem msaQp_sub_msaA_eq_baxter_first_moment (xi z Dt G : ℝ) (hz : 0 < z) (hx
   field_simp
   ring
 
+/-- **The dressed `r`-coefficient from the Baxter moments** — combining Eqs. (13)/(14):
+`msaQp = 2π(1 − T₀ + T₁)`, `T₀ = ∫ Q`, `T₁ = ∫ r·Q` the Baxter zeroth/first moments.  Together with
+`msaA = 2π(1 − T₀)` (Eq. 13) this expresses BOTH dressed Baxter coefficients directly as Baxter
+moments — the constant- and `r`-coefficient matches of the g-side equation (9) fully solved. -/
+theorem msaQp_eq_baxter_moments (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0) :
+    msaQp xi z Dt G
+      = 2 * Real.pi * (1 - (∫ r in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G r)
+          + ∫ r in Set.Ioi (0:ℝ), r * bhBaxterFn xi z Dt G r) := by
+  have h13 := msaA_eq_baxter_zeroth_moment xi z Dt G hz hxi
+  have h14 := msaQp_sub_msaA_eq_baxter_first_moment xi z Dt G hz hxi
+  linear_combination h13 + h14
+
 end FMSA.ExactMSA
