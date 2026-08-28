@@ -111,6 +111,23 @@ theorem integral_Ioi_id_mul_exp_neg {z : ℝ} (hz : 0 < z) :
   field_simp [hzne] at hcov ⊢
   linear_combination hcov
 
+/-- **Integrability of `r·e^{−zr}` on `Ioi 0`** (`z > 0`) — the companion to
+`integral_Ioi_id_mul_exp_neg`, needed to split first-moment integrals.  Via
+`integrable_of_isBigO_exp_neg` with `r e^{−zr} = O(e^{−(z/2)r})` (polynomial dominated by exp). -/
+theorem integrableOn_Ioi_id_mul_exp_neg {z : ℝ} (hz : 0 < z) :
+    MeasureTheory.IntegrableOn (fun r => r * Real.exp (-z * r)) (Set.Ioi (0:ℝ)) := by
+  have htend : Filter.Tendsto (fun r : ℝ => r * Real.exp (-(z / 2) * r))
+      Filter.atTop (nhds 0) := by
+    have h := tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero 1 (z / 2) (by linarith)
+    simp only [Real.rpow_one] at h; exact h
+  apply integrable_of_isBigO_exp_neg (b := z / 2) (by linarith) (by fun_prop)
+  rw [show (fun r : ℝ => r * Real.exp (-z * r))
+        = fun r => r * Real.exp (-(z / 2) * r) * Real.exp (-(z / 2) * r) from by
+      funext r
+      rw [mul_assoc, ← Real.exp_add, show -(z / 2) * r + -(z / 2) * r = -z * r from by ring]]
+  simpa using (htend.isBigO_one (F := ℝ)).mul
+    (Asymptotics.isBigO_refl (fun r : ℝ => Real.exp (-(z / 2) * r)) Filter.atTop)
+
 /-! ### Milestone 1 — the exterior-closure (`K`-side) of Baxter's Eq. (8) -/
 
 /-- **(29) LHS, real space.**  On the exterior `r > 1`, the MSA closure's `2πr·c(r)` is the pure
@@ -937,18 +954,7 @@ theorem msaQp_sub_msaA_eq_baxter_first_moment (xi z Dt G : ℝ) (hz : 0 < z) (hx
         (fun r => r * bhCoreFn xi z Dt G r) (Set.Ioi (0:ℝ)) := by
       rw [← Set.Ioc_union_Ioi_eq_Ioi (by norm_num : (0:ℝ) ≤ 1)]; exact hIoc.union hIoi1
     have hItail : MeasureTheory.IntegrableOn
-        (fun r => r * Real.exp (-z * r)) (Set.Ioi (0:ℝ)) := by
-      have htend : Filter.Tendsto (fun r : ℝ => r * Real.exp (-(z / 2) * r))
-          Filter.atTop (nhds 0) := by
-        have h := tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero 1 (z / 2) (by linarith)
-        simp only [Real.rpow_one] at h; exact h
-      apply integrable_of_isBigO_exp_neg (b := z / 2) (by linarith) (by fun_prop)
-      rw [show (fun r : ℝ => r * Real.exp (-z * r))
-            = fun r => r * Real.exp (-(z / 2) * r) * Real.exp (-(z / 2) * r) from by
-          funext r
-          rw [mul_assoc, ← Real.exp_add, show -(z / 2) * r + -(z / 2) * r = -z * r from by ring]]
-      simpa using (htend.isBigO_one (F := ℝ)).mul
-        (Asymptotics.isBigO_refl (fun r : ℝ => Real.exp (-(z / 2) * r)) Filter.atTop)
+        (fun r => r * Real.exp (-z * r)) (Set.Ioi (0:ℝ)) := integrableOn_Ioi_id_mul_exp_neg hz
     have hcoreI : (∫ r in Set.Ioi (0:ℝ), r * bhCoreFn xi z Dt G r)
         = ∫ r in (0:ℝ)..1, r * bhCoreFn xi z Dt G r := by
       rw [← Set.Ioc_union_Ioi_eq_Ioi (by norm_num : (0:ℝ) ≤ 1),
@@ -1012,5 +1018,35 @@ theorem msaQp_eq_baxter_moments (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) �
   have h13 := msaA_eq_baxter_zeroth_moment xi z Dt G hz hxi
   have h14 := msaQp_sub_msaA_eq_baxter_first_moment xi z Dt G hz hxi
   linear_combination h13 + h14
+
+/-! ### h33 — the polynomial part of `bhP` is the g-source Laplace moment
+
+`bhP`'s polynomial part `msaA/z² + msaQp/z` is exactly the Laplace transform (over the shifted
+half-line `u = r − σ`) of the g-side equation-(9) source polynomial `(r−σ)q'' + q' = u·msaA + msaQp`
+— `msaA_eq_baxter…`/`msaQp_eq_baxter…` fed through the moments `∫₀^∞ u e^{−zu} = 1/z²`
+(`integral_Ioi_id_mul_exp_neg`) and `∫₀^∞ e^{−zu} = 1/z`.  This is the **derivable half of h33**: the
+`ecdb3ad` poly/C split, made rigorous.  Only `bhP`'s remaining `C/γ` tail term (`gam·Dt/2`) resists —
+the Blum–Høye print-error zone that needs the full g(r) OZ derivation (see
+`proof_notes_leg3_bh_gside_eq9.md`). -/
+theorem bhP_poly_eq_gsource_moment (xi z Dt G : ℝ) (hz : 0 < z) :
+    msaA xi z Dt G / z ^ 2 + msaQp xi z Dt G / z
+      = ∫ u in Set.Ioi (0:ℝ),
+          (u * msaA xi z Dt G + msaQp xi z Dt G) * Real.exp (-z * u) := by
+  have hz' : z ≠ 0 := hz.ne'
+  have hIe : MeasureTheory.IntegrableOn (fun u => Real.exp (-z * u)) (Set.Ioi (0:ℝ)) :=
+    exp_neg_integrableOn_Ioi 0 hz
+  have hexpI : (∫ u in Set.Ioi (0:ℝ), Real.exp (-z * u)) = 1 / z := by
+    rw [integral_exp_mul_Ioi (show -z < 0 by linarith) 0, mul_zero, Real.exp_zero,
+        neg_div_neg_eq]
+  have hcongr : (∫ u in Set.Ioi (0:ℝ),
+        (u * msaA xi z Dt G + msaQp xi z Dt G) * Real.exp (-z * u))
+      = ∫ u in Set.Ioi (0:ℝ),
+          msaA xi z Dt G * (u * Real.exp (-z * u)) + msaQp xi z Dt G * Real.exp (-z * u) := by
+    apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi; intro u _; ring
+  rw [hcongr, MeasureTheory.integral_add
+        ((integrableOn_Ioi_id_mul_exp_neg hz).const_mul _) (hIe.const_mul _),
+      MeasureTheory.integral_const_mul, MeasureTheory.integral_const_mul,
+      integral_Ioi_id_mul_exp_neg hz, hexpI]
+  field_simp
 
 end FMSA.ExactMSA
