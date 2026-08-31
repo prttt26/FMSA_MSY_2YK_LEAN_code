@@ -62,7 +62,11 @@ convolution term with `laplace_conv_eq_rdf_mul_qhat_of_integrable` and substitut
 `Q̂(z) = 1 − bhF`; `h33_of_gside` chains it into `MSABlumHoyeDerivation.h33_of_gside_oz` for the full
 **`2πG·bhF = bhP`**.  So `h33` now stands on exactly the recognised inputs `hgside` (Eq. 32 Laplace-
 transformed) + `ĝ(z)=G` + `Q̂(z)=1−bhF` — parallel to how `h29` stands on `hbax` — with the convolution
-folding (the mathematical crux) fully discharged, axiom-clean.
+folding (the mathematical crux) fully discharged, axiom-clean.  **The `Q`-side is concretized:**
+`bhBaxterSupp` (the `[0,∞)`-supported exact Baxter function) discharges both `Q̂(z)=1−bhF`
+(`bhBaxterSupp_transform`, from `bhBaxter_transform_at_z`) and `e^{−z·}Q ∈ L¹` (`bhBaxterSupp_weighted_
+integrable`, via `bhCoreFn`'s compact support + the `D·e^{−2z·}` tail), so `h33_of_gside_baxter` reduces
+`h33` to only the RDF-side inputs (`g`-support, `hF1`, `ĝ(z)=G`, and `hgside` with the concrete kernel).
 -/
 
 open MeasureTheory Set Real
@@ -340,5 +344,84 @@ theorem h33_of_gside (xi z Dt G : ℝ) (hz : 0 < z) (g Q : ℝ → ℝ)
     2 * Real.pi * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0 :=
   h33_of_gside_oz xi z Dt G hz
     (hoz_of_gside xi z Dt G g Q hgsupp hF1 hF2 hgmoment hQtransform hgside)
+
+/-! ### The concrete Baxter function `Q` — discharging the `hQtransform`/`hF2` hypotheses -/
+
+/-- **The `[0,∞)`-supported exact Baxter function** — `bhBaxterFn` truncated to `r ≥ 0` (it is `0` on
+`(−∞,0)`, where the closed form's continuity-exponential and tail are nonphysical).  This is the `Q`
+consumed by the g-side convolution: the physical Baxter function vanishes on the negative half-line,
+so `e^{−z·}·Q ∈ L¹(ℝ)` (unlike `e^{−z·}·bhBaxterFn`, which blows up as `t → −∞`). -/
+noncomputable def bhBaxterSupp (xi z Dt G : ℝ) : ℝ → ℝ :=
+  fun r => if r < 0 then 0 else bhBaxterFn xi z Dt G r
+
+/-- **`Q̂(z) = 1 − bhF` for the supported Baxter function** — discharges `hQtransform`.  On `Ioi 0` the
+truncation is invisible (`t > 0 ⇒ ¬ t < 0`), so the transform is `bhBaxter_transform_at_z`. -/
+theorem bhBaxterSupp_transform (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0) :
+    (∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * bhBaxterSupp xi z Dt G t)
+      = 1 - bhF xi z (Dt, G) := by
+  rw [← bhBaxter_transform_at_z xi z Dt G hz hxi]
+  apply setIntegral_congr_fun measurableSet_Ioi
+  intro t ht
+  have ht0 : ¬ t < 0 := by simp only [Set.mem_Ioi] at ht; linarith
+  show Real.exp (-z * t) * bhBaxterSupp xi z Dt G t = bhBaxterFn xi z Dt G t * Real.exp (-z * t)
+  simp only [bhBaxterSupp, if_neg ht0]; ring
+
+/-- **`e^{−z·}·Q ∈ L¹(ℝ)` for the supported Baxter function** — discharges `hF2`.  Truncated to
+`[0,∞)` (`integrable_indicator_iff`), the weighted Baxter function splits into `e^{−zt}·bhCoreFn`
+(continuous, compactly supported on `[0,1]` since `bhCoreFn = 0` for `t > 1`) and the tail
+`D·e^{−2zt}` (`exp_neg_integrableOn_Ioi`), both integrable on `Ici 0`. -/
+theorem bhBaxterSupp_weighted_integrable (xi z Dt G : ℝ) (hz : 0 < z) :
+    Integrable (fun t => Real.exp (-z * t) * bhBaxterSupp xi z Dt G t) := by
+  have hf_eq : (fun t => Real.exp (-z * t) * bhBaxterSupp xi z Dt G t)
+      = (Set.Ici (0:ℝ)).indicator (fun t => Real.exp (-z * t) * bhBaxterFn xi z Dt G t) := by
+    funext t
+    simp only [bhBaxterSupp, Set.indicator_apply, Set.mem_Ici]
+    by_cases ht : (0:ℝ) ≤ t
+    · rw [if_pos ht, if_neg (not_lt.mpr ht)]
+    · rw [if_neg ht, if_pos (not_le.mp ht), mul_zero]
+  rw [hf_eq, integrable_indicator_iff measurableSet_Ici]
+  have hsplit : (fun t => Real.exp (-z * t) * bhBaxterFn xi z Dt G t)
+      = fun t => Real.exp (-z * t) * bhCoreFn xi z Dt G t
+               + (rhoOf xi * Dt * Real.exp z) * Real.exp (-(2 * z) * t) := by
+    funext t
+    simp only [bhBaxterFn]
+    have hee : Real.exp (-z * t) * Real.exp (-z * t) = Real.exp (-(2 * z) * t) := by
+      rw [← Real.exp_add]; congr 1; ring
+    rw [← hee]; ring
+  rw [hsplit]
+  have hA : MeasureTheory.IntegrableOn
+      (fun t => Real.exp (-z * t) * bhCoreFn xi z Dt G t) (Set.Ici (0:ℝ)) := by
+    rw [show Set.Ici (0:ℝ) = Set.Icc 0 1 ∪ Set.Ioi 1 from
+          (Set.Icc_union_Ioi_eq_Ici (by norm_num)).symm,
+        MeasureTheory.integrableOn_union]
+    refine ⟨Continuous.integrableOn_Icc ?_, ?_⟩
+    · exact (by fun_prop : Continuous fun t => Real.exp (-z * t)).mul (bhCoreFn_continuous xi z Dt G)
+    · exact integrableOn_zero.congr_fun
+        (fun t ht => by rw [bhCoreFn_eq_zero_of_gt xi z Dt G (Set.mem_Ioi.mp ht)]; ring)
+        measurableSet_Ioi
+  have hBioi : MeasureTheory.IntegrableOn
+      (fun t => (rhoOf xi * Dt * Real.exp z) * Real.exp (-(2 * z) * t)) (Set.Ioi (0:ℝ)) :=
+    (exp_neg_integrableOn_Ioi 0 (show (0:ℝ) < 2 * z by linarith)).const_mul _
+  exact hA.add (hBioi.congr_set_ae Ioi_ae_eq_Ici.symm)
+
+/-- **Blum–Høye Eq. (33) with the concrete Baxter function** — `h33_of_gside` specialized to
+`Q = bhBaxterSupp`, discharging the `hF2`/`hQtransform` hypotheses from `bhBaxterSupp_weighted_integrable`
+/ `bhBaxterSupp_transform`.  So `h33` (`2πG·bhF = bhP`) now needs only the RDF-side inputs — `g`'s core
+support, the RDF moment integrability `hF1`, the moment identification `ĝ(z) = G`, and the g-side OZ
+primitive `hgside` (with its Baxter kernel now the concrete `bhBaxterSupp`). -/
+theorem h33_of_gside_baxter (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0) (g : ℝ → ℝ)
+    (hgsupp : ∀ u, u < 0 → g u = 0)
+    (hF1 : Integrable (fun u => Real.exp (-z * u) * (u * g u)))
+    (hgmoment : rdfLaplaceMoment g z = G)
+    (hgside : 2 * Real.pi * rdfLaplaceMoment g z
+      = (∫ u in Set.Ioi (0:ℝ),
+            (u * msaA xi z Dt G + msaQp xi z Dt G + z * gam xi z G * Dt * Real.exp (-z * u))
+              * Real.exp (-z * u))
+        + 2 * Real.pi * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+            * ∫ t in Set.Ioi (0:ℝ), (r - t) * g (r - t) * bhBaxterSupp xi z Dt G t)) :
+    2 * Real.pi * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0 :=
+  h33_of_gside xi z Dt G hz g (bhBaxterSupp xi z Dt G) hgsupp hF1
+    (bhBaxterSupp_weighted_integrable xi z Dt G hz) hgmoment
+    (bhBaxterSupp_transform xi z Dt G hz hxi) hgside
 
 end FMSA.ExactMSA.GSide
