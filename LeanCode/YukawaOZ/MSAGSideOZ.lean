@@ -131,4 +131,18 @@ theorem laplace_conv_post_fubini (g Q : ℝ → ℝ) (z : ℝ) :
   rw [rdfLaplaceMoment_shift g z t]
   ring
 
+/-- **The "pull-in" step** — moves the exterior Laplace weight `e^{−zr}` inside the (`t`-)convolution
+integral, turning `L_z[conv]` into the double integral `∫_r ∫_t e^{−zr}·F(r,t)` that Fubini can swap.
+`e^{−zr}` is constant in `t`, so this is `integral_const_mul` under the `r`-integral.  Together with
+`laplace_conv_post_fubini`, this brackets the only remaining analytic input — the bare Fubini swap
+(`integral_integral_swap` + the OZ integrand's 2D integrability on `{0 < t < r}`). -/
+theorem laplace_conv_pull_in (F : ℝ → ℝ → ℝ) (z : ℝ) :
+    (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ∫ t in Set.Ioi (0:ℝ), F r t)
+      = ∫ r in Set.Ioi (0:ℝ), ∫ t in Set.Ioi (0:ℝ), Real.exp (-z * r) * F r t := by
+  apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
+  intro r _
+  show Real.exp (-z * r) * (∫ t in Set.Ioi (0:ℝ), F r t)
+      = ∫ t in Set.Ioi (0:ℝ), Real.exp (-z * r) * F r t
+  rw [MeasureTheory.integral_const_mul]
+
 end FMSA.ExactMSA.GSide
