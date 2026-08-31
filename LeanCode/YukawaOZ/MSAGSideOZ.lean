@@ -113,4 +113,22 @@ theorem rdfLaplaceMoment_shift (g : ℝ → ℝ) (z t : ℝ) :
         rw [← Real.exp_add]; congr 1; ring]
   ring
 
+/-- **The post-Fubini assembly of the convolution theorem.**  After swapping the `r`- and
+`t`-integrals (Fubini), the `t`-outer form of `L_z[(rg) ⋆ Q]` collapses via the shift step: the inner
+`r`-integral is `e^{−zt}·ĝ(z)` (`rdfLaplaceMoment_shift`), so
+`∫_{t>0} Q(t)·(∫_{r>t} e^{−zr}(r−t)g(r−t) dr) dt = ĝ(z)·∫_{t>0} e^{−zt}Q(t) dt = ĝ(z)·Q̂(z)`.
+This isolates the remaining analytic input to the single Fubini swap (`integral_integral_swap` +
+the 2D integrability of the OZ-convolution integrand). -/
+theorem laplace_conv_post_fubini (g Q : ℝ → ℝ) (z : ℝ) :
+    (∫ t in Set.Ioi (0:ℝ),
+        Q t * ∫ r in Set.Ioi t, Real.exp (-z * r) * ((r - t) * g (r - t)))
+      = rdfLaplaceMoment g z * ∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q t := by
+  rw [← MeasureTheory.integral_const_mul]
+  apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
+  intro t _
+  show Q t * (∫ r in Set.Ioi t, Real.exp (-z * r) * ((r - t) * g (r - t)))
+      = rdfLaplaceMoment g z * (Real.exp (-z * t) * Q t)
+  rw [rdfLaplaceMoment_shift g z t]
+  ring
+
 end FMSA.ExactMSA.GSide
