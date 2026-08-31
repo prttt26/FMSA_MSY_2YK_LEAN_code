@@ -47,15 +47,19 @@ with `f_z(r) = e^{−zr}·r·g(r)` and `Q_z(t) = e^{−zt}·Q(t)`, the pointwise
 (`∫ f⋆g = (∫f)(∫g)`) delivers `= (∫ f_z)(∫ Q_z) = ĝ(z)·Q̂(z)`.  For `[0,∞)`-supported `g`, `Q` the
 whole-line convolution agrees with the one-sided `∫_0^r`.
 
-**Status.**  The convolution theorem `laplace_conv_eq_rdf_mul_qhat` (`L_z[(rg) ⋆ Q] = ĝ(z)·Q̂(z)`) is
-**PROVED** (axiom-clean), assembled from `rdfLaplaceMoment` (BH Eq. 28), `laplace_conv_weight`,
-`laplace_conv_pull_in`, `integral_Ioi_shift`/`rdfLaplaceMoment_shift`/`rdfLaplaceMoment_shift_from_zero`
-(the support-based `[0,∞)`-shift), and `laplace_conv_post_fubini`.  Its **only** remaining hypothesis
-is `hfub`, the Fubini swap of the OZ integrand — i.e. `MeasureTheory.integral_integral_swap` applied
-to the 2D integrability of `e^{−zr}·(r−t)·g(r−t)·Q(t)` on `{0 < t < r}`.  TODO: (1) discharge `hfub`
-from `g`, `Q` integrability + exponential decay; (2) the assembly `hoz` from
-`bhP_eq_gsource_moment` + `laplace_conv_eq_rdf_mul_qhat` (transform BH Eq. 32 at `s = z`; `ĝ(z)=G·e^{−z}`,
-`1−ρQ̂(z)=bhF`), feeding `MSABlumHoyeDerivation.h33_of_gside_oz` for the unconditional `h33`.
+**Status.**  The convolution theorem is **fully PROVED, axiom-clean, with no Fubini hypothesis**:
+`laplace_conv_eq_rdf_mul_qhat_of_integrable` gives `L_z[(rg) ⋆ Q] = ĝ(z)·Q̂(z)` from just the physical
+integrability of the Laplace-weighted moments `r·g(r)`, `Q(t)` (`F₁, F₂ ∈ L¹`) plus `g`'s `[0,∞)`
+support.  The Fubini swap `hfub` (`laplace_conv_eq_rdf_mul_qhat`'s hypothesis) is discharged by
+`laplace_conv_fubini_swap`: the OZ integrand `e^{−zr}(r−t)g(r−t)Q(t)` is a convolution kernel
+`F₁(r−t)·F₂(t)`, so `Integrable.convolution_integrand` (full plane) + `Measure.prod_restrict` +
+`integral_integral_swap` give the swap.  The algebra is assembled from `rdfLaplaceMoment` (BH Eq. 28),
+`laplace_conv_weight`, `laplace_conv_pull_in`,
+`integral_Ioi_shift`/`rdfLaplaceMoment_shift`/`rdfLaplaceMoment_shift_from_zero`, and
+`laplace_conv_post_fubini`.  **TODO (the last leg):** the assembly `hoz` from `bhP_eq_gsource_moment`
++ `laplace_conv_eq_rdf_mul_qhat_of_integrable` (transform BH Eq. 32 at `s = z`; `ĝ(z)=G·e^{−z}`,
+`1−ρQ̂(z)=bhF`, the `e^{−z}` cancels via the σ-shift), feeding `MSABlumHoyeDerivation.h33_of_gside_oz`
+for the **unconditional `h33`**.
 -/
 
 open MeasureTheory Set Real
@@ -221,5 +225,56 @@ theorem laplace_conv_eq_rdf_mul_qhat (g Q : ℝ → ℝ) (z : ℝ)
         ring
     _ = rdfLaplaceMoment g z * ∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q t :=
         laplace_conv_post_fubini g Q z
+
+/-- **The Fubini swap of the OZ-convolution integrand** — discharges the `hfub` hypothesis of
+`laplace_conv_eq_rdf_mul_qhat`.  The 2D integrand factors as a *convolution kernel*
+`e^{−zr}·(r−t)·g(r−t)·Q(t) = F₁(r−t)·F₂(t)` with `F₁(u) = e^{−zu}·u·g(u)` and `F₂(t) = e^{−zt}·Q(t)`
+(since `e^{−z(r−t)}·e^{−zt} = e^{−zr}`).  So its 2D integrability follows from `F₁, F₂ ∈ L¹(ℝ)`:
+`Integrable.convolution_integrand` gives full-plane integrability on `volume.prod volume`, and
+restricting to `Ioi 0 ×ˢ Ioi 0` (`Integrable.integrableOn` + `Measure.prod_restrict`) yields
+integrability on `(volume.restrict (Ioi 0)).prod (volume.restrict (Ioi 0))` — exactly the hypothesis
+`integral_integral_swap` needs (no translation-invariance required at the swap step).  The physical
+integrability inputs are `F₁, F₂ ∈ L¹`, i.e. `r·g(r)` and `Q(t)` weighted by the `e^{−z·}` Laplace
+kernel decay — precisely the finiteness of the RDF moment `ĝ(z)` and Baxter moment `Q̂(z)`. -/
+theorem laplace_conv_fubini_swap (g Q : ℝ → ℝ) (z : ℝ)
+    (hF1 : Integrable (fun u => Real.exp (-z * u) * (u * g u)))
+    (hF2 : Integrable (fun t => Real.exp (-z * t) * Q t)) :
+    (∫ r in Set.Ioi (0:ℝ), ∫ t in Set.Ioi (0:ℝ),
+        Real.exp (-z * r) * ((r - t) * g (r - t) * Q t))
+      = ∫ t in Set.Ioi (0:ℝ), ∫ r in Set.Ioi (0:ℝ),
+        Real.exp (-z * r) * ((r - t) * g (r - t) * Q t) := by
+  have hconv : Integrable
+      (fun p : ℝ × ℝ => Real.exp (-z * p.1) * ((p.1 - p.2) * g (p.1 - p.2) * Q p.2))
+      (volume.prod volume) := by
+    refine (hF2.convolution_integrand (ContinuousLinearMap.mul ℝ ℝ) hF1).congr
+      (Filter.Eventually.of_forall (fun p => ?_))
+    simp only [ContinuousLinearMap.mul_apply']
+    have hac : Real.exp (-z * p.2) * Real.exp (-z * (p.1 - p.2)) = Real.exp (-z * p.1) := by
+      rw [← Real.exp_add]; congr 1; ring
+    linear_combination (Q p.2 * ((p.1 - p.2) * g (p.1 - p.2))) * hac
+  have hrestr : Integrable
+      (fun p : ℝ × ℝ => Real.exp (-z * p.1) * ((p.1 - p.2) * g (p.1 - p.2) * Q p.2))
+      ((volume.restrict (Set.Ioi (0:ℝ))).prod (volume.restrict (Set.Ioi (0:ℝ)))) := by
+    rw [Measure.prod_restrict]
+    exact hconv.integrableOn
+  exact integral_integral_swap
+    (f := fun r t => Real.exp (-z * r) * ((r - t) * g (r - t) * Q t)) hrestr
+
+/-- **The g-side Laplace convolution theorem, fully discharged** (no Fubini hypothesis).  Combines
+`laplace_conv_eq_rdf_mul_qhat` with `laplace_conv_fubini_swap`: for an RDF `g` supported on `[0, ∞)`
+and with the Laplace-weighted moments `r·g(r)` and `Q(t)` integrable,
+
+    ∫_{r>0} e^{−zr}·(∫_{t>0} (r−t)·g(r−t)·Q(t) dt) dr  =  ĝ(z)·Q̂(z).
+
+This is the form the g-side OZ assembly (`hoz`) consumes: only the physical integrability of the RDF
+and Baxter moments is assumed — the Fubini swap is now internal. -/
+theorem laplace_conv_eq_rdf_mul_qhat_of_integrable (g Q : ℝ → ℝ) (z : ℝ)
+    (hgsupp : ∀ u, u < 0 → g u = 0)
+    (hF1 : Integrable (fun u => Real.exp (-z * u) * (u * g u)))
+    (hF2 : Integrable (fun t => Real.exp (-z * t) * Q t)) :
+    (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+        * ∫ t in Set.Ioi (0:ℝ), (r - t) * g (r - t) * Q t)
+      = rdfLaplaceMoment g z * ∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q t :=
+  laplace_conv_eq_rdf_mul_qhat g Q z hgsupp (laplace_conv_fubini_swap g Q z hF1 hF2)
 
 end FMSA.ExactMSA.GSide
