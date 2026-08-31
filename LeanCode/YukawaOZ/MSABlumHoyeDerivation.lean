@@ -1049,4 +1049,69 @@ theorem bhP_poly_eq_gsource_moment (xi z Dt G : ℝ) (hz : 0 < z) :
       integral_Ioi_id_mul_exp_neg hz, hexpI]
   field_simp
 
+/-- **`bhP` is the FULL g-source Laplace moment** — extends `bhP_poly_eq_gsource_moment` with the
+continuity-exponential term.  `bhP = ∫₀^∞ [(u·msaA + msaQp) + z·γ·Dt·e^{−zu}]·e^{−zu} du`, the Laplace
+transform (over `u = r − σ`) of the FULL g-side Eq-(9) source `(r−σ)q'' + q' − zC e^{−z(r−σ)}` with
+`C = −γ·Dt` (so `−zC = z·γ·Dt`).  ⭐ **Resolution of the h33 print-error obstruction:** the `C`-exp is
+σ-ANCHORED (`e^{−z(r−σ)} = e^{−zu}`), NOT `e^{−zr}` as printed in Blum–Høye — with the σ-anchored form
+the tail moment is `∫₀^∞ zγDt·e^{−zu}·e^{−zu} = γDt/2` = `bhP`'s `C`-term EXACTLY, with no stray
+`e^{±z}` (the `e^{−z}` discrepancy of the printed form is precisely the `e^{−zr}` vs `e^{−z(r−σ)}`
+error).  So `bhP` (h33's RHS) IS the complete g-source Laplace. -/
+theorem bhP_eq_gsource_moment (xi z Dt G : ℝ) (hz : 0 < z) :
+    bhP xi z (Dt, G)
+      = ∫ u in Set.Ioi (0:ℝ),
+          (u * msaA xi z Dt G + msaQp xi z Dt G + z * gam xi z G * Dt * Real.exp (-z * u))
+            * Real.exp (-z * u) := by
+  have hz' : z ≠ 0 := hz.ne'
+  have hc : (fun u : ℝ => (z * gam xi z G * Dt * Real.exp (-z * u)) * Real.exp (-z * u))
+      = fun u => (z * gam xi z G * Dt) * Real.exp (-(2 * z) * u) := by
+    funext u
+    rw [mul_assoc, ← Real.exp_add, show -z * u + -z * u = -(2 * z) * u from by ring]
+  have hIpoly : MeasureTheory.IntegrableOn
+      (fun u => (u * msaA xi z Dt G + msaQp xi z Dt G) * Real.exp (-z * u)) (Set.Ioi (0:ℝ)) := by
+    have he : (fun u => (u * msaA xi z Dt G + msaQp xi z Dt G) * Real.exp (-z * u))
+        = fun u => msaA xi z Dt G * (u * Real.exp (-z * u))
+                 + msaQp xi z Dt G * Real.exp (-z * u) := by funext u; ring
+    rw [he]
+    exact ((integrableOn_Ioi_id_mul_exp_neg hz).const_mul _).add
+      ((exp_neg_integrableOn_Ioi 0 hz).const_mul _)
+  have hIcexp : MeasureTheory.IntegrableOn
+      (fun u => (z * gam xi z G * Dt * Real.exp (-z * u)) * Real.exp (-z * u)) (Set.Ioi (0:ℝ)) := by
+    rw [hc]
+    exact (exp_neg_integrableOn_Ioi 0 (show (0:ℝ) < 2 * z by linarith)).const_mul _
+  have hctail : (∫ u in Set.Ioi (0:ℝ),
+        (z * gam xi z G * Dt * Real.exp (-z * u)) * Real.exp (-z * u)) = gam xi z G * Dt / 2 := by
+    rw [hc, MeasureTheory.integral_const_mul,
+        integral_exp_mul_Ioi (show -(2 * z) < 0 by linarith) 0, mul_zero, Real.exp_zero,
+        neg_div_neg_eq]
+    field_simp
+  have hsplit : (∫ u in Set.Ioi (0:ℝ),
+        (u * msaA xi z Dt G + msaQp xi z Dt G + z * gam xi z G * Dt * Real.exp (-z * u))
+          * Real.exp (-z * u))
+      = (∫ u in Set.Ioi (0:ℝ), (u * msaA xi z Dt G + msaQp xi z Dt G) * Real.exp (-z * u))
+        + (∫ u in Set.Ioi (0:ℝ),
+            (z * gam xi z G * Dt * Real.exp (-z * u)) * Real.exp (-z * u)) := by
+    rw [← MeasureTheory.integral_add hIpoly hIcexp]
+    apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
+    intro u _; ring
+  rw [hsplit, ← bhP_poly_eq_gsource_moment xi z Dt G hz, hctail]
+  simp only [bhP, bhP0, bhPRest, msaA, msaQp, gam, Mtil, Ntil, rhoOf, bA0, bB0, qp0]
+  field_simp
+  ring
+
+/-- **Blum–Høye Eq. (33)/(34) ⟹ h33** — the g-side analog of `h29_of_baxter_exterior`.  Given the
+g-side OZ relation (Eq. 9) Laplace-transformed at `s = z` — `2π ĝ(z)·bhF = ∫₀^∞ (g-source)·e^{−zu} du`
+with the σ-anchored source (repo normalization `ĝ(z) → G`) — h33 (`2πG·bhF = bhP`) follows, since
+`bhP` IS that g-source Laplace (`bhP_eq_gsource_moment`).  This reduces the formerly-posited constraint
+`h33` to the recognised OZ primitive `hoz` (Eq. 9 at `s=z`), print-error-free.  Discharging `hoz`
+itself is the full g(r) OZ derivation (the RDF convolution `∫(r−t)g·Q`, folded into the LHS via the
+convolution theorem), tracked separately. -/
+theorem h33_of_gside_oz (xi z Dt G : ℝ) (hz : 0 < z)
+    (hoz : 2 * Real.pi * (G * bhF xi z (Dt, G))
+      = ∫ u in Set.Ioi (0:ℝ),
+          (u * msaA xi z Dt G + msaQp xi z Dt G + z * gam xi z G * Dt * Real.exp (-z * u))
+            * Real.exp (-z * u)) :
+    2 * Real.pi * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0 := by
+  linear_combination hoz - bhP_eq_gsource_moment xi z Dt G hz
+
 end FMSA.ExactMSA
