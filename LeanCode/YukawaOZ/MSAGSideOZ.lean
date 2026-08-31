@@ -81,4 +81,36 @@ theorem laplace_conv_weight (f h : ℝ → ℝ) (z r : ℝ) {s : Set ℝ} (hs : 
       show Real.exp (-z * (r - t)) * Real.exp (-z * t) = Real.exp (-z * r) from by
         rw [← Real.exp_add]; congr 1; ring]
 
+/-- **`Ioi`-translation of a set integral.**  `∫_{u > 0} F(u+t) du = ∫_{r > t} F(r) dr`, from the
+measure-preserving right-translation `u ↦ u + t` (which maps `Ioi 0` onto `Ioi t`).  The change of
+variables underlying the convolution theorem's shift step. -/
+theorem integral_Ioi_shift (F : ℝ → ℝ) (t : ℝ) :
+    ∫ u in Set.Ioi (0:ℝ), F (u + t) = ∫ r in Set.Ioi t, F r := by
+  have hmp : MeasureTheory.MeasurePreserving (· + t) (volume : Measure ℝ) volume :=
+    measurePreserving_add_right volume t
+  have hme : MeasurableEmbedding (· + t) :=
+    (Homeomorph.addRight t).isClosedEmbedding.measurableEmbedding
+  have hpre : (· + t) ⁻¹' Set.Ioi t = Set.Ioi (0:ℝ) := by
+    ext u; simp only [Set.mem_preimage, Set.mem_Ioi]; constructor <;> intro h <;> linarith
+  rw [← hpre, hmp.setIntegral_preimage_emb hme]
+
+/-- **The shift step of the convolution theorem** — the inner (over-`r`) integral of the g-side
+OZ convolution.  `∫_{r > t} e^{−zr}·(r−t)·g(r−t) dr = e^{−zt}·ĝ(z)`: substituting `u = r − t`
+(`integral_Ioi_shift`) and factoring `e^{−z(u+t)} = e^{−zt}·e^{−zu}` gives the RDF moment `ĝ(z)`
+times the `e^{−zt}` that combines with the `Q(t)` factor to reconstruct `Q̂(z)` after the `t`-integral.
+-/
+theorem rdfLaplaceMoment_shift (g : ℝ → ℝ) (z t : ℝ) :
+    ∫ r in Set.Ioi t, Real.exp (-z * r) * ((r - t) * g (r - t))
+      = Real.exp (-z * t) * rdfLaplaceMoment g z := by
+  rw [← integral_Ioi_shift (fun r => Real.exp (-z * r) * ((r - t) * g (r - t))) t, rdfLaplaceMoment,
+      ← MeasureTheory.integral_const_mul]
+  apply MeasureTheory.setIntegral_congr_fun measurableSet_Ioi
+  intro u _
+  show Real.exp (-z * (u + t)) * ((u + t - t) * g (u + t - t))
+      = Real.exp (-z * t) * (Real.exp (-z * u) * (u * g u))
+  rw [show u + t - t = u from by ring,
+      show Real.exp (-z * (u + t)) = Real.exp (-z * t) * Real.exp (-z * u) from by
+        rw [← Real.exp_add]; congr 1; ring]
+  ring
+
 end FMSA.ExactMSA.GSide
