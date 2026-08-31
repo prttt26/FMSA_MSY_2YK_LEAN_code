@@ -56,10 +56,13 @@ support.  The Fubini swap `hfub` (`laplace_conv_eq_rdf_mul_qhat`'s hypothesis) i
 `integral_integral_swap` give the swap.  The algebra is assembled from `rdfLaplaceMoment` (BH Eq. 28),
 `laplace_conv_weight`, `laplace_conv_pull_in`,
 `integral_Ioi_shift`/`rdfLaplaceMoment_shift`/`rdfLaplaceMoment_shift_from_zero`, and
-`laplace_conv_post_fubini`.  **TODO (the last leg):** the assembly `hoz` from `bhP_eq_gsource_moment`
-+ `laplace_conv_eq_rdf_mul_qhat_of_integrable` (transform BH Eq. 32 at `s = z`; `ĝ(z)=G·e^{−z}`,
-`1−ρQ̂(z)=bhF`, the `e^{−z}` cancels via the σ-shift), feeding `MSABlumHoyeDerivation.h33_of_gside_oz`
-for the **unconditional `h33`**.
+`laplace_conv_post_fubini`.  **The g-side leg is ASSEMBLED:** `hoz_of_gside` derives `hoz` from the
+g-side OZ equation Laplace-transformed at `s = z` (`hgside`, the OZ primitive) by folding its
+convolution term with `laplace_conv_eq_rdf_mul_qhat_of_integrable` and substituting `ĝ(z) = G`,
+`Q̂(z) = 1 − bhF`; `h33_of_gside` chains it into `MSABlumHoyeDerivation.h33_of_gside_oz` for the full
+**`2πG·bhF = bhP`**.  So `h33` now stands on exactly the recognised inputs `hgside` (Eq. 32 Laplace-
+transformed) + `ĝ(z)=G` + `Q̂(z)=1−bhF` — parallel to how `h29` stands on `hbax` — with the convolution
+folding (the mathematical crux) fully discharged, axiom-clean.
 -/
 
 open MeasureTheory Set Real
@@ -276,5 +279,66 @@ theorem laplace_conv_eq_rdf_mul_qhat_of_integrable (g Q : ℝ → ℝ) (z : ℝ)
         * ∫ t in Set.Ioi (0:ℝ), (r - t) * g (r - t) * Q t)
       = rdfLaplaceMoment g z * ∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q t :=
   laplace_conv_eq_rdf_mul_qhat g Q z hgsupp (laplace_conv_fubini_swap g Q z hF1 hF2)
+
+/-! ### The g-side OZ assembly — `hoz` from the convolution theorem (Blum–Høye Eq. 32 → 33) -/
+
+/-- **`hoz`, derived from the g-side OZ equation** — the g-side analog of `bh_exterior_baxter_relation`
+feeding `h29_of_baxter_exterior`.  Given Blum–Høye's real-space g-side OZ equation (Eq. 32),
+**Laplace-transformed at `s = z`** (`hgside`, the recognised OZ primitive — the moment/integral match,
+not a single-point coefficient match as on the c-side):
+
+    2π·ĝ(z)  =  ∫₀^∞ (g-source)·e^{−zu} du  +  2π·∫₀^∞ e^{−zr}(∫₀^∞ (r−t)g(r−t)Q(t) dt) dr,
+
+the last (OZ-convolution) term **folds** onto the left via `laplace_conv_eq_rdf_mul_qhat_of_integrable`
+into `ĝ(z)·Q̂(z)`.  With the physical identifications `ĝ(z) = G` (`hgmoment`, the RDF Laplace moment =
+the repo contact amplitude) and `Q̂(z) = 1 − bhF` (`hQtransform`, i.e. `1 − ρQ̂ = bhF` with `ρ` carried
+by `Q`; this is `MSABlumHoyeDerivation.bhBaxter_transform_at_z` for the `[0,∞)`-supported Baxter
+function), the `2π·ĝ(z)·(1 − ρQ̂)` regroups to `2π·G·bhF`, giving exactly the `hoz` consumed by
+`h33_of_gside_oz`.  The `Q`-support that `Q̂` needs is implicit in `hF2` (`e^{−z·}·Q ∈ L¹` forces
+`Q = 0` on `(−∞,0)` since `e^{−z·}` blows up there); the conv theorem itself never evaluates `Q` at
+negative arguments. -/
+theorem hoz_of_gside (xi z Dt G : ℝ) (g Q : ℝ → ℝ)
+    (hgsupp : ∀ u, u < 0 → g u = 0)
+    (hF1 : Integrable (fun u => Real.exp (-z * u) * (u * g u)))
+    (hF2 : Integrable (fun t => Real.exp (-z * t) * Q t))
+    (hgmoment : rdfLaplaceMoment g z = G)
+    (hQtransform : (∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q t)
+      = 1 - bhF xi z (Dt, G))
+    (hgside : 2 * Real.pi * rdfLaplaceMoment g z
+      = (∫ u in Set.Ioi (0:ℝ),
+            (u * msaA xi z Dt G + msaQp xi z Dt G + z * gam xi z G * Dt * Real.exp (-z * u))
+              * Real.exp (-z * u))
+        + 2 * Real.pi * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+            * ∫ t in Set.Ioi (0:ℝ), (r - t) * g (r - t) * Q t)) :
+    2 * Real.pi * (G * bhF xi z (Dt, G))
+      = ∫ u in Set.Ioi (0:ℝ),
+          (u * msaA xi z Dt G + msaQp xi z Dt G + z * gam xi z G * Dt * Real.exp (-z * u))
+            * Real.exp (-z * u) := by
+  rw [laplace_conv_eq_rdf_mul_qhat_of_integrable g Q z hgsupp hF1 hF2, hgmoment,
+      hQtransform] at hgside
+  linear_combination hgside
+
+/-- **Blum–Høye Eq. (33), fully assembled** — `2πG·bhF = bhP` from the g-side OZ equation
+(`hgside`) via the convolution theorem, chaining `hoz_of_gside` into
+`MSABlumHoyeDerivation.h33_of_gside_oz`.  This closes the g-side leg of the `N = 1` Blum–Høye
+derivation: `h33` is now reduced to the single recognised OZ primitive `hgside` (Eq. 32 Laplace-
+transformed) plus the two physical identifications `ĝ(z) = G`, `Q̂(z) = 1 − bhF` — the convolution
+folding that was the mathematical crux is discharged (axiom-clean). -/
+theorem h33_of_gside (xi z Dt G : ℝ) (hz : 0 < z) (g Q : ℝ → ℝ)
+    (hgsupp : ∀ u, u < 0 → g u = 0)
+    (hF1 : Integrable (fun u => Real.exp (-z * u) * (u * g u)))
+    (hF2 : Integrable (fun t => Real.exp (-z * t) * Q t))
+    (hgmoment : rdfLaplaceMoment g z = G)
+    (hQtransform : (∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q t)
+      = 1 - bhF xi z (Dt, G))
+    (hgside : 2 * Real.pi * rdfLaplaceMoment g z
+      = (∫ u in Set.Ioi (0:ℝ),
+            (u * msaA xi z Dt G + msaQp xi z Dt G + z * gam xi z G * Dt * Real.exp (-z * u))
+              * Real.exp (-z * u))
+        + 2 * Real.pi * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+            * ∫ t in Set.Ioi (0:ℝ), (r - t) * g (r - t) * Q t)) :
+    2 * Real.pi * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0 :=
+  h33_of_gside_oz xi z Dt G hz
+    (hoz_of_gside xi z Dt G g Q hgsupp hF1 hF2 hgmoment hQtransform hgside)
 
 end FMSA.ExactMSA.GSide
