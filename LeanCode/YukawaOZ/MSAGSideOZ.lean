@@ -47,10 +47,15 @@ with `f_z(r) = e^{−zr}·r·g(r)` and `Q_z(t) = e^{−zt}·Q(t)`, the pointwise
 (`∫ f⋆g = (∫f)(∫g)`) delivers `= (∫ f_z)(∫ Q_z) = ĝ(z)·Q̂(z)`.  For `[0,∞)`-supported `g`, `Q` the
 whole-line convolution agrees with the one-sided `∫_0^r`.
 
-**Status.**  This file currently provides the abstract RDF Laplace moment `rdfLaplaceMoment` (BH
-Eq. 28) and the core weighting identity `laplace_conv_weight`.  TODO (the substantial analysis): the
-full `laplace_conv_eq_rdf_mul_qhat` (Fubini/`integral_convolution` + support + integrability), then
-the assembly `hoz` from `bhP_eq_gsource_moment` + the transformed BH Eq. (32).
+**Status.**  The convolution theorem `laplace_conv_eq_rdf_mul_qhat` (`L_z[(rg) ⋆ Q] = ĝ(z)·Q̂(z)`) is
+**PROVED** (axiom-clean), assembled from `rdfLaplaceMoment` (BH Eq. 28), `laplace_conv_weight`,
+`laplace_conv_pull_in`, `integral_Ioi_shift`/`rdfLaplaceMoment_shift`/`rdfLaplaceMoment_shift_from_zero`
+(the support-based `[0,∞)`-shift), and `laplace_conv_post_fubini`.  Its **only** remaining hypothesis
+is `hfub`, the Fubini swap of the OZ integrand — i.e. `MeasureTheory.integral_integral_swap` applied
+to the 2D integrability of `e^{−zr}·(r−t)·g(r−t)·Q(t)` on `{0 < t < r}`.  TODO: (1) discharge `hfub`
+from `g`, `Q` integrability + exponential decay; (2) the assembly `hoz` from
+`bhP_eq_gsource_moment` + `laplace_conv_eq_rdf_mul_qhat` (transform BH Eq. 32 at `s = z`; `ĝ(z)=G·e^{−z}`,
+`1−ρQ̂(z)=bhF`), feeding `MSABlumHoyeDerivation.h33_of_gside_oz` for the unconditional `h33`.
 -/
 
 open MeasureTheory Set Real
@@ -144,5 +149,77 @@ theorem laplace_conv_pull_in (F : ℝ → ℝ → ℝ) (z : ℝ) :
   show Real.exp (-z * r) * (∫ t in Set.Ioi (0:ℝ), F r t)
       = ∫ t in Set.Ioi (0:ℝ), Real.exp (-z * r) * F r t
   rw [MeasureTheory.integral_const_mul]
+
+/-- **The shift step over the physical half-line** `[0, ∞)`.  For an RDF `g` supported on `[0, ∞)`
+(`g u = 0` for `u < 0`) and `t > 0`,
+`∫_{r > 0} e^{−zr}·(r−t)·g(r−t) dr = e^{−zt}·ĝ(z)`.  The inner `r`-integral of the OZ convolution
+naturally runs over `r > 0` (the physical domain), but `g(r−t) = 0` for `r < t` (support) *and* the
+`(r−t)` factor vanishes at the boundary `r = t`, so the integrand is **pointwise zero** on all of
+`(0, t]` — no measure-zero subtlety.  Hence `∫_{r>0} = ∫_{r>t}` by
+`setIntegral_eq_of_subset_of_forall_sdiff_eq_zero` (no integrability needed), and the latter is
+`rdfLaplaceMoment_shift`.  This is what lets the `t`-outer form assemble to `ĝ(z)·Q̂(z)` directly from
+the physical `r > 0` domain. -/
+theorem rdfLaplaceMoment_shift_from_zero (g : ℝ → ℝ) (z t : ℝ) (ht : 0 < t)
+    (hgsupp : ∀ u, u < 0 → g u = 0) :
+    ∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ((r - t) * g (r - t))
+      = Real.exp (-z * t) * rdfLaplaceMoment g z := by
+  rw [← rdfLaplaceMoment_shift g z t]
+  apply setIntegral_eq_of_subset_of_forall_sdiff_eq_zero measurableSet_Ioi
+    (Set.Ioi_subset_Ioi (le_of_lt ht))
+  intro r hr
+  simp only [Set.mem_diff, Set.mem_Ioi, not_lt] at hr
+  have hz : (r - t) * g (r - t) = 0 := by
+    rcases lt_or_eq_of_le hr.2 with h | h
+    · rw [hgsupp (r - t) (by linarith)]; ring
+    · rw [h]; ring
+  show Real.exp (-z * r) * ((r - t) * g (r - t)) = 0
+  rw [hz]; ring
+
+/-- **The Laplace convolution theorem for the g-side OZ equation** (Blum–Høye, the `L_z` of Eq. 32's
+convolution term).  For an RDF `g` and Baxter function `Q` supported on `[0, ∞)`, the Laplace
+transform at `s = z` of the OZ convolution `∫₀^∞ (r−t)·g(r−t)·Q(t) dt` factors into the product of the
+individual transforms:
+
+    ∫_{r>0} e^{−zr}·(∫_{t>0} (r−t)·g(r−t)·Q(t) dt) dr  =  ĝ(z)·Q̂(z)
+
+where `ĝ(z) = rdfLaplaceMoment g z` and `Q̂(z) = ∫_{t>0} e^{−zt}·Q(t) dt`.  Assembled from the four
+algebraic pieces — `laplace_conv_pull_in` (move `e^{−zr}` inside), the Fubini swap (`hfub`), the
+per-`t` collapse (`rdfLaplaceMoment_shift_from_zero`, using `g`'s support), and
+`laplace_conv_post_fubini`.  The **only** analytic hypothesis is `hfub`, the Fubini swap of the OZ
+integrand — i.e. `MeasureTheory.integral_integral_swap` applied to the 2D integrability of
+`e^{−zr}·(r−t)·g(r−t)·Q(t)` on the region `{0 < t < r}` (discharged from `g`, `Q` integrability +
+exponential decay). -/
+theorem laplace_conv_eq_rdf_mul_qhat (g Q : ℝ → ℝ) (z : ℝ)
+    (hgsupp : ∀ u, u < 0 → g u = 0)
+    (hfub : (∫ r in Set.Ioi (0:ℝ), ∫ t in Set.Ioi (0:ℝ),
+                Real.exp (-z * r) * ((r - t) * g (r - t) * Q t))
+          = ∫ t in Set.Ioi (0:ℝ), ∫ r in Set.Ioi (0:ℝ),
+                Real.exp (-z * r) * ((r - t) * g (r - t) * Q t)) :
+    (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+        * ∫ t in Set.Ioi (0:ℝ), (r - t) * g (r - t) * Q t)
+      = rdfLaplaceMoment g z * ∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q t := by
+  calc (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+            * ∫ t in Set.Ioi (0:ℝ), (r - t) * g (r - t) * Q t)
+      = ∫ r in Set.Ioi (0:ℝ), ∫ t in Set.Ioi (0:ℝ),
+            Real.exp (-z * r) * ((r - t) * g (r - t) * Q t) :=
+        laplace_conv_pull_in (fun r t => (r - t) * g (r - t) * Q t) z
+    _ = ∫ t in Set.Ioi (0:ℝ), ∫ r in Set.Ioi (0:ℝ),
+            Real.exp (-z * r) * ((r - t) * g (r - t) * Q t) := hfub
+    _ = ∫ t in Set.Ioi (0:ℝ),
+            Q t * ∫ r in Set.Ioi t, Real.exp (-z * r) * ((r - t) * g (r - t)) := by
+        apply setIntegral_congr_fun measurableSet_Ioi
+        intro t ht
+        show (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ((r - t) * g (r - t) * Q t))
+            = Q t * ∫ r in Set.Ioi t, Real.exp (-z * r) * ((r - t) * g (r - t))
+        rw [rdfLaplaceMoment_shift g z t,
+            ← rdfLaplaceMoment_shift_from_zero g z t ht hgsupp,
+            ← MeasureTheory.integral_const_mul]
+        apply setIntegral_congr_fun measurableSet_Ioi
+        intro r _
+        show Real.exp (-z * r) * ((r - t) * g (r - t) * Q t)
+            = Q t * (Real.exp (-z * r) * ((r - t) * g (r - t)))
+        ring
+    _ = rdfLaplaceMoment g z * ∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q t :=
+        laplace_conv_post_fubini g Q z
 
 end FMSA.ExactMSA.GSide
