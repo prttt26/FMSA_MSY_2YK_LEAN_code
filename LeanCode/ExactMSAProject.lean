@@ -193,3 +193,13 @@ cross-check (which is expected to mirror the c-side (♦) recentering) remain �
 /-- info: 'FMSA.ExactMSA.MixLeg3.mat_laplace_conv' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.mat_laplace_conv
+
+/-! **The g-side fold (mixture analog of the scalar `hoz_of_gside`).**  `mat_gside_fold` takes the
+mixture g-side OZ equation Laplace-transformed at `s = z` (`hgside_mix`, the g-side analog of the c-side
+`hbax`), folds the species-summed RDF⋆Baxter convolution via `mat_laplace_conv`, and yields the g-side
+constraint `2π·∑_l ĝ_il(z)·(δ_lj − ρ_l·Q̂_lj(z)) = source` — discharging the convolution-folding crux.
+Matching `source`/`ĝ`/`Q̂` to the physical amplitudes recovers the numerically-confirmed (33′). -/
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.mat_gside_fold' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.mat_gside_fold

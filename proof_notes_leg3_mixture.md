@@ -220,7 +220,21 @@ scalar `bhP`) is still open, but the (33′) *form* is now numerically pinned.
 is already discharged and generic in `g`,`Q`). **This resolves the roadmap's crux worry**: the `∑_l ρ_l`
 species contraction is pure linearity — the scalar g-side machinery reuses wholesale.
 
-**g-side edge cross-check (preliminary):** the g-side carries its OWN `σ`-edge factors, so an
+### MPhase 3/4 — the g-side fold (DONE, axiom-clean std-3)
+
+`mat_gside_fold` — the mixture analog of the scalar `hoz_of_gside`. Given the g-side OZ equation
+Laplace-transformed at `s=z` (`hgside_mix`, the g-side `hbax`), it folds the species-summed
+RDF⋆Baxter convolution via `mat_laplace_conv` and produces the g-side constraint
+`2π·∑_l ĝ_il(z)·(δ_lj − ρ_l·Q̂_lj(z)) = source`, with `ĝ_il`/`Q̂_lj` supplied by `hgmoment`/`hQtransform`.
+**This discharges the convolution-folding crux** (the same crux the c-side had). REMAINING (MPhase 4):
+pin the g-source normalization — match `source` to `(A_j+z·qp_ij+z²·Ct_ij/2)/z²·e^{−z·edgeHi_ij}`, and
+identify `ĝ_il = Gt_il·e^{−z·edgeHi_il}`, `Q̂_lj = e^{z·edgeLo σ l j}·qhatMixRuneq_lj` over the **full
+support `[edgeLo,∞)`** (replacing the scalar's `Ioi 0` domain) — to recover the (33′) of
+`MixBHRootUneq` (×`e^{z·edgeHi_ij}`). That (33′) form is already numerically pinned to machine precision
+(`msaemix_root_recentering_check.py` vs `msa_exact_mix.py`), so MPhase 4 is bookkeeping over the g-source
++ the full-support conv, not new physics.
+
+**g-side edge structure (numerically pinned):** the g-side carries its OWN `σ`-edge factors, so an
 analogous recentering to the c-side (♦) is EXPECTED at unequal σ — two independent signals:
 (1) `gam`'s convention `Gt_ij = ĝ_ij(z)·e^{+zσ_ij}` ⇒ `ĝ_il(z) = Gt_il·e^{−zσ_il}` (edge factor
 `e^{−zσ_il}` on the transform moment); (2) `∫₀^∞ e^{−zt}Q_lj = qhatMixRuneq_lj` only for

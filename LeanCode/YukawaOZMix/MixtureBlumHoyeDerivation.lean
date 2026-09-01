@@ -649,4 +649,38 @@ theorem mat_laplace_conv {N : ℕ} (z : ℝ) (ρ : Fin N → ℝ) (g Q : Fin N �
   rw [FMSA.ExactMSA.GSide.laplace_conv_eq_rdf_mul_qhat_of_integrable (g i l) (Q l j) z
         (hgsupp l) (hF1 l) (hF2 l)]
 
+/-- **MPhase 3/4 — the g-side fold (mixture analog of the scalar `hoz_of_gside`).**  Given the mixture
+g-side OZ equation Laplace-transformed at `s = z` (`hgside_mix`, the g-side analog of the c-side `hbax`),
+the species-summed RDF⋆Baxter convolution folds via `mat_laplace_conv` onto the transforms, giving the
+g-side constraint `2π·∑_l ĝ_il(z)·(δ_lj − ρ_l·Q̂_lj(z)) = source`, where `ĝ_il` / `Q̂_lj` are the matrix
+RDF-Laplace moment (`hgmoment`) and Baxter transform (`hQtransform`).  **This discharges the crux** — the
+convolution folding + the `∑_l` contraction — exactly as on the c-side.  Matching `source` to
+`(A_j + z·qp_ij + z²·Ct_ij/2)/z²·e^{−z·edgeHi_ij}` and identifying `ĝ_il = Gt_il·e^{−z·edgeHi_il}`,
+`Q̂_lj = e^{z·edgeLo σ l j}·qhatMixRuneq_lj` (full support) recovers the numerically-confirmed (33′) of
+`MSAMixture.MixBHRootUneq` (× `e^{z·edgeHi_ij}`); those identifications are the g-source normalization,
+still to be pinned (needs the full-support conv domain `[edgeLo,∞)` in place of the scalar's `Ioi 0`). -/
+theorem mat_gside_fold {N : ℕ} (z : ℝ) (ρ : Fin N → ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
+    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (source : ℝ)
+    (hgsupp : ∀ l u, u < 0 → g i l u = 0)
+    (hF1 : ∀ l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
+    (hgmoment : ∀ l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
+    (hQtransform : ∀ l, (∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q l j t) = Qhat l j)
+    (hgside_mix : 2 * Real.pi * ghat i j
+      = source + 2 * Real.pi * ∑ l, ρ l
+          * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+              * ∫ t in Set.Ioi (0:ℝ), (r - t) * g i l (r - t) * Q l j t)) :
+    2 * Real.pi * ∑ l, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j) = source := by
+  rw [mat_laplace_conv z ρ g Q i j hgsupp hF1 hF2,
+      Finset.sum_congr rfl (fun l _ => by rw [hgmoment l, hQtransform l])] at hgside_mix
+  have hexpand : ∑ l, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j)
+      = ghat i j - ∑ l, ρ l * (ghat i l * Qhat l j) := by
+    rw [Finset.sum_congr rfl (fun l _ => by ring :
+          ∀ l ∈ Finset.univ, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j)
+            = ghat i l * (if l = j then (1:ℝ) else 0) - ρ l * (ghat i l * Qhat l j)),
+        Finset.sum_sub_distrib]
+    congr 1
+    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  rw [hexpand, mul_sub, hgside_mix]; ring
+
 end FMSA.ExactMSA.MixLeg3
