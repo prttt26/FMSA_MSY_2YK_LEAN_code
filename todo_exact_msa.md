@@ -73,3 +73,20 @@ algebraic system over `ℝ` with `e^{−zσ}` a parameter. Needing an axiom mean
 ⚠ **Do not mark FOEQ closed on FOEQ.1–4 alone.** Those give "(D1)=(D2) *as soon as the derivative
 exists*", which is the algebraic half and is not the claim. Without FOEQ.5 the group's headline
 remains conditional, and the paper's §"What is *not* formalized" must keep saying so.
+
+### Group leg-3 — Blum–Høye `N=1` scalar derivation (h29/h33 from the OZ primitives)
+
+The scalar (`N=1`) Blum–Høye Eqs (29)/(33) `Dt·bhF = 2πK/z`, `2πG·bhF = bhP` are **derived** from the
+recognised OZ/Baxter primitives, not posited. Detail: [proof_notes_leg3_bh_realspace.md](proof_notes_leg3_bh_realspace.md).
+**Gated in [`ExactMSAProject.lean`](LeanCode/ExactMSAProject.lean)** (5 `#guard_msgs`). Every derivation
+is axiom-clean; the end-to-end factorization inherits **only** the pre-existing `exactMSA_hcore`.
+
+| Task | Title | Status | Lean file |
+|------|-------|--------|-----------|
+| leg-3 Ph.0–3 | map machinery + γ (RDF Laplace moment) + dressed coeffs `msaQp`/`msaA` (Baxter moments Eq 13/14) + tail moment | ✓ DONE | `YukawaOZ/MSABlumHoyeDerivation` |
+| leg-3 Ph.4 (h29) | `h29_of_baxter_exterior` — Eq 29 from Baxter's exterior Eq 8 + MSA closure `cMSAtail` | ✓ DONE, axiom-clean | `YukawaOZ/MSABlumHoyeDerivation` |
+| leg-3 Ph.5 (h33) | `h33_of_gside` — Eq 33 from the g-side OZ Eq 32 Laplace-transformed at `s=z`; print-error (σ-anchored C-exp) resolved | ✓ DONE, axiom-clean | `YukawaOZ/MSAGSideOZ` |
+| leg-3 conv-thm ⭐ | `laplace_conv_eq_rdf_mul_qhat_of_integrable` — `L_z[(rg)⋆Q]=ĝ(z)Q̂(z)`. **Fubini swap DISCHARGED** (`Integrable.convolution_integrand`+`Measure.prod_restrict`+`integral_integral_swap`); only physical `L¹` moment integrability assumed | ✓ DONE, axiom-clean | `YukawaOZ/MSAGSideOZ` |
+| leg-3 Q-side | `bhBaxterSupp` (+`_transform`/`_weighted_integrable`) discharge the concrete Baxter `Q̂=1−bhF` and `e^{−z·}Q∈L¹` | ✓ DONE, axiom-clean | `YukawaOZ/MSAGSideOZ` |
+| leg-3 Ph.6 | `exactMSA_factorization_of_oz` — wire the derived h29/h33 into `exactMSA_factorization`, retiring the posited constraints (footprint = std-3 + `exactMSA_hcore`, **no new axiom**) | ✓ DONE | `YukawaOZ/MSAFactorizationFromOZ` |
+| leg-3 hbax/hgside | `hbax_iff_h29` / `hgside_iff_h33` — the OZ primitives are **exactly** h29/h33 (both directions). ⚠ **NOT** unconditionally dischargeable: they are physical-root conditions, false off-root; full discharge = "closed-form Baxter fn solves OZ from first principles" = the `exactMSA_hcore` content | ✓ RESOLVED, axiom-clean | `YukawaOZ/MSAGSideOZ` |
