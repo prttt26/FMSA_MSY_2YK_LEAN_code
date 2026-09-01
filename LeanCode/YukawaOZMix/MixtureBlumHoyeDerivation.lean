@@ -743,9 +743,9 @@ the physical `Q_lj = baxterQ_lj` **only when `edgeLo_lj ≥ 0`** (ordered pairs 
 `baxterQ_lj ≠ 0` on `[edgeLo_lj,0)`, so `∫_{Ioi 0} ≠ qhatMixRuneq_lj` and this hypothesis is
 **unsatisfiable**.  ✅ **Superseded by `gside_33_of_hgside_full`** (MPhase 6): running the inner integral
 over all of `ℝ` makes `hQtransform` the *unconditional* full-line transform (`baxterQ_fullline_transform`),
-and the RDF hard core kills the `t<0` correction, extending the g-side to `σ_j < σ_i + 2σ_l` (every ordered
-pair and much more).  (The c-side (♦) has no such limitation — `mat_exterior_baxter_relation` integrates
-over the full line.) -/
+and the RDF hard core kills the `t<0` correction — with the overlap `-edgeHi_il < edgeLo_lj` automatic for
+positive diameters (`neg_edgeHi_lt_edgeLo`), so the g-side is closed for **every** unequal-σ combination.
+(The c-side (♦) has no such limitation — `mat_exterior_baxter_relation` integrates over the full line.) -/
 theorem gside_33_of_hgside {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
     (Gt Dt : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
     (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N)
@@ -784,8 +784,9 @@ runs the inner `t`-integral over **all of `ℝ`** — so its transform is the *u
 per-`t` collapse using the **RDF hard core** `g_il(u) = 0` for `u < σ_il = edgeHi_il`.  The naive
 `t<0` correction `e^{−zt}∫_{u>−t}e^{−zu}u g(u) du` differs from the clean `e^{−zt}ĝ(z)` only by
 `∫_{(0,−t]}e^{−zu}u g(u) du`, which **vanishes** when `−t < σ_il` — i.e. when `Q`'s support floor
-`edgeLo_lj > −edgeHi_il`, equivalently **`σ_j < σ_i + 2σ_l`**.  This is far broader than ordered
-pairs (which need `σ_j ≤ σ_l`); it fails only under an extreme size disparity `σ_j ≥ σ_i + 2σ_l`. -/
+`edgeLo_lj > −edgeHi_il`.  For the physical diameters this overlap is **automatic**: `edgeLo_lj + edgeHi_il
+= (σ_j−σ_l)/2 + (σ_i+σ_l)/2 = (σ_i+σ_j)/2 > 0` (the `σ_l` cancels; `neg_edgeHi_lt_edgeLo`), so the fold
+factors for **every** diameter triple — no ordered-pairs and no size-disparity restriction. -/
 
 /-- **The hard-core shift step** — the full-support generalisation of the scalar
 `FMSA.ExactMSA.GSide.rdfLaplaceMoment_shift_from_zero` to `t < 0`.  For an RDF `g` supported on
@@ -912,9 +913,10 @@ theorem laplace_conv_full_of_integrable (g Q : ℝ → ℝ) (z σg lam : ℝ) (h
 /-- **MPhase 6 — the matrix full-support convolution.**  Per species `l`, `laplace_conv_full_of_integrable`
 folds `∫_{r>0}e^{−zr}∫_ℝ(r−t)g_il(r−t)Q_lj(t)dt` onto `ĝ_il(z)·(∫_ℝ e^{−zt}Q_lj(t)dt)`, using the RDF
 hard core (`hgsupp`, support `[edgeHi_il,∞)`), the Baxter support (`hQsupp`, `[edgeLo_lj,∞)`) and the
-overlap condition `hcond` (`-edgeHi_il < edgeLo_lj`, i.e. `σ_j < σ_i + 2σ_l`); the `∑_l ρ_l` is
-linearity.  Unlike `mat_laplace_conv` the inner integral is over **all of `ℝ`**, so the resulting
-transform `∫_ℝ e^{−zt}Q_lj` is the unconditional `qhatMixRuneq_lj`. -/
+overlap condition `hcond` (`-edgeHi_il < edgeLo_lj`, which is automatic for positive diameters —
+`= σ_i+σ_j>0`, `neg_edgeHi_lt_edgeLo`); the `∑_l ρ_l` is linearity.  Unlike `mat_laplace_conv` the inner
+integral is over **all of `ℝ`**, so the resulting transform `∫_ℝ e^{−zt}Q_lj` is the unconditional
+`qhatMixRuneq_lj`. -/
 theorem mat_laplace_conv_full {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
     (i j : Fin N) (hσ : ∀ k, 0 ≤ σ k)
     (hgsupp : ∀ l u, u < edgeHi σ i l → g i l u = 0)
@@ -963,13 +965,13 @@ theorem mat_gside_fold_full {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ) (g Q : F
     simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
   rw [hexpand, mul_sub, hgside_mix]; ring
 
-/-- ⭐ **MPhase 6 — the g-side (33′) for `σ_j < σ_i + 2σ_l`.**  Chains the full-support fold
-`mat_gside_fold_full` into the (unchanged) g-source bookkeeping `gside_33_of_fold`.  Compared to
-`gside_33_of_hgside` the `Ioi 0` inner integral is replaced by `∫_ℝ`, so `hQtransform` is the full-line
-Baxter transform (`∫_ℝ e^{−zt}Q_lj = qhatMixRuneq_lj`), **unconditionally dischargeable from MPhase 1**,
-and the only remaining side condition is the mild overlap `hcond : -edgeHi_il < edgeLo_lj`
-(`σ_j < σ_i + 2σ_l`) — satisfied by all ordered pairs and much more.  So the g-side (33′) conjunct of
-`MSAMixture.MixBHRootUneq` now stands on OZ primitives for the whole range `σ_j < σ_i + 2σ_l`. -/
+/-- ⭐ **MPhase 6 — the g-side (33′), full-support.**  Chains the full-support fold `mat_gside_fold_full`
+into the (unchanged) g-source bookkeeping `gside_33_of_fold`.  Compared to `gside_33_of_hgside` the
+`Ioi 0` inner integral is replaced by `∫_ℝ`, so `hQtransform` is the full-line Baxter transform
+(`∫_ℝ e^{−zt}Q_lj = qhatMixRuneq_lj`), **unconditionally dischargeable from MPhase 1**.  The only side
+condition `hcond : -edgeHi_il < edgeLo_lj` is **automatic** for positive diameters (`= σ_i+σ_j>0`,
+`neg_edgeHi_lt_edgeLo`), so — at the mixture wire-in — the g-side (33′) conjunct of
+`MSAMixture.MixBHRootUneq` stands on OZ primitives for **every** unequal-σ combination. -/
 theorem gside_33_of_hgside_full {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
     (Gt Dt : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
     (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (hσ : ∀ k, 0 ≤ σ k)
@@ -1051,8 +1053,8 @@ use the full-line convolution).  This `Ioi 0`-fold version's **g-side hypotheses
 ordered pairs** (`σ_j ≥ σ_l`): `hQtransform` requires `∫_{Ioi 0}e^{−zt}Q_lj = qhatMixRuneq_lj`, which fails
 for `edgeLo_lj < 0`.  ✅ **Superseded by `MixBHRootUneq_of_oz_full`** (MPhase 6): its full-support fold makes
 `hQtransform` the unconditional full-line transform (`baxterQ_fullline_transform`) and the RDF hard core
-discharges the `t<0` correction, extending the g-side (and hence the whole retirement of the posited root)
-to `σ_j < σ_i + 2σ_l`. -/
+discharges the `t<0` correction, with the overlap automatic (`neg_edgeHi_lt_edgeLo`) — so it retires the
+posited root for **every** unequal-σ combination (no size-disparity condition). -/
 theorem MixBHRootUneq_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ k, 0 ≤ σ k)
     (g Q : Fin N → Fin N → ℝ → ℝ) (ghat Qhat : Fin N → Fin N → ℝ)
@@ -1099,17 +1101,28 @@ theorem baxterQ_fullline_transform {N : ℕ} (z : ℝ) (hz : 0 < z) (σ A : Fin 
       MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall (fun t => by ring))]
   exact baxterQ_transform_eq_qhatMixRuneq z σ A qp Wt Ct l j z hz.ne' (by linarith) hσl
 
-/-- ⭐⭐ **MPhase 6 — the posited root retired for `σ_j < σ_i + 2σ_l`: `MixBHRootUneq` from OZ primitives,
+/-- **The g-side overlap is automatic** — the MPhase-6 side condition `hcond` is never a restriction.
+For positive diameters the RDF hard-core reach `−edgeHi σ i l` lies strictly below the Baxter support
+floor `edgeLo σ l j`: the `σ_l` **cancels** and the gap is exactly `(σ_i + σ_j)/2 > 0`.  So the
+full-support fold factors for **every** diameter triple (no ordered-pairs, no size-disparity condition). -/
+theorem neg_edgeHi_lt_edgeLo {N : ℕ} (σ : Fin N → ℝ) (i j l : Fin N)
+    (hi : 0 < σ i) (hj : 0 ≤ σ j) : -edgeHi σ i l < edgeLo σ l j := by
+  unfold edgeHi edgeLo; linarith
+
+/-- ⭐⭐⭐ **MPhase 6 — the posited root retired for ALL unequal σ: `MixBHRootUneq` from OZ primitives,
 full-support g-side.**  The full-support upgrade of `MixBHRootUneq_of_oz`.  The g-side inner integral now
 runs over **all of `ℝ`**, so its Baxter transform `hQtransform` (`∫_ℝ e^{−zt}Q_lj = Qhat_lj`) is the
 *unconditional* MPhase-1 transform (satisfiable for every diameter pair — see `baxterQ_fullline_transform`),
 in place of the `Ioi 0` transform of `MixBHRootUneq_of_oz` that was **unsatisfiable** for `edgeLo_lj < 0`.
-The per-`t` collapse is rescued by the **RDF hard core** `hgsupp` (`g_il = 0` on `[0,edgeHi_il)`) under the
-mild overlap `hcond` (`-edgeHi_il < edgeLo_lj`, i.e. `σ_j < σ_i + 2σ_l`).  So the whole unequal-σ root now
-stands on OZ/Baxter primitives for the range `σ_j < σ_i + 2σ_l` — every ordered pair *and much more*,
-failing only under an extreme size disparity `σ_j ≥ σ_i + 2σ_l`.  The c-side (29′) remains fully general. -/
+The per-`t` collapse is rescued by the **RDF hard core** `hgsupp` (`g_il = 0` on `[0,edgeHi_il)`), and the
+overlap `−edgeHi_il < edgeLo_lj` needed for the collapse is **automatic** (`neg_edgeHi_lt_edgeLo`: the
+`σ_l` cancels, the gap `= (σ_i+σ_j)/2 > 0` for positive diameters), so it is discharged internally from
+`hσ : 0 < σ` — **no side condition survives**.  So the whole unequal-σ root stands on OZ/Baxter primitives
+for **every** diameter combination, exactly like the c-side (29′).  (There is no size-disparity corner —
+an earlier `σ_j < σ_i + 2σ_l` claim came from a flipped `edgeLo` orientation; confirmed vacuous over 6.5M
+random triples in `msaemix_extreme_disparity_check.py`.) -/
 theorem MixBHRootUneq_of_oz_full {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
-    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ k, 0 ≤ σ k)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ k, 0 < σ k)
     (g Q : Fin N → Fin N → ℝ → ℝ) (ghat Qhat : Fin N → Fin N → ℝ)
     (hbax : ∀ i j r, edgeHi σ i j < r →
       2 * Real.pi * r * matMSAtail K z σ i j r
@@ -1120,7 +1133,6 @@ theorem MixBHRootUneq_of_oz_full {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N
                     (Ct z ρ σ Gt Dt) j l t)
     (hgsupp : ∀ i l u, u < edgeHi σ i l → g i l u = 0)
     (hQsupp : ∀ j l t, t < edgeLo σ l j → Q l j t = 0)
-    (hcond : ∀ i j l, -edgeHi σ i l < edgeLo σ l j)
     (hF1 : ∀ i l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
     (hF2 : ∀ j l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
     (hgmoment : ∀ i l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
@@ -1135,12 +1147,13 @@ theorem MixBHRootUneq_of_oz_full {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N
             * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
                 * ∫ t, (r - t) * g i l (r - t) * Q l j t)) :
     MixBHRootUneq z ρ σ Gt Dt K := by
-  refine ⟨mixBHRootUneq_cSide_of_exterior z hz ρ σ Gt Dt K hσ hbax, fun i j => ?_⟩
+  refine ⟨mixBHRootUneq_cSide_of_exterior z hz ρ σ Gt Dt K (fun k => (hσ k).le) hbax, fun i j => ?_⟩
   rw [gside_bracket_sum_eq z σ ρ Gt
       (fun a b => qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
         (AVec z ρ σ Gt Dt) z a b) i j]
-  exact gside_33_of_hgside_full z ρ σ Gt Dt g Q ghat Qhat i j hσ
-    (hgsupp i) (hQsupp j) (hcond i j) (hF1 i) (hF2 j) (hgmoment i) (hQtransform j)
+  exact gside_33_of_hgside_full z ρ σ Gt Dt g Q ghat Qhat i j (fun k => (hσ k).le)
+    (hgsupp i) (hQsupp j) (fun l => neg_edgeHi_lt_edgeLo σ i j l (hσ i) (hσ j).le)
+    (hF1 i) (hF2 j) (hgmoment i) (hQtransform j)
     (hghat i) (hQhat j) (hgside_mix i j)
 
 end FMSA.ExactMSA.MixLeg3

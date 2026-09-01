@@ -1,8 +1,9 @@
 # Mixture leg-3 — roadmap (derive the matrix Blum–Høye root from OZ/Baxter primitives)
 
 **Status: MPhase 1–5 DONE (posited `MixBHRootUneq` retired on OZ primitives), + MPhase 6 DONE — the
-full-support g-side closes the (33′) derivation for `σ_j < σ_i + 2σ_l` (every ordered pair and much more;
-range numerically SHARP), superseding MP5's ordered-pairs-only `Ioi 0` fold (2026‑09‑01).** The scalar
+full-support g-side closes the (33′) derivation for ALL unequal σ (the RDF-hard-core overlap is automatic,
+`neg_edgeHi_lt_edgeLo`; no size-disparity corner — an earlier `σ_j<σ_i+2σ_l` claim was a flipped-`edgeLo`
+artifact), superseding MP5's ordered-pairs-only `Ioi 0` fold (2026‑09‑01).** The scalar
 (`N=1`) leg-3 is DONE
 (`proof_notes_leg3_bh_realspace.md`;
 `YukawaOZ/{MSABlumHoyeDerivation,MSAGSideOZ,MSAFactorizationFromOZ}.lean`): it derived `h29`/`h33` from
@@ -263,45 +264,51 @@ the g-side (33′), and the assembly (`MixBHRootUneq_of_oz`) retiring the posite
 scalar leg-3, with the σ-edge recentering (numerically pinned against `msa_exact_mix.py`) as the one
 genuinely-new mixture feature.
 
-## MPhase 6 — the full-support convolution: g-side closed for `σ_j < σ_i + 2σ_l` (2026‑09‑01)
+## MPhase 6 — the full-support convolution: g-side closed for ALL unequal σ (2026‑09‑01)
 
 The g-source normalization is **resolved** — not by absorbing a `t<0` correction into the g-source, but
-by recognising that the RDF **hard core** kills the correction outright over a broad range. Key insight:
-the RDF `g_il(u) = 0` for `u < σ_il = edgeHi_il` (particles `i`,`l` can't overlap). Re-run the fold with
-the inner `t`-integral over **all of `ℝ`** (so the Baxter transform is the *unconditional* MPhase-1
+by recognising that the RDF **hard core** kills the correction outright. Key insight: the RDF
+`g_il(u) = 0` for `u < σ_il = edgeHi_il` (particles `i`,`l` can't overlap). Re-run the fold with the inner
+`t`-integral over **all of `ℝ`** (so the Baxter transform is the *unconditional* MPhase-1
 `∫_ℝ e^{−zt}Q_lj = qhatMixRuneq_lj`, every diameter pair). The naive `t<0` correction
 `e^{−zt}∫_{u>−t}e^{−zu}u g(u)du − e^{−zt}ĝ = −e^{−zt}∫_{(0,−t]}e^{−zu}u g(u)du` **vanishes** whenever
-`−t < σ_il` — and on `Q`'s support `t ≥ edgeLo_lj`, so `−t ≤ −edgeLo_lj`; the correction is zero precisely
-when `−edgeLo_lj ≤ σ_il`, i.e. the **overlap condition `−edgeHi_il < edgeLo_lj`, equivalently
-`σ_j < σ_i + 2σ_l`**. Far broader than ordered pairs (which need `σ_j ≤ σ_l`); fails only under an extreme
-size disparity `σ_j ≥ σ_i + 2σ_l`.
+`−t < σ_il`, i.e. when `Q`'s support floor satisfies the **overlap `−edgeHi_il < edgeLo_lj`**.
+
+⭐ **The overlap is AUTOMATIC (no size-disparity corner).** With the Lean orientation
+`edgeLo σ a b = (σ_b−σ_a)/2`, `edgeHi σ a b = (σ_a+σ_b)/2`:
+`edgeLo_lj + edgeHi_il = (σ_j−σ_l)/2 + (σ_i+σ_l)/2 = (σ_i+σ_j)/2 > 0` — **the `σ_l` cancels**, so
+`−edgeHi_il < edgeLo_lj` holds for **every** diameter triple (positive diameters). So the fold factors
+cleanly for all unequal σ. ⚠ **CORRECTION to the first MP6 write-up:** an earlier claim that this needs
+`σ_j < σ_i + 2σ_l` (with a residual "extreme size disparity" corner) came from a **flipped** `edgeLo_lj =
+(σ_l−σ_j)/2`; it is **spurious**. Confirmed over **6.5M random triples** (`msaemix_extreme_disparity_check.py`,
+diameter ratios to ~1000×): zero violations, margin `= (σ_i+σ_j)/2` exactly. cf [[feedback_sigma_one_masks_bugs]].
 
 Lean (all axiom-clean std-3, `MixtureBlumHoyeDerivation.lean`):
 - `rdfLaplaceMoment_shift_hardcore` — the hard-core shift `∫_{Ioi 0}e^{−zr}(r−t)g(r−t) = e^{−zt}ĝ` for
   `t > −σg` (generalises the scalar `rdfLaplaceMoment_shift_from_zero` to `t<0`).
 - `laplace_conv_full` / `laplace_conv_full_of_integrable` — the full-support conv thm (inner `t` over `ℝ`,
-  `-σg < λ`); Fubini via `laplace_conv_full_fubini_swap` (`Ioi 0 ×ˢ ℝ`, `Measure.prod_restrict` on the
-  `r` factor only).
+  hypothesis `-σg < λ`); Fubini via `laplace_conv_full_fubini_swap` (`Ioi 0 ×ˢ ℝ`, `Measure.prod_restrict`
+  on the `r` factor only). [The `-σg < λ` hypothesis is generic-math; physically it is always met.]
 - `mat_laplace_conv_full` → `mat_gside_fold_full` → `gside_33_of_hgside_full` — the matrix stack; the key
   upgrade is `hQtransform` is now the **full-line** transform, discharged unconditionally by
   `baxterQ_fullline_transform` (`= baxterQ_transform_eq_qhatMixRuneq` at `s=z` mod `mul_comm`).
-- `MixBHRootUneq_of_oz_full` — retires the posited `MixBHRootUneq` on OZ primitives for the whole range
-  `σ_j < σ_i + 2σ_l`. No `matExactMSAUnequalDiam_hcore`.
+- `neg_edgeHi_lt_edgeLo` — the overlap `−edgeHi_il < edgeLo_lj` from `0 < σ` (`unfold; linarith`).
+- `MixBHRootUneq_of_oz_full` — retires the posited `MixBHRootUneq` on OZ primitives for **ALL** unequal σ;
+  the overlap `hcond` is discharged internally from `hσ : 0 < σ` (⇒ **no side condition survives**).
+  No `matExactMSAUnequalDiam_hcore`.
 
 **Numerically pinned** (`msaemix_fullsupport_fold_check.py`): the fold `= ĝ·Q̂` to machine precision for
-`λ ≥ −σg` and the correction is genuinely nonzero below (rel err `6.1e-2` at `λ=−σg−0.2`, `3.5e-1` at
-`λ=−σg−0.6`) ⇒ the range condition is **SHARP**. (The old `Ioi 0`-fold `gside_33_of_hgside` /
-`MixBHRootUneq_of_oz` remain in the file as the ordered-pairs statements, now marked *superseded*.)
+`λ ≥ −σg`, correction genuinely nonzero for `λ < −σg` (rel err `6.1e-2` at `λ=−σg−0.2`, `3.5e-1` at
+`λ=−σg−0.6`) — confirming `laplace_conv_full`'s hypothesis is the right one; but for physical diameters
+`λ = edgeLo_lj` is **always** `≥ −σg = −edgeHi_il`, so the correction regime is never reached.
 
-⚠ **Residual gap.** For an extreme size disparity `σ_j ≥ σ_i + 2σ_l` (some triple in the `∑_l`) the
-hard-core correction is nonzero and the g-side first-principles derivation is still open — but this is a
-much smaller corner than the previous "ordered pairs only", and does not arise for size ratios within
-~3×. The **c-side (29′) is fully general** throughout.
+**c-side (29′)** is fully general throughout. So both root conjuncts now stand on OZ/Baxter primitives for
+**every** unequal-σ combination — the g-side matches the c-side, with no residual.
 
 **Superseded note (pre-MP6, kept for history).** The g-side (33′) derivation was previously non-vacuous
 only for ordered pairs `σ_j ≥ σ_l`, because `gside_33_of_hgside`/`MixBHRootUneq_of_oz` took the `Ioi 0`
 transform `hQtransform` (`∫_{Ioi 0}e^{−zt}Q_lj = qhatMixRuneq_lj`) as a hypothesis, unsatisfiable for
-`edgeLo_lj < 0`. MP6's full-support fold removes that restriction up to `σ_j < σ_i + 2σ_l`.
+`edgeLo_lj < 0`. MP6's full-support fold removes that restriction entirely.
 
 **g-side edge structure (numerically pinned):** the g-side carries its OWN `σ`-edge factors, so an
 analogous recentering to the c-side (♦) is EXPECTED at unequal σ — two independent signals:

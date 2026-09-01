@@ -222,7 +222,7 @@ Blum–Høye root — consumed as a hypothesis by `matMSAmixture_unequalDiam_of_
 recognised OZ/Baxter primitives, the mixture analog of the scalar `exactMSA_factorization_of_oz`.  ⚠ The
 c-side (29′) is fully general; this `Ioi 0`-fold version's g-side (33′) `hQtransform` is satisfiable only
 for ordered pairs (`σ_j ≥ σ_l`).  **Superseded by `MixBHRootUneq_of_oz_full`** (MPhase 6), whose
-full-support fold extends the g-side to `σ_j < σ_i + 2σ_l`. -/
+full-support fold closes the g-side for **every** unequal-σ combination. -/
 
 /-- info: 'FMSA.ExactMSA.MixLeg3.MixBHRootUneq_of_oz' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
@@ -235,8 +235,9 @@ pairs `σ_j ≥ σ_l`).  MPhase 6 runs the inner `t`-integral over **all of `ℝ
 is the *unconditional* MPhase-1 `baxterQ_fullline_transform` (`∫_ℝ e^{−zt}Q_lj = qhatMixRuneq_lj`, every
 diameter pair) — and rescues the per-`t` collapse with the **RDF hard core** (`g_il = 0` on `[0,σ_il)`).
 The `t<0` partial-moment correction `∫_{(0,−t]}e^{−zu}u g(u)du` vanishes because `−t < σ_il` on `Q`'s
-support, precisely when the mild overlap `-edgeHi_il < edgeLo_lj`, i.e. **`σ_j < σ_i + 2σ_l`**, holds —
-every ordered pair and much more. -/
+support, i.e. the overlap `-edgeHi_il < edgeLo_lj`, which is **automatic** for positive diameters
+(`neg_edgeHi_lt_edgeLo`: the `σ_l` cancels, gap `= (σ_i+σ_j)/2 > 0`) — so the g-side closes for **every**
+unequal-σ combination, no ordered-pairs and no size-disparity restriction. -/
 
 /-- info: 'FMSA.ExactMSA.MixLeg3.laplace_conv_full_of_integrable' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
@@ -254,11 +255,12 @@ every ordered pair and much more. -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.gside_33_of_hgside_full
 
-/-! ⭐⭐ **MPhase 6 — the posited root retired for `σ_j < σ_i + 2σ_l`.**  `MixBHRootUneq_of_oz_full` is the
+/-! ⭐⭐⭐ **MPhase 6 — the posited root retired for ALL unequal σ.**  `MixBHRootUneq_of_oz_full` is the
 full-support upgrade of `MixBHRootUneq_of_oz`: its g-side `hQtransform` is the full-line Baxter transform
-(`baxterQ_fullline_transform`, satisfiable for every diameter pair), so — under the mild RDF hard core +
-overlap `σ_j < σ_i + 2σ_l` — the whole unequal-σ root stands on OZ/Baxter primitives for every ordered
-pair *and much more*.  Axiom-clean; no `matExactMSAUnequalDiam_hcore`. -/
+(`baxterQ_fullline_transform`, satisfiable for every diameter pair), and the RDF-hard-core overlap it
+needs is **automatic** (`neg_edgeHi_lt_edgeLo`, discharged internally from `0 < σ`), so **no side
+condition survives** — the whole unequal-σ root stands on OZ/Baxter primitives for **every** diameter
+combination, exactly like the c-side.  Axiom-clean; no `matExactMSAUnequalDiam_hcore`. -/
 
 /-- info: 'FMSA.ExactMSA.MixLeg3.MixBHRootUneq_of_oz_full' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
