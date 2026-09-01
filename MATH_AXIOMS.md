@@ -7,8 +7,8 @@ long-standing external proofs that are simply not in the pinned Mathlib (`v4.31.
 mixture RDF uniqueness capstone `matOzStar_unequalDiam_unique_uncond`:
 `pyhs_mixture_no_spinodal` (`HSMixture/MixtureNoSpinodal.lean`, added 2026-07-19), the
 **multicomponent** structure-factor nonsingularity.
-Full inventory: `todo_lean.md`'s
-Axioms table. Lean home: `LeanCode/Analysis/`.
+Full inventory: the **Consolidated live-axiom inventory** table just below (14 declarations, verified
+2026-09-01), and `todo_lean.md`'s Axioms table. Lean home: `LeanCode/Analysis/`.
 
 **Distinct third category — one *computation* axiom (not a math or physics assumption).**
 `exactMSA_hcore` (`YukawaOZ/MSAFullFactorization.lean`) is a *specific, externally-certified
@@ -31,6 +31,52 @@ statement bug in 4 of those (see *Statement bugs*). MA.12 is the sharpest case: 
 expected an axiom, but the positive-symbol specialization proved derivable via Plancherel coercivity. Deliberately **rejected**: an "arc-vanishing" axiom for `h_explicit`'s
 specific `Ĥ` (`proof_notes_ozfix.md` `OZFIX.10`) — that assumes the hard part of the theorem being
 proved rather than citing established mathematics.
+
+## Consolidated live-axiom inventory (14, verified 2026-09-01)
+
+Whole-library snapshot — every `axiom` **declaration** reachable in `LeanCode/`, verified by
+`grep -rn "^axiom " LeanCode/` (14 real declarations after excluding docstring prose) and by the three
+scope-gate files' `#guard_msgs #print axioms` pins passing in a green full build (8814 jobs). The count
+is **unchanged** across the MSAEMIX.6 smooth-family work (`git diff e284f04..2af7ce2`: no `axiom` line
+added or removed). Three categories, matching the taxonomy above; the per-axiom sections further below
+carry the detail (note: many of those sections document *retired* candidates — this table is the live set).
+
+**A. Pure-math, Mathlib-gap (7)** — classical, citable, absent from pinned Mathlib; formalization debt.
+
+| axiom | file | note |
+|---|---|---|
+| `circleIntegral_eq_sum_of_small_circles` | `Analysis/ContourDeformation.lean` | MA.1 keyhole/slit contour deformation |
+| `halfDiskBoundary_eq_sum_of_small_circles` | `Analysis/ContourDeformation.lean` | MA.1, upper half-disk boundary variant |
+| `sokhotski_plemelj_upper` | `Analysis/SokhotskiPlemelj.lean` | Sokhotski–Plemelj upper boundary value (P.V. existence a hypothesis) |
+| `wiener_causal_resolvent` | `Analysis/WienerRenewal.lean` | MA.13 Paley–Wiener causal resolvent (only assumption = Wiener 1/f) |
+| `zeroFree_lowerHalfPlane_of_homotopy` | `Analysis/ZeroCountHomotopy.lean` | MA.14 abstract zero-count homotopy invariance |
+| `radialShell_bounded_injective` | `Analysis/RadialWienerHopf.lean` | MA.15 bounded/`L∞` Wiener–Hopf injectivity (scalar) |
+| `matRadialShell_bounded_injective` | `Analysis/MatrixRadialWienerHopf.lean` | matrix MA.15 (MML.8 value route) |
+
+**B. Physics (1)** — the sole genuine physics assumption.
+
+| axiom | file | note |
+|---|---|---|
+| `pyhs_mixture_no_spinodal` | `HSMixture/MixtureNoSpinodal.lean` | multicomponent PY-HS structure-factor nonsingularity (`det Q̂₀(ik) ≠ 0`) |
+
+**C. Computation / Baxter–Fourier certificate (6)** — externally-certified polynomial/transform
+identities, `ring`-infeasible in Lean (measured), sympy-verified out of band. The scalar `exactMSA_hcore`
+note above now has mixture analogues (added with MSAEMIX.1/.4, 2026-08).
+
+| axiom | file | note |
+|---|---|---|
+| `exactMSA_hcore` | `YukawaOZ/MSAFullFactorization.lean` | scalar Blum–Høye closure-recovery ring (sympy `exactMSA_cert.py`) |
+| `exactMSA_kspace_residual` | `YukawaOZ/ExactMSACertificate.lean` | Fourier layer of `exactMSA_hcore` (out-of-default lib; reduces it to one cos/sin/exp identity) |
+| `matExactMSAEqualDiam_hcore` | `YukawaOZMix/MSAMixtureBHRoot.lean` | mixture equal-σ ring (MSAEMIX.4/.1) |
+| `matExactMSAEqualDiam_kspace_residual` | `YukawaOZMix/MatExactMSAEqualDiamCertificate.lean` | Fourier layer of the equal-σ mixture ring (out-of-default lib) |
+| `matExactMSAUnequalDiam_hcore` | `YukawaOZMix/MSAMixtureBHRootUneq.lean` | mixture unequal-σ ring |
+| `matHSexactUnequalDiam_kspace` | `YukawaOZMix/MSAMixtureBHRootUneq.lean` | unequal-σ HS Baxter–Fourier anchor (`cHShatUneq = √(ρᵢρⱼ)·𝓕[matCoreHSuneq]`) |
+
+⚠ **The MSAEMIX.6 matrix BH-root smooth family (both diameters) added ZERO axioms** — it is entirely
+std-3 theorems; its two HS-block determinant conditions were discharged onto the *proved* M.4 theorem
+`FMSA.MatrixQ0.Q0_mat_phys_isUnit_det` (rank-2 Weinstein–Aronszajn `Q0_moment_det_pos`), **not** any
+axiom (in particular **not** `pyhs_mixture_no_spinodal`, and not the retired free-`Qp` `Q0_mat_isUnit_det`).
+See `proof_notes_msa_exact.md` Group MSAEMIX.6.
 
 ## The axioms (4)
 
