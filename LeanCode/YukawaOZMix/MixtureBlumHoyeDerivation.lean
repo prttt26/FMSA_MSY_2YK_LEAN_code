@@ -1325,4 +1325,97 @@ theorem MixBHRootUneq_of_oz_full {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N
     (hF1 i) (hF2 j) (hgmoment i) (hQtransform j)
     (hghat i) (hQhat j) (hgside_mix i j)
 
+/-! ### MPhase 8 — the full MSA factorization from the OZ primitives (analog of scalar `exactMSA_factorization_of_oz`) -/
+
+/-- ⭐⭐ **The full unequal-σ MSA mixture factorization, from the OZ primitives** (Baxter-factor HS form).
+The mixture analog of the scalar `FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz`: chains
+`MixBHRootUneq_of_oz_full` (the posited root now *derived* from the OZ/Baxter primitives) into the
+capstone `MSAMixture.matMSAmixture_unequalDiam_of_hcore`.  So the full MSA factorization
+`((F̃_HS+F̃₁)(F̃_HS+F̃₁)ᵀ)_ij = δ_ij − (Ĉ_HS,ij + √(ρ_iρ_j)(𝓕[c_core]_ij + 𝓕[c_tail]_ij))` now stands on
+the OZ primitives (`hbax` c-side Eq 8 + `hgside_mix` g-side Eq 32 + the RDF-side data), the HS side by
+free `ftilde` algebra (`cHShatUneq`).  Footprint = std-3 + the single physics axiom
+`matExactMSAUnequalDiam_hcore` inherited from the capstone — `MixBHRootUneq_of_oz_full` adds **no** axiom,
+exactly as the scalar leg-3 adds none to `exactMSA_factorization`. -/
+theorem matMSAmixture_unequalDiam_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
+    (hσ : ∀ k, 0 < σ k) (hrho : ∀ l, 0 ≤ ρ l)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
+    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (k : ℝ)
+    (hbax : ∀ i j r, edgeHi σ i j < r →
+      2 * Real.pi * r * matMSAtail K z σ i j r
+        = -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
+          + ∑ l, ρ l * ∫ t, baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                (Ct z ρ σ Gt Dt) i l (t + r)
+                * baxterQ z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                    (Ct z ρ σ Gt Dt) j l t)
+    (hgsupp : ∀ i l u, u < edgeHi σ i l → g i l u = 0)
+    (hQsupp : ∀ j l t, t < edgeLo σ l j → Q l j t = 0)
+    (hF1 : ∀ i l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ j l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
+    (hgmoment : ∀ i l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
+    (hQtransform : ∀ j l, (∫ t, Real.exp (-z * t) * Q l j t) = Qhat l j)
+    (hghat : ∀ i l, ghat i l = Gt i l * Real.exp (-z * edgeHi σ i l))
+    (hQhat : ∀ j l, Qhat l j
+      = qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z l j)
+    (hgside_mix : ∀ i j, 2 * Real.pi * ghat i j
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+          * Real.exp (-z * edgeHi σ i j)
+        + 2 * Real.pi * ∑ l, ρ l
+            * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+                * ∫ t, (r - t) * g i l (r - t) * Q l j t)) :
+    ((FtHSuneq z ρ σ (Complex.I * k) + Ft1uneq z ρ σ Gt Dt (Complex.I * k))
+        * (FtHSuneq z ρ σ (-(Complex.I * k))
+            + Ft1uneq z ρ σ Gt Dt (-(Complex.I * k))).transpose) i j
+      = (if i = j then (1 : ℂ) else 0)
+        - (cHShatUneq z ρ σ k i j + (Real.sqrt (ρ i * ρ j) : ℂ)
+            * ((FMSA.HardSphere.radial_fourier (matCoreCorrUneq z ρ σ Gt Dt i j) k : ℂ)
+              + (FMSA.HardSphere.radial_fourier (matMSAtail K z σ i j) k : ℂ))) :=
+  matMSAmixture_unequalDiam_of_hcore z ρ σ hrho Gt Dt K k
+    (MixBHRootUneq_of_oz_full z hz ρ σ Gt Dt K hσ g Q ghat Qhat hbax hgsupp hQsupp hF1 hF2
+      hgmoment hQtransform hghat hQhat hgside_mix) i j
+
+/-- ⭐⭐⭐ **The full unequal-σ MSA mixture factorization, from the OZ primitives** (physical
+`radial_fourier` form — the exact shape of the scalar `exactMSA_factorization_of_oz` conclusion).  Same
+chain as `matMSAmixture_unequalDiam_of_oz` but into `matMSAmixture_unequalDiam_physical`, so the RHS is a
+pure radial Fourier transform of real-space DCFs: HS core `Φ_HS` + increment core + Yukawa tail.
+Footprint = std-3 + `matExactMSAUnequalDiam_hcore` (increment) + `matHSexactUnequalDiam_kspace` (the HS
+Baxter–Fourier anchor — the mixture HS side needs this axiom where the scalar `radial_fourier(c_HS)` is a
+proved closed form; this is the one genuinely-mixture-specific extra input). -/
+theorem matMSAmixture_unequalDiam_physical_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
+    (hσ : ∀ k, 0 < σ k) (hrho : ∀ l, 0 ≤ ρ l)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
+    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (k : ℝ)
+    (hbax : ∀ i j r, edgeHi σ i j < r →
+      2 * Real.pi * r * matMSAtail K z σ i j r
+        = -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
+          + ∑ l, ρ l * ∫ t, baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                (Ct z ρ σ Gt Dt) i l (t + r)
+                * baxterQ z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                    (Ct z ρ σ Gt Dt) j l t)
+    (hgsupp : ∀ i l u, u < edgeHi σ i l → g i l u = 0)
+    (hQsupp : ∀ j l t, t < edgeLo σ l j → Q l j t = 0)
+    (hF1 : ∀ i l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ j l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
+    (hgmoment : ∀ i l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
+    (hQtransform : ∀ j l, (∫ t, Real.exp (-z * t) * Q l j t) = Qhat l j)
+    (hghat : ∀ i l, ghat i l = Gt i l * Real.exp (-z * edgeHi σ i l))
+    (hQhat : ∀ j l, Qhat l j
+      = qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z l j)
+    (hgside_mix : ∀ i j, 2 * Real.pi * ghat i j
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+          * Real.exp (-z * edgeHi σ i j)
+        + 2 * Real.pi * ∑ l, ρ l
+            * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+                * ∫ t, (r - t) * g i l (r - t) * Q l j t)) :
+    ((FtHSuneq z ρ σ (Complex.I * k) + Ft1uneq z ρ σ Gt Dt (Complex.I * k))
+        * (FtHSuneq z ρ σ (-(Complex.I * k))
+            + Ft1uneq z ρ σ Gt Dt (-(Complex.I * k))).transpose) i j
+      = (if i = j then (1 : ℂ) else 0)
+        - (Real.sqrt (ρ i * ρ j) : ℂ)
+            * ((FMSA.HardSphere.radial_fourier (matCoreHSuneq z ρ σ i j) k : ℂ)
+              + (FMSA.HardSphere.radial_fourier (matCoreCorrUneq z ρ σ Gt Dt i j) k : ℂ)
+              + (FMSA.HardSphere.radial_fourier (matMSAtail K z σ i j) k : ℂ)) :=
+  matMSAmixture_unequalDiam_physical z ρ σ hrho Gt Dt K k
+    (MixBHRootUneq_of_oz_full z hz ρ σ Gt Dt K hσ g Q ghat Qhat hbax hgsupp hQsupp hF1 hF2
+      hgmoment hQtransform hghat hQhat hgside_mix) i j
+
 end FMSA.ExactMSA.MixLeg3

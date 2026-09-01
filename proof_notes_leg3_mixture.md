@@ -343,3 +343,25 @@ primitives are exactly the root conditions; their **full unconditional discharge
 `baxterQ` really solves OZ from first principles — is precisely the ring-infeasible
 `matExactMSAUnequalDiam_hcore` content (the analytic k-space ring). So this equivalence is the honest end
 of the leg-3 derivation line, mirroring the scalar (whose `hbax`/`hgside` bottomed out at `exactMSA_hcore`).
+
+## MPhase 8 — the full MSA factorization from the OZ primitives (analog of scalar `exactMSA_factorization_of_oz`, 2026‑09‑01)
+
+The scalar `FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz` produces the final MSA Baxter factorization
+`|1−ρQ̂|² = 1−ρĉ_MSA` from the OZ primitives (`hbax` + `hgside` + RDF data), footprint std-3 +
+`exactMSA_hcore`. The mixture analog (all axiom-clean besides the named physics axioms,
+`MixtureBlumHoyeDerivation.lean`):
+
+- `matMSAmixture_unequalDiam_of_oz` — chains `MixBHRootUneq_of_oz_full` into the capstone
+  `MSAMixture.matMSAmixture_unequalDiam_of_hcore`. Conclusion: `((F̃_HS+F̃₁)(F̃_HS+F̃₁)ᵀ)_ij = δ_ij −
+  (Ĉ_HS,ij + √(ρ_iρ_j)(𝓕[c_core]+𝓕[c_tail]))` (HS side = free `ftilde` algebra `cHShatUneq`).
+  **Footprint = std-3 + `matExactMSAUnequalDiam_hcore`** — one physics axiom, EXACTLY matching the scalar
+  `exactMSA_factorization_of_oz` shape; `MixBHRootUneq_of_oz_full` adds no axiom.
+- `matMSAmixture_unequalDiam_physical_of_oz` — same chain into `matMSAmixture_unequalDiam_physical`, RHS a
+  pure radial Fourier transform (`𝓕[Φ_HS] + 𝓕[c_core] + 𝓕[c_tail]`), matching the scalar conclusion shape.
+  Footprint = std-3 + `matExactMSAUnequalDiam_hcore` + `matHSexactUnequalDiam_kspace` (the mixture HS
+  Baxter–Fourier anchor — the one genuinely-mixture-specific extra input, where the scalar
+  `radial_fourier(c_HS)` is a proved closed form).
+
+So the mixture now has the SAME end-to-end wire-in as the scalar: OZ primitives → [leg-3, std-3] →
+`MixBHRootUneq` → [capstone + hcore] → full MSA factorization. 2 more gates (MP8). Structural parity with
+the scalar leg-3 is complete.

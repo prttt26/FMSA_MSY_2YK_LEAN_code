@@ -299,3 +299,34 @@ reverse `mat_hbax_of_cside`) and `mat_hgside_iff_gside` (forward `gside_33_of_hg
 /-- info: 'FMSA.ExactMSA.MixLeg3.mat_hgside_iff_gside' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.mat_hgside_iff_gside
+
+/-! ### MPhase 8 — the full MSA factorization from the OZ primitives (mixture analog of the scalar
+`exactMSA_factorization_of_oz`)
+
+`matMSAmixture_unequalDiam_of_oz` chains `MixBHRootUneq_of_oz_full` (the posited root derived from the OZ
+primitives) into the capstone `MSAMixture.matMSAmixture_unequalDiam_of_hcore`, so the full unequal-σ MSA
+mixture factorization stands on the OZ primitives (`hbax` + `hgside_mix` + RDF-side data), the HS side by
+free `ftilde` algebra.  Its footprint is **std-3 + the single physics axiom `matExactMSAUnequalDiam_hcore`**
+— identical in shape to the scalar `exactMSA_factorization_of_oz` (std-3 + `exactMSA_hcore`); the leg-3
+derivation adds **no** axiom.  The `_physical` form (radial-Fourier RHS, matching the scalar conclusion
+shape) additionally carries `matHSexactUnequalDiam_kspace`, the mixture HS Baxter–Fourier anchor (where the
+scalar `radial_fourier(c_HS)` is a proved closed form). -/
+
+/--
+info: 'FMSA.ExactMSA.MixLeg3.matMSAmixture_unequalDiam_of_oz' depends on axioms: [propext,
+ Classical.choice,
+ MSAMixture.matExactMSAUnequalDiam_hcore,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.matMSAmixture_unequalDiam_of_oz
+
+/--
+info: 'FMSA.ExactMSA.MixLeg3.matMSAmixture_unequalDiam_physical_of_oz' depends on axioms: [propext,
+ Classical.choice,
+ MSAMixture.matExactMSAUnequalDiam_hcore,
+ MSAMixture.matHSexactUnequalDiam_kspace,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.matMSAmixture_unequalDiam_physical_of_oz
