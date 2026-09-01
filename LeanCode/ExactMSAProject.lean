@@ -7,6 +7,7 @@ import LeanCode.YukawaOZMix.MSAMixturePositivity
 import LeanCode.YukawaOZMix.MSAMixtureSelection
 import LeanCode.YukawaOZ.MSAFactorizationFromOZ
 import LeanCode.YukawaOZMix.MixtureBlumHoyeDerivation
+import LeanCode.YukawaOZMix.MSAMixtureBHRootUneqSmooth
 
 /-!
 # Exact-MSA track — scope and axiom gate
@@ -352,3 +353,32 @@ factorization capstone `matMSAmixture_equalDiam`). -/
 /-- info: 'FMSA.ExactMSA.MixLeg3.MixBHRoot_of_oz' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.MixBHRoot_of_oz
+
+/-! ## MSAEMIX.6 — the general-`N` matrix MSA solution family is `C^∞` at `K = 0`, unconditionally
+
+The matrix analogue of the `N = 1` `exists_contDiffAt_bhRoot` (gated above): the mixture MSA amplitudes
+`(Dt, Gt)` are a `C^∞` family of the coupling near `K = 0`, seeded from a hard-sphere Blum–Høye root, at
+**equal** σ (`exists_contDiffAt_matBhRoot_of_physical`) and at **unequal** σ
+(`exists_contDiffAt_matBhRootUneq_of_physical`).  Both are fully unconditional — no Jacobian/determinant
+hypothesis — because the IFT's partial-Jacobian invertibility reduces (via the recentering + a
+diagonal-conjugation Sylvester argument, `detHuneq_eq_Q0`/`detGuneq_eq_Q0`) to the **same** physical Baxter
+matrix `Q0_mat_phys` nonsingular, which M.4 `FMSA.MatrixQ0.Q0_mat_phys_isUnit_det` proves for every physical
+σ (general, unequal) from the rank-two Weinstein–Aronszajn positivity `Q0_moment_det_pos`.  Std-3 — the
+asymmetric row-diameter block carries **no** physics axiom (in particular no `no_spinodal`); the sole
+remaining grade is Blum–Høye transcription faithfulness, exactly as at `N = 1`. -/
+
+/-- info: 'MSAMixture.detHuneq_eq_Q0' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms MSAMixture.detHuneq_eq_Q0
+
+/-- info: 'MSAMixture.detGuneq_eq_Q0' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms MSAMixture.detGuneq_eq_Q0
+
+/-- info: 'MSAMixture.exists_contDiffAt_matBhRoot_of_physical' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms MSAMixture.exists_contDiffAt_matBhRoot_of_physical
+
+/-- info: 'MSAMixture.exists_contDiffAt_matBhRootUneq_of_physical' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms MSAMixture.exists_contDiffAt_matBhRootUneq_of_physical
