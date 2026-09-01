@@ -181,5 +181,11 @@ Since `baxterS_eq_edgeHi_Dt` is proved + numerically confirmed and `mat_exterior
 axiom-clean, **(♦) is the rigorously-derived form**, so the posited (29′) appears to need the
 recentered transform `e^{z·edgeLo_jl}·qhatMixRuneq_jl` (Baxter `Q̂` centered at the support edge) for the
 unequal-σ root — a σ-power factor of exactly the kind `σ=1` masks (cf. `feedback_sigma_one_masks_bugs`).
-**DECISION PENDING** (fix (29′) to recentered / investigate) before formalizing (♦) as
-`c_side_constraint_of_exterior` and the MPhase-5 wire-in.
+
+**(♦) NOW PROVED, axiom-clean std-3 (option B):** `c_side_constraint_of_exterior`
+`(hz) (hσ) (hbax : ∀ r > edgeHi, 2πr·matMSAtail_ij = −Q'_ij(r) + ∑_l ρ_l ∫ Q'_il(t+r)Q_jl(t)dt)` derives
+exactly (♦). Matrix analog of scalar `h29_of_baxter_exterior` (takes the exterior closure `hbax` as
+hypothesis; proof = evaluate at `r = σ_ij+1`, fold by `mat_exterior_baxter_relation_Dt`, cancel `z·e^{−z}`).
+This is a Lean-checked fact that the exterior OZ/Baxter closure forces (♦), **not** the posited (29′).
+The posited `MixBHRootUneq` (29′) is left untouched. **NEXT (user decision):** either fix (29′) to the
+recentered form (then wire (♦) into the (29′)/(33′) gate at MPhase 5) or reconcile the convention.

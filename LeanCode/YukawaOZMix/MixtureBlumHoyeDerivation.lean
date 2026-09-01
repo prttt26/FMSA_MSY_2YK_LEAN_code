@@ -492,4 +492,78 @@ theorem mat_exterior_baxter_relation_Dt {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ 
       baxterS_eq_edgeHi_Dt z ρ σ Gt Dt i j,
       Finset.sum_congr rfl (fun l _ => by rw [baxterS_eq_edgeHi_Dt z ρ σ Gt Dt i l])]
 
+/-- ⭐ **The c-side constraint (♦), derived from the exterior MSA closure.**  Given the physical Baxter
+Eq (8) closure `hbax` (`2πr·c_ij = 2πr·matMSAtail_ij` equals the Baxter convolution right-hand side on
+the exterior `r > σ_ij`), the c-side constraint is
+
+  `Dt_ij − ∑_l ρ_l · e^{z·edgeLo_jl} · Dt_il · Q̂_jl(z) = 2π K_ij / z`.
+
+This is the rigorously-derived matrix analog of the scalar `h29_of_baxter_exterior` — **but note the
+recentering factor `e^{z·edgeLo_jl}` on the transform** (`= e^{z(edgeHi_il − edgeHi_ij)}`), which the
+posited `MSAMixture.MixBHRootUneq` (29′) omits.  At equal σ (`edgeLo_jl = 0`) they coincide; at unequal
+σ they differ (a σ-power masked by σ=1 — see the FINDING note above).  Proof: evaluate `hbax` at
+`r = σ_ij + 1`, fold the convolution by `mat_exterior_baxter_relation_Dt`, compute
+`2πr·matMSAtail = 2π K_ij e^{−z}`, and cancel the common `z·e^{−z}`. -/
+theorem c_side_constraint_of_exterior {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (i j : Fin N) (hσ : ∀ k, 0 ≤ σ k)
+    (hbax : ∀ r, edgeHi σ i j < r →
+      2 * Real.pi * r * matMSAtail K z σ i j r
+        = -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
+          + ∑ l, ρ l * ∫ t, baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                (Ct z ρ σ Gt Dt) i l (t + r)
+                * baxterQ z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                    (Ct z ρ σ Gt Dt) j l t) :
+    Dt i j - ∑ l, ρ l * (Real.exp (z * edgeLo σ j l) * Dt i l)
+        * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z j l
+      = 2 * Real.pi * K i j / z := by
+  have hr : edgeHi σ i j < edgeHi σ i j + 1 := by linarith
+  have key := hbax (edgeHi σ i j + 1) hr
+  rw [mat_exterior_baxter_relation_Dt z hz ρ σ Gt Dt i j (edgeHi σ i j + 1) hσ hr] at key
+  -- the exterior LHS `2π(σ_ij+1)·matMSAtail = 2π K_ij e^{−z}`
+  have hLHS : 2 * Real.pi * (edgeHi σ i j + 1) * matMSAtail K z σ i j (edgeHi σ i j + 1)
+      = 2 * Real.pi * K i j * Real.exp (-z) := by
+    unfold matMSAtail cMSAtail
+    rw [if_pos (show sigMix σ i j < edgeHi σ i j + 1 from by unfold sigMix edgeHi; linarith),
+        show -z * (edgeHi σ i j + 1 - sigMix σ i j) = -z from by unfold sigMix edgeHi; ring]
+    have hne : edgeHi σ i j + 1 ≠ 0 :=
+      ne_of_gt (show (0:ℝ) < edgeHi σ i j + 1 by unfold edgeHi; have := hσ i; have := hσ j; linarith)
+    field_simp
+  rw [hLHS] at key
+  -- the two exponential regroupings (`e^{−z(σ_ij+1)}·e^{z·edgeHi_i·}`)
+  have hDt : Real.exp (-z * (edgeHi σ i j + 1)) * Real.exp (z * edgeHi σ i j) = Real.exp (-z) := by
+    rw [← Real.exp_add]; congr 1; ring
+  have hsum : ∀ l : Fin N, Real.exp (-z * (edgeHi σ i j + 1)) * Real.exp (z * edgeHi σ i l)
+      = Real.exp (-z) * Real.exp (z * edgeLo σ j l) := by
+    intro l; rw [← Real.exp_add, ← Real.exp_add]; congr 1; unfold edgeHi edgeLo; ring
+  -- fold the `e^{−z(σ_ij+1)}` into the bracket, leaving the recentered `e^{z·edgeLo_jl}`
+  have hkey2 : z * Real.exp (-z * (edgeHi σ i j + 1))
+        * (Real.exp (z * edgeHi σ i j) * Dt i j
+           - ∑ l, ρ l * (Real.exp (z * edgeHi σ i l) * Dt i l)
+               * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+                   (AVec z ρ σ Gt Dt) z j l)
+      = z * Real.exp (-z)
+        * (Dt i j - ∑ l, ρ l * (Real.exp (z * edgeLo σ j l) * Dt i l)
+               * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+                   (AVec z ρ σ Gt Dt) z j l) := by
+    rw [mul_sub, mul_sub, Finset.mul_sum, Finset.mul_sum]
+    congr 1
+    · rw [show z * Real.exp (-z * (edgeHi σ i j + 1)) * (Real.exp (z * edgeHi σ i j) * Dt i j)
+            = z * (Real.exp (-z * (edgeHi σ i j + 1)) * Real.exp (z * edgeHi σ i j)) * Dt i j
+            from by ring, hDt]
+    · refine Finset.sum_congr rfl (fun l _ => ?_)
+      rw [show z * Real.exp (-z * (edgeHi σ i j + 1))
+              * (ρ l * (Real.exp (z * edgeHi σ i l) * Dt i l)
+                  * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+                      (AVec z ρ σ Gt Dt) z j l)
+            = z * (Real.exp (-z * (edgeHi σ i j + 1)) * Real.exp (z * edgeHi σ i l))
+              * (ρ l * Dt i l
+                  * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+                      (AVec z ρ σ Gt Dt) z j l) from by ring, hsum l]
+      ring
+  rw [hkey2] at key
+  -- cancel `z·e^{−z}`
+  have hze : z * Real.exp (-z) ≠ 0 := mul_ne_zero hz.ne' (Real.exp_ne_zero _)
+  apply mul_left_cancel₀ hze
+  rw [← key]; field_simp
+
 end FMSA.ExactMSA.MixLeg3

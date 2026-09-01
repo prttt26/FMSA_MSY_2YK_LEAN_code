@@ -159,3 +159,14 @@ unequal σ (see `proof_notes_leg3_mixture.md`, FINDING). -/
 /-- info: 'FMSA.ExactMSA.MixLeg3.mat_exterior_baxter_relation_Dt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.mat_exterior_baxter_relation_Dt
+
+/-! **MPhase 2 c-side constraint (♦), PROVED.**  `c_side_constraint_of_exterior` derives, from the
+exterior MSA closure `hbax` (`2πr·c_ij = matMSAtail`-tail = the Baxter convolution RHS on `r > σ_ij`),
+the c-side constraint `Dt_ij − ∑_l ρ_l·e^{z·edgeLo_jl}·Dt_il·Q̂_jl(z) = 2πK_ij/z` — the matrix analog of
+the scalar `h29_of_baxter_exterior`.  The **recentering `e^{z·edgeLo_jl}`** is the FINDING: it is absent
+in the posited `MixBHRootUneq` (29′), which therefore coincides with (♦) only at equal σ.  See
+`proof_notes_leg3_mixture.md`. -/
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.c_side_constraint_of_exterior' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.c_side_constraint_of_exterior
