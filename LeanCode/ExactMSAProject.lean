@@ -5,6 +5,7 @@ import LeanCode.YukawaOZMix.MSAMixtureFactorization
 import LeanCode.YukawaOZ.MSAClosedForm
 import LeanCode.YukawaOZMix.MSAMixturePositivity
 import LeanCode.YukawaOZMix.MSAMixtureSelection
+import LeanCode.YukawaOZ.MSAFactorizationFromOZ
 
 /-!
 # Exact-MSA track — scope and axiom gate
@@ -80,3 +81,44 @@ live in `FMSAProject.lean`; only the exact-MSA-side bridge result MSAEXACT.5 is 
 /-- info: 'MSAMixture.bh41_iff_contact_symm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms MSAMixture.bh41_iff_contact_symm
+
+/-! ## The leg-3 (`N = 1`) Blum–Høye derivation — `h29`/`h33` from the OZ primitives
+
+The scalar Blum–Høye constraints Eq. (29) `Dt·bhF = 2πK/z` and Eq. (33) `2πG·bhF = bhP` are **derived**
+(not posited) from the recognised OZ/Baxter primitives: `h29` from Baxter's exterior real-space
+relation (Eq. 8) plus the MSA closure, and `h33` from the g-side OZ equation (Eq. 32) Laplace-
+transformed at `s = z` — its OZ-convolution term folded by the fully-proved Laplace convolution
+theorem `laplace_conv_eq_rdf_mul_qhat_of_integrable` (no Fubini hypothesis; only the physical `L¹`
+integrability of the RDF and Baxter moments).  `exactMSA_factorization_of_oz` then feeds the derived
+`h29`/`h33` into `exactMSA_factorization`, so the MSA factorization stands on the OZ primitives with
+**no new axiom** — its footprint is the standard three plus the single pre-existing physics-computation
+axiom `exactMSA_hcore`.  All `#guard_msgs` below fail the build if these footprints change. -/
+
+/-- info: 'FMSA.ExactMSA.h29_of_baxter_exterior' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.h29_of_baxter_exterior
+
+/-- info: 'FMSA.ExactMSA.GSide.h33_of_gside' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.GSide.h33_of_gside
+
+/--
+info: 'FMSA.ExactMSA.GSide.laplace_conv_eq_rdf_mul_qhat_of_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.GSide.laplace_conv_eq_rdf_mul_qhat_of_integrable
+
+/-- info: 'FMSA.ExactMSA.GSide.h33_of_gside_baxter' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.GSide.h33_of_gside_baxter
+
+/--
+info: 'FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ FMSA.ExactMSA.exactMSA_hcore]
+-/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz
