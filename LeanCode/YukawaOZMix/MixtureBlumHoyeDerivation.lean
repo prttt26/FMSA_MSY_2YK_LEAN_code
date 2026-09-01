@@ -338,4 +338,91 @@ theorem baxterQ_transform_eq_qhatMixRuneq {N : ℕ} (z : ℝ) (σ A : Fin N → 
   simp only [qhatMixRuneq, edgeLo, edgeHi, neg_mul]
   ring
 
+/-! ### MPhase 2 — the matrix exterior Baxter relation (c-side)
+
+On the **exterior** `r > σ_ij = edgeHi`, the Baxter convolution `∑_l ρ_l ∫ Q'_il(t+r)·Q_jl(t) dt`
+reduces to the MPhase-1 transform `Q̂_jl(z)`: because `edgeLo_jl + edgeHi_ij = edgeHi_il`, whenever
+`Q_jl(t) ≠ 0` (i.e. `t ≥ edgeLo_jl`) the shifted argument `t + r` exceeds `edgeHi_il`, so `Q'_il(t+r)`
+is in its **tail** `−z(Wt_il e^{−z(·−edgeLo_il)} + Ct_il e^{−z(·−edgeHi_il)})`, which factors as
+`e^{−zr}·(coeff)·e^{−zt}` — pulling `e^{−zr}` out and leaving `∫ Q_jl(t) e^{−zt} dt = Q̂_jl(z)`.
+This is the matrix analog of the scalar `bh_exterior_baxter_relation`; matching to the MSA closure
+`matMSAtail` (Yukawa tail) yields the c-side constraint (29′). -/
+
+/-- **The per-`l` exterior Baxter convolution.**  For `r > edgeHi σ i j`, the shifted convolution of
+the Baxter derivative `Q'_il` with `Q_jl` factors through the MPhase-1 transform `Q̂_jl(z) =
+qhatMixRuneq … z j l`.  Reuses `baxterQ_transform_eq_qhatMixRuneq`. -/
+theorem baxterQ_exterior_conv {N : ℕ} (z : ℝ) (hz : 0 < z) (σ A : Fin N → ℝ)
+    (qp Wt Ct : Fin N → Fin N → ℝ) (i j l : Fin N) (r : ℝ)
+    (hσ : ∀ k, 0 ≤ σ k) (hr : edgeHi σ i j < r) :
+    ∫ t, baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t
+      = -z * Real.exp (-z * r)
+        * (Wt i l * Real.exp (z * edgeLo σ i l) + Ct i l * Real.exp (z * edgeHi σ i l))
+        * qhatMixRuneq z σ qp Wt Ct A z j l := by
+  have hz' : z ≠ 0 := hz.ne'
+  have hzz : (0:ℝ) < z + z := by linarith
+  have hil : edgeLo σ i l ≤ edgeHi σ i l := by unfold edgeLo edgeHi; linarith [hσ i]
+  have hedge : edgeLo σ j l + edgeHi σ i j = edgeHi σ i l := by unfold edgeLo edgeHi; ring
+  have hstep : (∫ t, baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t)
+      = ∫ t, (-z * Real.exp (-z * r)
+            * (Wt i l * Real.exp (z * edgeLo σ i l) + Ct i l * Real.exp (z * edgeHi σ i l)))
+          * (baxterQ z σ A qp Wt Ct j l t * Real.exp (-z * t)) := by
+    apply MeasureTheory.integral_congr_ae
+    apply Filter.Eventually.of_forall
+    intro t
+    dsimp only
+    by_cases htj : t < edgeLo σ j l
+    · rw [show baxterQ z σ A qp Wt Ct j l t = 0 from by simp only [baxterQ, if_pos htj]]; ring
+    · push_neg at htj
+      have ht1 : edgeHi σ i l < t + r := by linarith [hedge]
+      have h1 : ¬ (t + r < edgeLo σ i l) := not_lt.mpr (by linarith)
+      have h2 : ¬ (t + r ≤ edgeHi σ i l) := not_le.mpr ht1
+      have e1 : Real.exp (-z * (t + r - edgeLo σ i l))
+          = Real.exp (-z * r) * Real.exp (z * edgeLo σ i l) * Real.exp (-z * t) := by
+        rw [← Real.exp_add, ← Real.exp_add]; congr 1; ring
+      have e2 : Real.exp (-z * (t + r - edgeHi σ i l))
+          = Real.exp (-z * r) * Real.exp (z * edgeHi σ i l) * Real.exp (-z * t) := by
+        rw [← Real.exp_add, ← Real.exp_add]; congr 1; ring
+      simp only [baxterQ', if_neg h1, if_neg h2]
+      rw [e1, e2]; ring
+  rw [hstep, MeasureTheory.integral_const_mul,
+      baxterQ_transform_eq_qhatMixRuneq z σ A qp Wt Ct j l z hz' hzz (hσ j)]
+
+/-- **The matrix exterior Baxter relation (Blum–Høye Eq. 8, mixture).**  For `r > edgeHi σ i j`,
+`−Q'_ij(r) + ∑_l ρ_l ∫ Q'_il(t+r) Q_jl(t) dt = z e^{−zr}·(S_ij − ∑_l ρ_l S_il Q̂_jl(z))`, where
+`S_ab = Wt_ab e^{z·edgeLo_ab} + Ct_ab e^{z·edgeHi_ab}`.  Matrix analog of the scalar
+`bh_exterior_baxter_relation`.  On the exterior the Baxter core `baxterConvCore·(2πr)` equals this;
+matching against `2πr·matMSAtail_ij = 2π K_ij e^{z·edgeHi_ij} e^{−zr}` gives the c-side (29′). -/
+theorem mat_exterior_baxter_relation {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ A : Fin N → ℝ)
+    (qp Wt Ct : Fin N → Fin N → ℝ) (i j : Fin N) (r : ℝ)
+    (hσ : ∀ k, 0 ≤ σ k) (hr : edgeHi σ i j < r) :
+    -baxterQ' z σ A qp Wt Ct i j r
+        + ∑ l, ρ l * ∫ t, baxterQ' z σ A qp Wt Ct i l (t + r) * baxterQ z σ A qp Wt Ct j l t
+      = z * Real.exp (-z * r)
+        * ((Wt i j * Real.exp (z * edgeLo σ i j) + Ct i j * Real.exp (z * edgeHi σ i j))
+           - ∑ l, ρ l * (Wt i l * Real.exp (z * edgeLo σ i l) + Ct i l * Real.exp (z * edgeHi σ i l))
+               * qhatMixRuneq z σ qp Wt Ct A z j l) := by
+  have hij : edgeLo σ i j ≤ edgeHi σ i j := by unfold edgeLo edgeHi; linarith [hσ i]
+  have hQ' : baxterQ' z σ A qp Wt Ct i j r
+      = -z * Wt i j * Real.exp (-z * (r - edgeLo σ i j))
+        - z * Ct i j * Real.exp (-z * (r - edgeHi σ i j)) := by
+    have h1 : ¬ (r < edgeLo σ i j) := not_lt.mpr (by linarith)
+    have h2 : ¬ (r ≤ edgeHi σ i j) := not_le.mpr hr
+    simp only [baxterQ', if_neg h1, if_neg h2]
+  have eL : Real.exp (-z * (r - edgeLo σ i j))
+      = Real.exp (-z * r) * Real.exp (z * edgeLo σ i j) := by rw [← Real.exp_add]; congr 1; ring
+  have eH : Real.exp (-z * (r - edgeHi σ i j))
+      = Real.exp (-z * r) * Real.exp (z * edgeHi σ i j) := by rw [← Real.exp_add]; congr 1; ring
+  rw [hQ', eL, eH,
+      Finset.sum_congr rfl (fun l _ => by
+        rw [baxterQ_exterior_conv z hz σ A qp Wt Ct i j l r hσ hr]),
+      Finset.sum_congr rfl (fun l _ => show
+        ρ l * (-z * Real.exp (-z * r)
+              * (Wt i l * Real.exp (z * edgeLo σ i l) + Ct i l * Real.exp (z * edgeHi σ i l))
+              * qhatMixRuneq z σ qp Wt Ct A z j l)
+          = (-z * Real.exp (-z * r))
+            * (ρ l * (Wt i l * Real.exp (z * edgeLo σ i l) + Ct i l * Real.exp (z * edgeHi σ i l))
+                * qhatMixRuneq z σ qp Wt Ct A z j l) from by ring),
+      ← Finset.mul_sum]
+  ring
+
 end FMSA.ExactMSA.MixLeg3

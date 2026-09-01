@@ -136,3 +136,12 @@ See `proof_notes_leg3_mixture.md`. -/
 /-- info: 'FMSA.ExactMSA.MixLeg3.baxterQ_transform_eq_qhatMixRuneq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.baxterQ_transform_eq_qhatMixRuneq
+
+/-! **MPhase 2** — the exterior Baxter relation, matrix analog of the scalar `bh_exterior_baxter_relation`:
+on `r > σ_ij` the Baxter convolution `∑_l ρ_l ∫ Q'_il(t+r) Q_jl(t) dt` factors through the MPhase-1
+transform `Q̂(z)`, giving `−Q'_ij(r) + ∑_l ρ_l ∫ … = z e^{−zr}(S_ij − ∑_l ρ_l S_il Q̂_jl(z))`.  Matching
+`matMSAtail` yields the c-side (29′). -/
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.mat_exterior_baxter_relation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.mat_exterior_baxter_relation

@@ -69,10 +69,17 @@ Phased to mirror scalar leg-3 (`MPhase` = mixture phase):
   `msaA_eq_baxter_zeroth_moment`, `msaQp_sub_msaA_eq_baxter_first_moment`). The complex-`s`
   `qhatMixCuneq` analog is a mechanical lift of the same proof if ever needed (real-`s` is what the
   residual gate uses).
-* **MPhase 2 — c-side (29′): matrix `bh_exterior_baxter_relation`.** Compute the **exterior**
-  (`r > σ_ij`) convolution `∑_l ρ_l ∫ Q'_il(t+r)Q_jl(t) dt` from `baxterQ`/`baxterQ'`, match to
-  `matMSAtail` (`K_ij e^{−z(r−σ_ij)}/r`) ⇒ (29′). Reuses the `perL_conv_*` engine; the INTERIOR analog
-  (BRK.16) is the template. Then the coefficient match `→ (29′)` (matrix analog of `h29_of_baxter_exterior`).
+* **MPhase 2 — c-side (29′): matrix `bh_exterior_baxter_relation`. ◑ exterior relation DONE
+  (axiom-clean), (29′) coefficient-match REMAINING.** The exterior (`r > σ_ij`) convolution
+  `∑_l ρ_l ∫ Q'_il(t+r)Q_jl(t) dt` is computed by `baxterQ_exterior_conv` + `mat_exterior_baxter_relation`
+  (see Progress log) — it **factors through the MPhase-1 transform `Q̂(z)`** (the `perL_conv_*` engine is
+  NOT needed — those are interior sub-regions `r < edgeHi`). REMAINING: match to `matMSAtail`
+  (`= K_ij e^{−z(r−σ_ij)}/r`, `MSAMixtureConcrete.lean:77`) ⇒ (29′). The match gives (★):
+  `2π K_ij e^{z·σ_ij}/z = S_ij − ∑_l ρ_l S_il Q̂_jl(z)` with `S_ab = Wt_ab e^{z·edgeLo_ab} + Ct_ab e^{z·edgeHi_ab}`.
+  Reducing (★) ⇒ (29′) `Dt_ij − ∑_l ρ_l Dt_il Q̂_jl(z) = 2πK_ij/z` is the amplitude algebra:
+  unfold `Wt = (2π/z)∑_k ρ_k Gt_ik Dt_kj`, `Ct = ∑_k γ_ik Dt_kj e^{z(σ_k−σ_i)/2}`,
+  `γ = δ − 2πρ Gt e^{−zσ}/z` (`MSAMixtureCancellation.lean:74,79,68`) + the per-entry identity
+  (`…:89`); this is the matrix analog of scalar `h29_of_baxter_exterior` and is definition-heavy.
 * **MPhase 3 — g-side matrix Laplace-convolution stack (the CRUX, largest build).** No mixture analog
   exists (confirmed by grep): need a matrix `rdfLaplaceMoment` (ĝ_ij(s)), a **matrix** convolution
   theorem `∑_l ρ_l ∫(r−t)g_il(|r−t|)Q_jl(t) dt →ᴸ ∑_l ĝ_il(z)·Q̂_jl(z)` (a **matrix product**, species
@@ -135,3 +142,26 @@ Baxter factor `FMSA.ExactMSA.Breakpoint.baxterQ` is the posited closed form:
 **Deferred within MPhase 1** (do when consumed downstream): the `s=z` evaluation
 (`∑_l ρ_l·Q̂_jl(z)` feeding `δ − …` in (29′)/(33′)), the `T_n` moments, and the complex-`s`
 `qhatMixCuneq` lift (mechanical — real-`s` is what the gate uses).
+
+### MPhase 2 — the matrix exterior Baxter relation (exterior half DONE, axiom-clean std-3)
+
+Same file, built green, all `[propext, Classical.choice, Quot.sound]`, gated in `ExactMSAProject.lean`.
+
+* **`baxterQ_exterior_conv`** `(hz : 0<z) (hσ : ∀k, 0≤σ_k) (hr : edgeHi σ i j < r)` — the per-`l`
+  exterior convolution `∫ Q'_il(t+r)·Q_jl(t) dt = −z e^{−zr}·(Wt_il e^{z·edgeLo_il}+Ct_il e^{z·edgeHi_il})·Q̂_jl(z)`.
+  **KEY:** on `r > edgeHi_ij`, since `edgeLo_jl + edgeHi_ij = edgeHi_il`, wherever `Q_jl(t)≠0`
+  (`t ≥ edgeLo_jl`) the shifted arg `t+r > edgeHi_il`, so `Q'_il(t+r)` is in its TAIL
+  `−z(Wt_il e^{−z(·−edgeLo_il)}+Ct_il e^{−z(·−edgeHi_il)})`, which factors `= e^{−zr}·(coeff)·e^{−zt}` —
+  pulling `e^{−zr}` out leaves `∫ Q_jl(t)e^{−zt}dt = Q̂_jl(z)` = **the MPhase-1 transform**
+  (`baxterQ_transform_eq_qhatMixRuneq` at `s=z`). Proof: `integral_congr_ae` (pointwise, case
+  `t<edgeLo_jl` ⇒ `Q_jl=0` kills it) → `integral_const_mul` → MPhase-1 transform. `perL_conv_*` NOT used.
+* **`mat_exterior_baxter_relation`** — the assembled Baxter Eq (8):
+  `−Q'_ij(r) + ∑_l ρ_l ∫ Q'_il(t+r)Q_jl(t)dt = z e^{−zr}(S_ij − ∑_l ρ_l S_il Q̂_jl(z))`,
+  `S_ab = Wt_ab e^{z·edgeLo_ab}+Ct_ab e^{z·edgeHi_ab}`. Matrix analog of scalar `bh_exterior_baxter_relation`.
+  `−Q'_ij(r)` tail + per-`l` conv + `Finset.mul_sum` factoring.
+
+**REMAINING MPhase 2:** match `2πr·matMSAtail_ij = 2π K_ij e^{z·σ_ij}e^{−zr}` against
+`2πr·baxterConvCore = mat_exterior_baxter_relation` RHS ⇒ (★) `2π K_ij e^{z·σ_ij}/z = S_ij − ∑_l ρ_l S_il Q̂_jl(z)`,
+then the amplitude algebra (★)⇒(29′) (unfold `Wt`/`Ct`/`γ`; definition-heavy, analog of scalar
+`h29_of_baxter_exterior`). Cleanest as `h29_mix_of_exterior` taking the exterior closure as `hbax`
+hypothesis (as the scalar did) — the analytical content is already discharged above.
