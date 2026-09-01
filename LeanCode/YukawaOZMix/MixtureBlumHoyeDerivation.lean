@@ -741,12 +741,11 @@ axiom-clean.  ⚠ **Range of validity.** `hQtransform` (`∫_{Ioi 0} e^{−zt}Q_
 the physical `Q_lj = baxterQ_lj` **only when `edgeLo_lj ≥ 0`** (ordered pairs `σ_j ≥ σ_l`): then
 `baxterQ_lj = 0` on `(−∞,0)` so `∫_{Ioi 0} = ∫_ℝ = qhatMixRuneq_lj` (MPhase 1).  For `edgeLo_lj < 0`
 `baxterQ_lj ≠ 0` on `[edgeLo_lj,0)`, so `∫_{Ioi 0} ≠ qhatMixRuneq_lj` and this hypothesis is
-**unsatisfiable** — the full-support fold `∫_{r>0}e^{−zr}∫_ℝ(r−t)g(r−t)Q(t)dt` does **not** factor as
-`ĝ·Q̂` there (the per-`t` collapse `e^{−zt}∫_{u>−t}e^{−zu}u g(u)du` is a `t`-dependent partial moment for
-`t<0`, not the clean `ĝ(z)`).  So the g-side derivation is non-vacuous for **ordered pairs only**; the
-general unequal-σ g-side is the note's unresolved g-source normalization
-(`proof_notes_leg3_bh_gside_eq9.md`), where the `t<0` correction must be absorbed.  (The c-side (♦) has
-no such limitation — `mat_exterior_baxter_relation` integrates over the full line.) -/
+**unsatisfiable**.  ✅ **Superseded by `gside_33_of_hgside_full`** (MPhase 6): running the inner integral
+over all of `ℝ` makes `hQtransform` the *unconditional* full-line transform (`baxterQ_fullline_transform`),
+and the RDF hard core kills the `t<0` correction, extending the g-side to `σ_j < σ_i + 2σ_l` (every ordered
+pair and much more).  (The c-side (♦) has no such limitation — `mat_exterior_baxter_relation` integrates
+over the full line.) -/
 theorem gside_33_of_hgside {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
     (Gt Dt : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
     (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N)
@@ -774,6 +773,232 @@ theorem gside_33_of_hgside {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
       ((AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
         * Real.exp (-z * edgeHi σ i j))
       hgsupp hF1 hF2 hgmoment hQtransform hgside_mix)
+
+/-! ### MPhase 6 — the full-support convolution: close the g-side beyond ordered pairs
+
+The `mat_gside_fold`/`gside_33_of_hgside` stack above folds the RDF⋆Baxter convolution with the inner
+`t`-integral over `Ioi 0` and the Baxter transform `∫_{Ioi 0} e^{−zt}Q_lj`, which equals the
+full-support `qhatMixRuneq_lj` **only for ordered pairs** `σ_j ≥ σ_l` (`edgeLo_lj ≥ 0`).  The fix here
+runs the inner `t`-integral over **all of `ℝ`** — so its transform is the *unconditional* MPhase-1
+`baxterQ_transform` (`∫_ℝ e^{−zt}Q_lj = qhatMixRuneq_lj` for every diameter pair) — and rescues the
+per-`t` collapse using the **RDF hard core** `g_il(u) = 0` for `u < σ_il = edgeHi_il`.  The naive
+`t<0` correction `e^{−zt}∫_{u>−t}e^{−zu}u g(u) du` differs from the clean `e^{−zt}ĝ(z)` only by
+`∫_{(0,−t]}e^{−zu}u g(u) du`, which **vanishes** when `−t < σ_il` — i.e. when `Q`'s support floor
+`edgeLo_lj > −edgeHi_il`, equivalently **`σ_j < σ_i + 2σ_l`**.  This is far broader than ordered
+pairs (which need `σ_j ≤ σ_l`); it fails only under an extreme size disparity `σ_j ≥ σ_i + 2σ_l`. -/
+
+/-- **The hard-core shift step** — the full-support generalisation of the scalar
+`FMSA.ExactMSA.GSide.rdfLaplaceMoment_shift_from_zero` to `t < 0`.  For an RDF `g` supported on
+`[σg, ∞)` (`g u = 0` for `u < σg`, the hard core) and any `t > -σg`,
+`∫_{r>0} e^{−zr}·(r−t)·g(r−t) dr = e^{−zt}·ĝ(z)`.  The integrand vanishes on the symmetric difference
+between `Ioi 0` and `Ioi t`: for `t ≥ 0` on `(0,t]` (there `r−t ≤ 0 ≤ σg` gives `g(r−t)=0`, or the
+`(r−t)` factor vanishes at `r=t`), and for `-σg < t < 0` on `(t,0]` (there `r−t ≤ -t < σg` by the
+*strict* bound `-σg < t`).  Hence `∫_{Ioi 0} = ∫_{Ioi t} = e^{−zt}·ĝ(z)`
+(`FMSA.ExactMSA.GSide.rdfLaplaceMoment_shift`, itself unconditional). -/
+theorem rdfLaplaceMoment_shift_hardcore (g : ℝ → ℝ) (z t σg : ℝ) (hσg : 0 ≤ σg)
+    (ht : -σg < t) (hgsupp : ∀ u, u < σg → g u = 0) :
+    ∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ((r - t) * g (r - t))
+      = Real.exp (-z * t) * FMSA.ExactMSA.GSide.rdfLaplaceMoment g z := by
+  rw [← FMSA.ExactMSA.GSide.rdfLaplaceMoment_shift g z t]
+  by_cases ht0 : 0 ≤ t
+  · apply setIntegral_eq_of_subset_of_forall_sdiff_eq_zero measurableSet_Ioi
+      (Set.Ioi_subset_Ioi ht0)
+    intro r hr
+    simp only [Set.mem_diff, Set.mem_Ioi, not_lt] at hr
+    have hz : (r - t) * g (r - t) = 0 := by
+      rcases lt_or_eq_of_le hr.2 with h | h
+      · rw [hgsupp (r - t) (by linarith)]; ring
+      · rw [h]; ring
+    show Real.exp (-z * r) * ((r - t) * g (r - t)) = 0
+    rw [hz]; ring
+  · push_neg at ht0
+    symm
+    apply setIntegral_eq_of_subset_of_forall_sdiff_eq_zero measurableSet_Ioi
+      (Set.Ioi_subset_Ioi (le_of_lt ht0))
+    intro r hr
+    simp only [Set.mem_diff, Set.mem_Ioi, not_lt] at hr
+    have hz : g (r - t) = 0 := hgsupp (r - t) (by linarith)
+    show Real.exp (-z * r) * ((r - t) * g (r - t)) = 0
+    rw [hz]; ring
+
+/-- **The Fubini swap of the full-support OZ-convolution integrand** — the `Ioi 0 ×ˢ ℝ` analog of the
+scalar `FMSA.ExactMSA.GSide.laplace_conv_fubini_swap`.  The 2D integrand factors as the convolution
+kernel `e^{−zr}·(r−t)·g(r−t)·Q(t) = F₁(r−t)·F₂(t)` with `F₁(u) = e^{−zu}·u·g(u)`, `F₂(t) = e^{−zt}·Q(t)`,
+so `Integrable.convolution_integrand` gives full-plane integrability; restricting **only the `r`
+factor** to `Ioi 0` (the physical outer domain) via `Measure.prod_restrict` (with
+`Measure.restrict_univ` on the untouched `t` factor) yields the hypothesis `integral_integral_swap`
+needs. -/
+theorem laplace_conv_full_fubini_swap (g Q : ℝ → ℝ) (z : ℝ)
+    (hF1 : Integrable (fun u => Real.exp (-z * u) * (u * g u)))
+    (hF2 : Integrable (fun t => Real.exp (-z * t) * Q t)) :
+    (∫ r in Set.Ioi (0:ℝ), ∫ t, Real.exp (-z * r) * ((r - t) * g (r - t) * Q t))
+      = ∫ t, ∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ((r - t) * g (r - t) * Q t) := by
+  have hconv : Integrable
+      (fun p : ℝ × ℝ => Real.exp (-z * p.1) * ((p.1 - p.2) * g (p.1 - p.2) * Q p.2))
+      (volume.prod volume) := by
+    refine (hF2.convolution_integrand (ContinuousLinearMap.mul ℝ ℝ) hF1).congr
+      (Filter.Eventually.of_forall (fun p => ?_))
+    simp only [ContinuousLinearMap.mul_apply']
+    have hac : Real.exp (-z * p.2) * Real.exp (-z * (p.1 - p.2)) = Real.exp (-z * p.1) := by
+      rw [← Real.exp_add]; congr 1; ring
+    linear_combination (Q p.2 * ((p.1 - p.2) * g (p.1 - p.2))) * hac
+  have hrestr : Integrable
+      (fun p : ℝ × ℝ => Real.exp (-z * p.1) * ((p.1 - p.2) * g (p.1 - p.2) * Q p.2))
+      ((volume.restrict (Set.Ioi (0:ℝ))).prod volume) := by
+    have h1 : (volume.restrict (Set.Ioi (0:ℝ))).prod (volume : Measure ℝ)
+        = (volume.restrict (Set.Ioi (0:ℝ))).prod (volume.restrict Set.univ) := by
+      rw [Measure.restrict_univ]
+    rw [h1, Measure.prod_restrict]
+    exact hconv.integrableOn
+  exact integral_integral_swap
+    (f := fun r t => Real.exp (-z * r) * ((r - t) * g (r - t) * Q t)) hrestr
+
+/-- **The full-support Laplace convolution theorem** — the `[σg,∞)`-`Q`-support analog of the scalar
+`FMSA.ExactMSA.GSide.laplace_conv_eq_rdf_mul_qhat`, with the inner `t`-integral over **all of `ℝ`**.
+For an RDF `g` supported on `[σg,∞)` (hard core) and a Baxter factor `Q` supported on `[λ,∞)` with the
+**overlap condition `-σg < λ`**,
+`∫_{r>0} e^{−zr}·(∫_ℝ (r−t)·g(r−t)·Q(t) dt) dr = ĝ(z)·(∫_ℝ e^{−zt}·Q(t) dt)`.  The full-line inner
+integral makes the Baxter transform the *unconditional* `qhatMixRuneq` (MPhase 1), while the per-`t`
+collapse `Q(t)·∫_{r>0} e^{−zr}(r−t)g(r−t) dr = ĝ·e^{−zt}Q(t)` holds for every `t` — trivially where
+`Q(t)=0` (`t<λ`), and via `rdfLaplaceMoment_shift_hardcore` where `t ≥ λ > -σg` (the hard core kills
+the `t<0` partial-moment correction). -/
+theorem laplace_conv_full (g Q : ℝ → ℝ) (z σg lam : ℝ) (hσg : 0 ≤ σg)
+    (hgsupp : ∀ u, u < σg → g u = 0) (hQsupp : ∀ t, t < lam → Q t = 0) (hcond : -σg < lam)
+    (hfub : (∫ r in Set.Ioi (0:ℝ), ∫ t, Real.exp (-z * r) * ((r - t) * g (r - t) * Q t))
+          = ∫ t, ∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ((r - t) * g (r - t) * Q t)) :
+    (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ∫ t, (r - t) * g (r - t) * Q t)
+      = FMSA.ExactMSA.GSide.rdfLaplaceMoment g z * ∫ t, Real.exp (-z * t) * Q t := by
+  calc (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ∫ t, (r - t) * g (r - t) * Q t)
+      = ∫ r in Set.Ioi (0:ℝ), ∫ t, Real.exp (-z * r) * ((r - t) * g (r - t) * Q t) := by
+        apply setIntegral_congr_fun measurableSet_Ioi
+        intro r _
+        show Real.exp (-z * r) * (∫ t, (r - t) * g (r - t) * Q t)
+            = ∫ t, Real.exp (-z * r) * ((r - t) * g (r - t) * Q t)
+        rw [MeasureTheory.integral_const_mul]
+    _ = ∫ t, ∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ((r - t) * g (r - t) * Q t) := hfub
+    _ = ∫ t, FMSA.ExactMSA.GSide.rdfLaplaceMoment g z * (Real.exp (-z * t) * Q t) := by
+        apply MeasureTheory.integral_congr_ae
+        refine Filter.Eventually.of_forall (fun t => ?_)
+        have hpull : (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ((r - t) * g (r - t) * Q t))
+            = Q t * ∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ((r - t) * g (r - t)) := by
+          rw [← MeasureTheory.integral_const_mul]
+          apply setIntegral_congr_fun measurableSet_Ioi
+          intro r _
+          show Real.exp (-z * r) * ((r - t) * g (r - t) * Q t)
+              = Q t * (Real.exp (-z * r) * ((r - t) * g (r - t)))
+          ring
+        show (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ((r - t) * g (r - t) * Q t))
+            = FMSA.ExactMSA.GSide.rdfLaplaceMoment g z * (Real.exp (-z * t) * Q t)
+        rw [hpull]
+        by_cases htl : t < lam
+        · rw [hQsupp t htl]; ring
+        · push_neg at htl
+          rw [rdfLaplaceMoment_shift_hardcore g z t σg hσg (by linarith) hgsupp]; ring
+    _ = FMSA.ExactMSA.GSide.rdfLaplaceMoment g z * ∫ t, Real.exp (-z * t) * Q t := by
+        rw [MeasureTheory.integral_const_mul]
+
+/-- **The full-support Laplace convolution theorem, fully discharged** (no Fubini hypothesis) — combines
+`laplace_conv_full` with `laplace_conv_full_fubini_swap`.  Only the physical integrability of the RDF
+moment `r·g(r)` and Baxter moment `Q(t)` (Laplace-weighted) is assumed. -/
+theorem laplace_conv_full_of_integrable (g Q : ℝ → ℝ) (z σg lam : ℝ) (hσg : 0 ≤ σg)
+    (hgsupp : ∀ u, u < σg → g u = 0) (hQsupp : ∀ t, t < lam → Q t = 0) (hcond : -σg < lam)
+    (hF1 : Integrable (fun u => Real.exp (-z * u) * (u * g u)))
+    (hF2 : Integrable (fun t => Real.exp (-z * t) * Q t)) :
+    (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r) * ∫ t, (r - t) * g (r - t) * Q t)
+      = FMSA.ExactMSA.GSide.rdfLaplaceMoment g z * ∫ t, Real.exp (-z * t) * Q t :=
+  laplace_conv_full g Q z σg lam hσg hgsupp hQsupp hcond
+    (laplace_conv_full_fubini_swap g Q z hF1 hF2)
+
+/-- **MPhase 6 — the matrix full-support convolution.**  Per species `l`, `laplace_conv_full_of_integrable`
+folds `∫_{r>0}e^{−zr}∫_ℝ(r−t)g_il(r−t)Q_lj(t)dt` onto `ĝ_il(z)·(∫_ℝ e^{−zt}Q_lj(t)dt)`, using the RDF
+hard core (`hgsupp`, support `[edgeHi_il,∞)`), the Baxter support (`hQsupp`, `[edgeLo_lj,∞)`) and the
+overlap condition `hcond` (`-edgeHi_il < edgeLo_lj`, i.e. `σ_j < σ_i + 2σ_l`); the `∑_l ρ_l` is
+linearity.  Unlike `mat_laplace_conv` the inner integral is over **all of `ℝ`**, so the resulting
+transform `∫_ℝ e^{−zt}Q_lj` is the unconditional `qhatMixRuneq_lj`. -/
+theorem mat_laplace_conv_full {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
+    (i j : Fin N) (hσ : ∀ k, 0 ≤ σ k)
+    (hgsupp : ∀ l u, u < edgeHi σ i l → g i l u = 0)
+    (hQsupp : ∀ l t, t < edgeLo σ l j → Q l j t = 0)
+    (hcond : ∀ l, -edgeHi σ i l < edgeLo σ l j)
+    (hF1 : ∀ l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ l, Integrable (fun t => Real.exp (-z * t) * Q l j t)) :
+    ∑ l, ρ l * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+          * ∫ t, (r - t) * g i l (r - t) * Q l j t)
+      = ∑ l, ρ l * (FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z
+          * ∫ t, Real.exp (-z * t) * Q l j t) := by
+  refine Finset.sum_congr rfl (fun l _ => ?_)
+  have hσil : (0:ℝ) ≤ edgeHi σ i l := by unfold edgeHi; have := hσ i; have := hσ l; linarith
+  rw [laplace_conv_full_of_integrable (g i l) (Q l j) z (edgeHi σ i l) (edgeLo σ l j)
+        hσil (hgsupp l) (hQsupp l) (hcond l) (hF1 l) (hF2 l)]
+
+/-- **MPhase 6 — the full-support g-side fold.**  The full-support analog of `mat_gside_fold`: the
+species-summed RDF⋆Baxter convolution (inner `t` over **`ℝ`**) folds via `mat_laplace_conv_full` onto
+the transforms, giving `2π·∑_l ĝ_il(z)(δ_lj − ρ_l·Q̂_lj) = source`.  The key upgrade is `hQtransform`,
+`∫_ℝ e^{−zt}Q_lj = Q̂_lj` — the **full-line** Baxter transform, discharged unconditionally from MPhase 1
+(`baxterQ_transform_eq_qhatMixRuneq`) for every diameter pair, in place of the `Ioi 0` transform of
+`mat_gside_fold` (satisfiable only for ordered pairs). -/
+theorem mat_gside_fold_full {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
+    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (source : ℝ) (hσ : ∀ k, 0 ≤ σ k)
+    (hgsupp : ∀ l u, u < edgeHi σ i l → g i l u = 0)
+    (hQsupp : ∀ l t, t < edgeLo σ l j → Q l j t = 0)
+    (hcond : ∀ l, -edgeHi σ i l < edgeLo σ l j)
+    (hF1 : ∀ l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
+    (hgmoment : ∀ l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
+    (hQtransform : ∀ l, (∫ t, Real.exp (-z * t) * Q l j t) = Qhat l j)
+    (hgside_mix : 2 * Real.pi * ghat i j
+      = source + 2 * Real.pi * ∑ l, ρ l
+          * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+              * ∫ t, (r - t) * g i l (r - t) * Q l j t)) :
+    2 * Real.pi * ∑ l, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j) = source := by
+  rw [mat_laplace_conv_full z ρ σ g Q i j hσ hgsupp hQsupp hcond hF1 hF2,
+      Finset.sum_congr rfl (fun l _ => by rw [hgmoment l, hQtransform l])] at hgside_mix
+  have hexpand : ∑ l, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j)
+      = ghat i j - ∑ l, ρ l * (ghat i l * Qhat l j) := by
+    rw [Finset.sum_congr rfl (fun l _ => by ring :
+          ∀ l ∈ Finset.univ, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j)
+            = ghat i l * (if l = j then (1:ℝ) else 0) - ρ l * (ghat i l * Qhat l j)),
+        Finset.sum_sub_distrib]
+    congr 1
+    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  rw [hexpand, mul_sub, hgside_mix]; ring
+
+/-- ⭐ **MPhase 6 — the g-side (33′) for `σ_j < σ_i + 2σ_l`.**  Chains the full-support fold
+`mat_gside_fold_full` into the (unchanged) g-source bookkeeping `gside_33_of_fold`.  Compared to
+`gside_33_of_hgside` the `Ioi 0` inner integral is replaced by `∫_ℝ`, so `hQtransform` is the full-line
+Baxter transform (`∫_ℝ e^{−zt}Q_lj = qhatMixRuneq_lj`), **unconditionally dischargeable from MPhase 1**,
+and the only remaining side condition is the mild overlap `hcond : -edgeHi_il < edgeLo_lj`
+(`σ_j < σ_i + 2σ_l`) — satisfied by all ordered pairs and much more.  So the g-side (33′) conjunct of
+`MSAMixture.MixBHRootUneq` now stands on OZ primitives for the whole range `σ_j < σ_i + 2σ_l`. -/
+theorem gside_33_of_hgside_full {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
+    (Gt Dt : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
+    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (hσ : ∀ k, 0 ≤ σ k)
+    (hgsupp : ∀ l u, u < edgeHi σ i l → g i l u = 0)
+    (hQsupp : ∀ l t, t < edgeLo σ l j → Q l j t = 0)
+    (hcond : ∀ l, -edgeHi σ i l < edgeLo σ l j)
+    (hF1 : ∀ l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
+    (hgmoment : ∀ l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
+    (hQtransform : ∀ l, (∫ t, Real.exp (-z * t) * Q l j t) = Qhat l j)
+    (hghat : ∀ l, ghat i l = Gt i l * Real.exp (-z * edgeHi σ i l))
+    (hQhat : ∀ l, Qhat l j
+      = qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z l j)
+    (hgside_mix : 2 * Real.pi * ghat i j
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+          * Real.exp (-z * edgeHi σ i j)
+        + 2 * Real.pi * ∑ l, ρ l
+            * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+                * ∫ t, (r - t) * g i l (r - t) * Q l j t)) :
+    2 * Real.pi * ∑ l, Gt i l * (Real.exp (z * edgeLo σ l j)
+        * ((if l = j then (1:ℝ) else 0)
+          - ρ l * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+              (AVec z ρ σ Gt Dt) z l j))
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2 :=
+  gside_33_of_fold z ρ σ Gt Dt i j ghat Qhat hghat hQhat
+    (mat_gside_fold_full z ρ σ g Q ghat Qhat i j
+      ((AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+        * Real.exp (-z * edgeHi σ i j))
+      hσ hgsupp hQsupp hcond hF1 hF2 hgmoment hQtransform hgside_mix)
 
 /-! ### MPhase 5 — wire the derived (29′)/(33′) into `MixBHRootUneq` (retire the posited root) -/
 
@@ -822,13 +1047,12 @@ hypothesis by the capstones `matMSAmixture_unequalDiam_of_hcore` etc. — now **
 OZ/Baxter primitives** (the exterior DCF closure + the g-side OZ equation + the RDF-moment/Baxter-
 transform identities), exactly as the scalar `exactMSA_factorization_of_oz` retired the scalar `h29`/`h33`.
 ⚠ **The c-side (29′) is fully general** (`mixBHRootUneq_cSide_of_exterior` / `mat_exterior_baxter_relation`
-use the full-line convolution).  The **g-side hypotheses are satisfiable only for ordered pairs**
-(`σ_j ≥ σ_l`, i.e. `edgeLo_lj ≥ 0`): `hQtransform`/`hQhat` require `∫_{Ioi 0}e^{−zt}Q_lj = qhatMixRuneq_lj`,
-which fails for `edgeLo_lj < 0` (the `Ioi 0` integral misses `[edgeLo_lj,0)`; see `gside_33_of_hgside`).
-So this theorem genuinely retires the c-side for all σ and the g-side for ordered pairs; the general
-unequal-σ g-side awaits the full-support fold's `t<0` correction (the note's open g-source
-normalization).  A future `Q`-supported on `[edgeLo,∞)` full-support convolution theorem would discharge
-`hQtransform` from MPhase 1 unconditionally. -/
+use the full-line convolution).  This `Ioi 0`-fold version's **g-side hypotheses are satisfiable only for
+ordered pairs** (`σ_j ≥ σ_l`): `hQtransform` requires `∫_{Ioi 0}e^{−zt}Q_lj = qhatMixRuneq_lj`, which fails
+for `edgeLo_lj < 0`.  ✅ **Superseded by `MixBHRootUneq_of_oz_full`** (MPhase 6): its full-support fold makes
+`hQtransform` the unconditional full-line transform (`baxterQ_fullline_transform`) and the RDF hard core
+discharges the `t<0` correction, extending the g-side (and hence the whole retirement of the posited root)
+to `σ_j < σ_i + 2σ_l`. -/
 theorem MixBHRootUneq_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ k, 0 ≤ σ k)
     (g Q : Fin N → Fin N → ℝ → ℝ) (ghat Qhat : Fin N → Fin N → ℝ)
@@ -860,5 +1084,63 @@ theorem MixBHRootUneq_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → 
         (AVec z ρ σ Gt Dt) z a b) i j]
   exact gside_33_of_hgside z ρ σ Gt Dt g Q ghat Qhat i j
     (hgsupp i) (hF1 i) (hF2 j) (hgmoment i) (hQtransform j) (hghat i) (hQhat j) (hgside_mix i j)
+
+/-- **The full-line Baxter transform** — discharges the full-support g-side stack's `hQtransform`
+from MPhase 1, **unconditionally** (every diameter pair).  `∫_ℝ e^{−zt}·baxterQ_lj(t) dt =
+qhatMixRuneq_lj` is `baxterQ_transform_eq_qhatMixRuneq` at `s = z` modulo `mul_comm`.  This is exactly
+the hypothesis that was **unsatisfiable** in the `Ioi 0` stack (`mat_gside_fold`) for `edgeLo_lj < 0`:
+integrating over all of `ℝ` removes the ordered-pairs restriction entirely. -/
+theorem baxterQ_fullline_transform {N : ℕ} (z : ℝ) (hz : 0 < z) (σ A : Fin N → ℝ)
+    (qp Wt Ct : Fin N → Fin N → ℝ) (l j : Fin N) (hσl : 0 ≤ σ l) :
+    ∫ t, Real.exp (-z * t) * baxterQ z σ A qp Wt Ct l j t
+      = qhatMixRuneq z σ qp Wt Ct A z l j := by
+  rw [show (∫ t, Real.exp (-z * t) * baxterQ z σ A qp Wt Ct l j t)
+        = ∫ t, baxterQ z σ A qp Wt Ct l j t * Real.exp (-z * t) from
+      MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall (fun t => by ring))]
+  exact baxterQ_transform_eq_qhatMixRuneq z σ A qp Wt Ct l j z hz.ne' (by linarith) hσl
+
+/-- ⭐⭐ **MPhase 6 — the posited root retired for `σ_j < σ_i + 2σ_l`: `MixBHRootUneq` from OZ primitives,
+full-support g-side.**  The full-support upgrade of `MixBHRootUneq_of_oz`.  The g-side inner integral now
+runs over **all of `ℝ`**, so its Baxter transform `hQtransform` (`∫_ℝ e^{−zt}Q_lj = Qhat_lj`) is the
+*unconditional* MPhase-1 transform (satisfiable for every diameter pair — see `baxterQ_fullline_transform`),
+in place of the `Ioi 0` transform of `MixBHRootUneq_of_oz` that was **unsatisfiable** for `edgeLo_lj < 0`.
+The per-`t` collapse is rescued by the **RDF hard core** `hgsupp` (`g_il = 0` on `[0,edgeHi_il)`) under the
+mild overlap `hcond` (`-edgeHi_il < edgeLo_lj`, i.e. `σ_j < σ_i + 2σ_l`).  So the whole unequal-σ root now
+stands on OZ/Baxter primitives for the range `σ_j < σ_i + 2σ_l` — every ordered pair *and much more*,
+failing only under an extreme size disparity `σ_j ≥ σ_i + 2σ_l`.  The c-side (29′) remains fully general. -/
+theorem MixBHRootUneq_of_oz_full {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ k, 0 ≤ σ k)
+    (g Q : Fin N → Fin N → ℝ → ℝ) (ghat Qhat : Fin N → Fin N → ℝ)
+    (hbax : ∀ i j r, edgeHi σ i j < r →
+      2 * Real.pi * r * matMSAtail K z σ i j r
+        = -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
+          + ∑ l, ρ l * ∫ t, baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                (Ct z ρ σ Gt Dt) i l (t + r)
+                * baxterQ z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                    (Ct z ρ σ Gt Dt) j l t)
+    (hgsupp : ∀ i l u, u < edgeHi σ i l → g i l u = 0)
+    (hQsupp : ∀ j l t, t < edgeLo σ l j → Q l j t = 0)
+    (hcond : ∀ i j l, -edgeHi σ i l < edgeLo σ l j)
+    (hF1 : ∀ i l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ j l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
+    (hgmoment : ∀ i l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
+    (hQtransform : ∀ j l, (∫ t, Real.exp (-z * t) * Q l j t) = Qhat l j)
+    (hghat : ∀ i l, ghat i l = Gt i l * Real.exp (-z * edgeHi σ i l))
+    (hQhat : ∀ j l, Qhat l j
+      = qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z l j)
+    (hgside_mix : ∀ i j, 2 * Real.pi * ghat i j
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+          * Real.exp (-z * edgeHi σ i j)
+        + 2 * Real.pi * ∑ l, ρ l
+            * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+                * ∫ t, (r - t) * g i l (r - t) * Q l j t)) :
+    MixBHRootUneq z ρ σ Gt Dt K := by
+  refine ⟨mixBHRootUneq_cSide_of_exterior z hz ρ σ Gt Dt K hσ hbax, fun i j => ?_⟩
+  rw [gside_bracket_sum_eq z σ ρ Gt
+      (fun a b => qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+        (AVec z ρ σ Gt Dt) z a b) i j]
+  exact gside_33_of_hgside_full z ρ σ Gt Dt g Q ghat Qhat i j hσ
+    (hgsupp i) (hQsupp j) (hcond i j) (hF1 i) (hF2 j) (hgmoment i) (hQtransform j)
+    (hghat i) (hQhat j) (hgside_mix i j)
 
 end FMSA.ExactMSA.MixLeg3
