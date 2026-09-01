@@ -424,4 +424,89 @@ theorem h33_of_gside_baxter (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0
     (bhBaxterSupp_weighted_integrable xi z Dt G hz) hgmoment
     (bhBaxterSupp_transform xi z Dt G hz hxi) hgside
 
+/-! ### The OZ primitives `hbax`/`hgside` are *equivalent* to `h29`/`h33` (reverse directions)
+
+`hbax` (Baxter's exterior Eq. 8, `∀ r > 1`) and `hgside` (the g-side OZ Eq. 32 Laplace-transformed)
+are **not** unconditional theorems — they are the *physical-root conditions*, false for off-root
+`(Dt, G)`.  But they are logically **equivalent** to the two algebraic Blum–Høye constraints
+`h29`/`h33`: `h29_of_baxter_exterior` / `h33_of_gside` are the forward directions, and the two lemmas
+below are the reverse directions, so `hbax ⟺ h29` and (under the RDF-side data) `hgside ⟺ h33`.  This
+"discharges" `hbax`/`hgside` in the only sense available — showing they impose **no** assumption
+beyond `h29`/`h33`, not that they hold unconditionally (which is false). -/
+
+/-- **`h29 ⟹ hbax`** — the reverse of `h29_of_baxter_exterior`.  Both sides of Baxter's exterior
+Eq. (8) are known in closed form *unconditionally*: the LHS `2πρr·c(r) = ρ·2πK·e^{−z(r−1)}`
+(`cMSAtail_exterior_lhs`) and the RHS `= zρDt e^z e^{−zr}·bhF` (`bh_exterior_baxter_relation`).  They
+agree for every `r > 1` iff `2πK = zDt·bhF`, i.e. iff `h29`.  So `hbax` holds at the physical root. -/
+theorem hbax_of_h29 (xi z Dt G K : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0)
+    (h29 : Dt * bhF xi z (Dt, G) - 2 * Real.pi * K / z = 0) :
+    ∀ r, 1 < r →
+      2 * Real.pi * rhoOf xi * r * cMSAtail K z 1 r
+        = -deriv (fun s => bhBaxterFn xi z Dt G s) r
+          + ∫ t in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G t
+              * (-z * (rhoOf xi * Dt * Real.exp z) * Real.exp (-z * (r + t))) := by
+  intro r hr
+  rw [bh_exterior_baxter_relation xi z Dt G hz hxi hr,
+      show 2 * Real.pi * rhoOf xi * r * cMSAtail K z 1 r
+        = rhoOf xi * (2 * Real.pi * r * cMSAtail K z 1 r) from by ring,
+      cMSAtail_exterior_lhs K z hr]
+  have hzDt : z * Dt * bhF xi z (Dt, G) = 2 * Real.pi * K := by
+    have h : Dt * bhF xi z (Dt, G) = 2 * Real.pi * K / z := by linarith [h29]
+    rw [show z * Dt * bhF xi z (Dt, G) = z * (Dt * bhF xi z (Dt, G)) from by ring, h]
+    field_simp
+  have he : Real.exp (-z * (r - 1)) = Real.exp z * Real.exp (-z * r) := by
+    rw [← Real.exp_add]; congr 1; ring
+  rw [he]
+  linear_combination (-(rhoOf xi * Real.exp z * Real.exp (-z * r))) * hzDt
+
+/-- **`hbax ⟺ h29`** — the exterior Baxter Eq. (8) (`∀ r > 1`) is exactly the Blum–Høye constraint
+Eq. (29).  Forward: `h29_of_baxter_exterior` (matches the `e^{−zr}` coefficient at one exterior point);
+reverse: `hbax_of_h29`. -/
+theorem hbax_iff_h29 (xi z Dt G K : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0) (hxipos : 0 < xi) :
+    (∀ r, 1 < r →
+      2 * Real.pi * rhoOf xi * r * cMSAtail K z 1 r
+        = -deriv (fun s => bhBaxterFn xi z Dt G s) r
+          + ∫ t in Set.Ioi (0:ℝ), bhBaxterFn xi z Dt G t
+              * (-z * (rhoOf xi * Dt * Real.exp z) * Real.exp (-z * (r + t))))
+      ↔ Dt * bhF xi z (Dt, G) - 2 * Real.pi * K / z = 0 :=
+  ⟨fun hbax => h29_of_baxter_exterior xi z Dt G K hz hxi hxipos hbax,
+   hbax_of_h29 xi z Dt G K hz hxi⟩
+
+/-- **`h33 ⟹ hgside`** — the reverse of `h33_of_gside_baxter`.  Given the RDF-side data (`g`'s support,
+the moment integrability, `ĝ(z) = G`), the g-side OZ equation's two sides fold *unconditionally* by
+the convolution theorem (`conv = ĝ·Q̂ = G·(1 − bhF)`) and `bhP_eq_gsource_moment` (`source = bhP`), so
+`hgside` reduces to `2πG·bhF = bhP`, i.e. `h33`. -/
+theorem hgside_of_h33 (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0) (g : ℝ → ℝ)
+    (hgsupp : ∀ u, u < 0 → g u = 0)
+    (hF1 : Integrable (fun u => Real.exp (-z * u) * (u * g u)))
+    (hgmoment : rdfLaplaceMoment g z = G)
+    (h33 : 2 * Real.pi * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0) :
+    2 * Real.pi * rdfLaplaceMoment g z
+      = (∫ u in Set.Ioi (0:ℝ),
+            (u * msaA xi z Dt G + msaQp xi z Dt G + z * gam xi z G * Dt * Real.exp (-z * u))
+              * Real.exp (-z * u))
+        + 2 * Real.pi * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+            * ∫ t in Set.Ioi (0:ℝ), (r - t) * g (r - t) * bhBaxterSupp xi z Dt G t) := by
+  rw [laplace_conv_eq_rdf_mul_qhat_of_integrable g (bhBaxterSupp xi z Dt G) z hgsupp hF1
+        (bhBaxterSupp_weighted_integrable xi z Dt G hz),
+      bhBaxterSupp_transform xi z Dt G hz hxi, hgmoment,
+      ← bhP_eq_gsource_moment xi z Dt G hz]
+  linear_combination h33
+
+/-- **`hgside ⟺ h33`** (under the RDF-side data) — the g-side OZ Eq. (32) Laplace-transformed is
+exactly the Blum–Høye constraint Eq. (33).  Forward: `h33_of_gside_baxter`; reverse: `hgside_of_h33`. -/
+theorem hgside_iff_h33 (xi z Dt G : ℝ) (hz : 0 < z) (hxi : (1 - xi) ≠ 0) (g : ℝ → ℝ)
+    (hgsupp : ∀ u, u < 0 → g u = 0)
+    (hF1 : Integrable (fun u => Real.exp (-z * u) * (u * g u)))
+    (hgmoment : rdfLaplaceMoment g z = G) :
+    (2 * Real.pi * rdfLaplaceMoment g z
+      = (∫ u in Set.Ioi (0:ℝ),
+            (u * msaA xi z Dt G + msaQp xi z Dt G + z * gam xi z G * Dt * Real.exp (-z * u))
+              * Real.exp (-z * u))
+        + 2 * Real.pi * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+            * ∫ t in Set.Ioi (0:ℝ), (r - t) * g (r - t) * bhBaxterSupp xi z Dt G t))
+      ↔ 2 * Real.pi * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0 :=
+  ⟨fun hgside => h33_of_gside_baxter xi z Dt G hz hxi g hgsupp hF1 hgmoment hgside,
+   hgside_of_h33 xi z Dt G hz hxi g hgsupp hF1 hgmoment⟩
+
 end FMSA.ExactMSA.GSide
