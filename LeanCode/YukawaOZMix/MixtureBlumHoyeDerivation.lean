@@ -683,4 +683,89 @@ theorem mat_gside_fold {N : ℕ} (z : ℝ) (ρ : Fin N → ℝ) (g Q : Fin N →
     simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
   rw [hexpand, mul_sub, hgside_mix]; ring
 
+/-- **MPhase 4 — the g-source bookkeeping: recover (33′) from the fold.**  The g-side fold
+`mat_gside_fold` produces `2π·∑_l ĝ_il(z)(δ_lj − ρ_l·Q̂_lj) = source` (here `hgconstraint`, with `source`
+in the `×e^{−z·edgeHi_ij}` normalization).  With the physical identifications `ĝ_il = Gt_il·e^{−z·edgeHi_il}`
+(`hghat`, the `gam` convention `Gt = ĝ·e^{+z·edgeHi}`) and `Q̂_lj = qhatMixRuneq_lj` (`hQhat`, the
+full-support Baxter transform), multiplying by `e^{z·edgeHi_ij}` turns `ĝ_il·e^{z·edgeHi_ij} =
+Gt_il·e^{z(edgeHi_ij − edgeHi_il)} = Gt_il·e^{z·edgeLo σ l j}` (the key edge identity), recovering exactly
+the **(33′) conjunct of `MSAMixture.MixBHRootUneq`** (numerically confirmed to `3.6e-15`).  This is the
+matrix analog of the scalar `h33_of_gside` (it takes the same class of physical hypotheses — moment
+identity, transform value, folded OZ relation). -/
+theorem gside_33_of_fold {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
+    (Gt Dt : Matrix (Fin N) (Fin N) ℝ) (i j : Fin N) (ghat Qhat : Fin N → Fin N → ℝ)
+    (hghat : ∀ l, ghat i l = Gt i l * Real.exp (-z * edgeHi σ i l))
+    (hQhat : ∀ l, Qhat l j
+      = qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z l j)
+    (hgconstraint : 2 * Real.pi * ∑ l, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j)
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+        * Real.exp (-z * edgeHi σ i j)) :
+    2 * Real.pi * ∑ l, Gt i l * (Real.exp (z * edgeLo σ l j)
+        * ((if l = j then (1:ℝ) else 0)
+          - ρ l * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+              (AVec z ρ σ Gt Dt) z l j))
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2 := by
+  set R := (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+    with hR
+  have hedge : ∀ l : Fin N, Real.exp (z * edgeHi σ i j) * Real.exp (-z * edgeHi σ i l)
+      = Real.exp (z * edgeLo σ l j) := by
+    intro l; rw [← Real.exp_add]; congr 1; unfold edgeHi edgeLo; ring
+  have keysum : (∑ l, Gt i l * (Real.exp (z * edgeLo σ l j)
+        * ((if l = j then (1:ℝ) else 0)
+          - ρ l * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+              (AVec z ρ σ Gt Dt) z l j)))
+      = Real.exp (z * edgeHi σ i j)
+        * ∑ l, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j) := by
+    rw [Finset.mul_sum]
+    refine Finset.sum_congr rfl (fun l _ => ?_)
+    rw [hghat l, hQhat l, ← hedge l]; ring
+  have hc : Real.exp (z * edgeHi σ i j) * Real.exp (-z * edgeHi σ i j) = 1 := by
+    rw [← Real.exp_add, show z * edgeHi σ i j + -z * edgeHi σ i j = 0 from by ring, Real.exp_zero]
+  rw [keysum,
+      show 2 * Real.pi * (Real.exp (z * edgeHi σ i j)
+            * ∑ l, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j))
+        = Real.exp (z * edgeHi σ i j)
+          * (2 * Real.pi * ∑ l, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j)) from by ring,
+      hgconstraint]
+  linear_combination R * hc
+
+/-- ⭐ **MPhase 3/4 — the g-side (33′), derived from the g-side OZ primitive.**  Chains `mat_gside_fold`
+(the convolution folding) into `gside_33_of_fold` (the g-source bookkeeping): given the mixture g-side
+OZ equation Laplace-transformed at `s = z` (`hgside_mix`) — with its g-source in the `×e^{−z·edgeHi_ij}`
+normalization — plus the physical identifications `ĝ_il = Gt_il·e^{−z·edgeHi_il}` (`hghat`) and
+`Q̂_lj = qhatMixRuneq_lj` (`hQhat`), the **c… (33′) conjunct of `MSAMixture.MixBHRootUneq`** follows.  The
+full matrix analog of the scalar `FMSA.ExactMSA.GSide.h33_of_gside`: the whole g-side leg now stands on
+the recognised physical inputs (RDF support/integrability, the RDF-moment and Baxter-transform
+identities, and the folded g-side OZ relation), with the convolution-folding crux discharged
+axiom-clean.  (The `Ioi 0` transform equals the full-support `qhatMixRuneq_lj` when `edgeLo_lj ≥ 0`; the
+general full-support conv domain is the one remaining transcription detail — `hQtransform`/`hQhat` carry
+it as a hypothesis, exactly as the scalar `hQtransform` does.) -/
+theorem gside_33_of_hgside {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
+    (Gt Dt : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
+    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N)
+    (hgsupp : ∀ l u, u < 0 → g i l u = 0)
+    (hF1 : ∀ l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
+    (hgmoment : ∀ l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
+    (hQtransform : ∀ l, (∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q l j t) = Qhat l j)
+    (hghat : ∀ l, ghat i l = Gt i l * Real.exp (-z * edgeHi σ i l))
+    (hQhat : ∀ l, Qhat l j
+      = qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z l j)
+    (hgside_mix : 2 * Real.pi * ghat i j
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+          * Real.exp (-z * edgeHi σ i j)
+        + 2 * Real.pi * ∑ l, ρ l
+            * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+                * ∫ t in Set.Ioi (0:ℝ), (r - t) * g i l (r - t) * Q l j t)) :
+    2 * Real.pi * ∑ l, Gt i l * (Real.exp (z * edgeLo σ l j)
+        * ((if l = j then (1:ℝ) else 0)
+          - ρ l * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+              (AVec z ρ σ Gt Dt) z l j))
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2 :=
+  gside_33_of_fold z ρ σ Gt Dt i j ghat Qhat hghat hQhat
+    (mat_gside_fold z ρ g Q ghat Qhat i j
+      ((AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+        * Real.exp (-z * edgeHi σ i j))
+      hgsupp hF1 hF2 hgmoment hQtransform hgside_mix)
+
 end FMSA.ExactMSA.MixLeg3

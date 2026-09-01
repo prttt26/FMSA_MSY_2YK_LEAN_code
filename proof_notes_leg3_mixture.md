@@ -226,13 +226,25 @@ species contraction is pure linearity — the scalar g-side machinery reuses who
 Laplace-transformed at `s=z` (`hgside_mix`, the g-side `hbax`), it folds the species-summed
 RDF⋆Baxter convolution via `mat_laplace_conv` and produces the g-side constraint
 `2π·∑_l ĝ_il(z)·(δ_lj − ρ_l·Q̂_lj(z)) = source`, with `ĝ_il`/`Q̂_lj` supplied by `hgmoment`/`hQtransform`.
-**This discharges the convolution-folding crux** (the same crux the c-side had). REMAINING (MPhase 4):
-pin the g-source normalization — match `source` to `(A_j+z·qp_ij+z²·Ct_ij/2)/z²·e^{−z·edgeHi_ij}`, and
-identify `ĝ_il = Gt_il·e^{−z·edgeHi_il}`, `Q̂_lj = e^{z·edgeLo σ l j}·qhatMixRuneq_lj` over the **full
-support `[edgeLo,∞)`** (replacing the scalar's `Ioi 0` domain) — to recover the (33′) of
-`MixBHRootUneq` (×`e^{z·edgeHi_ij}`). That (33′) form is already numerically pinned to machine precision
-(`msaemix_root_recentering_check.py` vs `msa_exact_mix.py`), so MPhase 4 is bookkeeping over the g-source
-+ the full-support conv, not new physics.
+**This discharges the convolution-folding crux** (the same crux the c-side had).
+
+**MPhase 4 — the g-source bookkeeping (DONE, axiom-clean std-3):**
+* **`gside_33_of_fold`** — recovers the exact (33′) conjunct of `MixBHRootUneq` from the fold output.
+  KEY: multiply by `e^{z·edgeHi_ij}` and use `ĝ_il = Gt_il·e^{−z·edgeHi_il}` (the `gam` convention) ⇒
+  `ĝ_il·e^{z·edgeHi_ij} = Gt_il·e^{z(edgeHi_ij − edgeHi_il)} = Gt_il·e^{z·edgeLo σ l j}` (edge identity);
+  `source = RHS·e^{−z·edgeHi_ij}` cancels. Proof: `keysum` (per-`l` edge identity + `Finset.mul_sum`) +
+  `linear_combination R·hc` with `hc : e^{z·edgeHi_ij}·e^{−z·edgeHi_ij}=1`.
+* **`gside_33_of_hgside`** — chains `mat_gside_fold` → `gside_33_of_fold`: the **(33′) DERIVED from the
+  g-side OZ primitive `hgside_mix`** + the physical identifications (RDF moment `hgmoment`, transform
+  `hQtransform`, `ĝ`/`Q̂` conventions `hghat`/`hQhat`).  The full matrix analog of the scalar
+  `h33_of_gside`.  Together with the c-side (♦), both root conjuncts stand on recognised OZ/Baxter
+  primitives.
+
+**Residual (hypothesis-level, exactly as the scalar):** the `Ioi 0` transform in the fold equals the
+full-support `qhatMixRuneq_lj` when `edgeLo_lj ≥ 0`; the general full-support conv domain `[edgeLo,∞)` is
+carried as the `hQtransform`/`hQhat` hypothesis (the scalar `h33_of_gside` likewise takes `hQtransform`
+as a hypothesis).  The (33′) *form* is numerically pinned to machine precision
+(`msaemix_root_recentering_check.py` vs `msa_exact_mix.py`).
 
 **g-side edge structure (numerically pinned):** the g-side carries its OWN `σ`-edge factors, so an
 analogous recentering to the c-side (♦) is EXPECTED at unequal σ — two independent signals:

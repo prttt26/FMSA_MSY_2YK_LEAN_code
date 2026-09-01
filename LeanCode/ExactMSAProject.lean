@@ -203,3 +203,14 @@ Matching `source`/`ĝ`/`Q̂` to the physical amplitudes recovers the numerically
 /-- info: 'FMSA.ExactMSA.MixLeg3.mat_gside_fold' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.mat_gside_fold
+
+/-! **The g-side (33′), derived from the g-side OZ primitive.**  `gside_33_of_hgside` chains
+`mat_gside_fold` (convolution folding) into `gside_33_of_fold` (g-source bookkeeping): from the mixture
+g-side OZ equation Laplace-transformed at `s = z` (`hgside_mix`) + the physical identifications
+`ĝ_il = Gt_il·e^{−z·edgeHi_il}`, `Q̂_lj = qhatMixRuneq_lj`, the (33′) conjunct of `MixBHRootUneq` follows —
+the full matrix analog of the scalar `h33_of_gside`.  Together with the c-side (♦)
+(`mixBHRootUneq_cSide_of_exterior`), both root conjuncts now stand on recognised OZ/Baxter primitives. -/
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.gside_33_of_hgside' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.gside_33_of_hgside
