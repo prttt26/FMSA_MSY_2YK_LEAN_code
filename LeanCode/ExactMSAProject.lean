@@ -145,3 +145,17 @@ transform `Q̂(z)`, giving `−Q'_ij(r) + ∑_l ρ_l ∫ … = z e^{−zr}(S_ij 
 /-- info: 'FMSA.ExactMSA.MixLeg3.mat_exterior_baxter_relation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.mat_exterior_baxter_relation
+
+/-! **MPhase 2 amplitude algebra** — the exterior amplitude bundle collapses to the c-side amplitude
+`Dt` via the `e^{zσ}` cancellation `MSAMixture.cancellation_star`, putting the exterior Baxter
+convolution in `Dt` form.  ⚠ Matching `matMSAtail` then yields the c-side constraint `(♦)` with a
+recentering `e^{z·edgeLo_jl}` on the transform — differing from the posited `MixBHRootUneq` (29′) at
+unequal σ (see `proof_notes_leg3_mixture.md`, FINDING). -/
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.baxterS_eq_edgeHi_Dt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.baxterS_eq_edgeHi_Dt
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.mat_exterior_baxter_relation_Dt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.mat_exterior_baxter_relation_Dt

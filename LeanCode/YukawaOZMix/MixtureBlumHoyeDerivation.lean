@@ -425,4 +425,71 @@ theorem mat_exterior_baxter_relation {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ A :
       ← Finset.mul_sum]
   ring
 
+/-! ### MPhase 2 — the amplitude algebra `S = e^{z·edgeHi}·Dt` and the (29′) reduction
+
+The exterior Baxter relation's amplitude bundle `S_ab = Wt_ab e^{z·edgeLo_ab} + Ct_ab e^{z·edgeHi_ab}`
+collapses to `e^{z·edgeHi_ab}·Dt_ab` via the `e^{zσ}` cancellation `MSAMixture.cancellation_star`
+(`Dt − Ct = e^{−zσ}·Wt`).  Substituting into `mat_exterior_baxter_relation` puts the exterior Baxter
+convolution entirely in terms of `Dt` and the transform `Q̂`.
+
+⚠ **FINDING (σ-edge).** Matching against `matMSAtail` (`2πr·c_ij = 2π K_ij e^{z·σ_ij} e^{−zr}`) then
+gives the c-side constraint
+
+    (♦)   Dt_ij − ∑_l ρ_l · e^{z·edgeLo_jl} · Dt_il · Q̂_jl(z) = 2π K_ij / z,
+
+with a **recentering factor `e^{z·edgeLo_jl}`** on the transform (it arises structurally from
+`edgeHi_il − edgeHi_ij = edgeLo_jl`, the row-`i` tail edge vs the diagonal `K` edge).  At **equal** σ,
+`edgeLo_jl = 0`, so (♦) coincides with the posited `MixBHRootUneq` (29′)
+`Dt_ij − ∑_l ρ_l Dt_il Q̂_jl(z) = 2πK_ij/z`; at **unequal** σ they differ.  The `S = e^{z·edgeHi}·Dt`
+identity is confirmed to `4.4e-16` numerically (`scratchpad/scheck.py`) and proved below, and
+`mat_exterior_baxter_relation` is axiom-clean, so (♦) is the rigorously-derived form.  The posited (29′)
+therefore appears to need the recentered transform `e^{z·edgeLo_jl}·qhatMixRuneq_jl` (i.e. the Baxter
+`Q̂` centered at the support edge) for the unequal-σ root — a σ-power factor of the exact kind that
+`σ=1` masks. Flagged for reconciliation before the wire-in (MPhase 5). -/
+
+/-- **The exterior-amplitude bundle collapses to `Dt`.**  `Wt_il e^{z·edgeLo_il} + Ct_il e^{z·edgeHi_il}
+= e^{z·edgeHi_il}·Dt_il`, via `MSAMixture.cancellation_star` (`Dt − Ct = e^{−zσ}·Wt`) and
+`e^{−zσ_i}·e^{z·edgeHi_il} = e^{z·edgeLo_il}` (which cancels the two `Wt` terms). -/
+theorem baxterS_eq_edgeHi_Dt {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
+    (Gt Dt : Matrix (Fin N) (Fin N) ℝ) (i l : Fin N) :
+    Wt z ρ Gt Dt i l * Real.exp (z * edgeLo σ i l)
+        + Ct z ρ σ Gt Dt i l * Real.exp (z * edgeHi σ i l)
+      = Real.exp (z * edgeHi σ i l) * Dt i l := by
+  have hc := cancellation_star z ρ σ Gt Dt i l
+  have hkey : Real.exp (-z * σ i) * Real.exp (z * edgeHi σ i l) = Real.exp (z * edgeLo σ i l) := by
+    rw [← Real.exp_add]; congr 1; unfold edgeLo edgeHi; ring
+  have hCt : Ct z ρ σ Gt Dt i l = Dt i l - Real.exp (-z * σ i) * Wt z ρ Gt Dt i l := by
+    linarith [hc]
+  rw [hCt,
+      show Wt z ρ Gt Dt i l * Real.exp (z * edgeLo σ i l)
+            + (Dt i l - Real.exp (-z * σ i) * Wt z ρ Gt Dt i l) * Real.exp (z * edgeHi σ i l)
+          = Wt z ρ Gt Dt i l * Real.exp (z * edgeLo σ i l)
+            + Dt i l * Real.exp (z * edgeHi σ i l)
+            - Wt z ρ Gt Dt i l * (Real.exp (-z * σ i) * Real.exp (z * edgeHi σ i l)) from by ring,
+      hkey]
+  ring
+
+/-- **The exterior Baxter relation in `Dt` form** (physical MSA amplitudes).  Combining
+`mat_exterior_baxter_relation` with `baxterS_eq_edgeHi_Dt`: on `r > edgeHi σ i j`,
+`−Q'_ij(r) + ∑_l ρ_l ∫ Q'_il(t+r)Q_jl(t)dt
+= z e^{−zr}(e^{z·edgeHi_ij}Dt_ij − ∑_l ρ_l e^{z·edgeHi_il}Dt_il Q̂_jl(z))`.  Matching `matMSAtail`
+yields the c-side constraint (♦) (see the `FINDING` note above). -/
+theorem mat_exterior_baxter_relation_Dt {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
+    (Gt Dt : Matrix (Fin N) (Fin N) ℝ) (i j : Fin N) (r : ℝ)
+    (hσ : ∀ k, 0 ≤ σ k) (hr : edgeHi σ i j < r) :
+    -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
+        + ∑ l, ρ l * ∫ t, baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+              (Ct z ρ σ Gt Dt) i l (t + r)
+              * baxterQ z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                  (Ct z ρ σ Gt Dt) j l t
+      = z * Real.exp (-z * r)
+        * (Real.exp (z * edgeHi σ i j) * Dt i j
+           - ∑ l, ρ l * (Real.exp (z * edgeHi σ i l) * Dt i l)
+               * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+                   (AVec z ρ σ Gt Dt) z j l) := by
+  rw [mat_exterior_baxter_relation z hz ρ σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt)
+        (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r hσ hr,
+      baxterS_eq_edgeHi_Dt z ρ σ Gt Dt i j,
+      Finset.sum_congr rfl (fun l _ => by rw [baxterS_eq_edgeHi_Dt z ρ σ Gt Dt i l])]
+
 end FMSA.ExactMSA.MixLeg3

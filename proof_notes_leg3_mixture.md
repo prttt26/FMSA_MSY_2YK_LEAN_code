@@ -160,8 +160,26 @@ Same file, built green, all `[propext, Classical.choice, Quot.sound]`, gated in 
   `S_ab = Wt_ab e^{z·edgeLo_ab}+Ct_ab e^{z·edgeHi_ab}`. Matrix analog of scalar `bh_exterior_baxter_relation`.
   `−Q'_ij(r)` tail + per-`l` conv + `Finset.mul_sum` factoring.
 
-**REMAINING MPhase 2:** match `2πr·matMSAtail_ij = 2π K_ij e^{z·σ_ij}e^{−zr}` against
-`2πr·baxterConvCore = mat_exterior_baxter_relation` RHS ⇒ (★) `2π K_ij e^{z·σ_ij}/z = S_ij − ∑_l ρ_l S_il Q̂_jl(z)`,
-then the amplitude algebra (★)⇒(29′) (unfold `Wt`/`Ct`/`γ`; definition-heavy, analog of scalar
-`h29_of_baxter_exterior`). Cleanest as `h29_mix_of_exterior` taking the exterior closure as `hbax`
-hypothesis (as the scalar did) — the analytical content is already discharged above.
+**Amplitude algebra (DONE, axiom-clean std-3):**
+* **`baxterS_eq_edgeHi_Dt`** — `Wt_il e^{z·edgeLo_il} + Ct_il e^{z·edgeHi_il} = e^{z·edgeHi_il}·Dt_il`,
+  via `MSAMixture.cancellation_star` (`Dt − Ct = e^{−zσ}·Wt`); the two `Wt` terms cancel because
+  `e^{−zσ_i}·e^{z·edgeHi_il} = e^{z·edgeLo_il}`. Numerically confirmed to `4.4e-16`.
+* **`mat_exterior_baxter_relation_Dt`** — the exterior relation with `S` collapsed to `Dt`:
+  `−Q'_ij(r) + ∑_l ρ_l ∫ = z e^{−zr}(e^{z·edgeHi_ij}Dt_ij − ∑_l ρ_l e^{z·edgeHi_il}Dt_il Q̂_jl(z))`.
+
+### ⚠ FINDING — the c-side constraint is (♦), not the posited (29′), at unequal σ
+
+Matching `2πr·matMSAtail_ij = 2πK_ij e^{z·σ_ij}e^{−zr}` against `mat_exterior_baxter_relation_Dt`
+(cancel `e^{−zr}`, divide `z`, divide the common `e^{z·edgeHi_ij}` off `K` and `Dt_ij`) gives
+
+    (♦)   Dt_ij − ∑_l ρ_l · e^{z·edgeLo_jl} · Dt_il · Q̂_jl(z) = 2π K_ij / z.
+
+The **recentering factor `e^{z·edgeLo_jl}`** is structural: it is `e^{z(edgeHi_il − edgeHi_ij)}` (the
+row-`i` tail edge vs the diagonal `K` edge). The posited `MixBHRootUneq` (29′) has the **bare** `Q̂_jl`
+(no `e^{z·edgeLo_jl}`). At equal σ, `edgeLo_jl = 0` ⇒ (♦) ≡ (29′); at **unequal** σ they differ.
+Since `baxterS_eq_edgeHi_Dt` is proved + numerically confirmed and `mat_exterior_baxter_relation` is
+axiom-clean, **(♦) is the rigorously-derived form**, so the posited (29′) appears to need the
+recentered transform `e^{z·edgeLo_jl}·qhatMixRuneq_jl` (Baxter `Q̂` centered at the support edge) for the
+unequal-σ root — a σ-power factor of exactly the kind `σ=1` masks (cf. `feedback_sigma_one_masks_bugs`).
+**DECISION PENDING** (fix (29′) to recentered / investigate) before formalizing (♦) as
+`c_side_constraint_of_exterior` and the MPhase-5 wire-in.
