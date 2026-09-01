@@ -620,17 +620,18 @@ discharged, axiom-clean) is **generic** in the RDF `g` and Baxter factor `Q`, so
 species `l`**; the `∑_l ρ_l` contraction the roadmap flagged as the crux is then **just linearity of
 the integral** (`Finset.sum_congr`).  The g-side thus reuses the scalar Fubini machinery wholesale.
 
-⚠ **Edge structure of the g-side (corrected).** The g-side does **not** get the c-side's `Q̂`-recentering.
-The g-side Eq (34) (`proof_notes_leg3_bh_gside_eq9.md`) reads `∑_l 2π·ĝ_il(z)·[δ_lj − ρ_l·Q̂_lj(z)] = …`
-with the transform `Q̂ = ∫_λ^∞ e^{−st}Q(t) dt` over the **full support** `[edgeLo,∞)` (= `qhatMixRuneq`,
-*not* recentered — the `Ioi 0` domain in `mat_laplace_conv` is the scalar's `edgeLo=0` special case and
-must become `[edgeLo,∞)` here, matching the c-side's full-line convolution), and the σ-edge factor
-`ĝ_il(z) = Gt_il·e^{−z·edgeHi_il}` (from `gam`'s convention `Gt_ij = ĝ_ij(z)·e^{+z·edgeHi_ij}`) multiplies
-the **whole bracket** `[δ_lj − ρ_l·Q̂_lj]`, not `Q̂` alone.  So the g-side recentering is
-amplitude-structure-dependent and differs from the c-side's `S_il = e^{z·edgeHi_il}·Dt_il`; the naive
-Wiener–Hopf-consistency guess (a `Q̂`-recentering on (33′)) is **wrong**, and `MixBHRootUneq`'s (33′) is
-left with the bare `Q̂_lj`.  The rigorous g-side (33′) needs the repo-consistent mixture g-source (the
-matrix analog of the scalar `bhP`), which is open (the g-side Eq (32) is not yet in Lean). -/
+**Edge structure of the g-side (numerically confirmed).** Both conjuncts of `MSAMixture.MixBHRootUneq`
+carry the recentered transform — verified to machine precision (`(29′) 1.7e-16`, `(33′) 3.6e-15`)
+against the validated solver `msa_exact_mix.py` (`msaemix_root_recentering_check.py`), whose exact
+`_residuals` are `(29′) Σ_l Dt_il·e^{z·edgeLo σ j l}[δ_lj − ρ_l·Q̂_jl] = 2πK_ij/z` and
+`(33′) 2π·Σ_l Gt_il·e^{z·edgeLo σ l j}[δ_lj − ρ_l·Q̂_lj] = RHS`.  The two descend from Baxter's Eq (8)
+`D(I−PQ̂ᵀ)` and Eq (32) `2πĝ(I−PQ̂)` — hence the **opposite `edgeLo` orientation and transposed `Q̂`
+index** (`Q̂_jl` on c-side, `Q̂_lj` on g-side), a distinction invisible at `N=1`.  The `Q̂` is the
+full-support `qhatMixRuneq` and the factor may sit on `Q̂` alone or the whole bracket (identical, `=1` at
+`l=j`).  (A first analysis wrongly inferred the g-side gets no `Q̂`-recentering; the solver check
+refuted it — the recentering is real, and the c/g difference is only in the `edgeLo` index/sign.)
+The from-first-principles g-side derivation (via `mat_laplace_conv` + a repo-consistent g-source) is
+still open, but the (33′) *form* is now numerically pinned. -/
 
 /-- **MPhase 3 — the matrix Laplace-convolution theorem (the CRUX engine).**  For each species `l` the
 scalar `laplace_conv_eq_rdf_mul_qhat_of_integrable` folds the RDF⋆Baxter convolution onto

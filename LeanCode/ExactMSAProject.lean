@@ -171,13 +171,13 @@ in the posited `MixBHRootUneq` (29′), which therefore coincides with (♦) onl
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.c_side_constraint_of_exterior
 
-/-! **The c-side recentering fix, wired to `MixBHRootUneq`.**  `MixBHRootUneq`'s **c-side (29′)** is
-corrected to use the recentered Baxter transform `e^{z·edgeLo_jl}·Q̂_jl` (the σ-edge FINDING);
-`mixBHRootUneq_cSide_of_exterior` proves that conjunct follows exactly from the c-side exterior closure
-via `c_side_constraint_of_exterior` + `∑_l Dt_il·δ_lj = Dt_ij`.  The **g-side (33′) is left with the bare
-`Q̂_lj`**: the g-side Eq (34) has a different amplitude structure (`ĝ_il = Gt_il·e^{−z·edgeHi_il}` on the
-whole bracket), so it does NOT get a `Q̂`-recentering — the naive Wiener–Hopf-consistency intuition
-fails.  The g-side (33′) rigorous form is open (needs the repo-consistent mixture g-source). -/
+/-! **The recentering fix, wired to `MixBHRootUneq` (both conjuncts, numerically confirmed).**
+`MixBHRootUneq` uses the recentered Baxter transform on **both** conjuncts — (29′) `e^{z·edgeLo σ j l}·Q̂_jl`,
+(33′) `e^{z·edgeLo σ l j}·Q̂_lj` — the σ-edge FINDING, confirmed to machine precision at a physical
+unequal-σ root against the validated solver `msa_exact_mix.py` (`msaemix_root_recentering_check.py`:
+`(29′) 1.7e-16`, `(33′) 3.6e-15`; the bare form misses (33′) by `≈5`).  `mixBHRootUneq_cSide_of_exterior`
+additionally proves the (29′) conjunct from the c-side exterior closure (= the OZ-derived (♦)).  The two
+conjuncts descend from Baxter's Eq (8)/(32) with opposite `edgeLo` orientation and transposed `Q̂` index. -/
 
 /-- info: 'FMSA.ExactMSA.MixLeg3.mixBHRootUneq_cSide_of_exterior' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in

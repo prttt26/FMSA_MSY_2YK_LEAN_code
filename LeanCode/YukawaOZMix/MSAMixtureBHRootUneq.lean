@@ -93,19 +93,22 @@ noncomputable def matCoreCorrUneq (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt : Ma
 
 /-! ### The unequal-σ BH-root gate -/
 
-/-- The unequal-σ mixture MSA Blum–Høye root.  ⚠ The **c-side (29′)** uses the **recentered** Baxter
-transform `e^{z·edgeLo_jl}·qhatMixRuneq_jl` — this is rigorously the OZ/Baxter-derived constraint (♦)
-(`FMSA.ExactMSA.MixLeg3.c_side_constraint_of_exterior` / `mixBHRootUneq_cSide_of_exterior`); the
-recentering (= `e^{z(edgeHi_il − edgeHi_ij)}`) is forced by the c-side Baxter amplitude structure
-`S_il = e^{z·edgeHi_il}·Dt_il`.  The **g-side (33′)** uses the **bare** `qhatMixRuneq_lj` (the natural
-matrix analog of the scalar `h33`): the g-side has a **different** amplitude structure — Eq (34) reads
-`∑_l 2π·ĝ_il(z)·[δ_lj − ρ_l·Q̂_lj(z)] = …` with `Q̂ = ∫_λ^∞ e^{−st}Q(t) dt` (full support) and
-`ĝ_il(z) = Gt_il·e^{−z·edgeHi_il}` multiplying the **whole bracket** (see
-`proof_notes_leg3_bh_gside_eq9.md` Eq 34) — so the recentering, being amplitude-structure-dependent, is
-**not** a `Q̂`-recentering here; the naive Wiener–Hopf-consistency intuition fails.  The g-side (33′)
-rigorous form/derivation is **open** (needs the repo-consistent mixture g-source; the g-side Eq (32) is
-not yet in Lean).  At **equal** σ all `edgeLo = 0`, so (29′)'s factor is `1` and both conjuncts are the
-naive form.  The physical-solution gate (no `∀ i, σ i = sig` constraint). -/
+/-- The unequal-σ mixture MSA Blum–Høye root, with the **recentered** Baxter transform on **both**
+conjuncts — the σ-edge FINDING.  Numerically **confirmed to machine precision** (`1.7e-16` on (29′),
+`3.6e-15` on (33′)) at a physical unequal-σ root against the validated solver `msa_exact_mix.py`
+(whose `_residuals` passes the Tang & Lu gate at `σ₂/σ₁ = 1.5`); the bare form (no recentering) misses
+(33′) by `≈5`.
+
+* **c-side (29′)** carries `e^{z·edgeLo σ j l}·Q̂_jl` (= `e^{−z(σ_j−σ_l)/2}·Q̂_jl`); this is also the
+  OZ/Baxter-derived (♦) (`FMSA.ExactMSA.MixLeg3.c_side_constraint_of_exterior` /
+  `mixBHRootUneq_cSide_of_exterior`).
+* **g-side (33′)** carries `e^{z·edgeLo σ l j}·Q̂_lj` (= `e^{+z(σ_j−σ_l)/2}·Q̂_lj`) — **opposite sign,
+  transposed `Q̂` index**.  The two descend from Baxter's Eq (8) `D(I − PQ̂ᵀ)` and Eq (32) `2πĝ(I − PQ̂)`
+  respectively; the sign/index difference is real (invisible at `N=1`).  (The factor may be written on
+  `Q̂` alone or on the whole bracket `δ_lj − ρ_l·Q̂` — identical, since it is `1` at `l = j`.)
+
+At **equal** σ all `edgeLo = 0`, so both factors are `1` and this collapses to the naive form.  The
+physical-solution gate (no `∀ i, σ i = sig` constraint). -/
 def MixBHRootUneq (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) : Prop :=
   (∀ i j, ∑ l, Dt i l * ((if l = j then (1 : ℝ) else 0)
       - rho l * (Real.exp (z * edgeLo σ j l)
@@ -113,8 +116,9 @@ def MixBHRootUneq (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (
               (AVec z rho σ Gt Dt) z j l))
     = 2 * Real.pi * K i j / z)
   ∧ (∀ i j, 2 * Real.pi * ∑ l, Gt i l * ((if l = j then (1 : ℝ) else 0)
-      - rho l * qhatMixRuneq z σ (qpMat z rho σ Gt Dt) (Wt z rho Gt Dt) (Ct z rho σ Gt Dt)
-          (AVec z rho σ Gt Dt) z l j)
+      - rho l * (Real.exp (z * edgeLo σ l j)
+          * qhatMixRuneq z σ (qpMat z rho σ Gt Dt) (Wt z rho Gt Dt) (Ct z rho σ Gt Dt)
+              (AVec z rho σ Gt Dt) z l j))
     = (AVec z rho σ Gt Dt j + z * qpMat z rho σ Gt Dt i j
         + z ^ 2 * Ct z rho σ Gt Dt i j / 2) / z ^ 2)
 

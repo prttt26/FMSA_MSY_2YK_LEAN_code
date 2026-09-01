@@ -191,20 +191,26 @@ exactly (♦). Matrix analog of scalar `h29_of_baxter_exterior` (takes the exter
 hypothesis; proof = evaluate at `r = σ_ij+1`, fold by `mat_exterior_baxter_relation_Dt`, cancel `z·e^{−z}`).
 This is a Lean-checked fact that the exterior OZ/Baxter closure forces (♦).
 
-**C-SIDE RECENTERING FIX APPLIED (option A); g-side fix RETRACTED.** `MSAMixture.MixBHRootUneq`
-(`MSAMixtureBHRootUneq.lean:98`): the **c-side (29′)** now uses the recentered transform
-`e^{z·edgeLo σ j l}·Q̂_jl` (rigorous, = (♦); `mixBHRootUneq_cSide_of_exterior` proves this conjunct from
-the exterior closure via `c_side_constraint_of_exterior` + `∑_l Dt_il δ_lj = Dt_ij`, axiom-clean).  The
-**g-side (33′) is left with the bare `Q̂_lj`** — a first attempt to recenter it by Wiener–Hopf
-consistency was **retracted after finding the g-side structure** (`proof_notes_leg3_bh_gside_eq9.md`
-Eq 34): `∑_l 2π·ĝ_il(z)·[δ_lj − ρ_l·Q̂_lj] = …` with `Q̂ = ∫_λ^∞ e^{−st}Q` (full support, = `qhatMixRuneq`,
-**not** recentered) and the σ-edge factor `ĝ_il = Gt_il·e^{−z·edgeHi_il}` on the **whole bracket**, not
-on `Q̂`.  So the recentering is amplitude-structure-dependent (c-side `S_il = e^{z·edgeHi_il}Dt_il`
-differs from g-side `ĝ_il`), and the c-side/g-side asymmetry is genuine — **not** a uniform
-`Q̂`-recentering.  Full library **build green** at every step; the def change is transparent (consumers
-thread `hroot` to the `matExactMSAUnequalDiam_hcore` axiom).  REMAINING: the rigorous g-side (33′) needs
-the repo-consistent mixture g-source (matrix analog of scalar `bhP`), which is open (g-side Eq (32) not
-yet in Lean; even the scalar had a measured C/γ-tail normalization caveat).
+**RECENTERING FIX APPLIED, BOTH conjuncts (numerically CONFIRMED).** `MSAMixture.MixBHRootUneq`
+(`MSAMixtureBHRootUneq.lean:98`) uses the recentered transform on both conjuncts:
+* (29′) `e^{z·edgeLo σ j l}·Q̂_jl` = the OZ-derived (♦) (`mixBHRootUneq_cSide_of_exterior` proves it from
+  the exterior closure, axiom-clean).
+* (33′) `e^{z·edgeLo σ l j}·Q̂_lj` — **opposite `edgeLo` orientation, transposed `Q̂` index** (Baxter
+  Eq (8) `D(I−PQ̂ᵀ)` vs Eq (32) `2πĝ(I−PQ̂)`).
+
+**Numerically confirmed** to machine precision at a physical unequal-σ root against the validated solver
+`msa_exact_mix.py` (`_residuals` passes the Tang & Lu gate at `σ₂/σ₁=1.5`): `msaemix_root_recentering_check.py`
+gives `(29′) 1.7e-16`, `(33′) 3.6e-15`; the **bare (33′)** (no recentering) misses by `≈5`.  Full library
+**build green (8812 jobs)**; the def change is transparent (consumers thread `hroot` to the
+`matExactMSAUnequalDiam_hcore` axiom).
+
+⚠ **Course-correction record (kept as a lesson).** A first pass recentered both conjuncts (correct); then
+a flawed structural argument — reading the g-side Eq (34) `ĝ_il = Gt_il·e^{−z·edgeHi_il}` as an amplitude
+factor that "kills" the `Q̂`-recentering — wrongly **retracted** the (33′) recentering; the solver check
+then **refuted the retraction** (bare (33′) residual `≈5`) and restored it.  Lesson: **do not infer the
+g-side edge from the c-side by intuition — check against `msa_exact_mix._residuals`.**  The from-first-
+principles g-side derivation (via `mat_laplace_conv` + a repo-consistent g-source, matrix analog of the
+scalar `bhP`) is still open, but the (33′) *form* is now numerically pinned.
 
 ### MPhase 3 — the matrix Laplace-convolution theorem (CRUX engine DONE, axiom-clean std-3)
 
