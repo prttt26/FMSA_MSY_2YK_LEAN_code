@@ -124,6 +124,21 @@ info: 'FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz' depends on axioms: [pro
 #guard_msgs in
 #print axioms FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz
 
+/-! **The scalar OZ primitives ARE the root conditions** (`hbax`/`hgside` discharged, both directions).
+`hbax_iff_h29` (exterior Baxter Eq 8 `⟺` Eq 29; forward `h29_of_baxter_exterior`, reverse `hbax_of_h29`)
+and `hgside_iff_h33` (g-side OZ Eq 32 Laplace `⟺` Eq 33; forward `h33_of_gside_baxter`, reverse
+`hgside_of_h33`) — the scalar analogs of the mixture `mat_hbax_iff_cside` / `mat_hgside_iff_gside`, both
+complete iffs with the concrete `bhBaxterFn`/`bhBaxterSupp`.  Full unconditional discharge is the
+`exactMSA_hcore` ring (as `exactMSA_factorization_of_oz`'s footprint shows). -/
+
+/-- info: 'FMSA.ExactMSA.GSide.hbax_iff_h29' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.GSide.hbax_iff_h29
+
+/-- info: 'FMSA.ExactMSA.GSide.hgside_iff_h33' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.GSide.hgside_iff_h33
+
 /-! ## The mixture leg-3 (general `N`, matrix) Blum–Høye derivation — MPhase 1
 
 The mixture analog is the mirror image of the scalar leg-3: the analytic ring is already discharged (as
