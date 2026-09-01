@@ -80,12 +80,14 @@ Phased to mirror scalar leg-3 (`MPhase` = mixture phase):
   unfold `Wt = (2π/z)∑_k ρ_k Gt_ik Dt_kj`, `Ct = ∑_k γ_ik Dt_kj e^{z(σ_k−σ_i)/2}`,
   `γ = δ − 2πρ Gt e^{−zσ}/z` (`MSAMixtureCancellation.lean:74,79,68`) + the per-entry identity
   (`…:89`); this is the matrix analog of scalar `h29_of_baxter_exterior` and is definition-heavy.
-* **MPhase 3 — g-side matrix Laplace-convolution stack (the CRUX, largest build).** No mixture analog
-  exists (confirmed by grep): need a matrix `rdfLaplaceMoment` (ĝ_ij(s)), a **matrix** convolution
-  theorem `∑_l ρ_l ∫(r−t)g_il(|r−t|)Q_jl(t) dt →ᴸ ∑_l ĝ_il(z)·Q̂_jl(z)` (a **matrix product**, species
-  sum inside), and the matrix Fubini swap. The scalar `MSAGSideOZ.lean` technique (
-  `Integrable.convolution_integrand` + `Measure.prod_restrict` + `integral_integral_swap`) **lifts per
-  species `l`**, but the `∑_l ρ_l` contraction must be carried through — it does not lift for free.
+* **MPhase 3 — g-side matrix Laplace-convolution stack (the CRUX). ◑ conv theorem DONE (axiom-clean);
+  (33′) assembly + edge cross-check REMAINING.** The convolution theorem `mat_laplace_conv`
+  `∑_l ρ_l ∫₀^∞ e^{−zr}(∫₀^∞(r−t)g_il(r−t)Q_lj(t)dt)dr = ∑_l ρ_l·ĝ_il(z)·Q̂_lj(z)` **reuses the scalar
+  `FMSA.ExactMSA.GSide.laplace_conv_eq_rdf_mul_qhat_of_integrable` per species** (its Fubini swap is
+  already discharged, generic in `g`,`Q`) + `Finset.sum_congr` — so the `∑_l ρ_l` contraction the
+  roadmap feared is **just linearity**, no new integration-swap work (correcting the earlier "does not
+  lift for free"). REMAINING: the concrete mixture g-side OZ Eq (32) (matrix g-source + conv domain, the
+  g-side analog of the c-side `hbax`), then assemble (33′) = matrix analog of scalar `h33_of_gside`.
 * **MPhase 4 — assemble (33′).** Fold MPhase 3's conv result + the g-source moment (matrix analog of
   `bhP_eq_gsource_moment`) ⇒ (33′), matrix analog of `h33_of_gside`.
 * **MPhase 5 — wire-in `MixBHRootUneq_of_oz`.** Assemble (29′)+(33′) into `MixBHRootUneq`, feed
@@ -189,3 +191,21 @@ hypothesis; proof = evaluate at `r = σ_ij+1`, fold by `mat_exterior_baxter_rela
 This is a Lean-checked fact that the exterior OZ/Baxter closure forces (♦), **not** the posited (29′).
 The posited `MixBHRootUneq` (29′) is left untouched. **NEXT (user decision):** either fix (29′) to the
 recentered form (then wire (♦) into the (29′)/(33′) gate at MPhase 5) or reconcile the convention.
+
+### MPhase 3 — the matrix Laplace-convolution theorem (CRUX engine DONE, axiom-clean std-3)
+
+`mat_laplace_conv` `(hgsupp)(hF1)(hF2)` — `∑_l ρ_l ∫₀^∞ e^{−zr}(∫₀^∞(r−t)g_il(r−t)Q_lj(t)dt)dr
+= ∑_l ρ_l·rdfLaplaceMoment(g_il)(z)·(∫₀^∞ e^{−zt}Q_lj(t)dt)`. Proof = `Finset.sum_congr` +
+`FMSA.ExactMSA.GSide.laplace_conv_eq_rdf_mul_qhat_of_integrable` per species (the scalar's Fubini swap
+is already discharged and generic in `g`,`Q`). **This resolves the roadmap's crux worry**: the `∑_l ρ_l`
+species contraction is pure linearity — the scalar g-side machinery reuses wholesale.
+
+**g-side edge cross-check (preliminary):** the g-side carries its OWN `σ`-edge factors, so an
+analogous recentering to the c-side (♦) is EXPECTED at unequal σ — two independent signals:
+(1) `gam`'s convention `Gt_ij = ĝ_ij(z)·e^{+zσ_ij}` ⇒ `ĝ_il(z) = Gt_il·e^{−zσ_il}` (edge factor
+`e^{−zσ_il}` on the transform moment); (2) `∫₀^∞ e^{−zt}Q_lj = qhatMixRuneq_lj` only for
+`edgeLo_lj ≥ 0` (the `Ioi 0` transform misses `[edgeLo_lj,0)` when `σ_j < σ_l`). Confirming/pinning the
+exact g-side (33′) form needs the concrete mixture g-side OZ Eq (32) (the matrix g-source + conv
+domain). So the c-side FINDING is not an isolated slip — the σ-edge care is a **systematic** feature of
+the unequal-σ root, strengthening the case that the posited `MixBHRootUneq` needs the recentered
+transforms on both (29′) and (33′).

@@ -9,6 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.YukawaOZMix.MSAMixtureBaxterConv
 import LeanCode.YukawaOZMix.MSAMixtureBHRootUneq
+import LeanCode.YukawaOZ.MSAGSideOZ
 
 /-!
 # Mixture leg-3 (general `N`, matrix) — the matrix Baxter transform (MPhase 1)
@@ -565,5 +566,38 @@ theorem c_side_constraint_of_exterior {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : 
   have hze : z * Real.exp (-z) ≠ 0 := mul_ne_zero hz.ne' (Real.exp_ne_zero _)
   apply mul_left_cancel₀ hze
   rw [← key]; field_simp
+
+/-! ### MPhase 3 — the g-side matrix Laplace-convolution stack (the CRUX)
+
+The g-side OZ equation (Blum–Høye Eq. 32), Laplace-transformed at `s = z`, folds the species-summed
+RDF⋆Baxter convolution `∑_l ρ_l ∫₀^∞ e^{−zr} (∫₀^∞ (r−t) g_il(r−t) Q_lj(t) dt) dr` onto the
+transforms `∑_l ρ_l ĝ_il(z)·Q̂_lj(z)`.  The scalar convolution theorem
+`FMSA.ExactMSA.GSide.laplace_conv_eq_rdf_mul_qhat_of_integrable` (whose Fubini swap is already
+discharged, axiom-clean) is **generic** in the RDF `g` and Baxter factor `Q`, so it lifts **per
+species `l`**; the `∑_l ρ_l` contraction the roadmap flagged as the crux is then **just linearity of
+the integral** (`Finset.sum_congr`).  The g-side thus reuses the scalar Fubini machinery wholesale.
+
+⚠ **Edge cross-check (g-side vs the c-side FINDING).** `gam`'s convention is `Gt_ij = ĝ_ij(z)·e^{+zσ_ij}`
+(`MSAMixtureCancellation.lean:67`), so `ĝ_il(z) = Gt_il·e^{−zσ_il}` carries a `σ`-edge factor of its
+own; and `Q̂_lj(z) = ∫₀^∞ e^{−zt}Q_lj(t) dt = qhatMixRuneq_lj` only when `edgeLo_lj ≥ 0` (else the
+`Ioi 0` transform misses `[edgeLo_lj, 0)`).  So the g-side (33′) is expected to carry an analogous
+edge/recentering factor at unequal σ — the resolution needs the concrete mixture g-side OZ Eq (32)
+(the matrix g-source + the convolution domain), the g-side analog of the c-side `hbax`. -/
+
+/-- **MPhase 3 — the matrix Laplace-convolution theorem (the CRUX engine).**  For each species `l` the
+scalar `laplace_conv_eq_rdf_mul_qhat_of_integrable` folds the RDF⋆Baxter convolution onto
+`ĝ_il(z)·Q̂_lj(z)`; the `∑_l ρ_l` contraction is linearity.  Reuses the scalar Fubini discharge (no new
+integration-swap work).  `g_il` = the (abstract) matrix RDF, `Q_lj` = the Baxter factor entry. -/
+theorem mat_laplace_conv {N : ℕ} (z : ℝ) (ρ : Fin N → ℝ) (g Q : Fin N → Fin N → ℝ → ℝ) (i j : Fin N)
+    (hgsupp : ∀ l u, u < 0 → g i l u = 0)
+    (hF1 : ∀ l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ l, Integrable (fun t => Real.exp (-z * t) * Q l j t)) :
+    ∑ l, ρ l * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+          * ∫ t in Set.Ioi (0:ℝ), (r - t) * g i l (r - t) * Q l j t)
+      = ∑ l, ρ l * (FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z
+          * ∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q l j t) := by
+  refine Finset.sum_congr rfl (fun l _ => ?_)
+  rw [FMSA.ExactMSA.GSide.laplace_conv_eq_rdf_mul_qhat_of_integrable (g i l) (Q l j) z
+        (hgsupp l) (hF1 l) (hF2 l)]
 
 end FMSA.ExactMSA.MixLeg3

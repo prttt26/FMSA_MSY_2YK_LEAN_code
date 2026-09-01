@@ -170,3 +170,14 @@ in the posited `MixBHRootUneq` (29′), which therefore coincides with (♦) onl
 /-- info: 'FMSA.ExactMSA.MixLeg3.c_side_constraint_of_exterior' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.c_side_constraint_of_exterior
+
+/-! **MPhase 3 (CRUX) — the matrix Laplace-convolution theorem.**  `mat_laplace_conv` folds the
+species-summed RDF⋆Baxter convolution onto `∑_l ρ_l·ĝ_il(z)·Q̂_lj(z)` by reusing the scalar
+`FMSA.ExactMSA.GSide.laplace_conv_eq_rdf_mul_qhat_of_integrable` per species (its Fubini swap is already
+discharged) — the `∑_l ρ_l` contraction is pure linearity.  The g-side (33′) assembly + its σ-edge
+cross-check (which is expected to mirror the c-side (♦) recentering) remain — see
+`proof_notes_leg3_mixture.md`. -/
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.mat_laplace_conv' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.mat_laplace_conv
