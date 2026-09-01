@@ -9,6 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.YukawaOZMix.MSAMixtureBHRootSmooth
 import LeanCode.YukawaOZMix.MSAMixtureBHRootUneq
+import LeanCode.YukawaOZMix.MixtureBlumHoyeDerivation
 
 /-!
 # MSAEMIX.6 at **unequal** σ — the matrix Blum–Høye root is `C^∞` at `K = 0` (general `N`)
@@ -27,10 +28,14 @@ Items landed here (all std-3):
 * **item 3** — `contDiff_matBhResidualUneq` (`ContDiff ℝ ⊤`);
 * **item 4** — `matBhResidualUneq_base_eq` (base point is a root iff `Gt₀` is a zero-coupling root);
 * **capstone** — `exists_contDiffAt_matBhRootUneq`, the smooth family, taking the raw Fréchet-derivative
-  invertibility `hjac` as input (the general-`N` item-5 obligation — the *only* thing not transferred, as
-  the recentering makes the block-triangular Jacobian's diagonal blocks the asymmetric row-diameter
-  hard-sphere OZ matrices, whose determinant condition is the unequal-σ analogue of
-  `Q0_mat_phys_isUnit_det`; see the file docstring's discussion).
+  invertibility `hjac` as input;
+* **item 5** — `exists_contDiffAt_matBhRootUneq_physical` discharges `hjac` down to the two asymmetric
+  row-diameter HS-block determinants, and `exists_contDiffAt_matBhRootUneq_of_physical` closes them
+  **unconditionally**: the recentering + a diagonal-conjugation Sylvester argument reduce both to the
+  *same* physical `Q0_mat_phys` the equal-σ file uses, so M.4's `Q0_mat_phys_isUnit_det` (general σ,
+  std-3) discharges them with no equal-σ hypothesis and no physics axiom.  So the unequal-σ family now
+  matches the equal-σ grade exactly — the sole remaining grade is Blum–Høye transcription faithfulness,
+  as at `N = 1`.
 -/
 
 open scoped BigOperators
@@ -234,9 +239,10 @@ theorem exists_contDiffAt_matBhRootUneq_physical (z : ℝ) (rho σ : Fin N → �
 the asymmetric row-diameter HS-OZ blocks `resGuneq/resHuneq (0,Gt₀)` are strictly diagonally dominant,
 their determinants are units (Mathlib's Gershgorin `det_ne_zero_of_sum_row_lt_diag`), so the unequal-σ
 mixture MSA amplitudes are a `C^∞` family near `K = 0` from only the seed and the two checkable
-inequalities — the unequal-σ analogue of `exists_contDiffAt_matBhRoot_of_diag_dom`.  (Diagonal dominance
-is the achievable-now conditional discharge; an *unconditional* one is the unequal-σ analogue of M.4's
-`Q0_mat_phys_isUnit_det`, still open because the asymmetric block breaks the equal-σ rank-2 argument.) -/
+inequalities — the unequal-σ analogue of `exists_contDiffAt_matBhRoot_of_diag_dom`.  (This is now
+subsumed by the fully *unconditional* `exists_contDiffAt_matBhRootUneq_of_physical` below, which reduces
+both dets to `Q0_mat_phys` and closes them via M.4's `Q0_mat_phys_isUnit_det`; kept for the checkable
+diagonal-dominance route.) -/
 theorem exists_contDiffAt_matBhRootUneq_of_diag_dom (z : ℝ) (rho σ : Fin N → ℝ)
     (Kdir Gt₀ : Matrix (Fin N) (Fin N) ℝ) (hroot0 : MixBHRootUneq z rho σ Gt₀ 0 0)
     (hdomG : ∀ k, ∑ j ∈ Finset.univ.erase k, |resGuneq z rho σ (0, Gt₀) k j|
@@ -252,6 +258,134 @@ theorem exists_contDiffAt_matBhRootUneq_of_diag_dom (z : ℝ) (rho σ : Fin N �
       (det_ne_zero_of_sum_row_lt_diag (by simpa only [Real.norm_eq_abs] using hdomG)))
     (isUnit_iff_ne_zero.mpr
       (det_ne_zero_of_sum_row_lt_diag (by simpa only [Real.norm_eq_abs] using hdomH)))
+
+/-! #### Item 5 **unconditional** discharge — reduce the two asymmetric dets to `Q0_mat_phys` (M.4)
+
+The asymmetric row-diameter blocks reduce to the **same** physical Baxter matrix `Q0_mat_phys` that
+the equal-σ file uses, so M.4's unconditional positivity `Q0_mat_phys_isUnit_det` discharges both dets
+with **no** equal-σ hypothesis and **no** physics axiom.  Two structural facts make this work:
+
+* the recentering `qhatMixRuneq_recentered_eq_qhatMixR` (`e^{z·edgeLo}·qhatMixRuneq = qhatMixR` at the
+  *row* diameter) puts the per-row `σ_l` inside, so `resHuneq(0,Gt₀) = 1 − D_ρ·hsCoreUneq` and
+  `resGuneq(0,Gt₀) = 1 − D_ρ·hsCoreUneqᵀ`, with `hsCoreUneq_lj = p₁(σ_l)·Q0phys_lj + p₂(σ_l)·Qppphys_lj`;
+* the physical Baxter matrix is `Q0_mat_phys z σ ρ = 1 − D_{√ρ·e^{zσ/2}}·hsCoreUneq·D_{√ρ·e^{-zσ/2}}` —
+  the Baxter shift `e^{-(σ_j-σ_l)z/2} = e^{zσ_l/2}·e^{-zσ_j/2}` factors into a *diagonal conjugation*,
+  and under Sylvester `det(1-AB)=det(1-BA)` the two diagonals recombine to `D_ρ` (the exponentials cancel
+  — exactly the role `hσ` played at equal σ, now automatic).
+
+Hence `det resGuneq = det resHuneq = det Q0_mat_phys` unconditionally, so the equal-σ rank-2
+Weinstein–Aronszajn positivity `Q0_moment_det_pos` (general σ, no diameter equality) closes the unequal-σ
+case verbatim.  This retires the last open crux: the "asymmetric block breaks the rank-2 argument" worry
+was unfounded — the asymmetry is a pure diagonal conjugation invisible to the determinant. -/
+open FMSA.MatrixQ0
+
+/-- The unequal-σ **row-diameter** hard-sphere Baxter core:
+`hsCoreUneq_lj = p₁(σ_l)·Q0phys_lj + p₂(σ_l)·Qppphys_lj`, the per-row analogue of the equal-σ `hsCore`
+(there `p₁,p₂` used the single `sig`; here the recentering supplies the row diameter `σ_l`). -/
+noncomputable def hsCoreUneq (z : ℝ) (rho σ : Fin N → ℝ) : Matrix (Fin N) (Fin N) ℝ :=
+  Matrix.of fun l j =>
+    (1 - z * σ l - Real.exp (-(z * σ l))) / z ^ 2 * Q0phys rho σ l j
+    + (1 - z * σ l + (z * σ l) ^ 2 / 2 - Real.exp (-(z * σ l))) / z ^ 3 * Qppphys rho σ l j
+
+theorem resHuneq_eq_baxter (z : ℝ) (rho σ : Fin N → ℝ) (Gt₀ : Matrix (Fin N) (Fin N) ℝ) :
+    resHuneq z rho σ (0, Gt₀) = 1 - Matrix.diagonal rho * hsCoreUneq z rho σ := by
+  ext l j
+  simp only [resHuneq, Matrix.of_apply]
+  rw [FMSA.ExactMSA.MixLeg3.qhatMixRuneq_recentered_eq_qhatMixR z σ _ _ _ _ l j]
+  simp only [qpMat_zero_Dt, Wt_zero_Dt, Ct_zero_Dt, AVec_zero_Dt, qhatMixR, qp0Mat, A0Vec,
+    hsCoreUneq, Matrix.of_apply, Matrix.sub_apply, Matrix.one_apply, Matrix.diagonal_mul,
+    Matrix.zero_apply, Pi.zero_apply, Qppphys, zero_div, zero_mul, add_zero]
+
+theorem resGuneq_eq_baxter (z : ℝ) (rho σ : Fin N → ℝ) (Gt₀ : Matrix (Fin N) (Fin N) ℝ) :
+    resGuneq z rho σ (0, Gt₀) = 1 - Matrix.diagonal rho * (hsCoreUneq z rho σ).transpose := by
+  ext l j
+  simp only [resGuneq, Matrix.of_apply]
+  rw [FMSA.ExactMSA.MixLeg3.qhatMixRuneq_recentered_eq_qhatMixR z σ _ _ _ _ j l]
+  simp only [qpMat_zero_Dt, Wt_zero_Dt, Ct_zero_Dt, AVec_zero_Dt, qhatMixR, qp0Mat, A0Vec,
+    hsCoreUneq, Matrix.transpose_apply, Matrix.of_apply, Matrix.sub_apply, Matrix.one_apply,
+    Matrix.diagonal_mul, Matrix.zero_apply, Pi.zero_apply, Qppphys, zero_div, zero_mul, add_zero]
+
+/-- The physical Baxter matrix as a **diagonal conjugation** of the row-diameter core: the Baxter shift
+`e^{-(σ_j-σ_l)z/2}` splits as `e^{zσ_l/2}·e^{-zσ_j/2}`, absorbed into the two diagonals.  No `hσ`. -/
+theorem Q0phys_eq_baxter_uneq (z : ℝ) (rho σ : Fin N → ℝ) (hρ : ∀ i, 0 ≤ rho i) :
+    Q0_mat_phys z σ rho
+      = 1 - Matrix.diagonal (fun i => Real.sqrt (rho i) * Real.exp (z * σ i / 2))
+          * hsCoreUneq z rho σ
+          * Matrix.diagonal (fun i => Real.sqrt (rho i) * Real.exp (-(z * σ i / 2))) := by
+  ext l j
+  simp only [Q0_mat_phys, Q0_mat, q0_entry, rhoGeoPhys, hsCoreUneq, Matrix.of_apply,
+    Matrix.sub_apply, Matrix.one_apply, Matrix.diagonal_mul, Matrix.mul_diagonal]
+  have hexp : Real.exp (z * σ l / 2) * Real.exp (-(z * σ j / 2))
+      = Real.exp (-((σ j - σ l) / 2 * z)) := by
+    rw [← Real.exp_add]; congr 1; ring
+  rw [Real.sqrt_mul (hρ l), ← hexp]; ring
+
+/-- ⭐ Both asymmetric HS-OZ blocks and the physical Baxter matrix share the determinant, **no `hσ`**:
+plain-ρ vs the `√ρ·e^{±zσ/2}` diagonal conjugation drops out under Sylvester `det(1-AB)=det(1-BA)`. -/
+theorem detHuneq_eq_Q0 (z : ℝ) (rho σ : Fin N → ℝ) (Gt₀ : Matrix (Fin N) (Fin N) ℝ)
+    (hρ : ∀ i, 0 ≤ rho i) :
+    (resHuneq z rho σ (0, Gt₀)).det = (Q0_mat_phys z σ rho).det := by
+  have hd : Matrix.diagonal (fun i => (Real.sqrt (rho i) * Real.exp (-(z * σ i / 2)))
+        * (Real.sqrt (rho i) * Real.exp (z * σ i / 2)))
+      = (Matrix.diagonal rho : Matrix (Fin N) (Fin N) ℝ) := by
+    congr 1; ext i
+    have he : Real.exp (-(z * σ i / 2)) * Real.exp (z * σ i / 2) = 1 := by
+      rw [← Real.exp_add]; norm_num
+    calc (Real.sqrt (rho i) * Real.exp (-(z * σ i / 2)))
+            * (Real.sqrt (rho i) * Real.exp (z * σ i / 2))
+        = (Real.sqrt (rho i) * Real.sqrt (rho i))
+            * (Real.exp (-(z * σ i / 2)) * Real.exp (z * σ i / 2)) := by ring
+      _ = rho i := by rw [Real.mul_self_sqrt (hρ i), he, mul_one]
+  rw [resHuneq_eq_baxter, Q0phys_eq_baxter_uneq z rho σ hρ,
+    Matrix.det_one_sub_mul_comm (Matrix.diagonal rho) (hsCoreUneq z rho σ),
+    mul_assoc (Matrix.diagonal (fun i => Real.sqrt (rho i) * Real.exp (z * σ i / 2)))
+      (hsCoreUneq z rho σ),
+    Matrix.det_one_sub_mul_comm
+      (Matrix.diagonal (fun i => Real.sqrt (rho i) * Real.exp (z * σ i / 2)))
+      (hsCoreUneq z rho σ
+        * Matrix.diagonal (fun i => Real.sqrt (rho i) * Real.exp (-(z * σ i / 2)))),
+    mul_assoc, Matrix.diagonal_mul_diagonal, hd]
+
+theorem detGuneq_eq_Q0 (z : ℝ) (rho σ : Fin N → ℝ) (Gt₀ : Matrix (Fin N) (Fin N) ℝ)
+    (hρ : ∀ i, 0 ≤ rho i) :
+    (resGuneq z rho σ (0, Gt₀)).det = (Q0_mat_phys z σ rho).det := by
+  rw [resGuneq_eq_baxter,
+    ← Matrix.det_transpose (1 - Matrix.diagonal rho * (hsCoreUneq z rho σ).transpose),
+    Matrix.transpose_sub, Matrix.transpose_one, Matrix.transpose_mul, Matrix.transpose_transpose,
+    Matrix.diagonal_transpose,
+    Matrix.det_one_sub_mul_comm (hsCoreUneq z rho σ) (Matrix.diagonal rho),
+    ← resHuneq_eq_baxter z rho σ Gt₀, detHuneq_eq_Q0 z rho σ Gt₀ hρ]
+
+/-- ⭐⭐⭐ MSAEMIX.6 at unequal σ with the dets reduced to `Q0_mat_phys` nonsingular. -/
+theorem exists_contDiffAt_matBhRootUneq_of_Q0 (z : ℝ) (rho σ : Fin N → ℝ)
+    (Kdir Gt₀ : Matrix (Fin N) (Fin N) ℝ) (hρ : ∀ i, 0 ≤ rho i)
+    (hroot0 : MixBHRootUneq z rho σ Gt₀ 0 0) (hQ0 : IsUnit (Q0_mat_phys z σ rho).det) :
+    ∃ ψ : ℝ → Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ,
+      ψ 0 = (0, Gt₀) ∧
+      (∀ᶠ τ in nhds (0 : ℝ), MixBHRootUneq z rho σ (ψ τ).2 (ψ τ).1 (τ • Kdir)) ∧
+      ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 :=
+  exists_contDiffAt_matBhRootUneq_physical z rho σ Kdir Gt₀ hroot0
+    (by rw [detGuneq_eq_Q0 z rho σ Gt₀ hρ]; exact hQ0)
+    (by rw [detHuneq_eq_Q0 z rho σ Gt₀ hρ]; exact hQ0)
+
+/-- ⭐⭐⭐ **MSAEMIX.6 at unequal σ — fully discharged, no det hypothesis at all (std-3).**  At any
+physical unequal-σ mixture (`z > 0`, `vacMix > 0`, `ρ ≥ 0`, `σ > 0`) with a hard-sphere seed
+`MixBHRootUneq … Gt₀ 0 0`, the unequal-σ mixture MSA amplitudes `(Dt, Gt)` are a `C^∞` family of the
+coupling near `K = 0`.  The two asymmetric HS-block determinants reduce (unconditionally) to
+`Q0_mat_phys`, discharged by M.4 `FMSA.MatrixQ0.Q0_mat_phys_isUnit_det` (general `N`, general σ, std-3 —
+the rank-two Weinstein–Aronszajn positivity `Q0_moment_det_pos`).  This is the exact unequal-σ analogue
+of the equal-σ `exists_contDiffAt_matBhRoot_of_physical`; the sole remaining grade is the transcription
+faithfulness of the Blum–Høye system, as at `N = 1`. -/
+theorem exists_contDiffAt_matBhRootUneq_of_physical (z : ℝ) (rho σ : Fin N → ℝ)
+    (Kdir Gt₀ : Matrix (Fin N) (Fin N) ℝ)
+    (hz : 0 < z) (hvac : 0 < vacMix rho σ) (hrho : ∀ i, 0 ≤ rho i) (hsigma : ∀ i, 0 < σ i)
+    (hroot0 : MixBHRootUneq z rho σ Gt₀ 0 0) :
+    ∃ ψ : ℝ → Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ,
+      ψ 0 = (0, Gt₀) ∧
+      (∀ᶠ τ in nhds (0 : ℝ), MixBHRootUneq z rho σ (ψ τ).2 (ψ τ).1 (τ • Kdir)) ∧
+      ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 :=
+  exists_contDiffAt_matBhRootUneq_of_Q0 z rho σ Kdir Gt₀ hrho hroot0
+    (Q0_mat_phys_isUnit_det hz hvac hrho hsigma)
 
 end Smooth
 
