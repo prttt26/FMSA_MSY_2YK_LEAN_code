@@ -6,6 +6,7 @@ import LeanCode.YukawaOZ.MSAClosedForm
 import LeanCode.YukawaOZMix.MSAMixturePositivity
 import LeanCode.YukawaOZMix.MSAMixtureSelection
 import LeanCode.YukawaOZ.MSAFactorizationFromOZ
+import LeanCode.YukawaOZMix.MixtureBlumHoyeDerivation
 
 /-!
 # Exact-MSA track — scope and axiom gate
@@ -122,3 +123,16 @@ info: 'FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz' depends on axioms: [pro
 -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz
+
+/-! ## The mixture leg-3 (general `N`, matrix) Blum–Høye derivation — MPhase 1
+
+The mixture analog is the mirror image of the scalar leg-3: the analytic ring is already discharged (as
+the `matExactMSA…_hcore` physics axioms), while the physical **root** `MSAMixture.MixBHRootUneq` (the
+matrix (29′)/(33′)) is posited.  Mixture leg-3 derives that root from the real-space OZ/Baxter
+primitives.  **MPhase 1** proves the matrix Baxter transform: the posited real-`s` Baxter factor
+`qhatMixRuneq` **is** the Laplace transform of the real-space Baxter factor `baxterQ`, axiom-clean.
+See `proof_notes_leg3_mixture.md`. -/
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.baxterQ_transform_eq_qhatMixRuneq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.baxterQ_transform_eq_qhatMixRuneq

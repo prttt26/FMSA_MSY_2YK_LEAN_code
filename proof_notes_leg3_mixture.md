@@ -1,9 +1,10 @@
 # Mixture leg-3 — roadmap (derive the matrix Blum–Høye root from OZ/Baxter primitives)
 
-**Status: PLANNING (2026‑08‑31).** The scalar (`N=1`) leg-3 is DONE (`proof_notes_leg3_bh_realspace.md`;
+**Status: MPhase 1 DONE (2026‑08‑31), MPhase 2–5 planned.** The scalar (`N=1`) leg-3 is DONE
+(`proof_notes_leg3_bh_realspace.md`;
 `YukawaOZ/{MSABlumHoyeDerivation,MSAGSideOZ,MSAFactorizationFromOZ}.lean`): it derived `h29`/`h33` from
 the OZ/Baxter primitives and wired them into `exactMSA_factorization`. This file plans the **mixture
-(general `N`, matrix) analog.**
+(general `N`, matrix) analog** and logs progress (see **Progress log** at the bottom).
 
 ## The situation — mirror image of scalar
 
@@ -48,11 +49,26 @@ Every scalar moment identity acquires a `∑_l ρ_l (…)` species contraction a
 
 Phased to mirror scalar leg-3 (`MPhase` = mixture phase):
 
-* **MPhase 1 — matrix Baxter transform + moments.** `∫₀^∞ baxterQ_ij·e^{−sr} dr = qhatMixCuneq … s`
-  (matrix analog of `bhBaxter_transform`), its `s=z` value (`… = δ − …` feeding `Q̂` in (29′)/(33′)),
-  and the zeroth/first moments (analog of `msaA_eq_baxter_zeroth_moment`,
-  `msaQp_sub_msaA_eq_baxter_first_moment`). **Currently only numerically checked** (`msaemix_uneq_symconv.py`,
-  ~1e-8). *Smallest, self-contained, unblocks both sides — recommended first step.*
+* **MPhase 1 — matrix Baxter transform + moments. ✅ DONE (transform), axiom-clean (std-3).**
+  `MixtureBlumHoyeDerivation.lean`, namespace `FMSA.ExactMSA.MixLeg3`.
+  `baxterQ_transform : ∫_ℝ baxterQ_ij·e^{−sr} dr = ` closed form, and
+  `baxterQ_transform_eq_qhatMixRuneq : … = qhatMixRuneq z σ qp Wt Ct A s i j` — the posited real-`s`
+  Baxter factor consumed by `MixBHRootUneq` **is** the Laplace transform of the real-space `baxterQ`.
+  This is the matrix analog of the scalar `bhBaxter_transform`. **Key structure:** `baxterQ` regroups
+  into four support-clean pieces — the dressed poly `qp·(r−λ−σ_i)+(A/2)(r−λ−σ_i)²` (arg `=r−σ_ij`,
+  vanishes at `σ_ij`) on `[λ,σ_ij]`; the `Wt`-Yukawa `Wt·e^{−z(r−λ)}` on **all** `[λ,∞)` (spans
+  core+tail); the constant `Ct` on `[λ,σ_ij]`; the tail `Ct`-Yukawa on `(σ_ij,∞)`. The `Wt` core-piece
+  (`yukawa_shift_interval`) and tail-piece (`yukawa_shift_laplace_Ioi`) share an `e^{−(s+z)σ_ij}`
+  term that **cancels algebraically** (no recombination lemma needed); `λ+σ_i=σ_ij` gives
+  `e^{−sλ}·e^{−sσ_i}=e^{−sσ_ij}`. Helpers: `baxterQ_poly_moment` (FTC via copied `φ1`/`φ2`
+  antiderivatives, general `σ`, no `σ_i≥0` needed), `yukawa_shift_interval`, `expLin_interval`,
+  `yukawa_shift_integrableOn_Ioi`. Domain split `ℝ = Iio λ ⊔ Icc λ σ_ij ⊔ Ioi σ_ij` (baxterQ takes
+  ONE definite branch per piece — no a.e. arguments). Matches the numeric `msaemix_uneq_symconv.py`
+  (~1e-8). **REMAINING (deferred to MPhase 2/4 where consumed):** the `s=z` value
+  (`∑_l ρ_l Q̂(z) = δ − …` feeding `Q̂` in (29′)/(33′)) and the zeroth/first `T_n` moments (analogs of
+  `msaA_eq_baxter_zeroth_moment`, `msaQp_sub_msaA_eq_baxter_first_moment`). The complex-`s`
+  `qhatMixCuneq` analog is a mechanical lift of the same proof if ever needed (real-`s` is what the
+  residual gate uses).
 * **MPhase 2 — c-side (29′): matrix `bh_exterior_baxter_relation`.** Compute the **exterior**
   (`r > σ_ij`) convolution `∑_l ρ_l ∫ Q'_il(t+r)Q_jl(t) dt` from `baxterQ`/`baxterQ'`, match to
   `matMSAtail` (`K_ij e^{−z(r−σ_ij)}/r`) ⇒ (29′). Reuses the `perL_conv_*` engine; the INTERIOR analog
@@ -85,3 +101,37 @@ Transcribe scalar `YukawaOZ/{MSABlumHoyeDerivation,MSAGSideOZ,MSAFactorizationFr
 adding `∑_l ρ_l` + `Fin N × Fin N` throughout. New files would live under `YukawaOZMix/` (e.g.
 `MixtureBlumHoyeDerivation.lean`, `MixtureGSideOZ.lean`, `MixtureFactorizationFromOZ.lean`), gated in
 `ExactMSAProject.lean` alongside the scalar leg-3.
+
+## Progress log
+
+### MPhase 1 — the matrix Baxter transform (DONE, axiom-clean std-3)
+
+`LeanCode/YukawaOZMix/MixtureBlumHoyeDerivation.lean` (namespace `FMSA.ExactMSA.MixLeg3`), built green
+(8603 jobs), all `[propext, Classical.choice, Quot.sound]`. The Laplace transform of the real-space
+Baxter factor `FMSA.ExactMSA.Breakpoint.baxterQ` is the posited closed form:
+
+* **`baxterQ_transform`** `(hs : s≠0) (hsz : 0<s+z) (hσi : 0≤σ_i)` — `∫_ℝ baxterQ_ij·e^{−sr} dr` in
+  explicit closed form (`edgeLo`/`edgeHi` form; the integral is over `ℝ` since `baxterQ` vanishes below
+  `edgeLo`, so `∫_ℝ = ∫_{support}` = the intended `∫₀^∞` when `edgeLo≥0`).
+* **`baxterQ_transform_eq_qhatMixRuneq`** — the same, RHS = `MSAMixture.qhatMixRuneq z σ qp Wt Ct A s i j`.
+  So the **posited** real-`s` Baxter factor `qhatMixRuneq` (consumed by the (29′)/(33′) residual gate
+  `MixBHRootUneq`) **is** the transform of `baxterQ`. (Cosmetic bridge: unfold `qhatMixRuneq`/`edgeLo`/
+  `edgeHi`, normalize `−s·x ↔ −(s·x)`, commute qp/A order.)
+
+**Proof design (reusable for MPhase 2/4):**
+* the poly argument `r − edgeLo − σ_i = r − edgeHi` vanishes at the poly/tail junction, so
+  `baxterQ_poly_moment` is a `φ1`/`φ2` FTC moment shifted to `[edgeLo,edgeHi]` (antiderivatives copied
+  from the `private` ones in `HardSphere/BaxterRealSpace.lean`; holds for **any** `σ_i`, no positivity).
+* the `Wt`-Yukawa `Wt·e^{−z(r−edgeLo)}` lives on **all** `[edgeLo,∞)` (core + tail have the SAME form);
+  its core interval `yukawa_shift_interval` and tail half-line `yukawa_shift_laplace_Ioi` share an
+  `e^{−(s+z)·edgeHi}` term that **cancels by `ring`** — no recombination lemma. `edgeLo+σ_i=edgeHi`
+  gives `e^{−s·edgeLo}·e^{−s·σ_i}=e^{−s·edgeHi}` (`hEH`), collapsing the `Ct` core/tail split.
+* domain split `ℝ = Iio edgeLo ⊔ Icc edgeLo edgeHi ⊔ Ioi edgeHi` — `baxterQ` takes ONE definite branch
+  per piece (branch lemmas `hzero`/`hcore_eq`/`htail_eq`), so **no a.e. arguments**; integrabilities via
+  `Continuous.integrableOn_Icc` (core) and `yukawa_shift_integrableOn_Ioi` (tail exp-decay).
+* helpers exported for reuse: `yukawa_shift_laplace_Ioi`, `yukawa_shift_interval`, `expLin_interval`,
+  `yukawa_shift_integrableOn_Ioi`, `baxterQ_poly_moment`.
+
+**Deferred within MPhase 1** (do when consumed downstream): the `s=z` evaluation
+(`∑_l ρ_l·Q̂_jl(z)` feeding `δ − …` in (29′)/(33′)), the `T_n` moments, and the complex-`s`
+`qhatMixCuneq` lift (mechanical — real-`s` is what the gate uses).

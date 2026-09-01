@@ -90,3 +90,18 @@ is axiom-clean; the end-to-end factorization inherits **only** the pre-existing 
 | leg-3 Q-side | `bhBaxterSupp` (+`_transform`/`_weighted_integrable`) discharge the concrete Baxter `Q̂=1−bhF` and `e^{−z·}Q∈L¹` | ✓ DONE, axiom-clean | `YukawaOZ/MSAGSideOZ` |
 | leg-3 Ph.6 | `exactMSA_factorization_of_oz` — wire the derived h29/h33 into `exactMSA_factorization`, retiring the posited constraints (footprint = std-3 + `exactMSA_hcore`, **no new axiom**) | ✓ DONE | `YukawaOZ/MSAFactorizationFromOZ` |
 | leg-3 hbax/hgside | `hbax_iff_h29` / `hgside_iff_h33` — the OZ primitives are **exactly** h29/h33 (both directions). ⚠ **NOT** unconditionally dischargeable: they are physical-root conditions, false off-root; full discharge = "closed-form Baxter fn solves OZ from first principles" = the `exactMSA_hcore` content | ✓ RESOLVED, axiom-clean | `YukawaOZ/MSAGSideOZ` |
+
+### Group leg-3-mix — mixture (general `N`, matrix) Blum–Høye derivation
+
+**Mirror image of scalar:** the analytic ring is already discharged (`matExactMSA{Equal,Unequal}Diam_hcore`),
+but the physical root `MSAMixture.MixBHRootUneq` (matrix (29′)/(33′)) is **posited**. Mixture leg-3 derives
+the root from the real-space OZ/Baxter primitives. Plan/progress: [proof_notes_leg3_mixture.md](proof_notes_leg3_mixture.md).
+New files under `YukawaOZMix/`, namespace `FMSA.ExactMSA.MixLeg3`.
+
+| Task | Title | Status | Lean file |
+|------|-------|--------|-----------|
+| MPhase 1 ⭐ | `baxterQ_transform` / `baxterQ_transform_eq_qhatMixRuneq` — the matrix Baxter transform `∫_ℝ baxterQ_ij·e^{−sr} = qhatMixRuneq` (the posited real-`s` factor **is** the transform of real-space `baxterQ`). 4 support-clean pieces; `Wt` spans core+tail, its `e^{−(s+z)σ_ij}` term cancels; `edgeLo+σ_i=edgeHi`. Helpers `baxterQ_poly_moment`/`yukawa_shift_interval`/`expLin_interval`/`yukawa_shift_integrableOn_Ioi` | ✓ DONE, axiom-clean (std-3) | `YukawaOZMix/MixtureBlumHoyeDerivation` |
+| MPhase 1 rem. | `s=z` value (`∑_l ρ_l Q̂(z)` → `δ − …`) + `T_n` moments + complex-`s` `qhatMixCuneq` lift | ○ deferred (do when consumed in MP2/4) | — |
+| MPhase 2 | c-side matrix `bh_exterior_baxter_relation` (exterior conv `∑_l ρ_l ∫ Q'_il Q_jl`) → (29′); reuses `perL_conv_*` engine, BRK.16 interior analog is template | ○ TODO | `YukawaOZMix/…` |
+| MPhase 3 (CRUX) | g-side matrix Laplace-conv stack: matrix `rdfLaplaceMoment` + matrix conv thm `∑_l ĝ_il·Q̂_jl` (matrix product) + matrix Fubini (scalar technique lifts per species, `∑_l` contraction is new) | ○ TODO | `YukawaOZMix/…` |
+| MPhase 4/5 | assemble (33′) + wire-in `MixBHRootUneq_of_oz` (retire posited root) + hbax/hgside-style equivalences | ○ TODO | `YukawaOZMix/…` |
