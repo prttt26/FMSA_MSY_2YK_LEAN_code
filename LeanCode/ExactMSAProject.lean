@@ -171,11 +171,13 @@ in the posited `MixBHRootUneq` (29′), which therefore coincides with (♦) onl
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.c_side_constraint_of_exterior
 
-/-! **The recentering fix, wired to `MixBHRootUneq`.**  `MixBHRootUneq` has been corrected to use the
-recentered Baxter transform `e^{z·edgeLo_ab}·Q̂_ab` (the σ-edge FINDING); `mixBHRootUneq_cSide_of_exterior`
-proves that the corrected **(29′) conjunct** follows exactly from the c-side exterior closure via
-`c_side_constraint_of_exterior` + `∑_l Dt_il·δ_lj = Dt_ij`.  (The g-side (33′) recentering is by
-Wiener–Hopf consistency; its rigorous derivation is MPhase 3-remaining.) -/
+/-! **The c-side recentering fix, wired to `MixBHRootUneq`.**  `MixBHRootUneq`'s **c-side (29′)** is
+corrected to use the recentered Baxter transform `e^{z·edgeLo_jl}·Q̂_jl` (the σ-edge FINDING);
+`mixBHRootUneq_cSide_of_exterior` proves that conjunct follows exactly from the c-side exterior closure
+via `c_side_constraint_of_exterior` + `∑_l Dt_il·δ_lj = Dt_ij`.  The **g-side (33′) is left with the bare
+`Q̂_lj`**: the g-side Eq (34) has a different amplitude structure (`ĝ_il = Gt_il·e^{−z·edgeHi_il}` on the
+whole bracket), so it does NOT get a `Q̂`-recentering — the naive Wiener–Hopf-consistency intuition
+fails.  The g-side (33′) rigorous form is open (needs the repo-consistent mixture g-source). -/
 
 /-- info: 'FMSA.ExactMSA.MixLeg3.mixBHRootUneq_cSide_of_exterior' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in

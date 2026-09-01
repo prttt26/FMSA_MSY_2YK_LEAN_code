@@ -620,12 +620,17 @@ discharged, axiom-clean) is **generic** in the RDF `g` and Baxter factor `Q`, so
 species `l`**; the `∑_l ρ_l` contraction the roadmap flagged as the crux is then **just linearity of
 the integral** (`Finset.sum_congr`).  The g-side thus reuses the scalar Fubini machinery wholesale.
 
-⚠ **Edge cross-check (g-side vs the c-side FINDING).** `gam`'s convention is `Gt_ij = ĝ_ij(z)·e^{+zσ_ij}`
-(`MSAMixtureCancellation.lean:67`), so `ĝ_il(z) = Gt_il·e^{−zσ_il}` carries a `σ`-edge factor of its
-own; and `Q̂_lj(z) = ∫₀^∞ e^{−zt}Q_lj(t) dt = qhatMixRuneq_lj` only when `edgeLo_lj ≥ 0` (else the
-`Ioi 0` transform misses `[edgeLo_lj, 0)`).  So the g-side (33′) is expected to carry an analogous
-edge/recentering factor at unequal σ — the resolution needs the concrete mixture g-side OZ Eq (32)
-(the matrix g-source + the convolution domain), the g-side analog of the c-side `hbax`. -/
+⚠ **Edge structure of the g-side (corrected).** The g-side does **not** get the c-side's `Q̂`-recentering.
+The g-side Eq (34) (`proof_notes_leg3_bh_gside_eq9.md`) reads `∑_l 2π·ĝ_il(z)·[δ_lj − ρ_l·Q̂_lj(z)] = …`
+with the transform `Q̂ = ∫_λ^∞ e^{−st}Q(t) dt` over the **full support** `[edgeLo,∞)` (= `qhatMixRuneq`,
+*not* recentered — the `Ioi 0` domain in `mat_laplace_conv` is the scalar's `edgeLo=0` special case and
+must become `[edgeLo,∞)` here, matching the c-side's full-line convolution), and the σ-edge factor
+`ĝ_il(z) = Gt_il·e^{−z·edgeHi_il}` (from `gam`'s convention `Gt_ij = ĝ_ij(z)·e^{+z·edgeHi_ij}`) multiplies
+the **whole bracket** `[δ_lj − ρ_l·Q̂_lj]`, not `Q̂` alone.  So the g-side recentering is
+amplitude-structure-dependent and differs from the c-side's `S_il = e^{z·edgeHi_il}·Dt_il`; the naive
+Wiener–Hopf-consistency guess (a `Q̂`-recentering on (33′)) is **wrong**, and `MixBHRootUneq`'s (33′) is
+left with the bare `Q̂_lj`.  The rigorous g-side (33′) needs the repo-consistent mixture g-source (the
+matrix analog of the scalar `bhP`), which is open (the g-side Eq (32) is not yet in Lean). -/
 
 /-- **MPhase 3 — the matrix Laplace-convolution theorem (the CRUX engine).**  For each species `l` the
 scalar `laplace_conv_eq_rdf_mul_qhat_of_integrable` folds the RDF⋆Baxter convolution onto
