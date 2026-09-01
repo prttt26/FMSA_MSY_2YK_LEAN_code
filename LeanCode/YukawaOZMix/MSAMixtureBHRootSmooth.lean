@@ -49,10 +49,16 @@ is now unconditional.  So **`exists_contDiffAt_matBhRoot_of_physical` is fully u
 hypothesis at all**, needing only the checkable physical inequalities `z>0`, `vacMix>0`, `ρ≥0`, `σ>0`
 and the HS seed (a diagonal-dominance variant `exists_contDiffAt_matBhRoot_of_diag_dom` is also kept).
 As at `N = 1`, this proves the statement for the *transcribed* Blum–Høye system — transcription
-faithfulness is the sole remaining "two of three parts" grade.  (Historical note: it was the
-*free-`Qp`* `Q0_mat_isUnit_det` that was disproved and **removed** — never the physical
-`Q0_mat_phys_isUnit_det`, which M.4 closed unconditionally; only a diagonal-dominance form was
-available in the interim.)
+faithfulness is the sole remaining "two of three parts" grade.  **That grade is now narrowed on the
+root-gate side:** the seed `MixBHRoot` is no longer a bare posited transcription of (29′)/(33′) — it is
+*derived* from the recognised OZ/Baxter primitives (Baxter Eq 8 + the g-side OZ Eq 32) by the leg-3
+`FMSA.ExactMSA.MixLeg3.MixBHRoot_of_oz` (equal σ; `MixBHRootUneq_of_oz_full` at general σ), all std-3.
+So the trust boundary moves from "are the algebraic (29′)/(33′) the right constraints" to "do
+`hbax`/`hgside_mix` faithfully encode Baxter Eq 8 / OZ Eq 32" — more recognisable physics.  It is a
+genuine *narrowing*, not an elimination: transcription is a spec boundary (a Lean proof cannot certify
+that the formalisation matches the physical equations).  (Historical note: it was the *free-`Qp`*
+`Q0_mat_isUnit_det` that was disproved and **removed** — never the physical `Q0_mat_phys_isUnit_det`,
+which M.4 closed unconditionally; only a diagonal-dominance form was available in the interim.)
 -/
 
 open scoped BigOperators
