@@ -121,6 +121,115 @@ theorem exists_contDiffAt_matBhRootUneq (z : ℝ) (rho σ : Fin N → ℝ)
   filter_upwards [hroot] with τ hτ
   exact (matBhResidualUneq_eq_zero_iff z rho σ Kdir τ (ψ τ).1 (ψ τ).2).mp hτ
 
+/-! ### Item 5 — the fderiv shape, discharging `hjac` down to the two physical HS-block dets
+
+The generic block-triangular derivative lemma `matBhResidualShape_hasFDerivAt` and the amplitude
+`Dt = 0` lemmas (`qpMat_zero_Dt`, …) are shared with the equal-σ file; only the dressing matrices carry
+the σ-edge recentering.  `resGuneq`/`resHuneq` are the unequal-σ diagonal blocks (`resD` — the g-source,
+carrying no recentering — is reused as `resD z 0 rho σ`, its `sig` argument being unused). -/
+
+/-- The unequal-σ c-side dressing block (recentered). -/
+noncomputable def resGuneq (z : ℝ) (rho σ : Fin N → ℝ)
+    (p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) : Matrix (Fin N) (Fin N) ℝ :=
+  Matrix.of fun l j => (if l = j then (1 : ℝ) else 0) - rho l *
+    (Real.exp (z * edgeLo σ j l) * qhatMixRuneq z σ (qpMat z rho σ p.2 p.1) (Wt z rho p.2 p.1)
+      (Ct z rho σ p.2 p.1) (AVec z rho σ p.2 p.1) z j l)
+
+/-- The unequal-σ g-side dressing block (recentered). -/
+noncomputable def resHuneq (z : ℝ) (rho σ : Fin N → ℝ)
+    (p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) : Matrix (Fin N) (Fin N) ℝ :=
+  Matrix.of fun l j => (if l = j then (1 : ℝ) else 0) - rho l *
+    (Real.exp (z * edgeLo σ l j) * qhatMixRuneq z σ (qpMat z rho σ p.2 p.1) (Wt z rho p.2 p.1)
+      (Ct z rho σ p.2 p.1) (AVec z rho σ p.2 p.1) z l j)
+
+/-- The unequal-σ residual at `Dt = 0` in dressing-matrix (`p.1·resG, 2π·(p.2·resH) − resD`) form. -/
+theorem matBhResidualUneq_zero_eq (z : ℝ) (rho σ : Fin N → ℝ)
+    (Kdir : Matrix (Fin N) (Fin N) ℝ) (p : Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ) :
+    matBhResidualUneq z rho σ Kdir (0, p)
+      = (p.1 * resGuneq z rho σ p,
+         (2 * Real.pi) • (p.2 * resHuneq z rho σ p) - resD z 0 rho σ p) := by
+  rw [matBhResidualUneq]
+  refine Prod.ext ?_ ?_
+  · ext i j
+    simp only [Matrix.of_apply, zero_smul, Matrix.zero_apply, mul_zero, zero_div, sub_zero,
+      Matrix.mul_apply, resGuneq]
+  · ext i j
+    simp only [Matrix.of_apply, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul, Matrix.mul_apply,
+      resHuneq, resD, Finset.mul_sum]
+
+theorem contDiff_resGuneq (z : ℝ) (rho σ : Fin N → ℝ) :
+    ContDiff ℝ (⊤ : ℕ∞) (resGuneq z rho σ) := by
+  unfold resGuneq; apply contDiff_matrix_of; intro i j
+  simp only [qhatMixRuneq, qpMat, AVec, qpMSA, AMSA, mixDqp, mixDA, mixM, mixN, Wt, Ct, gam,
+    Matrix.smul_apply, smul_eq_mul]
+  fun_prop
+
+theorem contDiff_resHuneq (z : ℝ) (rho σ : Fin N → ℝ) :
+    ContDiff ℝ (⊤ : ℕ∞) (resHuneq z rho σ) := by
+  unfold resHuneq; apply contDiff_matrix_of; intro i j
+  simp only [qhatMixRuneq, qpMat, AVec, qpMSA, AMSA, mixDqp, mixDA, mixM, mixN, Wt, Ct, gam,
+    Matrix.smul_apply, smul_eq_mul]
+  fun_prop
+
+theorem resHuneq_zero_const (z : ℝ) (rho σ : Fin N → ℝ) (Gt Gt' : Matrix (Fin N) (Fin N) ℝ) :
+    resHuneq z rho σ (0, Gt) = resHuneq z rho σ (0, Gt') := by
+  simp only [resHuneq, qpMat_zero_Dt, Wt_zero_Dt, Ct_zero_Dt, AVec_zero_Dt]
+
+theorem resHuneq_fderiv_inr (z : ℝ) (rho σ : Fin N → ℝ) (Gt₀ : Matrix (Fin N) (Fin N) ℝ) :
+    fderiv ℝ (resHuneq z rho σ) (0, Gt₀) ∘L
+      ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ) = 0 := by
+  have hcd : HasFDerivAt (resHuneq z rho σ) (fderiv ℝ (resHuneq z rho σ) (0, Gt₀)) (0, Gt₀) :=
+    ((contDiff_resHuneq z rho σ).differentiable (by simp)).differentiableAt.hasFDerivAt
+  have hcomp : HasFDerivAt (fun Gt => resHuneq z rho σ (0, Gt))
+      (fderiv ℝ (resHuneq z rho σ) (0, Gt₀) ∘L
+        ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ)) Gt₀ :=
+    hcd.comp Gt₀ (ContinuousLinearMap.hasFDerivAt
+      (ContinuousLinearMap.inr ℝ (Matrix (Fin N) (Fin N) ℝ) (Matrix (Fin N) (Fin N) ℝ)))
+  have hconst : HasFDerivAt (fun Gt => resHuneq z rho σ (0, Gt))
+      (0 : Matrix (Fin N) (Fin N) ℝ →L[ℝ] Matrix (Fin N) (Fin N) ℝ) Gt₀ := by
+    have he : (fun Gt => resHuneq z rho σ (0, Gt)) = fun _ => resHuneq z rho σ (0, Gt₀) := by
+      funext Gt; exact resHuneq_zero_const z rho σ Gt Gt₀
+    rw [he]; exact hasFDerivAt_const _ _
+  exact hcomp.unique hconst
+
+/-- ⭐⭐⭐ **MSAEMIX.6 at unequal σ, item 5 discharged modulo the two physical HS-block dets.**  The
+unequal-σ mixture MSA amplitudes are a `C^∞` family of the coupling near `K = 0`, from a `MixBHRootUneq`
+seed and the two hard-sphere OZ blocks `resGuneq/resHuneq (0,Gt₀)` nonsingular.  The block-triangular
+fderiv transcription is proved internally (reusing the shared `matBhResidualShape_hasFDerivAt`); the
+`e^{z·edgeLo}` recentering only changes the diagonal blocks, not the derivative structure.  The exact
+unequal-σ analogue of `exists_contDiffAt_matBhRoot_physical` — same "two of three parts" grade, now with
+the two dets the *asymmetric row-diameter* HS-OZ matrices. -/
+theorem exists_contDiffAt_matBhRootUneq_physical (z : ℝ) (rho σ : Fin N → ℝ)
+    (Kdir Gt₀ : Matrix (Fin N) (Fin N) ℝ) (hroot0 : MixBHRootUneq z rho σ Gt₀ 0 0)
+    (h₁ : IsUnit (resGuneq z rho σ (0, Gt₀)).det)
+    (h₂ : IsUnit (resHuneq z rho σ (0, Gt₀)).det) :
+    ∃ ψ : ℝ → Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ,
+      ψ 0 = (0, Gt₀) ∧
+      (∀ᶠ τ in nhds (0 : ℝ), MixBHRootUneq z rho σ (ψ τ).2 (ψ τ).1 (τ • Kdir)) ∧
+      ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 := by
+  have hstruct := matBhResidualShape_hasFDerivAt
+    (Gmat := resGuneq z rho σ) (Hmat := resHuneq z rho σ) (Dmat := resD z 0 rho σ)
+    (N₁ := resGuneq z rho σ (0, Gt₀)) (N₂ := resHuneq z rho σ (0, Gt₀))
+    (((contDiff_resGuneq z rho σ).differentiable (by simp)).differentiableAt.hasFDerivAt)
+    (((contDiff_resHuneq z rho σ).differentiable (by simp)).differentiableAt.hasFDerivAt)
+    (((contDiff_resD z 0 rho σ).differentiable (by simp)).differentiableAt.hasFDerivAt)
+    rfl rfl (resHuneq_fderiv_inr z rho σ Gt₀) (resD_fderiv_inr z 0 rho σ Gt₀)
+  have hpart := hstruct.congr_of_eventuallyEq
+    (Filter.Eventually.of_forall (fun p => matBhResidualUneq_zero_eq z rho σ Kdir p))
+  have hmatcd : HasFDerivAt (matBhResidualUneq z rho σ Kdir)
+      (fderiv ℝ (matBhResidualUneq z rho σ Kdir) (0, (0, Gt₀))) (0, (0, Gt₀)) :=
+    ((contDiff_matBhResidualUneq z rho σ Kdir).differentiable
+      (by simp)).differentiableAt.hasFDerivAt
+  have hcomp : HasFDerivAt (fun p => matBhResidualUneq z rho σ Kdir (0, p))
+      (fderiv ℝ (matBhResidualUneq z rho σ Kdir) (0, (0, Gt₀)) ∘L
+        ContinuousLinearMap.inr ℝ ℝ
+          (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ)) (0, Gt₀) :=
+    hmatcd.comp (0, Gt₀) (ContinuousLinearMap.hasFDerivAt
+      (ContinuousLinearMap.inr ℝ ℝ (Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ)))
+  have hshape := hcomp.unique hpart
+  exact exists_contDiffAt_matBhRootUneq z rho σ Kdir Gt₀ hroot0
+    (hshape ▸ matBhJacobianCLM_isInvertible _ h₁ h₂)
+
 end Smooth
 
 end MSAMixture
