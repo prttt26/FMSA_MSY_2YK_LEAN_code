@@ -737,9 +737,16 @@ normalization — plus the physical identifications `ĝ_il = Gt_il·e^{−z·edg
 full matrix analog of the scalar `FMSA.ExactMSA.GSide.h33_of_gside`: the whole g-side leg now stands on
 the recognised physical inputs (RDF support/integrability, the RDF-moment and Baxter-transform
 identities, and the folded g-side OZ relation), with the convolution-folding crux discharged
-axiom-clean.  (The `Ioi 0` transform equals the full-support `qhatMixRuneq_lj` when `edgeLo_lj ≥ 0`; the
-general full-support conv domain is the one remaining transcription detail — `hQtransform`/`hQhat` carry
-it as a hypothesis, exactly as the scalar `hQtransform` does.) -/
+axiom-clean.  ⚠ **Range of validity.** `hQtransform` (`∫_{Ioi 0} e^{−zt}Q_lj = qhatMixRuneq_lj`) holds for
+the physical `Q_lj = baxterQ_lj` **only when `edgeLo_lj ≥ 0`** (ordered pairs `σ_j ≥ σ_l`): then
+`baxterQ_lj = 0` on `(−∞,0)` so `∫_{Ioi 0} = ∫_ℝ = qhatMixRuneq_lj` (MPhase 1).  For `edgeLo_lj < 0`
+`baxterQ_lj ≠ 0` on `[edgeLo_lj,0)`, so `∫_{Ioi 0} ≠ qhatMixRuneq_lj` and this hypothesis is
+**unsatisfiable** — the full-support fold `∫_{r>0}e^{−zr}∫_ℝ(r−t)g(r−t)Q(t)dt` does **not** factor as
+`ĝ·Q̂` there (the per-`t` collapse `e^{−zt}∫_{u>−t}e^{−zu}u g(u)du` is a `t`-dependent partial moment for
+`t<0`, not the clean `ĝ(z)`).  So the g-side derivation is non-vacuous for **ordered pairs only**; the
+general unequal-σ g-side is the note's unresolved g-source normalization
+(`proof_notes_leg3_bh_gside_eq9.md`), where the `t<0` correction must be absorbed.  (The c-side (♦) has
+no such limitation — `mat_exterior_baxter_relation` integrates over the full line.) -/
 theorem gside_33_of_hgside {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
     (Gt Dt : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
     (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N)
@@ -814,8 +821,14 @@ full physical root `MSAMixture.MixBHRootUneq`.  So the unequal-σ Blum–Høye r
 hypothesis by the capstones `matMSAmixture_unequalDiam_of_hcore` etc. — now **stands on the recognised
 OZ/Baxter primitives** (the exterior DCF closure + the g-side OZ equation + the RDF-moment/Baxter-
 transform identities), exactly as the scalar `exactMSA_factorization_of_oz` retired the scalar `h29`/`h33`.
-The `Ioi 0` → full-support `[edgeLo,∞)` conv domain is the one hypothesis-level detail (`hQtransform`),
-as on the scalar side. -/
+⚠ **The c-side (29′) is fully general** (`mixBHRootUneq_cSide_of_exterior` / `mat_exterior_baxter_relation`
+use the full-line convolution).  The **g-side hypotheses are satisfiable only for ordered pairs**
+(`σ_j ≥ σ_l`, i.e. `edgeLo_lj ≥ 0`): `hQtransform`/`hQhat` require `∫_{Ioi 0}e^{−zt}Q_lj = qhatMixRuneq_lj`,
+which fails for `edgeLo_lj < 0` (the `Ioi 0` integral misses `[edgeLo_lj,0)`; see `gside_33_of_hgside`).
+So this theorem genuinely retires the c-side for all σ and the g-side for ordered pairs; the general
+unequal-σ g-side awaits the full-support fold's `t<0` correction (the note's open g-source
+normalization).  A future `Q`-supported on `[edgeLo,∞)` full-support convolution theorem would discharge
+`hQtransform` from MPhase 1 unconditionally. -/
 theorem MixBHRootUneq_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ k, 0 ≤ σ k)
     (g Q : Fin N → Fin N → ℝ → ℝ) (ghat Qhat : Fin N → Fin N → ℝ)

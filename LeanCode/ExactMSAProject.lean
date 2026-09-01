@@ -219,8 +219,10 @@ the full matrix analog of the scalar `h33_of_gside`.  Together with the c-side (
 (`mixBHRootUneq_cSide_of_exterior`, from the exterior Baxter closure) and the derived g-side (33′)
 (`gside_33_of_hgside`, from the g-side OZ primitive) into `MSAMixture.MixBHRootUneq`.  So the unequal-σ
 Blum–Høye root — consumed as a hypothesis by `matMSAmixture_unequalDiam_of_hcore` etc. — now stands on the
-recognised OZ/Baxter primitives, the mixture analog of the scalar `exactMSA_factorization_of_oz`.  Both
-mixture leg-3 legs (c-side + g-side) are complete, axiom-clean. -/
+recognised OZ/Baxter primitives, the mixture analog of the scalar `exactMSA_factorization_of_oz`.  ⚠ The
+c-side (29′) is fully general; the g-side (33′) derivation's `hQtransform` is satisfiable only for ordered
+pairs (`σ_j ≥ σ_l`) — the general unequal-σ g-side needs the full-support fold's `t<0` correction (see the
+theorem docstring). -/
 
 /-- info: 'FMSA.ExactMSA.MixLeg3.MixBHRootUneq_of_oz' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in

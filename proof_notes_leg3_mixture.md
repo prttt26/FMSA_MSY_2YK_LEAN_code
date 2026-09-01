@@ -256,10 +256,23 @@ identity) into `MSAMixture.MixBHRootUneq`.  So the unequal-σ Blum–Høye root 
 primitives** (exterior DCF closure + g-side OZ + RDF-moment/Baxter-transform identities), the mixture
 analog of the scalar `exactMSA_factorization_of_oz`.
 
-**Mixture leg-3 is complete** (MP1–MP5), axiom-clean throughout: the matrix Baxter transform, the c-side
-(♦), the g-side (33′), and the assembly retiring the posited root — mirroring the scalar leg-3
-entry-by-entry, with the σ-edge recentering (numerically pinned against `msa_exact_mix.py`) as the one
+**Mixture leg-3 status** (MP1–MP5, axiom-clean throughout): the matrix Baxter transform, the c-side (♦),
+the g-side (33′), and the assembly (`MixBHRootUneq_of_oz`) retiring the posited root — mirroring the
+scalar leg-3, with the σ-edge recentering (numerically pinned against `msa_exact_mix.py`) as the one
 genuinely-new mixture feature.
+
+⚠ **Range of validity (important).** The **c-side (29′) is fully general** (`mat_exterior_baxter_relation`
+integrates over the full line). The **g-side (33′) derivation is non-vacuous only for ordered pairs**
+`σ_j ≥ σ_l` (`edgeLo_lj ≥ 0`): `gside_33_of_hgside`/`MixBHRootUneq_of_oz` take `hQtransform`
+(`∫_{Ioi 0}e^{−zt}Q_lj = qhatMixRuneq_lj`) as a hypothesis, which is **unsatisfiable for `edgeLo_lj < 0`**
+(the `Ioi 0` integral misses `[edgeLo_lj,0)` where `baxterQ_lj ≠ 0`). The obstruction is real, not a
+transcription detail: the full-support fold `∫_{r>0}e^{−zr}∫_ℝ(r−t)g(r−t)Q(t)dt` does **not** factor as
+`ĝ·Q̂` for `t<0` — the per-`t` collapse `e^{−zt}∫_{u>−t}e^{−zu}u g(u)du` is a `t`-dependent *partial*
+moment, not `ĝ(z)`. So the general unequal-σ g-side is the **note's unresolved g-source normalization**
+(`proof_notes_leg3_bh_gside_eq9.md`), where the `t<0` correction must be absorbed by the g-source. A
+future full-support (`Q` on `[edgeLo,∞)`) convolution theorem would discharge `hQtransform` from MPhase 1
+unconditionally and close this. (The (33′) *value* is still numerically pinned for all σ vs
+`msa_exact_mix.py`; it is the *first-principles Lean derivation* that is ordered-pairs-only.)
 
 **g-side edge structure (numerically pinned):** the g-side carries its OWN `σ`-edge factors, so an
 analogous recentering to the c-side (♦) is EXPECTED at unequal σ — two independent signals:
