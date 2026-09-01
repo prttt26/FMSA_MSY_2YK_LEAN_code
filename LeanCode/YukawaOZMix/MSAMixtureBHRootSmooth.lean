@@ -49,9 +49,10 @@ is now unconditional.  So **`exists_contDiffAt_matBhRoot_of_physical` is fully u
 hypothesis at all**, needing only the checkable physical inequalities `z>0`, `vacMix>0`, `ρ≥0`, `σ>0`
 and the HS seed (a diagonal-dominance variant `exists_contDiffAt_matBhRoot_of_diag_dom` is also kept).
 As at `N = 1`, this proves the statement for the *transcribed* Blum–Høye system — transcription
-faithfulness is the sole remaining "two of three parts" grade.  (Historical note: an earlier
-*matrix-wide* `Q0_mat_phys_isUnit_det` was false and only a diagonal-dominance form held; M.4 later
-closed the physical form unconditionally.)
+faithfulness is the sole remaining "two of three parts" grade.  (Historical note: it was the
+*free-`Qp`* `Q0_mat_isUnit_det` that was disproved and **removed** — never the physical
+`Q0_mat_phys_isUnit_det`, which M.4 closed unconditionally; only a diagonal-dominance form was
+available in the interim.)
 -/
 
 open scoped BigOperators
