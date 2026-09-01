@@ -246,6 +246,21 @@ carried as the `hQtransform`/`hQhat` hypothesis (the scalar `h33_of_gside` likew
 as a hypothesis).  The (33′) *form* is numerically pinned to machine precision
 (`msaemix_root_recentering_check.py` vs `msa_exact_mix.py`).
 
+### MPhase 5 — the posited root RETIRED (DONE, axiom-clean std-3)
+
+`MixBHRootUneq_of_oz` assembles the derived c-side (29′) (`mixBHRootUneq_cSide_of_exterior`, from the
+exterior Baxter closure `hbax`) and the derived g-side (33′) (`gside_33_of_hgside`, from the g-side OZ
+primitive `hgside_mix`; bridged by `gside_bracket_sum_eq`, the whole-bracket ↔ `Q̂`-only recentering
+identity) into `MSAMixture.MixBHRootUneq`.  So the unequal-σ Blum–Høye root — consumed as a hypothesis by
+`matMSAmixture_unequalDiam_of_hcore` and the other capstones — now **stands on the recognised OZ/Baxter
+primitives** (exterior DCF closure + g-side OZ + RDF-moment/Baxter-transform identities), the mixture
+analog of the scalar `exactMSA_factorization_of_oz`.
+
+**Mixture leg-3 is complete** (MP1–MP5), axiom-clean throughout: the matrix Baxter transform, the c-side
+(♦), the g-side (33′), and the assembly retiring the posited root — mirroring the scalar leg-3
+entry-by-entry, with the σ-edge recentering (numerically pinned against `msa_exact_mix.py`) as the one
+genuinely-new mixture feature.
+
 **g-side edge structure (numerically pinned):** the g-side carries its OWN `σ`-edge factors, so an
 analogous recentering to the c-side (♦) is EXPECTED at unequal σ — two independent signals:
 (1) `gam`'s convention `Gt_ij = ĝ_ij(z)·e^{+zσ_ij}` ⇒ `ĝ_il(z) = Gt_il·e^{−zσ_il}` (edge factor

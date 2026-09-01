@@ -768,4 +768,84 @@ theorem gside_33_of_hgside {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
         * Real.exp (-z * edgeHi σ i j))
       hgsupp hF1 hF2 hgmoment hQtransform hgside_mix)
 
+/-! ### MPhase 5 — wire the derived (29′)/(33′) into `MixBHRootUneq` (retire the posited root) -/
+
+/-- The two `∑_l` forms of the g-side (33′) coincide: the recentering factor `e^{z·edgeLo σ l j}` may
+sit on the whole bracket `(δ_lj − ρ_l·Q_lj)` (as `gside_33_of_hgside` produces it) or on `Q_lj` alone
+(as `MixBHRootUneq` states it) — both equal `Gt_ij − ∑_l ρ_l·Gt_il·e^{z·edgeLo σ l j}·Q_lj`, because the
+factor is `1` at `l = j` (`edgeLo σ j j = 0`). -/
+theorem gside_bracket_sum_eq {N : ℕ} (z : ℝ) (σ ρ : Fin N → ℝ)
+    (Gt : Matrix (Fin N) (Fin N) ℝ) (Q : Fin N → Fin N → ℝ) (i j : Fin N) :
+    (∑ l, Gt i l * ((if l = j then (1:ℝ) else 0)
+        - ρ l * (Real.exp (z * edgeLo σ l j) * Q l j)))
+      = ∑ l, Gt i l * (Real.exp (z * edgeLo σ l j)
+          * ((if l = j then (1:ℝ) else 0) - ρ l * Q l j)) := by
+  have hjj : Real.exp (z * edgeLo σ j j) = 1 := by
+    rw [show edgeLo σ j j = 0 from by unfold edgeLo; ring, mul_zero, Real.exp_zero]
+  have h1 : (∑ l, Gt i l * ((if l = j then (1:ℝ) else 0)
+        - ρ l * (Real.exp (z * edgeLo σ l j) * Q l j)))
+      = Gt i j - ∑ l, ρ l * (Gt i l * (Real.exp (z * edgeLo σ l j) * Q l j)) := by
+    rw [Finset.sum_congr rfl (fun l _ => by ring :
+          ∀ l ∈ Finset.univ, Gt i l * ((if l = j then (1:ℝ) else 0)
+              - ρ l * (Real.exp (z * edgeLo σ l j) * Q l j))
+            = Gt i l * (if l = j then (1:ℝ) else 0)
+              - ρ l * (Gt i l * (Real.exp (z * edgeLo σ l j) * Q l j))),
+        Finset.sum_sub_distrib]
+    congr 1
+    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  have h2 : (∑ l, Gt i l * (Real.exp (z * edgeLo σ l j)
+        * ((if l = j then (1:ℝ) else 0) - ρ l * Q l j)))
+      = Gt i j - ∑ l, ρ l * (Gt i l * (Real.exp (z * edgeLo σ l j) * Q l j)) := by
+    rw [Finset.sum_congr rfl (fun l _ => by ring :
+          ∀ l ∈ Finset.univ, Gt i l * (Real.exp (z * edgeLo σ l j)
+              * ((if l = j then (1:ℝ) else 0) - ρ l * Q l j))
+            = Gt i l * Real.exp (z * edgeLo σ l j) * (if l = j then (1:ℝ) else 0)
+              - ρ l * (Gt i l * (Real.exp (z * edgeLo σ l j) * Q l j))),
+        Finset.sum_sub_distrib]
+    congr 1
+    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    rw [hjj, mul_one]
+  rw [h1, h2]
+
+/-- ⭐⭐ **MPhase 5 — the posited root retired: `MixBHRootUneq` from the OZ primitives.**  Assembles the
+derived c-side (29′) (`mixBHRootUneq_cSide_of_exterior`, from the exterior Baxter closure `hbax`) and the
+derived g-side (33′) (`gside_33_of_hgside`, from the g-side OZ Laplace primitive `hgside_mix`) into the
+full physical root `MSAMixture.MixBHRootUneq`.  So the unequal-σ Blum–Høye root — consumed as a
+hypothesis by the capstones `matMSAmixture_unequalDiam_of_hcore` etc. — now **stands on the recognised
+OZ/Baxter primitives** (the exterior DCF closure + the g-side OZ equation + the RDF-moment/Baxter-
+transform identities), exactly as the scalar `exactMSA_factorization_of_oz` retired the scalar `h29`/`h33`.
+The `Ioi 0` → full-support `[edgeLo,∞)` conv domain is the one hypothesis-level detail (`hQtransform`),
+as on the scalar side. -/
+theorem MixBHRootUneq_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ k, 0 ≤ σ k)
+    (g Q : Fin N → Fin N → ℝ → ℝ) (ghat Qhat : Fin N → Fin N → ℝ)
+    (hbax : ∀ i j r, edgeHi σ i j < r →
+      2 * Real.pi * r * matMSAtail K z σ i j r
+        = -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
+          + ∑ l, ρ l * ∫ t, baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                (Ct z ρ σ Gt Dt) i l (t + r)
+                * baxterQ z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                    (Ct z ρ σ Gt Dt) j l t)
+    (hgsupp : ∀ i l u, u < 0 → g i l u = 0)
+    (hF1 : ∀ i l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ j l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
+    (hgmoment : ∀ i l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
+    (hQtransform : ∀ j l, (∫ t in Set.Ioi (0:ℝ), Real.exp (-z * t) * Q l j t) = Qhat l j)
+    (hghat : ∀ i l, ghat i l = Gt i l * Real.exp (-z * edgeHi σ i l))
+    (hQhat : ∀ j l, Qhat l j
+      = qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z l j)
+    (hgside_mix : ∀ i j, 2 * Real.pi * ghat i j
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+          * Real.exp (-z * edgeHi σ i j)
+        + 2 * Real.pi * ∑ l, ρ l
+            * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+                * ∫ t in Set.Ioi (0:ℝ), (r - t) * g i l (r - t) * Q l j t)) :
+    MixBHRootUneq z ρ σ Gt Dt K := by
+  refine ⟨mixBHRootUneq_cSide_of_exterior z hz ρ σ Gt Dt K hσ hbax, fun i j => ?_⟩
+  rw [gside_bracket_sum_eq z σ ρ Gt
+      (fun a b => qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+        (AVec z ρ σ Gt Dt) z a b) i j]
+  exact gside_33_of_hgside z ρ σ Gt Dt g Q ghat Qhat i j
+    (hgsupp i) (hF1 i) (hF2 j) (hgmoment i) (hQtransform j) (hghat i) (hQhat j) (hgside_mix i j)
+
 end FMSA.ExactMSA.MixLeg3
