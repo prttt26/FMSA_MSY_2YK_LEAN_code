@@ -9,6 +9,7 @@ Authors: FMSA project
 import Mathlib
 import LeanCode.YukawaOZMix.MSAMixtureBaxterConv
 import LeanCode.YukawaOZMix.MSAMixtureBHRootUneq
+import LeanCode.YukawaOZMix.MSAMixtureBHRoot
 import LeanCode.YukawaOZ.MSAGSideOZ
 
 /-!
@@ -1417,5 +1418,85 @@ theorem matMSAmixture_unequalDiam_physical_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z
   matMSAmixture_unequalDiam_physical z ρ σ hrho Gt Dt K k
     (MixBHRootUneq_of_oz_full z hz ρ σ Gt Dt K hσ g Q ghat Qhat hbax hgsupp hQsupp hF1 hF2
       hgmoment hQtransform hghat hQhat hgside_mix) i j
+
+/-! ### MPhase 9 — the equal-diameter root retired via the unequal-diameter leg-3
+
+The equal-σ root `MSAMixture.MixBHRoot` (bare `qhatMixR`, no recentering) is the equal-σ specialization of
+`MixBHRootUneq` (recentered `qhatMixRuneq`).  So it too is retired onto OZ primitives — via the
+unequal-diameter leg-3 plus the equal-σ bridge — with no separate equal-diameter derivation needed. -/
+
+/-- **The unequal-σ Baxter transform reduces to the equal-σ one at equal diameters.**  At `σ_i = σ_j = sig`
+the recentering exponent `lam = (σ_j−σ_i)/2` is `0` and the per-pair `a = σ_i`, `sij = (σ_i+σ_j)/2` both
+become `sig`, so `qhatMixRuneq` collapses to `qhatMixR` term-for-term (the `Ct` split is identical, only
+reordered). -/
+theorem qhatMixRuneq_eq_qhatMixR_of_equal {N : ℕ} (z sig : ℝ) (σ : Fin N → ℝ)
+    (qp Wt Ct : Matrix (Fin N) (Fin N) ℝ) (Av : Fin N → ℝ) (s : ℝ) (i j : Fin N)
+    (hi : σ i = sig) (hj : σ j = sig) :
+    qhatMixRuneq z σ qp Wt Ct Av s i j = qhatMixR z sig qp Wt Ct Av s i j := by
+  simp only [qhatMixRuneq, qhatMixR, hi, hj]
+  rw [show (sig - sig) / 2 = (0:ℝ) from by ring, mul_zero, neg_zero, Real.exp_zero, one_mul,
+      show (sig + sig) / 2 = sig from by ring]
+  ring
+
+/-- **`MixBHRootUneq` at equal σ ⟹ `MixBHRoot`.**  The equal-σ bridge: at `σ ≡ sig` the recentering
+`e^{z·edgeLo σ · ·} = 1` (`edgeLo = 0`) and `qhatMixRuneq = qhatMixR` (`qhatMixRuneq_eq_qhatMixR_of_equal`),
+so the recentered unequal-σ root is term-for-term the bare equal-σ root. -/
+theorem MixBHRoot_of_MixBHRootUneq {N : ℕ} (z sig : ℝ) (ρ σ : Fin N → ℝ)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ k, σ k = sig)
+    (h : MixBHRootUneq z ρ σ Gt Dt K) : MixBHRoot z sig ρ σ Gt Dt K := by
+  obtain ⟨h29, h33⟩ := h
+  have hbridge : ∀ a b : Fin N,
+      Real.exp (z * edgeLo σ a b)
+          * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+              (AVec z ρ σ Gt Dt) z a b
+        = qhatMixR z sig (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+            (AVec z ρ σ Gt Dt) z a b := by
+    intro a b
+    rw [show edgeLo σ a b = 0 from by unfold edgeLo; rw [hσ a, hσ b]; ring, mul_zero,
+        Real.exp_zero, one_mul,
+        qhatMixRuneq_eq_qhatMixR_of_equal z sig σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+          (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z a b (hσ a) (hσ b)]
+  refine ⟨fun i j => ?_, fun i j => ?_⟩
+  · rw [← h29 i j]
+    exact (Finset.sum_congr rfl (fun l _ => by rw [hbridge j l])).symm
+  · rw [← h33 i j]
+    congr 1
+    exact (Finset.sum_congr rfl (fun l _ => by rw [hbridge l j])).symm
+
+/-- ⭐⭐ **The equal-diameter root retired onto OZ primitives.**  Chains `MixBHRootUneq_of_oz_full` (the
+unequal-σ leg-3) with the equal-σ bridge `MixBHRoot_of_MixBHRootUneq`: so the posited equal-σ
+`MSAMixture.MixBHRoot` — consumed by `matExactMSAEqualDiam_hcore`, `matMSAmixture_equalDiam`, and the
+IFT-smoothness analysis — now **stands on the same OZ/Baxter primitives** as the unequal-σ root, no separate
+equal-diameter leg-3 required.  Axiom-clean (std-3). -/
+theorem MixBHRoot_of_oz {N : ℕ} (z sig : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
+    (hσeq : ∀ k, σ k = sig) (hσ : ∀ k, 0 < σ k)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
+    (ghat Qhat : Fin N → Fin N → ℝ)
+    (hbax : ∀ i j r, edgeHi σ i j < r →
+      2 * Real.pi * r * matMSAtail K z σ i j r
+        = -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
+          + ∑ l, ρ l * ∫ t, baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                (Ct z ρ σ Gt Dt) i l (t + r)
+                * baxterQ z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                    (Ct z ρ σ Gt Dt) j l t)
+    (hgsupp : ∀ i l u, u < edgeHi σ i l → g i l u = 0)
+    (hQsupp : ∀ j l t, t < edgeLo σ l j → Q l j t = 0)
+    (hF1 : ∀ i l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ j l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
+    (hgmoment : ∀ i l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
+    (hQtransform : ∀ j l, (∫ t, Real.exp (-z * t) * Q l j t) = Qhat l j)
+    (hghat : ∀ i l, ghat i l = Gt i l * Real.exp (-z * edgeHi σ i l))
+    (hQhat : ∀ j l, Qhat l j
+      = qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z l j)
+    (hgside_mix : ∀ i j, 2 * Real.pi * ghat i j
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+          * Real.exp (-z * edgeHi σ i j)
+        + 2 * Real.pi * ∑ l, ρ l
+            * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+                * ∫ t, (r - t) * g i l (r - t) * Q l j t)) :
+    MixBHRoot z sig ρ σ Gt Dt K :=
+  MixBHRoot_of_MixBHRootUneq z sig ρ σ Gt Dt K hσeq
+    (MixBHRootUneq_of_oz_full z hz ρ σ Gt Dt K hσ g Q ghat Qhat hbax hgsupp hQsupp hF1 hF2
+      hgmoment hQtransform hghat hQhat hgside_mix)
 
 end FMSA.ExactMSA.MixLeg3

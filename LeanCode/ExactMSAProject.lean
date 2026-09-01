@@ -330,3 +330,25 @@ info: 'FMSA.ExactMSA.MixLeg3.matMSAmixture_unequalDiam_physical_of_oz' depends o
 -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.matMSAmixture_unequalDiam_physical_of_oz
+
+/-! ### MPhase 9 — the equal-diameter root retired via the unequal-diameter leg-3
+
+The equal-σ `MSAMixture.MixBHRoot` (bare `qhatMixR`) was only *posited* — consumed by
+`matExactMSAEqualDiam_hcore`, `matMSAmixture_equalDiam`, and the IFT-smoothness analysis, but never
+derived.  It is the equal-σ specialization of `MixBHRootUneq` (`edgeLo = 0`, recentering `= 1`,
+`qhatMixRuneq = qhatMixR`), so `MixBHRoot_of_oz` retires it onto the SAME OZ/Baxter primitives via the
+unequal-σ leg-3 (`MixBHRootUneq_of_oz_full`) + the equal-σ bridge `MixBHRoot_of_MixBHRootUneq`.  Axiom-clean
+std-3 — no separate equal-diameter derivation, and no physics axiom (the `hcore` enters only later, at the
+factorization capstone `matMSAmixture_equalDiam`). -/
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.qhatMixRuneq_eq_qhatMixR_of_equal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.qhatMixRuneq_eq_qhatMixR_of_equal
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.MixBHRoot_of_MixBHRootUneq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.MixBHRoot_of_MixBHRootUneq
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.MixBHRoot_of_oz' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.MixBHRoot_of_oz

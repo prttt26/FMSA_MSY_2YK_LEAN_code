@@ -365,3 +365,25 @@ The scalar `FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz` produces the final
 So the mixture now has the SAME end-to-end wire-in as the scalar: OZ primitives → [leg-3, std-3] →
 `MixBHRootUneq` → [capstone + hcore] → full MSA factorization. 2 more gates (MP8). Structural parity with
 the scalar leg-3 is complete.
+
+## MPhase 9 — the equal-diameter root retired via the unequal-diameter leg-3 (2026‑09‑01)
+
+**Gap found & closed.** The equal-σ root `MSAMixture.MixBHRoot` (MSAMixtureBHRoot.lean, bare `qhatMixR`,
+no recentering) was only **posited** — consumed by `matExactMSAEqualDiam_hcore`, `matMSAmixture_equalDiam`,
+and the IFT-smoothness analysis (`MSAMixtureBHRootSmooth`) — never derived from OZ primitives, unlike the
+unequal-σ `MixBHRootUneq`. It is the equal-σ specialization of `MixBHRootUneq`, so it is retired via the
+unequal-σ leg-3 + a bridge (all axiom-clean std-3, `MixtureBlumHoyeDerivation.lean`):
+
+- `qhatMixRuneq_eq_qhatMixR_of_equal` — at `σ_i=σ_j=sig` the unequal transform collapses to the equal one
+  (`lam=(σ_j−σ_i)/2=0`, `a=σ_i=sig`, `sij=sig`; the `Ct` split is identical, only reordered → `ring`).
+- `MixBHRoot_of_MixBHRootUneq` — `MixBHRootUneq` at equal σ ⟹ `MixBHRoot` (recentering `e^{z·edgeLo}=1`
+  since `edgeLo=0`; each `∑_l` term matches via the transform bridge).
+- `MixBHRoot_of_oz` — chains `MixBHRootUneq_of_oz_full` + the bridge ⇒ the equal-σ `MixBHRoot` **stands on
+  the same OZ/Baxter primitives** as the unequal-σ root, **std-3** (no physics axiom — `hcore` enters only
+  later at the factorization capstone). No separate equal-diameter leg-3 needed.
+
+⚠ The equal-diameter *factorization* capstone (`matMSAmixture_equalDiam`) still takes `hHS` as a hypothesis
+or needs WH atoms (`_WH`) — the equal-σ HS side is not free `ftilde` algebra like the unequal-σ one
+(`FtHSuneq_mul_transpose`). So the factorization-from-OZ chain would carry `hHS`; the clean deliverable is
+the **root** retirement `MixBHRoot_of_oz`. The equal-diam physics is anyway covered by
+`matMSAmixture_unequalDiam_of_oz` (MP8) specialized to equal σ.
