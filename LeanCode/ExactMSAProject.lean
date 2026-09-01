@@ -171,6 +171,16 @@ in the posited `MixBHRootUneq` (29′), which therefore coincides with (♦) onl
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.c_side_constraint_of_exterior
 
+/-! **The recentering fix, wired to `MixBHRootUneq`.**  `MixBHRootUneq` has been corrected to use the
+recentered Baxter transform `e^{z·edgeLo_ab}·Q̂_ab` (the σ-edge FINDING); `mixBHRootUneq_cSide_of_exterior`
+proves that the corrected **(29′) conjunct** follows exactly from the c-side exterior closure via
+`c_side_constraint_of_exterior` + `∑_l Dt_il·δ_lj = Dt_ij`.  (The g-side (33′) recentering is by
+Wiener–Hopf consistency; its rigorous derivation is MPhase 3-remaining.) -/
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.mixBHRootUneq_cSide_of_exterior' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.mixBHRootUneq_cSide_of_exterior
+
 /-! **MPhase 3 (CRUX) — the matrix Laplace-convolution theorem.**  `mat_laplace_conv` folds the
 species-summed RDF⋆Baxter convolution onto `∑_l ρ_l·ĝ_il(z)·Q̂_lj(z)` by reusing the scalar
 `FMSA.ExactMSA.GSide.laplace_conv_eq_rdf_mul_qhat_of_integrable` per species (its Fubini swap is already

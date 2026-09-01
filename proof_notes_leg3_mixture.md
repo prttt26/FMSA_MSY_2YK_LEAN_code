@@ -1,6 +1,7 @@
 # Mixture leg-3 — roadmap (derive the matrix Blum–Høye root from OZ/Baxter primitives)
 
-**Status: MPhase 1 DONE (2026‑08‑31), MPhase 2–5 planned.** The scalar (`N=1`) leg-3 is DONE
+**Status: MPhase 1–2 DONE + c-side recentering FIX APPLIED to `MixBHRootUneq`, MPhase 3 conv-thm DONE
+(2026‑08‑31).** The scalar (`N=1`) leg-3 is DONE
 (`proof_notes_leg3_bh_realspace.md`;
 `YukawaOZ/{MSABlumHoyeDerivation,MSAGSideOZ,MSAFactorizationFromOZ}.lean`): it derived `h29`/`h33` from
 the OZ/Baxter primitives and wired them into `exactMSA_factorization`. This file plans the **mixture
@@ -188,9 +189,17 @@ unequal-σ root — a σ-power factor of exactly the kind `σ=1` masks (cf. `fee
 `(hz) (hσ) (hbax : ∀ r > edgeHi, 2πr·matMSAtail_ij = −Q'_ij(r) + ∑_l ρ_l ∫ Q'_il(t+r)Q_jl(t)dt)` derives
 exactly (♦). Matrix analog of scalar `h29_of_baxter_exterior` (takes the exterior closure `hbax` as
 hypothesis; proof = evaluate at `r = σ_ij+1`, fold by `mat_exterior_baxter_relation_Dt`, cancel `z·e^{−z}`).
-This is a Lean-checked fact that the exterior OZ/Baxter closure forces (♦), **not** the posited (29′).
-The posited `MixBHRootUneq` (29′) is left untouched. **NEXT (user decision):** either fix (29′) to the
-recentered form (then wire (♦) into the (29′)/(33′) gate at MPhase 5) or reconcile the convention.
+This is a Lean-checked fact that the exterior OZ/Baxter closure forces (♦).
+
+**RECENTERING FIX APPLIED (option A).** `MSAMixture.MixBHRootUneq` (`MSAMixtureBHRootUneq.lean:98`) is
+corrected to use the recentered transform `e^{z·edgeLo_ab}·qhatMixRuneq_ab` on **both** conjuncts —
+(29′) `e^{z·edgeLo σ j l}·Q̂_jl` (rigorous, = (♦)) and (33′) `e^{z·edgeLo σ l j}·Q̂_lj` (by
+Wiener–Hopf consistency; the same Baxter `Q̂` appears on both sides).  Full library **build green
+(8812 jobs)** — nothing downstream destructures/constructs the root, so the def change is transparent
+(consumers thread `hroot` to the `matExactMSAUnequalDiam_hcore` axiom).  Wired:
+`mixBHRootUneq_cSide_of_exterior` proves the corrected **(29′) conjunct** exactly from the exterior
+closure via `c_side_constraint_of_exterior` + `∑_l Dt_il δ_lj = Dt_ij`, axiom-clean.  REMAINING: the
+g-side (33′) rigorous derivation (MPhase 3-remaining) to confirm its `e^{z·edgeLo σ l j}` factor.
 
 ### MPhase 3 — the matrix Laplace-convolution theorem (CRUX engine DONE, axiom-clean std-3)
 

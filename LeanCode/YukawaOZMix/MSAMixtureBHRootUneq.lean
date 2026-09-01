@@ -94,15 +94,24 @@ noncomputable def matCoreCorrUneq (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt : Ma
 /-! ### The unequal-σ BH-root gate -/
 
 /-- The unequal-σ mixture MSA Blum–Høye root: (29′)/(33′) with the unequal-σ real Baxter factor
-`qhatMixRuneq`.  The physical-solution gate (no `∀ i, σ i = sig` constraint). -/
+`qhatMixRuneq`, **recentered** to the support edge — each transform entry `Q̂_ab(z)` appears as
+`e^{z·edgeLo_ab}·qhatMixRuneq_ab`, the Baxter `Q̂` centered at its support start `edgeLo_ab`
+(= `∫ Q_ab(t) e^{−z(t−edgeLo_ab)} dt`).  At **equal** σ, `edgeLo_ab = 0` so the factors are `1` and this
+collapses to the naive form; the recentering only matters at **unequal** σ.  This is the physically
+correct unequal-σ root: the c-side (29′) conjunct is exactly the OZ/Baxter-derived constraint (♦)
+(`FMSA.ExactMSA.MixLeg3.c_side_constraint_of_exterior`), and the g-side (33′) recentering follows by
+Wiener–Hopf consistency (the same Baxter `Q̂` appears on both sides; g-side rigorous derivation is
+MPhase 3-remaining).  The physical-solution gate (no `∀ i, σ i = sig` constraint). -/
 def MixBHRootUneq (z : ℝ) (rho σ : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) : Prop :=
   (∀ i j, ∑ l, Dt i l * ((if l = j then (1 : ℝ) else 0)
-      - rho l * qhatMixRuneq z σ (qpMat z rho σ Gt Dt) (Wt z rho Gt Dt) (Ct z rho σ Gt Dt)
-          (AVec z rho σ Gt Dt) z j l)
+      - rho l * (Real.exp (z * edgeLo σ j l)
+          * qhatMixRuneq z σ (qpMat z rho σ Gt Dt) (Wt z rho Gt Dt) (Ct z rho σ Gt Dt)
+              (AVec z rho σ Gt Dt) z j l))
     = 2 * Real.pi * K i j / z)
   ∧ (∀ i j, 2 * Real.pi * ∑ l, Gt i l * ((if l = j then (1 : ℝ) else 0)
-      - rho l * qhatMixRuneq z σ (qpMat z rho σ Gt Dt) (Wt z rho Gt Dt) (Ct z rho σ Gt Dt)
-          (AVec z rho σ Gt Dt) z l j)
+      - rho l * (Real.exp (z * edgeLo σ l j)
+          * qhatMixRuneq z σ (qpMat z rho σ Gt Dt) (Wt z rho Gt Dt) (Ct z rho σ Gt Dt)
+              (AVec z rho σ Gt Dt) z l j))
     = (AVec z rho σ Gt Dt j + z * qpMat z rho σ Gt Dt i j
         + z ^ 2 * Ct z rho σ Gt Dt i j / 2) / z ^ 2)
 

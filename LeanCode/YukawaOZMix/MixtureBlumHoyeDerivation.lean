@@ -499,10 +499,11 @@ the exterior `r > σ_ij`), the c-side constraint is
 
   `Dt_ij − ∑_l ρ_l · e^{z·edgeLo_jl} · Dt_il · Q̂_jl(z) = 2π K_ij / z`.
 
-This is the rigorously-derived matrix analog of the scalar `h29_of_baxter_exterior` — **but note the
-recentering factor `e^{z·edgeLo_jl}` on the transform** (`= e^{z(edgeHi_il − edgeHi_ij)}`), which the
-posited `MSAMixture.MixBHRootUneq` (29′) omits.  At equal σ (`edgeLo_jl = 0`) they coincide; at unequal
-σ they differ (a σ-power masked by σ=1 — see the FINDING note above).  Proof: evaluate `hbax` at
+This is the rigorously-derived matrix analog of the scalar `h29_of_baxter_exterior` — **with the
+recentering factor `e^{z·edgeLo_jl}` on the transform** (`= e^{z(edgeHi_il − edgeHi_ij)}`), which
+`MSAMixture.MixBHRootUneq` (29′) **now uses** (the σ-edge FINDING; the recentering fix is applied and
+`mixBHRootUneq_cSide_of_exterior` shows the corrected (29′) conjunct is exactly this).  At equal σ
+(`edgeLo_jl = 0`) the factor is `1` and reduces to the naive form.  Proof: evaluate `hbax` at
 `r = σ_ij + 1`, fold the convolution by `mat_exterior_baxter_relation_Dt`, compute
 `2πr·matMSAtail = 2π K_ij e^{−z}`, and cancel the common `z·e^{−z}`. -/
 theorem c_side_constraint_of_exterior {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
@@ -566,6 +567,48 @@ theorem c_side_constraint_of_exterior {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : 
   have hze : z * Real.exp (-z) ≠ 0 := mul_ne_zero hz.ne' (Real.exp_ne_zero _)
   apply mul_left_cancel₀ hze
   rw [← key]; field_simp
+
+/-- **The c-side conjunct of the (recentered) `MixBHRootUneq`, derived from the exterior closure.**
+Given the c-side exterior MSA closure `hbax` for every `(i,j)`, the **(29′) conjunct of
+`MSAMixture.MixBHRootUneq`** (with the recentered transform `e^{z·edgeLo_jl}·Q̂_jl`) holds.  Direct
+corollary of `c_side_constraint_of_exterior` + `∑_l Dt_il·δ_lj = Dt_ij`: the recentered (29′) is
+**exactly** the OZ/Baxter-derived (♦), confirming the `MixBHRootUneq` recentering fix on the c-side. -/
+theorem mixBHRootUneq_cSide_of_exterior {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ k, 0 ≤ σ k)
+    (hbax : ∀ i j r, edgeHi σ i j < r →
+      2 * Real.pi * r * matMSAtail K z σ i j r
+        = -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
+          + ∑ l, ρ l * ∫ t, baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                (Ct z ρ σ Gt Dt) i l (t + r)
+                * baxterQ z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                    (Ct z ρ σ Gt Dt) j l t) :
+    ∀ i j, ∑ l, Dt i l * ((if l = j then (1 : ℝ) else 0)
+        - ρ l * (Real.exp (z * edgeLo σ j l)
+            * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+                (AVec z ρ σ Gt Dt) z j l))
+      = 2 * Real.pi * K i j / z := by
+  intro i j
+  have hc := c_side_constraint_of_exterior z hz ρ σ Gt Dt K i j hσ (hbax i j)
+  have hsum : (∑ l, Dt i l * ((if l = j then (1 : ℝ) else 0)
+        - ρ l * (Real.exp (z * edgeLo σ j l)
+            * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+                (AVec z ρ σ Gt Dt) z j l)))
+      = Dt i j - ∑ l, ρ l * (Real.exp (z * edgeLo σ j l) * Dt i l)
+          * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+              (AVec z ρ σ Gt Dt) z j l := by
+    rw [Finset.sum_congr rfl (fun l _ => by ring :
+          ∀ l ∈ Finset.univ, Dt i l * ((if l = j then (1 : ℝ) else 0)
+              - ρ l * (Real.exp (z * edgeLo σ j l)
+                  * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+                      (AVec z ρ σ Gt Dt) z j l))
+            = Dt i l * (if l = j then (1 : ℝ) else 0)
+              - ρ l * (Real.exp (z * edgeLo σ j l) * Dt i l)
+                  * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+                      (AVec z ρ σ Gt Dt) z j l),
+        Finset.sum_sub_distrib]
+    congr 1
+    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  rw [hsum]; exact hc
 
 /-! ### MPhase 3 — the g-side matrix Laplace-convolution stack (the CRUX)
 
