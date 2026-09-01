@@ -230,6 +230,29 @@ theorem exists_contDiffAt_matBhRootUneq_physical (z : ℝ) (rho σ : Fin N → �
   exact exists_contDiffAt_matBhRootUneq z rho σ Kdir Gt₀ hroot0
     (hshape ▸ matBhJacobianCLM_isInvertible _ h₁ h₂)
 
+/-- ⭐⭐⭐ **MSAEMIX.6 at unequal σ — the two dets discharged from strict row diagonal dominance.**  When
+the asymmetric row-diameter HS-OZ blocks `resGuneq/resHuneq (0,Gt₀)` are strictly diagonally dominant,
+their determinants are units (Mathlib's Gershgorin `det_ne_zero_of_sum_row_lt_diag`), so the unequal-σ
+mixture MSA amplitudes are a `C^∞` family near `K = 0` from only the seed and the two checkable
+inequalities — the unequal-σ analogue of `exists_contDiffAt_matBhRoot_of_diag_dom`.  (Diagonal dominance
+is the achievable-now conditional discharge; an *unconditional* one is the unequal-σ analogue of M.4's
+`Q0_mat_phys_isUnit_det`, still open because the asymmetric block breaks the equal-σ rank-2 argument.) -/
+theorem exists_contDiffAt_matBhRootUneq_of_diag_dom (z : ℝ) (rho σ : Fin N → ℝ)
+    (Kdir Gt₀ : Matrix (Fin N) (Fin N) ℝ) (hroot0 : MixBHRootUneq z rho σ Gt₀ 0 0)
+    (hdomG : ∀ k, ∑ j ∈ Finset.univ.erase k, |resGuneq z rho σ (0, Gt₀) k j|
+      < |resGuneq z rho σ (0, Gt₀) k k|)
+    (hdomH : ∀ k, ∑ j ∈ Finset.univ.erase k, |resHuneq z rho σ (0, Gt₀) k j|
+      < |resHuneq z rho σ (0, Gt₀) k k|) :
+    ∃ ψ : ℝ → Matrix (Fin N) (Fin N) ℝ × Matrix (Fin N) (Fin N) ℝ,
+      ψ 0 = (0, Gt₀) ∧
+      (∀ᶠ τ in nhds (0 : ℝ), MixBHRootUneq z rho σ (ψ τ).2 (ψ τ).1 (τ • Kdir)) ∧
+      ContDiffAt ℝ (⊤ : ℕ∞) ψ 0 :=
+  exists_contDiffAt_matBhRootUneq_physical z rho σ Kdir Gt₀ hroot0
+    (isUnit_iff_ne_zero.mpr
+      (det_ne_zero_of_sum_row_lt_diag (by simpa only [Real.norm_eq_abs] using hdomG)))
+    (isUnit_iff_ne_zero.mpr
+      (det_ne_zero_of_sum_row_lt_diag (by simpa only [Real.norm_eq_abs] using hdomH)))
+
 end Smooth
 
 end MSAMixture
