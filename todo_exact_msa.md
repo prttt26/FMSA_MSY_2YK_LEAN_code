@@ -37,6 +37,10 @@ boundaries, non-vacuity: [proof_notes_msa_exact.md](proof_notes_msa_exact.md). N
 | MSAEMIX.1 | matrix factorization (matrix form of MSAEXACT.1) | ◑ (★) cancellation DONE + **staged to matrix `hcore`** (`matMixtureFactorization_of_core`, analog of MSAEXACT.6) | `YukawaOZMix/{MSAMixtureCancellation,MSAMixtureFactorization}` |
 | MSAEMIX.2 | `N=1` reduces to MSAEXACT.1 | ◑ positivity half; factorization half ← MSAEMIX.1 | `YukawaOZMix/MSAMixturePositivity` |
 | MSAEMIX.3 ⭐ | Eq.(41) mixture root selection = `g_ij=g_ji` | ✓ DONE | `YukawaOZMix/MSAMixtureSelection` |
+| MSAEMIX.4 ⭐ | the matrix `hcore` ring (`matMixtureFactorization_of_core`) | ✓ DONE equal σ + unequal σ (std-3 + one physics axiom each, mirrors MSAEXACT.6) | `YukawaOZMix/{MSAMixtureCore,MSAMixtureCoreUneq,MSAMixtureBHRoot,MSAMixtureBHRootUneq}` |
+| MSAEMIX.5 ⭐ | unequal-σ core breakpoint structure (`σ_l`-independent, no mediated 3-body breakpoints, all `N`) | ✓ DONE | `YukawaOZMix/MSAMixtureBreakpoints` |
+| MSAEMIX.6 ⭐⭐ | the matrix BH root is `C^∞` at `K=0` (general `N`) — paper Thm I.1 antecedent | ✓ **DONE, both diameters, UNCONDITIONAL (2026-09-01).** All 5 items; the two HS-block dets reduce (recentering + diagonal-conjugation Sylvester) to `Q0_mat_phys`, closed by M.4 `Q0_mat_phys_isUnit_det` — no det hypothesis, no physics axiom (not even `no_spinodal`). Equal-σ `exists_contDiffAt_matBhRoot_of_physical`, unequal-σ `..._matBhRootUneq_of_physical`; gated §MSAEMIX.6. Only transcription faithfulness stays open (as at `N=1`) | `YukawaOZMix/{MSAMixtureBHRootSmooth,MSAMixtureBHRootUneqSmooth}` |
+| MSAEMIX.7 ⭐ | mixture analog of MSAEXACT.5 (first-order MSA = HS-dressed, matrix) | ✓ DONE (axiom-clean) | `Closures/FirstOrderEquivalence` |
 
 ### Group FOEQ — The Two Definitions of "First Order" Agree *(closures)*
 
