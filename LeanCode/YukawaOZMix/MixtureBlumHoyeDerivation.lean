@@ -610,6 +610,79 @@ theorem mixBHRootUneq_cSide_of_exterior {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ 
     simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
   rw [hsum]; exact hc
 
+/-- **`(♦) ⟹ hbax`** — the reverse of `c_side_constraint_of_exterior`, completing the equivalence.  Given
+the c-side constraint (♦) `Dt_ij − ∑_l ρ_l e^{z·edgeLo_jl} Dt_il Q̂_jl = 2πK_ij/z`, the exterior Baxter
+Eq (8) closure holds at **every** exterior point `r > edgeHi_ij`: fold the Baxter convolution by
+`mat_exterior_baxter_relation_Dt` (`= z e^{−zr}(e^{z·edgeHi_ij}Dt_ij − ∑ρ_l e^{z·edgeHi_il}Dt_il Q̂_jl)`),
+compute `2πr·matMSAtail = 2πK_ij e^{z·edgeHi_ij} e^{−zr}` (the `r` cancels in `cMSAtail`), and match via
+`(♦)` scaled by `z·e^{z·edgeHi_ij}`, using the edge identity `edgeHi_ij + edgeLo_jl = edgeHi_il`. -/
+theorem mat_hbax_of_cside {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (i j : Fin N) (hσ : ∀ k, 0 ≤ σ k)
+    (hcside : Dt i j - ∑ l, ρ l * (Real.exp (z * edgeLo σ j l) * Dt i l)
+        * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z j l
+      = 2 * Real.pi * K i j / z) :
+    ∀ r, edgeHi σ i j < r →
+      2 * Real.pi * r * matMSAtail K z σ i j r
+        = -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
+          + ∑ l, ρ l * ∫ t, baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                (Ct z ρ σ Gt Dt) i l (t + r)
+                * baxterQ z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                    (Ct z ρ σ Gt Dt) j l t := by
+  intro r hr
+  have hrpos : 0 < r := by have := hσ i; have := hσ j; unfold edgeHi at hr; linarith
+  rw [mat_exterior_baxter_relation_Dt z hz ρ σ Gt Dt i j r hσ hr]
+  have hLHS : 2 * Real.pi * r * matMSAtail K z σ i j r
+      = 2 * Real.pi * K i j * Real.exp (z * edgeHi σ i j) * Real.exp (-z * r) := by
+    unfold matMSAtail cMSAtail
+    rw [if_pos (show sigMix σ i j < r by
+          have h := hr; unfold sigMix; unfold edgeHi at h; linarith),
+        show -z * (r - sigMix σ i j) = z * edgeHi σ i j + -z * r from by unfold sigMix edgeHi; ring,
+        Real.exp_add]
+    have hrne : r ≠ 0 := hrpos.ne'
+    field_simp
+  rw [hLHS]
+  have hedge : ∀ l : Fin N, Real.exp (z * edgeHi σ i j) * Real.exp (z * edgeLo σ j l)
+      = Real.exp (z * edgeHi σ i l) := by
+    intro l; rw [← Real.exp_add]; congr 1; unfold edgeHi edgeLo; ring
+  have hsumconv : (∑ l, ρ l * (Real.exp (z * edgeHi σ i l) * Dt i l)
+        * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+            (AVec z ρ σ Gt Dt) z j l)
+      = Real.exp (z * edgeHi σ i j) * ∑ l, ρ l * (Real.exp (z * edgeLo σ j l) * Dt i l)
+          * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+              (AVec z ρ σ Gt Dt) z j l := by
+    rw [Finset.mul_sum]
+    refine Finset.sum_congr rfl (fun l _ => ?_)
+    rw [← hedge l]; ring
+  -- clear the `/z` in `(♦)` so `linear_combination`'s `ring` needn't cancel `z·z⁻¹`
+  have hcside' : z * (Dt i j - ∑ l, ρ l * (Real.exp (z * edgeLo σ j l) * Dt i l)
+        * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+            (AVec z ρ σ Gt Dt) z j l)
+      = 2 * Real.pi * K i j := by rw [hcside]; field_simp
+  rw [hsumconv]
+  linear_combination (-(Real.exp (-z * r) * Real.exp (z * edgeHi σ i j))) * hcside'
+
+/-- **`hbax ⟺ (♦)`** — the exterior Baxter Eq (8) closure (`∀ r > edgeHi_ij`) is **exactly** the c-side
+Blum–Høye constraint (♦)/(29′).  Forward `c_side_constraint_of_exterior`, reverse `mat_hbax_of_cside` —
+the matrix analog of the scalar `FMSA.ExactMSA.GSide.hbax_iff_h29`.  So the c-side OZ primitive `hbax`
+consumed by `MixBHRootUneq_of_oz_full` is not a free assumption: it is equivalent to the algebraic root
+condition (its full unconditional discharge — that the concrete `baxterQ` really solves OZ — is the
+`matExactMSAUnequalDiam_hcore` ring content). -/
+theorem mat_hbax_iff_cside {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
+    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (i j : Fin N) (hσ : ∀ k, 0 ≤ σ k) :
+    (∀ r, edgeHi σ i j < r →
+      2 * Real.pi * r * matMSAtail K z σ i j r
+        = -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
+          + ∑ l, ρ l * ∫ t, baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                (Ct z ρ σ Gt Dt) i l (t + r)
+                * baxterQ z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
+                    (Ct z ρ σ Gt Dt) j l t)
+      ↔ Dt i j - ∑ l, ρ l * (Real.exp (z * edgeLo σ j l) * Dt i l)
+            * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+                (AVec z ρ σ Gt Dt) z j l
+          = 2 * Real.pi * K i j / z :=
+  ⟨fun hbax => c_side_constraint_of_exterior z hz ρ σ Gt Dt K i j hσ hbax,
+   mat_hbax_of_cside z hz ρ σ Gt Dt K i j hσ⟩
+
 /-! ### MPhase 3 — the g-side matrix Laplace-convolution stack (the CRUX)
 
 The g-side OZ equation (Blum–Høye Eq. 32), Laplace-transformed at `s = z`, folds the species-summed
@@ -1001,6 +1074,102 @@ theorem gside_33_of_hgside_full {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
       ((AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
         * Real.exp (-z * edgeHi σ i j))
       hσ hgsupp hQsupp hcond hF1 hF2 hgmoment hQtransform hgside_mix)
+
+/-- **`(33′) ⟹ hgside_mix`** — the reverse of `gside_33_of_hgside_full`, completing the g-side
+equivalence.  Given the (33′) conjunct and the RDF-side data, the g-side OZ equation Laplace-transformed
+at `s = z` (`hgside_mix`) holds: fold the conv onto the transforms (`mat_laplace_conv_full` +
+`hgmoment`/`hQtransform`), then run `gside_33_of_fold`'s `keysum` + `mat_gside_fold_full`'s `hexpand`
+**backward** — from `2π·∑_l Gt_il e^{z·edgeLo_lj}(δ_lj − ρ_l Q̂_lj) = R` peel the `e^{z·edgeHi_ij}` (via
+`E·E⁻¹ = 1`) to recover `2π·ĝ_ij = R·e^{−z·edgeHi_ij} + 2π·∑_l ρ_l·conv_il`. -/
+theorem mat_hgside_of_gside {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
+    (Gt Dt : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
+    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (hσ : ∀ k, 0 ≤ σ k)
+    (hgsupp : ∀ l u, u < edgeHi σ i l → g i l u = 0)
+    (hQsupp : ∀ l t, t < edgeLo σ l j → Q l j t = 0)
+    (hcond : ∀ l, -edgeHi σ i l < edgeLo σ l j)
+    (hF1 : ∀ l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
+    (hgmoment : ∀ l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
+    (hQtransform : ∀ l, (∫ t, Real.exp (-z * t) * Q l j t) = Qhat l j)
+    (hghat : ∀ l, ghat i l = Gt i l * Real.exp (-z * edgeHi σ i l))
+    (hQhat : ∀ l, Qhat l j
+      = qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z l j)
+    (h33 : 2 * Real.pi * ∑ l, Gt i l * (Real.exp (z * edgeLo σ l j)
+        * ((if l = j then (1:ℝ) else 0)
+          - ρ l * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+              (AVec z ρ σ Gt Dt) z l j))
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2) :
+    2 * Real.pi * ghat i j
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+          * Real.exp (-z * edgeHi σ i j)
+        + 2 * Real.pi * ∑ l, ρ l
+            * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+                * ∫ t, (r - t) * g i l (r - t) * Q l j t) := by
+  have hconv : (∑ l, ρ l * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+        * ∫ t, (r - t) * g i l (r - t) * Q l j t))
+      = ∑ l, ρ l * (ghat i l * Qhat l j) := by
+    rw [mat_laplace_conv_full z ρ σ g Q i j hσ hgsupp hQsupp hcond hF1 hF2]
+    exact Finset.sum_congr rfl (fun l _ => by rw [hgmoment l, hQtransform l])
+  rw [hconv]
+  have hedge : ∀ l : Fin N, Real.exp (z * edgeHi σ i j) * Real.exp (-z * edgeHi σ i l)
+      = Real.exp (z * edgeLo σ l j) := by
+    intro l; rw [← Real.exp_add]; congr 1; unfold edgeHi edgeLo; ring
+  have keysum : (∑ l, Gt i l * (Real.exp (z * edgeLo σ l j)
+        * ((if l = j then (1:ℝ) else 0)
+          - ρ l * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+              (AVec z ρ σ Gt Dt) z l j)))
+      = Real.exp (z * edgeHi σ i j)
+        * ∑ l, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j) := by
+    rw [Finset.mul_sum]
+    refine Finset.sum_congr rfl (fun l _ => ?_)
+    rw [hghat l, hQhat l, ← hedge l]; ring
+  have hexpand : (∑ l, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j))
+      = ghat i j - ∑ l, ρ l * (ghat i l * Qhat l j) := by
+    rw [Finset.sum_congr rfl (fun l _ => by ring :
+          ∀ l ∈ Finset.univ, ghat i l * ((if l = j then (1:ℝ) else 0) - ρ l * Qhat l j)
+            = ghat i l * (if l = j then (1:ℝ) else 0) - ρ l * (ghat i l * Qhat l j)),
+        Finset.sum_sub_distrib]
+    congr 1
+    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  rw [keysum, hexpand] at h33
+  have hc : Real.exp (z * edgeHi σ i j) * Real.exp (-z * edgeHi σ i j) = 1 := by
+    rw [← Real.exp_add, show z * edgeHi σ i j + -z * edgeHi σ i j = 0 from by ring, Real.exp_zero]
+  linear_combination Real.exp (-z * edgeHi σ i j) * h33
+    + (-(2 * Real.pi * (ghat i j - ∑ l, ρ l * (ghat i l * Qhat l j)))) * hc
+
+/-- **`hgside_mix ⟺ (33′)`** (under the RDF-side data) — the g-side OZ Eq (32) Laplace-transformed is
+**exactly** the (33′) conjunct of `MSAMixture.MixBHRootUneq`.  Forward `gside_33_of_hgside_full`, reverse
+`mat_hgside_of_gside` — the matrix analog of the scalar `FMSA.ExactMSA.GSide.hgside_iff_h33`.  Together
+with `mat_hbax_iff_cside`, both OZ primitives consumed by `MixBHRootUneq_of_oz_full` are equivalent to the
+algebraic root conditions; their full unconditional discharge is the `matExactMSAUnequalDiam_hcore` ring. -/
+theorem mat_hgside_iff_gside {N : ℕ} (z : ℝ) (ρ σ : Fin N → ℝ)
+    (Gt Dt : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
+    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (hσ : ∀ k, 0 ≤ σ k)
+    (hgsupp : ∀ l u, u < edgeHi σ i l → g i l u = 0)
+    (hQsupp : ∀ l t, t < edgeLo σ l j → Q l j t = 0)
+    (hcond : ∀ l, -edgeHi σ i l < edgeLo σ l j)
+    (hF1 : ∀ l, Integrable (fun u => Real.exp (-z * u) * (u * g i l u)))
+    (hF2 : ∀ l, Integrable (fun t => Real.exp (-z * t) * Q l j t))
+    (hgmoment : ∀ l, FMSA.ExactMSA.GSide.rdfLaplaceMoment (g i l) z = ghat i l)
+    (hQtransform : ∀ l, (∫ t, Real.exp (-z * t) * Q l j t) = Qhat l j)
+    (hghat : ∀ l, ghat i l = Gt i l * Real.exp (-z * edgeHi σ i l))
+    (hQhat : ∀ l, Qhat l j
+      = qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z l j) :
+    (2 * Real.pi * ghat i j
+      = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2
+          * Real.exp (-z * edgeHi σ i j)
+        + 2 * Real.pi * ∑ l, ρ l
+            * (∫ r in Set.Ioi (0:ℝ), Real.exp (-z * r)
+                * ∫ t, (r - t) * g i l (r - t) * Q l j t))
+      ↔ 2 * Real.pi * ∑ l, Gt i l * (Real.exp (z * edgeLo σ l j)
+            * ((if l = j then (1:ℝ) else 0)
+              - ρ l * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
+                  (AVec z ρ σ Gt Dt) z l j))
+          = (AVec z ρ σ Gt Dt j + z * qpMat z ρ σ Gt Dt i j + z ^ 2 * Ct z ρ σ Gt Dt i j / 2) / z ^ 2 :=
+  ⟨fun hgside_mix => gside_33_of_hgside_full z ρ σ Gt Dt g Q ghat Qhat i j hσ hgsupp hQsupp hcond
+      hF1 hF2 hgmoment hQtransform hghat hQhat hgside_mix,
+   fun h33 => mat_hgside_of_gside z ρ σ Gt Dt g Q ghat Qhat i j hσ hgsupp hQsupp hcond
+      hF1 hF2 hgmoment hQtransform hghat hQhat h33⟩
 
 /-! ### MPhase 5 — wire the derived (29′)/(33′) into `MixBHRootUneq` (retire the posited root) -/
 

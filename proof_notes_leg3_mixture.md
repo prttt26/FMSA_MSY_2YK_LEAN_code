@@ -319,3 +319,27 @@ exact g-side (33′) form needs the concrete mixture g-side OZ Eq (32) (the matr
 domain). So the c-side FINDING is not an isolated slip — the σ-edge care is a **systematic** feature of
 the unequal-σ root, strengthening the case that the posited `MixBHRootUneq` needs the recentered
 transforms on both (29′) and (33′).
+
+## MPhase 7 — the OZ primitives ARE the root conditions (hbax/hgside_mix discharged, 2026‑09‑01)
+
+`MixBHRootUneq_of_oz_full` consumes `hbax` (exterior Baxter Eq 8 matched to `matMSAtail`) and
+`hgside_mix` (g-side OZ Eq 32 Laplace-transformed) as OZ-primitive hypotheses. MP7 shows these are **not
+free assumptions**: with the concrete `baxterQ`/`matMSAtail` plugged in they are **equivalent** to the
+algebraic root conditions (29′)/(33′) — the matrix analogs of the scalar `hbax_iff_h29` /
+`hgside_iff_h33`. All axiom-clean std-3, `MixtureBlumHoyeDerivation.lean`:
+
+- `mat_hbax_of_cside` — reverse `(♦) ⟹ hbax`: fold the Baxter conv by `mat_exterior_baxter_relation_Dt`,
+  compute `2πr·matMSAtail = 2πK_ij e^{z·edgeHi_ij} e^{−zr}` (the `r` cancels in `cMSAtail`), match via
+  `(♦)` scaled by `z·e^{z·edgeHi_ij}` and the edge identity `edgeHi_ij + edgeLo_jl = edgeHi_il`. Clear the
+  `/z` in (♦) first so `linear_combination`'s `ring` needn't cancel `z·z⁻¹`.
+- `mat_hbax_iff_cside` — the iff (forward `c_side_constraint_of_exterior`).
+- `mat_hgside_of_gside` — reverse `(33′) ⟹ hgside_mix`: fold the conv onto the transforms
+  (`mat_laplace_conv_full` + `hgmoment`/`hQtransform`), then run `keysum`/`hexpand` backward, peeling
+  `e^{z·edgeHi_ij}` via `E·E⁻¹ = 1`.
+- `mat_hgside_iff_gside` — the iff (forward `gside_33_of_hgside_full`).
+
+**Interpretation.** leg-3 now shows `MixBHRootUneq ⟺ (hbax ∧ hgside_mix ∧ RDF-side data)`. The OZ
+primitives are exactly the root conditions; their **full unconditional discharge** — proving the concrete
+`baxterQ` really solves OZ from first principles — is precisely the ring-infeasible
+`matExactMSAUnequalDiam_hcore` content (the analytic k-space ring). So this equivalence is the honest end
+of the leg-3 derivation line, mirroring the scalar (whose `hbax`/`hgside` bottomed out at `exactMSA_hcore`).

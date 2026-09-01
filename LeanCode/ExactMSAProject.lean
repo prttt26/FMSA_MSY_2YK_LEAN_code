@@ -265,3 +265,22 @@ combination, exactly like the c-side.  Axiom-clean; no `matExactMSAUnequalDiam_h
 /-- info: 'FMSA.ExactMSA.MixLeg3.MixBHRootUneq_of_oz_full' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.MixBHRootUneq_of_oz_full
+
+/-! ### MPhase 7 — the OZ primitives ARE the root conditions (`hbax`/`hgside_mix` discharged)
+
+`MixBHRootUneq_of_oz_full` consumes `hbax` (exterior Baxter Eq 8 matched to `matMSAtail`) and `hgside_mix`
+(g-side OZ Eq 32 Laplace-transformed) as OZ-primitive hypotheses.  These are not free assumptions: with
+the concrete `baxterQ`/`matMSAtail` plugged in they are **equivalent to the algebraic root conditions**
+(29′)/(33′) — `mat_hbax_iff_cside` (forward `c_side_constraint_of_exterior` via `mat_exterior_baxter_relation`;
+reverse `mat_hbax_of_cside`) and `mat_hgside_iff_gside` (forward `gside_33_of_hgside_full`; reverse
+`mat_hgside_of_gside`), the matrix analogs of the scalar `hbax_iff_h29` / `hgside_iff_h33`.  Their full
+*unconditional* discharge — that the concrete `baxterQ` really solves OZ — is exactly the ring-infeasible
+`matExactMSAUnequalDiam_hcore` content, so this equivalence is the honest end of the leg-3 line. -/
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.mat_hbax_iff_cside' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.mat_hbax_iff_cside
+
+/-- info: 'FMSA.ExactMSA.MixLeg3.mat_hgside_iff_gside' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.MixLeg3.mat_hgside_iff_gside
