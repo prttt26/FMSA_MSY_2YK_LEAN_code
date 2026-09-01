@@ -38,14 +38,20 @@ Mathlib gives it no global norm):
   assembles in `exists_contDiffAt_matBhRoot_physical`**: the mixture MSA amplitudes are a `C^∞`
   family near `K = 0`, from a `MixBHRoot` seed plus the two physical hard-sphere OZ blocks
   `resG (0,Gt₀)`, `resH (0,Gt₀)` being nonsingular — the exact matrix analogue of the `N = 1`
-  `F₀ ≠ 0`.  Item 5's fderiv transcription is proved internally; nothing is left as a hypothesis
-  except the two physical determinant conditions.
+  `F₀ ≠ 0`.  Item 5's fderiv transcription is proved internally, so
+  `exists_contDiffAt_matBhRoot_physical` leaves only those two physical determinant conditions.
 
-The block invertibility of the diagonal HS-OZ blocks is **conditional**
-(`Q0_mat_phys_isUnit_det_of_diag_dom`, the mixture analogue of `Q0_ne_zero_at_yukawa`); the
-unconditional `Q0_mat_phys_isUnit_det` was retired as **false**.  As at `N = 1`, this proves the
-statement for the *transcribed* Blum–Høye system — transcription faithfulness stays the acknowledged
-"two of three parts" grade.
+**Those two determinant conditions are now DISCHARGED (no longer hypotheses).**  Via Sylvester
+(`det(1−AB)=det(1−BA)` + transpose) the two HS-OZ blocks share the equal-σ Baxter core, so
+`det resG = det resH = det Q0_mat_phys`; and the physical `Q0_mat_phys_isUnit_det` (`FMSA.MatrixQ0`,
+M.4, general `N`, **proved std-3** — the rank-two Weinstein–Aronszajn positivity `Q0_moment_det_pos`)
+is now unconditional.  So **`exists_contDiffAt_matBhRoot_of_physical` is fully unconditional — no det
+hypothesis at all**, needing only the checkable physical inequalities `z>0`, `vacMix>0`, `ρ≥0`, `σ>0`
+and the HS seed (a diagonal-dominance variant `exists_contDiffAt_matBhRoot_of_diag_dom` is also kept).
+As at `N = 1`, this proves the statement for the *transcribed* Blum–Høye system — transcription
+faithfulness is the sole remaining "two of three parts" grade.  (Historical note: an earlier
+*matrix-wide* `Q0_mat_phys_isUnit_det` was false and only a diagonal-dominance form held; M.4 later
+closed the physical form unconditionally.)
 -/
 
 open scoped BigOperators
