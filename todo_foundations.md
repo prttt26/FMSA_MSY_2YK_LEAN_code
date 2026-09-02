@@ -86,7 +86,7 @@ the Axioms table above.*
 | OZ.1 | PY closed-form DCF for hard spheres | ✓ DONE | `HardSphere/PYDCF.lean` |
 | OZ.2 | g₀_HS via OZ fixed point | ◑ fixed-point framework (`oz_h`, `oz_fixed_pt_unique`) live and reused by the Fourier line. See [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) | `HardSphere/PYOZ_GHS.lean` |
 | OZ.2b | Gap A: exterior 3D-OZ equation for `oz_h` (`oz_h_satisfies_conv_ext`) | ✓ DONE, transform-independent — reused verbatim by OZ.7. See [proof_notes_hard_sphere.md](proof_notes_hard_sphere.md) | `HardSphere/OZExteriorBridge.lean` |
-| OZ.3 | g₀_HS via OZ Laplace inversion | ◑ conditional on OZ.2 + `oz_h_exterior_regularity` axiom (see CONTACT.5) | `HardSphere/PYOZ.lean`, `HardSphere/JumpAsymptotic.lean` |
+| OZ.3 | g₀_HS via OZ Laplace inversion | ◑ conditional on OZ.2; ⚠ `oz_h_exterior_regularity` is **no longer an axiom** — RETIRED to a THEOREM 2026-07-17 (OZFIX.22, `JumpAsymptotic.lean`) | `HardSphere/PYOZ.lean`, `HardSphere/JumpAsymptotic.lean` |
 | OZ.4 | Linearised OZ: Ĥ¹=Ĉ¹·S₀ | ✓ DONE | `HardSphere/PYOZ.lean` |
 | OZ.6 | Radial sine/Fourier transform convolution theorem | ✓ DONE, no axiom | `HardSphere/RadialFourier.lean` |
 | OZ.7 | Fourier-domain exterior OZ equation (Gap A ∪ Gap B) | ✓ DONE, conditional only on OZ.9 (`hcore`) | `HardSphere/OZFourierBridge.lean` |
