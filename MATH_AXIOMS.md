@@ -17,7 +17,7 @@ polynomial identity* — the Blum–Høye MSA closure-recovery ring, sympy-verif
 principle, but `ring`/`linear_combination` cannot normalize it in practice — **measured 2026-08-22**,
 a clean 323-monomial degree-≈22 slice costs `ring` **3 h 12 m / 23 GB**, and the per-order reassembly
 extrapolates to weeks / ~200 GB (`native_decide` blocked: `MvPolynomial` semiring noncomputable). Its
-Fourier/definitional layer *is* discharged: `YukawaOZ/ExactMSA6Certificate.lean` (an
+Fourier/definitional layer *is* discharged: `YukawaOZ/ExactMSACertificate.lean` (an
 out-of-`defaultTargets` lib) derives the exact `exactMSA_hcore` statement from a single pure-cos/sin
 /exp axiom `exactMSA_kspace_residual`, so the only residual is the polynomial identity itself.
 Detail: `proof_notes_msa_exact.md` Group MSAEXACT.6. This does **not** change the physics-axiom count.

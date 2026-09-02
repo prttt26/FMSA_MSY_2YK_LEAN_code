@@ -83,13 +83,14 @@ grep -rn "^axiom [a-zA-Z_]" LeanCode/ --include=*.lean | sed 's|LeanCode/\([A-Za
 
 ⚠ **That grep spans math, physics *and* symbolic-computation axioms — it is the count for ALL axiom
 tables on this page, not one alone.**
-As of 2026-08-22 it returns **14 raw hits = 3 false + 11 real**:
+As of 2026-09-01 it returns **17 raw hits = 3 false + 14 real**:
 3 false positives (prose lines that happen to begin `axiom `, in `PYOZ_GHS.lean`,
-`HalfDiskArgumentPrinciple.lean`, and `YukawaOZMix/MixturePoleExhaustion.lean`) and 11 real axioms —
-**7 math + 1 physics + 3 sympy-computation**. So the bucket counts are
-**`Analysis` 7 (math) + `HardSphere` 0 + `HSMixture` 1 (physics) + `YukawaOZ` 2 + `YukawaOZMix` 1** —
-the 1 HSMixture being `pyhs_mixture_no_spinodal` (physics), and the `YukawaOZ` 2 + `YukawaOZMix` 1
-being the sympy-certified `exactMSA_hcore` / `exactMSA_kspace_residual` / `matExactMSA6_hcore`
+`HalfDiskArgumentPrinciple.lean`, and `YukawaOZMix/MixturePoleExhaustion.lean`) and 14 real axioms —
+**7 math + 1 physics + 6 sympy-computation**. So the bucket counts are
+**`Analysis` 7 (math) + `HardSphere` 0 + `HSMixture` 1 (physics) + `YukawaOZ` 2 + `YukawaOZMix` 4** —
+the 1 HSMixture being `pyhs_mixture_no_spinodal` (physics), and the `YukawaOZ` 2 + `YukawaOZMix` 4
+being the sympy-certified `exactMSA_hcore` / `exactMSA_kspace_residual` / `matExactMSAEqualDiam_hcore` /
+`matExactMSAEqualDiam_kspace_residual` / `matExactMSAUnequalDiam_hcore` / `matHSexactUnequalDiam_kspace`
 identities (the *Symbolic-computation axioms* table below).  The 7th math axiom (Analysis) is
 `matRadialShell_bounded_injective` (`Analysis/MatrixRadialWienerHopf.lean`, MML.8 value route,
 committed + **abstracted to `Analysis/` in raw-integral form 2026-07-30**: the matrix analog of the
@@ -142,6 +143,7 @@ argument-principle gap that MA.14 rests on stands).
 | MA.13 | `wiener_causal_resolvent` | `Analysis/WienerRenewal.lean` | **Wiener's `1/f` theorem** for the causal `L¹` convolution algebra `ℂ·δ ⊕ L¹(0,∞)` (maximal ideal space = closed RHP, Gelfand transform = Laplace transform): symbol `1−q̂` nonvanishing there ⇒ causal resolvent `R ∈ L¹`, `R = q + q ⋆ R`. **Reshaped 2026-07-21** from the former bespoke `volterra_renewal_tendsto_zero`, which is **now a THEOREM** proved from this: resolvent formula (Fubini) + `MA.10` uniqueness + moving-window `L¹` tail (decay) + Young (integrability). Irreducible: `‖q‖₁ > 1` in the physical regime so the Neumann series diverges; Mathlib has no Wiener algebra / Laplace transform / Paley–Wiener / Hardy spaces (re-verified 2026-07-21). See [MATH_AXIOMS.md](MATH_AXIOMS.md) MA.13 and `proof_notes_pole.md` POLE.11 decay half. |
 | MA.14 | `zeroFree_lowerHalfPlane_of_homotopy` | `Analysis/ZeroCountHomotopy.lean` | **Homotopy invariance of the open-lower-half-plane zero count** (argument principle / Hurwitz): a jointly-continuous family of entire functions `H t`, with all closed-LHP zeros inside `‖z‖<R` and never vanishing on the real axis, keeps its open-LHP zero-freeness from `t=a` to `t=b`. Fully general (no Baxter/Yukawa), abstracted here 2026-07-21. Mathlib has **neither Rouché nor the parametric argument principle**. **Retired the former domain axiom `baxter_no_open_lhp_pole_core`**, which is now a THEOREM (`BaxterHermiteBiehler.lean`) proved by the `η`-homotopy `Qhat_complex_ne_one_of_im_neg` (`BaxterLowerHalfPlane.lean`). See [MATH_AXIOMS.md](MATH_AXIOMS.md) and `proof_notes_pole.md` POLE.11-general. |
 | MA.15 | `radialShell_bounded_injective` | `Analysis/RadialWienerHopf.lean` | **L∞ Wiener–Hopf injectivity** for a radial shell operator with an *arbitrary* kernel `C` supported in `[0,σ]` and coercive symbol `1−ρĈ ≥ ε>0`. **Abstracted + migrated to `Analysis/` 2026-07-19** — the concrete `oz_linear_op_bounded_injective` is now a THEOREM instantiating it at `C := c_HS` (support from `c_HS_outer`; `radial_fourier`/`oz_linear_op` unfold definitionally). The L∞ analog of the *proved* (L²) MA.12: Plancherel coercivity does not survive to L∞, so the space — not the physics — is why this one is assumed. ⚠ `hCsupp` is load-bearing (symbol integrates `(0,∞)`, the operator only `[0,σ]`; false without it). Consumer: `OZ.10`. See [MATH_AXIOMS.md](MATH_AXIOMS.md) MA.15. |
+| MA.15 (matrix) | `matRadialShell_bounded_injective` | `Analysis/MatrixRadialWienerHopf.lean` | The **matrix** analog of MA.15: L∞ Wiener–Hopf injectivity for a radial shell operator with an *arbitrary* `N×N` matrix kernel `C` and coercive symbol. **Committed + abstracted to `Analysis/` in raw-integral form 2026-07-30** (MML.8 value route); `MixtureRDFUniqueness.lean` re-exposes it as a theorem via definitional bridges → `matOzStar_unique`. Same L∞-Plancherel gap as the scalar. See [MATH_AXIOMS.md](MATH_AXIOMS.md). |
 
 **Physics axioms (1)** — one axiom for the *mixture* track, **NOW CONSUMED (2026-08-20)** by the
 general-`N` unequal-σ RDF uniqueness capstone `matOzStar_unequalDiam_unique_uncond` (via the
@@ -179,9 +181,12 @@ axioms — the honest `ring`-scale boundary, not a heartbeat budget.*
 
 | Axiom (task) | Claim | File | sympy certificate |
 |------|-------|------|-------------------|
-| `exactMSA_hcore` (MSAEXACT.6) | scalar Blum–Høye closure-recovery ring `ρ(𝓕[c_core]+𝓕[c_tail]) = 2Dt·X − Dt²·Y` on the BH manifold | `YukawaOZ/MSAFullFactorization.lean` | `exactMSA_cert.py`: `Δ = m29·r29 + m33·r33`, polynomial-division remainder 0. Its Fourier layer IS discharged (out-of-build `ExactMSA6Certificate.lean` reduces it to `exactMSA_kspace_residual`) |
-| `exactMSA_kspace_residual` (MSAEXACT.6) | the same identity with both radial transforms in **closed cos/sin/exp form** (no `radial_fourier`) — the pure-algebra residual | `YukawaOZ/ExactMSA6Certificate.lean` (**out of `defaultTargets`**) | same `exactMSA_cert.py`; `exactMSA_hcore_of_residual` derives the original axiom's exact statement from this (`#print axioms` = std-3 + this) |
-| `matExactMSA6_hcore` (MSAEMIX.4) | matrix analog of MSAEXACT.6 at general `N` (equal σ) — closes MSAEMIX.1 at equal diameter | `YukawaOZMix/MSAMixtureBHRoot.lean` | `msaemix_hcore_cert.py` + `msaemix_core_coeffs.py`: mixture core = scalar 5-basis with Σ_l-coupled coeffs (all 5 cracked, held-out 1e-16) |
+| `exactMSA_hcore` (MSAEXACT.6) | scalar Blum–Høye closure-recovery ring `ρ(𝓕[c_core]+𝓕[c_tail]) = 2Dt·X − Dt²·Y` on the BH manifold | `YukawaOZ/MSAFullFactorization.lean` | `exactMSA_cert.py`: `Δ = m29·r29 + m33·r33`, polynomial-division remainder 0. Its Fourier layer IS discharged (out-of-build `ExactMSACertificate.lean` reduces it to `exactMSA_kspace_residual`) |
+| `exactMSA_kspace_residual` (MSAEXACT.6) | the same identity with both radial transforms in **closed cos/sin/exp form** (no `radial_fourier`) — the pure-algebra residual | `YukawaOZ/ExactMSACertificate.lean` (**out of `defaultTargets`**, lib `ExactMSACertificate`) | same `exactMSA_cert.py`; `exactMSA_hcore_of_residual` derives the original axiom's exact statement from this (`#print axioms` = std-3 + this) |
+| `matExactMSAEqualDiam_hcore` (MSAEMIX.4/.1) | matrix analog of MSAEXACT.6 at general `N`, **equal σ** — closes MSAEMIX.1 at equal diameter | `YukawaOZMix/MSAMixtureBHRoot.lean` | `msaemix_hcore_cert.py` + `msaemix_core_coeffs.py`: mixture core = scalar 5-basis with Σ_l-coupled coeffs (all 5 cracked, held-out 1e-16) |
+| `matExactMSAEqualDiam_kspace_residual` (MSAEMIX) | Fourier layer of the equal-σ mixture ring in closed cos/sin/exp form — the pure-algebra residual (matrix analog of `exactMSA_kspace_residual`) | `YukawaOZMix/MatExactMSAEqualDiamCertificate.lean` (**out of `defaultTargets`**, lib `MatExactMSAEqualDiamCertificate`) | same mixture cert; reduces `matExactMSAEqualDiam_hcore` to this residual |
+| `matExactMSAUnequalDiam_hcore` (MSAEMIX.4) | matrix analog at general `N`, **unequal σ** — closes MSAEMIX.1 at unequal diameter (piecewise `matCoreUneq` at `\|λ_ij\|`) | `YukawaOZMix/MSAMixtureBHRootUneq.lean` | `msaemix_uneq_*` + `baxterConvCore_eq_matCoreUneq` (BRK.13 seam); real-space Baxter-convolution core, symbolic-σ, case-split-free |
+| `matHSexactUnequalDiam_kspace` (MSAEMIX.1) | unequal-σ HS Baxter–Fourier anchor `cHShatUneq = √(ρᵢρⱼ)·𝓕[matCoreHSuneq]` — the coupling-`0` sibling of `matExactMSAUnequalDiam_hcore`, puts the HS DCF in `radial_fourier(Φ_HS)` form | `YukawaOZMix/MSAMixtureBHRootUneq.lean` | sympy-backed (the physical real-space HS DCF is the transform of the Baxter-`Q̂` combo) |
 
 ### Conditional-theorem hypotheses — ✅ all resolved (ledger)
 
@@ -211,7 +216,7 @@ equal-diameter capstone is `matOzStar_equalDiam_unique` (rank-1 coercivity).
 
 | Task | Title | Depends on | Notes |
 |------|-------|-----------|-------|
-| `MSAEXACT.1–6` *(msa_exact)* | Exact MSA closed form, single component | MSAX.1 gate 0 ✓ | ◑ **.1(→ reduced to .6)+.2+.3(core)+.4+.5 done; .6 = `hcore` ring `ring`-INFEASIBLE (measured 2026-08-22; Fourier layer discharged via out-of-build `ExactMSA6Certificate`, residual = 1 pure-algebra axiom `exactMSA_kspace_residual`)**; ⛔ compact `exactMSA_iff_core` route dead. See the Task-Status table → [msa_exact](proof_notes_msa_exact.md) |
+| `MSAEXACT.1–6` *(msa_exact)* | Exact MSA closed form, single component | MSAX.1 gate 0 ✓ | ◑ **.1(→ reduced to .6)+.2+.3(core)+.4+.5 done; .6 = `hcore` ring `ring`-INFEASIBLE (measured 2026-08-22; Fourier layer discharged via out-of-build `ExactMSACertificate`, residual = 1 pure-algebra axiom `exactMSA_kspace_residual`)**; ⛔ compact `exactMSA_iff_core` route dead. See the Task-Status table → [msa_exact](proof_notes_msa_exact.md) |
 | `MSAEMIX.0–3` *(msa_exact)* | Same at general `N` (matrix) | UNGATED 2026-08-19 | ◑ **.0+.1(dp)+.3 done; .1 staged to matrix `hcore`** (`matMixtureFactorization_of_core`, analog of MSAEXACT.6); .2 factorization half ← .1. → [msa_exact](proof_notes_msa_exact.md) |
 | `PYE.4` *(closures)* | Abstract equivalence `DP-map[g_HS·(−βu)] = OZ+PY first order` — the **function-space lift** | PYE.1–3, PYE.5–7 ✓ | ◑ **substantially reduced 2026-08-03**: the lift is now built except for ONE named classical input. Proved: half-line uniform + **L¹** tail-fit density (`exists_yukawa_tail_fit_halfLine`/`_L1`), the transform stage `‖Û₁(k)‖ ≤ ‖Ψ‖_{L¹}` uniformly in k (`norm_transform_le_L1`), and the reduction `tailFitWHConvergent_of_L1_tendsto` + capstone `exists_tailFit_whConvergent` — so `TailFitWHConvergent` is **derived**, not assumed. … → [closures](proof_notes_closures.md) PYE.4 |
 | `FOEQ.1–9` *(closures)* | The two "first order"s agree, at every order (D1 truncation vs D2 `d/ds c_MSA(sK)`) | PYE.2/.5 ✓ | ◑ **.1–.4, .6–.9 done; .5 ✅ at N=1,γ=1** (`msa_amplitude_differentiableAt_yukawa`, via MSAFAM.1–2); general N ← MSAFAM.7. See the Task-Status table → [closures](proof_notes_closures.md) |

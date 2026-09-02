@@ -31,8 +31,8 @@ declaration changes. All results guarded here are **axiom-clean** (the standard 
 
 ⚠ **Out of scope by design.** The MSAEXACT.6 / MSAEMIX.1 `hcore` closure-recovery *rings* were
 measured `ring`-infeasible; their Fourier layer is discharged from ONE pure-k-space sympy residual
-axiom each — `exactMSA_kspace_residual` and `matExactMSAEqualDiam_kspace_residual` — carried by the
-**out-of-`defaultTargets`** certificate libs `ExactMSA6Certificate` /
+per ring — `exactMSA_kspace_residual` and `matExactMSAEqualDiam_kspace_residual` — carried by the
+**out-of-`defaultTargets`** certificate libs `ExactMSACertificate` /
 `MatExactMSAEqualDiamCertificate` (`lake build <lib>` on demand).  Those are deliberately **not**
 imported or gated here, so the default
 build's footprint stays honest — exactly as `FMSAProject.lean` leaves `matOzStar_unique` un-gated.
