@@ -1246,6 +1246,36 @@ theorem exists_tailFit_whConvergent {N : ℕ} {R a C : ℝ} (ha : 0 < a)
   rw [hcomm]
   exact hbound m
 
+/-- **PYE.4 capstone ⭐⭐ — the abstract equivalence `DP-map[g_HS·(−βu)] = (OZ+PY)₁`, assembled into one
+conditional theorem.**  Given the single remaining analytic input `WHProjectionL1` (the `L¹`-bounded WH
+projection — the matrix Wiener-`1/f` boundary, deliberately a hypothesis rather than a duplicated MA-class
+axiom), an exponentially decaying exact outer closure `Ψ`, the first-order OZ/factorization data, and the
+identification `hB1of : B1of Ψ = Q̂₀ᵀ·Ĥ₁·Q̂₀` of the projection at the exact closure with the WH datum,
+there **is** a family of finite Yukawa-tail closures whose DP direct correlation functions converge
+entrywise to the exact first-order PY DCF `C1py`.  It chains `exists_tailFit_whConvergent` (the `L¹`
+approximants + their WH convergence) into `dp_tendsto_py_first_order` (the (★) assembly's continuity), so
+PYE.4 is now a **complete conditional theorem**: its only hypothesis beyond the physical set-up is
+`WHProjectionL1`, and it introduces no axiom (`#print axioms` = std-3). -/
+theorem dp_converges_to_py_first_order_of_whProjectionL1
+    {N : ℕ} {R a C : ℝ} (ha : 0 < a)
+    (Qp Qm T0 S0 H1 C1py : Matrix (Fin N) (Fin N) ℂ)
+    {B1of : (ℝ → ℝ) → Matrix (Fin N) (Fin N) ℂ}
+    (hP : WHProjectionL1 R C B1of)
+    (Psi : ℝ → ℝ) (hcont : ContinuousOn Psi (Set.Ici R))
+    (hdecay : Tendsto (fun r => Real.exp (a * (r - R)) * Psi r) atTop (𝓝 0))
+    (hoz : H1 * T0 = S0 * C1py) (hTS : T0 * S0 = 1)
+    (hfact : T0 = Qp * Qmᵀ) (hT0symm : T0ᵀ = T0)
+    (hB1of : B1of Psi = Qpᵀ * H1 * Qp) (i j : Fin N) :
+    ∃ fitfam : ℕ → ℝ → ℝ,
+      (∀ m, ∃ (n : ℕ) (A z : ℕ → ℝ), StrictMono z ∧ (∀ t, 0 < z t) ∧
+        fitfam m = fun r => ∑ t ∈ Finset.range n, A t * Real.exp (-(z t) * r)) ∧
+      Tendsto (fun m => (starConjLinear Qm (B1of (fitfam m))) i j) atTop (𝓝 (C1py i j)) := by
+  obtain ⟨fitfam, hform, hconv⟩ := exists_tailFit_whConvergent ha hP Psi hcont hdecay
+  refine ⟨fitfam, hform, ?_⟩
+  rw [hB1of] at hconv
+  exact dp_tendsto_py_first_order Qp Qm T0 S0 H1 C1py (Qpᵀ * H1 * Qp)
+    hoz hTS hfact hT0symm rfl hconv i j
+
 
 /-! ## PYE.6 at general `N` — the zeroth-order factor is the physical mixture PY Baxter
 

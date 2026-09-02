@@ -44,6 +44,16 @@ itself consumes — `dpDCFLinear`, `py_first_order_outer`, `msa_first_order_oute
 #guard_msgs in
 #print axioms FMSA.FirstOrderClosure.exists_yukawa_tail_fit
 
+/-! **PYE.4 capstone (conditional).**  `DP-map[g_HS·(−βu)] = (OZ+PY)₁` assembled into one theorem: the
+finite-tail DP DCFs converge entrywise to the exact first-order PY DCF, on the single analytic hypothesis
+`WHProjectionL1` (the matrix Wiener-`1/f` `L¹` bound — deliberately a hypothesis, not a duplicated MA-class
+axiom).  std-3: the assembly itself introduces no axiom. -/
+/-- info: 'FMSA.FirstOrderClosure.dp_converges_to_py_first_order_of_whProjectionL1' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.FirstOrderClosure.dp_converges_to_py_first_order_of_whProjectionL1
+
 /-! ## HNCB — first-order HNCB bridge -/
 
 /-- info: 'FMSA.FirstOrderClosure.hncb_first_order_outer' depends on axioms: [propext, Classical.choice, Quot.sound] -/
