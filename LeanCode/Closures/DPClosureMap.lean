@@ -1451,6 +1451,56 @@ theorem pullbackRung_zero
     pullbackRung embed refit Qm Amat zmat s Finv bridgeB minusBetaU 0 = refit minusBetaU := by
   rw [pullbackRung_affine]; simp
 
+/-! ### HNCB.3 — the unique fixed point `K̃* = (I−L)⁻¹a`
+
+The affine rung `K̃ ↦ a + L·K̃` has a **unique** fixed point exactly when `I − L` is invertible, and then
+`K̃* = (I−L)⁻¹a`.  Finite-dimensional, so `I − L` invertible ⇔ `det(I−L) ≠ 0` (equivalently `‖L‖<1`, a
+contraction away from a spinodal); the caller supplies the inverse as the `LinearEquiv` `e` acting as
+`I − L`.  With HNCB.1 (`−βu + B·h₁`), HNCB.2 (this rung is affine) and HNCB.3, the whole fixed-rate
+first-order HNCB is a closure expansion + a finite `(I−L)⁻¹` + the DP map + a linear OZ apply. -/
+
+/-- **Generic affine fixed point.**  If `e : V ≃ₗ V` acts as `I − L` (`e x = x − L x`), the affine map
+`x ↦ a + L·x` has the unique fixed point `x* = e.symm a = (I−L)⁻¹a`. -/
+theorem affine_fixed_point_unique (L : V →ₗ[ℂ] V) (a : V) (e : V ≃ₗ[ℂ] V)
+    (he : ∀ x, e x = x - L x) : ∃! x, a + L x = x := by
+  refine ⟨e.symm a, ?_, ?_⟩
+  · have h1 : e (e.symm a) = a := e.apply_symm_apply a
+    rw [he] at h1
+    exact (sub_eq_iff_eq_add.mp h1).symm
+  · intro x hx
+    have hex : e x = a := by rw [he]; exact (eq_sub_of_add_eq hx).symm
+    rw [← hex, e.symm_apply_apply]
+
+/-- **HNCB.3 ⭐ — the fixed-rate pull-back rung has a unique fixed point.**  When `I − L` is invertible
+(supplied as the `LinearEquiv` `e` acting as `I − L`), the rung `pullbackRung` has a unique fixed point;
+by `pullbackRung_fixed_point_eq` it is `K̃* = (I−L)⁻¹·refit(−βu)`. -/
+theorem pullbackRung_fixed_point
+    (embed : V →ₗ[ℂ] Matrix (Fin N) (Fin N) ℂ) (refit : Matrix (Fin N) (Fin N) ℂ →ₗ[ℂ] V)
+    (Qm Amat : Matrix (Fin N) (Fin N) ℂ) (zmat : Fin N → Fin N → ℂ) (s : ℂ)
+    (Finv : Matrix (Fin N) (Fin N) ℂ) (bridgeB : ℂ) (minusBetaU : Matrix (Fin N) (Fin N) ℂ)
+    (e : V ≃ₗ[ℂ] V)
+    (he : ∀ x, e x = x - pullbackLinearPart embed refit Qm Amat zmat s Finv bridgeB x) :
+    ∃! Kstar, pullbackRung embed refit Qm Amat zmat s Finv bridgeB minusBetaU Kstar = Kstar := by
+  have h := affine_fixed_point_unique
+    (pullbackLinearPart embed refit Qm Amat zmat s Finv bridgeB) (refit minusBetaU) e he
+  simp only [pullbackRung_affine]
+  exact h
+
+/-- **HNCB.3 — the fixed point in closed form** `K̃* = (I−L)⁻¹·refit(−βu)` (i.e. `e.symm(refit(−βu))`)
+solves the rung, exhibiting the `'solve'` mode. -/
+theorem pullbackRung_fixed_point_eq
+    (embed : V →ₗ[ℂ] Matrix (Fin N) (Fin N) ℂ) (refit : Matrix (Fin N) (Fin N) ℂ →ₗ[ℂ] V)
+    (Qm Amat : Matrix (Fin N) (Fin N) ℂ) (zmat : Fin N → Fin N → ℂ) (s : ℂ)
+    (Finv : Matrix (Fin N) (Fin N) ℂ) (bridgeB : ℂ) (minusBetaU : Matrix (Fin N) (Fin N) ℂ)
+    (e : V ≃ₗ[ℂ] V)
+    (he : ∀ x, e x = x - pullbackLinearPart embed refit Qm Amat zmat s Finv bridgeB x) :
+    pullbackRung embed refit Qm Amat zmat s Finv bridgeB minusBetaU (e.symm (refit minusBetaU))
+      = e.symm (refit minusBetaU) := by
+  rw [pullbackRung_affine]
+  have h1 : e (e.symm (refit minusBetaU)) = refit minusBetaU := e.apply_symm_apply _
+  rw [he] at h1
+  exact (sub_eq_iff_eq_add.mp h1).symm
+
 end HNCB2
 
 

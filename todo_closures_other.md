@@ -42,7 +42,7 @@ self-consistent HNCB-1 is the **RDF** ⇒ HS poles ⇒ not finite-closed-form (H
 |------|-------|--------|-----------|
 | HNCB.1 | HNCB closure to O(coupling): outer `c₁ = −βu + B·h₁`, `B=h_HS/g_HS=1−1/g_HS` | ✓ **DONE (2026-08-03, axiom-clean)**. `exp`-form half (PYE.1 by-products): `hncbClosure`, `hncb_outer_zeroth_order_eq_zero`, **`hncb_first_order_outer`**, `pass_zero_eq_py_first_order`. Audit additions: `hncb_base_point_gamma_eq` (the two hypotheses **force `γ₀ = g_HS−1 = h_HS`**) + non-vacuity `example`. … | `Closures/ClosureExpansions.lean` |
 | HNCB.2 | Fixed-rate pull-back map **affine** `K̃'=a+L·K̃` (reuses Y1 `Ĥ₁`) | ✅ **DONE 2026-09-01** — `pullbackRung`/`pullbackLinearPart`/`pullbackRung_affine` (std-3, gated §HNCB): rung = `refit(−βu) + L·K̃`, `L = B·refit ∘ starConj(F⁻¹) ∘ dpDCFLinear ∘ embed`; frozen rates make it affine | `Closures/DPClosureMap.lean` |
-| HNCB.3 | Fixed point `K̃*=(I−L)⁻¹a`; `(I−L)` invertible (finite matrix) | ☐ not started | new `…Closures.lean` |
+| HNCB.3 | Fixed point `K̃*=(I−L)⁻¹a`; `(I−L)` invertible (finite matrix) | ✅ **DONE 2026-09-01** — `affine_fixed_point_unique` + `pullbackRung_fixed_point` (`∃!`) + `pullbackRung_fixed_point_eq` (`K̃*=(I−L)⁻¹·refit(−βu)`), std-3, gated §HNCB; `I−L` invertibility = caller `LinearEquiv` hyp. HNCB.1–.3 complete | `Closures/DPClosureMap.lean` |
 | HNCB.4 | *(record only)* Exact HNCB-1 carries the RDF `h₁` ⇒ HS poles ⇒ not finite-closed-form (MZERO/MML.5 wall) | ☐ **boundary marker, NOT a to-do** — nothing to prove; the `☐` reads like unstarted work and is not | — |
 
 ### Group PYE PYE.1–PYE.3 CLOSED (2026-07-31) — no-pull-back construction ≡ first-order PY, **no new axiom**

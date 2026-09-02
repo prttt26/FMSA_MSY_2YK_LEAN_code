@@ -71,3 +71,11 @@ map.  std-3. -/
 /-- info: 'FMSA.FirstOrderClosure.pullbackRung_affine' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.FirstOrderClosure.pullbackRung_affine
+
+/-! **HNCB.3 — the fixed-rate pull-back rung has a unique fixed point** `K̃* = (I−L)⁻¹·refit(−βu)` when
+`I − L` is invertible (`affine_fixed_point_unique` + `pullbackRung_fixed_point_eq`).  With HNCB.1–.3 the
+whole fixed-rate first-order HNCB = closure expansion + finite `(I−L)⁻¹` + DP map + linear OZ apply.
+std-3. -/
+/-- info: 'FMSA.FirstOrderClosure.pullbackRung_fixed_point' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.FirstOrderClosure.pullbackRung_fixed_point

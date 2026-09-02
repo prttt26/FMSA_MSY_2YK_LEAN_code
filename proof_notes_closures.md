@@ -494,7 +494,7 @@ RDF and is out of finite-closed-form scope (HNCB.4, record-only).
 |------|-------|--------|
 | HNCB.1 | HNCB closure to O(coupling): outer `c₁ = −βu + B·h₁` | ✓ **DONE (2026-08-03, axiom-clean)** — pivot + `B<1` contraction proved |
 | HNCB.2 | Fixed-rate pull-back map is **affine**: `K̃' = a + L·K̃` | ✅ **DONE 2026-09-01** (`pullbackRung_affine`, std-3, gated) |
-| HNCB.3 | Fixed point `K̃* = (I−L)⁻¹a`; `(I−L)` invertible | ☐ not started |
+| HNCB.3 | Fixed point `K̃* = (I−L)⁻¹a`; `(I−L)` invertible | ✅ **DONE 2026-09-01** (`pullbackRung_fixed_point` + `_eq`, std-3, gated) |
 | HNCB.4 | *(record only)* Exact HNCB-1 carries the RDF `h₁` ⇒ HS poles ⇒ not a finite closed form | ☐ boundary *(by design — not a target)* |
 
 ---
@@ -662,7 +662,13 @@ map + a linear OZ apply.
 mode is exactly this.
 
 **Depends on.** HNCB.2.
-**Status.** ☐ not started.
+**Status.** ✅ **DONE 2026-09-01** (`Closures/DPClosureMap.lean`, std-3, gated §HNCB). Generic
+`affine_fixed_point_unique` (`e : V ≃ₗ V` acting as `I−L` ⇒ `x ↦ a+L·x` has the unique fixed point
+`e.symm a = (I−L)⁻¹a`) + `pullbackRung_fixed_point` (`∃!` fixed point of the rung) +
+`pullbackRung_fixed_point_eq` (the closed form `K̃* = (I−L)⁻¹·refit(−βu)` solves it — the `'solve'` mode).
+Invertibility of the finite `I−L` is the caller's hypothesis (the `LinearEquiv` `e`); det`(I−L)≠0` or
+`‖L‖<1`. ⇒ **HNCB.1–.3 complete the fixed-rate first-order HNCB** = closure expansion + finite `(I−L)⁻¹`
++ DP map + linear OZ apply.
 
 ---
 
