@@ -493,7 +493,7 @@ RDF and is out of finite-closed-form scope (HNCB.4, record-only).
 | Task | Title | Status |
 |------|-------|--------|
 | HNCB.1 | HNCB closure to O(coupling): outer `c₁ = −βu + B·h₁` | ✓ **DONE (2026-08-03, axiom-clean)** — pivot + `B<1` contraction proved |
-| HNCB.2 | Fixed-rate pull-back map is **affine**: `K̃' = a + L·K̃` | ☐ not started |
+| HNCB.2 | Fixed-rate pull-back map is **affine**: `K̃' = a + L·K̃` | ✅ **DONE 2026-09-01** (`pullbackRung_affine`, std-3, gated) |
 | HNCB.3 | Fixed point `K̃* = (I−L)⁻¹a`; `(I−L)` invertible | ☐ not started |
 | HNCB.4 | *(record only)* Exact HNCB-1 carries the RDF `h₁` ⇒ HS poles ⇒ not a finite closed form | ☐ boundary *(by design — not a target)* |
 
@@ -639,7 +639,14 @@ in `K̃`.
 column-by-column (`D = m_eff·#pairs`, small).
 
 **Depends on.** HNCB.1 (the `−βu + B·h₁` outer), PYE.2 (DP linearity), Y1 (`Ĥ₁` apply).
-**Status.** ☐ not started.
+**Status.** ✅ **DONE 2026-09-01** (`Closures/DPClosureMap.lean`, std-3, gated §HNCB). `pullbackRung`
+(the concrete rung `K̃ ↦ refit(−βu + B·F⁻¹·C̃₁·F⁻¹)`, `C̃₁ = dpDCF[embed K̃]`) + `pullbackLinearPart`
+(the bundled `ℂ`-linear `L = B·refit ∘ starConj(F⁻¹) ∘ dpDCFLinear ∘ embed`) + **`pullbackRung_affine`**:
+`pullbackRung K̃ = refit(−βu) + L·K̃`, from `map_add`/`map_smul` on the linear stages — the PYE.2 fixed-rate
+DP map `dpDCFLinear` and the OZ apply `starConjLinear` are already bundled `LinearMap`s; `embed`/`refit` are
+taken as the (linear) amplitude-embedding and fixed-rate least-squares refit.  The frozen rates are what
+make it affine (free rates ⇒ `dpDCFLinear` nonlinear).  `pullbackRung_zero` = the constant `refit(−βu)`.
+Sets up HNCB.3 (`K̃* = (I−L)⁻¹a`).
 
 ---
 

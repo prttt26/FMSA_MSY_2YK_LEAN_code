@@ -1396,4 +1396,62 @@ theorem dp_eq_py_first_order_N (hsig : ∀ i, 0 < sigma i) (hrho : ∀ i, 0 < rh
 end PYE6GeneralN
 
 
+/-! ## HNCB.2 — the fixed-rate predictor–corrector pull-back rung is affine
+
+With the tail **rates frozen**, one predictor–corrector rung maps the finite amplitude vector `K̃` to
+`K̃' = refit(−βu + B·h₁[K̃])`, where every sub-step is `ℂ`-linear: `C̃₁ = dpDCF[K̃]` (the PYE.2 fixed-rate
+DP map `dpDCFLinear`), `h₁ = F⁻¹·C̃₁·F⁻¹` (the OZ apply `starConjLinear F⁻¹`), the bridge scaling `B·`,
+the amplitude embedding `embed`, and the fixed-rate least-squares `refit`.  So the rung is **affine**:
+`K̃' = a + L·K̃` with `a = refit(−βu)` and `L` the bundled composite.  (With free rates the DP map is
+*not* linear — the rates enter the denominators `s + z` — so the frozen-rate discipline is exactly what
+makes this hold; cf. `dpTailsLinear`'s warning.)  This is the map whose unique fixed point
+`K̃* = (I−L)⁻¹a` closes HNCB.3. -/
+
+section HNCB2
+variable {N : ℕ} {V : Type*} [AddCommGroup V] [Module ℂ V]
+
+/-- The fixed-rate predictor–corrector pull-back rung `K̃ ↦ refit(−βu + B·(F⁻¹·C̃₁·F⁻¹))` with
+`C̃₁ = dpDCF[embed K̃]` (rates frozen inside `dpDCFLinear`). -/
+noncomputable def pullbackRung
+    (embed : V →ₗ[ℂ] Matrix (Fin N) (Fin N) ℂ) (refit : Matrix (Fin N) (Fin N) ℂ →ₗ[ℂ] V)
+    (Qm Amat : Matrix (Fin N) (Fin N) ℂ) (zmat : Fin N → Fin N → ℂ) (s : ℂ)
+    (Finv : Matrix (Fin N) (Fin N) ℂ) (bridgeB : ℂ) (minusBetaU : Matrix (Fin N) (Fin N) ℂ)
+    (Ktilde : V) : V :=
+  refit (minusBetaU + bridgeB •
+    starConjLinear Finv (dpDCFLinear Qm Amat zmat s (embed Ktilde)))
+
+/-- The linear part `L` of the pull-back rung, as a bundled `ℂ`-linear map
+`L = B · (refit ∘ starConj(F⁻¹) ∘ dpDCFLinear ∘ embed)`. -/
+noncomputable def pullbackLinearPart
+    (embed : V →ₗ[ℂ] Matrix (Fin N) (Fin N) ℂ) (refit : Matrix (Fin N) (Fin N) ℂ →ₗ[ℂ] V)
+    (Qm Amat : Matrix (Fin N) (Fin N) ℂ) (zmat : Fin N → Fin N → ℂ) (s : ℂ)
+    (Finv : Matrix (Fin N) (Fin N) ℂ) (bridgeB : ℂ) : V →ₗ[ℂ] V :=
+  bridgeB • (refit ∘ₗ (starConjLinear Finv) ∘ₗ dpDCFLinear Qm Amat zmat s ∘ₗ embed)
+
+/-- **HNCB.2 ⭐ — the fixed-rate pull-back rung is affine:** `K̃' = a + L·K̃`, with constant term
+`a = refit(−βu)` and linear part `L = pullbackLinearPart`.  Because every sub-step (`dpDCFLinear`,
+`starConjLinear`, the bridge scaling, `refit`, `embed`) is `ℂ`-linear, the rung splits as a constant
+plus a bundled linear map.  This is precisely the affineness the free-rate corrector lacks. -/
+theorem pullbackRung_affine
+    (embed : V →ₗ[ℂ] Matrix (Fin N) (Fin N) ℂ) (refit : Matrix (Fin N) (Fin N) ℂ →ₗ[ℂ] V)
+    (Qm Amat : Matrix (Fin N) (Fin N) ℂ) (zmat : Fin N → Fin N → ℂ) (s : ℂ)
+    (Finv : Matrix (Fin N) (Fin N) ℂ) (bridgeB : ℂ) (minusBetaU : Matrix (Fin N) (Fin N) ℂ)
+    (Ktilde : V) :
+    pullbackRung embed refit Qm Amat zmat s Finv bridgeB minusBetaU Ktilde
+      = refit minusBetaU
+        + pullbackLinearPart embed refit Qm Amat zmat s Finv bridgeB Ktilde := by
+  simp only [pullbackRung, pullbackLinearPart, map_add, map_smul, LinearMap.smul_apply,
+    LinearMap.comp_apply]
+
+/-- The affine rung's constant term is `refit(−βu)` — its value at `K̃ = 0`. -/
+theorem pullbackRung_zero
+    (embed : V →ₗ[ℂ] Matrix (Fin N) (Fin N) ℂ) (refit : Matrix (Fin N) (Fin N) ℂ →ₗ[ℂ] V)
+    (Qm Amat : Matrix (Fin N) (Fin N) ℂ) (zmat : Fin N → Fin N → ℂ) (s : ℂ)
+    (Finv : Matrix (Fin N) (Fin N) ℂ) (bridgeB : ℂ) (minusBetaU : Matrix (Fin N) (Fin N) ℂ) :
+    pullbackRung embed refit Qm Amat zmat s Finv bridgeB minusBetaU 0 = refit minusBetaU := by
+  rw [pullbackRung_affine]; simp
+
+end HNCB2
+
+
 end FMSA.FirstOrderClosure

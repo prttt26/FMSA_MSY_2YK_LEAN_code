@@ -63,3 +63,11 @@ axiom).  std-3: the assembly itself introduces no axiom. -/
 /-- info: 'FMSA.FirstOrderClosure.pass_zero_eq_py_first_order' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.FirstOrderClosure.pass_zero_eq_py_first_order
+
+/-! **HNCB.2 — the fixed-rate predictor–corrector pull-back rung is affine** `K̃' = a + L·K̃`
+(`a = refit(−βu)`, `L = pullbackLinearPart`): every sub-step (`dpDCFLinear`, `starConjLinear`, bridge
+scaling, `refit`, `embed`) is `ℂ`-linear, so the frozen-rate rung splits as constant + bundled linear
+map.  std-3. -/
+/-- info: 'FMSA.FirstOrderClosure.pullbackRung_affine' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.FirstOrderClosure.pullbackRung_affine
