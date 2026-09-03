@@ -150,7 +150,7 @@ solution (where K, A, d, z satisfy the MSA closure) but is NOT a purely algebrai
 it requires the FMSA structural equations relating the real-space and Laplace-space formulas.
 
 **Status:** sorry — requires Parseval/residue theory (beyond current Lean scope). -/
-theorem f4_real_space_equals_laplace_domain
+theorem contact_real_space_equals_laplace_domain
     (K A_val z d : ℝ) (hz : 0 < z)
     (hMSA : FMSA.Task4_1.b_general (fun _ _ => K) (fun _ _ => A_val) z 0 (0 : Fin 1) 0 =
             cHat_outer K z d / (4 * Real.pi) +

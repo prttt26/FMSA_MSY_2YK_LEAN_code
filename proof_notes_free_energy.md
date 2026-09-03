@@ -206,19 +206,19 @@ or conversely prove ε is large (approximation fails for large z or dense packin
 - **`lj_u_integrable`**: `((σ/r)¹²−(σ/r)⁶)·r²` is `IntervalIntegrable` on `[σ,R]` for `0 < σ ≤ R`.
   Proof: rewrite integrand to power-law form via `lj_integrand_eq`, then use `lj_integrable`.
 
-- **`f5_contact_error_formula`** (part a): pure linearity identity, any `g` and `u`:
+- **`contact_error_formula`** (part a): pure linearity identity, any `g` and `u`:
   ```
   (∫_σ^R g(r)·u(r)·r² dr) − gR·(∫_σ^R u(r)·r² dr) = ∫_σ^R (g(r)−gR)·u(r)·r² dr
   ```
   Proof: `integral_congr` (ring rewrite inside integral) + `integral_sub` + `integral_const_mul`;
   `linear_combination -hcongr - hsub + hconst`.
 
-- **`f5_lj_contact_error`**: specialises to LJ potential using `lj_integral` (Task F.2b):
+- **`lj_contact_error_bound`**: specialises to LJ potential using `lj_integral` (Task F.2b):
   ```
   (∫_σ^R g(r)·((σ/r)¹²−(σ/r)⁶)·r² dr) − gR·R³·(−s¹²/9+s⁶/3−2s³/9) = ∫_σ^R (g−gR)·...
   ```
 
-- **`f5_error_bound`** (part b): abstract Lipschitz bound for any `M`:
+- **`contact_error_bound`** (part b): abstract Lipschitz bound for any `M`:
   ```
   (∀ r ∈ [σ,R], |g(r)−gR| ≤ M) → |∫_σ^R (g−gR)·u·r²| ≤ M · ∫_σ^R |u·r²| dr
   ```
@@ -233,9 +233,9 @@ or conversely prove ε is large (approximation fails for large z or dense packin
   `0 ≤ eij(R)−eij(r)` and `eij(R)−eij(r) ≤ Σ Aₖ·(1−exp(−zₖ·(R−σ)))`.
   Proof: `Finset.sum_nonneg` + `Finset.sum_le_sum`; per-term: `exp_le_exp.mpr` + `nlinarith`.
 
-- **`f5_ga_matrix_mix_error_bound`**: concrete M = Σ Aₖ·(1−exp(−zₖ·(R−σ))) for `f5_error_bound`
+- **`ga_matrix_mix_contact_error_bound`**: concrete M = Σ Aₖ·(1−exp(−zₖ·(R−σ))) for `contact_error_bound`
   when g = eij. No OZ.2/g₀_HS needed.
-  Proof: applies `f5_error_bound` with `hbound` derived from `eij_contact_variation_bound`.
+  Proof: applies `contact_error_bound` with `hbound` derived from `eij_contact_variation_bound`.
 
 **Remaining open:** Full numeric bound for g = g₀_HS + g^(1) still requires the
 closed-form `g₀_HS(r)` at general r > σ. `g₀_HS` is now defined concretely as `1 + oz_h`

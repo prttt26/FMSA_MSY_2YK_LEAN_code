@@ -752,15 +752,15 @@ Laplace-space formula for multicomponent Yukawa MSA (or an independent derivatio
 `LeanCode/YukawaOZMix/YukawaPoleResidue.lean`:
 - `g_entry_eq_adj_div_det` — the matrix-algebra identity `[Q̂₀⁻¹]_{ij} = adj(Q̂₀)_{ij}/det Q̂₀`
   (`Matrix.inv_def`), i.e. the `= K_t·G_{ij}(z_t)` simplification.
-- `c5_residue_eq_K_mul_Ginv` — the residue assembly: given the Blum simple-pole shape near `z_t`
+- `yukawa_pole_residue_eq_K_mul_Ginv` — the residue assembly: given the Blum simple-pole shape near `z_t`
   (`N/D`, simple zero, `N(z_t)/D'(z_t) = K_t·[Q̂₀(z_t)⁻¹]_{ij}` as the explicit hypothesis `hblum`),
   the residue-defining limit `(s−z_t)·(N/D) → K_t·(adj/det)`.  Reuses
   `FMSA.HardSphere.residue_of_simple_pole` (`BaxterResidue.lean`).
 
 **❌ `hblum` is FALSIFIED — 2026-07-17 (Lean, axiom-clean).**  Not merely underivable: the single
-`K·G` **contradicts the proven exact residue**.  `SpectralAmplitude.c5_hblum_falsified` pairs the
+`K·G` **contradicts the proven exact residue**.  `SpectralAmplitude.residue_ne_K_mul_G` pairs the
 certified residue `K·G²` (`spectralAmp_residue_n1`) with `K·G² ≠ K·G` (equal only at `G∈{0,1}`, i.e.
-`Q̂₀(z_t)=I`, no interaction); `c5_hblum_falsified_matrix` gives the unlike-pair **sign flip**
+`Q̂₀(z_t)=I`, no interaction); `residue_ne_K_mul_G_matrix` gives the unlike-pair **sign flip**
 (`[G·K·Gᵀ]_{01}=+1` vs `K_{01}·G_{01}=−1`).  Shipped-`Q̂₀` 2YK magnitudes: exact/shorthand ratios
 `0.82`(00) / `0.061`(11) / **`−3.32`(01, sign flip)**.  The 2026-07-15 plan below aimed to *discharge*
 `hblum` from the [LN] Laplace-space form; that target is **void** — the exact residue is
@@ -771,7 +771,7 @@ to prove (there is, instead, an inequality to certify — done).
 - **DCF `ĉ^(1)`:** by (★) = MRS.3 (`star_of_oz1_baxter`, `MixtureRealSpace.lean`, certified
   `4.4×10⁻¹³`), `Ĉ₁ = Q̂₀(−k)·B₁·Q̂₀ᵀ(−k)` carries **forward** `Q̂₀`, **no inverse** — the
   `yukawaBaseAmp` docstring explicitly refutes the single-`K·[Q̂₀⁻¹]` DCF-base claim.
-So `hblum` has no physical instantiation for either correlation function; `c5_residue_eq_K_mul_Ginv`
+So `hblum` has no physical instantiation for either correlation function; `yukawa_pole_residue_eq_K_mul_Ginv`
 is retained only as a *true conditional* (the residue-limit algebra). The [LN] source pointers below
 are kept for reference (they are what actually delivered the doubly-propagated form):
 

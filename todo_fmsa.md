@@ -83,7 +83,7 @@ so IB.* can be renumbered without touching Lean source. Proof records:
 |------|-------|--------|-----------|
 | C.1 | N=1: corrected formula = FMSA_pure | ✓ DONE | `HardSphere/SingleCompReduction.lean` |
 | C.2 | N=1 like-pair inner formula bounded: `(1−G²₀₀)·exp(z(R−r))` ≤ C on (0,d) via exp-cancellation | ✓ DONE (`c1_n1_twoexp_bounded`) | `HardSphere/SingleCompReduction.lean` |
-| C.5 | Leading Yukawa-pole residue of the first-order MSA amplitude. **CORRECTED:** exact single-tail residue is `[Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij}` (doubly-propagated), **not** `K·G` (the… | ◑ core (`c5_residue_eq_K_mul_Ginv`) + single-tail exact residue (`spectralAmp_residue`, `spectralAmp_residue_n1`) DONE; multi-tail + Wiener–Hopf derivation of `b_{ij}(s)` → **Group Y1** | `YukawaOZMix/YukawaPoleResidue.lean`, `YukawaOZMix/SpectralAmplitude.lean` |
+| C.5 | Leading Yukawa-pole residue of the first-order MSA amplitude. **CORRECTED:** exact single-tail residue is `[Q̂₀⁻¹·K·Q̂₀⁻ᵀ]_{ij}` (doubly-propagated), **not** `K·G` (the… | ◑ core (`yukawa_pole_residue_eq_K_mul_Ginv`) + single-tail exact residue (`spectralAmp_residue`, `spectralAmp_residue_n1`) DONE; multi-tail + Wiener–Hopf derivation of `b_{ij}(s)` → **Group Y1** | `YukawaOZMix/YukawaPoleResidue.lean`, `YukawaOZMix/SpectralAmplitude.lean` |
 
 ### Group Y1 — First-Order Yukawa RDF/DCF (Wiener–Hopf derivation) *(yukawa_wh)*
 

@@ -49,7 +49,7 @@ see Y1.4) and Y1.7's "the N=2 mixture groups remain *below*" (they were split in
 
 - `FMSA.YukawaPoleResidue.g_entry_eq_adj_div_det` (`YukawaOZMix/YukawaPoleResidue.lean`) —
   `[Q̂₀⁻¹]_{ij} = adj(Q̂₀)_{ij}/det Q̂₀` (Mathlib `Matrix.inv_def`); the `G_{ij} = adj/det` core of Y1.1.
-- `FMSA.YukawaPoleResidue.c5_residue_eq_K_mul_Ginv` — residue assembly conditional on the Blum
+- `FMSA.YukawaPoleResidue.yukawa_pole_residue_eq_K_mul_Ginv` — residue assembly conditional on the Blum
   simple-pole shape (the C.5 conditional core; feeds Y1.6).
 - `FMSA.SpectralAmplitude.spectralAmp_residue` / `spectralAmp_residue_n1`
   (`YukawaOZMix/SpectralAmplitude.lean`) — the **single-tail** exact residue

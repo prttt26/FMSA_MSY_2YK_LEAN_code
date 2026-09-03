@@ -86,14 +86,14 @@ theorem spectralAmp_residue_n1 (Kmat Gmat : Matrix (Fin 1) (Fin 1) ℂ) (z : ℂ
   rwa [he] at h
 
 /-- **C.5 `hblum` FALSIFIED (2026-07-17).**  The Blum single-`K·G` shorthand — hypothesis `hblum`
-in `YukawaPoleResidue.c5_residue_eq_K_mul_Ginv` (`N(z_t)/D'(z_t) = K_t·[Q̂₀⁻¹]_{ij}`) — is not
+in `YukawaPoleResidue.yukawa_pole_residue_eq_K_mul_Ginv` (`N(z_t)/D'(z_t) = K_t·[Q̂₀⁻¹]_{ij}`) — is not
 merely underivable, it is **false**: it contradicts the proven exact residue.  This witness pairs
 the certified residue limit (`spectralAmp_residue_n1`, value `K·G²`) with the fact that at an
 interacting point `K·G² ≠ K·G`.  The two agree only when `G ∈ {0,1}` (i.e. `Q̂₀(z_t) = I`, no
 interaction).  Physical magnitude (shipped `Q̂₀`, 2YK ρ*=0.139 T*=1): exact `[G·K·Gᵀ]_{ij}` vs the
 `K·G` shorthand differ by 0.82× (00), 0.061× (11), and **−3.32×** for the unlike pair (01) — the
 shorthand there even has the **wrong sign**. -/
-theorem c5_hblum_falsified :
+theorem residue_ne_K_mul_G :
     ∃ (Kmat Gmat : Matrix (Fin 1) (Fin 1) ℂ) (z : ℂ),
       -- `K·G²` is the PROVEN exact Yukawa-pole residue (spectralAmp_residue_n1) …
       Tendsto (fun s => (s - (-z)) * spectralAmp Kmat Gmat z s 0 0) (𝓝[≠] (-z))
@@ -111,7 +111,7 @@ entry the exact residue `[G·K·Gᵀ]_{01}` can have the **opposite sign** to th
 `K_{01}·G_{01}` — the single-propagation shorthand is qualitatively wrong, not just off by a
 constant.  Concrete `2×2` witness (`G` invertible, `det = −4`; `K` symmetric) echoing the
 shipped-`Q̂₀` (01)-pair sign flip: exact `[G·K·Gᵀ]_{01} = +1`, shorthand `K_{01}·G_{01} = −1`. -/
-theorem c5_hblum_falsified_matrix :
+theorem residue_ne_K_mul_G_matrix :
     ∃ (Kmat Gmat : Matrix (Fin 2) (Fin 2) ℂ),
       (Gmat * Kmat * Gmatᵀ : Matrix (Fin 2) (Fin 2) ℂ) 0 1 = 1 ∧ Kmat 0 1 * Gmat 0 1 = -1 := by
   refine ⟨Matrix.of ![![0, 1], ![1, -1]], Matrix.of ![![-2, -1], ![-2, 1]], ?_, ?_⟩ <;>

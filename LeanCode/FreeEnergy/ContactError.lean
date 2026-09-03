@@ -66,7 +66,7 @@ This is a pure linearity identity: the error equals the integral of the deviatio
 
 Note: explicit parentheses around each `∫` in the LHS are required to prevent the greedy
 `∫` notation from swallowing the subtraction (see module docstring). -/
-theorem f5_contact_error_formula (sigma R gR : ℝ) (g u : ℝ → ℝ)
+theorem contact_error_formula (sigma R gR : ℝ) (g u : ℝ → ℝ)
     (hgu : IntervalIntegrable (fun r => g r * u r * r ^ 2) volume sigma R)
     (hu : IntervalIntegrable (fun r => u r * r ^ 2) volume sigma R) :
     (∫ r in sigma..R, g r * u r * r ^ 2) - gR * (∫ r in sigma..R, u r * r ^ 2) =
@@ -104,13 +104,13 @@ lemma lj_u_integrable {sigma R : ℝ} (hsigma : 0 < sigma) (hsigmaR : sigma <= R
 
 /-- **Task F.5 — LJ contact-value error formula:**
 
-Specializing `f5_contact_error_formula` to the LJ potential u(r) = (sigma/r)1^2 - (sigma/r)^6
+Specializing `contact_error_formula` to the LJ potential u(r) = (sigma/r)1^2 - (sigma/r)^6
 and substituting the closed form ∫_sigma^R u·r^2 dr from Task F.2b (`lj_integral`):
 
     (∫_sigma^R g(r)·((sigma/r)1^2-(sigma/r)^6)·r^2 dr)
       - gR · R^3·(-(sigma/R)1^2/9 + (sigma/R)^6/3 - 2(sigma/R)^3/9)
       = ∫_sigma^R (g(r) - gR)·((sigma/r)1^2-(sigma/r)^6)·r^2 dr -/
-theorem f5_lj_contact_error {sigma R gR : ℝ} (hsigma : 0 < sigma) (hR : 0 < R)
+theorem lj_contact_error_bound {sigma R gR : ℝ} (hsigma : 0 < sigma) (hR : 0 < R)
     (hsigmaR : sigma <= R)
     (g : ℝ → ℝ)
     (hg : IntervalIntegrable (fun r => g r * ((sigma / r) ^ 12 - (sigma / r) ^ 6) * r ^ 2)
@@ -133,7 +133,7 @@ theorem f5_lj_contact_error {sigma R gR : ℝ} (hsigma : 0 < sigma) (hR : 0 < R)
     rw [heq]
     exact lj_integral hsigma hR hsigmaR
   rw [← hint]
-  exact f5_contact_error_formula sigma R gR g (fun r => (sigma / r) ^ 12 - (sigma / r) ^ 6) hg hu
+  exact contact_error_formula sigma R gR g (fun r => (sigma / r) ^ 12 - (sigma / r) ^ 6) hg hu
 
 /-! ### Part (b) — Abstract Lipschitz error bound -/
 
@@ -150,7 +150,7 @@ then pull the constant M out of the integral.
 **Note:** The explicit Lipschitz constant M for g = g0_HS + g^(1) requires the
 closed-form pair correlation function, which carries a sorry (inverse Laplace transform
 of `C_HS_laplace / (1 - rho·C_HS_laplace)`).  This theorem proves the bound for *any* M. -/
-theorem f5_error_bound {sigma R gR M : ℝ} (hsigmaR : sigma <= R)
+theorem contact_error_bound {sigma R gR M : ℝ} (hsigmaR : sigma <= R)
     (g u : ℝ → ℝ)
     (hbound : ∀ r ∈ Icc sigma R, |g r - gR| <= M)
     (hgu : IntervalIntegrable (fun r => (g r - gR) * u r * r ^ 2) volume sigma R)
@@ -208,7 +208,8 @@ For r ∈ [sigma, R] with A_k ≥ 0 and z_k ≥ 0:
 1. `eij(R) - eij(r) ≥ 0`  (eij increases toward contact when amplitudes are non-negative)
 2. `eij(R) - eij(r) ≤ Σ_k A_k · (1 - exp(-z_k · (R-sigma)))`  (max variation is at r = sigma)
 
-Part 2 gives a sorry-free explicit M for `f5_error_bound` applied to the FMSA_GA_matrix_mix DCF. -/
+Part 2 gives a sorry-free explicit M for `contact_error_bound` applied to the FMSA_GA_matrix_mix
+DCF. -/
 theorem eij_contact_variation_bound {n : ℕ} (A z : Fin n → ℝ) (sigma R r : ℝ)
     (hA : ∀ k, 0 <= A k) (hz : ∀ k, 0 <= z k)
     (hsigmar : sigma <= r) (hrR : r <= R) :
@@ -237,8 +238,8 @@ the contact-value approximation error satisfies:
 
 The Lipschitz constant M = Σ A_k · (1 - exp(-z_k · (R-sigma))) is the **total variation of eij
 on [sigma, R]**, computable from FMSA_GA_matrix_mix parameters (A_k, z_k, sigma, R) with no sorry.
-This improves `f5_error_bound` from abstract M to an explicit formula. -/
-theorem f5_ga_matrix_mix_error_bound {n : ℕ} (A z : Fin n → ℝ) (sigma R : ℝ)
+This improves `contact_error_bound` from abstract M to an explicit formula. -/
+theorem ga_matrix_mix_contact_error_bound {n : ℕ} (A z : Fin n → ℝ) (sigma R : ℝ)
     (hA : ∀ k, 0 <= A k) (hz : ∀ k, 0 <= z k) (hsigmaR : sigma <= R)
     (u : ℝ → ℝ)
     (hgu : IntervalIntegrable
@@ -247,7 +248,7 @@ theorem f5_ga_matrix_mix_error_bound {n : ℕ} (A z : Fin n → ℝ) (sigma R : 
     |∫ r in sigma..R, (eij A z R r - eij A z R R) * u r * r ^ 2| <=
     (∑ k : Fin n, A k * (1 - Real.exp (-(z k) * (R - sigma)))) *
     ∫ r in sigma..R, |u r * r ^ 2| := by
-  exact f5_error_bound hsigmaR (fun r => eij A z R r) u
+  exact contact_error_bound hsigmaR (fun r => eij A z R r) u
     (fun r hr => by
       have hvar := eij_contact_variation_bound A z sigma R r hA hz hr.1 hr.2
       rw [abs_of_nonpos (by linarith [hvar.1])]
