@@ -26,7 +26,8 @@ The mathematical content splits into two reusable pieces, both fully proved and 
 
 * `g_entry_eq_adj_div_det` — the matrix-algebra identity `[Q̂₀⁻¹]_{ij} = adj(Q̂₀)_{ij} / det Q̂₀`
   (`Matrix.inv_def`); this is the "`[adj Q̂₀]_{ij}/det Q̂₀ = G_{ij}`" simplification of the residue.
-* `yukawa_pole_residue_eq_K_mul_Ginv` — the residue assembly: given the Blum simple-pole shape of `ĉ^(1)`
+* `yukawa_pole_residue_eq_K_mul_Ginv` — the residue assembly: given the Blum simple-pole shape
+  of `ĉ^(1)`
   near `z_t` (`N/D` with a simple zero of `D` at `z_t`, and `N(z_t)/D'(z_t) = K_t·G_{ij}(z_t)`), the
   residue-defining limit `(s−z_t)·ĉ^(1) → K_t·G_{ij}(z_t)`.  Reuses the general simple-pole residue
   lemma `FMSA.Analysis.residue_of_simple_pole` (`ResidueAtSimplePole.lean`).
@@ -52,7 +53,8 @@ is already delivered — by `spectralAmp_residue` / MRS — which **supersede** 
 discharge it.  The theorems below are kept as a *true conditional* (the residue-limit algebra is
 real and reusable), but `hblum` has **no physical instantiation**; do not attempt to prove it.
 
-**`hblum` is FALSIFIED, not merely underivable (2026-07-17).**  `SpectralAmplitude.residue_ne_K_mul_G`
+**`hblum` is FALSIFIED, not merely underivable (2026-07-17).**
+`SpectralAmplitude.residue_ne_K_mul_G`
 (axiom-clean) pairs the *proven* exact residue `K·G²` (`spectralAmp_residue_n1`) with `K·G² ≠ K·G`,
 so the single-`K·G` shape **contradicts** the proven residue whenever `G ∉ {0,1}` (any interacting
 point).  `residue_ne_K_mul_G_matrix` exhibits the unlike-pair **sign flip** (`[G·K·Gᵀ]_{01} = +1` vs

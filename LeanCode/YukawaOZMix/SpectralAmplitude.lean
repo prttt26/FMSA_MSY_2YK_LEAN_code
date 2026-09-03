@@ -86,7 +86,8 @@ theorem spectralAmp_residue_n1 (Kmat Gmat : Matrix (Fin 1) (Fin 1) ℂ) (z : ℂ
   rwa [he] at h
 
 /-- **C.5 `hblum` FALSIFIED (2026-07-17).**  The Blum single-`K·G` shorthand — hypothesis `hblum`
-in `YukawaPoleResidue.yukawa_pole_residue_eq_K_mul_Ginv` (`N(z_t)/D'(z_t) = K_t·[Q̂₀⁻¹]_{ij}`) — is not
+in `YukawaPoleResidue.yukawa_pole_residue_eq_K_mul_Ginv`
+(`N(z_t)/D'(z_t) = K_t·[Q̂₀⁻¹]_{ij}`) — is not
 merely underivable, it is **false**: it contradicts the proven exact residue.  This witness pairs
 the certified residue limit (`spectralAmp_residue_n1`, value `K·G²`) with the fact that at an
 interacting point `K·G² ≠ K·G`.  The two agree only when `G ∈ {0,1}` (i.e. `Q̂₀(z_t) = I`, no
