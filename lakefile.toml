@@ -8,6 +8,7 @@ pp.unicode.fun = true # pretty-prints `fun a ↦ b`
 relaxedAutoImplicit = false
 weak.linter.mathlibStandardSet = true
 maxSynthPendingDepth = 3
+linter.style.longLine = false # disabled project-wide (many long lines are #guard_msgs `info:` output that must match compiler messages verbatim, and docstrings with wide math)
 
 [[require]]
 name = "mathlib"
