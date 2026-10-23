@@ -1,0 +1,29 @@
+{
+ "r_lo": 6.9,
+ "half_disc": true,
+ "rectangles": 260262,
+ "splits": 85752,
+ "min_width": 0.001953125,
+ "width_histogram": {
+  "2^-3": 628,
+  "2^-4": 7521,
+  "2^-5": 26820,
+  "2^-6": 27271,
+  "2^-7": 44454,
+  "2^-8": 70058,
+  "2^-9": 83510
+ },
+ "glued_edge_pairs": 520263,
+ "glued_by_point_fallback": 4045,
+ "h0": 0.125,
+ "hmin": 9.5367431640625e-07,
+ "seed_in_zero_rectangle": true,
+ "certified": true,
+ "seconds": 1066.9,
+ "w": "-2.636",
+ "eta": "0.3",
+ "z": [
+  "1.8",
+  "12"
+ ]
+}

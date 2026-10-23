@@ -1,0 +1,24 @@
+  cover r_lo=7.0: 20000 certified, 2622 pending, 50s
+  cover r_lo=7.0: 40000 certified, 1936 pending, 104s
+  cover r_lo=7.0: 60000 certified, 1499 pending, 160s
+  cover r_lo=7.0: 80000 certified, 1200 pending, 216s
+  cover r_lo=7.0: 100000 certified, 1024 pending, 270s
+  cover r_lo=7.0: 120000 certified, 851 pending, 328s
+  cover r_lo=7.0: 140000 certified, 699 pending, 387s
+  cover r_lo=7.0: 160000 certified, 595 pending, 442s
+  cover r_lo=7.0: 180000 certified, 521 pending, 499s
+  cover r_lo=7.0: 200000 certified, 453 pending, 552s
+  cover r_lo=7.0: 220000 certified, 376 pending, 608s
+  cover r_lo=7.0: 240000 certified, 326 pending, 669s
+  cover r_lo=7.0: 260000 certified, 249 pending, 723s
+  cover r_lo=7.0: 280000 certified, 200 pending, 781s
+  cover r_lo=7.0: 300000 certified, 177 pending, 838s
+  cover r_lo=7.0: 320000 certified, 144 pending, 896s
+  cover done: 330024 leaves, 109048 splits, 925s; gluing
+  gluing: 50000/330024 leaves, 100595 pairs (1417 by point), 64s
+  gluing: 100000/330024 leaves, 200943 pairs (2237 by point), 127s
+  gluing: 150000/330024 leaves, 301201 pairs (2894 by point), 190s
+  gluing: 200000/330024 leaves, 401446 pairs (3517 by point), 253s
+  gluing: 250000/330024 leaves, 501559 pairs (3915 by point), 316s
+  gluing: 300000/330024 leaves, 601259 pairs (4766 by point), 379s
+{"r_lo": 7.0, "half_disc": true, "rectangles": 330024, "splits": 109048, "min_width": 0.0009765625, "width_histogram": {"2^-3": 630, "2^-4": 7628, "2^-5": 27837, "2^-6": 28432, "2^-7": 46982, "2^-8": 76887, "2^-9": 114532, "2^-10": 27096}, "glued_edge_pairs": 659828, "glued_by_point_fallback": 5367, "h0": 0.125, "hmin": 9.5367431640625e-07, "seed_in_zero_rectangle": true, "certified": true, "seconds": 1341.0, "w": "-2.636", "eta": "0.3", "z": ["1.8", "12"]}

@@ -1,0 +1,3 @@
+  cover r_lo=4.4: 20000 certified, 144 pending, 52s
+  cover done: 23803 leaves, 7420 splits, 62s; gluing
+{"r_lo": 4.4, "half_disc": true, "rectangles": 23803, "splits": 7420, "min_width": 0.001953125, "width_histogram": {"2^-3": 621, "2^-4": 4281, "2^-5": 3754, "2^-6": 4388, "2^-7": 4429, "2^-8": 3978, "2^-9": 2352}, "glued_edge_pairs": 47457, "glued_by_point_fallback": 975, "h0": 0.125, "hmin": 9.5367431640625e-07, "seed_in_zero_rectangle": true, "certified": true, "seconds": 93.4, "w": "-2.5", "eta": "0.3", "z": ["1.8", "12"]}

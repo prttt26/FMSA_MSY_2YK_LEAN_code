@@ -537,10 +537,13 @@ was tested by ray continuation: `|u − u*|` shrinks like `d^{0.52–0.54}` as `
 
 * **Upper bound (monodromy).** A validated chain runs along a ray to the singularity, then around a
   small circle. Disjoint start and end enclosures give `R_c ≤ |c| + ρ`.
-* **Lower bound (disc cover).** Dyadic rectangles cover the closed upper half-disc. Each rectangle
-  carries a Krawczyk box: by Rump's theorem, `K ⊂ int X` alone gives a unique root and an
-  invertible Jacobian. Neighbouring boxes are glued at exact common points. The rectangles on the
-  real axis are symmetric, so the glued function extends to the whole disc by Schwarz reflection,
+* **Lower bound (disc cover).** A quadtree of dyadic rectangles covers the closed upper half-disc.
+  Each leaf carries a Krawczyk box: by Rump's theorem, `K ⊂ int X` alone gives a unique root and
+  an invertible Jacobian. Leaves sharing an edge segment are glued: the Krawczyk image on the
+  common segment lies in the other box, or a box certified at one exact common point lies in
+  both. Edge pairs suffice because every point of the closed disc is interior to the union, and
+  the leaves holding it go round it in a cycle of edge-sharing neighbours. The leaves on the real
+  axis are symmetric, so the glued function extends to the whole disc by Schwarz reflection,
   which gives `R_c ≥ r_lo`.
 * **Real fold.** An arclength chain on the curve `{P(u) = τb}` (re-anchored as the tangent turns)
   shows that τ attains an interior maximum on the continuation of the physical branch. That maximum
@@ -550,11 +553,22 @@ Results:
 
 | state | upper bound | real fold | lower bound |
 |---|---|---|---|
-| A, `w = −2.5` (fold binds) | loop around the real fold: `R_c ≤ 4.5239` | `τ_f ∈ [4.4761, …]` | disc cover `r_lo = 4.40` *(running)* |
-| B, `w = −2.636` (fold does not bind) | loop around `τ*_c = −2.7909 + 6.4597i`: `R_c ≤ 7.1068` | the physical real branch is regular on `[0, 7.6]` and turns at `τ_f ≥ 7.8336` | disc cover `r_lo = 6.90` *(running)* |
+| A, `w = −2.5` (fold binds) | loop around the real fold: `R_c ≤ 4.5239` | `τ_f ∈ [4.4761, 4.5070]` | disc cover: `R_c ≥ 4.47` (44 554 leaves) |
+| B, `w = −2.636` (fold does not bind) | loop around `τ*_c = −2.7909 + 6.4597i`: `R_c ≤ 7.1068` | the physical real branch is regular on `[0, 7.6]` and turns at `τ_f ∈ [7.8336, 7.8347]` | disc cover: `R_c ≥ 7.00` (330 024 leaves) |
 
-So in B, `R_c ≤ 7.107 < 7.8336 ≤ τ_f` is certified: **a real fold that does not bind**. Negative
-control: a loop of the same radius around the regular point 2.2 closes.
+So in B, `7.00 ≤ R_c ≤ 7.107 < 7.8336 ≤ τ_f` is certified: **a real fold that does not bind**,
+with the radius bracketed around the complex fold (`|τ*_c| = 7.0368` in floating point). In A,
+`R_c ∈ [4.47, 4.524]` and `τ_f ∈ [4.4761, 4.5070]`: the brackets overlap and there is no
+singularity in `|τ| ≤ 4.47`. Equality `R_c = τ_f` would need a local analysis at the fold, which
+was not done.
+
+Negative controls:
+
+* A loop of the same radius around the regular point 2.2 closes.
+* A disc cover past the real fold of A (`r_lo = 4.57`) fails at `τ = 4.4770 + 0.0004i`, at the
+  fold.
+* A disc cover past the complex fold of B (`r_lo = 7.10`) fails at `τ = −2.7890 + 6.4608i`,
+  0.002 from `τ*_c`.
 
 Floating-point numerics make the window `(w_e, w_c)` narrow (`Δw ≈ 0.005`), but it is not
 fragile: at B the gap `τ_f / R_c − 1` is 11 %.
@@ -566,8 +580,13 @@ fragile: at B the gap `τ_f / R_c − 1` is 11 %.
   alone (Rump).
 * Near a fold, a float Newton tolerance of `1e-14·|x|` is unreachable (`cond ≈ 1e4–1e5`). Boxes
   only need a centre, so the iterate is accepted once the step stalls.
-* Pure-Python intervals cost about 30 ms per Krawczyk call. The disc cover needs about 10⁶
-  rectangles, so it uses Arb through python-flint (0.7 ms per call).
+* Pure-Python intervals cost about 30 ms per Krawczyk call, so the disc cover uses Arb through
+  python-flint (0.7 ms per call).
+* The natural interval extension of `J` over a box is 7–15× wider than its true spread
+  (cancellations inside the residual). B then needed more than 6·10⁶ rectangles and did not
+  finish. `J` is quadratic in `u`, so the centred form `J(y) + ∂J(y)δ + ½∂²J δδ` is an exact
+  Taylor identity; its derivative tensors come from step-1 differences at points. With that form
+  and a quadtree from coarse cells (`h0 = 1/8`), B needs 2.6·10⁵ leaves.
 
 **MSAEXACT.4.** Should be nearly free: BAXTER.3 = MRS.8 at `N=1` is already in the library and PYE.6
 already wires it to the physical PY objects (`pyBaxterMat`, `pyT0Mat`, `dp_zeroth_order_is_py_n1`).

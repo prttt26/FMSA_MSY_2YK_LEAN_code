@@ -1,0 +1,11 @@
+{
+ "r_lo": 7.1,
+ "certified": false,
+ "failure": "cover: rectangle at -2.78903+6.46078j (w=6.10e-05) failed at min size",
+ "w": "-2.636",
+ "eta": "0.3",
+ "z": [
+  "1.8",
+  "12"
+ ]
+}
