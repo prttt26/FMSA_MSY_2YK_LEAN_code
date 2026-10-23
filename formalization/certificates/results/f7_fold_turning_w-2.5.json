@@ -1,0 +1,20 @@
+{
+ "w": "-2.5",
+ "tau_chain": {
+  "interval": [
+   0.0,
+   4.4
+  ],
+  "pieces": 1520
+ },
+ "arc": {
+  "pieces": 144,
+  "reanchors": 3,
+  "tau_hi": 4.47,
+  "tau_lo": 4.43,
+  "tau_max_lower_bound": 4.476126176538676,
+  "tau_max_upper_bound": 4.506989143082825,
+  "turning_point_certified": true
+ },
+ "seconds": 6.9
+}

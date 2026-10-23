@@ -1,0 +1,79 @@
+{
+ "description": "F7 certificate: a real fold need not bind the coupling series; the radius is set by the",
+ "z": [
+  "1.8",
+  "12"
+ ],
+ "eta": "0.3",
+ "states": {
+  "A_fold_binds": {
+   "w": "-2.5",
+   "tau_f_float": 4.4789,
+   "real_branch": {
+    "interval": [
+     0.0,
+     4.4
+    ],
+    "pieces": 3035,
+    "worst_contraction": 0.6932019516297356,
+    "certified": true
+   },
+   "loop": {
+    "center": [
+     4.4789,
+     0.0
+    ],
+    "radius": 0.045,
+    "ray_pieces": 3463,
+    "loop_pieces": 6032,
+    "worst_contraction": 0.6913919620643246,
+    "max_abs_tau": 4.523900000000046,
+    "monodromy_nontrivial": true
+   },
+   "cover": null,
+   "R_c_bracket": [
+    null,
+    4.523900000000046
+   ]
+  },
+  "B_fold_does_not_bind": {
+   "w": "-2.636",
+   "tau_f_float": 7.83369,
+   "complex_fold_float": [
+    -2.7909459619869414,
+    6.459683339536881,
+    7.036823730194012,
+    1.224948936633442e-08
+   ],
+   "real_branch": {
+    "interval": [
+     0.0,
+     7.6
+    ],
+    "pieces": 29558,
+    "worst_contraction": 0.6956376417299291,
+    "certified": true
+   },
+   "loop": {
+    "center": [
+     -2.7909459619869414,
+     6.459683339536881
+    ],
+    "radius": 0.07,
+    "ray_pieces": 3979,
+    "loop_pieces": 4644,
+    "worst_contraction": 0.6927100798594447,
+    "max_abs_tau": 7.106823730194082,
+    "monodromy_nontrivial": true
+   },
+   "cover": null,
+   "R_c_bracket": [
+    null,
+    7.106823730194082
+   ]
+  }
+ },
+ "negative_controls": {
+  "loop_around_regular_point_closes": true
+ }
+}

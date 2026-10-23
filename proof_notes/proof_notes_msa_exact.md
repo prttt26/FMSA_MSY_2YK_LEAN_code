@@ -495,6 +495,80 @@ was found where it precedes a fold.
   (`Analysis/MatrixWienerHopf` has the L² Plancherel side); and the canonical uniqueness step
   (cf. MA.15 `matRadialShell_bounded_injective`).
 
+### §8d The coupling-series radius is the nearest singularity of the principal branch (2026-10-23)
+
+**Structure.** The BH residual is a cubic polynomial in `u = (D̃, G̃)`, and τ enters only its
+constant term: `P(u) = τ b` with `b = (2πK^ν/z_ν, 0)`. The physical branch is therefore a branch
+of an algebraic function, analytic at 0 because `J₀ = DP(u₀)` is invertible.
+
+Continue it along rays from 0 (its Mittag-Leffler star). Then:
+
+* **(i)** `R_c` equals the distance from 0 to the nearest boundary point of that star (Taylor's
+  theorem for analytic functions; Cauchy–Hadamard).
+* **(ii)** Every such boundary point lies in one of two sets:
+  * `Σ`: critical values, i.e. points where `P(u) = τ b` with `det DP(u) = 0` (real or complex
+    folds);
+  * `Σ_∞`: asymptotic critical values, i.e. points where `|u| → ∞` at finite τ.
+
+  The reason is that the implicit-function theorem continues the branch along any path that
+  avoids both sets while `u` stays bounded.
+* So `R_c = τ_f` holds **iff** no point of `Σ ∪ Σ_∞` on the principal star is nearer than the
+  real fold. A real fold existing is not sufficient for this.
+
+**Numerics.** Tools: `scripts/coupling_singularities/` (`nearest.py`, `family_crossing.py`,
+`window_scan.py`); results in `results/coupling_singularities/`. Membership of the physical sheet
+was tested by ray continuation: `|u − u*|` shrinks like `d^{0.52–0.54}` as `τ → (1−d)τ*`.
+
+* **F5 states.** The nearest singularity is a complex fold: `−0.976 ± 1.830i` at η = 0.3, with
+  `|τ*| = 2.074`.
+* **Family z = (1.8, 12), K = (1, w), η = 0.3.** The complex fold `τ*_c(w)` was tracked by Newton
+  on the augmented system.
+  * `|τ*_c|` falls smoothly from 10.4 (`w = −2.02`) to 6.98 (`w = −2.65`).
+  * The prediction `R = min(τ_f, |τ*_c|)` matches the root-test radius of the 80-order series to
+    `1e-3` throughout the fold-binding range (e.g. `w = −2.5`: 4.4789 vs 4.4782).
+  * Crossing `|τ*_c| = τ_f` at `w_c ∈ (−2.6315, −2.6310)`.
+  * The real fold disappears at `w_e ∈ (−2.6365, −2.6360)`.
+  * For `w ∈ (w_e, w_c)` a real fold exists (`τ_f = 7.08 … 7.83`) but `R_c = |τ*_c| ≈ 7.04–7.05`.
+* No escape to infinity was seen; the disc-cover lower bound below does not need to classify
+  singularities.
+
+**Certificate F7** (`formalization/certificates/f7_fold_binding.py`, `f7_fold_turning.py`,
+`f7_cover_arb.py`; rigorous interval / Arb ball arithmetic):
+
+* **Upper bound (monodromy).** A validated chain runs along a ray to the singularity, then around a
+  small circle. Disjoint start and end enclosures give `R_c ≤ |c| + ρ`.
+* **Lower bound (disc cover).** Dyadic rectangles cover the closed upper half-disc. Each rectangle
+  carries a Krawczyk box: by Rump's theorem, `K ⊂ int X` alone gives a unique root and an
+  invertible Jacobian. Neighbouring boxes are glued at exact common points. The rectangles on the
+  real axis are symmetric, so the glued function extends to the whole disc by Schwarz reflection,
+  which gives `R_c ≥ r_lo`.
+* **Real fold.** An arclength chain on the curve `{P(u) = τb}` (re-anchored as the tangent turns)
+  shows that τ attains an interior maximum on the continuation of the physical branch. That maximum
+  is a fold, with τ_f inside the enclosure.
+
+Results:
+
+| state | upper bound | real fold | lower bound |
+|---|---|---|---|
+| A, `w = −2.5` (fold binds) | loop around the real fold: `R_c ≤ 4.5239` | `τ_f ∈ [4.4761, …]` | disc cover `r_lo = 4.40` *(running)* |
+| B, `w = −2.636` (fold does not bind) | loop around `τ*_c = −2.7909 + 6.4597i`: `R_c ≤ 7.1068` | the physical real branch is regular on `[0, 7.6]` and turns at `τ_f ≥ 7.8336` | disc cover `r_lo = 6.90` *(running)* |
+
+So in B, `R_c ≤ 7.107 < 7.8336 ≤ τ_f` is certified: **a real fold that does not bind**. Negative
+control: a loop of the same radius around the regular point 2.2 closes.
+
+Floating-point numerics make the window `(w_e, w_c)` narrow (`Δw ≈ 0.005`), but it is not
+fragile: at B the gap `τ_f / R_c − 1` is 11 %.
+
+**Implementation notes (traps hit).**
+
+* The unweighted ∞-norm contraction test of F5 fails here. The components differ by two orders of
+  magnitude, and the radius-weighted norm then broke the ε-inflation. Acceptance is now by inclusion
+  alone (Rump).
+* Near a fold, a float Newton tolerance of `1e-14·|x|` is unreachable (`cond ≈ 1e4–1e5`). Boxes
+  only need a centre, so the iterate is accepted once the step stalls.
+* Pure-Python intervals cost about 30 ms per Krawczyk call. The disc cover needs about 10⁶
+  rectangles, so it uses Arb through python-flint (0.7 ms per call).
+
 **MSAEXACT.4.** Should be nearly free: BAXTER.3 = MRS.8 at `N=1` is already in the library and PYE.6
 already wires it to the physical PY objects (`pyBaxterMat`, `pyT0Mat`, `dp_zeroth_order_is_py_n1`).
 Extend that wiring rather than re-deriving it.

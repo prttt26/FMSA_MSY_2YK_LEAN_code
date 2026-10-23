@@ -1,0 +1,256 @@
+== A_fold_binds: w=-2.5 singularity 4.478900+0.000000j (|.|=4.478900)
+  real [0,4.4]: s=0.2742, pieces=200, worst weighted contraction=0.693
+  real [0,4.4]: s=0.4613, pieces=400, worst weighted contraction=0.693
+  real [0,4.4]: s=0.5955, pieces=600, worst weighted contraction=0.693
+  real [0,4.4]: s=0.6945, pieces=800, worst weighted contraction=0.693
+  real [0,4.4]: s=0.7696, pieces=1000, worst weighted contraction=0.693
+  real [0,4.4]: s=0.8264, pieces=1200, worst weighted contraction=0.693
+  real [0,4.4]: s=0.8699, pieces=1400, worst weighted contraction=0.693
+  real [0,4.4]: s=0.9034, pieces=1600, worst weighted contraction=0.693
+  real [0,4.4]: s=0.9294, pieces=1800, worst weighted contraction=0.693
+  real [0,4.4]: s=0.9495, pieces=2000, worst weighted contraction=0.693
+  real [0,4.4]: s=0.9650, pieces=2200, worst weighted contraction=0.693
+  real [0,4.4]: s=0.9770, pieces=2400, worst weighted contraction=0.693
+  real [0,4.4]: s=0.9864, pieces=2600, worst weighted contraction=0.693
+  real [0,4.4]: s=0.9936, pieces=2800, worst weighted contraction=0.693
+  real [0,4.4]: s=0.9992, pieces=3000, worst weighted contraction=0.693
+  ray 0->4.4339+0.0000j: s=0.2722, pieces=200, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.4580, pieces=400, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.5908, pieces=600, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.6892, pieces=800, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.7633, pieces=1000, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.8197, pieces=1200, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.8630, pieces=1400, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.8964, pieces=1600, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.9221, pieces=1800, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.9420, pieces=2000, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.9575, pieces=2200, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.9694, pieces=2400, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.9787, pieces=2600, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.9859, pieces=2800, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.9915, pieces=3000, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.9958, pieces=3200, worst weighted contraction=0.691
+  ray 0->4.4339+0.0000j: s=0.9991, pieces=3400, worst weighted contraction=0.691
+  loop around 4.4789+0.0000j: s=0.0399, pieces=200, worst weighted contraction=0.353
+  loop around 4.4789+0.0000j: s=0.0766, pieces=400, worst weighted contraction=0.353
+  loop around 4.4789+0.0000j: s=0.1118, pieces=600, worst weighted contraction=0.354
+  loop around 4.4789+0.0000j: s=0.1455, pieces=800, worst weighted contraction=0.355
+  loop around 4.4789+0.0000j: s=0.1767, pieces=1000, worst weighted contraction=0.355
+  loop around 4.4789+0.0000j: s=0.2082, pieces=1200, worst weighted contraction=0.355
+  loop around 4.4789+0.0000j: s=0.2434, pieces=1400, worst weighted contraction=0.355
+  loop around 4.4789+0.0000j: s=0.2800, pieces=1600, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.3112, pieces=1800, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.3410, pieces=2000, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.3726, pieces=2200, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.4069, pieces=2400, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.4416, pieces=2600, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.4778, pieces=2800, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.5158, pieces=3000, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.5514, pieces=3200, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.5845, pieces=3400, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.6166, pieces=3600, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.6471, pieces=3800, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.6757, pieces=4000, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.7047, pieces=4200, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.7372, pieces=4400, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.7728, pieces=4600, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.8029, pieces=4800, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.8311, pieces=5000, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.8601, pieces=5200, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.8919, pieces=5400, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.9244, pieces=5600, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.9582, pieces=5800, worst weighted contraction=0.368
+  loop around 4.4789+0.0000j: s=0.9941, pieces=6000, worst weighted contraction=0.368
+   R_c in [None, 4.523900000000046]   real branch regular on [0,4.4]   tau_f(float)=4.4789
+== B_fold_does_not_bind: w=-2.636 singularity -2.790946+6.459683j (|.|=7.036824)
+  real [0,7.6]: s=0.1601, pieces=200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.2739, pieces=400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.3599, pieces=600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.4281, pieces=800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.4838, pieces=1000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.5294, pieces=1200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.5682, pieces=1400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.6015, pieces=1600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.6303, pieces=1800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.6554, pieces=2000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.6776, pieces=2200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.6973, pieces=2400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.7150, pieces=2600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.7310, pieces=2800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.7454, pieces=3000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.7586, pieces=3200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.7707, pieces=3400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.7817, pieces=3600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.7919, pieces=3800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8014, pieces=4000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8101, pieces=4200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8183, pieces=4400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8259, pieces=4600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8330, pieces=4800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8396, pieces=5000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8459, pieces=5200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8518, pieces=5400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8573, pieces=5600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8625, pieces=5800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8675, pieces=6000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8721, pieces=6200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8766, pieces=6400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8809, pieces=6600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8849, pieces=6800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8887, pieces=7000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8924, pieces=7200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8959, pieces=7400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.8992, pieces=7600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9024, pieces=7800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9054, pieces=8000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9084, pieces=8200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9112, pieces=8400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9138, pieces=8600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9163, pieces=8800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9186, pieces=9000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9208, pieces=9200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9229, pieces=9400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9250, pieces=9600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9270, pieces=9800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9290, pieces=10000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9308, pieces=10200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9327, pieces=10400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9344, pieces=10600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9361, pieces=10800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9378, pieces=11000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9394, pieces=11200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9410, pieces=11400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9425, pieces=11600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9439, pieces=11800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9453, pieces=12000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9467, pieces=12200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9481, pieces=12400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9494, pieces=12600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9507, pieces=12800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9519, pieces=13000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9531, pieces=13200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9543, pieces=13400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9554, pieces=13600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9566, pieces=13800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9576, pieces=14000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9587, pieces=14200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9597, pieces=14400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9608, pieces=14600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9617, pieces=14800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9627, pieces=15000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9636, pieces=15200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9646, pieces=15400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9655, pieces=15600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9663, pieces=15800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9672, pieces=16000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9680, pieces=16200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9689, pieces=16400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9697, pieces=16600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9704, pieces=16800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9712, pieces=17000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9720, pieces=17200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9727, pieces=17400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9734, pieces=17600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9741, pieces=17800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9748, pieces=18000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9755, pieces=18200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9762, pieces=18400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9769, pieces=18600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9775, pieces=18800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9781, pieces=19000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9788, pieces=19200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9794, pieces=19400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9799, pieces=19600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9805, pieces=19800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9811, pieces=20000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9817, pieces=20200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9822, pieces=20400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9828, pieces=20600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9833, pieces=20800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9838, pieces=21000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9843, pieces=21200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9848, pieces=21400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9853, pieces=21600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9858, pieces=21800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9863, pieces=22000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9868, pieces=22200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9873, pieces=22400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9877, pieces=22600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9882, pieces=22800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9886, pieces=23000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9890, pieces=23200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9895, pieces=23400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9899, pieces=23600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9903, pieces=23800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9907, pieces=24000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9911, pieces=24200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9915, pieces=24400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9919, pieces=24600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9923, pieces=24800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9927, pieces=25000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9930, pieces=25200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9934, pieces=25400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9938, pieces=25600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9941, pieces=25800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9945, pieces=26000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9948, pieces=26200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9952, pieces=26400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9955, pieces=26600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9958, pieces=26800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9962, pieces=27000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9965, pieces=27200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9968, pieces=27400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9971, pieces=27600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9974, pieces=27800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9977, pieces=28000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9981, pieces=28200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9984, pieces=28400, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9986, pieces=28600, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9989, pieces=28800, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9992, pieces=29000, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9995, pieces=29200, worst weighted contraction=0.696
+  real [0,7.6]: s=0.9998, pieces=29400, worst weighted contraction=0.696
+  ray 0->-2.7632+6.3954j: s=0.1708, pieces=200, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.3058, pieces=400, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.4183, pieces=600, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.5148, pieces=800, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.5971, pieces=1000, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.6677, pieces=1200, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.7286, pieces=1400, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.7809, pieces=1600, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.8259, pieces=1800, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.8637, pieces=2000, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.8950, pieces=2200, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.9207, pieces=2400, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.9413, pieces=2600, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.9573, pieces=2800, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.9696, pieces=3000, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.9791, pieces=3200, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.9866, pieces=3400, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.9924, pieces=3600, worst weighted contraction=0.693
+  ray 0->-2.7632+6.3954j: s=0.9969, pieces=3800, worst weighted contraction=0.693
+  loop around -2.7909+6.4597j: s=0.0469, pieces=200, worst weighted contraction=0.520
+  loop around -2.7909+6.4597j: s=0.0936, pieces=400, worst weighted contraction=0.533
+  loop around -2.7909+6.4597j: s=0.1376, pieces=600, worst weighted contraction=0.533
+  loop around -2.7909+6.4597j: s=0.1799, pieces=800, worst weighted contraction=0.533
+  loop around -2.7909+6.4597j: s=0.2218, pieces=1000, worst weighted contraction=0.533
+  loop around -2.7909+6.4597j: s=0.2631, pieces=1200, worst weighted contraction=0.533
+  loop around -2.7909+6.4597j: s=0.3047, pieces=1400, worst weighted contraction=0.533
+  loop around -2.7909+6.4597j: s=0.3475, pieces=1600, worst weighted contraction=0.533
+  loop around -2.7909+6.4597j: s=0.3935, pieces=1800, worst weighted contraction=0.533
+  loop around -2.7909+6.4597j: s=0.4426, pieces=2000, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.4901, pieces=2200, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.5333, pieces=2400, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.5768, pieces=2600, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.6179, pieces=2800, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.6564, pieces=3000, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.6952, pieces=3200, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.7339, pieces=3400, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.7725, pieces=3600, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.8119, pieces=3800, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.8526, pieces=4000, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.8962, pieces=4200, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.9445, pieces=4400, worst weighted contraction=0.539
+  loop around -2.7909+6.4597j: s=0.9905, pieces=4600, worst weighted contraction=0.539
+   R_c in [None, 7.106823730194082]   real branch regular on [0,7.6]   tau_f(float)=7.83369
+PASS
