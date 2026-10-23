@@ -1,0 +1,8 @@
+1 tail z=1.8 eta=0.2: fold tau_end=1.007038 scale=1.0070 components=3 last sign flip order: max=0 (n with flips: 0)  DombSykes R/scale=0.99997 exponent g=0.502
+2 attractive z=(1.8,4) K=(1,.5) eta=0.3: fold tau_end=1.051899 scale=1.0519 components=5 last sign flip order: max=0 (n with flips: 0)  DombSykes R/scale=0.99997 exponent g=0.502
+2 attractive z=(1.8,.8) K=(1,.3) eta=0.3: fold tau_end=0.704565 scale=0.7046 components=5 last sign flip order: max=0 (n with flips: 0)  DombSykes R/scale=0.99999 exponent g=0.501
+2YK eta=0.25: fold tau_end=1.243634 scale=1.2436 components=5 last sign flip order: max=2 (n with flips: 1)  DombSykes R/scale=0.99996 exponent g=0.503
+F5 z=(1.8,12) w=(1,-6) eta=0.3: no fold<=8 tau_end=8.000000 scale=2.0000 components=5 last sign flip order: max=40 (n with flips: 5)  DombSykes R/scale=0.10489 exponent g=32.269
+binary Berthelot eta=0.3: fold tau_end=1.562278 scale=1.5623 components=10 last sign flip order: max=0 (n with flips: 0)  DombSykes R/scale=0.99999 exponent g=0.501
+binary equal-sigma K12=0.2: fold tau_end=0.532700 scale=0.5327 components=10 last sign flip order: max=0 (n with flips: 0)  DombSykes R/scale=0.99981 exponent g=0.513
+binary K12=-0.3 (repulsive cross): fold tau_end=0.327815 scale=0.3278 components=10 last sign flip order: max=0 (n with flips: 0)  DombSykes R/scale=0.99981 exponent g=0.513
