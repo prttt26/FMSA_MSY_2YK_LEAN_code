@@ -43,9 +43,9 @@ energy, documented failures), and `proof_notes/MATH_AXIOMS.md`, the registry of
 general-purpose mathematical axioms and their retirement history (its live-axiom
 inventory is dated; the current per-theorem footprints are the `#guard_msgs`
 gates). The closure notes (PYE/HNCB/FOEQ/MSAFAM) live in
-the separate `Other_Closures` project. Task IDs and status indices referenced
-inside the notes (`todo_lean.md` and similar) belong to the authors' workspace
-and are not part of this repository.
+the separate `Other_Closures` project. Task status for every group, the
+re-derived axiom ledger and the open items are in `TODO.md` (it replaces the
+`todo_lean.md` and per-track task files that the notes still mention by name).
 
 ## 1.0.10: the weak identity at every coupling order (F1 complete in Lean)
 
