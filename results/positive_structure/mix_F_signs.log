@@ -1,0 +1,4 @@
+binary Berthelot: s=1e-09: F~ entries[----] det[-]  s=1: F~ entries[----] det[-]  s=1.8: F~ entries[----] det[-]  s=4: F~ entries[----] det[-]  s=12: F~ entries[----] det[-]
+equal-sigma K12=0.2: s=1e-09: F~ entries[-++-] det[-]  s=1: F~ entries[-++-] det[-]  s=1.8: F~ entries[-++-] det[-]  s=4: F~ entries[-++-] det[-]  s=12: F~ entries[-++-] det[-]
+equal-sigma K12=-0.3: s=1e-09: F~ entries[-++-] det[-]  s=1: F~ entries[-++-] det[-]  s=1.8: F~ entries[-++-] det[-]  s=4: F~ entries[-++-] det[-]  s=12: F~ entries[-++-] det[-]
+binary 2 attr tails: s=1e-09: F~ entries[----] det[-]  s=1: F~ entries[----] det[-]  s=1.8: F~ entries[----] det[-]  s=4: F~ entries[----] det[-]  s=12: F~ entries[----] det[-]

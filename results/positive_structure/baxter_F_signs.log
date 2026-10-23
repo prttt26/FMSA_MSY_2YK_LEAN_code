@@ -1,0 +1,6 @@
+1 tail z=1.8 eta=0.2 (scale 1.007): s=1e-09:all-  s=0.5:all-  s=1:all-  s=1.8:all-  s=3:all-  s=6:all-  s=12:all-  s=30:all-
+1 tail z=1.8 eta=0.4 (scale 2.000): s=1e-09:all-  s=0.5:all-  s=1:all-  s=1.8:all-  s=3:all-  s=6:all-  s=12:all-  s=30:all-
+2 attr z=(1.8,4) eta=0.3 (scale 1.052): s=1e-09:all-  s=0.5:all-  s=1:all-  s=1.8:all-  s=3:all-  s=6:all-  s=12:all-  s=30:all-
+2 attr z=(1.8,.8) eta=0.3 (scale 0.705): s=1e-09:all-  s=0.5:all-  s=1:all-  s=1.8:all-  s=3:all-  s=6:all-  s=12:all-  s=30:all-
+2YK eta=0.25 (scale 1.244): s=1e-09:all-  s=0.5:all-  s=1:all-  s=1.8:all-  s=3:all-  s=6:all-  s=12:all-  s=30:all-
+F5 eta=0.3 (scale 2.000): s=1e-09:mixed(++--+--+--)  s=0.5:mixed(++-++-++-+)  s=1:mixed(++-++-++-+)  s=1.8:mixed(++-++-++-+)  s=3:mixed(++-++-++-+)  s=6:mixed(++-++-++-+)  s=12:mixed(++-++-++-+)  s=30:mixed(++-++-++-+)

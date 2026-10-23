@@ -1,0 +1,11 @@
+w=+0.0: fold tau_f=1.30698  first order with F_n(s)>0 at s=0,1.8,6,12: [0, 0, 0, 0]   DombSykes R/scale=1.0000 exp=+0.501   root R/scale(n=48)=1.1081
+w=-0.5: fold tau_f=1.47661  first order with F_n(s)>0 at s=0,1.8,6,12: [0, 0, 0, 0]   DombSykes R/scale=1.0000 exp=+0.502   root R/scale(n=48)=1.1079
+w=-1.0: fold tau_f=1.71062  first order with F_n(s)>0 at s=0,1.8,6,12: [0, 0, 0, 0]   DombSykes R/scale=1.0000 exp=+0.502   root R/scale(n=48)=1.1076
+w=-1.5: fold tau_f=2.06264  first order with F_n(s)>0 at s=0,1.8,6,12: [0, 0, 0, 0]   DombSykes R/scale=1.0000 exp=+0.502   root R/scale(n=48)=1.1075
+w=-2.0: fold tau_f=2.68556  first order with F_n(s)>0 at s=0,1.8,6,12: [0, 0, 0, 0]   DombSykes R/scale=1.0000 exp=+0.499   root R/scale(n=48)=1.1078
+w=-2.5: fold tau_f=4.47890  first order with F_n(s)>0 at s=0,1.8,6,12: [0, 2, 1, 1]   DombSykes R/scale=1.0002 exp=+0.484   root R/scale(n=48)=1.1113
+w=-3.0: no fold<=8     first order with F_n(s)>0 at s=0,1.8,6,12: [2, 1, 1, 1]   DombSykes R/scale=1.0101 exp=+23.594   root R/scale(n=48)=3.1824
+w=-3.5: no fold<=8     first order with F_n(s)>0 at s=0,1.8,6,12: [2, 1, 1, 1]   DombSykes R/scale=-3.6454 exp=+110.137   root R/scale(n=48)=2.6354
+w=-4.0: no fold<=8     first order with F_n(s)>0 at s=0,1.8,6,12: [1, 1, 1, 1]   DombSykes R/scale=0.1165 exp=+34.669   root R/scale(n=48)=2.0183
+w=-5.0: no fold<=8     first order with F_n(s)>0 at s=0,1.8,6,12: [1, 1, 1, 1]   DombSykes R/scale=0.3493 exp=+19.766   root R/scale(n=48)=1.4441
+w=-6.0: no fold<=8     first order with F_n(s)>0 at s=0,1.8,6,12: [1, 1, 1, 1]   DombSykes R/scale=0.7340 exp=-30.673   root R/scale(n=48)=1.1506
