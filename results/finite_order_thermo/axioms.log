@@ -1,0 +1,28 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+'FMSA.ExactMSA.FiniteOrderThermo.amplitudeJet_continuous' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.squaredJetTrunc_continuous' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.amplitudeJet_sq_eq_trunc_add_remainder' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.real_square_cannot_be_negative' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.weighted_real_squares_nonneg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.firstOrder_spinodal_factor_value' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.firstOrder_spinodal_factor_positive' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.secondOrder_square_remainder' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.secondOrder_can_be_negative' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.firstOrderDerivative_eq_square_sub' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.firstOrderSpectral_eq_normSq_sub' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

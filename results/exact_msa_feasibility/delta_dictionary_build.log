@@ -1,0 +1,30 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+sparse circuit: 50 certified nodes; latest 7 monomials
+sparse circuit: 100 certified nodes; latest 105 monomials
+sparse circuit: 150 certified nodes; latest 1 monomials
+sparse circuit: 200 certified nodes; latest 1 monomials
+sparse circuit: 250 certified nodes; latest 7 monomials
+sparse circuit: 300 certified nodes; latest 16 monomials
+sparse circuit: 350 certified nodes; latest 2 monomials
+sparse circuit: 400 certified nodes; latest 81 monomials
+sparse circuit: 450 certified nodes; latest 14 monomials
+sparse circuit: 500 certified nodes; latest 518 monomials
+sparse circuit: 50 certified nodes; latest 7 monomials
+sparse circuit: 100 certified nodes; latest 84 monomials
+sparse circuit: 150 certified nodes; latest 1 monomials
+sparse circuit: 200 certified nodes; latest 1395 monomials
+sparse circuit: 250 certified nodes; latest 0 monomials
+sparse circuit: 300 certified nodes; latest 26 monomials
+sparse circuit: 350 certified nodes; latest 24 monomials
+sparse circuit: 400 certified nodes; latest 2 monomials
+sparse circuit: 450 certified nodes; latest 486 monomials
+sparse circuit: 500 certified nodes; latest 7 monomials
+sparse circuit: 550 certified nodes; latest 2 monomials
+LeanCode/YukawaOZ/ExactMSADeltaDictionary.lean:21:42: warning: This simp argument is unused:
+  zero_pow
+
+Hint: Omit it from the simp argument list.
+  simp only [̵m̵u̵l̵_̵z̵e̵r̵o̵,̵z̵e̵r̵o̵_̵m̵u̵l̵,̵z̵e̵r̵o̵_̵d̵i̵v̵,̵z̵e̵r̵o̵_̵p̵o̵w̵]̵[̲m̲u̲l̲_̲z̲e̲r̲o̲,̲ ̲z̲e̲r̲o̲_̲m̲u̲l̲,̲ ̲z̲e̲r̲o̲_̲d̲i̲v̲]̲
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+'FMSA.ExactMSA.RationalBridge.delta_dictionary' depends on axioms: [propext, Classical.choice, Quot.sound]

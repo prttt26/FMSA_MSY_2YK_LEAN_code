@@ -1,0 +1,12 @@
+{
+  "destination_name": "FMSA_paper",
+  "destination_thread_id": "01a118aa-0495-7e23-b80b-227ae08e5827",
+  "destination_cwd": "/home/rpan/YK_tail_FMSA",
+  "method": "thread/queue/add",
+  "accepted": true,
+  "result_keys": [
+    "queuedSubmission"
+  ],
+  "paper_rewrite_completion_confirmed": false,
+  "queued_submission_id": "01a123db-edb4-77c1-94f5-af11e89a53f9"
+}

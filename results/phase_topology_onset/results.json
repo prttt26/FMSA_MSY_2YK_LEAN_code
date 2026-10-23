@@ -1,0 +1,796 @@
+{
+  "construction": "Strict compressibility-route truncations on the same scalar PY reference",
+  "event": "a_N=0 and partial_rho a_N=0, with negative density curvature",
+  "limitations": "Selected cases, finite density window; no universal onset or physical phase identification",
+  "onsets": [
+    {
+      "model": "HSY_z1.8",
+      "z": [
+        1.8
+      ],
+      "K": [
+        1.0
+      ],
+      "order": 6,
+      "rho_onset": 0.2534231406422567,
+      "T_onset": 0.5187175065156989,
+      "T_over_own_Tc": 0.4808935747897963,
+      "density_curvature": -149.53136066575817,
+      "direct_equation_defect": 1.0842021724855043e-14,
+      "derivative_step_refinement_defect": 1.933493874265816e-13,
+      "interpolation_correction": 7.420014269676756e-09,
+      "before": {
+        "T": 0.5239046815808559,
+        "summary": {
+          "min_derivative": -4.252474268653134,
+          "minimum_density": 0.5765750000000001,
+          "spinodal_roots": [
+            0.06991157029530914,
+            0.7400338895815153
+          ],
+          "coexistence": {
+            "rho_g": 0.008729364818575355,
+            "rho_l": 0.8976701145903354,
+            "beta_p": 0.00810384699610306,
+            "pressure_defect": 2.2590089521212775e-13,
+            "chemical_potential_defect": 8.881784197001252e-16,
+            "minimum_sampled_tangent_gap": 6.091204937655123e-07,
+            "supporting_tangent": true
+          },
+          "coexistence_candidates": [
+            {
+              "rho_g": 0.008729364818575355,
+              "rho_l": 0.8976701145903354,
+              "beta_p": 0.00810384699610306,
+              "pressure_defect": 2.2590089521212775e-13,
+              "chemical_potential_defect": 8.881784197001252e-16,
+              "minimum_sampled_tangent_gap": 6.091204937655123e-07,
+              "supporting_tangent": true
+            }
+          ],
+          "supporting_tangent_count": 1,
+          "finite": true
+        }
+      },
+      "after": {
+        "T": 0.5135303314505419,
+        "summary": {
+          "min_derivative": -4.462574100530362,
+          "minimum_density": 0.582725,
+          "spinodal_roots": [
+            0.06815715880533382,
+            0.22033621549984825,
+            0.2893262686279197,
+            0.747072639615572
+          ],
+          "coexistence": {
+            "rho_g": 0.009113567047425861,
+            "rho_l": 0.9032401562055306,
+            "beta_p": 0.00841484802153634,
+            "pressure_defect": 3.441726070807505e-13,
+            "chemical_potential_defect": 4.440892098500626e-14,
+            "minimum_sampled_tangent_gap": 2.927689209474086e-06,
+            "supporting_tangent": true
+          },
+          "coexistence_candidates": [
+            {
+              "rho_g": 0.009113567047425861,
+              "rho_l": 0.9032401562055306,
+              "beta_p": 0.00841484802153634,
+              "pressure_defect": 3.441726070807505e-13,
+              "chemical_potential_defect": 4.440892098500626e-14,
+              "minimum_sampled_tangent_gap": 2.927689209474086e-06,
+              "supporting_tangent": true
+            }
+          ],
+          "supporting_tangent_count": 1,
+          "finite": true
+        }
+      },
+      "positive_island_a_after": 0.09242076091128801,
+      "triple_support_onset": {
+        "T": 0.45270675184204257,
+        "T_over_own_Tc": 0.4196962035986504,
+        "densities": [
+          0.03410924464613839,
+          0.18531484942657728,
+          0.9278706033524635
+        ],
+        "independent_integral_defect": 2.1649348980190553e-15,
+        "interpolation_correction": 9.580330972980278e-11,
+        "minimum_sampled_tangent_gap": 3.9929785184691317e-07,
+        "sampled_density_window": [
+          1e-07,
+          1.25
+        ],
+        "spectral_checks": [
+          {
+            "phase": "gas",
+            "rho": 0.03410924464613839,
+            "k0": 0.3663518706602597,
+            "minimum_D": 0.3663518706602597,
+            "k_min": 0.0,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 32.0000000032,
+            "scan_points": 1602,
+            "optimized_local_minima": 0,
+            "tail_constant": 9.734353385289653,
+            "tail_lower_bound_at_cutoff": 0.9904937955240793,
+            "coefficient_defect": 6.776263578034403e-21,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 1.1627339118524992e-23
+          },
+          {
+            "phase": "middle",
+            "rho": 0.18531484942657728,
+            "k0": 0.7368434907358751,
+            "minimum_D": 0.6890207775546391,
+            "k_min": 6.187042989736916,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 63.393673039782044,
+            "scan_points": 1915,
+            "optimized_local_minima": 1,
+            "tail_constant": 2009.3788903355182,
+            "tail_lower_bound_at_cutoff": 0.5000000001000001,
+            "coefficient_defect": 1.5530052155583578e-20,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 8.307634963758985e-22
+          },
+          {
+            "phase": "liquid",
+            "rho": 0.9278706033524635,
+            "k0": 20.49771305083574,
+            "minimum_D": 0.333078943057487,
+            "k_min": 6.9718910224688795,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 432.23736624993444,
+            "scan_points": 5604,
+            "optimized_local_minima": 1,
+            "tail_constant": 93414.57037265706,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 6.212020862233431e-20,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "model": "HSY_z1.8",
+      "z": [
+        1.8
+      ],
+      "K": [
+        1.0
+      ],
+      "order": 12,
+      "rho_onset": 0.2761588323685547,
+      "T_onset": 0.7743729745000301,
+      "T_over_own_Tc": 0.7295897443636193,
+      "density_curvature": -84.16827256532612,
+      "direct_equation_defect": 3.8850577847397234e-14,
+      "derivative_step_refinement_defect": 2.005774019098183e-13,
+      "interpolation_correction": 7.691732806236473e-09,
+      "before": {
+        "T": 0.7821167042450303,
+        "summary": {
+          "min_derivative": -0.8536456263866052,
+          "minimum_density": 0.46895000000000003,
+          "spinodal_roots": [
+            0.12805538550799123,
+            0.5718108666912106
+          ],
+          "coexistence": {
+            "rho_g": 0.06050542218843532,
+            "rho_l": 0.6762617727048281,
+            "beta_p": 0.04356193378767487,
+            "pressure_defect": 1.0408340855860843e-16,
+            "chemical_potential_defect": 4.440892098500626e-16,
+            "minimum_sampled_tangent_gap": 1.5371283232498353e-07,
+            "supporting_tangent": true
+          },
+          "coexistence_candidates": [
+            {
+              "rho_g": 0.06050542218843532,
+              "rho_l": 0.6762617727048281,
+              "beta_p": 0.04356193378767487,
+              "pressure_defect": 1.0408340855860843e-16,
+              "chemical_potential_defect": 4.440892098500626e-16,
+              "minimum_sampled_tangent_gap": 1.5371283232498353e-07,
+              "supporting_tangent": true
+            }
+          ],
+          "supporting_tangent_count": 1,
+          "finite": true
+        }
+      },
+      "after": {
+        "T": 0.7666292447550298,
+        "summary": {
+          "min_derivative": -0.9214205221990267,
+          "minimum_density": 0.47971250000000004,
+          "spinodal_roots": [
+            0.12393633065066495,
+            0.24036614138761642,
+            0.31490591798670003,
+            0.5816958068891909
+          ],
+          "coexistence": {
+            "rho_g": 0.06262938268135686,
+            "rho_l": 0.6825571853318169,
+            "beta_p": 0.04399351296883665,
+            "pressure_defect": 1.3877787807814457e-17,
+            "chemical_potential_defect": 0.0,
+            "minimum_sampled_tangent_gap": 2.721092510750379e-08,
+            "supporting_tangent": true
+          },
+          "coexistence_candidates": [
+            {
+              "rho_g": 0.06262938268135686,
+              "rho_l": 0.6825571853318169,
+              "beta_p": 0.04399351296883665,
+              "pressure_defect": 1.3877787807814457e-17,
+              "chemical_potential_defect": 0.0,
+              "minimum_sampled_tangent_gap": 2.721092510750379e-08,
+              "supporting_tangent": true
+            }
+          ],
+          "supporting_tangent_count": 1,
+          "finite": true
+        }
+      },
+      "positive_island_a_after": 0.06288468987470504,
+      "triple_support_onset": {
+        "T": 0.7347813921475568,
+        "T_over_own_Tc": 0.692287806668619,
+        "densities": [
+          0.08916343883157708,
+          0.23568208528703707,
+          0.6885618727242433
+        ],
+        "independent_integral_defect": 6.106226635438361e-16,
+        "interpolation_correction": 1.594870069343557e-10,
+        "minimum_sampled_tangent_gap": 5.570498108900402e-10,
+        "sampled_density_window": [
+          1e-07,
+          1.25
+        ],
+        "spectral_checks": [
+          {
+            "phase": "gas",
+            "rho": 0.08916343883157708,
+            "k0": 0.17165917323026952,
+            "minimum_D": 0.17165917323026952,
+            "k_min": 0.0,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 32.0000000032,
+            "scan_points": 1602,
+            "optimized_local_minima": 0,
+            "tail_constant": 59.89352684274343,
+            "tail_lower_bound_at_cutoff": 0.9415102277043313,
+            "coefficient_defect": 3.1060104311167156e-20,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 1.8837874857503032e-23
+          },
+          {
+            "phase": "middle",
+            "rho": 0.23568208528703707,
+            "k0": 0.23658764012922065,
+            "minimum_D": 0.23658764012922065,
+            "k_min": 0.0,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 60.73994421319708,
+            "scan_points": 1889,
+            "optimized_local_minima": 0,
+            "tail_constant": 1844.6704111422125,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 1.3552527156068805e-20,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 6.819201056819914e-22
+          },
+          {
+            "phase": "liquid",
+            "rho": 0.6885618727242433,
+            "k0": 3.068703911619693,
+            "minimum_D": 0.5494077308946402,
+            "k_min": 6.573246280971491,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 208.16836392823606,
+            "scan_points": 3363,
+            "optimized_local_minima": 1,
+            "tail_constant": 21667.03386594586,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 2.710505431213761e-20,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 2.0655852967930113e-22
+          }
+        ]
+      }
+    },
+    {
+      "model": "HSY_z5",
+      "z": [
+        5.0
+      ],
+      "K": [
+        1.0
+      ],
+      "order": 6,
+      "rho_onset": 0.3581173305839699,
+      "T_onset": 0.2352574770026406,
+      "T_over_own_Tc": 0.7164370759780271,
+      "density_curvature": -30.49727703486639,
+      "direct_equation_defect": 7.546047120499111e-17,
+      "derivative_step_refinement_defect": 8.673617379884034e-14,
+      "interpolation_correction": 1.976923680313547e-09,
+      "before": {
+        "T": 0.237610051772667,
+        "summary": {
+          "min_derivative": -1.2755770690355874,
+          "minimum_density": 0.6488375000000001,
+          "spinodal_roots": [
+            0.1746949236014314,
+            0.7539197344540596
+          ],
+          "coexistence": {
+            "rho_g": 0.07849235030789756,
+            "rho_l": 0.8568333651372565,
+            "beta_p": 0.05445719176356061,
+            "pressure_defect": 8.449491106787832e-14,
+            "chemical_potential_defect": 4.440892098500626e-16,
+            "minimum_sampled_tangent_gap": 1.2078253435621476e-08,
+            "supporting_tangent": true
+          },
+          "coexistence_candidates": [
+            {
+              "rho_g": 0.07849235030789756,
+              "rho_l": 0.8568333651372565,
+              "beta_p": 0.05445719176356061,
+              "pressure_defect": 8.449491106787832e-14,
+              "chemical_potential_defect": 4.440892098500626e-16,
+              "minimum_sampled_tangent_gap": 1.2078253435621476e-08,
+              "supporting_tangent": true
+            }
+          ],
+          "supporting_tangent_count": 1,
+          "finite": true
+        }
+      },
+      "after": {
+        "T": 0.2329049022326142,
+        "summary": {
+          "min_derivative": -1.3970907249643787,
+          "minimum_density": 0.6596000000000001,
+          "spinodal_roots": [
+            0.16924202889488826,
+            0.31332934915216704,
+            0.4059422139611875,
+            0.7648634164345952
+          ],
+          "coexistence": {
+            "rho_g": 0.07864474852005993,
+            "rho_l": 0.8661387823275839,
+            "beta_p": 0.053846961010436595,
+            "pressure_defect": 3.387568003887509e-14,
+            "chemical_potential_defect": 0.0,
+            "minimum_sampled_tangent_gap": 1.2351404929885376e-07,
+            "supporting_tangent": true
+          },
+          "coexistence_candidates": [
+            {
+              "rho_g": 0.07864474852005993,
+              "rho_l": 0.8661387823275839,
+              "beta_p": 0.053846961010436595,
+              "pressure_defect": 3.387568003887509e-14,
+              "chemical_potential_defect": 0.0,
+              "minimum_sampled_tangent_gap": 1.2351404929885376e-07,
+              "supporting_tangent": true
+            }
+          ],
+          "supporting_tangent_count": 1,
+          "finite": true
+        }
+      },
+      "positive_island_a_after": 0.03442382700752315,
+      "triple_support_onset": {
+        "T": 0.21532481932030131,
+        "T_over_own_Tc": 0.6557355196732053,
+        "densities": [
+          0.1235348811003441,
+          0.270980137331165,
+          0.8952386153124973
+        ],
+        "independent_integral_defect": 7.603773878464958e-16,
+        "interpolation_correction": 8.018646857621547e-11,
+        "minimum_sampled_tangent_gap": 2.7868380313889496e-08,
+        "sampled_density_window": [
+          1e-07,
+          1.25
+        ],
+        "spectral_checks": [
+          {
+            "phase": "gas",
+            "rho": 0.1235348811003441,
+            "k0": 0.09208422883924722,
+            "minimum_D": 0.09208422883924722,
+            "k_min": 0.0,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 32.0000000032,
+            "scan_points": 1602,
+            "optimized_local_minima": 0,
+            "tail_constant": 151.50299708970428,
+            "tail_lower_bound_at_cutoff": 0.8520478544341761,
+            "coefficient_defect": 8.470329472543003e-22,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 6.445580331224323e-26
+          },
+          {
+            "phase": "middle",
+            "rho": 0.270980137331165,
+            "k0": 0.11216697937704603,
+            "minimum_D": 0.11216697937704603,
+            "k_min": 0.0,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 59.94323968856665,
+            "scan_points": 1881,
+            "optimized_local_minima": 0,
+            "tail_constant": 1796.5959918211568,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 1.6940658945086007e-21,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 1.5867006127909566e-24
+          },
+          {
+            "phase": "liquid",
+            "rho": 0.8952386153124973,
+            "k0": 7.244957350874873,
+            "minimum_D": 0.3667598250067373,
+            "k_min": 7.042018849184111,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 456.15005704219215,
+            "scan_points": 5843,
+            "optimized_local_minima": 1,
+            "tail_constant": 104036.43724899027,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 3.3881317890172014e-21,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 7.557551643220386e-26
+          }
+        ]
+      }
+    },
+    {
+      "model": "HSY_z12",
+      "z": [
+        12.0
+      ],
+      "K": [
+        1.0
+      ],
+      "order": 6,
+      "rho_onset": 0.4850702396550701,
+      "T_onset": 0.11566979505620399,
+      "T_over_own_Tc": 0.8757119643708489,
+      "density_curvature": -7.6495063372570415,
+      "direct_equation_defect": 3.6140072416183476e-15,
+      "derivative_step_refinement_defect": 5.059610138265687e-14,
+      "interpolation_correction": 1.0411932427345505e-10,
+      "before": {
+        "T": 0.11682649300676604,
+        "summary": {
+          "min_derivative": -0.26060927187783967,
+          "minimum_density": 0.7226375,
+          "spinodal_roots": [
+            0.3285449902523611,
+            0.7974784193049598
+          ],
+          "coexistence": {
+            "rho_g": 0.22591413470940244,
+            "rho_l": 0.8695037406172201,
+            "beta_p": 0.11264845908236981,
+            "pressure_defect": 2.055300374337321e-14,
+            "chemical_potential_defect": 4.440892098500626e-16,
+            "minimum_sampled_tangent_gap": 3.524262119657985e-09,
+            "supporting_tangent": true
+          },
+          "coexistence_candidates": [
+            {
+              "rho_g": 0.22591413470940244,
+              "rho_l": 0.8695037406172201,
+              "beta_p": 0.11264845908236981,
+              "pressure_defect": 2.055300374337321e-14,
+              "chemical_potential_defect": 4.440892098500626e-16,
+              "minimum_sampled_tangent_gap": 3.524262119657985e-09,
+              "supporting_tangent": true
+            }
+          ],
+          "supporting_tangent_count": 1,
+          "finite": true
+        }
+      },
+      "after": {
+        "T": 0.11451309710564195,
+        "summary": {
+          "min_derivative": -0.32080585375059445,
+          "minimum_density": 0.7441625000000001,
+          "spinodal_roots": [
+            0.3141545732129988,
+            0.4254240424627688,
+            0.5479922445495312,
+            0.8179106842006792
+          ],
+          "coexistence": {
+            "rho_g": 0.22299472546674637,
+            "rho_l": 0.8872453608242513,
+            "beta_p": 0.1090868511958196,
+            "pressure_defect": 2.2801205368239152e-14,
+            "chemical_potential_defect": 4.440892098500626e-16,
+            "minimum_sampled_tangent_gap": 5.218785903872487e-10,
+            "supporting_tangent": true
+          },
+          "coexistence_candidates": [
+            {
+              "rho_g": 0.2800494391547621,
+              "rho_l": 0.4838238568740808,
+              "beta_p": 0.11293650010576789,
+              "pressure_defect": 2.7755575615628914e-16,
+              "chemical_potential_defect": 1.0658141036401503e-14,
+              "minimum_sampled_tangent_gap": -0.010195894053166232,
+              "supporting_tangent": false
+            },
+            {
+              "rho_g": 0.22299472546674637,
+              "rho_l": 0.8872453608242513,
+              "beta_p": 0.1090868511958196,
+              "pressure_defect": 2.2801205368239152e-14,
+              "chemical_potential_defect": 4.440892098500626e-16,
+              "minimum_sampled_tangent_gap": 5.218785903872487e-10,
+              "supporting_tangent": true
+            }
+          ],
+          "supporting_tangent_count": 1,
+          "finite": true
+        }
+      },
+      "positive_island_a_after": 0.015800014192246442,
+      "triple_support_onset": {
+        "T": 0.11086725610127644,
+        "T_over_own_Tc": 0.8393529406504073,
+        "densities": [
+          0.2693378515315262,
+          0.39675886589465964,
+          0.9105507159488015
+        ],
+        "independent_integral_defect": 2.002188616205366e-17,
+        "interpolation_correction": 8.403999718353816e-11,
+        "minimum_sampled_tangent_gap": 1.1904205238204883e-10,
+        "sampled_density_window": [
+          1e-07,
+          1.25
+        ],
+        "spectral_checks": [
+          {
+            "phase": "gas",
+            "rho": 0.2693378515315262,
+            "k0": 0.019184254609253208,
+            "minimum_D": 0.019184254609253208,
+            "k_min": 0.0,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 48.748899340629904,
+            "scan_points": 1769,
+            "optimized_local_minima": 0,
+            "tail_constant": 1188.2275932237878,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 4.235164736271502e-22,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 0.0
+          },
+          {
+            "phase": "middle",
+            "rho": 0.39675886589465964,
+            "k0": 0.018671107916150446,
+            "minimum_D": 0.018671107916150446,
+            "k_min": 0.0,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 95.93734230844865,
+            "scan_points": 2241,
+            "optimized_local_minima": 0,
+            "tail_constant": 4601.986823683828,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 1.3552527156068805e-20,
+            "spectral_evaluation_defect": 3.469446951953614e-18,
+            "spectral_imaginary_defect": 2.3938176774222298e-26
+          },
+          {
+            "phase": "liquid",
+            "rho": 0.9105507159488015,
+            "k0": 1.7463689580442734,
+            "minimum_D": 0.3673784923813585,
+            "k_min": 7.34005383210108,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 545.4116720795863,
+            "scan_points": 6736,
+            "optimized_local_minima": 1,
+            "tail_constant": 148736.94599057772,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 6.776263578034403e-21,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 6.174623734795704e-26
+          }
+        ]
+      }
+    },
+    {
+      "model": "2YK_short_repulsion",
+      "z": [
+        5.0,
+        12.0
+      ],
+      "K": [
+        1.0,
+        -0.3
+      ],
+      "order": 6,
+      "rho_onset": 0.3450337083534795,
+      "T_onset": 0.20243434219651188,
+      "T_over_own_Tc": 0.7059239206491363,
+      "density_curvature": -33.86925175223946,
+      "direct_equation_defect": 1.2649025345664217e-14,
+      "derivative_step_refinement_defect": 6.86661375907486e-14,
+      "interpolation_correction": 1.6024546689585861e-09,
+      "before": {
+        "T": 0.204458685618477,
+        "summary": {
+          "min_derivative": -1.3067556758656438,
+          "minimum_density": 0.62885,
+          "spinodal_roots": [
+            0.16522485084452446,
+            0.7345561050444751
+          ],
+          "coexistence": {
+            "rho_g": 0.07274441259962974,
+            "rho_l": 0.838072921183284,
+            "beta_p": 0.05104985925985707,
+            "pressure_defect": 3.191891195797325e-16,
+            "chemical_potential_defect": 4.440892098500626e-16,
+            "minimum_sampled_tangent_gap": 5.482267801629626e-08,
+            "supporting_tangent": true
+          },
+          "coexistence_candidates": [
+            {
+              "rho_g": 0.07274441259962974,
+              "rho_l": 0.838072921183284,
+              "beta_p": 0.05104985925985707,
+              "pressure_defect": 3.191891195797325e-16,
+              "chemical_potential_defect": 4.440892098500626e-16,
+              "minimum_sampled_tangent_gap": 5.482267801629626e-08,
+              "supporting_tangent": true
+            }
+          ],
+          "supporting_tangent_count": 1,
+          "finite": true
+        }
+      },
+      "after": {
+        "T": 0.20040999877454677,
+        "summary": {
+          "min_derivative": -1.424817758179469,
+          "minimum_density": 0.6396125,
+          "spinodal_roots": [
+            0.16014803548394232,
+            0.3020028645121795,
+            0.3909513757686381,
+            0.7448474909525398
+          ],
+          "coexistence": {
+            "rho_g": 0.07298337795960783,
+            "rho_l": 0.846768590926939,
+            "beta_p": 0.05054912670846746,
+            "pressure_defect": 6.286637876939949e-15,
+            "chemical_potential_defect": 0.0,
+            "minimum_sampled_tangent_gap": 6.273875027135167e-07,
+            "supporting_tangent": true
+          },
+          "coexistence_candidates": [
+            {
+              "rho_g": 0.07298337795960783,
+              "rho_l": 0.846768590926939,
+              "beta_p": 0.05054912670846746,
+              "pressure_defect": 6.286637876939949e-15,
+              "chemical_potential_defect": 0.0,
+              "minimum_sampled_tangent_gap": 6.273875027135167e-07,
+              "supporting_tangent": true
+            }
+          ],
+          "supporting_tangent_count": 1,
+          "finite": true
+        }
+      },
+      "positive_island_a_after": 0.0352310661043386,
+      "triple_support_onset": {
+        "T": 0.1849682177373274,
+        "T_over_own_Tc": 0.6450164929716514,
+        "densities": [
+          0.11581175812928374,
+          0.2613462381339171,
+          0.8742056129571881
+        ],
+        "independent_integral_defect": 5.551115123125783e-17,
+        "interpolation_correction": 8.85814199769186e-11,
+        "minimum_sampled_tangent_gap": 3.9089216446460084e-10,
+        "sampled_density_window": [
+          1e-07,
+          1.25
+        ],
+        "spectral_checks": [
+          {
+            "phase": "gas",
+            "rho": 0.11581175812928374,
+            "k0": 0.09878398626871215,
+            "minimum_D": 0.09878398626871215,
+            "k_min": 0.0,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 32.0000000032,
+            "scan_points": 1602,
+            "optimized_local_minima": 0,
+            "tail_constant": 143.217260909039,
+            "tail_lower_bound_at_cutoff": 0.8601393936714887,
+            "coefficient_defect": 1.0784758441377485e-20,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 6.3742780432768164e-27
+          },
+          {
+            "phase": "middle",
+            "rho": 0.2613462381339171,
+            "k0": 0.12163770292610246,
+            "minimum_D": 0.12163770292610246,
+            "k_min": 0.0,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 59.184935977081444,
+            "scan_points": 1873,
+            "optimized_local_minima": 0,
+            "tail_constant": 1751.4283229553291,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 1.0784758441377485e-20,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 6.360524521292867e-24
+          },
+          {
+            "phase": "liquid",
+            "rho": 0.8742056129571881,
+            "k0": 7.1660848004059785,
+            "minimum_D": 0.37336197403136123,
+            "k_min": 6.972969435026348,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 421.3048877840672,
+            "scan_points": 5495,
+            "optimized_local_minima": 1,
+            "tail_constant": 88748.90421762296,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 2.6961896103443713e-21,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 2.624199416214902e-27
+          }
+        ]
+      }
+    }
+  ],
+  "second_order_fixed_density": {
+    "model": "HSY_z1.8",
+    "rho": 0.3,
+    "order": 2,
+    "a_coefficients": [
+      3.420974301523296,
+      -4.017325498605425,
+      0.18918035433805405
+    ],
+    "tau_roots": [
+      0.8887514649636209,
+      20.34667497591672
+    ],
+    "lower_reentrant_temperature": 0.049148079535533296,
+    "a_at_tau_25": 21.225558297671462,
+    "first_order_a_at_tau_25": -97.01216316361233,
+    "scope": "Fixed density only; tau=25 extrapolates far beyond the Exact MSA fold"
+  }
+}

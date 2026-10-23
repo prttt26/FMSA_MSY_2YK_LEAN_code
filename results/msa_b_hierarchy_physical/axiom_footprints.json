@@ -1,0 +1,416 @@
+{
+  "theorems": {
+    "FMSA.ExactMSA.BSource.normalized_mul": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.convolution_split": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.bhFRest_affine": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.bhPRest_affine": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.solve_D_order": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.solve_G_order": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.source_reconstruction": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.matrix_source_reconstruction": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.fourier_second_order": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.fourier_zero_obstruction": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.background_first": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.background_second": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.symbol_cancellation": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.actual_source_cancellation": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.sourceKernel_laplace": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.kappa_affine": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.source_jet_shape": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.jet_linear": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.kappa_jet": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.kappa_seed_residual": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.kappa_seed": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.first_source_amplitude": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.jet_const_add": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.affine_rest_jet": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.actual_F_jet": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.actual_P_jet": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.jet_linear_coupling": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.actual_BH_recurrence": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.exists_actual_BH_jet_recurrence": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.tailW_contact_identity": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.actualQ_real_integral": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.actualQ_at_tail_rate": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.actual_complex_source_cancellation": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.sourceKernel_complex_laplace": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.contactSource_support": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.contactSource_complex_laplace": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.first_contact_source_paper": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.ScalarBSource.actual_first_fourier_zero_obstruction": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.innerQp_explicit": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.innerA_explicit": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.innerC_explicit": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.innerW_explicit": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.polynomial_inner_integral": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.exponential_inner_integral": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_background_inner": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.backgroundW_no_knot": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_background_closed": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_source_eq_finite": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_source_jet_finite": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_source_jet_tail": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.sourceCoefficient_contDiff": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.source_dictionary_size": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_source_jet_of_smooth_pair": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.exists_actual_root_with_finite_sources": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_source_integrable": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_excess_source_renewal_of_integrable": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_excess_source_complex_renewal": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_normalized_radial_transfer": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.source_order_reconstruction": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_finite_source_radial_OZ_bridge": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_finite_source_radial_OZ_automatic": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_hardcore_positive_jet": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_ordered_DCF_exterior": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.FiniteBSource.actual_exterior_DCF_jet": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.normalized_complex_mul": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.normalized_matrix_mul": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BSource.normalized_renewal_line": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.coeff_mul": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.convolution_split": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.coeff_local_eq": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.coeff_scaled": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.actual_D_order": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.actual_G_order": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.jet_scaled": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.jet_finite_sum": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.product_zero_right_jet": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.affine_product_jet": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.actual_W_jet": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.actual_C_jet": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.actual_smooth_root_orders": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.exists_actual_root_with_all_orders": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.MultiTailMixture.BHJet.first_order_amplitude_recovered": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "standard_axioms_only": true,
+  "guard_count": 82
+}

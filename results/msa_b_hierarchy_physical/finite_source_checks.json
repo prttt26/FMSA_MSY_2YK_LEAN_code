@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "symbolic_background_checks": 2,
+  "scalar_source_shape_orders": [
+    {
+      "order": 1,
+      "source_shape_residual": "2.308169730520918786424227988976743612200086770321747475e-56",
+      "kappa_coefficient": "3.382932183397690653653370708066101965573944437905030328"
+    },
+    {
+      "order": 2,
+      "source_shape_residual": "1.913369044467852784063829088014994345553184292448073572e-57",
+      "kappa_coefficient": "0.4251543020720460795660497083953879660492335334552143338"
+    },
+    {
+      "order": 3,
+      "source_shape_residual": "7.556698441753654332710823973779730748208181436693461994e-58",
+      "kappa_coefficient": "0.1278274853805530767856026298636680508104462540150105906"
+    },
+    {
+      "order": 4,
+      "source_shape_residual": "4.871981134184288844496184005726450742283986905404255476e-58",
+      "kappa_coefficient": "0.05013359638795960701849760291784948157069456854859841319"
+    },
+    {
+      "order": 5,
+      "source_shape_residual": "1.207457412956031068049187961647286107577440881365787872e-58",
+      "kappa_coefficient": "0.02239355466441364755736765339954526294978451665628116237"
+    },
+    {
+      "order": 6,
+      "source_shape_residual": "5.292124783883149306046894552519830969242613147430104546e-59",
+      "kappa_coefficient": "0.01080634244497391964822185303123377949477132552930491813"
+    }
+  ],
+  "mixture_parameters": {
+    "sigma": [
+      0.8,
+      1.1,
+      1.5
+    ],
+    "rho": [
+      0.03,
+      0.08,
+      0.0
+    ],
+    "z": [
+      0.6,
+      2.45,
+      2.45,
+      9.0
+    ],
+    "eta": 0.06379527481889674
+  },
+  "mixture_amplitudes": "Off-root values from existing msa_exact_mix._pieces; repeated rates and zero density included.",
+  "mixture_quadrature_checks": 63,
+  "maximum_quadrature_residual": "8.156630584998155658387867636570684444626455322586208185e-56",
+  "tail_check_tolerance": "1e-10 (machine-precision BH dictionary)",
+  "proof_status": "Numerical/SymPy verification only; all corresponding formal claims use kernel-checked Lean theorems."
+}

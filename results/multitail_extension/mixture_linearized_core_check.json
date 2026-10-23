@@ -1,0 +1,138 @@
+{
+  "scope": "finite numerical evidence; independent DP Lean identity remains open",
+  "states": [
+    {
+      "label": "binary_single",
+      "species": 2,
+      "tails": 3,
+      "rates": [
+        1.2,
+        1.44,
+        1.8
+      ],
+      "point_count": 22,
+      "normalized_DP_defect": 1.3882532261831522e-14,
+      "normalized_exterior_defect": 1.8931392420861387e-16,
+      "actual_root_differences": [
+        {
+          "step": 0.001,
+          "normalized_defect": 1.227720011731946e-07
+        },
+        {
+          "step": 0.0005,
+          "normalized_defect": 3.068647241409046e-08
+        }
+      ]
+    },
+    {
+      "label": "binary_signed",
+      "species": 2,
+      "tails": 6,
+      "rates": [
+        1.2,
+        1.44,
+        1.8,
+        4.0,
+        4.8,
+        6.0
+      ],
+      "point_count": 22,
+      "normalized_DP_defect": 1.111464417828311e-14,
+      "normalized_exterior_defect": 7.005822843127526e-17,
+      "actual_root_differences": [
+        {
+          "step": 0.001,
+          "normalized_defect": 8.68249474829031e-08
+        },
+        {
+          "step": 0.0005,
+          "normalized_defect": 2.1708633732923175e-08
+        }
+      ]
+    },
+    {
+      "label": "binary_repeated",
+      "species": 2,
+      "tails": 6,
+      "rates": [
+        2.0,
+        2.0,
+        2.4,
+        2.4,
+        3.0,
+        3.0
+      ],
+      "point_count": 22,
+      "normalized_DP_defect": 4.6897060261396565e-15,
+      "normalized_exterior_defect": 1.1582871367568488e-16,
+      "actual_root_differences": [
+        {
+          "step": 0.001,
+          "normalized_defect": 1.4397096898467014e-08
+        },
+        {
+          "step": 0.0005,
+          "normalized_defect": 3.603638948670613e-09
+        }
+      ]
+    },
+    {
+      "label": "binary_high_z",
+      "species": 2,
+      "tails": 6,
+      "rates": [
+        1.2,
+        1.44,
+        1.8,
+        40.0,
+        48.0,
+        60.0
+      ],
+      "point_count": 22,
+      "normalized_DP_defect": 1.3273139050745913e-14,
+      "normalized_exterior_defect": 1.8935030304137703e-16,
+      "actual_root_differences": [
+        {
+          "step": 0.001,
+          "normalized_defect": 1.2192106982727417e-07
+        },
+        {
+          "step": 0.0005,
+          "normalized_defect": 3.0486226801305376e-08
+        }
+      ]
+    },
+    {
+      "label": "ternary_unequal",
+      "species": 3,
+      "tails": 12,
+      "rates": [
+        0.529411764706,
+        0.692307692308,
+        0.818181818182,
+        1.0,
+        1.285714285714,
+        1.764705882353,
+        1.8,
+        2.307692307692,
+        2.727272727273,
+        3.333333333333,
+        4.285714285714,
+        6.0
+      ],
+      "point_count": 65,
+      "normalized_DP_defect": 4.693901304895442e-14,
+      "normalized_exterior_defect": 2.1017468529383567e-16,
+      "actual_root_differences": [
+        {
+          "step": 0.001,
+          "normalized_defect": 9.324129682646209e-08
+        },
+        {
+          "step": 0.0005,
+          "normalized_defect": 2.330665474517963e-08
+        }
+      ]
+    }
+  ]
+}

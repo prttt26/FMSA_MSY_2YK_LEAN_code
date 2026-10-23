@@ -2001,7 +2001,7 @@ Final scope/dependency metadata reconciliation: validation_summary.json's
 full_build_log points to mixture_pair_hs_reference_build.log, matching the
 625/8930/97 checkpoint. The three actual radial-OZ/reference/first-order
 capstone footprints were separately rechecked with standard-three guards;
-the reproducible harness and log are mixture_pair_hs_final_dependency_audit.lean
+the reproducible harness and log are mixture_pair_hs_final_dependency_audit.lean.txt
 and mixture_pair_hs_final_dependency_audit.log. These repeat checks do not
 increase the 625 default gate count. The first-order RDF/reference capstone
 retains rho_i>0, distinct from the earlier DCF/DP rho_i>=0 scope. Metadata,
@@ -2210,7 +2210,7 @@ All 842 default guards use only subsets of `propext`, `Classical.choice`,
 `Quot.sound`; two generic ring identities need only `propext`, `Quot.sound`.
 The three-target default build passes with 8959 jobs, logged in
 `mixture_nonlinear_reconstruction_build.log`. The independent 217-theorem
-dependency audit is reproducible from `mixture_nonlinear_dependency_audit.lean`
+dependency audit is reproducible from `mixture_nonlinear_dependency_audit.lean.txt`
 and its log. The 126-source scan has zero actual axiom declarations, sorry,
 native_decide or ofReduceBool after nested-comment stripping; its manifest
 also records source SHA-256 values. `git diff --check` passes. The four old

@@ -1,0 +1,99 @@
+[
+  {
+    "z": [
+      12.0
+    ],
+    "K": [
+      1.0
+    ],
+    "rho": 0.5,
+    "order": 40,
+    "maximum_scaled_coefficient_error": 1.348258965291298e-16,
+    "maximum_relative_coefficient_error": 1.5874728212318755e-15
+  },
+  {
+    "z": [
+      20.0
+    ],
+    "K": [
+      1.0
+    ],
+    "rho": 0.54,
+    "order": 40,
+    "maximum_scaled_coefficient_error": 1.7569609768560974e-16,
+    "maximum_relative_coefficient_error": 2.7872775874611965e-16
+  },
+  {
+    "z": [
+      5.0,
+      0.5
+    ],
+    "K": [
+      1.0,
+      -0.05
+    ],
+    "rho": 0.4,
+    "order": 40,
+    "maximum_scaled_coefficient_error": 1.1102230246251565e-16,
+    "maximum_relative_coefficient_error": 8.01755771698281e-15
+  },
+  {
+    "z": [
+      1.8,
+      4.0,
+      8.0
+    ],
+    "K": [
+      1.0,
+      -0.35,
+      0.15
+    ],
+    "rho": 0.3,
+    "order": 16,
+    "maximum_scaled_coefficient_error": 2.5132464377689484e-16,
+    "maximum_relative_coefficient_error": 4.833022715517085e-16
+  },
+  {
+    "kind": "spectral",
+    "rho": 0.3,
+    "z": [
+      5,
+      0.5
+    ],
+    "K": [
+      1,
+      -0.05
+    ],
+    "order": 6,
+    "maximum_scaled_coefficient_error": 2.2084493364992587e-16,
+    "states": [
+      {
+        "k": 0,
+        "strict_at_T_point2": {
+          "1": 2.015585799597043,
+          "2": 3.68574739643082,
+          "3": 4.293498903879063,
+          "6": 4.456339576526377
+        }
+      },
+      {
+        "k": 1,
+        "strict_at_T_point2": {
+          "1": -1.8222305673101251,
+          "2": -0.28132259205912563,
+          "3": 0.27951814064653935,
+          "6": 0.432293595260429
+        }
+      },
+      {
+        "k": 6.7,
+        "strict_at_T_point2": {
+          "1": 0.722701282600889,
+          "2": 0.6942364665234485,
+          "3": 0.685363892746389,
+          "6": 0.6902164135169261
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "source": "/home/rpan/YK_tail_FMSA/msaexact6_scaletest.py",
+  "source_sha256": "5244b23b2b367a03c19e690d16a36e69f4ba73009afbc5aeb628166f26bd03f5",
+  "generated_sha256": "bad4347b5d6c52b44f082f9e0765a6b4fb20f9c3157b156998f46891622b76d2",
+  "expression_variables": [
+    "xi",
+    "z",
+    "k",
+    "G",
+    "C",
+    "S",
+    "Ez",
+    "p",
+    "Dt",
+    "K"
+  ],
+  "cached_algebra": false,
+  "elapsed_seconds": 133.08491815207526,
+  "scope": "scalar one-component one-Yukawa exact closure; data proposals require Lean checks"
+}

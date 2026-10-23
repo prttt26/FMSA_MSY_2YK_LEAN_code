@@ -1,0 +1,61 @@
+{
+  "retired_axioms": [
+    "MSAMixture.matExactMSAEqualDiam_hcore",
+    "FMSA.ExactMSA.MatEqualDiamCertificate.matExactMSAEqualDiam_kspace_residual",
+    "MSAMixture.matExactMSAUnequalDiam_hcore",
+    "MSAMixture.matHSexactUnequalDiam_kspace"
+  ],
+  "retired_count": 4,
+  "replaced_by_kernel_checked_theorems": true,
+  "original_DCF_definitions_and_closed_RHS_preserved": true,
+  "new_definition_and_bridge_modules": [
+    "LeanCode/YukawaOZMix/MSAMixtureBHRootDefs.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureBHRootUneqDefs.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureBHRootRecenter.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureBaxterLaplace.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureLegacySingleTail.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureLegacyFourier.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureEqualRootBridge.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureSingleTailOriginPolynomial.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureEqualCoreOrigin.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureEqualCoreOriginAlgebra.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureEqualCoreResidues.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureEqualCorePolynomial.lean",
+    "LeanCode/YukawaOZMix/MSAMixtureEqualCoreBridge.lean"
+  ],
+  "default_guard_module": "LeanCode/MixtureLegacyRetirementProject.lean",
+  "default_migration_guards": 77,
+  "existing_multitail_guards": 1074,
+  "tracked_combined_guards": 1151,
+  "guard_scope": "MultiTailMSAProject plus MixtureLegacyRetirementProject; other existing project guards are additional",
+  "audited_migration_theorems": 77,
+  "joint_independent_theorem_footprints": 526,
+  "joint_axiom_counts": {
+    "standard_three": 524,
+    "propext_Quot_sound": 2
+  },
+  "build_jobs": 9008,
+  "build_targets": [
+    "LeanCode",
+    "ExactMSACertificate",
+    "ExactMSASparseFeasibility",
+    "MatExactMSAEqualDiamCertificate"
+  ],
+  "build_log": "mixture_legacy_retirement_build.log",
+  "dependency_log": "mixture_legacy_retirement_dependency_audit.log",
+  "joint_dependency_log": "mixture_legacy_retirement_joint_audit.log",
+  "selected_source_hashes": 182,
+  "git_diff_check": "PASS",
+  "legacy_Fourier_domain": "supplied actual single-tail BH root; z>0; k!=0; sigma_i>0; rho_i>=0; vacMix>0; symmetric K. Equal-diameter interfaces additionally sigma_i=sig>0. HS anchor has no nonlinear root premise.",
+  "weighted_RDF_decay_budget_needed_for_legacy_Fourier": false,
+  "arbitrary_finite_tail_scope": "The previously completed automatic finite-tail Wronskian theorem is unchanged; the four legacy interfaces are its faithful singleton-tail specializations.",
+  "retained_physical_limits": [
+    "global root existence and continuation",
+    "all-state RDF decay",
+    "g>=0",
+    "thermodynamic route consistency",
+    "Maxwell/binodal physical accuracy",
+    "universal finite-order anomaly thresholds",
+    "SCOZA"
+  ]
+}

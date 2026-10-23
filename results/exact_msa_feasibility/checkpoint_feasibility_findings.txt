@@ -1,0 +1,166 @@
+Exact MSA scalar closure-recovery proof: feasibility investigation
+Date: 2026-10-08
+
+RESULT
+
+The historical direct-ring resource measurements do not establish that the
+Exact MSA Lean proof is impossible or cannot be decomposed. A different proof
+representation has now passed the actual polynomial-division checkpoints,
+including both full nonzero amplitude coefficients, followed by a small
+coefficient-reassembly theorem. The original physical hcore axiom is NOT yet
+removed. This is positive feasibility evidence, not a completed end-to-end
+proof of the physical closure.
+
+SCOPE AND PROOF CHAIN
+
+This experiment concerns the scalar, single-component, one-Yukawa closure.
+It does not discharge the mixture matrix hcore axioms, finite-order physical
+validity, coexistence, or finite-k stability.
+The Dt powers below are coefficients in the exact Baxter-amplitude closure
+identity, not orders N of the thermodynamic coupling-tau Taylor truncation.
+Passing these checkpoints does not certify a high-order truncation's phase
+diagram or resolve its possible nonphysical branches.
+
+The algebraic prefix of msaexact6_scaletest.py in the project root reconstructs the
+original scalar rational residual Delta and the two Blum-Hoye residuals r29
+and r33. See checkpoint_metadata.json for the source path and SHA256.
+With m29 = -z/(2*pi) * partial_K Delta, the source performs:
+
+  R = Delta - m29*r29;
+  R = nRaw / denR;
+  nReduced = remainder of nRaw modulo S^2 + C^2 - 1;
+  nReduced = n1*Dt + n2*Dt^2;
+  numerator(r33) = r0 + r1*Dt;
+  quotient = q1*Dt.
+
+The source's symbolic polynomial division gives nReduced = quotient *
+numerator(r33). The emitted Lean statements check the two coefficient
+identities independently:
+
+  n1 = q1*r0;
+  n2 = q1*r1.
+
+Their expression variables are [xi,z,k,G,C,S,Ez,p], where C,S,Ez,p will
+eventually be identified with cos(k), sin(k), exp(-z), pi. In Lean they are
+arbitrary real values, so these coefficient identities are not numerical
+checks or statements restricted to sampled thermodynamic states.
+
+ExactMSASparseReassembly.lean then proves for every real Dt:
+
+  n1*Dt + n2*Dt^2 = Dt*q1*(r0 + Dt*r1).
+
+It also proves that the left side vanishes when r0 + Dt*r1 = 0. Reassembly
+treats q1,r0,r1 as three opaque real coefficient values; it does not repeat
+a large expanded normalization.
+
+WHAT IS ACTUALLY FORMAL
+
+SparsePolynomialCertificate.lean defines a computable integer-coefficient
+expression language and a sparse polynomial compiler. It proves that
+compilation preserves evaluation in the reals. The compiler uses raw
+products, a structurally recursive fuel-based merge sort, and adjacent
+coefficient collection. Soundness does not depend on sorting completeness;
+insufficient fuel can fail to certify an identity but cannot make a false
+identity pass.
+
+Each fixture keeps the right-side factor products unexpanded. Lean checks
+that the difference compiles to the empty polynomial using decide +kernel,
+then applies the compiler's proved semantic soundness. No native_decide,
+new axiom, or admitted proof is used. The aggregate module contains five
+axiom guards for the three checkpoint identities and two reassembly results.
+Each depends only on propext, Classical.choice, Quot.sound.
+
+Important boundary: the mapping from the original rational MSA definitions
+to these encoded coefficients, and the preceding clearing/reduction steps,
+are still reconstructed and checked by SymPy outside Lean. The kernel proofs
+certify the encoded identities, not that entire source-to-physics chain.
+
+MEASUREMENTS
+
+Successful direct Lean checks with /usr/bin/time -v, including Lean imports:
+
+  checkpoint   monomials  total degree  elapsed    maximum RSS
+  small323          323            23    9.48 s      7.13 GiB
+  Dt coefficient   1135            27   34.21 s     10.78 GiB
+  Dt^2 coefficient 2843            29   98.85 s     20.31 GiB
+
+These are final successful runs; the logs and benchmark_results.json retain
+their exit codes and resource data. A preliminary 55-second timeout on Dt^2
+was followed by the successful longer-budget run. The full Lake target also
+passes, including the coefficient-reassembly proofs and axiom guards.
+Lake's exported/native-code build has extra packaging cost; the direct
+proof-check times above must not be described as total cold library times.
+The largest peak is substantial: this has been demonstrated on this machine,
+not on a small-memory laptop. Further coefficient grading may reduce it,
+but that optimization has not been tested.
+
+OLD BENCHMARK INTERPRETATION
+
+The old msaexact6_scaletest.py emission calls expand on BOTH sides before
+printing a Lean statement. These sides are identical canonical expressions
+at all three sizes; that emitted equality could therefore be closed by rfl.
+Its expensive ring run cannot establish an intrinsic proof-complexity lower
+bound or certify the bridge from an unexpanded physical residual. The new
+fixtures deliberately preserve the RHS factor products. We therefore do
+not claim a controlled speedup ratio against that historical benchmark.
+
+REMAINING SUBTASKS
+
+1. Establish the Lean dictionary from msaA, msaQp, gam, bhF, bhP and the
+   closed k-space transform formulas to the rational expression used here.
+   Reuse ExactMSACertificate's existing Fourier-layer bridge; do not redo
+   those radial integral proofs.
+
+2. Audit regularity assumptions and clear denominators in Lean. For the
+   physical regular domain, k != 0, z > 0, xi < 1, pi != 0, exp(-z) != 0
+   supply ordinary nonvanishing facts. Terms such as (K*G)^2/K require a
+   K = 0 case or a formal identity valid under Lean's totalized division.
+   The existing axiom's broadly quantified domain must also be audited:
+   a proof on the regular physical domain alone does not justify replacing
+   an unrestricted statement at singular parameter values.
+
+3. Certify the K-elimination identity and the numerator correspondence:
+   Delta - m29*r29 = nRaw/denR. This can itself be divided into coefficient
+   identities and handled with the same proved checker, but has not yet
+   been generated and checked end to end.
+
+4. Certify the trigonometric reduction as an explicit identity
+   nRaw = nReduced + mu*(S^2 + C^2 - 1). Substitute sin/cos and apply
+   the existing Pythagorean theorem, rather than normalizing the full
+   polynomial again.
+
+5. Identify numerator(r33) with the encoded r0 + Dt*r1, use h33 and
+   nonvanishing denominators, apply full_division_zero_of_residual, then
+   h29 and the Fourier bridge to discharge the physical hcore theorem.
+
+The interfaces should be fixed before attempting these subtasks. Their
+successful completion is plausible after the demonstrated division checks,
+but their total cost and any singular-domain issues are still unmeasured.
+For unequal-diameter mixtures the c-side piecewise dictionary and matrix
+branch constraints add separate tasks; scalar success is not their proof.
+
+FILES AND REPRODUCTION
+
+From the project root:
+  python Lean_code/scripts/msa_exact_sparse_feasibility.py
+
+The source reconstruction took about 130 seconds in this experiment.
+From Lean_code:
+  lake build ExactMSASparseFeasibility
+  lake build LeanCode
+
+Final validation passed: ExactMSASparseFeasibility (8564 jobs), the default
+LeanCode build (8816 jobs), Python syntax compilation, and git diff --check.
+An isolated regeneration reproduced all five emitted Lean files: the three
+fixtures and reassembly byte-for-byte, and the aggregate modulo whitespace.
+The source SHA256 and all coefficient metadata also matched. See
+regeneration_final_check.log and final_library_build.log. A first regeneration
+comparison found only a reassembly doc-comment mismatch; the generator's
+comment was aligned before the successful rerun. Earlier failed build and
+prototype logs are historical attempts, not the final verification results.
+
+The research library is deliberately outside defaultTargets and is not
+imported by the production ExactMSA root while the physical bridge is open.
+No paper TeX was edited by this investigation. The FMSA_paper thread has
+been informed that the old global infeasibility conclusion must be narrowed,
+while the paper's current physical-certification strength is unchanged.

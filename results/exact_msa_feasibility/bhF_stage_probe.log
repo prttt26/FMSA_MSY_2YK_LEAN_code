@@ -1,0 +1,15 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+phase: beginning deltaActual elaboration
+phase: deltaActual elaborated; starting dictionary
+sparse_ring: reified 6 real atoms; checking integer circuit in kernel
+phase: starting field_simp
+phase: starting sparse_ring
+sparse_ring diagnostic: raw term counts 784 / 712; circuit=false
+/tmp/msa_bhF_stage_probe.lean:41:2: warning: 'run_tac
+  Lean.Core.liftIOCore (IO.eprintln "phase: starting field_simp")' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+/tmp/msa_bhF_stage_probe.lean:43:2: warning: 'run_tac
+  Lean.Core.liftIOCore (IO.eprintln "phase: starting sparse_ring")' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`

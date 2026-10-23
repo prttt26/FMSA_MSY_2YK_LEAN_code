@@ -1,0 +1,3 @@
+binary_single completion True exact identities 22 failures 0
+binary_two_rates completion True exact identities 32 failures 0
+ternary_single completion True exact identities 60 failures 0

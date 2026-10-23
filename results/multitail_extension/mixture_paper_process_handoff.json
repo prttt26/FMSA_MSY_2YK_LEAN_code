@@ -1,0 +1,225 @@
+{
+  "destination": "FMSA_paper",
+  "verified_thread_id": "01a118aa-0495-7e23-b80b-227ae08e5827",
+  "checkpoint": {
+    "tracked_axiom_guards": 1151,
+    "multitail_guards": 1074,
+    "legacy_migration_guards": 77,
+    "build_jobs": 9008,
+    "scanned_sources": 182,
+    "independent_nonlinear_footprints": 438,
+    "additional_thermodynamic_scope_footprints": 11,
+    "additional_legacy_migration_footprints": 77,
+    "total_independent_footprints": 526
+  },
+  "validation": "four-target build PASS (9008 jobs); 1074 retained multitail gates plus 77 new migration gates; 182 selected source hashes; 526-footprint joint audit uses standard axiom subsets only; source scan and git diff --check PASS",
+  "paper_scope": "Actual nonlinear finite-mixture BH roots with symmetric K automatically satisfy the algebraic Wronskian/reciprocity conditions. The actual same RDF/h/c obey core, global radial L1, labelled G moments, pointwise reciprocity, radial OZ AE and all-nonzero-k positive definiteness under the existing explicit weighted decay budget and physical diameter/density assumptions.",
+  "theorems": [
+    "nonlinearRoot_distinct_wronskian_polynomials_zero",
+    "nonlinearRoot_automatic_finite_wronskian",
+    "nonlinearMixtureRDF_automatic_admissibility_certificate"
+  ],
+  "retained_hypotheses": "actual BH root; symmetric signed K; positive diameters/rates; vacMix!=0; delta>0 below every rate; actual A_delta<1. Combined positive definiteness uses rho>=0. Independent finite Wronskian and unknown-G symmetry premises have been discharged.",
+  "canonical_status": "Automatic finite Wronskian admissibility is now proved for every supplied symmetric-K BH root with positive rates and vacMix!=0, including a nonzero-coupling canonical root if it exists. Structural mixture closure is complete on the explicit budget domain; no global existence, unconditional decay, g>=0 or thermodynamic consistency claim.",
+  "delivery_status": "1151 legacy matrix retirement checkpoint accepted by verified FMSA_paper thread via thread/queue/add. Paper rewrite completion not confirmed.",
+  "scope_clarification": "Automatic algebraic admissibility is complete. Actual structural/analytic MSA closure on the explicit budget domain remains distinct from thermodynamic route consistency, RDF nonnegativity, physically accurate coexistence, and global root existence.",
+  "paper_rewrite_requested_by_user": true,
+  "new_module": "LeanCode/YukawaOZMix/MSAMixtureThermodynamicScope.lean",
+  "new_results": [
+    "Negative thermodynamic curvature forbids equality with a PSD structural matrix in the same normalized coordinates.",
+    "All component chemical potentials and pressure must agree for mixture coexistence; explicit differentiable polynomial counterexample shows fixed-composition scalar conditions are insufficient (not an MSA state).",
+    "Prescribed standard PY mixture pressure difference is 3*eta*m2^3/(1-eta)^3 in pi/6 pressure units and is strictly positive for 0<eta<1,m2>0; all finite coupling jets retaining those seed values mismatch at tau=0. Actual RDF/DCF pressure identification remains outside this proof."
+  ],
+  "RDF_positivity": "Previously certified actual unique dilute long-attraction/short-repulsion BH root satisfies actual radial OZ yet g<0 on an outer interval; exact affine coupling dependence means higher Taylor terms do not cure that dilute counterexample. Finite-density contact negativity iff qp+sum(z*C)<0. No universal canonical positive-density failure-region theorem.",
+  "Maxwell_and_binodal": "Remove route-independent Maxwell/binodal correctness claims. A construction from one specified free energy can be internally defined; cross-route agreement or physical accuracy is not guaranteed. For mixtures enforce every chemical potential, not just fixed-composition scalar equal area. Do not assert Maxwell universally invalid without a specified route/domain.",
+  "SCOZA": "Discuss as an external extension enforcing selected route consistency, typically energy versus compressibility; neither unique remedy nor universal all-route/g>=0/phase-accuracy guarantee. Not implemented/certified by this Lean project. Standard SCOZA literature also excludes unusable spinodal-interior states.",
+  "replacement_paragraphs": [
+    "For arbitrary finite numbers of additive hard-sphere species and Yukawa tails, every supplied Blum\u2013Hoye root with symmetric tail strengths, positive decay rates and a nonzero free-volume denominator satisfies the finite Wronskian identities automatically. Repeated decay rates, unequal diameters and zero-density species are included. No independent Wronskian certificate or symmetry assumption on the unknown Laplace amplitudes is required.",
+    "Under positive diameters and an explicit sufficient weighted-decay budget, the same constructed nonlinear correlations satisfy the hard-core condition, species reciprocity, the labelled Laplace-moment identities and the radial Ornstein\u2013Zernike equations. For nonnegative species densities the density-weighted structural matrix is positive definite for every nonzero real wave number. This theorem concerns a supplied root on the stated analytic domain; it does not establish global root existence, nonnegative radial distribution functions, thermodynamic route consistency, or Maxwell/binodal physical accuracy.",
+    "The four legacy matrix closure-recovery and hard-sphere Fourier assumptions have also been replaced by kernel-checked theorems. The migration preserves the original unequal-diameter piecewise DCF, the five-coefficient equal-diameter DCF, and the closed trigonometric residual. For supplied single-tail BH roots with symmetric strengths, positive rates and diameters, nonnegative species densities and positive free volume, the original matrix Fourier identities hold at every nonzero real wave number. This Fourier result does not require the sufficient weighted RDF decay budget used by the reconstructed RDF/OZ capstone. Neither result supplies thermodynamic route consistency, nonnegative RDFs or accurate Maxwell/binodal coexistence."
+  ],
+  "sources": [
+    "https://arxiv.org/html/1204.4551v2",
+    "https://doi.org/10.1103/PhysRev.133.A895",
+    "https://arxiv.org/html/cond-mat/9801277v1",
+    "https://arxiv.org/abs/0712.3739"
+  ],
+  "delivery_receipt": "mixture_paper_notification_1151_receipt.json",
+  "additional_dilute_module": "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDiluteAdmissibility.lean",
+  "additional_dilute_results": "All three residual polynomials vanish for symmetric Dt at rho=0; every symmetric-K actual dilute root automatically passes both finite certificates, including nonzero coupling. The actual long-attractive/short-repulsive negative-g OZ counterexample passes the finite Wronskian certificate and has zero weighted budget and structural matrix identity/strict positivity. Automatic admissibility now extends to every supplied positive-density or nonzero-coupling actual root; the analytic budget remains explicit.",
+  "delivery_receipts": [
+    "mixture_paper_notification_853_receipt.json",
+    "mixture_paper_notification_861_receipt.json",
+    "mixture_paper_notification_875_receipt.json",
+    "mixture_paper_notification_900_receipt.json",
+    "mixture_paper_notification_951_receipt.json",
+    "mixture_paper_notification_1074_receipt.json",
+    "mixture_paper_notification_1151_receipt.json"
+  ],
+  "pole_checkpoint": {
+    "modules": [
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearPoleCancellation.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearPolePolynomial.lean"
+    ],
+    "new_theorems": 14,
+    "result": "The actual BH root plus symmetric K automatically cancels all four finite Yukawa residue matrices, without assuming unknown G symmetry, contact selection, a Wronskian certificate, or density inverses. Both actual U/V numerator polynomials vanish at every +/-z label. Arbitrary finite species/tail sets, unequal diameters, signed/zero densities and repeated rates are allowed.",
+    "exact_symbolic_examples": "Three fixed rational normalized parameter dictionaries: binary one tail, binary two distinct tails, ternary one tail. Exact linear combination completion verifies 22+32+60=114 coefficient identities over independent C/W. Not a universal completion theorem or a Lean-verified parameter-family bridge.",
+    "remaining": "Uniform completion of origin/polynomial terms from actual amplitude/moment dictionary, including repeated-rate multiplicity. Full positive-density automatic admissibility remains unproved.",
+    "scope": "Finite-pole cancellation alone is insufficient for the full Wronskian coefficient certificate; existing general structural reconstruction remains conditional."
+  },
+  "origin_checkpoint": {
+    "new_modules": [
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearCompletion.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearOriginJet.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearOriginDictionary.lean"
+    ],
+    "new_guarded_theorems": 25,
+    "uniform_kernel_algebra": true,
+    "actual_BH_moment_and_origin_kernel_bridges": true,
+    "actual_rational_normalization_denominator_degree_bridge": false,
+    "polynomial_completion": "Finite distinct nonzero pole set, entry degree bound, stronger lower block bound, skew/Lagrangian origin imply zero polynomial matrix. Conditional abstract algebra theorem.",
+    "origin_jet": "Highest three products vanish pointwise; next two coefficients vanish by actual BH moment dictionaries; residue kernel is Lagrangian; constant projected kernel vanishes pointwise. Arbitrary species sum as linear functional.",
+    "scope": "All species/tail sizes; repeated nonzero rates and signed/zero densities; no root or unknown G symmetry for the moment/origin kernel identities.",
+    "remaining": "Completed: actual rational normalization and degree bridge, unscaled kernel origin constraints, finite factors, polynomial completion and determinant cancellation."
+  },
+  "distinct_origin_checkpoint": {
+    "new_modules": [
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctCertificate.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctPoles.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctReduction.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctResidues.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctWronskian.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearFixedOriginAdmissibility.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearOriginExpansion.lean"
+    ],
+    "new_guarded_theorems": 51,
+    "actual_distinct_rate_denominator_bridge": true,
+    "repeated_rate_collected_root_residues": true,
+    "actual_root_reflected_pole_factor_divisibility": true,
+    "tail_count_independent_remainder_degree_bounds": {
+      "U": 5,
+      "V": 4
+    },
+    "fixed_origin_coefficient_checks_per_ordered_species_pair": {
+      "U": 6,
+      "V": 5,
+      "total": 11
+    },
+    "fixed_origin_certificate_iff_existing_finite_wronskian_at_root": true,
+    "actual_RDF_radial_OZ_finite_k_capstone_from_fixed_origin_certificate": true,
+    "exact_finite_J_L_origin_expansion_with_rational_remainder": true,
+    "origin_expansion_orders": "arbitrary natural n; z!=0 and s+z!=0; no convergence assumption",
+    "scope": "arbitrary finite species/tails; positive repeated rates with no upper bound; unequal diameters; signed or zero densities for algebra; symmetric K and actual BH root for cancellation; no unknown G symmetry",
+    "automatic_origin_coefficient_vanishing": true,
+    "remaining": "Completed by automatic actual-root finite Wronskian theorem.",
+    "physical_scope": "Structural closure only. No g>=0, thermodynamic route consistency, Maxwell/binodal accuracy, or global-root existence conclusion."
+  },
+  "automatic_completion_checkpoint": {
+    "new_modules": [
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearAutomaticAdmissibility.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearAutomaticWronskian.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearFactorCompletion.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicDefectPolynomial.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicHS.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicKernel.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicOrigin.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicPolynomial.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicWronskian.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearMatrixPolynomial.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearNormalizedDegree.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearNormalizedFactors.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearNormalizedOrigin.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearNormalizedTransport.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearOriginLift.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearOriginPolynomial.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearPolynomialCoefficients.lean",
+      "LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearPolynomialDegree.lean"
+    ],
+    "new_guarded_theorems": 123,
+    "automatic_actual_root_finite_wronskian": true,
+    "automatic_actual_root_fixed_origin_coefficients": true,
+    "actual_finite_origin_expansion_to_polynomial_normalization": true,
+    "zero_density_rows_preserved_by_unscaled_kernel": true,
+    "HS_cleared_defect_zero": true,
+    "normalized_numerator_origin_factor_degree": 5,
+    "normalization_matrix_determinant_nonzero": true,
+    "normalized_defect_reflected_factor_degree": "4*m, m=number of distinct rates",
+    "normalized_defect_entry_degree_bound": "4*m+1",
+    "normalized_defect_lower_block_degree_bound": "4*m",
+    "algebraic_capstone": "nonlinearRoot_automatic_finite_wronskian",
+    "actual_RDF_OZ_finite_k_capstone": "nonlinearMixtureRDF_automatic_admissibility_certificate",
+    "algebraic_domain": "supplied actual BH root; symmetric K; arbitrary finite species and tails; strictly positive rates with repetitions and no upper bound; vacMix!=0; no density inverse, density sign, equal diameter, or unknown G symmetry premise",
+    "analytic_domain": "positive diameters; nonnegative densities for positive definiteness; explicit actual weighted kernel budget at delta>0 below all rates is <1; no independent Wronskian or reciprocity certificate",
+    "remaining_algebraic_bridge": null,
+    "not_proved": [
+      "global existence or continuation of BH roots",
+      "automatic decay budget at every physical state",
+      "g>=0",
+      "thermodynamic route consistency",
+      "Maxwell/binodal accuracy",
+      "universal finite-order anomaly threshold",
+      "SCOZA closure"
+    ]
+  },
+  "legacy_matrix_retirement_checkpoint": {
+    "retired_axioms": [
+      "MSAMixture.matExactMSAEqualDiam_hcore",
+      "FMSA.ExactMSA.MatEqualDiamCertificate.matExactMSAEqualDiam_kspace_residual",
+      "MSAMixture.matExactMSAUnequalDiam_hcore",
+      "MSAMixture.matHSexactUnequalDiam_kspace"
+    ],
+    "retired_count": 4,
+    "replaced_by_kernel_checked_theorems": true,
+    "original_DCF_definitions_and_closed_RHS_preserved": true,
+    "new_definition_and_bridge_modules": [
+      "LeanCode/YukawaOZMix/MSAMixtureBHRootDefs.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureBHRootUneqDefs.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureBHRootRecenter.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureBaxterLaplace.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureLegacySingleTail.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureLegacyFourier.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureEqualRootBridge.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureSingleTailOriginPolynomial.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureEqualCoreOrigin.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureEqualCoreOriginAlgebra.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureEqualCoreResidues.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureEqualCorePolynomial.lean",
+      "LeanCode/YukawaOZMix/MSAMixtureEqualCoreBridge.lean"
+    ],
+    "default_guard_module": "LeanCode/MixtureLegacyRetirementProject.lean",
+    "default_migration_guards": 77,
+    "existing_multitail_guards": 1074,
+    "tracked_combined_guards": 1151,
+    "guard_scope": "MultiTailMSAProject plus MixtureLegacyRetirementProject; other existing project guards are additional",
+    "audited_migration_theorems": 77,
+    "joint_independent_theorem_footprints": 526,
+    "joint_axiom_counts": {
+      "standard_three": 524,
+      "propext_Quot_sound": 2
+    },
+    "build_jobs": 9008,
+    "build_targets": [
+      "LeanCode",
+      "ExactMSACertificate",
+      "ExactMSASparseFeasibility",
+      "MatExactMSAEqualDiamCertificate"
+    ],
+    "build_log": "mixture_legacy_retirement_build.log",
+    "dependency_log": "mixture_legacy_retirement_dependency_audit.log",
+    "joint_dependency_log": "mixture_legacy_retirement_joint_audit.log",
+    "selected_source_hashes": 182,
+    "git_diff_check": "PASS",
+    "legacy_Fourier_domain": "supplied actual single-tail BH root; z>0; k!=0; sigma_i>0; rho_i>=0; vacMix>0; symmetric K. Equal-diameter interfaces additionally sigma_i=sig>0. HS anchor has no nonlinear root premise.",
+    "weighted_RDF_decay_budget_needed_for_legacy_Fourier": false,
+    "arbitrary_finite_tail_scope": "The previously completed automatic finite-tail Wronskian theorem is unchanged; the four legacy interfaces are its faithful singleton-tail specializations.",
+    "retained_physical_limits": [
+      "global root existence and continuation",
+      "all-state RDF decay",
+      "g>=0",
+      "thermodynamic route consistency",
+      "Maxwell/binodal physical accuracy",
+      "universal finite-order anomaly thresholds",
+      "SCOZA"
+    ]
+  }
+}

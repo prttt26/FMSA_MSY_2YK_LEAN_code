@@ -1,0 +1,126 @@
+strace: Process 38251 attached
+strace: Process 38253 attached
+strace: Process 38254 attached
+strace: Process 38255 attached
+strace: Process 38256 attached
+strace: Process 38257 attached
+strace: Process 38258 attached
+strace: Process 38259 attached
+strace: Process 38260 attached
+strace: Process 38261 attached
+strace: Process 38262 attached
+strace: Process 38263 attached
+strace: Process 38264 attached
+strace: Process 38265 attached
+strace: Process 38266 attached
+strace: Process 38267 attached
+strace: Process 38268 attached
+strace: Process 38269 attached
+strace: Process 38270 attached
+strace: Process 38271 attached
+strace: Process 38272 attached
+strace: Process 38273 attached
+strace: Process 38274 attached
+strace: Process 38281 attached
+strace: Process 38282 attached
+strace: Process 38283 attached
+strace: Process 38284 attached
+strace: Process 38285 attached
+strace: Process 38286 attached
+strace: Process 38287 attached
+strace: Process 38288 attached
+strace: Process 38289 attached
+strace: Process 38290 attached
+strace: Process 38291 attached
+strace: Process 38292 attached
+strace: Process 38293 attached
+strace: Process 38294 attached
+strace: Process 38295 attached
+strace: Process 38296 attached
+strace: Process 38297 attached
+strace: Process 38298 attached
+strace: Process 38299 attached
+strace: Process 38300 attached
+strace: Process 38301 attached
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+strace: Process 38302 attached
+strace: Process 38303 attached
+strace: Process 38304 attached
+strace: Process 38305 attached
+strace: Process 38307 attached
+strace: Process 38308 attached
+strace: Process 38549 attached
+strace: Process 38550 attached
+strace: Process 38551 attached
+strace: Process 38552 attached
+strace: Process 38553 attached
+strace: Process 38554 attached
+strace: Process 38555 attached
+strace: Process 38556 attached
+strace: Process 38557 attached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 55.82    4.227021         532      7945      1021 futex
+ 14.73    1.115389           2    417513    347227 statx
+  9.79    0.741398          63     11695       237 newfstatat
+  8.50    0.643726       30653        21           wait4
+  2.99    0.226260           4     47480         1 mmap
+  2.09    0.158392           3     47575       273 openat
+  1.69    0.128128           2     47252           read
+  1.37    0.103685           2     47339           fstat
+  1.28    0.097159           2     47374           close
+  0.62    0.047225          67       704       682 execve
+  0.62    0.046731        2336        20           clone
+  0.14    0.010608           5      1971           mprotect
+  0.10    0.007805          46       168           rt_sigprocmask
+  0.07    0.005359         153        35           sigaltstack
+  0.05    0.003994         102        39           clone3
+  0.03    0.002288          13       169           madvise
+  0.02    0.001296          11       109           munmap
+  0.01    0.001132          18        60           rseq
+  0.01    0.001009          12        80           set_robust_list
+  0.01    0.000711           3       230       131 access
+  0.01    0.000508           3       167       165 readlink
+  0.00    0.000284           3        81           brk
+  0.00    0.000245           5        44           getrandom
+  0.00    0.000231         115         2         2 rt_sigreturn
+  0.00    0.000214           5        36           getdents64
+  0.00    0.000211           7        27           chdir
+  0.00    0.000176          44         4           io_uring_setup
+  0.00    0.000172           2        69           getcwd
+  0.00    0.000131           2        50           rt_sigaction
+  0.00    0.000128           2        51           pread64
+  0.00    0.000116           2        45           fcntl
+  0.00    0.000104           2        41           pipe2
+  0.00    0.000100           3        32           prlimit64
+  0.00    0.000078           2        33           write
+  0.00    0.000078           2        37           geteuid
+  0.00    0.000073           3        22           arch_prctl
+  0.00    0.000067          16         4           kill
+  0.00    0.000065           3        19         8 stat
+  0.00    0.000061           2        22           set_tid_address
+  0.00    0.000058           1        54           dup2
+  0.00    0.000041          20         2         2 rt_sigsuspend
+  0.00    0.000038           5         7         1 open
+  0.00    0.000037          18         2           io_uring_enter
+  0.00    0.000036          18         2           readlinkat
+  0.00    0.000028          28         1           sched_yield
+  0.00    0.000019           0        27           gettid
+  0.00    0.000016           8         2           sysinfo
+  0.00    0.000012           6         2           epoll_create1
+  0.00    0.000009           9         1           timer_settime
+  0.00    0.000008           4         2           epoll_ctl
+  0.00    0.000007           3         2           eventfd2
+  0.00    0.000006           2         3         3 ioctl
+  0.00    0.000005           1         3           lseek
+  0.00    0.000004           2         2           getpid
+  0.00    0.000004           1         4           flock
+  0.00    0.000004           4         1           setpgid
+  0.00    0.000004           4         1           timer_create
+  0.00    0.000003           3         1         1 lstat
+  0.00    0.000003           3         1           poll
+  0.00    0.000003           3         1           getegid
+  0.00    0.000002           2         1           getuid
+  0.00    0.000002           2         1           getgid
+------ ----------- ----------- --------- --------- ----------------
+100.00    7.572707          11    678688    349754 total

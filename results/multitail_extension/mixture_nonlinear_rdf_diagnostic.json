@@ -1,0 +1,481 @@
+{
+  "scope": "floating-point actual nonlinear renewal/DCF diagnostic only; no interval or all-state certificate",
+  "orientation": "Yg=GSource+Yg causal-convolved with K; K_ij=rho_i*Q_ij(t+lambda_ij)",
+  "limitations": "finite grid and quadrature; excess Laplace/radial tails truncated; sampled OZ and Wronskian tests are not formal or exact coefficient certificates; Gram samples use actual Q but are not an all-k proof or zero-k radial thermodynamic identity",
+  "cases": [
+    {
+      "label": "binary_single",
+      "sigma": [
+        1.0,
+        1.6
+      ],
+      "rho": [
+        0.008,
+        0.012
+      ],
+      "z": [
+        1.8
+      ],
+      "strengths": [
+        [
+          [
+            0.3,
+            0.24
+          ],
+          [
+            0.24,
+            0.36
+          ]
+        ]
+      ],
+      "step": 0.004,
+      "excess_ceiling": 14.0,
+      "root_residual": 4.75103629533951e-16,
+      "weighted_budget_delta": 0.2,
+      "numerical_weighted_budget": 0.234071881163167,
+      "numerical_budget_passes": true,
+      "contact_minimum": 1.237467949657197,
+      "maximum_RDF_reciprocity_error": 2.189301744337513e-07,
+      "maximum_labelled_G_moment_error": 2.16385779849837e-06,
+      "maximum_rational_reciprocity_residual": 3.952393967665557e-14,
+      "maximum_sampled_imaginary_axis_Wronskian_U_residual": 1.0096109708453097e-11,
+      "maximum_sampled_imaginary_axis_Wronskian_V_residual": 1.8189894035458565e-11,
+      "actual_Fourier_factor_gram_samples": [
+        {
+          "k": 0.0,
+          "minimum_gram_eigenvalue": 0.984613917173982
+        },
+        {
+          "k": 0.1,
+          "minimum_gram_eigenvalue": 0.9846792432406356
+        },
+        {
+          "k": 0.37,
+          "minimum_gram_eigenvalue": 0.9854694858495978
+        },
+        {
+          "k": 1.3,
+          "minimum_gram_eigenvalue": 0.9913183255883217
+        },
+        {
+          "k": 9.0,
+          "minimum_gram_eigenvalue": 0.9996311030518645
+        },
+        {
+          "k": 60.0,
+          "minimum_gram_eigenvalue": 0.9999773737056876
+        }
+      ],
+      "maximum_sampled_radial_OZ_residual": 1.0023955022905873e-06,
+      "maximum_absolute_excess_at_truncation": 3.7991046493157654e-06
+    },
+    {
+      "label": "binary_single_refined",
+      "sigma": [
+        1.0,
+        1.6
+      ],
+      "rho": [
+        0.008,
+        0.012
+      ],
+      "z": [
+        1.8
+      ],
+      "strengths": [
+        [
+          [
+            0.3,
+            0.24
+          ],
+          [
+            0.24,
+            0.36
+          ]
+        ]
+      ],
+      "step": 0.002,
+      "excess_ceiling": 14.0,
+      "root_residual": 4.75103629533951e-16,
+      "weighted_budget_delta": 0.2,
+      "numerical_weighted_budget": 0.234071881163167,
+      "numerical_budget_passes": true,
+      "contact_minimum": 1.237467949657197,
+      "maximum_RDF_reciprocity_error": 5.4732553156355834e-08,
+      "maximum_labelled_G_moment_error": 5.409656722576983e-07,
+      "maximum_rational_reciprocity_residual": 3.952393967665557e-14,
+      "maximum_sampled_imaginary_axis_Wronskian_U_residual": 1.0096109708453097e-11,
+      "maximum_sampled_imaginary_axis_Wronskian_V_residual": 1.8189894035458565e-11,
+      "actual_Fourier_factor_gram_samples": [
+        {
+          "k": 0.0,
+          "minimum_gram_eigenvalue": 0.984613917173982
+        },
+        {
+          "k": 0.1,
+          "minimum_gram_eigenvalue": 0.9846792432406356
+        },
+        {
+          "k": 0.37,
+          "minimum_gram_eigenvalue": 0.9854694858495978
+        },
+        {
+          "k": 1.3,
+          "minimum_gram_eigenvalue": 0.9913183255883217
+        },
+        {
+          "k": 9.0,
+          "minimum_gram_eigenvalue": 0.9996311030518645
+        },
+        {
+          "k": 60.0,
+          "minimum_gram_eigenvalue": 0.9999773737056876
+        }
+      ],
+      "maximum_sampled_radial_OZ_residual": 5.349646533918395e-08,
+      "maximum_absolute_excess_at_truncation": 9.49786156168031e-07
+    },
+    {
+      "label": "binary_high_z_signed",
+      "sigma": [
+        1.0,
+        1.6
+      ],
+      "rho": [
+        0.004,
+        0.006
+      ],
+      "z": [
+        1.0,
+        60.0
+      ],
+      "strengths": [
+        [
+          [
+            0.2,
+            0.16000000000000003
+          ],
+          [
+            0.16000000000000003,
+            0.24
+          ]
+        ],
+        [
+          [
+            -0.1,
+            -0.08000000000000002
+          ],
+          [
+            -0.08000000000000002,
+            -0.12
+          ]
+        ]
+      ],
+      "step": 0.004,
+      "excess_ceiling": 14.0,
+      "root_residual": 4.38356959695045e-16,
+      "weighted_budget_delta": 0.2,
+      "numerical_weighted_budget": 0.1318681040977112,
+      "numerical_budget_passes": true,
+      "contact_minimum": 1.088399360026269,
+      "maximum_RDF_reciprocity_error": 1.0414128048807925e-07,
+      "maximum_labelled_G_moment_error": 8.637594291815986e-06,
+      "maximum_rational_reciprocity_residual": 9.601928861622975e-15,
+      "maximum_sampled_imaginary_axis_Wronskian_U_residual": 1.4388130737212733e-11,
+      "maximum_sampled_imaginary_axis_Wronskian_V_residual": 9.094947017729282e-12,
+      "actual_Fourier_factor_gram_samples": [
+        {
+          "k": 0.0,
+          "minimum_gram_eigenvalue": 0.9891354739449126
+        },
+        {
+          "k": 0.1,
+          "minimum_gram_eigenvalue": 0.9892540029493543
+        },
+        {
+          "k": 0.37,
+          "minimum_gram_eigenvalue": 0.9905567421390684
+        },
+        {
+          "k": 1.3,
+          "minimum_gram_eigenvalue": 0.9960250039904617
+        },
+        {
+          "k": 9.0,
+          "minimum_gram_eigenvalue": 0.9998317303738231
+        },
+        {
+          "k": 60.0,
+          "minimum_gram_eigenvalue": 0.9999897871848114
+        }
+      ],
+      "maximum_sampled_radial_OZ_residual": 1.0194711487360175e-06,
+      "maximum_absolute_excess_at_truncation": 1.9306204399605065e-06
+    },
+    {
+      "label": "binary_repeated_rates",
+      "sigma": [
+        1.0,
+        1.6
+      ],
+      "rho": [
+        0.004,
+        0.006
+      ],
+      "z": [
+        5.0,
+        5.0
+      ],
+      "strengths": [
+        [
+          [
+            0.2,
+            0.16000000000000003
+          ],
+          [
+            0.16000000000000003,
+            0.24
+          ]
+        ],
+        [
+          [
+            -0.1,
+            -0.08000000000000002
+          ],
+          [
+            -0.08000000000000002,
+            -0.12
+          ]
+        ]
+      ],
+      "step": 0.004,
+      "excess_ceiling": 14.0,
+      "root_residual": 1.3309699667192608e-16,
+      "weighted_budget_delta": 0.2,
+      "numerical_weighted_budget": 0.12252843606850393,
+      "numerical_budget_passes": true,
+      "contact_minimum": 1.094504012718887,
+      "maximum_RDF_reciprocity_error": 1.0499124369900414e-07,
+      "maximum_labelled_G_moment_error": 2.0688756555697907e-06,
+      "maximum_rational_reciprocity_residual": 9.601928861622975e-15,
+      "maximum_sampled_imaginary_axis_Wronskian_U_residual": 5.445458561751548e-12,
+      "maximum_sampled_imaginary_axis_Wronskian_V_residual": 6.466938262913635e-12,
+      "actual_Fourier_factor_gram_samples": [
+        {
+          "k": 0.0,
+          "minimum_gram_eigenvalue": 0.9970287999094185
+        },
+        {
+          "k": 0.1,
+          "minimum_gram_eigenvalue": 0.9970303994082117
+        },
+        {
+          "k": 0.37,
+          "minimum_gram_eigenvalue": 0.9970501764452058
+        },
+        {
+          "k": 1.3,
+          "minimum_gram_eigenvalue": 0.9972114333334074
+        },
+        {
+          "k": 9.0,
+          "minimum_gram_eigenvalue": 0.9998192637196905
+        },
+        {
+          "k": 60.0,
+          "minimum_gram_eigenvalue": 0.9999895761016098
+        }
+      ],
+      "maximum_sampled_radial_OZ_residual": 1.252375694375113e-06,
+      "maximum_absolute_excess_at_truncation": 1.6809899843206466e-06
+    },
+    {
+      "label": "ternary_multitail",
+      "sigma": [
+        1.0,
+        1.4,
+        2.3
+      ],
+      "rho": [
+        0.0003,
+        0.0005,
+        0.0008
+      ],
+      "z": [
+        1.0,
+        5.0,
+        20.0
+      ],
+      "strengths": [
+        [
+          [
+            0.15,
+            0.15,
+            0.15
+          ],
+          [
+            0.15,
+            0.15,
+            0.15
+          ],
+          [
+            0.15,
+            0.15,
+            0.15
+          ]
+        ],
+        [
+          [
+            -0.06,
+            -0.06,
+            -0.06
+          ],
+          [
+            -0.06,
+            -0.06,
+            -0.06
+          ],
+          [
+            -0.06,
+            -0.06,
+            -0.06
+          ]
+        ],
+        [
+          [
+            0.03,
+            0.03,
+            0.03
+          ],
+          [
+            0.03,
+            0.03,
+            0.03
+          ],
+          [
+            0.03,
+            0.03,
+            0.03
+          ]
+        ]
+      ],
+      "step": 0.004,
+      "excess_ceiling": 14.0,
+      "root_residual": 1.9821784298032975e-16,
+      "weighted_budget_delta": 0.2,
+      "numerical_weighted_budget": 0.06944511583671384,
+      "numerical_budget_passes": true,
+      "contact_minimum": 1.0664331164044514,
+      "maximum_RDF_reciprocity_error": 4.749877469123476e-08,
+      "maximum_labelled_G_moment_error": 4.699368050711805e-06,
+      "maximum_rational_reciprocity_residual": 1.6237011735142914e-14,
+      "maximum_sampled_imaginary_axis_Wronskian_U_residual": 2.454007238922233e-12,
+      "maximum_sampled_imaginary_axis_Wronskian_V_residual": 1.1666756877146889e-12,
+      "actual_Fourier_factor_gram_samples": [
+        {
+          "k": 0.0,
+          "minimum_gram_eigenvalue": 0.997702391213735
+        },
+        {
+          "k": 0.1,
+          "minimum_gram_eigenvalue": 0.9977112692152866
+        },
+        {
+          "k": 0.37,
+          "minimum_gram_eigenvalue": 0.9978057642035276
+        },
+        {
+          "k": 1.3,
+          "minimum_gram_eigenvalue": 0.9980060629811487
+        },
+        {
+          "k": 9.0,
+          "minimum_gram_eigenvalue": 0.9998348402898948
+        },
+        {
+          "k": 60.0,
+          "minimum_gram_eigenvalue": 0.9999927647651162
+        }
+      ],
+      "maximum_sampled_radial_OZ_residual": 3.9721489032956e-07,
+      "maximum_absolute_excess_at_truncation": 4.868501073396203e-07
+    },
+    {
+      "label": "dilute_long_attraction_short_repulsion_negative_g",
+      "sigma": [
+        1.0,
+        1.6
+      ],
+      "rho": [
+        0.0,
+        0.0
+      ],
+      "z": [
+        1.0,
+        20.0
+      ],
+      "strengths": [
+        [
+          [
+            1.0,
+            1.3
+          ],
+          [
+            1.3,
+            1.6
+          ]
+        ],
+        [
+          [
+            -3.0,
+            -3.9000000000000004
+          ],
+          [
+            -3.9000000000000004,
+            -4.800000000000001
+          ]
+        ]
+      ],
+      "step": 0.004,
+      "excess_ceiling": 14.0,
+      "root_residual": 5.354469160712991e-17,
+      "weighted_budget_delta": 0.2,
+      "numerical_weighted_budget": 0.0,
+      "numerical_budget_passes": true,
+      "contact_minimum": -1.0000000000000004,
+      "maximum_RDF_reciprocity_error": 0.0,
+      "maximum_labelled_G_moment_error": 0.0002110961074621373,
+      "maximum_rational_reciprocity_residual": 0.0,
+      "maximum_sampled_imaginary_axis_Wronskian_U_residual": 0.0,
+      "maximum_sampled_imaginary_axis_Wronskian_V_residual": 0.0,
+      "actual_Fourier_factor_gram_samples": [
+        {
+          "k": 0.0,
+          "minimum_gram_eigenvalue": 1.0
+        },
+        {
+          "k": 0.1,
+          "minimum_gram_eigenvalue": 1.0
+        },
+        {
+          "k": 0.37,
+          "minimum_gram_eigenvalue": 1.0
+        },
+        {
+          "k": 1.3,
+          "minimum_gram_eigenvalue": 1.0
+        },
+        {
+          "k": 9.0,
+          "minimum_gram_eigenvalue": 1.0
+        },
+        {
+          "k": 60.0,
+          "minimum_gram_eigenvalue": 1.0
+        }
+      ],
+      "maximum_sampled_radial_OZ_residual": 1.970584027244371e-05,
+      "maximum_absolute_excess_at_truncation": 1.330445950298298e-06
+    }
+  ]
+}

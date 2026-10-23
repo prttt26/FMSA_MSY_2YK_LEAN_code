@@ -1,0 +1,10 @@
+import LeanCode.YukawaOZMix.MSAMultiTailMixtureHSPairReference
+/-- info: 'FMSA.ExactMSA.MultiTailMixture.rdfHSPairCandidate_actual_radial_OZ' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms FMSA.ExactMSA.MultiTailMixture.rdfHSPairCandidate_actual_radial_OZ
+/-- info: 'FMSA.ExactMSA.MultiTailMixture.rdfHSPairCandidate_valid_of_weighted_budget' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms FMSA.ExactMSA.MultiTailMixture.rdfHSPairCandidate_valid_of_weighted_budget
+/-- info: 'FMSA.ExactMSA.MultiTailMixture.firstOrderMixtureRDF_pairContact_certificate_of_weighted_budget' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms FMSA.ExactMSA.MultiTailMixture.firstOrderMixtureRDF_pairContact_certificate_of_weighted_budget

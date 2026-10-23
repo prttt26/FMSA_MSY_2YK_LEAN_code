@@ -1,0 +1,12 @@
+'FMSA.ExactMSA.BHierarchy.lower_source_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.BHierarchy.lower_source_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.BHierarchy.corrected_b_eq_raw_sub' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.BHierarchy.oz_order_dcf' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.BHierarchy.baxter_dressing' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.BHierarchy.raw_b_dcf' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.BHierarchy.corrected_b_dcf' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.BHierarchy.hierarchy_dcf' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.BHierarchy.first_order_recovered' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.BHierarchy.coefficient_fixed_basis' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.BHierarchy.truncation_fixed_basis' depends on axioms: [propext, Classical.choice, Quot.sound]
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/MSA_and_1st_Truncation/../.lake/packages/batteries' has local changes

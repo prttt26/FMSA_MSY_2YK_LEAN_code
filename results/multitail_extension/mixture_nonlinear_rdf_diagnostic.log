@@ -1,0 +1,6 @@
+binary_single budget 0.234071881163167 OZ 1.0023955022905873e-06
+binary_single_refined budget 0.234071881163167 OZ 5.349646533918395e-08
+binary_high_z_signed budget 0.1318681040977112 OZ 1.0194711487360175e-06
+binary_repeated_rates budget 0.12252843606850393 OZ 1.252375694375113e-06
+ternary_multitail budget 0.06944511583671384 OZ 3.9721489032956e-07
+dilute_long_attraction_short_repulsion_negative_g budget 0.0 OZ 1.970584027244371e-05

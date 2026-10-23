@@ -1,0 +1,206 @@
+{
+  "scope": "floating-point evaluation of the explicit sufficient kernel budget only",
+  "not_a_formal_interval_certificate": true,
+  "reference_condition": "arbitrary positive additive diameters: actual pair-contact HS reference constructed internally under the certified weighted budget; strictly positive densities and vacMix>0 required by the actual HS factorization; floating-point values here do not certify the exact budget inequality",
+  "failure_meaning": "budget >= 1 does not imply nonintegrability or physical instability",
+  "cases": [
+    {
+      "rho": [
+        0.02
+      ],
+      "sigma": [
+        1.0
+      ],
+      "delta": 0.2,
+      "rates": [
+        0.5,
+        1.8
+      ],
+      "vacancy": 0.989528024488034,
+      "entry_budgets": [
+        [
+          0.04605435622794203
+        ]
+      ],
+      "quadrature_error_estimate": 5.113060666855021e-16,
+      "weighted_kernel_budget": 0.04605435622794203,
+      "numerical_sufficient_budget_passes": true,
+      "equal_diameters": true,
+      "Y_bound_multiplier": 1.0482777572586166,
+      "U_bound_multiplier": 1.098886256363155
+    },
+    {
+      "rho": [
+        0.01,
+        0.015
+      ],
+      "sigma": [
+        1.0,
+        1.6
+      ],
+      "delta": 0.2,
+      "rates": [
+        0.6,
+        1.8,
+        1.8
+      ],
+      "vacancy": 0.9625941034712575,
+      "entry_budgets": [
+        [
+          0.023955714954665825,
+          0.03471861892869358
+        ],
+        [
+          0.11234209509508203,
+          0.1561558069443723
+        ]
+      ],
+      "quadrature_error_estimate": 3.632341493396015e-15,
+      "weighted_kernel_budget": 0.32717223592281375,
+      "numerical_sufficient_budget_passes": true,
+      "equal_diameters": false,
+      "Y_bound_multiplier": 1.4862644697362413,
+      "U_bound_multiplier": 2.20898207400035
+    },
+    {
+      "rho": [
+        0.0003,
+        0.0005,
+        0.0008
+      ],
+      "sigma": [
+        1.0,
+        1.4,
+        2.3
+      ],
+      "delta": 0.35,
+      "rates": [
+        0.5,
+        3.0
+      ],
+      "vacancy": 0.994028041805036,
+      "entry_budgets": [
+        [
+          0.000725043738216161,
+          0.0009395324983098052,
+          0.0014221322085205053
+        ],
+        [
+          0.002772833450159681,
+          0.0035104137567223597,
+          0.005169969446488388
+        ],
+        [
+          0.0167708558289685,
+          0.020362055795439274,
+          0.02844225571999851
+        ]
+      ],
+      "quadrature_error_estimate": 8.894562024999516e-16,
+      "weighted_kernel_budget": 0.08011509244282318,
+      "numerical_sufficient_budget_passes": true,
+      "equal_diameters": false,
+      "Y_bound_multiplier": 1.087092517536324,
+      "U_bound_multiplier": 1.181770141683463
+    },
+    {
+      "rho": [
+        0.4
+      ],
+      "sigma": [
+        1.0
+      ],
+      "delta": 0.2,
+      "rates": [
+        0.5,
+        1.8
+      ],
+      "vacancy": 0.7905604897606805,
+      "entry_budgets": [
+        [
+          1.3765341407001512
+        ]
+      ],
+      "quadrature_error_estimate": 1.5282598971879126e-14,
+      "weighted_kernel_budget": 1.3765341407001512,
+      "numerical_sufficient_budget_passes": false,
+      "equal_diameters": true,
+      "Y_bound_multiplier": null,
+      "U_bound_multiplier": null
+    },
+    {
+      "rho": [
+        0.01,
+        0.015
+      ],
+      "sigma": [
+        1.0,
+        1.0
+      ],
+      "delta": 0.2,
+      "rates": [
+        0.6,
+        1.8,
+        1.8
+      ],
+      "vacancy": 0.9869100306100426,
+      "entry_budgets": [
+        [
+          0.023135465651231767,
+          0.023135465651231767
+        ],
+        [
+          0.03470319847684765,
+          0.03470319847684765
+        ]
+      ],
+      "quadrature_error_estimate": 1.2842763325710976e-15,
+      "weighted_kernel_budget": 0.11567732825615884,
+      "numerical_sufficient_budget_passes": true,
+      "equal_diameters": true,
+      "Y_bound_multiplier": 1.130808959164248,
+      "U_bound_multiplier": 1.27872890212613
+    },
+    {
+      "rho": [
+        0.0003,
+        0.0005,
+        0.0008
+      ],
+      "sigma": [
+        1.4,
+        1.4,
+        1.4
+      ],
+      "delta": 0.35,
+      "rates": [
+        0.5,
+        3.0
+      ],
+      "vacancy": 0.9977011919356132,
+      "entry_budgets": [
+        [
+          0.0020955608679340994,
+          0.0020955608679340994,
+          0.0020955608679340994
+        ],
+        [
+          0.0034926014465568333,
+          0.0034926014465568333,
+          0.0034926014465568333
+        ],
+        [
+          0.005588162314490933,
+          0.005588162314490933,
+          0.005588162314490933
+        ]
+      ],
+      "quadrature_error_estimate": 3.722463880134263e-16,
+      "weighted_kernel_budget": 0.0335289738869456,
+      "numerical_sufficient_budget_passes": true,
+      "equal_diameters": true,
+      "Y_bound_multiplier": 1.0346921666361715,
+      "U_bound_multiplier": 1.0705878796982546
+    }
+  ]
+}

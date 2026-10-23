@@ -1,0 +1,50 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+⚠ [8559/8564] Replayed LeanCode.YukawaOZ.ExactMSASparseSmall
+warning: LeanCode/YukawaOZ/ExactMSASparseSmall.lean:5:0: Unscoped option maxHeartbeats is not allowed:
+Please scope this to individual declarations, as in
+```
+set_option maxHeartbeats in
+-- comment explaining why this is necessary
+example : ... := ...
+```
+
+Note: This linter can be disabled with `set_option linter.style.setOption false`
+info: LeanCode/YukawaOZ/ExactMSASparseSmall.lean:13:0: 'FMSA.ExactMSA.SparseCheckpoints.small323_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [8560/8564] Replayed LeanCode.YukawaOZ.ExactMSASparseDt1
+warning: LeanCode/YukawaOZ/ExactMSASparseDt1.lean:5:0: Unscoped option maxHeartbeats is not allowed:
+Please scope this to individual declarations, as in
+```
+set_option maxHeartbeats in
+-- comment explaining why this is necessary
+example : ... := ...
+```
+
+Note: This linter can be disabled with `set_option linter.style.setOption false`
+info: LeanCode/YukawaOZ/ExactMSASparseDt1.lean:13:0: 'FMSA.ExactMSA.SparseCheckpoints.dt1_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [8561/8564] Replayed LeanCode.YukawaOZ.ExactMSASparseDt2
+warning: LeanCode/YukawaOZ/ExactMSASparseDt2.lean:5:0: Unscoped option maxHeartbeats is not allowed:
+Please scope this to individual declarations, as in
+```
+set_option maxHeartbeats in
+-- comment explaining why this is necessary
+example : ... := ...
+```
+
+Note: This linter can be disabled with `set_option linter.style.setOption false`
+info: LeanCode/YukawaOZ/ExactMSASparseDt2.lean:13:0: 'FMSA.ExactMSA.SparseCheckpoints.dt2_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [8562/8564] Built LeanCode.YukawaOZ.ExactMSASparseReassembly (5.7s)
+warning: LeanCode/YukawaOZ/ExactMSASparseReassembly.lean:6:0: Unscoped option maxHeartbeats is not allowed:
+Please scope this to individual declarations, as in
+```
+set_option maxHeartbeats in
+-- comment explaining why this is necessary
+example : ... := ...
+```
+
+Note: This linter can be disabled with `set_option linter.style.setOption false`
+info: LeanCode/YukawaOZ/ExactMSASparseReassembly.lean:34:0: 'FMSA.ExactMSA.SparseCheckpoints.full_division_reassembled' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: LeanCode/YukawaOZ/ExactMSASparseReassembly.lean:35:0: 'FMSA.ExactMSA.SparseCheckpoints.full_division_zero_of_residual' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+✔ [8563/8564] Built LeanCode.YukawaOZ.ExactMSASparseCheckpoints (3.1s)
+Build completed successfully (8564 jobs).

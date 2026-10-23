@@ -1,0 +1,6 @@
+FMSA_LEAN 更新（用户已要求同步并据实际结果改写论文）：检查点 951 guards / 8973 三目标 build jobs / 140 selected source hashes / 326 independent footprints，全部 PASS；新增 7 模块、51 个定理，只使用标准公理子集。
+本轮完成了上次待证的去重尾率分母及实际 J/L 分子桥梁。任意有限组分、任意有限正尾率（允许重复、无上限）、不等粒径、零/有符号密度的代数范围内，在实际 BH 根和对称 K 条件下，同一率所有标签留数相加后四类恒等式成立；原点以外的反射极点因子 F 完整整除实际去重 U/V 分子。若不同率数为 m，则 deg U<=2m+5、deg V<=2m+4、deg F=2m，因此 U=F*u、V=F*v 且 deg u<=5、deg v<=4。
+重要的新结论：在上述实际根条件下，旧完整有限 Wronskian coefficient certificate 等价于每个有序组分对固定的 11 个原点商多项式系数检查（u 的 0..5 共 6 个；v 的 0..4 共 5 个），检查数与尾数无关。等价性和到现有实际 RDF/径向 OZ/全部非零 k 正定性的 capstone 连接均已在 Lean 编译通过；正定性 capstone 继续要求 rho>=0、正粒径、vacMix!=0、显式实际加权预算<1。
+另外证明了任意有限 n 的实际 J/L 原点展开，显式保留有理余项；无需无限级数收敛假设。余项在 s=0 等于下一实际 C/W 矩。
+仍不能写“混合物自动 Exact MSA 证明全部完成”：尚需将这些实际有限展开提升为 HS-normalized 矩阵缺陷恒等式，并利用已证 origin kernels 证明 11 个系数自动为零。新的 fixed origin certificate 是旧独立条件的严格等价缩减，不是 BH 根已自动满足它。full_mixture_closure_certificate=false、mixture_automatic_canonical_nonlinear_admissibility=false 均保留。上次 900 checkpoint 中“去重分母尚未形式化”的说法已被本轮结果替代；HS-normalized 最后桥梁仍未完成。
+请根据此检查点更新论文有关证明范围和剩余条件的措辞。结构闭包、有限 k 检查不推出 g>=0、热力学路径一致性、Maxwell/binodal 物理准确性、全状态根延拓或普适高阶异常阈值。详细定理与边界见 Lean_code/proof_notes_msa_exact.md 最新 “Distinct-rate cancellation and fixed origin reduction (951 checkpoint)” 以及 results/multitail_extension/validation_summary.json、mixture_paper_process_handoff.json。

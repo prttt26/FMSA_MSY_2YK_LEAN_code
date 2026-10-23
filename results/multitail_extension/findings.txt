@@ -1,0 +1,599 @@
+Scalar finite-tail completion, 2026-10-08
+
+CERTIFIED, STANDARD THREE AXIOMS ONLY
+Pure fluid: arbitrary finite positive-rate Yukawa tails, including coincident
+rates, zero strengths and either amplitude sign. BH residual transcription,
+actual Q Laplace integral, given-root exterior closure, actual core convolution
+closed form, spatial smoothness and a local real smooth root family at zero
+coupling are proved. No upper bound on the rates is imposed.
+
+The actual convolution is decomposed into polynomial/polynomial,
+polynomial/tail and ordered tail/tail blocks. Actual sine integrals are
+identified with the kernel-checked spectral blocks; polarization assembles
+all diagonal and cross-rate terms. The actual radial Fourier integral of c
+satisfies 1-rho*c_hat=(1-rho*Qre)^2+(rho*Qim)^2 for nonzero k. Qre/Qim
+are identified with the actual cosine/negative-sine integrals of Q. The
+structure denominator is nonnegative unconditionally; strict positivity at
+every nonzero k follows in the conditional actual-RDF reconstruction region below.
+
+The g-side source Laplace integral is the actual second BH RHS. With an RDF
+having the stated support, weighted moment integrability, identified moments
+and g-side OZ equation, the second BH equations follow. The concrete Q's
+support, weighted L1 and transform are proved. This does not construct an RDF
+with h=-1 in the hard core from a BH root alone. The old theorem name hcore is
+a c-side Fourier identity. Integrability alone does not imply support.
+Repeated-rate exterior sum closure identifies grouped amplitudes, not each
+labelled tail; the forward closure theorem at a root remains valid.
+
+MIXTURE CHECKPOINT, NOT A FULL CERTIFICATE
+Arbitrary finite species and tail counts, unequal nonnegative additive
+diameters: actual real-space convolution integrability, BH dictionary and
+smoothness, actual positive-s Laplace transform and given-root exterior
+Yukawa sum are already proved. NOW ALSO CERTIFIED: actual finite-tail
+Jacobian, distinct transposed-first/untransposed-second right-multiplication
+blocks, explicit triangular inverse, physical PY block determinant
+nonvanishing, internally constructed seed equation, and a real C-infinity
+BH amplitude root family near tau=0. Conditions: all z>0, all diameters>0,
+individual densities>=0, vacMix>0. No determinant/Jacobian/seed premise is
+retained. Actual matrix Q Fourier and its cross-correlation/Gram bridge are now certified below.
+Unconditional off-diagonal radial DCF factorization/core and matrix RDF/OZ remain open. Diagonal radial identification and conditional full matrix identification are now proved below.
+
+VALIDATION
+207 guarded standard-three axiom footprints in MultiTailMSAProject.lean.
+Default full build targets LeanCode, ExactMSACertificate and
+ExactMSASparseFeasibility; log mixture_edge_propagator_build.log (8885 jobs).
+The prior independent numerical check covers 26 states, z through 60,
+repeated/zero/signed tails and four nonzero k values. Maximum Fourier error
+1.8314e-9; other errors below 7e-15. Inputs and unequal-diameter orientation
+are preserved in independent_closure_checks.json. No new numerical scan is
+needed for the exact integral proofs. These samples do not certify strict
+stability over the continuum.
+
+PAPER SCOPE
+Pure-fluid finite-tail c-side closure/factorization may now be claimed under
+positive rates, nonzero k and a supplied real BH root. State the conditional actual RDF/OZ theorem with actual excess L1 or its
+explicit weighted-budget sufficient condition. Exclude infinite sums,
+all-parameter stability, zero-k thermodynamics, global roots through folds,
+pressure-loop normality and binodal existence/accuracy.
+
+
+RDF AUDIT, EXACT OBSTRUCTION AND CERTIFIED SYMBOL ASSEMBLY
+An explicit positive-density one-label K=0 real BH root has
+Dt=4*pi*(9*exp(-1)-2)/3, G=3/(9*exp(-1)-2), xi=1/4, z=1.
+F_alt(s)=(s-1)/(s+1)*F_PY(s), so F_alt(1)=0. Its nonzero-k
+Fourier denominator equals PY's exactly, but its labelled G is not the PY
+moment. Lean proves incompatibility of that G identification with the full
+g-side integral primitive and continuous weighted moments, with continuity
+proved by dominated convergence. This is not a no-hardcore-RDF counterexample
+for the same c; it rules out unrestricted root Q/G identification.
+
+Actual q is full-line L1. A finite-window causal moment density is uniquely
+constructed by Volterra. The universal finite-tail rational blocks and actual
+BH normalization/second equations prove, over the complex plane off the
+stated finite rational poles, T(s)T(-s)-p(s)p(-s)=-s^2 and the source-transfer
+OZ symbol identity. Here p=rho*secondRHS and sF=T+exp(-s)p.
+The reconstructed symbol matches the actual Laplace factor on the regular
+positive real axis. All these are standard-three results in the default gate.
+
+NOW CERTIFIED: global Volterra existence/uniqueness; physical shifted moment
+y(u)=(u+1)g_phys(u+1), excess e=y-(u+1); actual zero/first q moments and
+background normalization; internal exponential excess decay and L1 if some
+0<delta<all z has integral exp(delta*t)|rho*q(t)|<1; actual complex transfer
+and Abel boundary; actual RDF radial Fourier identification and Fourier OZ;
+actual radial OZ a.e. jointly with pointwise core h=-1. The last bridge
+internally discharges weighted c/h moments, triangle-region Fubini, convolution
+continuity and radial Fourier injectivity. General version: supplied BH root,
+1-xi!=0, rho!=0, positive z, and actual constructed excess L1 suffice. Explicit
+weighted budget is an internally proved sufficient condition. Every k!=0
+then has D(k)>0. This is conditional physical equation recovery, not an
+all-parameter or root-alone certificate. Labelled G needs F(z_nu)!=0.
+Still open: decay/canonical branch selection beyond that region, zero-k
+thermodynamics, RDF nonnegativity and global phase-diagram guarantees. The GSide abstract
+g is a shifted moment proxy y(u)/u, where y(u)=(u+1)g_phys(u+1), not the raw
+physical RDF shifted by one. Raw g and y are not unweighted L1 in general.
+The older WienerRenewal axiom handles compact kernels and is not reused.
+No root-alone physical reconstruction or complete mixture certificate is
+claimed. The old mixture Jacobian draft in the results directory is an archived
+prototype. Its corrected actual derivative/family implementation is now
+compiled and gated in MSAMultiTailMixtureFamily.lean.
+
+
+ACTUAL MIXTURE Q/SPECTRAL CHECKPOINT, STANDARD THREE AXIOMS ONLY
+MSAMultiTailMixtureFourier identifies the finite-tail complex Q dictionary
+with the actual full-line integral (s!=0, Re(s)>=0); negative lambda_ij is
+included. Actual Q Fourier exists at all real k, is identified with that
+dictionary for k!=0, and has the correct conjugation at -k, including k=0.
+MSAMultiTailMixtureSpectral derives actual cross-correlation joint L1 from
+the two marginal weighted L1 conditions by a measure-preserving reflection/
+shear, then identifies its actual transform with the actual Q products.
+For nonnegative species densities, the exact density/transposition identity
+F*F^H=I-sqrt(rho_i*rho_j)*C_Q,ij is proved. The Gram matrix is positive
+semidefinite, and positive definite if F is invertible. C_Q is defined by Q
+products, NOT by the actual radial c integral. Its Hermitian reciprocity is
+proved; being real is equivalent to equality of species-swapped entries.
+
+This is not yet a physical DCF/core or matrix RDF/OZ certificate. The exterior reciprocity theorem uses per-label K_nu_ij=K_nu_ji as an
+explicit sufficient physical symmetry condition; the arbitrary signed-matrix
+BH-family theorem did not require that symmetry and does not itself prove
+output reciprocity. The actual unequal-diameter radial DCF transform needs
+correct larger-diameter-row orientation and lower-support-edge boundary
+terms. Do not substitute Gram positivity for that identification. None of
+the old four matrix physics axioms has been used or removed. Actual all-order
+BH root families must be distinguished from first-order exact FMSA DCF;
+the latter identification is still a separate obligation. Previous Q-only build:
+108 guarded standard-three results, 8872 jobs; scan of 38 related sources
+has no axiom declaration, sorry, native_decide or ofReduceBool.
+
+
+BOUNDARY, ACTUAL PRIMITIVE AND FIRST-ORDER CHECKPOINT
+The ordinary qPrime has the actual integral identity integral qPrime*exp(-sr)
+=s*integral q*exp(-sr)-q(lambda+)*exp(-s*lambda), for s!=0, Re(s)>=0.
+No lower-edge jump was discarded. With sigma_j<=sigma_i and r>0, its partner
+q_jl(lambda_il-r) vanishes, for every species l. Reflected Q_ji(-r) also vanishes
+in that ordered positive domain. These are actual pointwise support results.
+
+C_Q is NOW identified with the actual full-line Fourier integral of
+P_ij=Q_ij+Q_ji(reflected)-sum_l rho_l integral Q_il(t)*Q_jl(t-r).
+Actual weighted P L1, real-valuedness and transpose/reflection parity are
+proved, including zero k. At an actual BH root, its exterior is
+2*pi*sum_nu K_nu_ij/z_nu*exp[-z_nu*(r-R_ij)], without diameter sorting.
+Per-label K symmetry is a sufficient condition for actual exterior reciprocity
+and evenness on both real half-lines. The remaining species-antisymmetric
+primitive is supported in [-R_ij,R_ij]; actual spectral antisymmetry equals
+its finite-core Fourier integral. This is a genuine reduction of the open
+reciprocity obligation, not a proof of its core part. With repeated rates,
+per-label symmetry is sufficient and need not be a necessary description of
+the physical total tail; grouped-strength symmetry is not yet formalized here.
+
+The actual local C-infinity BH family now has a proved first slope
+Dt'(0)=rightBlock(inverseBlocks(baseFirst), 2*pi*K/z). Its actual derivative
+and physical HS block inverse are internally discharged. The actual
+convolution-defined exterior DCF has exactly the prescribed first-order tail
+slope at tau=0. This is an actual HS-dressed amplitude/exterior identification,
+not a completed first-order core FMSA DCF or matrix RDF/OZ certificate.
+Open: actual positive-r primitive derivative and radial DCF transform bridge,
+finite-core primitive reciprocity, first-order core FMSA identification,
+and matrix RDF/OZ/physical branch decay. The old four matrix physics axioms
+are neither used nor removed. Historical spatial checkpoint: 159 standard-three guards,
+8880 jobs, mixture_spatial_derivative_build.log. Source scan:
+46 related files, no axiom declaration/sorry/native_decide/ofReduceBool.
+
+
+ACTUAL ORDERED DCF FIRST VARIATION, INCLUDING THE CORE
+MSAMultiTailMixtureBasis proves actual Q/Qprime finite basis expansions,
+actual improper convolution as a finite quadratic amplitude expression,
+and C-infinity coupling-amplitude smoothness of the actual ordered DCF at
+any fixed position, including spatial core knots. No differentiation under
+an improper integral is assumed; no smoothness in r at knots is asserted.
+
+MSAMultiTailMixtureLinearized explicitly supplies the coefficient slopes
+at Dt=0. All G-prime terms vanish internally. linearizedCorrelation is an
+explicit finite fixed-integral formula, not a derivative by definition.
+correlation_hasDerivAt_seed proves it is the actual family derivative.
+exists_contDiffAt_root_with_linearizedCorrelation supplies the actual PY
+local BH family and its explicit first DCF slope throughout the ordered
+positive core (larger diameter is the row) and exterior. Additivity in
+arbitrary signed matrix tail strengths is proved. The exterior formula
+is identified with the prescribed Yukawa sum by derivative uniqueness.
+This does not complete the independent double-propagator FMSA identity,
+core primitive reciprocity or the actual radial DCF/RDF/OZ bridge.
+
+Independent new numerical evidence: 5 binary/ternary states, 153 spatial
+points including core/overlap knots, signed tails, unmerged repeated BH
+labels and z through 60. Maximum normalized difference against the existing
+closed double-propagator FMSA core formula is 4.694e-14. Nonlinear BH branch
+central differences at steps 1e-3 and 5e-4 exhibit quadratic convergence;
+the largest finer-step normalized error is 3.069e-8. These samples are
+numerical evidence for the remaining identity, not a formal proof of it.
+The default 3-target build passes 8878 jobs; all 143 gates use only the
+standard three axioms. Forbidden-proof scan: 44 related sources, clean.
+Logs: mixture_linearized_core_build.log and mixture_linearized_core_check.json.
+
+
+ACTUAL SPATIAL PRIMITIVE-DCF BRIDGE
+MSAMultiTailMixtureRegularity supplies an explicit continuous right
+extension Qright from clipped polynomial/exponential functions. It keeps
+the actual lower-edge value constant to the left, rather than falsely
+setting that value to zero. Global Lipschitz and boundedness are proved
+for all z>0, sigma>=0 and arbitrary real coefficients. On the support of
+Q_jl(t), the actual product Q_il(t+r) Q_jl(t) equals the right-extension
+product for sigma_j<=sigma_i and r>0. All integrability and differentiation
+controls for the actual correlation are thereby supplied internally.
+
+MSAMultiTailMixtureDerivative proves the actual positive-axis Q cross-
+correlation derivative. It proves the actual Baxter primitive real part
+has derivative -2*pi*r*c_ij(r) at every positive r off R_ij, for the larger-
+diameter species in the row. It is continuous through every positive r,
+including contact R_ij. The derivative identity consequently holds almost
+everywhere on the entire positive axis. No BH-root, reciprocity, or
+spatial-derivative assumption is required; lower-edge and null junction
+terms are handled internally. This completes that ordered spatial bridge,
+not the full radial Fourier identification, core primitive reciprocity,
+independent double-propagator FMSA identity or matrix RDF/OZ certificate.
+
+Historical spatial three-target audit: 159 standard-three guards, 8880 jobs,
+mixture_spatial_derivative_build.log. Forbidden-proof scan: 46 related
+sources, clean; git diff --check PASS. The previous 143/8878 audit and
+5-state/153-point numerical evidence remain valid historical checkpoints.
+
+ACTUAL RADIAL IDENTIFICATION CHECKPOINT
+MSAMultiTailMixtureShell proves a globally Lipschitz actual right primitive,
+actual radius-weighted DCF integrability on compact positive windows, and
+P(a)-P(b)=2*pi*integral_a^b r*c(r) for any a,b>0, crossing contact if needed.
+OneContactCosine supplies improper integration by parts across the contact
+jump, with continuity but no derivative at contact. At an actual BH root,
+finite positive-rate Yukawa tails supply global radius-weighted DCF L1 and
+primitive decay internally. The resulting actual cosine/sine transform
+identity has no retained derivative, integrability or boundary hypotheses.
+
+MSAMultiTailMixtureRadial identifies every actual diagonal species radial
+DCF Fourier coefficient with C_Q,ii at nonzero k. Evenness for i=i follows
+from the actual reflection identity and needs no core reciprocity premise.
+For off-diagonal entries, actual exterior reciprocity is internally supplied
+by the root and per-label K symmetry; the sole retained physical premise is
+actual P_ij=P_ji on the finite core Icc(-R_ij,R_ij). Larger diameter is the
+row of the actual ordered radial DCF. With this premise for all pairs and
+nonnegative species densities, the actual radial matrix factorization
+I-sqrt(rho_i*rho_j)*c_hat_ij=F*F^H and positive semidefiniteness are proved.
+This is conditional physical factorization, not unconditional matrix
+stability. No strict positivity, all-parameter root existence, zero-k
+thermodynamics, independent DP core identity, or matrix RDF/OZ follows.
+
+Historical radial audit: 179 guards, each standard three axioms; three targets
+PASS (8883 jobs), mixture_actual_radial_build.log. Source scan: 49 related
+files, no axiom declarations/sorry/native_decide/ofReduceBool; diff check
+PASS. The 159/8880 spatial checkpoint and 153-point independent numerical
+comparison remain valid historical evidence. All four old matrix physics
+axioms are unused and are not removed or declared discharged.
+
+ACTUAL GENERAL-SPECIES PY SEED PAIR SYMMETRY
+MSAMultiTailMixtureSeedReciprocity proves baseSeed_nu_ij=baseSeed_nu_ji
+for arbitrary finite species and unequal positive diameters, all positive
+rates, nonnegative densities and positive vacMix. This is the actual seed
+constructed by the internally invertible second HS block, not a free
+symmetric seed premise. The finite identities H_li*J_lj-J_li*H_lj and
+J_ij-J_ji cancel after the rho-weighted xi2 sum, giving B^T J=J^T B.
+Actual invertibility then makes J B^-1 symmetric. No general BH-root
+primitive core reciprocity or independent DP core identity follows yet.
+
+Historical seed audit: 186 standard-three guards, three targets PASS (8884 jobs),
+mixture_seed_reciprocity_build.log; 50 related sources forbidden-proof
+scan clean, git diff --check PASS. The 179/8883 radial stage is historical.
+
+ACTUAL LOWER-EDGE Q FIRST VARIATION AND TWO-SIDED HS AMPLITUDE
+MSAMultiTailMixtureEdgePropagator now proves the actual Q_ij(lambda_ij+)
+first derivative on a smooth local root family through the PY seed:
+  sum_nu (2*pi/z_nu) * (B_nu^-1)^T * K_nu * B_nu^-1.
+B_nu is the actual recentered first HS block. The actual polynomial
+amplitude and W/C lower-edge combination loses its j-dependent moment
+terms internally and factors as T_nu*Dt_nu. Actual seed equations and HS
+finite moment identities identify T_nu=(B_nu^-1)^T via a dual resolvent
+identity. Both determinant conditions are discharged from physical PY
+parameters. The derivative of the G direction disappears at Dt(0)=0.
+The capstone constructs the actual smooth root family and its explicit
+Q lower-edge derivatives without retaining a family/derivative premise.
+
+For per-label symmetric K, this actual boundary slope is pair-symmetric;
+the actual pair-skew of Q lower-edge values has zero first derivative
+at tau=0. This gives the two-sided actual HS-block amplitude at the Q
+boundary. It is not the full independent double-propagator DCF core
+identity, core primitive reciprocity or actual matrix RDF/OZ. In particular
+boundary first-order reciprocity does not imply reciprocity at every core
+position or every finite coupling. No arbitrary-root reciprocity theorem
+or certified counterexample to it has been obtained at this stage.
+
+Current audit: 207 standard-three guards; default three targets PASS
+(8885 jobs), mixture_edge_propagator_build.log. Forbidden-proof scan: 51
+related sources clean, git diff --check PASS. The 186/8884 seed stage,
+179/8883 radial stage and prior 153-point DP comparison are historical.
+
+
+**Actual arbitrary-species HS primitive reciprocity and endpoint correction — audited checkpoint.**
+`Analysis/EvenCosine` proves the Fourier/cosine bridge under a.e. evenness,
+by symmetrizing an actual L1 function without changing its integrals.
+`MSAMultiTailMixtureRadial` now provides that weaker bridge as well as the
+previous pointwise sufficient special case. The new
+`MSAMultiTailMixtureAEReciprocity` supplies the all-pair actual radial
+Q-factorization, actual matrix Gram identity and PSD with only a.e.
+finite-core primitive reciprocity retained. Exterior reciprocity is
+still internal at an actual root with symmetric per-label strengths.
+
+This correction matters for unequal diameters. Both closed HS support
+indicators can contribute at a size-asymmetry knot. A formal explicit
+zero-density binary HS example with sigma=[1,2], no Yukawa tails and
+r=1/2 gives P01=-4*pi, P10=-2*pi. It is a removable isolated point-value
+spike: no change in an integral, no physical reciprocity violation and
+no evidence of a higher-order branch or unstable phase. The older
+pointwise conditional theorems are valid sufficient statements, but
+their premise is too strong for the raw closed-window representative.
+
+The actual new zero-Dt Q equals the independent general-N physMixN HS
+kernel pointwise. At nonnegative densities, its actual primitive times
+sqrt(rho_i*rho_j) equals the independent general-N matDCFfullN pointwise;
+the correlation bridge uses the exact geometric-density product law.
+The existing independently proved general-N HS Fourier injectivity
+certificate then gives a.e. symmetry. At strictly positive individual
+densities the weights cancel to yield full-line a.e. reciprocity of the
+actual unweighted P0. This requires sigma_i>0 and vacMix!=0, not an
+assumed seed/core reciprocity condition. Zero-density species are not
+covered by this entrywise cancellation theorem.
+
+With positive rates and vacMix>0, the actual PY BH seed root is supplied
+internally by the actual seed/determinant theorem. All pairs now have
+actual ordered radial Fourier factorization and a PSD matrix at nonzero
+real k with no retained primitive symmetry premise at tau=0. This is a
+zeroth-order full-space identification, not the first-order independent
+DP core identity. The full first-order P1 a.e. reciprocity, nonzero-
+coupling/arbitrary-root a.e. reciprocity and matrix RDF/OZ remain open.
+
+Current audit: mixture_ae_seed_reciprocity_build.log, default three targets
+PASS (8887 jobs), 222 guarded standard-three footprints. Forbidden-proof
+scan of 53 related sources and git diff --check PASS. Previous 207/8885
+and earlier stages remain historical. The four old matrix physics axioms
+are still unused, not discharged or deleted.
+
+
+**Actual full-space primitive tangent and its actual Fourier transform — audited checkpoint.**
+`MSAMultiTailMixturePrimitiveTangent` supplies global boundedness of the actual Q,
+L1 and bounds for each independent finite Q basis, and L1 of every fixed
+basis-Q cross-correlation. The actual full-line primitive is proved equal
+to a finite quadratic expression with these fixed real basisQQ integrals.
+The explicit linearizedPrimitiveReal differentiates that finite expression
+on an actual BH family through the PY seed; Gprime cancels internally.
+The existence capstone constructs the family and its derivative at every
+real spatial position, including all support/core knots, from actual
+physical determinant/seed conditions. There is no derivative-under-an-
+improper-integral hypothesis. P1_ji(-r)=P1_ij(r) is proved, as is the exact
+exterior P1=sum_nu (2*pi*K_nu_ij/z_nu)*exp[-z_nu*(r-R_ij)].
+
+`MSAMultiTailMixturePrimitiveTangentFourier` proves actual weighted basis-Q
+and basisQQ L1 on the whole Fourier axis, actual basisQQ Fourier product,
+and the actual finite-basis Q Fourier identity. The actual Q Fourier first
+variation follows by differentiating only its finite coefficients. The
+explicit full-space P1 is actually L1 under the Fourier weight for every
+real k. Its actual Fourier integral equals an explicit finite spectral
+tangent; that expression is proved equal to the actual Q-product first
+variation C_Q1. Thus the Fourier integral of the explicit real-space
+first variation equals the derivative of actual C_Q along the true local
+BH family, with every analytic control internally discharged.
+
+The joint exists_contDiffAt_root_with_primitive_fourier_tangent capstone
+internally constructs one local smooth BH family through actual baseSeed,
+its all-position actual P derivative and its all-wave-number C_Q derivative
+as the actual P1 Fourier integral. Parameters: arbitrary finite species and
+labelled tails; sigma_i>0, z_nu>0, rho_i>=0, vacMix>0; signed, zero and repeated
+labelled tails allowed. No local family, derivative-existence or integral-
+interchange premise remains. The auxiliary fixed-kernel statements only
+need sigma_i>=0 and positive rates.
+
+This is actual full-space first-order identification of the primitive and
+its Q-side Fourier coefficient. It is not yet the independent DP core DCF
+identity or P1 a.e. same-radius reciprocity. Reflection does not imply
+P1 evenness; the Fourier coefficient need not be real from this theorem
+alone. The canonical zeroth-order HS reciprocity, seed G0 symmetry and
+symmetric first-order Q lower-edge amplitudes remain certified ingredients,
+not substitutes for the missing whole-core P1 reciprocity/DP equality.
+All-real-k primitive Fourier statements do not assert a zero-k thermodynamic
+identification. Matrix RDF/OZ and arbitrary-root reciprocity remain open.
+
+Current audit: mixture_primitive_tangent_fourier_build.log; default three
+targets PASS (8889 jobs); 252 guarded standard-three footprints; forbidden-
+proof scan of 55 related sources and git diff --check PASS. The 222/8887
+AE-HS stage and 207/8885 boundary stage are historical. The four old matrix
+physics axioms remain unused, not discharged or deleted.
+
+
+**Independent DP amplitude dictionary and real-space target — audited checkpoint.**
+`MSAMultiTailMixtureDPAmplitude` constructs the independent recentered HS
+resolvent from the actual HS moment H and actual second HS block B2=I-R*H,
+R=diag(rho): Ared=H*B2^-1, Tred=I+Ared*R. The physical determinant theorem
+internally proves Tred=B1^-T. Independent bare DP amplitude
+bbar=2*pi*Tred*K*Tred.transpose is proved equal to z*E, where E is the
+previously certified actual lower-edge Q first slope. Its fourterm expansion
+has precisely one rho factor for every internal species index. This is an
+independent resolvent construction, not a definition using E or a free
+propagator fixed to satisfy the desired identity.
+
+The bare K in these Lean/BH theorems is the coefficient of the unweighted
+c1 tail K*exp[-z*(r-R)]/r. In Python notation it is beta*k_bare. The paper's
+weighted source is 2*pi*S*K*S, S=diag(sqrt(rho)). The weighted recentered
+HS factor is Frec=I-S*H*S; its inverse is internally proved equal to
+Tweighted=I+S*Ared*S. Intertwining Tweighted*S=S*Tred proves the exact
+weighted amplitude dictionary, including zero-density species, with no
+cancellation/division by density.
+
+The actual HS factor is identified with its actual positive-real Q0
+Laplace integral. Unequal-size phases are proved exactly:
+Factual=Eplus*Frec*Eminus, Eplus_ii=exp(z*sigma_i/2), Eminus=Eplus^-1.
+The actual inverse obeys the same phase conjugation, and
+Factual^-1_ij*exp(z*lambda_ij)=Tweighted_ij. This is precisely the
+phase-removed HS inverse in the bare propagator formula behind the
+paper/Python fourterm b_ij construction (Python [LN] eq:bij). Rates are
+per finite global label; repeated labels and zero entries are allowed.
+
+`MSAMultiTailMixtureDPKernel` constructs the independent reduced source
+B_mn(r)=sum_nu bbar_nu_mn*exp[-z_nu*(r-R_mn)] on r>=R_mn, with the actual
+compact HS Q0. It defines the four actual convolution terms
+
+  W_ij = B_ij - sum_n rho_n*(B_in * Q0_jn(-.))
+              - sum_m rho_m*(Q0_im(-.) * B_mj)
+              + sum_mn rho_m*rho_n*(Q0_im(-.) * B_mn * Q0_jn(-.)).
+
+The reduced DCF target is [W_ij(r)-W_ij(-r)]/(2*pi*r), physically for r>0.
+Measurability and global bounds of B, L1 of every single convolution and
+all triple inner/outer/joint L1 are proved; the Fubini interchange is
+internally justified. Symmetric per-label bare K implies pair symmetry
+of independent B, W and this DCF target. Its lower support bound
+W_ij(r)=0 for r<-R_ij follows from the actual compact HS support geometry.
+These statements require z>0 and sigma>=0 for the independent kernel
+controls; physical inverse/amplitude identification additionally uses
+sigma>0, rho>=0 and vacMix>0. No upper z bound or tail-count bound occurs.
+
+This provides the concrete independent core target and its correct
+normalization, but still does not prove equality with the actual BH P1
+or linearizedCorrelation throughout the core. Independent target symmetry
+does not establish actual P1 a.e. reciprocity. Raw closed source windows
+choose a contact value; compiled piece evaluators can choose a different
+representative at contact, so the forthcoming comparison should use a.e.
+equality or explicitly matched representatives. The previous 153-point
+numerical comparison did not sample exact contact R; it remains finite
+numerical evidence and does not discharge this missing identity.
+Actual first-order radial FT, arbitrary-root a.e. reciprocity, matrix
+RDF/OZ and all-parameter phase guarantees remain open. The manuscript's
+claimed scope should stay at its accepted 222 checkpoint until the joint
+actual-core identification is completed.
+
+Current audit: mixture_dp_joint_identification_build.log; default three targets
+PASS (8901 jobs); 403 standard-three guards; forbidden-proof scan of 67
+related sources and git diff --check PASS. The 337/8896 tangent-reciprocity,
+282/8891 DP-target and earlier audits remain historical. Four old
+matrix physics axioms remain unused, not discharged or deleted.
+
+
+**Actual Q tangent decomposition and actual P1 a.e. reciprocity — audited checkpoint.**
+The five new modules `MSAMultiTailMixtureDPQTangent`, `MSAMultiTailMixtureHSParity`,
+`MSAMultiTailMixtureDPQTransform`, `MSAMultiTailMixtureDPFactorTangent`, and
+`MSAMultiTailMixtureTangentReciprocity` connect the actual BH coefficients to
+an explicit two-sided HS tangent and prove actual first-order reciprocity.
+This supersedes the first-order reciprocity obstruction in earlier checkpoints;
+the independent real-space DP identity and arbitrary-root reciprocity remain open.
+
+For each label, H is the actual recentered HS moment, J the actual HS source,
+R=diag(rho), E=(2*pi/z)*B1^-T*K*B1^-1. The actual coefficients satisfy
+D1=(I-H*R)*E and W1=(J*R*E)/z. Internally reducing DeltaA and DeltaQp gives
+
+  DeltaA_j = -sum_m rho_m*(A0_m/z + 2*pi*sigma_m/vacMix)*E_mj,
+  DeltaQp_ij = sum_m rho_m*[(1/z^2-sigma_i/(2*z))*A0_m
+                         +(pi*sigma_m/vacMix)*(1/z-sigma_i)]*E_mj.
+
+The compact quadratic correction has coefficient
+
+  c_j = [DeltaA_j + sum_m rho_m*A0_m*E_mj/z]/2
+      = -(pi/vacMix)*sum_m rho_m*sigma_m*E_mj.
+
+It cannot be silently dropped. This is a proved identity of actual BH
+coefficients; no independent convolution representation is assumed.
+The actual complex HS moments satisfy the exact rank-one parity identity
+
+  H(s)_im - exp(-s*sigma_i)*H(-s)_im
+    = (pi*sigma_m/vacMix)*[2-s*sigma_i-(2+s*sigma_i)*exp(-s*sigma_i)]/s^2.
+
+With the unweighted right-density HS factor F(s)=I-Q0hat(s)*R, define
+L_nu(s)_ij=exp(-s*lambda_ij)*E_nu_ij and
+M_nu(s)_ij=exp(-s*R_ij)*E_nu_ij. The actual single-label Q tangent is
+
+  Q1_nu(s) = F(s)*L_nu(s)/s
+             - z_nu*F(-s)*M_nu(s)/(s*(s+z_nu)).
+
+This is identified with the actual finite-basis Fourier derivative at
+s=i*k, k!=0, along every differentiable actual BH germ through the physical
+PY seed. A joint existence theorem internally supplies a smooth root germ.
+The complex algebraic statement uses s!=0 and s+z_nu!=0; it is not an
+assertion of full-line Laplace convergence for every such complex s.
+
+Symmetric K implies L_nu(-s)^T=L_nu(s) and M_nu(s)^T=M_nu(s).
+The cross term in the actual Baxter product cancels. Its actual P1 transform is
+
+  sum_nu z_nu/[s*(z_nu-s)] * F(s)*M_nu(-s)*F(s)^T
+       - z_nu/[s*(s+z_nu)] * F(-s)*M_nu(s)*F(-s)^T.
+
+Both sandwiches are pair symmetric. This is the actual Q-product/primitive
+spectral tangent, not yet an integral identification for independent dpW.
+The K_BH=beta*k_bare, paper K=2*pi*S*K_BH*S, support-edge phase, and explicit
+internal rho dictionaries from the previous DP-amplitude checkpoint remain
+part of the correspondence; F in this display is the unweighted right-density
+factor, not the sqrt-density Gram factor.
+
+Actual Q is continuous off its lower support edge. Every fixed basis QQ
+is continuous on the full axis, using its actual L1 first factor, bounded
+second factor, dominated convergence, and the measure-zero translated support
+edge. Hence actual P1 is L1 and continuous a.e. Fourier injectivity, with
+frequency zero recovered by continuity, proves actual P1_ij=P1_ji a.e.
+throughout the core and exterior. Reflection then gives actual P1 a.e. evenness.
+No core-reciprocity premise remains in these first-order theorems.
+
+Parameters: arbitrary finite labelled tails/species; z_nu>0 with no upper bound;
+unequal positive additive diameters; rho_i>=0, including zero species densities;
+vacMix>0; arbitrary signed strengths. Per-label symmetric K is needed for
+P1 reciprocity, not for the actual Q tangent decomposition. Repeated rates
+and zero strengths are permitted. This does not certify reciprocal arbitrary
+nonzero-coupling BH roots, physical radial c1 Fourier coefficients, independent
+real-space DP core identity, matrix RDF/OZ, or phase-diagram/positivity guarantees.
+The manuscript should await the joint real-space core identification before
+asserting exact first-order mixture-MSA/FMSA DCF equivalence.
+
+Current audit: mixture_dp_tangent_reciprocity_build.log; default three targets
+PASS (8896 jobs); 337 guarded standard-three footprints; forbidden-proof scan
+of 62 related sources and git diff --check PASS. The 282/8891 DP-target audit
+and earlier audits are historical. Four old matrix physics axioms remain
+unused, not discharged or deleted.
+
+
+JOINT ACTUAL FIRST-ORDER MIXTURE / INDEPENDENT DP IDENTIFICATION
+The actual P1 Fourier integral is the antiderivative transform of the
+independent fourterm dpW Fourier integral. Finite interval increments,
+Fourier injectivity and actual exterior decay identify actual P1 with the
+independently defined dpPrimitive a.e. on the whole real axis. No extra
+first-moment or core-identity premise is retained.
+
+Odd polarization of the actual finite quadratic BH primitive and radial
+correlation, together with internally proved DP convolution continuity,
+gives actual ordered c1=dpCorrelation for every r>0 off contact, including
+the entire core. The larger-diameter row is essential for the actual BH
+radial representative; canonical ordering covers every physical pair.
+Actual radial Fourier integrals of DP and canonical actual c1 equal the
+actual Baxter spectral first derivative for k!=0; radius-weighted L1 is
+internal. A smooth actual BH root germ realizes this DP derivative.
+
+Domain: arbitrary finite species and labelled tails, unequal positive
+additive diameters, z>0 without upper bound, rho_i>=0, vacMix>0 and symmetric
+per-label signed K. Repeated rates and zero strengths/densities are allowed.
+Contact representatives are compared a.e.; no pointwise contact equality
+is claimed. K_BH=beta*k_bare, paper K=2*pi*S*K_BH*S, support phases, internal
+rho factors and the compact quadratic Q1 correction are retained.
+
+This completes the first-order actual mixture-MSA / independent DP FMSA
+DCF core and nonzero-k radial Fourier correspondence. It does not complete
+nonlinear arbitrary-root reciprocity or matrix RDF/hard-core/OZ recovery,
+and gives no global stability, thermodynamic or phase-diagram guarantee.
+
+Current joint audit: 403 standard-three guards, 8901 default build jobs,
+67 related certified sources; forbidden-proof scan and git diff --check PASS.
+
+
+Actual first-order mixture RDF/core/radial OZ, 2026-10-09
+Default audit: 490 standard-three guards, 8911 jobs, 77-source forbidden-proof scan PASS.
+Actual two-sided causal Volterra constructs the same h1 with pointwise zero for r<R_ij.
+Given a valid actual HS reference and L1 of final constructed Uc, actual h1 satisfies
+first-order radial matrix OZ a.e. on r>0. The HS reference has actual canonical c0
+radius L1, measurable global r*h0 L1, pointwise h0=-1 in the open positive core,
+and actual zeroth-order radial OZ a.e.; it is not replaced by an abstract spectrum.
+Yc L1 is internal from Uc L1. Actual transforms retain unequal support phases and
+left/right density factors. No extra determinant premise is needed for the joint OZ proof.
+Actual c1 measurability, first and second radius moments, and odd a.e. continuity are internal.
+Domain: arbitrary finite species/tails, signed symmetric strengths and repeated z>0,
+positive unequal additive diameters, strictly positive rho_i and positive free volume.
+Earlier actual first-order DCF/DP identities remain valid with rho_i>=0.
+Capstone: firstOrderMixtureRDF_certificate in MSAMultiTailMixtureRDFCertificate.lean.
+No contact, all-state decay, independent general HS RDF construction, zero-density
+RDF extension, nonlinear arbitrary-root reciprocity/RDF/OZ, g>=0, stability,
+zero-k thermodynamic or phase-diagram theorem. Old four physics axioms unused, not removed.
+Log: mixture_actual_rdf_oz_build.log. The 403/8901 DP joint audit is historical.
+
+
+Explicit mixture causal decay budget and internal HS c0 radius moment, 2026-10-09
+Default audit: 513 std-3 guards / 8914 jobs / 80-source scan and diff-check PASS.
+Actual HS canonical c0 first radius L1 is internal from bounded compact Q0prime,
+actual Q0 L1 and actual exterior zero. That field is removed from ValidRadialHSReference.
+The reference retains measurable global r*h0 L1, pointwise open-core -1,
+and actual zero-order radial matrix OZ AE.
+Explicit A_delta=sum_ij integral_0^sigma_i exp(delta*t)*abs(rho_i*actual Qc_ij(t)).
+For delta>0, delta<=each z_nu, A_delta<1, actual exp(delta*r) entry norms
+of Yc and Uc are bounded by B/(1-A_delta) and B/(1-A_delta)^2. Uc L1 internal.
+Weighted-budget capstone joins same h1 pointwise hardcore and actual radial OZ AE.
+Criterion sufficient only; a failed budget is not a nonintegrability/stability conclusion.
+Numerical checker/examples provided; quadrature is not a formal interval certificate.
+Independent general unequal-size actual HS reference remains open: old WT seed
+terminus not formally completed, old matOzStar_unique adds a WH injectivity axiom.
+Existing equal-diameter actual existence is std-3 and a future dictionary/moment bridge entry.
+Old physics axioms unused; all nonlinear/thermodynamic/positivity boundaries retained.

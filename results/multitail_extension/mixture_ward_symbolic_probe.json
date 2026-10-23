@@ -1,0 +1,6203 @@
+{
+  "scope": "Exact finite-instance polynomial identities over independent normalized C,W; not a universal completion proof, not a Lean theorem, and not a physical root/stability or phase calculation.",
+  "implication": "In each successful finite instance, zero U,V numerator values at every reflected rate imply all U,V numerator coefficients vanish.",
+  "limitations": "Fixed rational density/diameter/rate examples; distinct rates only. Uniform arbitrary-species/arbitrary-tail completion and repeated-rate multiplicity remain unproved.",
+  "cases": [
+    {
+      "label": "binary_single",
+      "pi_scaled_densities": [
+        "1/50",
+        "1/100"
+      ],
+      "diameters": [
+        "1",
+        "3"
+      ],
+      "rates": [
+        "1"
+      ],
+      "free_volume": "571/600",
+      "independent_pole_values": 6,
+      "coefficient_identities": 22,
+      "failures": [],
+      "completion_verified": true,
+      "identities": [
+        {
+          "target": "U[0,0].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "325393/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "162/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "12786/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "324/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-3480/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "29700/326041"
+            }
+          ]
+        },
+        {
+          "target": "U[0,0].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "648/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-162/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-12786/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-324/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "3480/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-29700/326041"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "36/571"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "553/1142"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-469/1142"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-18/571"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "577/1142"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-445/1142"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-14460/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "333271/652082"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "317047/652082"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "7230/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-5202/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "10668/326041"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-35340/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "8835/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-27225/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "17670/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-343351/652082"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "305131/652082"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "14460/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-3615/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "4497/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-7230/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "5202/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-10668/326041"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "14784/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-3696/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-1896/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-7392/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "6942/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-25518/326041"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-36/571"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-553/1142"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "469/1142"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "18/571"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-577/1142"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "445/1142"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-14460/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "333271/652082"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "317047/652082"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "7230/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-5202/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "10668/326041"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "35340/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-8835/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "27225/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-17670/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "343351/652082"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-305131/652082"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "14460/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-3615/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "4497/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-7230/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "5202/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-10668/326041"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-14784/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "3696/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "1896/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "7392/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-6942/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "25518/326041"
+            }
+          ]
+        },
+        {
+          "target": "U[1,1].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "1296/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-324/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-25572/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "325393/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "6960/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-59400/326041"
+            }
+          ]
+        },
+        {
+          "target": "U[1,1].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-1296/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "324/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "25572/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "648/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-6960/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "59400/326041"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "28596/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-7149/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "15387/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-14298/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "343369/652082"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "313069/652082"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "14784/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-3696/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-1896/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-7392/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "339925/652082"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-377077/652082"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-28596/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "7149/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-15387/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "14298/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-8664/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "6486/326041"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-14784/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "3696/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "1896/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "7392/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-6942/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "25518/326041"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-28596/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "7149/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-15387/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "14298/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-343369/652082"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-313069/652082"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-14784/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "3696/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "1896/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "7392/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-339925/652082"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "377077/652082"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "28596/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-7149/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "15387/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-14298/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "8664/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-6486/326041"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "14784/326041"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-3696/326041"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-1896/326041"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-7392/326041"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "6942/326041"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-25518/326041"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "binary_two_rates",
+      "pi_scaled_densities": [
+        "1/50",
+        "1/100"
+      ],
+      "diameters": [
+        "1",
+        "3"
+      ],
+      "rates": [
+        "1",
+        "5"
+      ],
+      "free_volume": "571/600",
+      "independent_pole_values": 12,
+      "coefficient_identities": 32,
+      "failures": [],
+      "completion_verified": true,
+      "identities": [
+        {
+          "target": "U[0,0].coeff(8)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-325393/7824984"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "8150377/3056634375000"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-27/1304164"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "4343/2547195312500"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-2131/1304164"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "6447/2547195312500"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-27/652082"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "27/254719531250"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "145/326041"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-8238/636798828125"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-2475/652082"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "27401/1273597656250"
+            }
+          ]
+        },
+        {
+          "target": "U[0,0].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "8134177/7824984"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-8134177/3056634375000"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "351/652082"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-56459/1273597656250"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "27703/652082"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-83811/1273597656250"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "351/326041"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-351/127359765625"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-3770/326041"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "214188/636798828125"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "32175/326041"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-356213/636798828125"
+            }
+          ]
+        },
+        {
+          "target": "U[0,0].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "675/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-27/5094390625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-675/1304164"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "4343/101887812500"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-53275/1304164"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "6447/101887812500"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-675/652082"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "27/10188781250"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "3625/326041"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-8238/25471953125"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-61875/652082"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "27401/50943906250"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(9)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-3/1142"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "3/446093750"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-553/27408"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "577/2141250000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "469/27408"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-2801/10706250000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "3/2284"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-3/892187500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-577/27408"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "2909/10706250000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "445/27408"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-2777/10706250000"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(8)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "1205/652082"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-241/50943906250"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-333271/15649968"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "40758827/30566343750000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-317047/15649968"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "40742603/30566343750000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-1205/1304164"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "241/101887812500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "867/1304164"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-47009/2547195312500"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-889/652082"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "12891/636798828125"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "22885/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-4577/25471953125"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "7876405/15649968"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-2069633/6113268750000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-6640525/15649968"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "833753/6113268750000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-22885/652082"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "4577/50943906250"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "4290013/7824984"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-21669689/3056634375000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-3328753/7824984"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "20708429/3056634375000"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-15665/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "3133/25471953125"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "8339005/15649968"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-40851377/30566343750000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "7917181/15649968"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-40429553/30566343750000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "15665/652082"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-3133/50943906250"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-11271/652082"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "611117/1273597656250"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "11557/326041"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-335166/636798828125"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-74857/652082"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "74857/254719531250"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "74857/2608328"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "45583/1018878125000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-226243/2608328"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "105803/1018878125000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "74857/1304164"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-74857/509439062500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-8597659/15649968"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "45487439/6113268750000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "7679311/15649968"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-44569091/6113268750000"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "30125/652082"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-241/2037756250"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-30125/2608328"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "617/203775625000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "37475/2608328"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-2087/203775625000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-30125/1304164"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "241/4075512500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "21675/1304164"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-47009/101887812500"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-22225/652082"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "12891/25471953125"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "15400/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-616/5094390625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-3850/326041"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "124/5094390625"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-1975/326041"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "109/5094390625"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-7700/326041"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "308/5094390625"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "28925/1304164"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-12697/20377562500"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-106325/1304164"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "15793/20377562500"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(9)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "3/1142"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-3/446093750"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "553/27408"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-577/2141250000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-469/27408"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "2801/10706250000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-3/2284"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "3/892187500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "577/27408"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-2909/10706250000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-445/27408"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "2777/10706250000"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(8)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "1205/652082"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-241/50943906250"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-333271/15649968"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "40758827/30566343750000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-317047/15649968"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "40742603/30566343750000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-1205/1304164"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "241/101887812500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "867/1304164"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-47009/2547195312500"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-889/652082"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "12891/636798828125"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-22885/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "4577/25471953125"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-7876405/15649968"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "2069633/6113268750000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "6640525/15649968"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-833753/6113268750000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "22885/652082"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-4577/50943906250"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-4290013/7824984"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "21669689/3056634375000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "3328753/7824984"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-20708429/3056634375000"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-15665/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "3133/25471953125"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "8339005/15649968"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-40851377/30566343750000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "7917181/15649968"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-40429553/30566343750000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "15665/652082"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-3133/50943906250"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-11271/652082"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "611117/1273597656250"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "11557/326041"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-335166/636798828125"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "74857/652082"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-74857/254719531250"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-74857/2608328"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-45583/1018878125000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "226243/2608328"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-105803/1018878125000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-74857/1304164"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "74857/509439062500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "8597659/15649968"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-45487439/6113268750000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-7679311/15649968"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "44569091/6113268750000"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "30125/652082"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-241/2037756250"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-30125/2608328"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "617/203775625000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "37475/2608328"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-2087/203775625000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-30125/1304164"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "241/4075512500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "21675/1304164"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-47009/101887812500"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-22225/652082"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "12891/25471953125"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-15400/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "616/5094390625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "3850/326041"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-124/5094390625"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "1975/326041"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-109/5094390625"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "7700/326041"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-308/5094390625"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-28925/1304164"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "12697/20377562500"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "106325/1304164"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-15793/20377562500"
+            }
+          ]
+        },
+        {
+          "target": "U[1,1].coeff(8)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-54/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "54/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "27/652082"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-4343/1273597656250"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "2131/652082"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-6447/1273597656250"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-325393/7824984"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "8150377/3056634375000"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-290/326041"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "16476/636798828125"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "2475/326041"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-27401/636798828125"
+            }
+          ]
+        },
+        {
+          "target": "U[1,1].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "1404/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-1404/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-351/326041"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "56459/636798828125"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-27703/326041"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "83811/636798828125"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "8134177/7824984"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-8134177/3056634375000"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "7540/326041"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-428376/636798828125"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-64350/326041"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "712426/636798828125"
+            }
+          ]
+        },
+        {
+          "target": "U[1,1].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-1350/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "54/5094390625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "675/652082"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-4343/50943906250"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "53275/652082"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-6447/50943906250"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "675/326041"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-27/5094390625"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-7250/326041"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "16476/25471953125"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "61875/326041"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-27401/25471953125"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(8)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-2383/652082"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "2383/254719531250"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "2383/2608328"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "3109/5094390625000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-5129/2608328"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "10621/5094390625000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "2383/1304164"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-2383/509439062500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-343369/15649968"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "41685629/30566343750000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-313069/15649968"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "39846401/30566343750000"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-616/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "616/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "154/326041"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-124/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "79/326041"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-109/127359765625"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "308/326041"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-308/127359765625"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-339925/15649968"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "40907489/6113268750000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "377077/15649968"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-40944641/6113268750000"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "30979/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-30979/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-30979/1304164"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-40417/2547195312500"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "66677/1304164"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-138073/2547195312500"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-30979/652082"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "30979/254719531250"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "8601553/15649968"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-64948229/30566343750000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "7813753/15649968"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-17128301/30566343750000"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "16016/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-16016/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-4004/326041"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "3224/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-2054/326041"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "2834/127359765625"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-8008/326041"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "8008/127359765625"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "8512009/15649968"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-44716589/6113268750000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-9477961/15649968"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "45682541/6113268750000"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-59575/652082"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "2383/10188781250"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "59575/2608328"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "3109/203775625000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-128225/2608328"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "10621/203775625000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "59575/1304164"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-2383/20377562500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-9025/326041"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "38771/50943906250"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "27025/1304164"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-75727/101887812500"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-15400/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "616/5094390625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "3850/326041"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-124/5094390625"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "1975/326041"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-109/5094390625"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "7700/326041"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-308/5094390625"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-28925/1304164"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "12697/20377562500"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "106325/1304164"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-15793/20377562500"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(8)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "2383/652082"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-2383/254719531250"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-2383/2608328"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-3109/5094390625000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "5129/2608328"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-10621/5094390625000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-2383/1304164"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "2383/509439062500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "343369/15649968"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-41685629/30566343750000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "313069/15649968"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-39846401/30566343750000"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "616/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-616/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-154/326041"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "124/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-79/326041"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "109/127359765625"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-308/326041"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "308/127359765625"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "339925/15649968"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-40907489/6113268750000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-377077/15649968"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "40944641/6113268750000"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-30979/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "30979/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "30979/1304164"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "40417/2547195312500"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-66677/1304164"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "138073/2547195312500"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "30979/652082"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-30979/254719531250"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-8601553/15649968"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "64948229/30566343750000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-7813753/15649968"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "17128301/30566343750000"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "-16016/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "16016/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "4004/326041"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-3224/127359765625"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "2054/326041"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-2834/127359765625"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "8008/326041"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "-8008/127359765625"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "-8512009/15649968"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "44716589/6113268750000"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "9477961/15649968"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "-45682541/6113268750000"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "59575/652082"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-2383/10188781250"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-59575/2608328"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "-3109/203775625000"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "128225/2608328"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "-10621/203775625000"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-59575/1304164"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "2383/20377562500"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "9025/326041"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-38771/50943906250"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-27025/1304164"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "75727/101887812500"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](1)",
+              "multiplier": "15400/326041"
+            },
+            {
+              "pole_value": "U[0,0](5)",
+              "multiplier": "-616/5094390625"
+            },
+            {
+              "pole_value": "U[0,1](1)",
+              "multiplier": "-3850/326041"
+            },
+            {
+              "pole_value": "U[0,1](5)",
+              "multiplier": "124/5094390625"
+            },
+            {
+              "pole_value": "U[0,1](-1)",
+              "multiplier": "-1975/326041"
+            },
+            {
+              "pole_value": "U[0,1](-5)",
+              "multiplier": "109/5094390625"
+            },
+            {
+              "pole_value": "U[1,1](1)",
+              "multiplier": "-7700/326041"
+            },
+            {
+              "pole_value": "U[1,1](5)",
+              "multiplier": "308/5094390625"
+            },
+            {
+              "pole_value": "V[0,1](1)",
+              "multiplier": "28925/1304164"
+            },
+            {
+              "pole_value": "V[0,1](5)",
+              "multiplier": "-12697/20377562500"
+            },
+            {
+              "pole_value": "V[0,1](-1)",
+              "multiplier": "-106325/1304164"
+            },
+            {
+              "pole_value": "V[0,1](-5)",
+              "multiplier": "15793/20377562500"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "ternary_single",
+      "pi_scaled_densities": [
+        "1/100",
+        "1/200",
+        "1/300"
+      ],
+      "diameters": [
+        "1",
+        "2",
+        "3"
+      ],
+      "rates": [
+        "2"
+      ],
+      "free_volume": "293/300",
+      "independent_pole_values": 15,
+      "coefficient_identities": 60,
+      "failures": [],
+      "completion_verified": true,
+      "identities": [
+        {
+          "target": "U[0,0].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "343351/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-9/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "3381/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "287/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "849/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "9/21977344"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "39/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "33/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "9/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-3561/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "13893/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-447/10988672"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "199/1373584"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "3/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-3/87909376"
+            }
+          ]
+        },
+        {
+          "target": "U[0,0].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "45/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "9/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-3381/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-287/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-849/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-9/5494336"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-39/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-33/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-9/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "3561/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-13893/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "447/2747168"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-199/343396"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-3/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "3/21977344"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "3/37504"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "583/150016"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-577/150016"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "1/37504"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "1/18752"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-3/75008"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-1/75008"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-1/37504"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "589/150016"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-571/150016"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "1/37504"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1/18752"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-1/75008"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-1/37504"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-915/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "687599/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "685805/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "3/10988672"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "269/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "861/43954688"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "157/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "219/10988672"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "9/10988672"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-2673/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "2565/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-37/686792"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "2595/21977344"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-447/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "199/2747168"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-8853/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "8907/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-19527/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-2667/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-5023/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "555/2747168"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "5893/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "10659/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-9/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-1389469/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "1357393/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-1915/10988672"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1335/10988672"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "10617/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "1319/87909376"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "915/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-807/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "987/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-3/2747168"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-269/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-861/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-157/5494336"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-219/2747168"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-9/2747168"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "2673/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-2565/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "37/171698"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-2595/5494336"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "447/5494336"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-199/686792"
+            }
+          ]
+        },
+        {
+          "target": "U[0,1].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "1821/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-1875/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-1569/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "323/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "335/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-231/1373584"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-1205/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-1283/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "9/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "8853/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-18969/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "743/2747168"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1009/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-5929/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "8057/21977344"
+            }
+          ]
+        },
+        {
+          "target": "U[0,2].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "9/75008"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "9/300032"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "27/300032"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "1/256"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-287/75008"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-9/300032"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-3/300032"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-3/75008"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "9/300032"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "27/300032"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "37/9376"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-71/18752"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "3/300032"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "9/300032"
+            }
+          ]
+        },
+        {
+          "target": "U[0,2].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-453/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-213/10988672"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-81/43954688"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "171973/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "171369/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "27/21977344"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "897/43954688"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "9/10988672"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "1/37504"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-3543/43954688"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "243/1373584"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-1483/21977344"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1429/21977344"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "897/43954688"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-435/5494336"
+            }
+          ]
+        },
+        {
+          "target": "U[0,2].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-6189/10988672"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-6225/43954688"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-16809/43954688"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "299/10988672"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-3247/10988672"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-9/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "6195/43954688"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "2631/43954688"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "2069/10988672"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-7947/43954688"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-11499/43954688"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-10915/686792"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "84363/5494336"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-4425/43954688"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-957/43954688"
+            }
+          ]
+        },
+        {
+          "target": "U[0,2].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "453/1373584"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "213/2747168"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "81/10988672"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-275/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "329/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-27/5494336"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-897/10988672"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-9/2747168"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-1/9376"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "3543/10988672"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-243/343396"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "1483/5494336"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1429/5494336"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-897/10988672"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "435/1373584"
+            }
+          ]
+        },
+        {
+          "target": "U[0,2].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "915/2747168"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "951/10988672"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "987/10988672"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-299/2747168"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-269/2747168"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "9/2747168"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-921/10988672"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-873/10988672"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-311/2747168"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "2673/10988672"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-4323/10988672"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "37/85849"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1151/1373584"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "2667/10988672"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-4317/10988672"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-3/37504"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-583/150016"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "577/150016"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-1/37504"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-1/18752"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "3/75008"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "1/75008"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "1/37504"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-589/150016"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "571/150016"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-1/37504"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1/18752"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "1/75008"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "1/37504"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-915/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "687599/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "685805/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "3/10988672"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "269/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "861/43954688"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "157/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "219/10988672"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "9/10988672"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-2673/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "2565/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-37/686792"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "2595/21977344"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-447/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "199/2747168"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "8853/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-8907/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "19527/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "2667/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "5023/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-555/2747168"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-5893/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-10659/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "9/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "1389469/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-1357393/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "1915/10988672"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1335/10988672"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-10617/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-1319/87909376"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "915/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-807/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "987/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-3/2747168"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-269/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-861/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-157/5494336"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-219/2747168"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-9/2747168"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "2673/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-2565/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "37/171698"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-2595/5494336"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "447/5494336"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-199/686792"
+            }
+          ]
+        },
+        {
+          "target": "U[1,0].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-1821/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "1875/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "1569/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-323/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-335/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "231/1373584"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "1205/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "1283/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-9/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-8853/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "18969/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-743/2747168"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1009/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "5929/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-8057/21977344"
+            }
+          ]
+        },
+        {
+          "target": "U[1,1].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "9/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-63/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-1731/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "3/1373584"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "3/2747168"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "85831/5494336"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "3/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "547/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "9/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "1767/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-6933/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "3/5494336"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-3/5494336"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-2377/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "5199/21977344"
+            }
+          ]
+        },
+        {
+          "target": "U[1,1].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-9/1373584"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "63/5494336"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "1731/5494336"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-3/343396"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-3/686792"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "9/686792"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-3/5494336"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-547/5494336"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-9/1373584"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-1767/5494336"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "6933/5494336"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-3/1373584"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "3/1373584"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "2377/5494336"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-5199/5494336"
+            }
+          ]
+        },
+        {
+          "target": "U[1,2].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "9/75008"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-3/37504"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "9/75008"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "583/150016"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-577/150016"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-3/37504"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-9/75008"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "3/37504"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "595/150016"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-565/150016"
+            }
+          ]
+        },
+        {
+          "target": "U[1,2].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "27/10988672"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-453/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-639/10988672"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "9/10988672"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-843/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-933/43954688"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "687049/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "686427/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "1/75008"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "333/5494336"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-4767/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "897/21977344"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-435/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-3259/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "3151/87909376"
+            }
+          ]
+        },
+        {
+          "target": "U[1,2].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-9/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-45969/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-3543/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "7953/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "873/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-5745/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "7669/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-20633/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "7663/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "3507/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "31869/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-441/10988672"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-2223/10988672"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-1405943/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "1341051/87909376"
+            }
+          ]
+        },
+        {
+          "target": "U[1,2].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-27/2747168"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "453/5494336"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "639/2747168"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-9/2747168"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "843/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "933/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-257/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "365/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-1/18752"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-333/1373584"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "4767/5494336"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-897/5494336"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "435/686792"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "3259/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-3151/21977344"
+            }
+          ]
+        },
+        {
+          "target": "U[1,2].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "9/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "3777/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "3543/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-921/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-873/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "471/2747168"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-637/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-463/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-631/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-3507/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "10323/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "441/2747168"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1293/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "11263/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-16691/21977344"
+            }
+          ]
+        },
+        {
+          "target": "U[2,0].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-9/75008"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-9/300032"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-27/300032"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-1/256"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "287/75008"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "9/300032"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "3/300032"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "3/75008"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-9/300032"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-27/300032"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-37/9376"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "71/18752"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-3/300032"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-9/300032"
+            }
+          ]
+        },
+        {
+          "target": "U[2,0].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-453/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-213/10988672"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-81/43954688"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "171973/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "171369/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "27/21977344"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "897/43954688"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "9/10988672"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "1/37504"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-3543/43954688"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "243/1373584"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-1483/21977344"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1429/21977344"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "897/43954688"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-435/5494336"
+            }
+          ]
+        },
+        {
+          "target": "U[2,0].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "6189/10988672"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "6225/43954688"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "16809/43954688"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-299/10988672"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "3247/10988672"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "9/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-6195/43954688"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-2631/43954688"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-2069/10988672"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "7947/43954688"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "11499/43954688"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "10915/686792"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-84363/5494336"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "4425/43954688"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "957/43954688"
+            }
+          ]
+        },
+        {
+          "target": "U[2,0].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "453/1373584"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "213/2747168"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "81/10988672"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-275/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "329/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-27/5494336"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-897/10988672"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-9/2747168"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-1/9376"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "3543/10988672"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-243/343396"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "1483/5494336"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1429/5494336"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-897/10988672"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "435/1373584"
+            }
+          ]
+        },
+        {
+          "target": "U[2,0].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-915/2747168"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-951/10988672"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-987/10988672"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "299/2747168"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "269/2747168"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-9/2747168"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "921/10988672"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "873/10988672"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "311/2747168"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-2673/10988672"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "4323/10988672"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-37/85849"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1151/1373584"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-2667/10988672"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "4317/10988672"
+            }
+          ]
+        },
+        {
+          "target": "U[2,1].coeff(7)",
+          "terms": [
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-9/75008"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "3/37504"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-9/75008"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-583/150016"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "577/150016"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "3/37504"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "9/75008"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-3/37504"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-595/150016"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "565/150016"
+            }
+          ]
+        },
+        {
+          "target": "U[2,1].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "27/10988672"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-453/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-639/10988672"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "9/10988672"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-843/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-933/43954688"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "687049/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "686427/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "1/75008"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "333/5494336"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-4767/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "897/21977344"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-435/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-3259/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "3151/87909376"
+            }
+          ]
+        },
+        {
+          "target": "U[2,1].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "9/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "45969/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "3543/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-7953/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-873/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "5745/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-7669/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "20633/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-7663/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-3507/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-31869/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "441/10988672"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "2223/10988672"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "1405943/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-1341051/87909376"
+            }
+          ]
+        },
+        {
+          "target": "U[2,1].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-27/2747168"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "453/5494336"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "639/2747168"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-9/2747168"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "843/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "933/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-257/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "365/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-1/18752"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-333/1373584"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "4767/5494336"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-897/5494336"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "435/686792"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "3259/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-3151/21977344"
+            }
+          ]
+        },
+        {
+          "target": "U[2,1].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-9/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-3777/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-3543/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "921/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "873/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-471/2747168"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "637/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "463/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "631/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "3507/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-10323/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-441/2747168"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1293/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-11263/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "16691/21977344"
+            }
+          ]
+        },
+        {
+          "target": "U[2,2].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "81/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "405/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "243/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-933/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-2583/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "81/21977344"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-135/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-3381/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "343315/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "81/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-81/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "333/2747168"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-4767/10988672"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "14253/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-31185/87909376"
+            }
+          ]
+        },
+        {
+          "target": "U[2,2].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-81/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-405/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-243/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "933/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "2583/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-81/5494336"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "135/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "3381/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "81/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-81/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "81/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-333/686792"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "4767/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-14253/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "31185/21977344"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "2691/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-2691/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "2799/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "151/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "915/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-2691/43954688"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-897/43954688"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-1501/43954688"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "694757/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "679151/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "111/1373584"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1429/21977344"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-2069/43954688"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "843/43954688"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "1821/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-1875/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-1569/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "323/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "335/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-231/5494336"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-1205/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-1283/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "9/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "1382437/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-1392553/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "743/10988672"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1009/10988672"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-5929/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "8057/87909376"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-2691/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "2691/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-2799/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-151/1373584"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-915/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "2691/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "897/10988672"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "1501/10988672"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-7965/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "7641/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-111/343396"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1429/5494336"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "2069/10988672"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-843/10988672"
+            }
+          ]
+        },
+        {
+          "target": "V[0,1].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-1821/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "1875/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "1569/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-323/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-335/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "231/1373584"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "1205/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "1283/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-9/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-8853/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "18969/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-743/2747168"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1009/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "5929/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-8057/21977344"
+            }
+          ]
+        },
+        {
+          "target": "V[0,2].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "3597/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "3597/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "5517/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-1/37504"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "5/171698"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-3597/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-1785/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-1199/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "8871/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-10305/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "174655/21977344"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "168849/21977344"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "3543/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-1677/87909376"
+            }
+          ]
+        },
+        {
+          "target": "V[0,2].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "915/10988672"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "951/43954688"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "987/43954688"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-299/10988672"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-269/10988672"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "9/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-921/43954688"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-873/43954688"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-311/10988672"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "2673/43954688"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-4323/43954688"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "86441/5494336"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-10875/686792"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "2667/43954688"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-4317/43954688"
+            }
+          ]
+        },
+        {
+          "target": "V[0,2].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-3597/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-3597/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-5517/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "1/9376"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-10/85849"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "3597/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "1785/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "1199/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-8871/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "10305/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-2957/5494336"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "2849/5494336"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-3543/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "1677/21977344"
+            }
+          ]
+        },
+        {
+          "target": "V[0,2].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-915/2747168"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-951/10988672"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-987/10988672"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "299/2747168"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "269/2747168"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-9/2747168"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "921/10988672"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "873/10988672"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "311/2747168"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-2673/10988672"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "4323/10988672"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-37/85849"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1151/1373584"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-2667/10988672"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "4317/10988672"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-2691/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "2691/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-2799/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-151/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-915/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "2691/43954688"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "897/43954688"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "1501/43954688"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-694757/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-679151/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-111/1373584"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1429/21977344"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "2069/43954688"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-843/43954688"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-1821/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "1875/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "1569/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-323/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-335/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "231/5494336"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "1205/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "1283/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-9/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-1382437/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "1392553/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-743/10988672"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1009/10988672"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "5929/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-8057/87909376"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "2691/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-2691/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "2799/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "151/1373584"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "915/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-2691/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-897/10988672"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-1501/10988672"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "7965/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-7641/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "111/343396"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1429/5494336"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-2069/10988672"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "843/10988672"
+            }
+          ]
+        },
+        {
+          "target": "V[1,0].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "1821/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-1875/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-1569/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "323/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "335/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-231/1373584"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-1205/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-1283/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "9/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "8853/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-18969/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "743/2747168"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1009/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-5929/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "8057/21977344"
+            }
+          ]
+        },
+        {
+          "target": "V[1,2].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "4557/43954688"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "9/150016"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-453/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-3/75008"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "4557/43954688"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-1519/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "1627/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-1519/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-9/150016"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "5991/43954688"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "3/75008"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-213/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "703069/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "671055/87909376"
+            }
+          ]
+        },
+        {
+          "target": "V[1,2].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "9/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "3777/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "3543/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-921/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-873/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "471/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-637/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-463/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-631/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-3507/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "10323/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "441/10988672"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1293/10988672"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "1384847/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-1390275/87909376"
+            }
+          ]
+        },
+        {
+          "target": "V[1,2].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-4557/10988672"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-9/37504"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "453/1373584"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "3/18752"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-4557/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "1519/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-1627/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "1519/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "9/37504"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-5991/10988672"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-3/18752"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "213/686792"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-16277/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "15737/21977344"
+            }
+          ]
+        },
+        {
+          "target": "V[1,2].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-9/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-3777/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-3543/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "921/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "873/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-471/2747168"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "637/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "463/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "631/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "3507/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-10323/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-441/2747168"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1293/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-11263/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "16691/21977344"
+            }
+          ]
+        },
+        {
+          "target": "V[2,0].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-3597/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-3597/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-5517/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "1/37504"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-5/171698"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "3597/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "1785/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "1199/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-8871/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "10305/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-174655/21977344"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-168849/21977344"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-3543/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "1677/87909376"
+            }
+          ]
+        },
+        {
+          "target": "V[2,0].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-915/10988672"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-951/43954688"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-987/43954688"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "299/10988672"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "269/10988672"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-9/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "921/43954688"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "873/43954688"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "311/10988672"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-2673/43954688"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "4323/43954688"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-86441/5494336"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "10875/686792"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-2667/43954688"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "4317/43954688"
+            }
+          ]
+        },
+        {
+          "target": "V[2,0].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "3597/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "3597/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "5517/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-1/9376"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "10/85849"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-3597/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-1785/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-1199/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "8871/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-10305/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "2957/5494336"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-2849/5494336"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "3543/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-1677/21977344"
+            }
+          ]
+        },
+        {
+          "target": "V[2,0].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "915/2747168"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "951/10988672"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "987/10988672"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-299/2747168"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-269/2747168"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "9/2747168"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-921/10988672"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-873/10988672"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-311/2747168"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "2673/10988672"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-4323/10988672"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "37/85849"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1151/1373584"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "2667/10988672"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-4317/10988672"
+            }
+          ]
+        },
+        {
+          "target": "V[2,1].coeff(6)",
+          "terms": [
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-4557/43954688"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-9/150016"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "453/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "3/75008"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-4557/43954688"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "1519/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-1627/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "1519/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "9/150016"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-5991/43954688"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-3/75008"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "213/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-703069/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-671055/87909376"
+            }
+          ]
+        },
+        {
+          "target": "V[2,1].coeff(5)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "-9/21977344"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "-3777/87909376"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "-3543/87909376"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "921/21977344"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "873/21977344"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "-471/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "637/87909376"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "463/87909376"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "631/21977344"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "3507/87909376"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "-10323/87909376"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "-441/10988672"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "1293/10988672"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "-1384847/87909376"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "1390275/87909376"
+            }
+          ]
+        },
+        {
+          "target": "V[2,1].coeff(4)",
+          "terms": [
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "4557/10988672"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "9/37504"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-453/1373584"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-3/18752"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "4557/10988672"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-1519/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "1627/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-1519/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-9/37504"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "5991/10988672"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "3/18752"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-213/686792"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "16277/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-15737/21977344"
+            }
+          ]
+        },
+        {
+          "target": "V[2,1].coeff(3)",
+          "terms": [
+            {
+              "pole_value": "U[0,0](2)",
+              "multiplier": "9/5494336"
+            },
+            {
+              "pole_value": "U[0,1](2)",
+              "multiplier": "3777/21977344"
+            },
+            {
+              "pole_value": "U[0,1](-2)",
+              "multiplier": "3543/21977344"
+            },
+            {
+              "pole_value": "U[0,2](2)",
+              "multiplier": "-921/5494336"
+            },
+            {
+              "pole_value": "U[0,2](-2)",
+              "multiplier": "-873/5494336"
+            },
+            {
+              "pole_value": "U[1,1](2)",
+              "multiplier": "471/2747168"
+            },
+            {
+              "pole_value": "U[1,2](2)",
+              "multiplier": "-637/21977344"
+            },
+            {
+              "pole_value": "U[1,2](-2)",
+              "multiplier": "-463/21977344"
+            },
+            {
+              "pole_value": "U[2,2](2)",
+              "multiplier": "-631/5494336"
+            },
+            {
+              "pole_value": "V[0,1](2)",
+              "multiplier": "-3507/21977344"
+            },
+            {
+              "pole_value": "V[0,1](-2)",
+              "multiplier": "10323/21977344"
+            },
+            {
+              "pole_value": "V[0,2](2)",
+              "multiplier": "441/2747168"
+            },
+            {
+              "pole_value": "V[0,2](-2)",
+              "multiplier": "-1293/2747168"
+            },
+            {
+              "pole_value": "V[1,2](2)",
+              "multiplier": "11263/21977344"
+            },
+            {
+              "pole_value": "V[1,2](-2)",
+              "multiplier": "-16691/21977344"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

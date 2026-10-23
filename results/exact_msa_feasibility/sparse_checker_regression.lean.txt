@@ -1,0 +1,26 @@
+import LeanCode.YukawaOZ.SparseCircuitTactic
+
+namespace SparseCheckerRegression
+
+theorem repeatedSubexpression (x y : ℝ) :
+    (x + y) ^ 4 + (x + y) ^ 4 = 2 * (x + y) ^ 4 := by
+  sparse_dag
+
+theorem reciprocalAtom (x y : ℝ) :
+    (1 / x + y) ^ 2 = (1 / x) ^ 2 + 2 * (1 / x) * y + y ^ 2 := by
+  sparse_dag
+
+-- A false proposed normal form must fail before it can become a theorem.
+example (x : ℝ) : x = x := by
+  fail_if_success (have bad : (1 : ℝ) = 2 := by sparse_dag)
+  rfl
+
+/-- info: 'SparseCheckerRegression.repeatedSubexpression' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms repeatedSubexpression
+
+/-- info: 'SparseCheckerRegression.reciprocalAtom' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms reciprocalAtom
+
+end SparseCheckerRegression

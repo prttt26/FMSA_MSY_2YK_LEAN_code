@@ -1,0 +1,2 @@
+PASS: uncached reconstruction reproduced ExactMSARationalData.lean byte-for-byte.
+Source and generated SHA256 agree with bridge_generation_metadata.json.

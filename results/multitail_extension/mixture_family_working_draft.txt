@@ -1,0 +1,136 @@
+import LeanCode.YukawaOZMix.MSAMultiTailMixtureSystem
+import LeanCode.Closures.MSASolutionFamily
+
+/-! Local smooth roots of the actual finite-tail, unequal-diameter mixture BH system. -/
+noncomputable section
+open Real Filter Topology Set MSAMixture FMSA.MatrixQ0
+open scoped BigOperators ContDiff
+
+namespace FMSA.ExactMSA.MultiTailMixture
+
+variable {N : ℕ} {ι : Type*} [Fintype ι]
+
+/-- Right multiplication independently in each tail block, with the entrywise product norm. -/
+def rightBlock (B : TailMatrix ι N) : TailMatrix ι N →L[ℝ] TailMatrix ι N :=
+  ContinuousLinearMap.pi (fun u => ContinuousLinearMap.pi (fun i =>
+    ContinuousLinearMap.pi (fun j => ∑ l, B u l j •
+      ((ContinuousLinearMap.proj l).comp
+        ((ContinuousLinearMap.proj i).comp (ContinuousLinearMap.proj u))))))
+
+@[simp] theorem rightBlock_apply (B p : TailMatrix ι N) (u : ι) (i j : Fin N) :
+    rightBlock B p u i j = ∑ l, p u i l * B u l j := by
+  simp [rightBlock, mul_comm]
+
+theorem rightBlock_matrix (B p : TailMatrix ι N) (u : ι) :
+    rightBlock B p u = (p u : Matrix (Fin N) (Fin N) ℝ) * B u := by
+  ext i j
+  simp [Matrix.mul_apply]
+
+def inverseBlocks (B : TailMatrix ι N) : TailMatrix ι N := fun u => (B u : Matrix _ _ ℝ)⁻¹
+
+theorem rightBlock_left_inverse (B : TailMatrix ι N)
+    (hB : ∀ u, IsUnit (B u : Matrix _ _ ℝ).det) (p : TailMatrix ι N) :
+    rightBlock (inverseBlocks B) (rightBlock B p) = p := by
+  funext u
+  rw [rightBlock_matrix, rightBlock_matrix, inverseBlocks, Matrix.mul_assoc,
+    Matrix.mul_nonsing_inv _ (hB u), Matrix.mul_one]
+
+theorem rightBlock_right_inverse (B : TailMatrix ι N)
+    (hB : ∀ u, IsUnit (B u : Matrix _ _ ℝ).det) (p : TailMatrix ι N) :
+    rightBlock B (rightBlock (inverseBlocks B) p) = p := by
+  funext u
+  rw [rightBlock_matrix, rightBlock_matrix, inverseBlocks, Matrix.mul_assoc,
+    Matrix.nonsing_inv_mul _ (hB u), Matrix.mul_one]
+
+def triangular (B H : TailMatrix ι N) (J : TailMatrix ι N →L[ℝ] TailMatrix ι N) :
+    (TailMatrix ι N × TailMatrix ι N) →L[ℝ] (TailMatrix ι N × TailMatrix ι N) :=
+  ((rightBlock B).comp (ContinuousLinearMap.fst ℝ _ _)).prod
+    (J.comp (ContinuousLinearMap.fst ℝ _ _) +
+      (2 * π) • (rightBlock H).comp (ContinuousLinearMap.snd ℝ _ _))
+
+def triangularInverse (B H : TailMatrix ι N) (J : TailMatrix ι N →L[ℝ] TailMatrix ι N) :
+    (TailMatrix ι N × TailMatrix ι N) →L[ℝ] (TailMatrix ι N × TailMatrix ι N) :=
+  ((rightBlock (inverseBlocks B)).comp (ContinuousLinearMap.fst ℝ _ _)).prod
+    ((2 * π)⁻¹ • (rightBlock (inverseBlocks H)).comp
+      (ContinuousLinearMap.snd ℝ _ _ -
+        J.comp ((rightBlock (inverseBlocks B)).comp (ContinuousLinearMap.fst ℝ _ _))))
+
+@[simp] theorem triangular_apply (B H : TailMatrix ι N)
+    (J : TailMatrix ι N →L[ℝ] TailMatrix ι N) (p : TailMatrix ι N × TailMatrix ι N) :
+    triangular B H J p = (rightBlock B p.1, J p.1 + (2 * π) • rightBlock H p.2) := by
+  rfl
+
+@[simp] theorem triangularInverse_apply (B H : TailMatrix ι N)
+    (J : TailMatrix ι N →L[ℝ] TailMatrix ι N) (p : TailMatrix ι N × TailMatrix ι N) :
+    triangularInverse B H J p = (rightBlock (inverseBlocks B) p.1,
+      (2 * π)⁻¹ • rightBlock (inverseBlocks H) (p.2 - J (rightBlock (inverseBlocks B) p.1))) := by
+  rfl
+
+theorem triangular_isInvertible (B H : TailMatrix ι N)
+    (hB : ∀ u, IsUnit (B u : Matrix _ _ ℝ).det)
+    (hH : ∀ u, IsUnit (H u : Matrix _ _ ℝ).det)
+    (J : TailMatrix ι N →L[ℝ] TailMatrix ι N) : (triangular B H J).IsInvertible := by
+  have hp : (2 : ℝ) * π ≠ 0 := mul_ne_zero two_ne_zero pi_ne_zero
+  refine ⟨ContinuousLinearEquiv.equivOfInverse (triangular B H J) (triangularInverse B H J) ?_ ?_, rfl⟩
+  · intro p
+    simp only [triangular_apply, triangularInverse_apply, rightBlock_left_inverse B hB,
+      add_sub_cancel_left, map_smul, rightBlock_left_inverse H hH, smul_smul,
+      inv_mul_cancel₀ hp, one_smul]
+  · intro p
+    simp only [triangular_apply, triangularInverse_apply, rightBlock_right_inverse B hB,
+      map_smul, rightBlock_right_inverse H hH, smul_smul, mul_inv_cancel₀ hp, one_smul,
+      add_sub_cancel]
+
+def hsTransform (ρ σ : Fin N → ℝ) (s : ℝ) (i j : Fin N) : ℝ :=
+  exp (-s * edgeLo σ i j) *
+    ((1 - s * σ i - exp (-s * σ i)) / s ^ 2 * Q0phys ρ σ i j +
+      (1 - s * σ i + (s * σ i) ^ 2 / 2 - exp (-s * σ i)) / s ^ 3 * Qppphys ρ σ j j)
+
+@[simp] theorem dressedQhat_zero (z : ι → ℝ) (ρ σ : Fin N → ℝ) (G : TailMatrix ι N)
+    (s : ℝ) (i j : Fin N) : dressedQhat z ρ σ 0 G s i j = hsTransform ρ σ s i j := by
+  simp [dressedQhat, Qhat, W, C, Wt, Ct, hsTransform]
+
+def firstBlock (z : ι → ℝ) (ρ σ : Fin N → ℝ) (Dt G : TailMatrix ι N) : TailMatrix ι N :=
+  fun u l j => (if l = j then 1 else 0) -
+    ρ l * exp (z u * edgeLo σ j l) * dressedQhat z ρ σ Dt G (z u) j l
+
+def secondBlock (z : ι → ℝ) (ρ σ : Fin N → ℝ) (Dt G : TailMatrix ι N) : TailMatrix ι N :=
+  fun u l j => (if l = j then 1 else 0) -
+    ρ l * exp (z u * edgeLo σ l j) * dressedQhat z ρ σ Dt G (z u) l j
+
+def baseFirst (z : ι → ℝ) (ρ σ : Fin N → ℝ) : TailMatrix ι N := firstBlock z ρ σ 0 0
+def baseSecond (z : ι → ℝ) (ρ σ : Fin N → ℝ) : TailMatrix ι N := secondBlock z ρ σ 0 0
+def baseSource (z : ι → ℝ) (ρ σ : Fin N → ℝ) : TailMatrix ι N :=
+  fun u i j => (Qppphys ρ σ j j + z u * Q0phys ρ σ i j) / (z u) ^ 2
+
+@[simp] theorem firstBlock_zero (z : ι → ℝ) (ρ σ : Fin N → ℝ) (G : TailMatrix ι N) :
+    firstBlock z ρ σ 0 G = baseFirst z ρ σ := by
+  ext u l j
+  simp [firstBlock, baseFirst]
+
+@[simp] theorem secondBlock_zero (z : ι → ℝ) (ρ σ : Fin N → ℝ) (G : TailMatrix ι N) :
+    secondBlock z ρ σ 0 G = baseSecond z ρ σ := by
+  ext u l j
+  simp [secondBlock, baseSecond]
+
+@[simp] theorem secondRHS_zero (z : ι → ℝ) (ρ σ : Fin N → ℝ) (G : TailMatrix ι N)
+    (u : ι) (i j : Fin N) : secondRHS z ρ σ 0 G u i j = baseSource z ρ σ u i j := by
+  simp [secondRHS, baseSource, C, Ct]
+
+theorem baseFirst_eq (z : ι → ℝ) (ρ σ : Fin N → ℝ) (u : ι) :
+    baseFirst z ρ σ u = resGuneq (z u) ρ σ (0, 0) := by
+  ext l j
+  simp only [baseFirst, firstBlock, dressedQhat_zero, resGuneq, Matrix.of_apply,
+    qpMat_zero_Dt, Wt_zero_Dt, Ct_zero_Dt, AVec_zero_Dt]
+  simp [hsTransform, qhatMixRuneq, qp0Mat, A0Vec, edgeLo, edgeHi, Qppphys]
+  ring
+
+theorem baseSecond_eq (z : ι → ℝ) (ρ σ : Fin N → ℝ) (u : ι) :
+    baseSecond z ρ σ u = resHuneq (z u) ρ σ (0, 0) := by
+  ext l j
+  simp only [baseSecond, secondBlock, dressedQhat_zero, resHuneq, Matrix.of_apply,
+    qpMat_zero_Dt, Wt_zero_Dt, Ct_zero_Dt, AVec_zero_Dt]
+  simp [hsTransform, qhatMixRuneq, qp0Mat, A0Vec, edgeLo, edgeHi, Qppphys]
+  ring
+
+end FMSA.ExactMSA.MultiTailMixture

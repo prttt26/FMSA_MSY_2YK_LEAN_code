@@ -1,0 +1,8 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+'FMSA.ExactMSA.RationalBridge.deltaActual_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.exactMSA_hcore' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.Certificate.exactMSA_kspace_residual' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.Certificate.exactMSA_hcore_of_residual' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.exactMSA_factorization' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.exactMSA_structureDen_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]

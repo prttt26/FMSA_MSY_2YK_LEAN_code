@@ -1,0 +1,20 @@
+{
+  "small_sorted": {
+    "wall_clock": "0:09.48",
+    "max_rss_kib": 7471420,
+    "max_rss_gib": 7.125301361083984,
+    "exit_code": 0
+  },
+  "dt1_sorted": {
+    "wall_clock": "0:34.21",
+    "max_rss_kib": 11303460,
+    "max_rss_gib": 10.77981948852539,
+    "exit_code": 0
+  },
+  "dt2_sorted": {
+    "wall_clock": "1:38.85",
+    "max_rss_kib": 21296524,
+    "max_rss_gib": 20.309947967529297,
+    "exit_code": 0
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "source_declaration_count": 12,
+  "note": "Source inventory; compiled theorem axiom guards are the proof audit. Comments excluded.",
+  "axioms": [
+    {
+      "name": "circleIntegral_eq_sum_of_small_circles",
+      "path": "LeanCode/Analysis/ContourDeformation.lean"
+    },
+    {
+      "name": "halfDiskBoundary_eq_sum_of_small_circles",
+      "path": "LeanCode/Analysis/ContourDeformation.lean"
+    },
+    {
+      "name": "matRadialShell_bounded_injective",
+      "path": "LeanCode/Analysis/MatrixRadialWienerHopf.lean"
+    },
+    {
+      "name": "radialShell_bounded_injective",
+      "path": "LeanCode/Analysis/RadialWienerHopf.lean"
+    },
+    {
+      "name": "sokhotski_plemelj_upper",
+      "path": "LeanCode/Analysis/SokhotskiPlemelj.lean"
+    },
+    {
+      "name": "wiener_causal_resolvent",
+      "path": "LeanCode/Analysis/WienerRenewal.lean"
+    },
+    {
+      "name": "zeroFree_lowerHalfPlane_of_homotopy",
+      "path": "LeanCode/Analysis/ZeroCountHomotopy.lean"
+    },
+    {
+      "name": "pyhs_mixture_no_spinodal",
+      "path": "LeanCode/HSMixture/MixtureNoSpinodal.lean"
+    },
+    {
+      "name": "matExactMSAEqualDiam_hcore",
+      "path": "LeanCode/YukawaOZMix/MSAMixtureBHRoot.lean"
+    },
+    {
+      "name": "matExactMSAUnequalDiam_hcore",
+      "path": "LeanCode/YukawaOZMix/MSAMixtureBHRootUneq.lean"
+    },
+    {
+      "name": "matHSexactUnequalDiam_kspace",
+      "path": "LeanCode/YukawaOZMix/MSAMixtureBHRootUneq.lean"
+    },
+    {
+      "name": "matExactMSAEqualDiam_kspace_residual",
+      "path": "LeanCode/YukawaOZMix/MatExactMSAEqualDiamCertificate.lean"
+    }
+  ]
+}

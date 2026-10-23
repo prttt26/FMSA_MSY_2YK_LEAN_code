@@ -1,0 +1,27 @@
+pure_eta0.05_single {'laplace': 1.3517280462727964e-15, 'exterior': 4.163336342344337e-17, 'fourier': 4.949166338206073e-11, 'symmetry': 0.0, 'adaptive_conv': 1.915796957700123e-16}
+pure_eta0.05_two_attractive {'laplace': 1.3117694350113112e-15, 'exterior': 2.7755575615628914e-17, 'fourier': 4.9672383424744314e-11, 'symmetry': 0.0, 'adaptive_conv': 3.8483650639189334e-16}
+pure_eta0.05_long_attraction_short_repulsion {'laplace': 1.3924010778370265e-15, 'exterior': 1.3877787807814457e-17, 'fourier': 4.945065760072386e-11, 'symmetry': 0.0, 'adaptive_conv': 1.9131886850987925e-16}
+pure_eta0.05_three_high_z {'laplace': 1.3498501278194727e-15, 'exterior': 4.163336342344337e-17, 'fourier': 4.874135118797569e-11, 'symmetry': 0.0, 'adaptive_conv': 3.811374546866354e-16}
+pure_eta0.05_coincident_rates {'laplace': 1.385370648488714e-15, 'exterior': 6.938893903907228e-18, 'fourier': 4.7065634914263924e-11, 'symmetry': 0.0, 'adaptive_conv': 1.8737388512259324e-16}
+pure_eta0.05_zero_strength_tail {'laplace': 1.3909994708934917e-15, 'exterior': 1.3877787807814457e-17, 'fourier': 4.8950641560616366e-11, 'symmetry': 0.0, 'adaptive_conv': 1.9056271178135564e-16}
+pure_eta0.25_single {'laplace': 1.5633119106558227e-15, 'exterior': 8.326672684688674e-17, 'fourier': 7.933949999811318e-11, 'symmetry': 0.0, 'adaptive_conv': 0.0}
+pure_eta0.25_two_attractive {'laplace': 1.5640259336989807e-15, 'exterior': 5.551115123125783e-17, 'fourier': 7.944210476856131e-11, 'symmetry': 0.0, 'adaptive_conv': 0.0}
+pure_eta0.25_long_attraction_short_repulsion {'laplace': 1.6746679419924246e-15, 'exterior': 6.938893903907228e-17, 'fourier': 7.931271141316434e-11, 'symmetry': 0.0, 'adaptive_conv': 1.7170748828602576e-16}
+pure_eta0.25_three_high_z {'laplace': 1.5256818956166274e-15, 'exterior': 4.85722573273506e-17, 'fourier': 7.875300193343645e-11, 'symmetry': 0.0, 'adaptive_conv': 1.7185162784931747e-16}
+pure_eta0.25_coincident_rates {'laplace': 1.5610785617841775e-15, 'exterior': 2.0816681711721685e-17, 'fourier': 7.745551459759894e-11, 'symmetry': 0.0, 'adaptive_conv': 5.132423303265354e-16}
+pure_eta0.25_zero_strength_tail {'laplace': 1.6371347191343667e-15, 'exterior': 5.551115123125783e-17, 'fourier': 7.8936181649448e-11, 'symmetry': 0.0, 'adaptive_conv': 1.71653501141938e-16}
+pure_eta0.45_single {'laplace': 1.7101340880651927e-15, 'exterior': 9.71445146547012e-17, 'fourier': 1.0951245938363774e-10, 'symmetry': 0.0, 'adaptive_conv': 0.0}
+pure_eta0.45_two_attractive {'laplace': 1.773839701858109e-15, 'exterior': 8.326672684688674e-17, 'fourier': 1.0956444598716146e-10, 'symmetry': 0.0, 'adaptive_conv': 1.1145188464613583e-16}
+pure_eta0.45_long_attraction_short_repulsion {'laplace': 1.8365397778188182e-15, 'exterior': 1.249000902703301e-16, 'fourier': 1.0949515431579209e-10, 'symmetry': 0.0, 'adaptive_conv': 2.224381711683266e-16}
+pure_eta0.45_three_high_z {'laplace': 1.64678266696022e-15, 'exterior': 7.632783294297951e-17, 'fourier': 1.0922219848132216e-10, 'symmetry': 0.0, 'adaptive_conv': 2.227021830286294e-16}
+pure_eta0.45_coincident_rates {'laplace': 1.7096877259311623e-15, 'exterior': 4.163336342344337e-17, 'fourier': 1.0857074819043914e-10, 'symmetry': 0.0, 'adaptive_conv': 1.1126377871923121e-16}
+pure_eta0.45_zero_strength_tail {'laplace': 1.77330619626952e-15, 'exterior': 8.326672684688674e-17, 'fourier': 1.0931262490949529e-10, 'symmetry': 0.0, 'adaptive_conv': 1.112786269870058e-16}
+binary_sig1.0_single {'laplace': 1.490354090301446e-15, 'exterior': 5.551115123125783e-17, 'fourier': 6.550163931417422e-11, 'symmetry': 1.1102230246251565e-15, 'adaptive_conv': 1.3217366681745786e-16}
+binary_sig1.0_two {'laplace': 1.489682085577306e-15, 'exterior': 6.938893903907228e-17, 'fourier': 6.532125960483816e-11, 'symmetry': 3.9968028886505635e-15, 'adaptive_conv': 0.0}
+binary_sig1.0_three {'laplace': 1.5340166367885008e-15, 'exterior': 6.938893903907228e-17, 'fourier': 6.5343108753077e-11, 'symmetry': 1.9984014443252818e-15, 'adaptive_conv': 0.0}
+binary_sig1.0_coincident_rates {'laplace': 1.5654047127452e-15, 'exterior': 2.0816681711721685e-17, 'fourier': 6.184439069854656e-11, 'symmetry': 1.7763568394002505e-15, 'adaptive_conv': 3.924716306415572e-16}
+binary_sig1.5_single {'laplace': 6.855091898726009e-15, 'exterior': 2.7755575615628914e-17, 'fourier': 1.8314391847246097e-09, 'symmetry': 1.7763568394002505e-15, 'adaptive_conv': 3.0898351642794745e-16}
+binary_sig1.5_two {'laplace': 6.599433795929748e-15, 'exterior': 2.7755575615628914e-17, 'fourier': 1.8292444608976688e-09, 'symmetry': 2.6645352591003757e-15, 'adaptive_conv': 1.5406055028204502e-16}
+binary_sig1.5_three {'laplace': 6.974037437334228e-15, 'exterior': 5.551115123125783e-17, 'fourier': 1.829523699121383e-09, 'symmetry': 1.7763568394002505e-15, 'adaptive_conv': 0.0}
+binary_sig1.5_coincident_rates {'laplace': 6.813840732485659e-15, 'exterior': 3.469446951953614e-17, 'fourier': 1.7979312360884068e-09, 'symmetry': 2.6645352591003757e-15, 'adaptive_conv': 1.5268923576007536e-16}
+PASS 26 states; /home/rpan/YK_tail_FMSA/Lean_code/results/multitail_extension/independent_closure_checks.json

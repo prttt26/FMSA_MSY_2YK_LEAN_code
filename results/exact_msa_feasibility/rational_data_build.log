@@ -1,0 +1,121 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+LeanCode/YukawaOZ/ExactMSARationalData.lean:8:32: warning: Variable name `k` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:8:36: warning: Variable name `C` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:8:38: warning: Variable name `S` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:8:48: warning: Variable name `K` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:11:32: warning: Variable name `k` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:11:36: warning: Variable name `C` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:11:38: warning: Variable name `S` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:11:48: warning: Variable name `K` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:17:47: warning: Variable name `Dt` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:17:50: warning: Variable name `K` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:20:36: warning: Variable name `G` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:20:38: warning: Variable name `C` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:20:40: warning: Variable name `S` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:20:42: warning: Variable name `Ez` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:20:47: warning: Variable name `Dt` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:20:50: warning: Variable name `K` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:23:37: warning: Variable name `k` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:23:39: warning: Variable name `G` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:23:41: warning: Variable name `C` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:23:43: warning: Variable name `S` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:23:45: warning: Variable name `Ez` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:23:48: warning: Variable name `p` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:23:50: warning: Variable name `Dt` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+LeanCode/YukawaOZ/ExactMSARationalData.lean:23:53: warning: Variable name `K` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

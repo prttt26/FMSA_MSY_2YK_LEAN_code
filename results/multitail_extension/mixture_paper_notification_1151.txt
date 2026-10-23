@@ -1,0 +1,19 @@
+FMSA_LEAN 已完成用户要求的“接口迁移、退役 SymPy 支持公理、通知论文据此重写”。这是 1074 自动有限尾 Wronskian 完成之后的新结果，请据此重写论文的混合物 Exact MSA 形式化段落和公理状态。
+
+以下四个原名称现在全部是 Lean kernel 检查的 theorem，原 axiom 声明已删除，没有保留包装公理：
+1. MSAMixture.matExactMSAEqualDiam_hcore
+2. FMSA.ExactMSA.MatEqualDiamCertificate.matExactMSAEqualDiam_kspace_residual
+3. MSAMixture.matExactMSAUnequalDiam_hcore
+4. MSAMixture.matHSexactUnequalDiam_kspace
+
+完成的是原接口的真实数学桥梁：原 matMSACoreCorr 五系数公式、matCoreCorrUneq 两段卷积公式、matCoreHSuneq、原矩阵因子乘积和闭合 cos/sin/exp 残差 RHS 均保留；没有重定义 DCF，也没有加入“新旧表达式相等”的兼容性假设。所有调用者已迁移，包括等径/不等径 factorization、Fin-1 标量归约、physical HS anchor 和 OZ-derived capstones。默认 ExactMSA 目标也已导入原来独立的矩阵 Fourier certificate。
+
+证明机制：拆开 BH 定义和闭包 capstone 消除循环依赖。singleton-tail 字典把旧实际根、幅度、Q/Qprime、卷积和因子接到任意有限尾的自动 Wronskian 定理；实际径向 DCF 的积分收敛与既有 checked Baxter 分段卷积给出完整矩阵 Gram 关系和 HS/core/tail Fourier 分拆；从内部 HS 零强度根得到旧 HS Fourier 恒等式，两者相减证明不等径 hcore。等径处由自动 Wronskian 的 U 六次系数与实际原语互易性消除原点额外 1/r 常数项；三个多项式系数直接归约，两条 BH 方程的矩阵物种求和识别两个指数系数为原 K/G 的 coreC4/coreC5；由此证明原五系数 core 与不等径卷积在所有正半径（含 contact）相等。最后实际 Fourier 与 scalar 闭式积分公式推出原矩阵 kspace residual。
+
+原先隐含的适用域现已写入公共接口：z>0、非零实 k、正粒径、非负组分密度、vacMix>0、对称 K、已给定的实际 BH 根；等径另外 sigma_i=sig>0。HS anchor 不需外加非线性根。特别是这四个旧单尾 Fourier 接口的证明不需要额外的加权 RDF 衰减预算。此前任意有限尾（正尾率可重复、无上界、任意有限组分）的自动 Wronskian 定理保持有效；实际 reconstructed g/h/OZ 和严格正定性的 capstone 仍保留其明确的解析预算域。不要把单尾旧接口无预算的 Fourier 结论扩展成全状态 RDF/OZ 可容许性。
+
+验证全部 PASS：lake build LeanCode ExactMSACertificate ExactMSASparseFeasibility MatExactMSAEqualDiamCertificate（9008 jobs）；默认增加 77 个接口/桥梁的 axiom guards，77 个独立 migration footprints 全部只有 [propext, Classical.choice, Quot.sound]。加上此前 1074 multitail guards，共 1151 个本组跟踪 gates（其他项目 guards 另计）。526 个独立联合审计 footprints：524 标准三公理、2 个既有 HS 通用恒等式仅 propext/Quot.sound。182 个当前选定 Lean 源码哈希的嵌套注释/字符串感知扫描无 axiom/sorry/native_decide/ofReduceBool；git diff --check PASS。其他无关公理（例如 shell-injectivity）不在这四项退役范围内，且上述所有 footprints 均不依赖它们。
+
+请删改当前全文中“混合物 matrix closure residual 仍是 SymPy 公理”“四个旧 physics axioms 只是不用但未删除”“matrix proof 无法简化/分解、measured infeasible”等现状措辞：四项现在确实完成可编译的分解证明，SymPy 不再是这些定理的逻辑前提。可写结构闭包的形式化以及旧公式接口迁移完成，须写明 actual root 和物理/解析域；不应宣称全局 BH 根存在/延拓、全状态衰减、g>=0、MSA 热力学路径一致性、Maxwell/binodal 物理准确性、普适高阶异常阈值或 SCOZA 已解决。现有 negative-g 实际 dilute OZ 反例仍与结构定理相容。
+
+更新的写作材料：Lean_code/results/multitail_extension/mixture_paper_process_handoff.json（replacement_paragraphs 新增正式英文退役段落）、mixture_legacy_retirement_validation.json（四项名称、精确域、验证和构建日志）、validation_summary.json；Lean_code/proof_notes_msa_exact.md 顶部 Current status 和末尾 “Legacy matrix interface migration and four-axiom retirement (2026-10-09)” 给出完整机制及边界。默认 guard 文件 Lean_code/LeanCode/MixtureLegacyRetirementProject.lean；完整构建日志 mixture_legacy_retirement_build.log，联合依赖日志 mixture_legacy_retirement_joint_audit.log。请据此重写相应段落；本通知送达不代表论文改写已经完成。

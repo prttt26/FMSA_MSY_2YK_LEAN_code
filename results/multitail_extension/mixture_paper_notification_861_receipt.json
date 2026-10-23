@@ -1,0 +1,17 @@
+{
+  "verified_destination": {
+    "id": "01a118aa-0495-7e23-b80b-227ae08e5827",
+    "name": "FMSA_paper",
+    "cwd": "/home/rpan/YK_tail_FMSA",
+    "status": {
+      "type": "active",
+      "activeFlags": []
+    }
+  },
+  "steer": {
+    "id": 4,
+    "result": {
+      "turnId": "01a1227c-674e-70e0-a663-4c145cb0482e"
+    }
+  }
+}

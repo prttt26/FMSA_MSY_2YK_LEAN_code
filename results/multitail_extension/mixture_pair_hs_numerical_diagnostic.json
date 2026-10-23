@@ -1,0 +1,1013 @@
+{
+  "scope": "numerical definition and implementation diagnostic only; actual pairwise HS candidate global radius L1 is Lean-certified under the budget, actual canonical radial OZ remains unproved",
+  "not_a_formal_OZ_or_interval_certificate": true,
+  "kernel": "Kc_mi=LEFT rho_m*Qc_mi; r=Rij+u, t=lambda_mi+v; per-pair contacts retained",
+  "source": "sum_m rho_m*[qp_mi*(Rmj*w^2/2-w^3/6)+qpp_i*(w^4/24-Rmj*w^3/6)], w=max(sigma_m-u,0); equivalent actual core tail integral",
+  "warnings": [
+    "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated."
+  ],
+  "cases": [
+    {
+      "rho": [
+        0.01,
+        0.015
+      ],
+      "sigma": [
+        1.0,
+        1.6
+      ],
+      "step": 0.003,
+      "maximum_OZ_residual": 1.3035183256404625e-07,
+      "maximum_reciprocity_residual": 1.7248365305477797e-09,
+      "numerical_budget": {
+        "rho": [
+          0.01,
+          0.015
+        ],
+        "sigma": [
+          1.0,
+          1.6
+        ],
+        "delta": 0.2,
+        "rates": [
+          0.6,
+          1.8
+        ],
+        "vacancy": 0.9625941034712575,
+        "entry_budgets": [
+          [
+            0.023955714954665825,
+            0.03471861892869358
+          ],
+          [
+            0.11234209509508203,
+            0.1561558069443723
+          ]
+        ],
+        "quadrature_error_estimate": 3.632341493396015e-15,
+        "weighted_kernel_budget": 0.32717223592281375,
+        "numerical_sufficient_budget_passes": true,
+        "equal_diameters": false,
+        "Y_bound_multiplier": 1.4862644697362413,
+        "U_bound_multiplier": 2.20898207400035
+      },
+      "samples": [
+        {
+          "i": 0,
+          "j": 0,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.1697106705860367,
+          "OZ_convolution": 0.1697106824699231,
+          "absolute_OZ_residual": 1.1883886374963737e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.1135335646418558,
+          "OZ_convolution": 0.11353357721103328,
+          "absolute_OZ_residual": 1.2569177462729009e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 1.1,
+          "h0": 0.06963840027778367,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.06963853062961624,
+          "absolute_OZ_residual": 1.3035183256404625e-07,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 1.7,
+          "h0": 0.021590518340516646,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.021590499132823206,
+          "absolute_OZ_residual": 1.9207693439243778e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 2.5,
+          "h0": -0.0011870981044387293,
+          "canonical_c0": 0.0,
+          "OZ_convolution": -0.0011871077157201645,
+          "absolute_OZ_residual": 9.611281435225466e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.2023609441884977,
+          "OZ_convolution": 0.20236094418849748,
+          "absolute_OZ_residual": 2.220446049250313e-16,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.1656909359596155,
+          "OZ_convolution": 0.16569094772631823,
+          "absolute_OZ_residual": 1.1766702751048186e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.1138596205623046,
+          "OZ_convolution": 0.11385963361681957,
+          "absolute_OZ_residual": 1.3054514982901999e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 1.7,
+          "h0": 0.04731642927819421,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.04731645538186108,
+          "absolute_OZ_residual": 2.6103666866950093e-08,
+          "absolute_reciprocity_residual": 1.7248365305477797e-09
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 2.5,
+          "h0": 0.002614884076822132,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.0026148720780077225,
+          "absolute_OZ_residual": 1.1998814409500819e-08,
+          "absolute_reciprocity_residual": 7.02351430053455e-10
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.2023609441884977,
+          "OZ_convolution": 0.2023609850523129,
+          "absolute_OZ_residual": 4.086381519274873e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.1656909359596155,
+          "OZ_convolution": 0.16569095851645055,
+          "absolute_OZ_residual": 2.255683506646733e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.1138596205623046,
+          "OZ_convolution": 0.11385963130485262,
+          "absolute_OZ_residual": 1.0742548031683619e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 1.7,
+          "h0": 0.04731643100303074,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.047316448670259734,
+          "absolute_OZ_residual": 1.766722899226858e-08,
+          "absolute_reciprocity_residual": 1.7248365305477797e-09
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 2.5,
+          "h0": 0.002614884779173562,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.002614871116926529,
+          "absolute_OZ_residual": 1.3662247032916047e-08,
+          "absolute_reciprocity_residual": 7.02351430053455e-10
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.352870374863867,
+          "OZ_convolution": 0.352870399429166,
+          "absolute_OZ_residual": 2.4565298906154e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.261129977814459,
+          "OZ_convolution": 0.2611300000887475,
+          "absolute_OZ_residual": 2.2274288580259594e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.185623360616163,
+          "OZ_convolution": 0.18562337626418207,
+          "absolute_OZ_residual": 1.564801904718749e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 1.7,
+          "h0": 0.09056232389314792,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.09056239183556927,
+          "absolute_OZ_residual": 6.794242135566009e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 2.5,
+          "h0": 0.014093762817666885,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.01409374259566255,
+          "absolute_OZ_residual": 2.0222004334935484e-08,
+          "absolute_reciprocity_residual": 0.0
+        }
+      ]
+    },
+    {
+      "rho": [
+        0.01,
+        0.015
+      ],
+      "sigma": [
+        1.0,
+        1.6
+      ],
+      "step": 0.0015,
+      "maximum_OZ_residual": 3.31567104605579e-08,
+      "maximum_reciprocity_residual": 4.312106227644108e-10,
+      "numerical_budget": {
+        "rho": [
+          0.01,
+          0.015
+        ],
+        "sigma": [
+          1.0,
+          1.6
+        ],
+        "delta": 0.2,
+        "rates": [
+          0.6,
+          1.8
+        ],
+        "vacancy": 0.9625941034712575,
+        "entry_budgets": [
+          [
+            0.023955714954665825,
+            0.03471861892869358
+          ],
+          [
+            0.11234209509508203,
+            0.1561558069443723
+          ]
+        ],
+        "quadrature_error_estimate": 3.632341493396015e-15,
+        "weighted_kernel_budget": 0.32717223592281375,
+        "numerical_sufficient_budget_passes": true,
+        "equal_diameters": false,
+        "Y_bound_multiplier": 1.4862644697362413,
+        "U_bound_multiplier": 2.20898207400035
+      },
+      "samples": [
+        {
+          "i": 0,
+          "j": 0,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.1697106705860367,
+          "OZ_convolution": 0.1697106737004269,
+          "absolute_OZ_residual": 3.1143901624286485e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.1135335646418558,
+          "OZ_convolution": 0.11353356811641932,
+          "absolute_OZ_residual": 3.474563498029326e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 1.1,
+          "h0": 0.06963849192838381,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.06963852508509427,
+          "absolute_OZ_residual": 3.31567104605579e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 1.7,
+          "h0": 0.021590504437653445,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.021590499641170574,
+          "absolute_OZ_residual": 4.796482870605967e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 2.5,
+          "h0": -0.0011871006420700505,
+          "canonical_c0": 0.0,
+          "OZ_convolution": -0.001187103050194705,
+          "absolute_OZ_residual": 2.4081246545459845e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.2023609441884977,
+          "OZ_convolution": 0.20236094418849748,
+          "absolute_OZ_residual": 2.220446049250313e-16,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.1656909359596155,
+          "OZ_convolution": 0.16569093898285148,
+          "absolute_OZ_residual": 3.0232359948811904e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.1138596205623046,
+          "OZ_convolution": 0.11385962355719256,
+          "absolute_OZ_residual": 2.994887976504046e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 1.7,
+          "h0": 0.04731644642028394,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.047316453080930916,
+          "absolute_OZ_residual": 6.660646978406959e-09,
+          "absolute_reciprocity_residual": 4.312106227644108e-10
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 2.5,
+          "h0": 0.0026148811815358145,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.0026148782197634455,
+          "absolute_OZ_residual": 2.961772369025617e-09,
+          "absolute_reciprocity_residual": 1.7542365260067583e-10
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.2023609441884977,
+          "OZ_convolution": 0.20236095437938753,
+          "absolute_OZ_residual": 1.0190889826455773e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.1656909359596155,
+          "OZ_convolution": 0.16569094143504506,
+          "absolute_OZ_residual": 5.4754295819581245e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.1138596205623046,
+          "OZ_convolution": 0.11385962334572641,
+          "absolute_OZ_residual": 2.7834218263578236e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 1.7,
+          "h0": 0.04731644685149456,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.047316451280257806,
+          "absolute_OZ_residual": 4.428763245023504e-09,
+          "absolute_reciprocity_residual": 4.312106227644108e-10
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 2.5,
+          "h0": 0.002614881356959467,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.002614878009641966,
+          "absolute_OZ_residual": 3.3473175008701117e-09,
+          "absolute_reciprocity_residual": 1.7542365260067583e-10
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.352870374863867,
+          "OZ_convolution": 0.35287038128825543,
+          "absolute_OZ_residual": 6.424388354631105e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.261129977814459,
+          "OZ_convolution": 0.26112998400828674,
+          "absolute_OZ_residual": 6.193827839506838e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.185623360616163,
+          "OZ_convolution": 0.18562336495146578,
+          "absolute_OZ_residual": 4.3353027556758406e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 1.7,
+          "h0": 0.09056237516641545,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.09056239202843483,
+          "absolute_OZ_residual": 1.6862019378005577e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 2.5,
+          "h0": 0.014093756184506184,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.014093751103986786,
+          "absolute_OZ_residual": 5.080519397543393e-09,
+          "absolute_reciprocity_residual": 0.0
+        }
+      ]
+    },
+    {
+      "rho": [
+        0.0003,
+        0.0005,
+        0.0008
+      ],
+      "sigma": [
+        1.0,
+        1.4,
+        2.3
+      ],
+      "step": 0.003,
+      "maximum_OZ_residual": 1.2996870260573168e-08,
+      "maximum_reciprocity_residual": 2.8432541043788007e-11,
+      "numerical_budget": {
+        "rho": [
+          0.0003,
+          0.0005,
+          0.0008
+        ],
+        "sigma": [
+          1.0,
+          1.4,
+          2.3
+        ],
+        "delta": 0.2,
+        "rates": [
+          0.6,
+          1.8
+        ],
+        "vacancy": 0.994028041805036,
+        "entry_budgets": [
+          [
+            0.0006836605143094921,
+            0.0008871977174118697,
+            0.0013451564243922192
+          ],
+          [
+            0.002544060034143583,
+            0.0032285137359608354,
+            0.004768534565049656
+          ],
+          [
+            0.014386333499209062,
+            0.017545989235213024,
+            0.02465521464122194
+          ]
+        ],
+        "quadrature_error_estimate": 7.776519469139451e-16,
+        "weighted_kernel_budget": 0.07004466036691168,
+        "numerical_sufficient_budget_passes": true,
+        "equal_diameters": false,
+        "Y_bound_multiplier": 1.0753204561356116,
+        "U_bound_multiplier": 1.1563140833836996
+      },
+      "samples": [
+        {
+          "i": 0,
+          "j": 0,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.017671716607844,
+          "OZ_convolution": 0.017671716672172853,
+          "absolute_OZ_residual": 6.432890678476078e-11,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.0131870827789105,
+          "OZ_convolution": 0.013187082874119793,
+          "absolute_OZ_residual": 9.520934041162832e-11,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 1.1,
+          "h0": 0.009505418314476642,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.009505431311346903,
+          "absolute_OZ_residual": 1.2996870260573168e-08,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 1.7,
+          "h0": 0.004898467892350137,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.004898471131129917,
+          "absolute_OZ_residual": 3.2387797808258734e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 0,
+          "r": 2.5,
+          "h0": 0.0011773979549069135,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.0011773979106610712,
+          "absolute_OZ_residual": 4.4245842233114896e-11,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.0201187744069866,
+          "OZ_convolution": 0.020118774419853037,
+          "absolute_OZ_residual": 1.2866419735191315e-11,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.0161492349269476,
+          "OZ_convolution": 0.016149235014750185,
+          "absolute_OZ_residual": 8.780254301399282e-11,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.0120932578680593,
+          "OZ_convolution": 0.012093257956879011,
+          "absolute_OZ_residual": 8.881975190055957e-11,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 1.7,
+          "h0": 0.006710615056461401,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.006710620124758885,
+          "absolute_OZ_residual": 5.06829748395804e-09,
+          "absolute_reciprocity_residual": 1.0412432201178934e-11
+        },
+        {
+          "i": 0,
+          "j": 1,
+          "r": 2.5,
+          "h0": 0.0019436859535155678,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.0019436838861088429,
+          "absolute_OZ_residual": 2.067406724981513e-09,
+          "absolute_reciprocity_residual": 7.1809543988193836e-12
+        },
+        {
+          "i": 0,
+          "j": 2,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.0202358554463176,
+          "OZ_convolution": 0.020235855446317716,
+          "absolute_OZ_residual": 1.5265566588595902e-16,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 2,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.0201825873268067,
+          "OZ_convolution": 0.020182587336538257,
+          "absolute_OZ_residual": 9.73159053341277e-12,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 2,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.0175899146296188,
+          "OZ_convolution": 0.017589914691163184,
+          "absolute_OZ_residual": 6.154439805006184e-11,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 0,
+          "j": 2,
+          "r": 1.7,
+          "h0": 0.01161194020584663,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.011611950313322506,
+          "absolute_OZ_residual": 1.0107475875362204e-08,
+          "absolute_reciprocity_residual": 4.235093178928118e-12
+        },
+        {
+          "i": 0,
+          "j": 2,
+          "r": 2.5,
+          "h0": 0.004659287989003795,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.004659287792770705,
+          "absolute_OZ_residual": 1.962330905408427e-10,
+          "absolute_reciprocity_residual": 2.8432541043788007e-11
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.0201187744069866,
+          "OZ_convolution": 0.02011877456360066,
+          "absolute_OZ_residual": 1.566140446496167e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.0161492349269476,
+          "OZ_convolution": 0.016149235069919072,
+          "absolute_OZ_residual": 1.4297142983399347e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.0120932578680593,
+          "OZ_convolution": 0.012093258014397978,
+          "absolute_OZ_residual": 1.463387189204468e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 1.7,
+          "h0": 0.006710615066873833,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.006710620127954763,
+          "absolute_OZ_residual": 5.061080929347206e-09,
+          "absolute_reciprocity_residual": 1.0412432201178934e-11
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "r": 2.5,
+          "h0": 0.0019436859606965222,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.001943683875273765,
+          "absolute_OZ_residual": 2.0854227572239536e-09,
+          "absolute_reciprocity_residual": 7.1809543988193836e-12
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.026335157081013,
+          "OZ_convolution": 0.026335157192723856,
+          "absolute_OZ_residual": 1.1171077257676743e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.0204575745303004,
+          "OZ_convolution": 0.020457574666923654,
+          "absolute_OZ_residual": 1.3662326131536062e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.015537747795109,
+          "OZ_convolution": 0.015537747937698966,
+          "absolute_OZ_residual": 1.4258988607906975e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 1.7,
+          "h0": 0.009075913098981673,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.009075913153151538,
+          "absolute_OZ_residual": 5.4169864774356036e-11,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 1,
+          "r": 2.5,
+          "h0": 0.0030356886979327116,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.003035687658488107,
+          "absolute_OZ_residual": 1.039444604607892e-09,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 2,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.0296731563204773,
+          "OZ_convolution": 0.0296731563204759,
+          "absolute_OZ_residual": 1.3912482277333993e-15,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 2,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.0281665748968731,
+          "OZ_convolution": 0.02816657496740097,
+          "absolute_OZ_residual": 7.052784051220229e-11,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 2,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.0233734532627594,
+          "OZ_convolution": 0.023373453395287437,
+          "absolute_OZ_residual": 1.3252802327778923e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 2,
+          "r": 1.7,
+          "h0": -1.0,
+          "canonical_c0": -1.015490133707912,
+          "OZ_convolution": 0.015490133827299841,
+          "absolute_OZ_residual": 1.193877618294037e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 1,
+          "j": 2,
+          "r": 2.5,
+          "h0": 0.006729580244120297,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.006729581253415573,
+          "absolute_OZ_residual": 1.009295276695188e-09,
+          "absolute_reciprocity_residual": 1.8463834627890918e-11
+        },
+        {
+          "i": 2,
+          "j": 0,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.0202358554463176,
+          "OZ_convolution": 0.020235855873977034,
+          "absolute_OZ_residual": 4.276594703367387e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 2,
+          "j": 0,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.0201825873268067,
+          "OZ_convolution": 0.020182587670264037,
+          "absolute_OZ_residual": 3.434573701832644e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 2,
+          "j": 0,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.0175899146296188,
+          "OZ_convolution": 0.017589914846593134,
+          "absolute_OZ_residual": 2.169743482105524e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 2,
+          "j": 0,
+          "r": 1.7,
+          "h0": 0.011611940210081724,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.011611950295706665,
+          "absolute_OZ_residual": 1.0085624941105764e-08,
+          "absolute_reciprocity_residual": 4.235093178928118e-12
+        },
+        {
+          "i": 2,
+          "j": 0,
+          "r": 2.5,
+          "h0": 0.004659288017436336,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.004659287743480914,
+          "absolute_OZ_residual": 2.739554225833496e-10,
+          "absolute_reciprocity_residual": 2.8432541043788007e-11
+        },
+        {
+          "i": 2,
+          "j": 1,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.0296731563204773,
+          "OZ_convolution": 0.02967315678222803,
+          "absolute_OZ_residual": 4.6175074180920817e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 2,
+          "j": 1,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.0281665748968731,
+          "OZ_convolution": 0.02816657522571669,
+          "absolute_OZ_residual": 3.288435600212747e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 2,
+          "j": 1,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.0233734532627594,
+          "OZ_convolution": 0.023373453500325124,
+          "absolute_OZ_residual": 2.375657101594264e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 2,
+          "j": 1,
+          "r": 1.7,
+          "h0": -1.0,
+          "canonical_c0": -1.015490133707912,
+          "OZ_convolution": 0.015490133815243709,
+          "absolute_OZ_residual": 1.0733162969511767e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 2,
+          "j": 1,
+          "r": 2.5,
+          "h0": 0.006729580262584131,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.006729581186772383,
+          "absolute_OZ_residual": 9.241882519689382e-10,
+          "absolute_reciprocity_residual": 1.8463834627890918e-11
+        },
+        {
+          "i": 2,
+          "j": 2,
+          "r": 0.25,
+          "h0": -1.0,
+          "canonical_c0": -1.0556236838188797,
+          "OZ_convolution": 0.05562368407409256,
+          "absolute_OZ_residual": 2.5521283697482744e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 2,
+          "j": 2,
+          "r": 0.7,
+          "h0": -1.0,
+          "canonical_c0": -1.0459214937991617,
+          "OZ_convolution": 0.04592149405834779,
+          "absolute_OZ_residual": 2.5918613089093157e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 2,
+          "j": 2,
+          "r": 1.1,
+          "h0": -1.0,
+          "canonical_c0": -1.0376020159804107,
+          "OZ_convolution": 0.03760201623699657,
+          "absolute_OZ_residual": 2.565858844838509e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 2,
+          "j": 2,
+          "r": 1.7,
+          "h0": -1.0,
+          "canonical_c0": -1.0260408068334814,
+          "OZ_convolution": 0.02604080700286903,
+          "absolute_OZ_residual": 1.6938760810658593e-10,
+          "absolute_reciprocity_residual": 0.0
+        },
+        {
+          "i": 2,
+          "j": 2,
+          "r": 2.5,
+          "h0": 0.013220736439340219,
+          "canonical_c0": 0.0,
+          "OZ_convolution": 0.01322074080859656,
+          "absolute_OZ_residual": 4.369256340411298e-09,
+          "absolute_reciprocity_residual": 0.0
+        }
+      ]
+    }
+  ]
+}

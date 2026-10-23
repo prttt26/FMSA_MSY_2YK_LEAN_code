@@ -1,0 +1,3521 @@
+{
+  "reference": "PY, scalar fixed-rate multi-Yukawa",
+  "max_order": 40,
+  "sampled_orders": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    12,
+    20,
+    40
+  ],
+  "temperature_ratios": [
+    0.8,
+    0.9,
+    0.97,
+    1.05
+  ],
+  "rho_min": 1e-07,
+  "rho_max": 1.25,
+  "rho_points": 1721,
+  "linear_grid": 1601,
+  "wavevector_screen": {
+    "min": 0,
+    "max": 30,
+    "points": 340
+  },
+  "models": [
+    {
+      "name": "HSY_z12",
+      "z": [
+        12.0
+      ],
+      "K": [
+        1.0
+      ],
+      "Tc1": 0.21092531428922343,
+      "rho_c1": 0.4788001974265013,
+      "critical_temperatures": [
+        {
+          "order": 1,
+          "Tc": 0.21092531428785893,
+          "rho_c": 0.478800190554174,
+          "Tc_over_Tc1": 0.999999999993531
+        },
+        {
+          "order": 2,
+          "Tc": 0.16369448214873908,
+          "rho_c": 0.5206734200441373,
+          "Tc_over_Tc1": 0.7760779340325134
+        },
+        {
+          "order": 3,
+          "Tc": 0.14774893855186427,
+          "rho_c": 0.535781540082073,
+          "Tc_over_Tc1": 0.7004798786231466
+        },
+        {
+          "order": 4,
+          "Tc": 0.1397817469951927,
+          "rho_c": 0.5418389130516224,
+          "Tc_over_Tc1": 0.6627073069262905
+        },
+        {
+          "order": 6,
+          "Tc": 0.132086576134371,
+          "rho_c": 0.5435596996829156,
+          "Tc_over_Tc1": 0.6262243893269834
+        },
+        {
+          "order": 8,
+          "Tc": 0.12866003975866808,
+          "rho_c": 0.5403239044324426,
+          "Tc_over_Tc1": 0.6099791302538861
+        },
+        {
+          "order": 12,
+          "Tc": 0.12608738864682006,
+          "rho_c": 0.5325435127069189,
+          "Tc_over_Tc1": 0.5977821537054934
+        },
+        {
+          "order": 20,
+          "Tc": 0.12518390212030925,
+          "rho_c": 0.5260181919845692,
+          "Tc_over_Tc1": 0.5934987108690781
+        },
+        {
+          "order": 40,
+          "Tc": 0.1250998638235716,
+          "rho_c": 0.5247858593286524,
+          "Tc_over_Tc1": 0.5931002840751163
+        }
+      ],
+      "HS_condition_max": 1.0828067182333383,
+      "coefficient_defect_max": 5.421010862427522e-20,
+      "zero_wavevector_identity_defect_max": 3.3939502818922433e-19,
+      "isotherms": [
+        {
+          "T": 0.16874025143137875,
+          "T_over_Tc1": 0.8,
+          "orders": {
+            "1": {
+              "min_derivative": -2.5212183928598453,
+              "minimum_density": 0.63115625,
+              "spinodal_roots": [
+                0.23486080655443853,
+                0.7988225107529067
+              ],
+              "coexistence": {
+                "rho_g": 0.060522741169721735,
+                "rho_l": 0.9486082486376441,
+                "beta_p": 0.05537358207326698,
+                "pressure_defect": 1.0408340855860843e-16,
+                "chemical_potential_defect": 4.440892098500626e-16,
+                "minimum_sampled_tangent_gap": 1.2292730757357956e-08,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.060522741169721735,
+                  "rho_l": 0.9486082486376441,
+                  "beta_p": 0.05537358207326698,
+                  "pressure_defect": 1.0408340855860843e-16,
+                  "chemical_potential_defect": 4.440892098500626e-16,
+                  "minimum_sampled_tangent_gap": 1.2292730757357956e-08,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                0.8099216561076277,
+                2.713393035856946
+              ]
+            },
+            "2": {
+              "min_derivative": 0.17286598183024562,
+              "minimum_density": 0.49047500000000005,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "3": {
+              "min_derivative": 0.4695074106109577,
+              "minimum_density": 0.38823125,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "4": {
+              "min_derivative": 0.5088859629473573,
+              "minimum_density": 0.355175,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 0.5181691932234892,
+              "minimum_density": 0.34518125,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "8": {
+              "min_derivative": 0.5187356299523914,
+              "minimum_density": 0.3444125,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": 0.5187819075661915,
+              "minimum_density": 0.3444125,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "20": {
+              "min_derivative": 0.5187822448912386,
+              "minimum_density": 0.3444125,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "40": {
+              "min_derivative": 0.5187822449176768,
+              "minimum_density": 0.3444125,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            }
+          }
+        },
+        {
+          "T": 0.18983278286030109,
+          "T_over_Tc1": 0.9,
+          "orders": {
+            "1": {
+              "min_derivative": -0.9404405366796462,
+              "minimum_density": 0.55581875,
+              "spinodal_roots": [
+                0.3004380769339126,
+                0.6941839933532897
+              ],
+              "coexistence": {
+                "rho_g": 0.15835892083049086,
+                "rho_l": 0.8123799128434683,
+                "beta_p": 0.12904103281345775,
+                "pressure_defect": 1.8290924330699454e-14,
+                "chemical_potential_defect": 0.0,
+                "minimum_sampled_tangent_gap": 4.777977494192467e-10,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.15835892083049086,
+                  "rho_l": 0.8123799128434683,
+                  "beta_p": 0.12904103281345775,
+                  "pressure_defect": 1.8290924330699454e-14,
+                  "chemical_potential_defect": 0.0,
+                  "minimum_sampled_tangent_gap": 4.777977494192467e-10,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                0.9256203264380103,
+                2.131163463311906
+              ]
+            },
+            "2": {
+              "min_derivative": 0.6366468729173852,
+              "minimum_density": 0.35748125000000003,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "3": {
+              "min_derivative": 0.725443850508142,
+              "minimum_density": 0.2798375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "4": {
+              "min_derivative": 0.7341239787031016,
+              "minimum_density": 0.26830625,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 0.7356683953891744,
+              "minimum_density": 0.26523125000000003,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "8": {
+              "min_derivative": 0.7357201698184911,
+              "minimum_density": 0.26523125000000003,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": 0.7357223285030133,
+              "minimum_density": 0.26523125000000003,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "20": {
+              "min_derivative": 0.7357223328568949,
+              "minimum_density": 0.26523125000000003,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "40": {
+              "min_derivative": 0.7357223328569216,
+              "minimum_density": 0.26523125000000003,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            }
+          }
+        },
+        {
+          "T": 0.2045975548605467,
+          "T_over_Tc1": 0.97,
+          "orders": {
+            "1": {
+              "min_derivative": -0.23251190796968263,
+              "minimum_density": 0.50200625,
+              "spinodal_roots": [
+                0.37731000668922654,
+                0.5912050070914843
+              ],
+              "coexistence": {
+                "rho_g": 0.2963545600050144,
+                "rho_l": 0.6626679244189772,
+                "beta_p": 0.2019966168578563,
+                "pressure_defect": 6.938893903907228e-16,
+                "chemical_potential_defect": 5.329070518200751e-15,
+                "minimum_sampled_tangent_gap": 2.769525238043881e-11,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.2963545600050144,
+                  "rho_l": 0.6626679244189772,
+                  "beta_p": 0.2019966168578563,
+                  "pressure_defect": 6.938893903907228e-16,
+                  "chemical_potential_defect": 5.329070518200751e-15,
+                  "minimum_sampled_tangent_gap": 2.769525238043881e-11,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                1.083315167037785,
+                1.6981919506447551
+              ]
+            },
+            "2": {
+              "min_derivative": 0.8037940534686369,
+              "minimum_density": 0.2675375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "3": {
+              "min_derivative": 0.8374757052178168,
+              "minimum_density": 0.21910625,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "4": {
+              "min_derivative": 0.8402276127545311,
+              "minimum_density": 0.213725,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 0.8406070337073934,
+              "minimum_density": 0.21295624999999999,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "8": {
+              "min_derivative": 0.8406147434167598,
+              "minimum_density": 0.21295624999999999,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": 0.8406149319988921,
+              "minimum_density": 0.21295624999999999,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "20": {
+              "min_derivative": 0.8406149321341044,
+              "minimum_density": 0.21295624999999999,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "40": {
+              "min_derivative": 0.8406149321341045,
+              "minimum_density": 0.21295624999999999,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            }
+          }
+        },
+        {
+          "T": 0.2214715800036846,
+          "T_over_Tc1": 1.05,
+          "orders": {
+            "1": {
+              "min_derivative": 0.31349248695017207,
+              "minimum_density": 0.43820000000000003,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "2": {
+              "min_derivative": 0.9113148735946803,
+              "minimum_density": 0.18066875,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "3": {
+              "min_derivative": 0.9207925798987227,
+              "minimum_density": 0.15760625,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "4": {
+              "min_derivative": 0.9213905294297442,
+              "minimum_density": 0.1553,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 0.9214474473323752,
+              "minimum_density": 0.1553,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "8": {
+              "min_derivative": 0.9214480163836345,
+              "minimum_density": 0.1553,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": 0.9214480231038992,
+              "minimum_density": 0.1553,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "20": {
+              "min_derivative": 0.9214480231050518,
+              "minimum_density": 0.1553,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "40": {
+              "min_derivative": 0.9214480231050518,
+              "minimum_density": 0.1553,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            }
+          }
+        }
+      ],
+      "stability_screens": [
+        {
+          "rho": 0.15,
+          "orders": [
+            {
+              "order": 1,
+              "T_instability": 0.1270772147862969,
+              "k_instability": 0.0,
+              "T_k0": 0.1270772147862969,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 2,
+              "T_instability": 0.09174792778213262,
+              "k_instability": 0.0,
+              "T_k0": 0.09174792778213262,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 3,
+              "T_instability": 0.0810340519552317,
+              "k_instability": 0.0,
+              "T_k0": 0.0810340519552317,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 6,
+              "T_instability": 0.0724697754786102,
+              "k_instability": 0.0,
+              "T_k0": 0.0724697754786102,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 12,
+              "T_instability": 0.07071718258602322,
+              "k_instability": 0.0,
+              "T_k0": 0.07071718258602322,
+              "finite_k_preempts_k0": false
+            }
+          ],
+          "spectral_imaginary_defect": 4.1836583790957375e-23
+        },
+        {
+          "rho": 0.3,
+          "orders": [
+            {
+              "order": 1,
+              "T_instability": 0.18971969612294887,
+              "k_instability": 0.0,
+              "T_k0": 0.18971969612294887,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 2,
+              "T_instability": 0.14127699069468266,
+              "k_instability": 0.0,
+              "T_k0": 0.14127699069468266,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 3,
+              "T_instability": 0.12570983907332114,
+              "k_instability": 0.0,
+              "T_k0": 0.12570983907332114,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 6,
+              "T_instability": 0.11204812086314976,
+              "k_instability": 0.0,
+              "T_k0": 0.11204812086314976,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 12,
+              "T_instability": 0.1083846274295116,
+              "k_instability": 0.0,
+              "T_k0": 0.1083846274295116,
+              "finite_k_preempts_k0": false
+            }
+          ],
+          "spectral_imaginary_defect": 2.1299621954284746e-22
+        },
+        {
+          "rho": 0.6,
+          "orders": [
+            {
+              "order": 1,
+              "T_instability": 0.20362914245412644,
+              "k_instability": 0.0,
+              "T_k0": 0.20362914245412644,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 2,
+              "T_instability": 0.1614061292040449,
+              "k_instability": 0.0,
+              "T_k0": 0.1614061292040449,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 3,
+              "T_instability": 0.14643697998566982,
+              "k_instability": 0.0,
+              "T_k0": 0.14643697998566982,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 6,
+              "T_instability": 0.13122557621102363,
+              "k_instability": 0.0,
+              "T_k0": 0.13122557621102363,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 12,
+              "T_instability": 0.12493283288410525,
+              "k_instability": 0.0,
+              "T_k0": 0.12493283288410525,
+              "finite_k_preempts_k0": false
+            }
+          ],
+          "spectral_imaginary_defect": 5.470196943714821e-22
+        }
+      ],
+      "own_critical_comparison": [
+        {
+          "order": 1,
+          "T": 0.16874025143028715,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -2.521218392964971,
+            "minimum_density": 0.63115625,
+            "spinodal_roots": [
+              0.23486080655163644,
+              0.7988225107577905
+            ],
+            "coexistence": {
+              "rho_g": 0.0605227411663281,
+              "rho_l": 0.9486082486436755,
+              "beta_p": 0.05537358207039275,
+              "pressure_defect": 1.6653345369377348e-16,
+              "chemical_potential_defect": 4.440892098500626e-16,
+              "minimum_sampled_tangent_gap": 1.2292727117908103e-08,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.0605227411663281,
+                "rho_l": 0.9486082486436755,
+                "beta_p": 0.05537358207039275,
+                "pressure_defect": 1.6653345369377348e-16,
+                "chemical_potential_defect": 4.440892098500626e-16,
+                "minimum_sampled_tangent_gap": 1.2292727117908103e-08,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.0605227411663281,
+                "rho_l": 0.9486082486436755,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.0605227411663281,
+                    "k0": 0.8212811751678103,
+                    "min_sampled_inverse_structure_factor": 0.8212811751678103,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.9486082486436755,
+                    "k0": 13.376923038717061,
+                    "min_sampled_inverse_structure_factor": 0.363467078485181,
+                    "k_min": 7.1657949790794975,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 2,
+          "T": 0.13095558571899127,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -2.263774170906857,
+            "minimum_density": 0.70188125,
+            "spinodal_roots": [
+              0.25855908961199514,
+              0.8513663910302994
+            ],
+            "coexistence": {
+              "rho_g": 0.07177770384538341,
+              "rho_l": 0.988453859781282,
+              "beta_p": 0.060781414701207584,
+              "pressure_defect": 2.6229018956769323e-15,
+              "chemical_potential_defect": 4.440892098500626e-16,
+              "minimum_sampled_tangent_gap": 1.9459785809486374e-07,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.07177770384538341,
+                "rho_l": 0.988453859781282,
+                "beta_p": 0.060781414701207584,
+                "pressure_defect": 2.6229018956769323e-15,
+                "chemical_potential_defect": 4.440892098500626e-16,
+                "minimum_sampled_tangent_gap": 1.9459785809486374e-07,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.07177770384538341,
+                "rho_l": 0.988453859781282,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.07177770384538341,
+                    "k0": 0.7001863648268531,
+                    "min_sampled_inverse_structure_factor": 0.7001863648268531,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.988453859781282,
+                    "k0": 13.125229992926245,
+                    "min_sampled_inverse_structure_factor": 0.3301636994291604,
+                    "k_min": 7.299267782426778,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 3,
+          "T": 0.11819915084149142,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -1.743719395705202,
+            "minimum_density": 0.7433937500000001,
+            "spinodal_roots": [
+              0.2663602848517043,
+              0.8714658299375951
+            ],
+            "coexistence": {
+              "rho_g": 0.0886585108789891,
+              "rho_l": 0.9936749284821987,
+              "beta_p": 0.06890320997996474,
+              "pressure_defect": 2.3592239273284576e-15,
+              "chemical_potential_defect": 8.881784197001252e-16,
+              "minimum_sampled_tangent_gap": 1.8561711403824142e-07,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.0886585108789891,
+                "rho_l": 0.9936749284821987,
+                "beta_p": 0.06890320997996474,
+                "pressure_defect": 2.3592239273284576e-15,
+                "chemical_potential_defect": 8.881784197001252e-16,
+                "minimum_sampled_tangent_gap": 1.8561711403824142e-07,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.0886585108789891,
+                "rho_l": 0.9936749284821987,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.0886585108789891,
+                    "k0": 0.5716924011859538,
+                    "min_sampled_inverse_structure_factor": 0.5716924011859538,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.9936749284821987,
+                    "k0": 10.505524675505468,
+                    "min_sampled_inverse_structure_factor": 0.3235316108537765,
+                    "k_min": 7.3326359832635974,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 6,
+          "T": 0.1056692609074968,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -0.6376389594070772,
+            "minimum_density": 0.81719375,
+            "spinodal_roots": [
+              0.2676322943057284,
+              0.3179358638933727,
+              0.681062856030249,
+              0.887949114069624
+            ],
+            "coexistence": null,
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.2503048605745996,
+                "rho_l": 0.3375409334865655,
+                "beta_p": 0.09749556445275417,
+                "pressure_defect": 1.1102230246251565e-16,
+                "chemical_potential_defect": 4.440892098500626e-15,
+                "minimum_sampled_tangent_gap": 4.7614807396812285e-11,
+                "supporting_tangent": true
+              },
+              {
+                "rho_g": 0.5602603344805538,
+                "rho_l": 0.946413804182993,
+                "beta_p": 0.1385217742293816,
+                "pressure_defect": 5.415112802609201e-14,
+                "chemical_potential_defect": 4.440892098500626e-16,
+                "minimum_sampled_tangent_gap": 6.019057863725866e-09,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 2,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.2503048605745996,
+                "rho_l": 0.3375409334865655,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.2503048605745996,
+                    "k0": 0.013562774752998458,
+                    "min_sampled_inverse_structure_factor": 0.013562774752998458,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.3375409334865655,
+                    "k0": 0.014452621589960728,
+                    "min_sampled_inverse_structure_factor": 0.014452621589960728,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  }
+                ]
+              },
+              {
+                "rho_g": 0.5602603344805538,
+                "rho_l": 0.946413804182993,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.5602603344805538,
+                    "k0": 0.3162984338971605,
+                    "min_sampled_inverse_structure_factor": 0.3162984338971605,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.946413804182993,
+                    "k0": 2.322935761634283,
+                    "min_sampled_inverse_structure_factor": 0.3431777855540347,
+                    "k_min": 7.366004184100418,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 12,
+          "T": 0.10086991091745606,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -0.07445064289905903,
+            "minimum_density": 0.8602437500000001,
+            "spinodal_roots": [
+              0.2601068266823442,
+              0.26220945337127954,
+              0.8346298665542015,
+              0.8830027598891074
+            ],
+            "coexistence": null,
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.25933886454651867,
+                "rho_l": 0.2629807187528118,
+                "beta_p": 0.09020450071866076,
+                "pressure_defect": 1.3877787807814457e-17,
+                "chemical_potential_defect": 0.0,
+                "minimum_sampled_tangent_gap": 2.0667697553365787e-13,
+                "supporting_tangent": true
+              },
+              {
+                "rho_g": 0.815623666459234,
+                "rho_l": 0.8996195329255016,
+                "beta_p": 0.44635299874416284,
+                "pressure_defect": 2.4980018054066022e-15,
+                "chemical_potential_defect": 1.7763568394002505e-15,
+                "minimum_sampled_tangent_gap": 7.998791530522279e-11,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 2,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.25933886454651867,
+                "rho_l": 0.2629807187528118,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.25933886454651867,
+                    "k0": 3.591418638161387e-05,
+                    "min_sampled_inverse_structure_factor": 3.591418638161387e-05,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.2629807187528118,
+                    "k0": 3.612201479490096e-05,
+                    "min_sampled_inverse_structure_factor": 3.612201479490096e-05,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  }
+                ]
+              },
+              {
+                "rho_g": 0.815623666459234,
+                "rho_l": 0.8996195329255016,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.815623666459234,
+                    "k0": 0.12298535212780322,
+                    "min_sampled_inverse_structure_factor": 0.12298535212780322,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.8996195329255016,
+                    "k0": 0.1752273936395011,
+                    "min_sampled_inverse_structure_factor": 0.1752273936395011,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 40,
+          "T": 0.10007989105885728,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -7.736163523664602e-06,
+            "minimum_density": 0.8687,
+            "spinodal_roots": [
+              0.8685459388709883,
+              0.8690482381656213
+            ],
+            "coexistence": {
+              "rho_g": 0.8683624496463683,
+              "rho_l": 0.869232454106684,
+              "beta_p": 0.518341310506802,
+              "pressure_defect": 0.0,
+              "chemical_potential_defect": 0.0,
+              "minimum_sampled_tangent_gap": 4.4692627376724185e-13,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.8683624496463683,
+                "rho_l": 0.869232454106684,
+                "beta_p": 0.518341310506802,
+                "pressure_defect": 0.0,
+                "chemical_potential_defect": 0.0,
+                "minimum_sampled_tangent_gap": 4.4692627376724185e-13,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.8683624496463683,
+                "rho_l": 0.869232454106684,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.8683624496463683,
+                    "k0": 1.8107709268005284e-05,
+                    "min_sampled_inverse_structure_factor": 1.8107709268005284e-05,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.869232454106684,
+                    "k0": 1.829564649442547e-05,
+                    "min_sampled_inverse_structure_factor": 1.829564649442547e-05,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "HSY_z20",
+      "z": [
+        20.0
+      ],
+      "K": [
+        1.0
+      ],
+      "Tc1": 0.13648374228010668,
+      "rho_c1": 0.5381234267735084,
+      "critical_temperatures": [
+        {
+          "order": 1,
+          "Tc": 0.13648374228010665,
+          "rho_c": 0.5381234255990333,
+          "Tc_over_Tc1": 0.9999999999999998
+        },
+        {
+          "order": 2,
+          "Tc": 0.09946978192880514,
+          "rho_c": 0.5887879898280128,
+          "Tc_over_Tc1": 0.7288031546252777
+        },
+        {
+          "order": 3,
+          "Tc": 0.08817913618447729,
+          "rho_c": 0.6022636110595297,
+          "Tc_over_Tc1": 0.6460779482695201
+        },
+        {
+          "order": 4,
+          "Tc": 0.08300969982183976,
+          "rho_c": 0.6038112976204055,
+          "Tc_over_Tc1": 0.6082021084348515
+        },
+        {
+          "order": 6,
+          "Tc": 0.07868174083075408,
+          "rho_c": 0.5962672491713116,
+          "Tc_over_Tc1": 0.5764916723141641
+        },
+        {
+          "order": 8,
+          "Tc": 0.07720272877574982,
+          "rho_c": 0.5879251438764264,
+          "Tc_over_Tc1": 0.5656551284863368
+        },
+        {
+          "order": 12,
+          "Tc": 0.07646741889257741,
+          "rho_c": 0.5798732035237644,
+          "Tc_over_Tc1": 0.5602676012183393
+        },
+        {
+          "order": 20,
+          "Tc": 0.07634758610796943,
+          "rho_c": 0.577480580594911,
+          "Tc_over_Tc1": 0.5593896007868884
+        },
+        {
+          "order": 40,
+          "Tc": 0.07302904712607333,
+          "rho_c": 0.43106361750755523,
+          "Tc_over_Tc1": 0.5350750639310229
+        }
+      ],
+      "HS_condition_max": 1.082806720864589,
+      "coefficient_defect_max": 2.710505431213761e-20,
+      "zero_wavevector_identity_defect_max": 3.3939502818922433e-19,
+      "isotherms": [
+        {
+          "T": 0.10918699382408535,
+          "T_over_Tc1": 0.8,
+          "orders": {
+            "1": {
+              "min_derivative": -3.5693260563414304,
+              "minimum_density": 0.724175,
+              "spinodal_roots": [
+                0.26339268319455,
+                0.8920116430027466
+              ],
+              "coexistence": {
+                "rho_g": 0.057145662391077906,
+                "rho_l": 1.0426860736161963,
+                "beta_p": 0.05372388701747217,
+                "pressure_defect": 7.147060721024445e-16,
+                "chemical_potential_defect": 1.7763568394002505e-15,
+                "minimum_sampled_tangent_gap": 4.618063117570485e-07,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.057145662391077906,
+                  "rho_l": 1.0426860736161963,
+                  "beta_p": 0.05372388701747217,
+                  "pressure_defect": 7.147060721024445e-16,
+                  "chemical_potential_defect": 1.7763568394002505e-15,
+                  "minimum_sampled_tangent_gap": 4.618063117570485e-07,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                0.8583367710193947,
+                3.4047787340451054
+              ]
+            },
+            "2": {
+              "min_derivative": 0.5109211251152614,
+              "minimum_density": 0.45511250000000003,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "3": {
+              "min_derivative": 0.65722126573079,
+              "minimum_density": 0.3351875,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "4": {
+              "min_derivative": 0.6669480844660162,
+              "minimum_density": 0.32135,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 0.6682664663311839,
+              "minimum_density": 0.31904375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "8": {
+              "min_derivative": 0.6682938113030282,
+              "minimum_density": 0.31904375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": 0.6682945031281338,
+              "minimum_density": 0.31904375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "20": {
+              "min_derivative": 0.6682945036583576,
+              "minimum_density": 0.31904375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "40": {
+              "min_derivative": 0.6682945036583581,
+              "minimum_density": 0.31904375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            }
+          }
+        },
+        {
+          "T": 0.12283536805209601,
+          "T_over_Tc1": 0.9,
+          "orders": {
+            "1": {
+              "min_derivative": -1.2684491664268336,
+              "minimum_density": 0.63423125,
+              "spinodal_roots": [
+                0.33733206711264047,
+                0.777730013898904
+              ],
+              "coexistence": {
+                "rho_g": 0.1689725342746829,
+                "rho_l": 0.900882391349106,
+                "beta_p": 0.14420226986546397,
+                "pressure_defect": 2.9976021664879227e-15,
+                "chemical_potential_defect": 4.440892098500626e-16,
+                "minimum_sampled_tangent_gap": 3.593526240268895e-08,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.1689725342746829,
+                  "rho_l": 0.900882391349106,
+                  "beta_p": 0.14420226986546397,
+                  "pressure_defect": 2.9976021664879227e-15,
+                  "chemical_potential_defect": 4.440892098500626e-16,
+                  "minimum_sampled_tangent_gap": 3.593526240268895e-08,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                0.998057354590384,
+                2.5817999141511985
+              ]
+            },
+            "2": {
+              "min_derivative": 0.8266618133513917,
+              "minimum_density": 0.27445625,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "3": {
+              "min_derivative": 0.8527891341094664,
+              "minimum_density": 0.226025,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "4": {
+              "min_derivative": 0.8541986698421271,
+              "minimum_density": 0.22294999999999998,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 0.854324021592706,
+              "minimum_density": 0.22294999999999998,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "8": {
+              "min_derivative": 0.8543251298100316,
+              "minimum_density": 0.22294999999999998,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": 0.8543251413781912,
+              "minimum_density": 0.22294999999999998,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "20": {
+              "min_derivative": 0.8543251413797471,
+              "minimum_density": 0.22294999999999998,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "40": {
+              "min_derivative": 0.8543251413797471,
+              "minimum_density": 0.22294999999999998,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            }
+          }
+        },
+        {
+          "T": 0.13238923001170347,
+          "T_over_Tc1": 0.97,
+          "orders": {
+            "1": {
+              "min_derivative": -0.3031329066476895,
+              "minimum_density": 0.56811875,
+              "spinodal_roots": [
+                0.42399049336143185,
+                0.6637580845116403
+              ],
+              "coexistence": {
+                "rho_g": 0.32993569065707884,
+                "rho_l": 0.7408624968877929,
+                "beta_p": 0.23968476216042175,
+                "pressure_defect": 2.7755575615628914e-17,
+                "chemical_potential_defect": 2.2426505097428162e-14,
+                "minimum_sampled_tangent_gap": 7.918020345581923e-09,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.32993569065707884,
+                  "rho_l": 0.7408624968877929,
+                  "beta_p": 0.23968476216042175,
+                  "pressure_defect": 2.7755575615628914e-17,
+                  "chemical_potential_defect": 2.2426505097428162e-14,
+                  "minimum_sampled_tangent_gap": 7.918020345581923e-09,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                1.192832752147877,
+                1.990938315571814
+              ]
+            },
+            "2": {
+              "min_derivative": 0.9251283382035344,
+              "minimum_density": 0.17913125,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "3": {
+              "min_derivative": 0.9316533859749675,
+              "minimum_density": 0.15914375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "4": {
+              "min_derivative": 0.9319213898131726,
+              "minimum_density": 0.158375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 0.931937367164551,
+              "minimum_density": 0.158375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "8": {
+              "min_derivative": 0.9319374316052536,
+              "minimum_density": 0.158375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": 0.9319374319106193,
+              "minimum_density": 0.158375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "20": {
+              "min_derivative": 0.9319374319106278,
+              "minimum_density": 0.158375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "40": {
+              "min_derivative": 0.9319374319106278,
+              "minimum_density": 0.158375,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            }
+          }
+        },
+        {
+          "T": 0.14330792939411202,
+          "T_over_Tc1": 1.05,
+          "orders": {
+            "1": {
+              "min_derivative": 0.39268593658120815,
+              "minimum_density": 0.48586250000000003,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "2": {
+              "min_derivative": 0.980155912896978,
+              "minimum_density": 0.09303125000000001,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "3": {
+              "min_derivative": 0.9809383607707821,
+              "minimum_density": 0.08765,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "4": {
+              "min_derivative": 0.9809569118615141,
+              "minimum_density": 0.08765,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 0.9809574820753784,
+              "minimum_density": 0.08765,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "8": {
+              "min_derivative": 0.9809574827070143,
+              "minimum_density": 0.08765,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": 0.9809574827078343,
+              "minimum_density": 0.08765,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "20": {
+              "min_derivative": 0.9809574827078343,
+              "minimum_density": 0.08765,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "40": {
+              "min_derivative": 0.9809574827078343,
+              "minimum_density": 0.08765,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            }
+          }
+        }
+      ],
+      "stability_screens": [
+        {
+          "rho": 0.15,
+          "orders": [
+            {
+              "order": 1,
+              "T_instability": 0.07581553598722972,
+              "k_instability": 0.0,
+              "T_k0": 0.07581553598722972,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 2,
+              "T_instability": 0.051111882748344634,
+              "k_instability": 0.0,
+              "T_k0": 0.051111882748344634,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 3,
+              "T_instability": 0.04471481058478451,
+              "k_instability": 0.0,
+              "T_k0": 0.04471481058478451,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 6,
+              "T_instability": 0.04078697736666217,
+              "k_instability": 0.0,
+              "T_k0": 0.04078697736666217,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 12,
+              "T_instability": 0.04039524380297717,
+              "k_instability": 0.0,
+              "T_k0": 0.04039524380297717,
+              "finite_k_preempts_k0": false
+            }
+          ],
+          "spectral_imaginary_defect": 1.0727559329742767e-23
+        },
+        {
+          "rho": 0.3,
+          "orders": [
+            {
+              "order": 1,
+              "T_instability": 0.11664410093566674,
+              "k_instability": 0.0,
+              "T_k0": 0.11664410093566674,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 2,
+              "T_instability": 0.08083024565475698,
+              "k_instability": 0.0,
+              "T_k0": 0.08083024565475698,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 3,
+              "T_instability": 0.07089685715650486,
+              "k_instability": 0.0,
+              "T_k0": 0.07089685715650486,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 6,
+              "T_instability": 0.06404629383169068,
+              "k_instability": 0.0,
+              "T_k0": 0.06404629383169068,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 12,
+              "T_instability": 0.06311493269897851,
+              "k_instability": 0.0,
+              "T_k0": 0.06311493269897851,
+              "finite_k_preempts_k0": false
+            }
+          ],
+          "spectral_imaginary_defect": 6.08498099657611e-23
+        },
+        {
+          "rho": 0.6,
+          "orders": [
+            {
+              "order": 1,
+              "T_instability": 0.13543999597011933,
+              "k_instability": 0.0,
+              "T_k0": 0.13543999597011933,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 2,
+              "T_instability": 0.099446801628094,
+              "k_instability": 0.0,
+              "T_k0": 0.099446801628094,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 3,
+              "T_instability": 0.0881783388191909,
+              "k_instability": 0.0,
+              "T_k0": 0.0881783388191909,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 6,
+              "T_instability": 0.07867987976438408,
+              "k_instability": 0.0,
+              "T_k0": 0.07867987976438408,
+              "finite_k_preempts_k0": false
+            },
+            {
+              "order": 12,
+              "T_instability": 0.07641291686773737,
+              "k_instability": 0.0,
+              "T_k0": 0.07641291686773737,
+              "finite_k_preempts_k0": false
+            }
+          ],
+          "spectral_imaginary_defect": 1.6541509908054811e-22
+        }
+      ],
+      "own_critical_comparison": [
+        {
+          "order": 1,
+          "T": 0.10918699382408532,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -3.5693260563414397,
+            "minimum_density": 0.724175,
+            "spinodal_roots": [
+              0.2633926831945498,
+              0.8920116430027469
+            ],
+            "coexistence": {
+              "rho_g": 0.0571456623910775,
+              "rho_l": 1.0426860736161967,
+              "beta_p": 0.0537238870174718,
+              "pressure_defect": 5.759281940243e-16,
+              "chemical_potential_defect": 6.661338147750939e-15,
+              "minimum_sampled_tangent_gap": 4.618063117500012e-07,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.0571456623910775,
+                "rho_l": 1.0426860736161967,
+                "beta_p": 0.0537238870174718,
+                "pressure_defect": 5.759281940243e-16,
+                "chemical_potential_defect": 6.661338147750939e-15,
+                "minimum_sampled_tangent_gap": 4.618063117500012e-07,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.0571456623910775,
+                "rho_l": 1.0426860736161967,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.0571456623910775,
+                    "k0": 0.8731050636813715,
+                    "min_sampled_inverse_structure_factor": 0.8731050636813715,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 1.0426860736161967,
+                    "k0": 20.848966115358184,
+                    "min_sampled_inverse_structure_factor": 0.3053675079982759,
+                    "k_min": 7.3326359832635974,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 2,
+          "T": 0.07957582554304411,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -3.0528818235124375,
+            "minimum_density": 0.81258125,
+            "spinodal_roots": [
+              0.29138520760941783,
+              0.9555538387063771
+            ],
+            "coexistence": {
+              "rho_g": 0.07290955308849242,
+              "rho_l": 1.0886448583758503,
+              "beta_p": 0.06249285333487463,
+              "pressure_defect": 1.8455376116222055e-13,
+              "chemical_potential_defect": 2.1227464230832993e-13,
+              "minimum_sampled_tangent_gap": 6.097622013583916e-08,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.07290955308849242,
+                "rho_l": 1.0886448583758503,
+                "beta_p": 0.06249285333487463,
+                "pressure_defect": 1.8455376116222055e-13,
+                "chemical_potential_defect": 2.1227464230832993e-13,
+                "minimum_sampled_tangent_gap": 6.097622013583916e-08,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.07290955308849242,
+                "rho_l": 1.0886448583758503,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.07290955308849242,
+                    "k0": 0.7204590592370119,
+                    "min_sampled_inverse_structure_factor": 0.7204590592370119,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 1.0886448583758503,
+                    "k0": 19.580541549805016,
+                    "min_sampled_inverse_structure_factor": 0.2800448920676534,
+                    "k_min": 7.499476987447698,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 3,
+          "T": 0.07054330894758183,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -2.058750489537555,
+            "minimum_density": 0.859475,
+            "spinodal_roots": [
+              0.297230886061248,
+              0.9756987800224799
+            ],
+            "coexistence": {
+              "rho_g": 0.10316071908017176,
+              "rho_l": 1.0881601951484317,
+              "beta_p": 0.07786226287705243,
+              "pressure_defect": 8.604228440844963e-16,
+              "chemical_potential_defect": 0.0,
+              "minimum_sampled_tangent_gap": 4.7472326083878875e-08,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.10316071908017176,
+                "rho_l": 1.0881601951484317,
+                "beta_p": 0.07786226287705243,
+                "pressure_defect": 8.604228440844963e-16,
+                "chemical_potential_defect": 0.0,
+                "minimum_sampled_tangent_gap": 4.7472326083878875e-08,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.10316071908017176,
+                "rho_l": 1.0881601951484317,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.10316071908017176,
+                    "k0": 0.5313348654367696,
+                    "min_sampled_inverse_structure_factor": 0.5313348654367696,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 1.0881601951484317,
+                    "k0": 13.272512912998796,
+                    "min_sampled_inverse_structure_factor": 0.2806264868551234,
+                    "k_min": 7.566213389121338,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 6,
+          "T": 0.06294539266460326,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -0.42653012759505804,
+            "minimum_density": 0.9286625000000001,
+            "spinodal_roots": [
+              0.2902940268278245,
+              0.3088370951758502,
+              0.848542975778515,
+              0.980559054487157
+            ],
+            "coexistence": null,
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.2836315397983662,
+                "rho_l": 0.31574958908643985,
+                "beta_p": 0.10198451483817521,
+                "pressure_defect": 2.7755575615628914e-17,
+                "chemical_potential_defect": 0.0,
+                "minimum_sampled_tangent_gap": 8.469250667439465e-12,
+                "supporting_tangent": true
+              },
+              {
+                "rho_g": 0.7867336514561067,
+                "rho_l": 1.0204288876923904,
+                "beta_p": 0.3140481774561191,
+                "pressure_defect": 1.1102230246251565e-16,
+                "chemical_potential_defect": 0.0,
+                "minimum_sampled_tangent_gap": 2.3381782803541876e-08,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 2,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.2836315397983662,
+                "rho_l": 0.31574958908643985,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.2836315397983662,
+                    "k0": 0.001950442595266291,
+                    "min_sampled_inverse_structure_factor": 0.001950442595266291,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.31574958908643985,
+                    "k0": 0.002024361915771192,
+                    "min_sampled_inverse_structure_factor": 0.002024361915771192,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  }
+                ]
+              },
+              {
+                "rho_g": 0.7867336514561067,
+                "rho_l": 1.0204288876923904,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.7867336514561067,
+                    "k0": 0.437128286422923,
+                    "min_sampled_inverse_structure_factor": 0.3802889748992837,
+                    "k_min": 7.499476987447698,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 1.0204288876923904,
+                    "k0": 1.3183187909179455,
+                    "min_sampled_inverse_structure_factor": 0.30643250309703446,
+                    "k_min": 7.5995815899581585,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 12,
+          "T": 0.06117393511406193,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -0.013465523811729326,
+            "minimum_density": 0.95249375,
+            "spinodal_roots": [
+              0.2825874901589285,
+              0.28287419713548057,
+              0.9424080123240591,
+              0.9619938800856911
+            ],
+            "coexistence": null,
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.2824825480876696,
+                "rho_l": 0.28297913912672573,
+                "beta_p": 0.09707744144585562,
+                "pressure_defect": 0.0,
+                "chemical_potential_defect": 0.0,
+                "minimum_sampled_tangent_gap": 3.197531128762116e-15,
+                "supporting_tangent": true
+              },
+              {
+                "rho_g": 0.9350066999499997,
+                "rho_l": 0.9689451216830616,
+                "beta_p": 0.5457652065968412,
+                "pressure_defect": 0.0,
+                "chemical_potential_defect": 4.440892098500626e-16,
+                "minimum_sampled_tangent_gap": 5.068573905025472e-10,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 2,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.2824825480876696,
+                "rho_l": 0.28297913912672573,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.2824825480876696,
+                    "k0": 5.573989187252978e-07,
+                    "min_sampled_inverse_structure_factor": 5.573989187252978e-07,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.28297913912672573,
+                    "k0": 5.57399546603039e-07,
+                    "min_sampled_inverse_structure_factor": 5.57399546603039e-07,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  }
+                ]
+              },
+              {
+                "rho_g": 0.9350066999499997,
+                "rho_l": 0.9689451216830616,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.9350066999499997,
+                    "k0": 0.024864110998649196,
+                    "min_sampled_inverse_structure_factor": 0.024864110998649196,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.9689451216830616,
+                    "k0": 0.029032816738189866,
+                    "min_sampled_inverse_structure_factor": 0.029032816738189866,
+                    "k_min": 0.0,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 40,
+          "T": 0.058423237700858666,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": 1.4441801618469974e-07,
+            "minimum_density": 0.9901625000000001,
+            "spinodal_roots": [
+              0.9901796527863849,
+              0.9902009502912904
+            ],
+            "coexistence": null,
+            "coexistence_candidates": [],
+            "supporting_tangent_count": 0,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "2YK_long_repulsion",
+      "z": [
+        5.0,
+        0.5
+      ],
+      "K": [
+        1.0,
+        -0.05
+      ],
+      "Tc1": 0.1664928867110631,
+      "rho_c1": 0.6101292436727549,
+      "critical_temperatures": [
+        {
+          "order": 1,
+          "Tc": 0.16649288671181103,
+          "rho_c": 0.6101292437400955,
+          "Tc_over_Tc1": 1.0000000000044922
+        },
+        {
+          "order": 2,
+          "Tc": 0.1056124812070834,
+          "rho_c": 0.8192659610076427,
+          "Tc_over_Tc1": 0.6343362968435196
+        },
+        {
+          "order": 3,
+          "Tc": 0.07508777998769989,
+          "rho_c": 0.9677837998907546,
+          "Tc_over_Tc1": 0.4509969252801145
+        },
+        {
+          "order": 4,
+          "Tc": 0.056095433819495895,
+          "rho_c": 1.073420206311773,
+          "Tc_over_Tc1": 0.3369239066462079
+        },
+        {
+          "order": 6,
+          "Tc": 0.07440161506665653,
+          "rho_c": 0.2363530118023865,
+          "Tc_over_Tc1": 0.446875638571727
+        },
+        {
+          "order": 8,
+          "Tc": 0.12385137776012894,
+          "rho_c": 0.34626033306311854,
+          "Tc_over_Tc1": 0.7438838992266645
+        },
+        {
+          "order": 12,
+          "Tc": 0.16194283163202902,
+          "rho_c": 0.4728416266682728,
+          "Tc_over_Tc1": 0.9726711743131081
+        },
+        {
+          "order": 20,
+          "Tc": 0.16608513594800028,
+          "rho_c": 0.3536369152609077,
+          "Tc_over_Tc1": 0.9975509418383114
+        },
+        {
+          "order": 40,
+          "Tc": 0.19791470477865475,
+          "rho_c": 0.46989758859628245,
+          "Tc_over_Tc1": 1.1887276909440705
+        }
+      ],
+      "HS_condition_max": 1.1997874917143303,
+      "coefficient_defect_max": 1.2941710129652982e-19,
+      "zero_wavevector_identity_defect_max": 5.170403696412743e-19,
+      "isotherms": [
+        {
+          "T": 0.1331943093688505,
+          "T_over_Tc1": 0.8,
+          "orders": {
+            "1": {
+              "min_derivative": -3.8759341891707346,
+              "minimum_density": 0.70341875,
+              "spinodal_roots": [
+                0.41381662342640035,
+                0.8486206962552256
+              ],
+              "coexistence": {
+                "rho_g": 0.22339999962578153,
+                "rho_l": 0.9731150061590025,
+                "beta_p": 0.36435547938867086,
+                "pressure_defect": 3.5926817076870066e-13,
+                "chemical_potential_defect": 6.245004513516506e-17,
+                "minimum_sampled_tangent_gap": 1.5743367655146265e-07,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.22339999962578153,
+                  "rho_l": 0.9731150061590025,
+                  "beta_p": 0.36435547938867086,
+                  "pressure_defect": 3.5926817076870066e-13,
+                  "chemical_potential_defect": 6.245004513516506e-17,
+                  "minimum_sampled_tangent_gap": 1.5743367655146265e-07,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                1.1679825523022687,
+                3.0584652950639035
+              ],
+              "coexistence_endpoint_spectral_screen": [
+                {
+                  "rho_g": 0.22339999962578153,
+                  "rho_l": 0.9731150061590025,
+                  "endpoints": [
+                    {
+                      "endpoint": "gas",
+                      "rho": 0.22339999962578153,
+                      "k0": 1.7628430485466304,
+                      "min_sampled_inverse_structure_factor": -2.4960469320508807,
+                      "k_min": 0.9926778242677823,
+                      "finite_k_unstable": true
+                    },
+                    {
+                      "endpoint": "liquid",
+                      "rho": 0.9731150061590025,
+                      "k0": 16.804230263348597,
+                      "min_sampled_inverse_structure_factor": -2.3339271051546753,
+                      "k_min": 1.0260460251046022,
+                      "finite_k_unstable": true
+                    }
+                  ]
+                }
+              ]
+            },
+            "2": {
+              "min_derivative": 1.000000984956259,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "3": {
+              "min_derivative": 1.000000984956259,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "4": {
+              "min_derivative": 1.000000984956259,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 1.000000984956259,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "8": {
+              "min_derivative": 1.000000984956259,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": -70.84252069154428,
+              "minimum_density": 0.50046875,
+              "spinodal_roots": [
+                0.3437078261758223,
+                0.6408778728040447
+              ],
+              "coexistence": {
+                "rho_g": 0.00037218512180357886,
+                "rho_l": 1.0664470038694622,
+                "beta_p": 0.00037286786782371516,
+                "pressure_defect": 9.379378784063475e-15,
+                "chemical_potential_defect": 5.266898028821743e-13,
+                "minimum_sampled_tangent_gap": 5.538961216570796e-08,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.00037218512180357886,
+                  "rho_l": 1.0664470038694622,
+                  "beta_p": 0.00037286786782371516,
+                  "pressure_defect": 9.379378784063475e-15,
+                  "chemical_potential_defect": 5.266898028821743e-13,
+                  "minimum_sampled_tangent_gap": 5.538961216570796e-08,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                3.7287902999274753,
+                -2.0155994325367805
+              ],
+              "coexistence_endpoint_spectral_screen": [
+                {
+                  "rho_g": 0.00037218512180357886,
+                  "rho_l": 1.0664470038694622,
+                  "endpoints": [
+                    {
+                      "endpoint": "gas",
+                      "rho": 0.00037218512180357886,
+                      "k0": 1.003670348823626,
+                      "min_sampled_inverse_structure_factor": 0.9963493816889168,
+                      "k_min": 1.0260460251046022,
+                      "finite_k_unstable": false
+                    },
+                    {
+                      "endpoint": "liquid",
+                      "rho": 1.0664470038694622,
+                      "k0": 54.63670555441659,
+                      "min_sampled_inverse_structure_factor": 0.22568422804474447,
+                      "k_min": 7.3326359832635974,
+                      "finite_k_unstable": false
+                    }
+                  ]
+                }
+              ]
+            },
+            "20": {
+              "min_derivative": -634.2530168903021,
+              "minimum_density": 0.37055000000000005,
+              "spinodal_roots": [
+                0.24118638506812176,
+                0.4173604794235333,
+                0.6355681225698999,
+                0.801849985678545
+              ],
+              "coexistence": {
+                "rho_g": 0.5954894785341033,
+                "rho_l": 1.067481109352812,
+                "beta_p": 231.3262325945624,
+                "pressure_defect": 5.684341886080802e-14,
+                "chemical_potential_defect": 5.684341886080802e-14,
+                "minimum_sampled_tangent_gap": 2.7323453464893344e-06,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.5954894785341033,
+                  "rho_l": 1.067481109352812,
+                  "beta_p": 231.3262325945624,
+                  "pressure_defect": 5.684341886080802e-14,
+                  "chemical_potential_defect": 5.684341886080802e-14,
+                  "minimum_sampled_tangent_gap": 2.7323453464893344e-06,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                2.574265965856994,
+                -121.51031217148376,
+                37.85123348104742,
+                1.0692408624191494
+              ]
+            },
+            "40": {
+              "min_derivative": -41338606.540435165,
+              "minimum_density": 0.48586250000000003,
+              "spinodal_roots": [
+                0.25036877569505755,
+                0.34102490848814776,
+                0.437853830238894,
+                0.542963890379339,
+                0.6580142655397678,
+                0.7815606395001202
+              ],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                906.3789798880804,
+                -254024.87381660895,
+                2220209.0864026533,
+                -1125478.8906173797,
+                32958.871957733296,
+                -44.0759923448091
+              ],
+              "coexistence_endpoint_spectral_screen": []
+            }
+          }
+        },
+        {
+          "T": 0.1498435980399568,
+          "T_over_Tc1": 0.9,
+          "orders": {
+            "1": {
+              "min_derivative": -1.5454355521126533,
+              "minimum_density": 0.65729375,
+              "spinodal_roots": [
+                0.4695272640469192,
+                0.770925097779335
+              ],
+              "coexistence": {
+                "rho_g": 0.3432669106500614,
+                "rho_l": 0.8645577332262406,
+                "beta_p": 0.5571539898684148,
+                "pressure_defect": 0.0,
+                "chemical_potential_defect": 1.1102230246251565e-16,
+                "minimum_sampled_tangent_gap": 2.582799944265122e-07,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.3432669106500614,
+                  "rho_l": 0.8645577332262406,
+                  "beta_p": 0.5571539898684148,
+                  "pressure_defect": 0.0,
+                  "chemical_potential_defect": 1.1102230246251565e-16,
+                  "minimum_sampled_tangent_gap": 2.582799944265122e-07,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                1.311370611662455,
+                2.5410214922191736
+              ],
+              "coexistence_endpoint_spectral_screen": [
+                {
+                  "rho_g": 0.3432669106500614,
+                  "rho_l": 0.8645577332262406,
+                  "endpoints": [
+                    {
+                      "endpoint": "gas",
+                      "rho": 0.3432669106500614,
+                      "k0": 1.250083076518745,
+                      "min_sampled_inverse_structure_factor": -4.501938098138652,
+                      "k_min": 0.9593096234309623,
+                      "finite_k_unstable": true
+                    },
+                    {
+                      "endpoint": "liquid",
+                      "rho": 0.8645577332262406,
+                      "k0": 5.528206858104723,
+                      "min_sampled_inverse_structure_factor": -9.109229830662702,
+                      "k_min": 0.9593096234309623,
+                      "finite_k_unstable": true
+                    }
+                  ]
+                }
+              ]
+            },
+            "2": {
+              "min_derivative": 1.0000009220587396,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "3": {
+              "min_derivative": 1.0000009220587396,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "4": {
+              "min_derivative": 1.0000009220587396,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 1.0000009220587396,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "8": {
+              "min_derivative": 1.0000009220587396,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": -11.57992583558368,
+              "minimum_density": 0.4874,
+              "spinodal_roots": [
+                0.37832438702502386,
+                0.5814348774000202
+              ],
+              "coexistence": {
+                "rho_g": 0.2641116854885164,
+                "rho_l": 0.6880336338049992,
+                "beta_p": 0.7384972746250019,
+                "pressure_defect": 1.5543122344752192e-15,
+                "chemical_potential_defect": 6.661338147750939e-16,
+                "minimum_sampled_tangent_gap": 1.201906204661811e-09,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.2641116854885164,
+                  "rho_l": 0.6880336338049992,
+                  "beta_p": 0.7384972746250019,
+                  "pressure_defect": 1.5543122344752192e-15,
+                  "chemical_potential_defect": 6.661338147750939e-16,
+                  "minimum_sampled_tangent_gap": 1.201906204661811e-09,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                1.9287165079467987,
+                -0.15276943935998236
+              ],
+              "coexistence_endpoint_spectral_screen": [
+                {
+                  "rho_g": 0.2641116854885164,
+                  "rho_l": 0.6880336338049992,
+                  "endpoints": [
+                    {
+                      "endpoint": "gas",
+                      "rho": 0.2641116854885164,
+                      "k0": 5.160369474589271,
+                      "min_sampled_inverse_structure_factor": 0.4162293640642794,
+                      "k_min": 1.0594142259414223,
+                      "finite_k_unstable": false
+                    },
+                    {
+                      "endpoint": "liquid",
+                      "rho": 0.6880336338049992,
+                      "k0": 16.161151956267577,
+                      "min_sampled_inverse_structure_factor": 0.4139998627391937,
+                      "k_min": 7.032322175732217,
+                      "finite_k_unstable": false
+                    }
+                  ]
+                }
+              ]
+            },
+            "20": {
+              "min_derivative": -47.38020044790203,
+              "minimum_density": 0.36363125,
+              "spinodal_roots": [
+                0.27215069341753845,
+                0.4055903427695032,
+                0.6298084518767736,
+                0.7357909817203285
+              ],
+              "coexistence": null,
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.09047654622463881,
+                  "rho_l": 0.4496987628641567,
+                  "beta_p": 0.1343650110436789,
+                  "pressure_defect": 1.4155343563970746e-15,
+                  "chemical_potential_defect": 2.930988785010413e-14,
+                  "minimum_sampled_tangent_gap": 1.6762002848919044e-07,
+                  "supporting_tangent": true
+                },
+                {
+                  "rho_g": 0.5991658784944481,
+                  "rho_l": 0.8058068293809563,
+                  "beta_p": 28.91488539208113,
+                  "pressure_defect": 3.552713678800501e-15,
+                  "chemical_potential_defect": 7.105427357601002e-15,
+                  "minimum_sampled_tangent_gap": 1.833451629953617e-07,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 2,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                1.2867321038259727,
+                -10.205523854675281,
+                5.383221981137809,
+                1.3351678745769062
+              ]
+            },
+            "40": {
+              "min_derivative": -404845.7716511847,
+              "minimum_density": 0.48278750000000004,
+              "spinodal_roots": [
+                0.2481011652409735,
+                0.3369859837823657,
+                0.4337627319319034,
+                0.5382637390943873,
+                0.6515019573185615,
+                0.7628101252028592
+              ],
+              "coexistence": null,
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.6308212900376114,
+                  "rho_l": 1.2138306566541874,
+                  "beta_p": -10236.509558338616,
+                  "pressure_defect": 0.0,
+                  "chemical_potential_defect": 3.637978807091713e-12,
+                  "minimum_sampled_tangent_gap": -10236.507595698235,
+                  "supporting_tangent": false
+                }
+              ],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                7.5604322831009485,
+                -2016.3494328711317,
+                20649.502041209296,
+                -12046.089435886794,
+                438.1118316972742,
+                -0.0016113938036127194
+              ],
+              "coexistence_endpoint_spectral_screen": []
+            }
+          }
+        },
+        {
+          "T": 0.1614981001097312,
+          "T_over_Tc1": 0.97,
+          "orders": {
+            "1": {
+              "min_derivative": -0.3995985979058357,
+              "minimum_density": 0.6242375,
+              "spinodal_roots": [
+                0.5315932654735412,
+                0.6945555896634069
+              ],
+              "coexistence": {
+                "rho_g": 0.467152669139749,
+                "rho_l": 0.7493235705453873,
+                "beta_p": 0.6965752532051555,
+                "pressure_defect": 2.220446049250313e-16,
+                "chemical_potential_defect": 2.220446049250313e-16,
+                "minimum_sampled_tangent_gap": 3.6545822839533296e-08,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.467152669139749,
+                  "rho_l": 0.7493235705453873,
+                  "beta_p": 0.6965752532051555,
+                  "pressure_defect": 2.220446049250313e-16,
+                  "chemical_potential_defect": 2.220446049250313e-16,
+                  "minimum_sampled_tangent_gap": 3.6545822839533296e-08,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                1.4945376855518577,
+                2.1329474400779924
+              ],
+              "coexistence_endpoint_spectral_screen": [
+                {
+                  "rho_g": 0.467152669139749,
+                  "rho_l": 0.7493235705453873,
+                  "endpoints": [
+                    {
+                      "endpoint": "gas",
+                      "rho": 0.467152669139749,
+                      "k0": 0.5163570800898135,
+                      "min_sampled_inverse_structure_factor": -6.682538481843842,
+                      "k_min": 0.9593096234309623,
+                      "finite_k_unstable": true
+                    },
+                    {
+                      "endpoint": "liquid",
+                      "rho": 0.7493235705453873,
+                      "k0": 1.1276828293623957,
+                      "min_sampled_inverse_structure_factor": -10.445424890963693,
+                      "k_min": 0.9593096234309623,
+                      "finite_k_unstable": true
+                    }
+                  ]
+                }
+              ]
+            },
+            "2": {
+              "min_derivative": 1.0000008857467761,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "3": {
+              "min_derivative": 1.0000008857467761,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "4": {
+              "min_derivative": 1.0000008857467761,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 1.0000008857467761,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "8": {
+              "min_derivative": 1.0000008857467761,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": -0.24513419515694063,
+              "minimum_density": 0.4735625,
+              "spinodal_roots": [
+                0.45318724666683213,
+                0.4929774919973835
+              ],
+              "coexistence": {
+                "rho_g": 0.438456460057677,
+                "rho_l": 0.5076951954873752,
+                "beta_p": 1.3187932047691049,
+                "pressure_defect": 7.549516567451064e-15,
+                "chemical_potential_defect": 2.220446049250313e-15,
+                "minimum_sampled_tangent_gap": 3.3572578184672065e-08,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.438456460057677,
+                  "rho_l": 0.5076951954873752,
+                  "beta_p": 1.3187932047691049,
+                  "pressure_defect": 7.549516567451064e-15,
+                  "chemical_potential_defect": 2.220446049250313e-15,
+                  "minimum_sampled_tangent_gap": 3.3572578184672065e-08,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                1.1394521109936708,
+                0.8263467690543616
+              ],
+              "coexistence_endpoint_spectral_screen": [
+                {
+                  "rho_g": 0.438456460057677,
+                  "rho_l": 0.5076951954873752,
+                  "endpoints": [
+                    {
+                      "endpoint": "gas",
+                      "rho": 0.438456460057677,
+                      "k0": 0.4444100196624738,
+                      "min_sampled_inverse_structure_factor": -6.2747424364704365,
+                      "k_min": 0.9593096234309623,
+                      "finite_k_unstable": true
+                    },
+                    {
+                      "endpoint": "liquid",
+                      "rho": 0.5076951954873752,
+                      "k0": 0.5155551481232449,
+                      "min_sampled_inverse_structure_factor": -7.263233770757335,
+                      "k_min": 0.9593096234309623,
+                      "finite_k_unstable": true
+                    }
+                  ]
+                }
+              ]
+            },
+            "20": {
+              "min_derivative": -4.731638275489707,
+              "minimum_density": 0.35671250000000004,
+              "spinodal_roots": [
+                0.3115345417005351,
+                0.38676336830112606
+              ],
+              "coexistence": {
+                "rho_g": 0.2721365806758722,
+                "rho_l": 0.4118107232771659,
+                "beta_p": 0.7050383626162116,
+                "pressure_defect": 8.071321389024888e-14,
+                "chemical_potential_defect": 3.774758283725532e-15,
+                "minimum_sampled_tangent_gap": 1.1519470638471753e-09,
+                "supporting_tangent": true
+              },
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.2721365806758722,
+                  "rho_l": 0.4118107232771659,
+                  "beta_p": 0.7050383626162116,
+                  "pressure_defect": 8.071321389024888e-14,
+                  "chemical_potential_defect": 3.774758283725532e-15,
+                  "minimum_sampled_tangent_gap": 1.1519470638471753e-09,
+                  "supporting_tangent": true
+                }
+              ],
+              "supporting_tangent_count": 1,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                0.8758309418593007,
+                -1.0612783584651888
+              ]
+            },
+            "40": {
+              "min_derivative": -21240.411026045953,
+              "minimum_density": 0.48048125,
+              "spinodal_roots": [
+                0.25890436522033866,
+                0.33384596743078443,
+                0.43062345618163167,
+                0.5345180650409294,
+                0.6466473454633584,
+                0.7342802722265339
+              ],
+              "coexistence": null,
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.030317649623097156,
+                  "rho_l": 0.35054950342910796,
+                  "beta_p": 0.03457472216509611,
+                  "pressure_defect": 2.382005703793766e-11,
+                  "chemical_potential_defect": 2.7533531010703882e-14,
+                  "minimum_sampled_tangent_gap": -777.6680678214686,
+                  "supporting_tangent": false
+                },
+                {
+                  "rho_g": 0.6274410523885728,
+                  "rho_l": 0.9078344609750673,
+                  "beta_p": -531.8439848857781,
+                  "pressure_defect": 9.208633855450898e-12,
+                  "chemical_potential_defect": 0.0,
+                  "minimum_sampled_tangent_gap": -531.8438812599728,
+                  "supporting_tangent": false
+                }
+              ],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                1.6487432045796435,
+                -88.71225932654747,
+                1041.4880121035399,
+                -675.5728938083117,
+                29.64448299146692,
+                1.132700318334496
+              ],
+              "coexistence_endpoint_spectral_screen": []
+            }
+          }
+        },
+        {
+          "T": 0.17481753104661626,
+          "T_over_Tc1": 1.05,
+          "orders": {
+            "1": {
+              "min_derivative": 0.5662461992583048,
+              "minimum_density": 0.5858,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "2": {
+              "min_derivative": 1.0000008501758777,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "3": {
+              "min_derivative": 1.0000008501758777,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "4": {
+              "min_derivative": 1.0000008501758777,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "6": {
+              "min_derivative": 1.0000008501758777,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "8": {
+              "min_derivative": 1.0000008501758777,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "12": {
+              "min_derivative": 1.0000008501758777,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [],
+              "coexistence_endpoint_spectral_screen": []
+            },
+            "20": {
+              "min_derivative": 1.0000008501758777,
+              "minimum_density": 1e-07,
+              "spinodal_roots": [],
+              "coexistence": null,
+              "coexistence_candidates": [],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": []
+            },
+            "40": {
+              "min_derivative": -921.664191965084,
+              "minimum_density": 0.47740625000000003,
+              "spinodal_roots": [
+                0.2939840102483061,
+                0.32543728689132645,
+                0.4271029957769084,
+                0.5294987238363996,
+                0.6508309571008507,
+                0.6756071245490722
+              ],
+              "coexistence": null,
+              "coexistence_candidates": [
+                {
+                  "rho_g": 0.2769818933431376,
+                  "rho_l": 0.334666937843848,
+                  "beta_p": 0.6967717482191729,
+                  "pressure_defect": 1.035838081975271e-13,
+                  "chemical_potential_defect": 1.1102230246251565e-15,
+                  "minimum_sampled_tangent_gap": -26.19350692008305,
+                  "supporting_tangent": false
+                },
+                {
+                  "rho_g": 0.643024670574142,
+                  "rho_l": 0.6867049698704407,
+                  "beta_p": -19.258627034694697,
+                  "pressure_defect": 1.0658141036401503e-14,
+                  "chemical_potential_defect": 0.0,
+                  "minimum_sampled_tangent_gap": -19.258624817225204,
+                  "supporting_tangent": false
+                }
+              ],
+              "supporting_tangent_count": 0,
+              "finite": true,
+              "normalized_factor_at_spinodal": [
+                0.803310864630025,
+                -1.58111168510427,
+                44.435387730143134,
+                -31.12198500218635,
+                2.3137854515005416,
+                1.5448271116840055
+              ],
+              "coexistence_endpoint_spectral_screen": []
+            }
+          }
+        }
+      ],
+      "stability_screens": [
+        {
+          "rho": 0.15,
+          "orders": [
+            {
+              "order": 1,
+              "T_instability": 0.2113409474900134,
+              "k_instability": 1.0260460251046022,
+              "T_k0": 0.0007458627002757353,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 2,
+              "T_instability": 0.12834675941472523,
+              "k_instability": 1.0260460251046022,
+              "T_k0": 0.0,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 3,
+              "T_instability": 0.040564990296945574,
+              "k_instability": 6.631903765690376,
+              "T_k0": 0.0,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 6,
+              "T_instability": 0.09926283471160068,
+              "k_instability": 1.0260460251046022,
+              "T_k0": 0.06316684701118067,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 12,
+              "T_instability": 0.07986376574348432,
+              "k_instability": 6.331589958158995,
+              "T_k0": 0.0,
+              "finite_k_preempts_k0": true
+            }
+          ],
+          "spectral_imaginary_defect": 3.2532477619260202e-21
+        },
+        {
+          "rho": 0.3,
+          "orders": [
+            {
+              "order": 1,
+              "T_instability": 0.3138573192604173,
+              "k_instability": 1.0260460251046022,
+              "T_k0": 0.08216305520333546,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 2,
+              "T_instability": 0.2304901076073959,
+              "k_instability": 1.0260460251046022,
+              "T_k0": 0.0,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 3,
+              "T_instability": 0.0712645953303554,
+              "k_instability": 6.7320083682008365,
+              "T_k0": 0.0,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 6,
+              "T_instability": 0.07503958661262185,
+              "k_instability": 0.9926778242677823,
+              "T_k0": 0.06703307531759947,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 12,
+              "T_instability": 0.16516691939055203,
+              "k_instability": 1.0594142259414223,
+              "T_k0": 0.0,
+              "finite_k_preempts_k0": true
+            }
+          ],
+          "spectral_imaginary_defect": 1.13653539429314e-20
+        },
+        {
+          "rho": 0.6,
+          "orders": [
+            {
+              "order": 1,
+              "T_instability": 0.30035839175382795,
+              "k_instability": 1.0594142259414223,
+              "T_k0": 0.1664141767672899,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 2,
+              "T_instability": 0.2562621907537095,
+              "k_instability": 1.0594142259414223,
+              "T_k0": 0.0,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 3,
+              "T_instability": 0.23138683391719422,
+              "k_instability": 1.0594142259414223,
+              "T_k0": 0.0,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 6,
+              "T_instability": 0.1107147253950234,
+              "k_instability": 6.998953974895397,
+              "T_k0": 0.0,
+              "finite_k_preempts_k0": true
+            },
+            {
+              "order": 12,
+              "T_instability": 0.17539339509249852,
+              "k_instability": 1.0260460251046022,
+              "T_k0": 0.1454627457837887,
+              "finite_k_preempts_k0": true
+            }
+          ],
+          "spectral_imaginary_defect": 1.8208538238734342e-20
+        }
+      ],
+      "own_critical_comparison": [
+        {
+          "order": 1,
+          "T": 0.13319430936944884,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -3.8759341890682357,
+            "minimum_density": 0.70341875,
+            "spinodal_roots": [
+              0.4138166234281029,
+              0.8486206962526961
+            ],
+            "coexistence": {
+              "rho_g": 0.2233999996295536,
+              "rho_l": 0.9731150061555957,
+              "beta_p": 0.36435547939533186,
+              "pressure_defect": 3.592126596174694e-13,
+              "chemical_potential_defect": 1.0408340855860843e-17,
+              "minimum_sampled_tangent_gap": 1.5743368426621163e-07,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.2233999996295536,
+                "rho_l": 0.9731150061555957,
+                "beta_p": 0.36435547939533186,
+                "pressure_defect": 3.592126596174694e-13,
+                "chemical_potential_defect": 1.0408340855860843e-17,
+                "minimum_sampled_tangent_gap": 1.5743368426621163e-07,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.2233999996295536,
+                "rho_l": 0.9731150061555957,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.2233999996295536,
+                    "k0": 1.7628430485368458,
+                    "min_sampled_inverse_structure_factor": -2.496046932111737,
+                    "k_min": 0.9926778242677823,
+                    "finite_k_unstable": true
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.9731150061555957,
+                    "k0": 16.804230262809277,
+                    "min_sampled_inverse_structure_factor": -2.3339271055152966,
+                    "k_min": 1.0260460251046022,
+                    "finite_k_unstable": true
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 2,
+          "T": 0.08448998496566673,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -6.636444700868726,
+            "minimum_density": 0.89099375,
+            "spinodal_roots": [
+              0.7317804273772605,
+              0.9939462885140307
+            ],
+            "coexistence": {
+              "rho_g": 0.6174352671659403,
+              "rho_l": 1.0750886400007487,
+              "beta_p": 4.64943630194708,
+              "pressure_defect": 3.9879211044535623e-13,
+              "chemical_potential_defect": 1.0658141036401503e-14,
+              "minimum_sampled_tangent_gap": 7.122617023524319e-08,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.6174352671659403,
+                "rho_l": 1.0750886400007487,
+                "beta_p": 4.64943630194708,
+                "pressure_defect": 3.9879211044535623e-13,
+                "chemical_potential_defect": 1.0658141036401503e-14,
+                "minimum_sampled_tangent_gap": 7.122617023524319e-08,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.6174352671659403,
+                "rho_l": 1.0750886400007487,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.6174352671659403,
+                    "k0": 6.476317170924856,
+                    "min_sampled_inverse_structure_factor": -12.024607300566576,
+                    "k_min": 0.9593096234309623,
+                    "finite_k_unstable": true
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 1.0750886400007487,
+                    "k0": 21.7894912099892,
+                    "min_sampled_inverse_structure_factor": -10.785437678646995,
+                    "k_min": 0.9926778242677823,
+                    "finite_k_unstable": true
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 3,
+          "T": 0.06007022399015991,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -9.699141594466743,
+            "minimum_density": 1.025525,
+            "spinodal_roots": [
+              0.9387372389541159,
+              1.096203226632535
+            ],
+            "coexistence": {
+              "rho_g": 0.8769999833153354,
+              "rho_l": 1.1493793316369192,
+              "beta_p": 37.7873599537892,
+              "pressure_defect": 3.623767952376511e-13,
+              "chemical_potential_defect": 1.4210854715202004e-14,
+              "minimum_sampled_tangent_gap": 8.056392949897656e-08,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.8769999833153354,
+                "rho_l": 1.1493793316369192,
+                "beta_p": 37.7873599537892,
+                "pressure_defect": 3.623767952376511e-13,
+                "chemical_potential_defect": 1.4210854715202004e-14,
+                "minimum_sampled_tangent_gap": 8.056392949897656e-08,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.8769999833153354,
+                "rho_l": 1.1493793316369192,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.8769999833153354,
+                    "k0": 14.508467476217765,
+                    "min_sampled_inverse_structure_factor": -22.253755121483202,
+                    "k_min": 0.9593096234309623,
+                    "finite_k_unstable": true
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 1.1493793316369192,
+                    "k0": 25.304313306388753,
+                    "min_sampled_inverse_structure_factor": -22.946468608863125,
+                    "k_min": 0.9593096234309623,
+                    "finite_k_unstable": true
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 6,
+          "T": 0.05952129205332523,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -43.522427964862466,
+            "minimum_density": 0.26369375,
+            "spinodal_roots": [
+              0.13640815078750676,
+              0.324370830978975
+            ],
+            "coexistence": {
+              "rho_g": 0.001576125709314213,
+              "rho_l": 0.38552502780543174,
+              "beta_p": 0.0015973561023324401,
+              "pressure_defect": 1.8691645453650096e-16,
+              "chemical_potential_defect": 2.6645352591003757e-15,
+              "minimum_sampled_tangent_gap": 3.803469859143882e-09,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.001576125709314213,
+                "rho_l": 0.38552502780543174,
+                "beta_p": 0.0015973561023324401,
+                "pressure_defect": 1.8691645453650096e-16,
+                "chemical_potential_defect": 2.6645352591003757e-15,
+                "minimum_sampled_tangent_gap": 3.803469859143882e-09,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 0.001576125709314213,
+                "rho_l": 0.38552502780543174,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 0.001576125709314213,
+                    "k0": 1.02712692087462,
+                    "min_sampled_inverse_structure_factor": 0.9585150201899947,
+                    "k_min": 0.9926778242677823,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 0.38552502780543174,
+                    "k0": 163.53721279232752,
+                    "min_sampled_inverse_structure_factor": 0.7678669288644984,
+                    "k_min": 19.333333333333332,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 12,
+          "T": 0.12955426530562322,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -101.01910255882567,
+            "minimum_density": 0.50200625,
+            "spinodal_roots": [
+              0.34036702432480614,
+              0.6508816960389315
+            ],
+            "coexistence": {
+              "rho_g": 1.2247084430092192e-06,
+              "rho_l": 1.1370849034373642,
+              "beta_p": 1.2247158990159338e-06,
+              "pressure_defect": 6.95701447974784e-15,
+              "chemical_potential_defect": 0.0,
+              "minimum_sampled_tangent_gap": 8.898429995857773e-10,
+              "supporting_tangent": true
+            },
+            "coexistence_candidates": [
+              {
+                "rho_g": 1.2247084430092192e-06,
+                "rho_l": 1.1370849034373642,
+                "beta_p": 1.2247158990159338e-06,
+                "pressure_defect": 6.95701447974784e-15,
+                "chemical_potential_defect": 0.0,
+                "minimum_sampled_tangent_gap": 8.898429995857773e-10,
+                "supporting_tangent": true
+              }
+            ],
+            "supporting_tangent_count": 1,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": [
+              {
+                "rho_g": 1.2247084430092192e-06,
+                "rho_l": 1.1370849034373642,
+                "endpoints": [
+                  {
+                    "endpoint": "gas",
+                    "rho": 1.2247084430092192e-06,
+                    "k0": 1.0000122576790287,
+                    "min_sampled_inverse_structure_factor": 0.9999875062339463,
+                    "k_min": 1.0260460251046022,
+                    "finite_k_unstable": false
+                  },
+                  {
+                    "endpoint": "liquid",
+                    "rho": 1.1370849034373642,
+                    "k0": 99.51085971213864,
+                    "min_sampled_inverse_structure_factor": 0.17122163768062454,
+                    "k_min": 7.466108786610878,
+                    "finite_k_unstable": false
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "order": 40,
+          "T": 0.1583317638229238,
+          "T_over_own_Tc": 0.8,
+          "summary": {
+            "min_derivative": -46339.96038461182,
+            "minimum_density": 0.48125,
+            "spinodal_roots": [
+              0.2542911242515442,
+              0.3347549352998493,
+              0.4314930299173442,
+              0.5355744053014996,
+              0.6479000443684991,
+              0.7435195934141199
+            ],
+            "coexistence": null,
+            "coexistence_candidates": [
+              {
+                "rho_g": 0.0005610387814908732,
+                "rho_l": 0.35200195907976045,
+                "beta_p": 0.0005624487058662308,
+                "pressure_defect": 7.302795521080263e-14,
+                "chemical_potential_defect": 3.8265390855940495e-11,
+                "minimum_sampled_tangent_gap": -1686.8129183515728,
+                "supporting_tangent": false
+              },
+              {
+                "rho_g": 0.6280066226308494,
+                "rho_l": 0.9915786374133572,
+                "beta_p": -1167.6792969824633,
+                "pressure_defect": 1.6370904631912708e-11,
+                "chemical_potential_defect": 0.0,
+                "minimum_sampled_tangent_gap": -1167.6790693938758,
+                "supporting_tangent": false
+              }
+            ],
+            "supporting_tangent_count": 0,
+            "finite": true,
+            "coexistence_endpoint_spectral_screen": []
+          }
+        }
+      ]
+    }
+  ]
+}

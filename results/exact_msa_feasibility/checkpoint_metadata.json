@@ -1,0 +1,48 @@
+{
+  "generator_seconds": 129.5598064030055,
+  "source": "/home/rpan/YK_tail_FMSA/msaexact6_scaletest.py",
+  "variables": [
+    "xi",
+    "z",
+    "k",
+    "G",
+    "C",
+    "S",
+    "Ez",
+    "p"
+  ],
+  "graded_small_coefficient": [
+    0,
+    0,
+    0
+  ],
+  "cases": [
+    {
+      "name": "small323",
+      "monomials": 323,
+      "total_degree": 23,
+      "lhs_expr_chars": 37185,
+      "rhs_expr_chars": 4619,
+      "old_expanded_sides_identical": true
+    },
+    {
+      "name": "dt1",
+      "monomials": 1135,
+      "total_degree": 27,
+      "lhs_expr_chars": 178136,
+      "rhs_expr_chars": 29304,
+      "old_expanded_sides_identical": true
+    },
+    {
+      "name": "dt2",
+      "monomials": 2843,
+      "total_degree": 29,
+      "lhs_expr_chars": 411089,
+      "rhs_expr_chars": 27773,
+      "old_expanded_sides_identical": true
+    }
+  ],
+  "scope": "Kernel-checkable actual division checkpoints; complete original Fourier/residual bridge pending",
+  "note": "Old scaletest emission expanded both sides to the same canonical expression; new tests retain RHS factor products.",
+  "source_sha256": "5244b23b2b367a03c19e690d16a36e69f4ba73009afbc5aeb628166f26bd03f5"
+}

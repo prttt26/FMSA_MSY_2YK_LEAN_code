@@ -1,0 +1,16 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+'FMSA.ExactMSA.FiniteOrderThermo.nonnegative_structure_factor_requires_positive_inverse' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.spectral_tail_positive_of_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.quadratic_positive_beyond_linear_balance' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.negative_sign_preserved_by_error_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.FiniteOrderThermo.strictly_monotone_pressure_excludes_binodal' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

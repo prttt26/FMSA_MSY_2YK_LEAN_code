@@ -40,6 +40,17 @@ for this reason.
 `formalization/audit_foundation.py` checks the source/configuration hashes
 against `release-manifest.json` without any other repository.
 
+## Numerical scripts and evidence
+
+`scripts/` holds the numerical and SymPy checks behind the foundation's theorems
+(exact MSA, multitail, finite-order thresholds), and `results/` holds their recorded
+outputs and build/axiom-audit logs (moved from the authors' workspace on 2026-10-22).
+They are evidence, not proof premises. Some scripts import Python modules from the
+authors' parent research repository (via `parents[3]` on `sys.path`), so they run only
+in that workspace. Lean audit inputs inside `results/` are stored as `*.lean.txt` so
+that they are not part of the hashed source set; copy one to a `.lean` file to run it
+with `lake env lean`.
+
 ## Proof notes
 
 `proof_notes/` holds the per-group proof records for the foundation (hard

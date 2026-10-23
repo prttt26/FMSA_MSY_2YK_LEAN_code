@@ -1,0 +1,57 @@
+TARGETED PRIMARY-SOURCE SEARCH — 2026-10-07
+
+S. V. G. Menon (2021), Convergence of Coupling-Parameter Expansion-Based
+Solutions to Ornstein-Zernike Equation in Liquid State Theory.
+Condensed Matter 6(3),29. DOI 10.3390/condmat6030029.
+https://www.mdpi.com/2410-3896/6/3/29
+Author preprint: https://www.preprints.org/manuscript/202106.0175
+DOI 10.20944/preprints202106.0175.v1.
+Section 4 studies attractive hard-core Yukawa MSA, its quartic amplitude
+equation, physical root selection, complex-root region and CPE recurrence.
+This supports distinguishing real-root failure from coupling-series behavior.
+The retrieved material does not supply a universal lowest order for extra
+pressure loops, extra supporting tangents, or negative finite-k spectra.
+The publisher page was intermittently inaccessible directly; its Section 4
+was retrieved in primary-site search results, and the author preprint abstract
+was accessible. No unread full-paper conclusion is claimed.
+
+A. Sai Venkata Ramana and S. V. G. Menon (2013), Coupling-parameter expansion
+in thermodynamic perturbation theory. Phys. Rev. E 87,022101.
+https://journals.aps.org/pre/abstract/10.1103/PhysRevE.87.022101
+DOI 10.1103/PhysRevE.87.022101.
+The primary abstract develops arbitrary-order CPE for square-well fluids and
+reports range-dependent performance. It is not a proof about the scalar
+Yukawa compressibility-route jet considered here; closure, tail and route
+differences prevent importing an order threshold.
+
+J. Juanos i Timoneda and A. D. J. Haymet (1989):
+Spinodal decomposition in the mean-spherical approximation: From adhesive
+hard spheres to the van der Waals fluid. Phys. Rev. A 40,5979 (1989).
+https://journals.aps.org/pra/abstract/10.1103/PhysRevA.40.5979
+DOI 10.1103/PhysRevA.40.5979.
+The primary abstract separates real/complex subregions within the MSA
+spinodal. It concerns exact MSA branch domains rather than a universal finite
+coupling-order threshold. Do not identify a real fold with the nearest
+complex coupling singularity for an arbitrary model without checking it.
+
+Henderson, Blum and Noworyta (1995), Inverse temperature expansion of some
+parameters arising from the solution of the mean spherical approximation
+integral equation for a Yukawa fluid. J. Chem. Phys. 102,4973-4975.
+Bibliographic identity was located in secondary search material; a primary
+publisher DOI/full text was not verified during this targeted search.
+Accordingly it is NOT used as evidence for a threshold theorem. The reported
+expansions concern energy and contact RDF; these cannot stand in for the
+strict compressibility coefficients derived in our symbolic script.
+
+Representative search strings:
+  Yukawa coupling-parameter expansion unphysical order
+  mean spherical second order spinodal expansion
+  mean spherical approximation expansion multiple spinodal Yukawa
+  site:mdpi.com/2410-3896/6/3/29 convergence Yukawa
+  site:aps.org 022101 2013 Menon coupling
+  Inverse temperature expansion of some parameters Henderson Blum Noworyta
+
+Search outcome is limited: no common-order theorem was identified, not an
+exhaustive absence result. The new coefficient-sign, first-order unimodality
+and directed-interval counterexample results are independent repository
+calculations, not claims borrowed from these papers.

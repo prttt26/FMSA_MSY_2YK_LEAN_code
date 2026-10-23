@@ -1,0 +1,714 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_boundary_eq_of_positive_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearComplexJ_continuousAt_axis' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearComplexBackground_continuousAt_axis' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCompletedZ_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalKernel_complex_boundary' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCompletedZ_actual_axis_renewal' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_wronskian_complex_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_wronskian_implies_finite_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearH_actual_radial_OZ_of_finite_wronskian' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearMixtureRDF_single_finite_admissibility_certificate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalG_at_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_at_contact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_negative_contact_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_negative_contact_has_outer_interval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearW_zero_density' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearC_zero_density' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearA_zero_density' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearQp_zero_density' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearKernel_zero_density' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearBudget_zero_density' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearDt_zero_density_of_root' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalG_zero_density' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_zero_density_outer' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearH_zero_density_outer' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_zero_density_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_zero_density_exists' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_zero_density_coupling_affine' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_zero_density_negative_contact_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCorrelation_zero_density_core' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearH_zero_density_actual_radial_OZ' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_zero_density_nonnegative_of_attraction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_exists_decay_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_zero_density_certificate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_long_attraction_short_repulsion_negative_RDF' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_long_attraction_short_repulsion_OZ_counterexample' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearMixtureRDF_core_moments_decay_certificate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.complexCausalLaplace_weighted_convolution' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.complexMatrixLaplace_right_renewal' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalG_actual_complex_laplace_renewal' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearGSource_actual_complex_laplace' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalG_complex_background' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRatePolynomial_complex_eval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRatePolynomialExcept_complex_eval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_complex_rate_nonzero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRationalDenominator_complex_eval_ne_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearJNumerator_complex_eval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearLNumerator_complex_eval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearComplexReciprocityResidual_entry' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearReciprocityPolynomial_complex_eval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_certificate_complex_residual_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearActualQ_eq_causalShift' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_actual_complex_laplace' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_complex_recenter_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_complex_laplace_rational' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.complex_matrix_one_sub_isUnit_of_normSum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalKernel_complex_laplace_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_complex_block_isUnit_of_weighted_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearComplexReciprocityResidual_actual_factor' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.complex_matrix_source_reciprocity_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_actual_complex_laplace_reciprocity_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_certificate_actual_complex_laplace_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.primitiveBasisReal_continuousAt_off_lower_edge' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearActualPrimitive_ae_continuous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_wronskian_actual_primitive_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_wronskian_actual_core_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_actualRadial_posDef_of_finite_certificate_and_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalKernel_continuous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalKernelTranspose_continuous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_weighted_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalKernel_weighted_entry_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalKernel_weighted_absSum_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRDFExcess_continuous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRDFExcess_renewal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRDFExcess_integrable_of_weighted_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_actual_fourier' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_fourierFactor_isUnit_of_weighted_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_actualRadial_posDef_of_core_and_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRatePolynomial_eval' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRatePolynomialExcept_eval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRationalDenominator_eval_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearJNumerator_eval' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearLNumerator_eval' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearReciprocityResidual_entry' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearReciprocityPolynomial_eval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_certificate_polynomial_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_certificate_residual_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_certificate_actual_laplace_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_certificate_iff_all_positive_residuals' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_failed_finite_certificate_excludes_pair_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRDFMoment_positive_laplace' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearH_radial_fourier' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_actual_laplace' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_actual_secondBlock' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.matrix_one_sub_isUnit_of_absSum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalKernel_laplace_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_secondBlock_isUnit_of_weighted_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearGSource_laplace_at_label' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_amplitude_eq_actual_causal_laplace' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_radial_laplace_shift' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_amplitude_eq_actual_radial_laplace' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_firstBlock_det_eq_secondBlock' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_firstBlock_isUnit_of_weighted_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_repeated_rate_G_consistency' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.hsAdmissibility_cross_products' depends on axioms: [propext, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.hsAdmissibility_linear_products' depends on axioms: [propext, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearHS_lower_value' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearHS_numerator_dictionary' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.hsAdmissibility_moment_relation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.hsAdmissibility_finite_residuals' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearHS_admissibility_polynomials_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearHS_automatic_finite_certificates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_zero_coupling_Dt_eq_zero_of_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_zero_coupling_root_automatic_finite_certificates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearHS_base_actual_root' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearHS_actual_joint_certificate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_compact_integrable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_compact_integral' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearClipExp_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearClipExp_integrable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearClipExp_first_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearClipExp_integral' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearClipExp_first_integral' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearClipPolynomial_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearClipPolynomial_integrals' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_first_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearQMoment0_eq_integral' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearQMoment1_eq_integral' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_actual_background_normalization' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.realCausalLaplace_convolution' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.realMatrixLaplace_right_renewal' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalKernel_laplace_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearGSource_laplace_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.realLaplace_weight_integrable_of_L1' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalG_laplace_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalG_actual_laplace_renewal' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearGSource_actual_laplace' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.amplitudeA_moment_dictionary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.amplitudeQp_moment_dictionary' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.amplitudeQp_nonlinear_rank_two' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_continuous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_eq_actual' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearM_tail_mass' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearN_tail_centered_moment' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearQMoment0_column' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearQMoment_column_centered' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_background_mass_normalization' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_background_contact_normalization' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.causalDampedComplex_fourier' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.causalComplexLaplace_injective_continuous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_certificate_actual_causal_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_certificate_actual_pair_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_certificate_iff_actual_pair_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalG_continuous' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalG_renewal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_hardcore' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRDFMoment_core' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRDFMoment_outer' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearH_hardcore' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearG_eq_one_add_h' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRDFMoment_measurable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRDFMoment_integrable_of_weighted_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearH_radius_integrable_of_weighted_budget' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearH_actual_radial_OZ_of_finite_certificates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearMixtureRDF_finite_admissibility_certificate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_recentered_dictionary_rational' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_laplace_rational' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearReciprocityResidual_actual_factor' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.matrix_source_reciprocity_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_actual_laplace_reciprocity_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_nonzero_residual_excludes_pair_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.qPrime_bounded' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.qPrime_continuousAt_off_edges' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.qPrime_convolution_continuous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.correlation_continuousAt_ordered' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_orderedCorrelation_odd_ae_continuous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearH_odd_ae_continuous' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_orderedCorrelation_radius_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.correlation_second_moment_integrable_of_root' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_orderedCorrelation_second_moment_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRecenteredQ_tail' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearTailAmplitude_eq_Dt' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_exp_affine_integrable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_exp_affine_integral' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearQ_background_convolution' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearGSource_continuous' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearExcessSource_continuous' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearExcessSource_tail' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearExcessSource_weighted_bounded' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCompletedZ_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearCausalKernel_actual_fourier_entry' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_actual_recentered_factor_phase' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_completed_phase_transfer' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_actual_OZ_factorization' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearH_actual_phase_difference' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearH_actual_Fourier_OZ_of_finite_certificates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.symplectic_blocks_source_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearWronskian_density_free_implies_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearWronskian_implies_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearWronskian_implies_reciprocity_of_density_factor' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearActualFourierQ_eq_phaseQ' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearActualFourierC_eq_Q_product' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearActualFourierC_neg_transpose' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_actual_source_wronskian_of_finite_certificate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_wronskian_actual_spectral_reciprocity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearPhaseQ_entry' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_wronskian_cross_scalar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_wronskian_linear_scalar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_phase_wronskian_residual' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.finite_polynomial_zero_of_coefficients' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearWronskianU_entry' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearWronskianV_entry' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.polynomial_complex_eval_neg_comp' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearWronskianUPolynomial_complex_eval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearWronskianVPolynomial_complex_eval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinear_finite_wronskian_residuals_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MixtureThermodynamicScope.negative_curvature_obstructs_route_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MixtureThermodynamicScope.negative_curvature_obstructs_baxter_gram_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MixtureThermodynamicScope.pressure_eq_iff_common_tangent' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MixtureThermodynamicScope.binaryFreeEnergy_partial_x' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MixtureThermodynamicScope.binaryFreeEnergy_partial_y' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MixtureThermodynamicScope.binaryFreeEnergy_equimolar_ray' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MixtureThermodynamicScope.fixed_composition_scalar_conditions_insufficient' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MixtureThermodynamicScope.py_pressure_route_difference' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MixtureThermodynamicScope.py_pressure_routes_strictly_differ' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MixtureThermodynamicScope.couplingPressureJet_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MixtureThermodynamicScope.py_seed_route_mismatch_every_finite_order' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearDilute_lower_value' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearDilute_numerator_dictionary' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearDilute_JNumerator_reciprocal' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearDilute_LNumerator_neg_transpose' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearDilute_admissibility_polynomials_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearDilute_automatic_finite_certificates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearDilute_root_automatic_finite_certificates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearDilute_finitely_admissible_negative_RDF_counterexample' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.bh_matrix_pole_cancellation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_first_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_first_matrix_symmetric' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_W_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_C_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_J_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_L_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_all_yukawa_pole_defects_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_yukawa_residue_matrices_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRatePolynomial_eval_neg_rate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRatePolynomialExcept_eval_other_neg_rate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearJNumerator_eval_neg_rate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearLNumerator_eval_neg_rate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_wronskian_polynomials_zero_at_all_rates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.completionU_mul_completionV' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.completionU_mul_omega' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.completionOmega_mul_completionU_transpose' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.completion_origin_double_pole_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.completion_origin_residue_factorization' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.completion_origin_residue_bottom_block' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.completion_skew_origin_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.completion_polynomial_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.originJet_highest_three_products_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.originJet_third_product_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.originJet_second_product_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.originJet_residue_product_projections' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.originJet_third_coefficient_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.originJet_second_coefficient_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.originJet_residue_lagrangian' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.originJet_constant_lagrangian_projection_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearOriginMoment_eq_centered_moment' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearB_origin_moment_dictionary' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.amplitudeA_origin_moment_dictionary' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearOrigin_projected_pole_coefficient_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearOrigin_mass_functional' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearOrigin_centered_functional' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearOrigin_third_coefficient_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearOrigin_second_coefficient_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FMSA.ExactMSA.MultiTailMixture.nonlinearOrigin_residue_lagrangian' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

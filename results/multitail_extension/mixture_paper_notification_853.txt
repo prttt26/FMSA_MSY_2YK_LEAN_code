@@ -1,0 +1,13 @@
+来自 FMSA_lean 的最终混合物阶段交接。用户明确要求“完成混合物部分，并通知 FMSA_paper 根据结果重写论文有关部分”，并提醒路径不一致、Maxwell/双节线及 g>=0 失效。请根据以下经过验证的结果重写正文/SI有关表述并完成你正常的论文验证工作。
+
+已更新共享交接：Lean_code/results/multitail_extension/mixture_paper_process_handoff.json（含英文替换段落和主文献），proof_notes_msa_exact.md 末尾853 checkpoint。三目标默认构建PASS：853 guards /8960 jobs /127 sources；独立审计217 nonlinear+11 thermodynamic-scope=228 footprints，全部仅标准公理子集，无新增物理公理。
+
+结构结果：任意有限组分、任意有限YK尾、不等加性直径、重复z，实际BH root+actual decay budget+一个finite Wronskian U/V证书可给同一g/h/c的硬核、互易、实际label G moments、实际径向OZ；rho>=0时在证书/预算域内所有k!=0结构矩阵严格正定。PY tau=0证书自动。必须保留未证明项：canonical nonzero-coupling分支自动Wronskian admissibility，不能宣称无条件混合物全部闭合。
+
+新增 MSAMixtureThermodynamicScope.lean 11项Lean定理：负自由能曲率方向排除与PSD结构矩阵的同坐标同归一化路径识别；同一可微二元多项式自由能反例证明固定组成标量条件不足以保证逐组分化学势相等（这个反例不是MSA状态）；指定标准PY混合物压力公式的差（pi/6缩放单位）为3 eta m2^3/(1-eta)^3>0，保留两条seed路径的任意有限tau展开在tau=0仍不一致。这是指定公式代数，不是实际DCF/RDF积分识别，也不适用于另行修正的共同CS/BMCSL参考。
+
+已有真实闭包反例：rho=0、长吸引z=1/短排斥z=20、多组分对称K，实际唯一BH根且实际径向OZ成立，硬核外区间g<0；精确tau依赖affine，增加Taylor阶数不能修复该稀释反例。有限正密度也有确切接触判据qp+sum(z C)<0；不把稀释证明写成已经证明规范正密度失效区。
+
+请删去“Lean保证物理正确/路径一致/正确Maxwell双节线/普适g>=0”的结论。用户的“Maxwell已知不成立”应写为普通MSA/FMSA没有跨路径一致性及共存准确性保证；一个指定自由能内的Maxwell/共同切线仍可定义，混合物必须比较全部mu_i及P。SCOZA作为额外自洽框架讨论，不写成唯一补救或全部路径/g>=0/任意混合物相图保证；当前Lean未实现SCOZA。SCOZA经典工作本身也排除旋节线内不可用区。关键文献Pini/Stell/Wilding1998、Reiner/Hoye2008、Santos2012链接见JSON。
+
+请自行核查原文后重写；对未证自动Wr条件保持显式假设，区分结构定理、有限阶代数、数值诊断、物理经验结论。

@@ -1,0 +1,21 @@
+{
+  "certificates": [
+    {
+      "name": "polynomialPair",
+      "circle_quotient": "(aa**2 + k**2*qq**2)/(2*k**5)",
+      "numerator_terms": 6
+    },
+    {
+      "name": "polynomialTail",
+      "circle_quotient": "-cc*z*(aa*z - k**2*qq)/(k**3*(k**2 + z**2))",
+      "numerator_terms": 6
+    },
+    {
+      "name": "tailPair",
+      "circle_quotient": "cc*dd*w*z*(k**2 + w*z)/(k*(k**2 + w**2)*(k**2 + z**2))",
+      "numerator_terms": 6
+    }
+  ],
+  "output_sha256": "bee3a6b8f93642d8b9fdb117a31ba95ebbaa2e2b7da4d6bb8c461baa38044795",
+  "scope": "Algebra dictionary only; actual-integral bridge is separate."
+}

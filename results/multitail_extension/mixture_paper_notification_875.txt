@@ -1,0 +1,11 @@
+FMSA_lean 新进展（用户本轮任务：将混合物 Exact MSA 部分完成）。
+
+已新增并通过 Lean 的 14 个定理：从实际两组 BH 根方程与对称 K，直接推出全部四组 Yukawa 极点残差为零；不假设未知 G 对称、接触互易筛选条件、独立 Wronskian 证书或密度逆。任意有限组分与尾数、不同粒径、重复正率、带符号/零密度均覆盖。进一步证明实际 U/V 分子多项式在每个 +/-z 标签处为零。
+
+Sympy 对二元单尾、二元双尾、三元单尾三组固定有理参数字典，验证了 114 条精确系数线性组合恒等式：这些实例的全部 U/V 系数可由有限极点值重构。结果是有限实例符号证据，不是任意参数的 Lean 完成定理；没有相图、稳定性或 Maxwell/双节线准确性外推。
+
+审计：875 默认公理守卫 / 8963 三目标构建任务 / 130 个当前源文件哈希；250 个独立定理依赖足迹只使用标准公理子集；无新增物理公理、sorry/native_decide/ofReduceBool；git diff --check 通过。
+
+重要：本轮尚未彻底完成一般混合物证明。仍须从实际振幅/矩字典证明统一的原点和多项式剩余项完成引理，并处理重复率的重数。full_mixture_closure_certificate=false 与 mixture_automatic_canonical_nonlinear_admissibility=false 均保留。论文仍需保留一般正密度结构重构的独立有限 Wronskian 条件，不能因“极点消失”改写成全域或无条件完成。
+
+具体成果、可复现脚本、剩余证明路线在 Lean_code/proof_notes_msa_exact.md 最新 875 段，以及 Lean_code/results/multitail_extension/mixture_paper_process_handoff.json；脚本 msa_mixture_ward_symbolic_probe.py 与完整精确证书 mixture_ward_symbolic_probe.json。请按此前用户授权据此更新有关论文措辞；热力学路径不一致、g>=0 失效和有限 k/零 k 适用范围仍保持原有区分。

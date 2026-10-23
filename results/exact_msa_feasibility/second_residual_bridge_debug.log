@@ -1,0 +1,153 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+sparse_ring atom 0: xi
+sparse_ring atom 1: G
+sparse_ring atom 2: z
+sparse_ring atom 3: p
+sparse_ring atom 4: 2 ^ 2 * z * (z ^ 2 * p + -(xi * 6 * Dt * ((1 + z) * (z + -(xi * G * 12 * Ez)) + xi * G * 12))) *
+    ((1 + 2 * xi) * (2 + z ^ 2 + 2 * (-Ez + -z)) + z * (2 + xi) * (1 + (-Ez + -z))) /
+  (1 + -xi) ^ 2
+sparse_ring atom 5: Dt
+sparse_ring atom 6: Ez
+sparse_ring atom 7: xi * 6 * ((z + -(xi * G * 12 * Ez)) * (2 + z * (2 + z)) + 2 * xi * G * 12) *
+    (2 ^ 2 * z * (1 + 2 * xi) * (1 + (-Ez + -z)) + xi * 12 * (2 + z ^ 2 + 2 * (-Ez + -z))) /
+  (1 + -xi) ^ 2
+sparse_ring atom 8: (2 * z * (z ^ 2 * p + -(xi * 6 * Dt * ((1 + z) * (z + -(xi * G * 12 * Ez)) + xi * G * 12))) *
+      (2 + xi) +
+    xi * Dt * 12 * (1 + 2 * xi) * ((z + -(xi * G * 12 * Ez)) * (2 + z * (2 + z)) + 2 * xi * G * 12)) /
+  (1 + -xi) ^ 2
+sparse_ring atom 9: (2 ^ 2 * z * (z ^ 2 * p + -(xi * 6 * Dt * ((1 + z) * (z + -(xi * G * 12 * Ez)) + xi * G * 12))) *
+      (1 + 2 * xi) +
+    xi ^ 2 * Dt * ((z + -(xi * G * 12 * Ez)) * (2 + z * (2 + z)) + 2 * xi * G * 12) * 72) /
+  (1 + -xi) ^ 2
+LeanCode/YukawaOZ/ExactMSASecondResidualBridge.lean:13:2: error: Tactic `decide` proved that the proposition
+  compileCircuit
+      (((((Expr.const (Int.ofNat 1)).add (Expr.var 0).neg).pow 2).mul
+            (((Expr.var 1).mul
+                  (((((Expr.const (Int.ofNat 2)).pow 2).mul ((Expr.var 2).pow 6)).mul (Expr.var 3)).add
+                    (((Expr.var 0).mul (Expr.const (Int.ofNat 6))).mul
+                        ((Expr.var 4).add
+                          ((Expr.var 5).mul
+                            ((((Expr.const (Int.ofNat 2)).mul ((Expr.var 2).pow 4)).mul
+                                  ((((Expr.var 2).add
+                                            ((((Expr.var 0).mul (Expr.var 1)).mul (Expr.const (Int.ofNat 12))).mul
+                                                (Expr.var 6)).neg).mul
+                                        ((Expr.const (Int.ofNat 2)).add (Expr.var 6).neg)).add
+                                    (((Expr.var 0).mul (Expr.var 1)).mul (Expr.const (Int.ofNat 12))))).add
+                              (Expr.var 7))))).neg)).add
+              ((Expr.var 2).mul
+                  (((Expr.var 2).mul
+                        ((Expr.var 8).add
+                          ((((Expr.var 2).pow 3).mul (Expr.var 5)).mul
+                            ((Expr.var 2).add
+                              ((((Expr.var 0).mul (Expr.var 1)).mul (Expr.const (Int.ofNat 12))).mul
+                                  (Expr.var 6)).neg)))).add
+                    (Expr.var 9))).neg)).add
+        (((((Expr.var 2).pow 3).mul (Expr.var 3)).mul
+                ((((Expr.var 2).mul
+                          (((Expr.const (Int.ofNat 4)).mul ((Expr.const (Int.ofNat 1)).neg.add (Expr.var 2).neg)).add
+                            ((Expr.var 0).mul
+                              ((Expr.const (Int.ofNat 8)).neg.add
+                                ((Expr.const (Int.ofNat 2)).mul (Expr.var 2)).neg)))).add
+                      ((Expr.var 1).mul
+                        (((((Expr.var 2).pow 3).mul (Expr.const (Int.ofNat 4))).add
+                              (((Expr.var 0).pow 2).mul (Expr.const (Int.ofNat 96))).neg).add
+                          ((Expr.var 0).mul
+                            ((Expr.const (Int.ofNat 48)).neg.add
+                              ((((Expr.var 2).pow 2).mul (Expr.var 0)).mul (Expr.const (Int.ofNat 24))).neg))))).add
+                  (((Expr.var 0).mul (Expr.var 1)).mul
+                    (((Expr.var 2).mul
+                          ((((Expr.var 2).pow 2).mul
+                                ((Expr.const (Int.ofNat 8)).neg.add ((Expr.var 0).mul (Expr.const (Int.ofNat 4))))).add
+                            (((Expr.var 2).mul (Expr.const (Int.ofNat 24))).add
+                              ((Expr.var 0).mul (Expr.const (Int.ofNat 72)))))).add
+                      ((Expr.var 6).mul
+                        (((((Expr.var 2).mul (Expr.var 0)).mul (Expr.const (Int.ofNat 24))).add
+                              (Expr.const (Int.ofNat 48))).add
+                          (((Expr.var 2).mul (Expr.const (Int.ofNat 48))).add
+                            ((Expr.var 0).mul (Expr.const (Int.ofNat 96)))))))))).add
+            ((Expr.var 5).mul
+              (((((((Expr.var 2).pow 6).neg.add
+                                (((Expr.var 0).pow 2).mul
+                                  (((Expr.var 2).pow 6).neg.add
+                                    ((((Expr.var 0).pow 2).mul ((Expr.var 1).pow 2)).mul
+                                        (Expr.const (Int.ofNat 20736))).neg))).add
+                            ((((Expr.var 2).pow 2).mul ((Expr.var 0).pow 2)).mul
+                              ((Expr.const (Int.ofNat 144)).neg.add
+                                ((Expr.var 2).mul
+                                  ((Expr.const (Int.ofNat 144)).neg.add
+                                    ((Expr.var 2).mul (Expr.const (Int.ofNat 60))).neg))))).add
+                        ((Expr.var 0).mul
+                          ((((Expr.var 2).pow 5).mul
+                                (((Expr.var 0).mul (Expr.const (Int.ofNat 12))).neg.add
+                                  (((Expr.const (Int.ofNat 2)).mul (Expr.var 2)).add (Expr.const (Int.ofNat 12))))).add
+                            ((((Expr.var 2).pow 4).mul (Expr.const (Int.ofNat 24))).add
+                              ((((Expr.var 0).pow 3).mul ((Expr.var 1).pow 2)).mul
+                                ((((Expr.var 6).pow 2).mul (Expr.const (Int.ofNat 20736))).neg.add
+                                  (((Expr.var 2).pow 2).mul (Expr.const (Int.ofNat 8640))).neg)))))).add
+                    ((((Expr.var 2).mul (Expr.var 0)).mul (Expr.var 1)).mul
+                      ((((Expr.var 0).mul
+                                (((Expr.var 0).mul (Expr.const (Int.ofNat 3456))).neg.add
+                                  ((((Expr.var 2).pow 2).mul (Expr.var 1)).mul
+                                    (((Expr.var 0).mul (Expr.const (Int.ofNat 1728))).neg.add
+                                      ((Expr.var 2).mul (Expr.const (Int.ofNat 144))).neg)))).add
+                            (((Expr.var 2).pow 3).mul
+                              (((((Expr.var 0).pow 3).mul (Expr.var 1)).mul (Expr.const (Int.ofNat 144))).neg.add
+                                (((Expr.var 2).mul (Expr.const (Int.ofNat 24))).mul
+                                  ((Expr.const (Int.ofNat 1)).neg.add ((Expr.var 0).pow 2).neg))))).add
+                        (((Expr.var 2).mul (Expr.var 0)).mul
+                          (((Expr.var 2).mul
+                                ((((Expr.var 2).pow 2).mul (Expr.const (Int.ofNat 48))).add
+                                  (((Expr.var 0).mul (Expr.const (Int.ofNat 288))).mul
+                                    ((Expr.const (Int.ofNat 1)).add ((Expr.var 2).mul (Expr.var 1)))))).add
+                            (((Expr.var 2).mul (Expr.const (Int.ofNat 576))).add
+                              (((Expr.var 0).mul (Expr.var 1)).mul
+                                ((((Expr.var 2).mul (Expr.var 0)).mul (Expr.const (Int.ofNat 1728))).add
+                                  (Expr.const (Int.ofNat 3456)))))))))).add
+                (((Expr.var 0).mul (Expr.var 1)).mul
+                  (((Expr.var 0).mul
+                        ((((Expr.var 0).mul (Expr.var 1)).mul
+                              (((Expr.var 0).mul
+                                    (((Expr.var 2).mul (Expr.const (Int.ofNat 20736))).add
+                                      ((Expr.var 6).mul
+                                        ((Expr.const (Int.ofNat 41472)).add
+                                          (((Expr.var 2).mul (Expr.var 6)).mul
+                                              (Expr.const (Int.ofNat 20736))).neg)))).add
+                                ((((Expr.var 2).pow 2).mul (Expr.var 6)).mul
+                                  ((((Expr.var 0).mul (Expr.var 6)).mul (Expr.const (Int.ofNat 8640))).neg.add
+                                    ((Expr.const (Int.ofNat 6912)).neg.add
+                                      ((Expr.var 0).mul (Expr.const (Int.ofNat 3456))).neg))))).add
+                          ((((Expr.var 2).pow 3).mul (Expr.var 6)).mul
+                            (((((((Expr.var 0).pow 2).mul (Expr.var 1)).mul (Expr.var 6)).mul
+                                        (Expr.const (Int.ofNat 1728))).neg.add
+                                  ((Expr.const (Int.ofNat 576)).mul
+                                    ((Expr.const (Int.ofNat 1)).neg.add
+                                      (((Expr.var 2).mul (Expr.var 0)).mul (Expr.var 1)).neg))).add
+                              ((Expr.var 2).mul
+                                ((Expr.const (Int.ofNat 288)).neg.add
+                                  ((((Expr.var 1).mul (Expr.var 6)).mul (Expr.const (Int.ofNat 144))).mul
+                                    ((Expr.const (Int.ofNat 1)).neg.add ((Expr.var 0).pow 2).neg)))))))).add
+                    (((Expr.var 2).mul (Expr.var 6)).mul
+                      ((((Expr.var 2).pow 3).mul
+                            (((Expr.var 2).mul
+                                  (((Expr.var 0).mul (Expr.const (Int.ofNat 48))).neg.add
+                                    ((Expr.const (Int.ofNat 24)).mul
+                                      ((Expr.const (Int.ofNat 1)).add ((Expr.var 0).pow 2))))).add
+                              (((Expr.var 0).mul (Expr.const (Int.ofNat 288))).mul
+                                ((Expr.var 0).add
+                                  ((Expr.var 1).mul ((Expr.const (Int.ofNat 1)).add ((Expr.var 0).pow 2))))))).add
+                        (((Expr.var 0).pow 2).mul
+                          ((((Expr.var 2).pow 2).mul
+                                (((((Expr.var 2).mul (Expr.var 1)).mul (Expr.var 6)).mul
+                                      (Expr.const (Int.ofNat 288))).add
+                                  ((Expr.const (Int.ofNat 1440)).add
+                                    (((Expr.var 1).mul (Expr.var 6)).mul (Expr.const (Int.ofNat 1728)))))).add
+                            ((Expr.const (Int.ofNat 3456)).mul
+                              ((Expr.const (Int.ofNat 1)).add
+                                ((Expr.var 2).mul
+                                  ((Expr.const (Int.ofNat 1)).add ((Expr.var 1).mul (Expr.var 6))))))))))))))).neg) =
+    []
+is false
+'FMSA.ExactMSA.RationalBridge.second_residual_numerator' depends on axioms: [propext,
+ sorryAx,
+ Classical.choice,
+ Quot.sound]

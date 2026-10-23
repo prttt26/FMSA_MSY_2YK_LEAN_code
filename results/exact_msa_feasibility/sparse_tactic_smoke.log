@@ -1,0 +1,9 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+sparse_ring: reified 2 real atoms; checking integer circuit in kernel
+sparse_ring diagnostic: raw term counts 4 / 3; circuit=false
+sparse_ring: reified 2 real atoms; checking integer circuit in kernel
+sparse_ring diagnostic: raw term counts 4 / 3; circuit=false
+sparse_ring: reified 1 real atoms; checking integer circuit in kernel
+sparse_ring diagnostic: raw term counts 2 / 1; circuit=false
+sparse_ring: reified 1 real atoms; checking integer circuit in kernel
+sparse_ring diagnostic: raw term counts 1 / 1; circuit=false

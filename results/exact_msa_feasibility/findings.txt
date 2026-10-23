@@ -1,0 +1,153 @@
+Exact MSA scalar closure recovery: completed kernel proof
+Date: 2026-10-08
+
+RESULT
+
+The scalar one-component, one-Yukawa closure-recovery chain is complete.
+exactMSA_hcore and exactMSA_kspace_residual are now theorems, not project
+axioms. The original rational definitions, elimination, trigonometric
+reduction, coefficient division, reassembly and Fourier bridges are all
+checked by Lean. The OZ-derived scalar factorization is also standard-three.
+The earlier global claim that this proof cannot be decomposed is superseded.
+
+The final combined command passed (8834 jobs):
+  lake build LeanCode ExactMSACertificate ExactMSASparseFeasibility
+See end_to_end_final_build.log. The scalar proof is imported by the default
+LeanCode target; the compatibility certificate can also be built separately.
+
+DOMAIN AND SCOPE
+
+The unit-hard-core-diameter conventions are unchanged. The pure rational
+residual theorem requires xi != 1, z != 0 and k != 0. The Fourier closure
+requires z > 0, xi != 1 and k != 0. The factorization uses xi < 1, z > 0
+and k != 0; its OZ-derived version additionally already assumes xi > 0.
+K = 0 is included by a separate dictionary case, with no division-by-K
+assumption in the final theorem. No division by G is required.
+
+The old unrestricted hcore axiom was replaced with explicit regular physical
+domain conditions. This is not a theorem about divergent z <= 0 tail
+transforms, xi = 1 singular formulas, or the k = 0 limit. The existing OZ
+consumer already supplied the new physical z > 0 condition.
+
+This is a theorem at a Blum-Hoye root, not a proof that such a root exists
+at every state. Mixture matrix closure axioms remain separate. No theorem
+of universal finite-order thermodynamic validity, Maxwell coexistence,
+strict finite-k stability or all-order branch topology is added.
+Dt powers in the exact closure identity are Baxter-amplitude powers, not
+orders N of the thermodynamic coupling-tau truncation.
+
+CHECKED PROOF CHAIN
+
+1. ExactMSAPhysicalDictionary and ExactMSADeltaDictionary identify actual
+   bhF, bhP and the original closed k-space residual deltaActual with
+   generated rational expressions at C=cos(k), S=sin(k), E=exp(-z), p=pi.
+2. ExactMSAEliminationBridge proves
+     denR * (Delta - m29*r29) = nRaw
+   on explicitly stated nonzero-denominator conditions.
+3. ExactMSAReductionBridge proves the polynomial identity
+     nRaw = n1*Dt + n2*Dt^2 + mu*(S^2+C^2-1).
+4. ExactMSASecondResidualBridge proves
+     den33*r33 = r0 + Dt*r1.
+   The existing sparse division certificates prove n1=q1*r0 and n2=q1*r1,
+   and ExactMSASparseReassembly proves
+     n1*Dt+n2*Dt^2 = Dt*q1*(r0+Dt*r1).
+5. ExactMSAResidualRecovery substitutes the trigonometric identity and both
+   root constraints, proves denR nonzero, and concludes deltaActual=0.
+6. MSAFullFactorization rewrites the independently defined core and tail
+   Fourier transforms, proves exactMSA_hcore, and derives the physical
+   Baxter factorization. MSAFactorizationFromOZ supplies the two root
+   constraints from the already proved OZ/Baxter primitive derivations.
+
+A direct corollary exactMSA_structureDen_nonneg proves that the exact scalar
+structure-factor denominator is nonnegative at every real nonzero k under
+these root/domain conditions. Zeros are allowed. Strict stability and the
+zero-wavevector limit require additional arguments.
+
+TRUST AND AXIOM AUDIT
+
+All named scalar results above have footprint
+  [propext, Classical.choice, Quot.sound].
+Axiom guards cover deltaActual_zero, exactMSA_hcore, the compatibility
+residual/Fourier theorems, exactMSA_structureDen_nonneg, the main scalar
+factorization and its OZ-derived version. No native_decide, admitted proof
+or polynomial/physics-computation axiom is used in this scalar chain.
+
+SparsePolynomialCertificate proves semantic soundness of its integer sparse
+compiler. SparseRingTactic reifies ordinary real goals after field_simp.
+SparseCircuitTactic shares circuit operations and certifies each integer
+normalization separately in the kernel. Native computation proposes normal
+forms, but the kernel checks every proposed operation and every semantic
+connection; it does not trust native computation as a proof.
+SymPy likewise proposes formulas and witnesses only. The original physical
+expression-to-certificate connections are now Lean theorems.
+
+The source declaration inventory, excluding nested comments, now has 12
+project axioms: seven mathematical, four remaining mixture symbolic
+identities, and one physical assumption. The two scalar declarations retired
+here account for the former 14-to-12 change. See source_axiom_ledger.json;
+compiled theorem guards, rather than this text inventory, are the proof audit.
+The seven final theorem footprints are recorded in scalar_axiom_audit.log,
+reproduced with lake env lean results/exact_msa_feasibility/scalar_axiom_audit.lean.
+
+MEASUREMENTS AND VALIDATION
+
+The original direct checkpoint checks, including imports, remain:
+  small323      9.48 s,  7.13 GiB maximum RSS
+  Dt full      34.21 s, 10.78 GiB maximum RSS (1135 monomials, degree 27)
+  Dt^2 full    98.85 s, 20.31 GiB maximum RSS (2843 monomials, degree 29).
+These are division-checkpoint measurements, not the full physical proof.
+
+The integration build rebuilt the new bridge modules in parallel:
+  elimination 646 s; reduction 737 s; Delta dictionary 807 s;
+  residual recovery 3.6 s; full Fourier/factorization module 3.8 s.
+This run took 14:26.92 overall, with maximum child RSS 19.33 GiB, and
+passed all mathematical proof modules. Its final root gate failed only
+because the expected axiom text retained old line breaks. The formatting
+was corrected, and the full combined target passed in the subsequent
+13.48 s cached run, exit 0 (end_to_end_final_build.log/time.txt).
+These timings are not a controlled speedup comparison with historical ring.
+
+Uncached source reconstruction reproduced ExactMSARationalData.lean
+byte-for-byte in an independent output file. Source and generated SHA256
+match bridge_generation_metadata.json and bridge_reproduction_verified.txt.
+The fresh reconstruction took 133.08 s. Earlier checkpoint regeneration
+also reproduced its five emitted files (regeneration_final_check.log).
+
+The generic checker regression passes positive identities with shared
+subexpressions and opaque reciprocal atoms, and rejects a false identity:
+  lake env lean results/exact_msa_feasibility/sparse_checker_regression.lean
+Python generator syntax checks and git diff --check passed. Prototype,
+timeout and stopped-run logs are retained as historical experiments;
+they are not successful final validation.
+
+REPRODUCTION
+
+From the project root, regenerate proposed data:
+  python Lean_code/scripts/msa_exact_sparse_feasibility.py
+  python Lean_code/scripts/msa_exact_bridge_emit.py
+The latter also accepts --output and --metadata for isolated reproduction;
+--cached-algebra is an optional development shortcut, unused in the final
+reproduction check. The theorem modules are maintained independently of
+the data generator.
+
+From Lean_code:
+  lake build LeanCode ExactMSACertificate ExactMSASparseFeasibility
+  lake env lean results/exact_msa_feasibility/sparse_checker_regression.lean
+
+PAPER UPDATE
+
+FMSA_paper updated the main paper's scope statement and SI subsection
+si:scalarclosure, theorem-correspondence rows, current axiom ledger and
+reproduction instructions. The former feasibility-only wording now states
+completed scalar closure recovery on the explicit regular domain. The two
+scalar names are removed from the axiom ledger; 14/6 is updated to 12/4.
+Mixture, finite-order, root-existence, k=0 and strict-stability qualifications
+are retained. The K-elimination wording distinguishes the potential tail
+strength K from the retained Baxter-amplitude grading.
+
+The paper process reports make check passed and the affected correspondence
+and SI pages were checked for layout. This Lean process reviewed the source
+diff against theorem conditions and the seven explicit axiom-audit outputs.
+The historical benchmark is not presented as an intrinsic lower bound or
+evidence of decomposition impossibility. The matrix certificate docstring
+was also corrected, with its declarations and proofs unchanged.

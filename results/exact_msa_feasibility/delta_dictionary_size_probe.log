@@ -1,0 +1,11 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+libc++abi: terminating due to uncaught exception of type lean::throwable: deep recursion was detected at 'interpreter' (potential solution: increase elaboration stack size using the `lean --tstack` flag). This flag can be set in the `weakLeanArgs` field of the Lake configuration. Further details are available in the Lean reference manual at https://lean-lang.org/doc/reference/4.31.0/find/?domain=Verso.Genre.Manual.section&name=lake-config-toml
+interpreter stacktrace:
+#1 FMSA.ExactMSA.SparseCertificate.monoMul
+#2 FMSA.ExactMSA.SparseCertificate.mulTerm
+#3 FMSA.ExactMSA.SparseCertificate.rawMul
+#4 FMSA.ExactMSA.SparseCertificate.rawMul
+#5 FMSA.ExactMSA.SparseCertificate.rawMul
+#6 FMSA.ExactMSA.SparseCertificate.rawMul
+
+[Diagnostic trace truncated: 63300977 original bytes, more than 1.3 million repeated rawMul stack frames. Native term counting was replaced by a scalar structural count.]

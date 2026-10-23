@@ -1,0 +1,781 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/Other_Closures/../.lake/packages/batteries' has local changes
+⚠ [8567/8631] Replayed LeanCode.Analysis.BanachPoleFamily
+warning: LeanCode/Analysis/BanachPoleFamily.lean:184:15: Variable name `hc` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8570/8631] Replayed LeanCode.Analysis.JordanLemma
+warning: LeanCode/Analysis/JordanLemma.lean:103:5: Variable name `hg` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8571/8631] Replayed LeanCode.Analysis.MittagLeffler
+warning: LeanCode/Analysis/MittagLeffler.lean:173:4: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+⚠ [8572/8631] Replayed LeanCode.YukawaOZMix.MixtureRealSpace
+warning: LeanCode/YukawaOZMix/MixtureRealSpace.lean:348:54: Variable name `hrg` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8573/8631] Replayed LeanCode.Analysis.RadialFourierInversion
+warning: LeanCode/Analysis/RadialFourierInversion.lean:79:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/Analysis/RadialFourierInversion.lean:84:8: `MeasureTheory.Integrable.bdd_mul'` has been deprecated: Use `MeasureTheory.Integrable.bdd_mul` instead
+warning: LeanCode/Analysis/RadialFourierInversion.lean:282:48: missing space in the source
+
+This part of the code
+  '(0:ℝ), r'
+should be written as
+  '(0 : ℝ),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/Analysis/RadialFourierInversion.lean:325:22: missing space in the source
+
+This part of the code
+  '(0:ℝ), cosineTransform'
+should be written as
+  '(0 : ℝ),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/Analysis/RadialFourierInversion.lean:354:75: missing space in the source
+
+This part of the code
+  '(0:ℝ)))'
+should be written as
+  '(0 : ℝ)))'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/Analysis/RadialFourierInversion.lean:386:23: missing space in the source
+
+This part of the code
+  '(0:ℝ), HasDerivAt'
+should be written as
+  '(0 : ℝ),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/Analysis/RadialFourierInversion.lean:387:29: missing space in the source
+
+This part of the code
+  '(0:ℝ)) (𝓝'
+should be written as
+  '(0 : ℝ))'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/Analysis/RadialFourierInversion.lean:441:48: missing space in the source
+
+This part of the code
+  '(0:ℝ), r'
+should be written as
+  '(0 : ℝ),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/Analysis/RadialFourierInversion.lean:443:23: missing space in the source
+
+This part of the code
+  '(0:ℝ), ContinuousAt'
+should be written as
+  '(0 : ℝ),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/Analysis/RadialFourierInversion.lean:447:37: missing space in the source
+
+This part of the code
+  '(0:ℝ)) (𝓝'
+should be written as
+  '(0 : ℝ))'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+⚠ [8579/8631] Replayed LeanCode.Closures.DPClosureMap
+warning: LeanCode/Closures/DPClosureMap.lean:1:1: * '-/':
+Copyright too short!
+
+
+Note: This linter can be disabled with `set_option linter.style.header false`
+⚠ [8590/8631] Replayed LeanCode.HardSphere.BaxterNoSpinodalEquiv
+warning: LeanCode/HardSphere/BaxterNoSpinodalEquiv.lean:92:46: Variable name `heta0` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: LeanCode/HardSphere/BaxterNoSpinodalEquiv.lean:93:26: Variable name `hrho` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8593/8631] Replayed LeanCode.Analysis.IntervalIntegralSwap
+warning: LeanCode/Analysis/IntervalIntegralSwap.lean:60:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/Analysis/IntervalIntegralSwap.lean:94:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/Analysis/IntervalIntegralSwap.lean:122:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/Analysis/IntervalIntegralSwap.lean:134:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+⚠ [8594/8631] Replayed LeanCode.HardSphere.BaxterRenewal
+warning: LeanCode/HardSphere/BaxterRenewal.lean:470:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:522:32: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma)'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:652:24: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma)'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:677:31: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:872:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:914:28: missing space in the source
+
+This part of the code
+  '(0:ℝ),
+'
+should be written as
+  '(0 : ℝ),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:984:0: Please, add a comment explaining the need for modifying the maxHeartbeat limit, as in
+set_option maxHeartbeats 1000000 in
+-- reason for change
+...
+
+Note: This linter can be disabled with `set_option linter.style.maxHeartbeats false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1004:61: missing space in the source
+
+This part of the code
+  '(0:ℝ))),'
+should be written as
+  '(0 : ℝ))),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1008:61: missing space in the source
+
+This part of the code
+  '(0:ℝ))),'
+should be written as
+  '(0 : ℝ))),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1048:61: missing space in the source
+
+This part of the code
+  '(0:ℝ))),'
+should be written as
+  '(0 : ℝ))),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1052:61: missing space in the source
+
+This part of the code
+  '(0:ℝ))),'
+should be written as
+  '(0 : ℝ))),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1220:37: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1223:6: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1308:33: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1351:6: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1295:81: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma)'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1487:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1491:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1447:8: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1460:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1471:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1501:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1412:30: missing space in the source
+
+This part of the code
+  '(0:ℝ),
+'
+should be written as
+  '(0 : ℝ),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1581:6: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1588:6: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1598:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1603:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1699:6: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1706:6: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1861:33: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1883:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1898:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1930:6: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1779:19: missing space in the source
+
+This part of the code
+  '(0:ℝ)..sigma,'
+should be written as
+  '(0 : ℝ)..sigma,'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HardSphere/BaxterRenewal.lean:1785:30: missing space in the source
+
+This part of the code
+  '(0:ℝ),
+'
+should be written as
+  '(0 : ℝ),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+⚠ [8595/8631] Replayed LeanCode.Analysis.WienerRenewal
+warning: LeanCode/Analysis/WienerRenewal.lean:114:30: This simp argument is unused:
+  Set.indicator_apply
+
+Hint: Omit it from the simp argument list.
+  simp [Function.uncurry, Set.i̵n̵d̵i̵c̵a̵t̵o̵r̵_̵a̵p̵p̵l̵y̵,̵ ̵S̵e̵t̵.̵mem_Ioi, h]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: LeanCode/Analysis/WienerRenewal.lean:175:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/Analysis/WienerRenewal.lean:227:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/Analysis/WienerRenewal.lean:305:57: Variable name `hRcont` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8599/8631] Replayed LeanCode.HardSphere.ShellKernel
+warning: LeanCode/HardSphere/ShellKernel.lean:123:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/HardSphere/ShellKernel.lean:126:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: LeanCode/HardSphere/ShellKernel.lean:89:8: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/ShellKernel.lean:101:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/ShellKernel.lean:109:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HardSphere/ShellKernel.lean:135:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+⚠ [8601/8631] Replayed LeanCode.HSMixture.MixtureOzStar
+warning: LeanCode/HSMixture/MixtureOzStar.lean:510:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HSMixture/MixtureOzStar.lean:542:56: missing space in the source
+
+This part of the code
+  '(0:ℝ)..t,'
+should be written as
+  '(0 : ℝ)..t,'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureOzStar.lean:644:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/HSMixture/MixtureOzStar.lean:671:26: missing space in the source
+
+This part of the code
+  '(0:ℝ)..sigma,'
+should be written as
+  '(0 : ℝ)..sigma,'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureOzStar.lean:673:26: missing space in the source
+
+This part of the code
+  '(0:ℝ)..sigma,'
+should be written as
+  '(0 : ℝ)..sigma,'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+⚠ [8602/8631] Replayed LeanCode.HSMixture.MixtureBaxterSeed
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:99:36: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:102:33: missing space in the source
+
+This part of the code
+  '(0:ℝ)..sigma,'
+should be written as
+  '(0 : ℝ)..sigma,'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:190:32: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma)'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:275:24: missing space in the source
+
+This part of the code
+  '(0:ℝ)..(sigma'
+should be written as
+  '(0 : ℝ)..(sigma'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:341:27: missing space in the source
+
+This part of the code
+  '(0:ℝ)..sigma,'
+should be written as
+  '(0 : ℝ)..sigma,'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:341:69: missing space in the source
+
+This part of the code
+  '(0:ℝ)..sigma,'
+should be written as
+  '(0 : ℝ)..sigma,'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:342:24: missing space in the source
+
+This part of the code
+  '(0:ℝ)..(sigma'
+should be written as
+  '(0 : ℝ)..(sigma'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:343:41: missing space in the source
+
+This part of the code
+  '(0:ℝ)..sigma,'
+should be written as
+  '(0 : ℝ)..sigma,'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:344:31: missing space in the source
+
+This part of the code
+  '(0:ℝ)..sigma,'
+should be written as
+  '(0 : ℝ)..sigma,'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:362:7: Variable name `j` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:435:49: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:499:49: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+⚠ [8617/8631] Replayed LeanCode.HSMixture.MixtureSeedExtended
+warning: LeanCode/HSMixture/MixtureSeedExtended.lean:91:28: Variable name `j` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: LeanCode/HSMixture/MixtureSeedExtended.lean:97:9: `continuous_finset_sum` has been deprecated: Use `continuous_finsetSum` instead
+⚠ [8618/8631] Replayed LeanCode.YukawaOZMix.MixtureRowSum
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:68:44: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma)'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:158:33: missing space in the source
+
+This part of the code
+  '(0:ℝ)..sigma,'
+should be written as
+  '(0 : ℝ)..sigma,'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:342:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:408:35: missing space in the source
+
+This part of the code
+  '(0:ℝ),
+'
+should be written as
+  '(0 : ℝ),'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:452:6: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:485:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:551:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:553:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:694:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:671:35: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:672:35: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:824:36: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:825:46: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma)'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:837:36: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:944:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+⚠ [8619/8631] Replayed LeanCode.YukawaOZMix.MixtureCorrectedSeed
+warning: LeanCode/YukawaOZMix/MixtureCorrectedSeed.lean:205:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureCorrectedSeed.lean:231:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureCorrectedSeed.lean:305:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureCorrectedSeed.lean:1164:49: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/YukawaOZMix/MixtureCorrectedSeed.lean:1189:49: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+warning: LeanCode/YukawaOZMix/MixtureCorrectedSeed.lean:1364:10: `MeasureTheory.integral_finset_sum` has been deprecated: Use `MeasureTheory.integral_finsetSum` instead
+warning: LeanCode/YukawaOZMix/MixtureCorrectedSeed.lean:1377:8: `MeasureTheory.integral_finset_sum` has been deprecated: Use `MeasureTheory.integral_finsetSum` instead
+warning: LeanCode/YukawaOZMix/MixtureCorrectedSeed.lean:1402:19: `MeasureTheory.integrable_finset_sum` has been deprecated: Use `MeasureTheory.integrable_finsetSum` instead
+warning: LeanCode/YukawaOZMix/MixtureCorrectedSeed.lean:1582:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureCorrectedSeed.lean:1659:49: missing space in the source
+
+This part of the code
+  '(0:ℝ) sigma'
+should be written as
+  '(0 : ℝ)'
+
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`
+⚠ [8621/8631] Replayed LeanCode.YukawaOZMix.MixtureClosedForm
+warning: LeanCode/YukawaOZMix/MixtureClosedForm.lean:70:5: Variable name `hint` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: LeanCode/YukawaOZMix/MixtureClosedForm.lean:201:5: Variable name `hint` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: LeanCode/YukawaOZMix/MixtureClosedForm.lean:407:10: `intervalIntegral.integral_finset_sum` has been deprecated: Use `intervalIntegral.integral_finsetSum` instead
+warning: LeanCode/YukawaOZMix/MixtureClosedForm.lean:466:10: `intervalIntegral.integral_finset_sum` has been deprecated: Use `intervalIntegral.integral_finsetSum` instead
+warning: LeanCode/YukawaOZMix/MixtureClosedForm.lean:535:55: Variable name `hz` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: LeanCode/YukawaOZMix/MixtureClosedForm.lean:659:5: Variable name `hint` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: LeanCode/YukawaOZMix/MixtureClosedForm.lean:703:10: `intervalIntegral.integral_finset_sum` has been deprecated: Use `intervalIntegral.integral_finsetSum` instead
+⚠ [8622/8631] Replayed LeanCode.YukawaOZMix.MixtureHSDCF
+warning: LeanCode/YukawaOZMix/MixtureHSDCF.lean:127:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+⚠ [8624/8631] Replayed LeanCode.YukawaOZMix.MixtureDCFAEInjective
+warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:757:15: `MeasureTheory.integral_finset_sum` has been deprecated: Use `MeasureTheory.integral_finsetSum` instead
+warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:758:12: `MeasureTheory.integral_finset_sum` has been deprecated: Use `MeasureTheory.integral_finsetSum` instead
+warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:758:46: `MeasureTheory.integrable_finset_sum` has been deprecated: Use `MeasureTheory.integrable_finsetSum` instead
+warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:1564:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:1570:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:1590:9: `continuous_finset_sum` has been deprecated: Use `continuous_finsetSum` instead
+warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:1598:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:1631:9: Variable name `t` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:1760:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:2173:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
+However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
+
+Note: This linter can be disabled with `set_option linter.style.show false`
+warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:2469:10: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+⚠ [8627/8631] Replayed OtherClosures.OscillatoryYukawa
+warning: OtherClosures/OscillatoryYukawa.lean:22:29: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: OtherClosures/OscillatoryYukawa.lean:33:32: This simp argument is unused:
+  ← Complex.ofReal_mul
+
+Hint: Omit it from the simp argument list.
+  simp [mode, Complex.mul_re, Complex.mul_im, Complex.exp_re, Complex.exp_im, Real.cos_neg,
+  ̲  ̲ ̲ ̲Real.sin_neg, ← C̵o̵m̵p̵l̵e̵x̵.̵o̵f̵R̵e̵a̵l̵_̵m̵u̵l̵,̵ ̵←̵ ̵Complex.ofReal_cos, ← Complex.ofReal_sin]
+
+Note: Simp arguments with `←` have the additional effect of removing the other direction from the simp set, even if the simp argument itself is unused. If the hint above does not work, try replacing `←` with `-` to only get that effect and silence this warning.
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OtherClosures/OscillatoryYukawa.lean:33:54: This simp argument is unused:
+  ← Complex.ofReal_cos
+
+Hint: Omit it from the simp argument list.
+  simp [mode, Complex.mul_re, Complex.mul_im, Complex.exp_re, Complex.exp_im, Real.cos_neg,
+  ̲  ̲ ̲ ̲Real.sin_neg, ← Complex.ofReal_mul, ← C̵o̵m̵p̵l̵e̵x̵.̵o̵f̵R̵e̵a̵l̵_̵c̵o̵s̵,̵
+  ̵ ̵ ̵ ̵ ̵←̵ ̵Complex.ofReal_sin]
+
+Note: Simp arguments with `←` have the additional effect of removing the other direction from the simp set, even if the simp argument itself is unused. If the hint above does not work, try replacing `←` with `-` to only get that effect and silence this warning.
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OtherClosures/OscillatoryYukawa.lean:34:4: This simp argument is unused:
+  ← Complex.ofReal_sin
+
+Hint: Omit it from the simp argument list.
+  simp [mode, Complex.mul_re, Complex.mul_im, Complex.exp_re, Complex.exp_im, Real.cos_neg,
+  ̲  ̲ ̲ ̲Real.sin_neg, ← Complex.ofReal_mul, ← C̵o̵m̵p̵l̵e̵x̵.̵o̵f̵R̵e̵a̵l̵_̵c̵o̵s̵,̵
+  ̵ ̵ ̵ ̵ ̵←̵ ̵C̵o̵m̵p̵l̵e̵x̵.̵o̵f̵R̵e̵a̵l̵_̵s̵i̵n̵]̵C̲o̲m̲p̲l̲e̲x̲.̲o̲f̲R̲e̲a̲l̲_̲c̲o̲s̲]̲
+
+Note: Simp arguments with `←` have the additional effect of removing the other direction from the simp set, even if the simp argument itself is unused. If the hint above does not work, try replacing `←` with `-` to only get that effect and silence this warning.
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OtherClosures/OscillatoryYukawa.lean:53:14: This simp argument is unused:
+  norm_mul
+
+Hint: Omit it from the simp argument list.
+  simp [mode, n̵o̵r̵m̵_̵m̵u̵l̵,̵ ̵Complex.norm_exp, Complex.mul_re]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Build completed successfully (8631 jobs).

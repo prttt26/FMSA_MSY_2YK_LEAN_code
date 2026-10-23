@@ -1,0 +1,104 @@
+{
+  "status": "PASS",
+  "foundation_version": "1.0.1",
+  "new_theorem_count": 11,
+  "theorems": {
+    "FMSA.ExactMSA.BHierarchy.lower_source_one": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BHierarchy.lower_source_two": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BHierarchy.corrected_b_eq_raw_sub": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BHierarchy.oz_order_dcf": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BHierarchy.baxter_dressing": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BHierarchy.raw_b_dcf": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BHierarchy.corrected_b_dcf": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BHierarchy.hierarchy_dcf": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BHierarchy.first_order_recovered": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BHierarchy.coefficient_fixed_basis": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FMSA.ExactMSA.BHierarchy.truncation_fixed_basis": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "standard_axioms_only": true,
+  "inline_guard_count": 11,
+  "builds": {
+    "foundation": {
+      "status": "PASS",
+      "jobs": 9003,
+      "log": "foundation_build.log"
+    },
+    "closures": {
+      "status": "PASS",
+      "jobs": 8631,
+      "log": "closures_build.log"
+    },
+    "scoza": {
+      "status": "PASS",
+      "jobs": 8853,
+      "log": "scoza_build.log"
+    },
+    "workspace": {
+      "status": "PASS",
+      "jobs": 9065,
+      "log": "workspace_build.log"
+    }
+  },
+  "foundation_manifest_sha256": "33f78794e5b952be2c83a33ce1aae60c340b5d128817f7fd42befccc12921b2c",
+  "original_foundation_manifest_sha256": "80e8181562d776c649a6980957f9371a6caf89d03efdb9c6663481764372b97c",
+  "original_scientific_definitions_and_proofs_unchanged": true,
+  "new_module": "LeanCode/YukawaOZMix/MSABHierarchy.lean",
+  "new_module_sha256": "381d9dea37a55fbbe5d6be1a67854b8ab83f286c09307d6999c5651abfddfe43",
+  "scope": "Noncommuting normalized OZ order algebra with raw and source-corrected Fourier B matrices; recovery of first order; fixed-basis normalized Taylor coefficients and strict finite truncation without infinite-series convergence.",
+  "premises": [
+    "Supplied normalized positive-order OZ coefficient line",
+    "Zeroth-order OZ inverse and symmetric Baxter factorization",
+    "Actual coupling-independent finite spatial basis on the selected geometric piece",
+    "Required finite differentiability of basis coefficients"
+  ],
+  "not_claimed": [
+    "Automatic construction/identification of arbitrary-order one-sided WH projection",
+    "An automatic closed formula for every physical coefficient jet",
+    "Uniform parameter-domain solvability, convergence or truncation accuracy",
+    "A finite RDF representation or unconditional physical stability"
+  ]
+}

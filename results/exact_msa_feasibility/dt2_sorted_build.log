@@ -1,0 +1,2 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+'FMSA.ExactMSA.SparseCheckpoints.dt2_identity' depends on axioms: [propext, Classical.choice, Quot.sound]

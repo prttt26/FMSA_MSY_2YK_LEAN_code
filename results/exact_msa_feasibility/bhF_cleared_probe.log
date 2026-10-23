@@ -1,0 +1,32 @@
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/.lake/packages/batteries' has local changes
+xi z k Dt G K : ℝ
+hvac : 1 - xi ≠ 0
+hz : z ≠ 0
+hvacAdd : 1 + -xi ≠ 0
+⊢ (π * z ^ 3 * 2 ^ 2 *
+          (z ^ 3 * (1 - xi) ^ 2 -
+            6 * xi *
+              (z * (1 - z - rexp (-z)) * (xi * 3 + 2 * (1 - xi)) +
+                ((1 - z) * 2 + z ^ 2 - rexp (-z) * 2) * (1 + xi * 2))) +
+        -(6 * xi * Dt *
+            (6 * xi *
+                (-(z * 2 ^ 2 *
+                        (z * (1 - z - rexp (-z)) * (xi * 3 + 2 * (1 - xi)) +
+                          ((1 - z) * 2 + z ^ 2 - rexp (-z) * 2) * (1 + xi * 2)) *
+                      ((z - 6 * xi * rexp (-z) * 2 * G) * (1 + z) + 6 * xi * 2 * G)) +
+                  (6 * xi * 2 ^ 2 * G + (z - 6 * xi * rexp (-z) * 2 * G) * (2 * (1 + z) + z ^ 2)) *
+                    (z * (1 - z - rexp (-z)) * 2 ^ 2 * (1 + xi * 2) -
+                      -(xi * 3 * ((1 - z) * 2 + z ^ 2 - rexp (-z) * 2) * 4))) +
+              z ^ 4 * 2 * (1 - xi) ^ 2 * (6 * xi * 2 * G + (z - 6 * xi * rexp (-z) * 2 * G) * (2 - rexp (-z)))))) *
+      (1 + -xi) ^ 2 =
+    (1 - xi) ^ 2 *
+      (π * z ^ 6 * 2 ^ 2 * (1 + -xi) ^ 2 +
+        -(6 * xi *
+            (z * 2 ^ 2 * (π * z ^ 2 + -(6 * xi * Dt * ((1 + z) * (z + -(xi * rexp (-z) * G * 12)) + xi * G * 12))) *
+                ((1 + xi * 2) * (2 + z ^ 2 + 2 * (-rexp (-z) + -z)) + z * (2 + xi) * (1 + (-rexp (-z) + -z))) +
+              Dt *
+                (z ^ 4 * 2 * (1 + -xi) ^ 2 * ((z + -(xi * rexp (-z) * G * 12)) * (2 + -rexp (-z)) + xi * G * 12) +
+                  6 * xi * ((z + -(xi * rexp (-z) * G * 12)) * (2 + z * (2 + z)) + xi * 2 * G * 12) *
+                    (z * 2 ^ 2 * (1 + xi * 2) * (1 + (-rexp (-z) + -z)) +
+                      xi * 12 * (2 + z ^ 2 + 2 * (-rexp (-z) + -z)))))))
+/tmp/msa_bhF_cleared_probe.lean:35:8: warning: declaration uses `sorry`

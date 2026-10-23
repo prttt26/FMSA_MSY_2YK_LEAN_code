@@ -1,0 +1,10 @@
+import LeanCode.ExactMSAProject
+import LeanCode.YukawaOZ.ExactMSACertificate
+
+#print axioms FMSA.ExactMSA.RationalBridge.deltaActual_zero
+#print axioms FMSA.ExactMSA.exactMSA_hcore
+#print axioms FMSA.ExactMSA.Certificate.exactMSA_kspace_residual
+#print axioms FMSA.ExactMSA.Certificate.exactMSA_hcore_of_residual
+#print axioms FMSA.ExactMSA.exactMSA_factorization
+#print axioms FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz
+#print axioms FMSA.ExactMSA.exactMSA_structureDen_nonneg

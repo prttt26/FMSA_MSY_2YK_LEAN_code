@@ -1,0 +1,11 @@
+Reconstructed original rational residual and G-division
+small323 {'name': 'small323', 'monomials': 323, 'total_degree': 23, 'lhs_expr_chars': 37185, 'rhs_expr_chars': 4619, 'old_expanded_sides_identical': True}
+dt1 {'name': 'dt1', 'monomials': 1135, 'total_degree': 27, 'lhs_expr_chars': 178136, 'rhs_expr_chars': 29304, 'old_expanded_sides_identical': True}
+dt2 {'name': 'dt2', 'monomials': 2843, 'total_degree': 29, 'lhs_expr_chars': 411089, 'rhs_expr_chars': 27773, 'old_expanded_sides_identical': True}
+Emitted /tmp/msa_sparse_regenerate_cu_bahx5/ExactMSASparseCheckpoints.lean
+MATCH ExactMSASparseCheckpoints.lean
+MATCH ExactMSASparseDt1.lean
+MATCH ExactMSASparseDt2.lean
+Traceback (most recent call last):
+  File "<stdin>", line 17, in <module>
+AssertionError: ExactMSASparseReassembly.lean

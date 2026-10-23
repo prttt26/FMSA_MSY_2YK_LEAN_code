@@ -1,0 +1,454 @@
+{
+  "reference": "Scalar sigma=1 PY; strict compressibility-route coupling truncation",
+  "density_window": [
+    1e-07,
+    1.4
+  ],
+  "limitations": "Selected low-T fluid-ansatz tests; no freezing check or convergence certificate; no proof for every N>1 and no proof that order two excludes extra binodals",
+  "cases": [
+    {
+      "model": "HSY_z1.8",
+      "z": [
+        1.8
+      ],
+      "K": [
+        1.0
+      ],
+      "order": 2,
+      "T_onset": 0.05679143359564778,
+      "T_over_own_Tc": 0.05046018720567853,
+      "rho_onset": 0.18637108449819376,
+      "direct_onset_defect": 4.951189921017136e-13,
+      "derivative_refinement_defect": 2.1087732254843057e-12,
+      "example": {
+        "T": 0.0562235192596913,
+        "spinodals": [
+          0.005697587794301312,
+          0.16172763944853988,
+          0.21323427514026957,
+          1.2657528162397347
+        ],
+        "sampled_supporting_tangent_count": 0,
+        "positive_island_a": 0.37430898225073
+      }
+    },
+    {
+      "model": "HSY_z5",
+      "z": [
+        5.0
+      ],
+      "K": [
+        1.0
+      ],
+      "order": 2,
+      "T_onset": 0.06323174646484045,
+      "T_over_own_Tc": 0.1677174609517782,
+      "rho_onset": 0.2709074352257488,
+      "direct_onset_defect": 4.607859233063393e-14,
+      "derivative_refinement_defect": 9.77588958857763e-13,
+      "example": {
+        "T": 0.06259942900019204,
+        "spinodals": [
+          0.027618077256205294,
+          0.23608433349118707,
+          0.3084648917991987,
+          1.2007317371133157
+        ],
+        "sampled_supporting_tangent_count": 0,
+        "positive_island_a": 0.14129413318774856
+      }
+    },
+    {
+      "model": "HSY_z12",
+      "z": [
+        12.0
+      ],
+      "K": [
+        1.0
+      ],
+      "order": 2,
+      "T_onset": 0.04978939555575337,
+      "T_over_own_Tc": 0.3041605001091079,
+      "rho_onset": 0.37687547693338563,
+      "direct_onset_defect": 3.9754079657801825e-14,
+      "derivative_refinement_defect": 2.963485938127045e-13,
+      "example": {
+        "T": 0.04929150160019583,
+        "spinodals": [
+          0.0701762158733334,
+          0.3291909626244782,
+          0.4278516447115294,
+          1.2659331040911388
+        ],
+        "sampled_supporting_tangent_count": 0,
+        "positive_island_a": 0.10126814547580898
+      }
+    },
+    {
+      "model": "HSY_z20",
+      "z": [
+        20.0
+      ],
+      "K": [
+        1.0
+      ],
+      "order": 2,
+      "T_onset": 0.038513409730132016,
+      "T_over_own_Tc": 0.3871870329190921,
+      "rho_onset": 0.4402040959188917,
+      "direct_onset_defect": 4.8789097761847693e-14,
+      "derivative_refinement_defect": 1.8431436932253573e-13,
+      "example": {
+        "T": 0.038128275632830694,
+        "spinodals": [
+          0.10407906337760378,
+          0.38465595524529733,
+          0.4993667054853625,
+          1.3119741679792782
+        ],
+        "sampled_supporting_tangent_count": 0,
+        "positive_island_a": 0.09171153340250911
+      }
+    },
+    {
+      "model": "HSY_z1.8",
+      "z": [
+        1.8
+      ],
+      "K": [
+        1.0
+      ],
+      "order": 3,
+      "T_onset": 0.19880819515066003,
+      "T_over_own_Tc": 0.1799976743660822,
+      "rho_onset": 0.21811517068016698,
+      "direct_onset_defect": 3.071906155375596e-14,
+      "derivative_refinement_defect": 1.1582893209386804e-12,
+      "example": {
+        "T": 0.19682011319915343,
+        "spinodals": [
+          0.021703167027754874,
+          0.18940136503846938,
+          0.2493618784347082,
+          1.020194529712755
+        ],
+        "sampled_supporting_tangent_count": 1,
+        "positive_island_a": 0.17314640718961474
+      },
+      "triple_support_onset": {
+        "T": 0.13574918647042758,
+        "T_over_own_Tc": 0.12290508368252984,
+        "densities": [
+          0.003458383483003203,
+          0.11224565846121279,
+          1.2895223873352957
+        ],
+        "independent_integral_defect": 6.279698983036042e-15,
+        "interpolation_correction": 1.97590083184096e-10,
+        "minimum_sampled_tangent_gap": -6.324352802557448e-10,
+        "sampled_density_window": [
+          1e-07,
+          1.4
+        ],
+        "spectral_checks": [
+          {
+            "phase": "gas",
+            "rho": 0.003458383483003203,
+            "k0": 0.7427964242551521,
+            "minimum_D": 0.7427964242551521,
+            "k_min": 0.0,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 32.0000000032,
+            "scan_points": 1602,
+            "optimized_local_minima": 0,
+            "tail_constant": 0.6506868366830646,
+            "tail_lower_bound_at_cutoff": 0.9993645636361788,
+            "coefficient_defect": 0.0,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 1.0205262771655809e-25
+          },
+          {
+            "phase": "middle",
+            "rho": 0.11224565846121279,
+            "k0": 2.6832632579941875,
+            "minimum_D": 0.22531782423697397,
+            "k_min": 6.142994923788639,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 63.6755368439703,
+            "scan_points": 1918,
+            "optimized_local_minima": 1,
+            "tail_constant": 2027.2869957784517,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 6.212020862233431e-20,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 0.0
+          },
+          {
+            "phase": "liquid",
+            "rho": 1.2895223873352957,
+            "k0": 318.9539214206509,
+            "minimum_D": 0.07164265283815927,
+            "k_min": 7.772850354645386,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 1532.3182730507956,
+            "scan_points": 16605,
+            "optimized_local_minima": 1,
+            "tail_constant": 1173999.6447278862,
+            "tail_lower_bound_at_cutoff": 0.5000000001000001,
+            "coefficient_defect": 8.271806125530277e-25,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 0.0
+          }
+        ]
+      },
+      "two_supporting_pairs": [
+        {
+          "T": 0.1343916946057233,
+          "rho_g": 0.0034450731576594062,
+          "rho_l": 0.11037800589881128,
+          "independent_integral_defect": 4.85722573273506e-17,
+          "spectral_checks": [
+            {
+              "rho": 0.0034450731576594062,
+              "k0": 0.7410931974684646,
+              "minimum_D": 0.7410931974684646,
+              "k_min": 0.0,
+              "status": "numerical_screen_pass",
+              "scanned_k_max": 32.0000000032,
+              "scan_points": 1602,
+              "optimized_local_minima": 0,
+              "tail_constant": 0.6528296304198475,
+              "tail_lower_bound_at_cutoff": 0.9993624710641706,
+              "coefficient_defect": 3.1060104311167156e-20,
+              "spectral_evaluation_defect": 0.0,
+              "spectral_imaginary_defect": 7.962255200917225e-28
+            },
+            {
+              "rho": 0.11037800589881128,
+              "k0": 2.6848060082731497,
+              "minimum_D": 0.22754273875922,
+              "k_min": 6.140917368064809,
+              "status": "numerical_screen_pass",
+              "scanned_k_max": 62.610166793328176,
+              "scan_points": 1908,
+              "optimized_local_minima": 1,
+              "tail_constant": 1960.0164925521838,
+              "tail_lower_bound_at_cutoff": 0.5000000001,
+              "coefficient_defect": 1.3552527156068805e-20,
+              "spectral_evaluation_defect": 0.0,
+              "spectral_imaginary_defect": 0.0
+            }
+          ]
+        },
+        {
+          "T": 0.1343916946057233,
+          "rho_g": 0.13307107753894087,
+          "rho_l": 1.2911175534264863,
+          "independent_integral_defect": 4.3076653355456074e-14,
+          "spectral_checks": [
+            {
+              "rho": 0.13307107753894087,
+              "k0": 5.280503347796964,
+              "minimum_D": -0.009522519241008326,
+              "k_min": 6.158217373453477,
+              "status": "finite_k_unstable",
+              "scanned_k_max": 86.92821201202827,
+              "scan_points": 2151,
+              "optimized_local_minima": 1,
+              "tail_constant": 3778.257021048416,
+              "tail_lower_bound_at_cutoff": 0.5000000001,
+              "coefficient_defect": 1.3552527156068805e-20,
+              "spectral_evaluation_defect": 0.0,
+              "spectral_imaginary_defect": 0.0
+            },
+            {
+              "rho": 1.2911175534264863,
+              "k0": 322.7416435887598,
+              "minimum_D": 0.07093576095492206,
+              "k_min": 7.77660471534876,
+              "status": "numerical_screen_pass",
+              "scanned_k_max": 1543.0305392187695,
+              "scan_points": 16712,
+              "optimized_local_minima": 1,
+              "tail_constant": 1190471.622242789,
+              "tail_lower_bound_at_cutoff": 0.5000000001,
+              "coefficient_defect": 5.293955920339377e-23,
+              "spectral_evaluation_defect": 0.0,
+              "spectral_imaginary_defect": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "model": "HSY_z5",
+      "z": [
+        5.0
+      ],
+      "K": [
+        1.0
+      ],
+      "order": 3,
+      "T_onset": 0.13661476556432797,
+      "T_over_own_Tc": 0.38548950071163735,
+      "rho_onset": 0.3103615280623844,
+      "direct_onset_defect": 6.324512672832109e-15,
+      "derivative_refinement_defect": 9.03501810404587e-14,
+      "example": {
+        "T": 0.1352486179086847,
+        "spinodals": [
+          0.07206395964280582,
+          0.270893295786466,
+          0.35275994331440447,
+          0.9978200955137044
+        ],
+        "sampled_supporting_tangent_count": 1,
+        "positive_island_a": 0.0750061057439635
+      },
+      "triple_support_onset": {
+        "T": 0.10173904299522908,
+        "T_over_own_Tc": 0.2870797510437728,
+        "densities": [
+          0.03067012020661179,
+          0.17083248714061836,
+          1.2201456680549927
+        ],
+        "independent_integral_defect": 1.7763568394002505e-15,
+        "interpolation_correction": 5.3319210158164765e-11,
+        "minimum_sampled_tangent_gap": 4.393734619404367e-08,
+        "sampled_density_window": [
+          1e-07,
+          1.4
+        ],
+        "spectral_checks": [
+          {
+            "phase": "gas",
+            "rho": 0.03067012020661179,
+            "k0": 0.32437956449208627,
+            "minimum_D": 0.32437956449208627,
+            "k_min": 0.0,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 32.0000000032,
+            "scan_points": 1602,
+            "optimized_local_minima": 0,
+            "tail_constant": 13.021919969004715,
+            "tail_lower_bound_at_cutoff": 0.9872832812828122,
+            "coefficient_defect": 4.235164736271502e-22,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 0.0
+          },
+          {
+            "phase": "middle",
+            "rho": 0.17083248714061836,
+            "k0": 0.6066461039674983,
+            "minimum_D": 0.5558857669693426,
+            "k_min": 6.608070850784717,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 46.41287900368814,
+            "scan_points": 1746,
+            "optimized_local_minima": 1,
+            "tail_constant": 1077.0776684900823,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 2.541098841762901e-21,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 0.0
+          },
+          {
+            "phase": "liquid",
+            "rho": 1.2201456680549927,
+            "k0": 132.53558080253018,
+            "minimum_D": 0.11502112725075839,
+            "k_min": 7.626725853563299,
+            "status": "numerical_screen_pass",
+            "scanned_k_max": 1294.7198268240202,
+            "scan_points": 14229,
+            "optimized_local_minima": 1,
+            "tail_constant": 838149.7148179804,
+            "tail_lower_bound_at_cutoff": 0.5000000001,
+            "coefficient_defect": 1.3234889800848443e-23,
+            "spectral_evaluation_defect": 0.0,
+            "spectral_imaginary_defect": 0.0
+          }
+        ]
+      },
+      "two_supporting_pairs": [
+        {
+          "T": 0.10072165256527679,
+          "rho_g": 0.030440240428339097,
+          "rho_l": 0.1677683350768132,
+          "independent_integral_defect": 2.7755575615628914e-17,
+          "spectral_checks": [
+            {
+              "rho": 0.030440240428339097,
+              "k0": 0.3220859423886685,
+              "minimum_D": 0.3220859423886685,
+              "k_min": 0.0,
+              "status": "numerical_screen_pass",
+              "scanned_k_max": 32.0000000032,
+              "scan_points": 1602,
+              "optimized_local_minima": 0,
+              "tail_constant": 12.967209590497381,
+              "tail_lower_bound_at_cutoff": 0.9873367093868125,
+              "coefficient_defect": 4.235164736271502e-22,
+              "spectral_evaluation_defect": 0.0,
+              "spectral_imaginary_defect": 0.0
+            },
+            {
+              "rho": 0.1677683350768132,
+              "k0": 0.6036243207852229,
+              "minimum_D": 0.5583887635744225,
+              "k_min": 6.606180765577414,
+              "status": "numerical_screen_pass",
+              "scanned_k_max": 45.44703272395659,
+              "scan_points": 1736,
+              "optimized_local_minima": 1,
+              "tail_constant": 1032.7163914996474,
+              "tail_lower_bound_at_cutoff": 0.5000000000999999,
+              "coefficient_defect": 8.627806753101988e-20,
+              "spectral_evaluation_defect": 0.0,
+              "spectral_imaginary_defect": 0.0
+            }
+          ]
+        },
+        {
+          "T": 0.10072165256527679,
+          "rho_g": 0.20700143221041173,
+          "rho_l": 1.222355084887056,
+          "independent_integral_defect": 2.375877272697835e-14,
+          "spectral_checks": [
+            {
+              "rho": 0.20700143221041173,
+              "k0": 1.5600876952360985,
+              "minimum_D": 0.4545565695743376,
+              "k_min": 6.622625721846928,
+              "status": "numerical_screen_pass",
+              "scanned_k_max": 64.73432762237874,
+              "scan_points": 1929,
+              "optimized_local_minima": 1,
+              "tail_constant": 2095.2665859416807,
+              "tail_lower_bound_at_cutoff": 0.5000000000999999,
+              "coefficient_defect": 3.3881317890172014e-21,
+              "spectral_evaluation_defect": 0.0,
+              "spectral_imaginary_defect": 1.7654801508841856e-25
+            },
+            {
+              "rho": 1.222355084887056,
+              "k0": 134.65553499582475,
+              "minimum_D": 0.11371207295647451,
+              "k_min": 7.6316538203554165,
+              "status": "numerical_screen_pass",
+              "scanned_k_max": 1306.220824534678,
+              "scan_points": 14344,
+              "optimized_local_minima": 1,
+              "tail_constant": 853106.4210534057,
+              "tail_lower_bound_at_cutoff": 0.5000000001,
+              "coefficient_defect": 3.370237012930464e-22,
+              "spectral_evaluation_defect": 0.0,
+              "spectral_imaginary_defect": 0.0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

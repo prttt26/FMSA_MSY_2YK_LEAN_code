@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "date": "2026-10-12",
+  "foundation_version": "1.0.3",
+  "foundation_manifest_sha256": "8041a673b8a723c8f0670a61f9fb1aca66875851433a398bbd492ca9d97f8f3b",
+  "toolchain": "leanprover/lean4:v4.31.0",
+  "mathlib_revision": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
+  "new_theorem_count": 82,
+  "default_guard_count": 82,
+  "standard_axioms_only": true,
+  "axiom_footprints_file": "axiom_footprints.json",
+  "source_modules": [
+    "LeanCode.YukawaOZMix.MSABSourceHierarchy",
+    "LeanCode.YukawaOZ.MSAScalarBSource",
+    "LeanCode.YukawaOZ.MSABHJetRecurrence",
+    "LeanCode.YukawaOZ.MSAScalarBSourceComplex",
+    "LeanCode.YukawaOZMix.MSAMixtureFiniteBSource",
+    "LeanCode.YukawaOZMix.MSABSourceTransfer",
+    "LeanCode.YukawaOZMix.MSAMixtureBHJetRecurrence"
+  ],
+  "builds": {
+    "foundation": {
+      "status": "PASS",
+      "jobs": 9011,
+      "log": "foundation_build.log"
+    },
+    "closures": {
+      "status": "PASS",
+      "jobs": 8631,
+      "log": "closures_build.log"
+    },
+    "scoza": {
+      "status": "PASS",
+      "jobs": 8853,
+      "log": "scoza_build.log"
+    },
+    "workspace": {
+      "status": "PASS",
+      "jobs": 9073,
+      "log": "workspace_build.log"
+    }
+  },
+  "audits": {
+    "foundation": "PASS (461 source/config hashes)",
+    "project_boundaries": "PASS",
+    "git_project_layout": "PASS; all repository HEADs retained",
+    "SCOZA_dependency": "PASS",
+    "Other_Closures_dependency": "PASS"
+  },
+  "numerical_checks": {
+    "physical_poles_and_BH_jets": "PASS",
+    "finite_sources": "PASS"
+  },
+  "archived_SCOZA_checkpoint_sha256_unchanged": {
+    "SCOZA/results/scoza_extension/validation.json": "dcbf46a9ce987e9d979d3a894a5cce68b80cd2a6034c0abb154a2d236e6d9f39",
+    "SCOZA/results/scoza_extension/checkpoint.json": "4ee8f19c2abcb9b700aa69d51f85730cbc6ef08f5c3356de243064abe110e9dd"
+  },
+  "scope": "Actual finite source kernels and actual all-order BH block recurrence. Automatic physical radial OZ on the established analytic-budget domain. No convergence, g positivity or thermodynamic/phase claim.",
+  "formal_boundaries": [
+    "Physical HS zero numerically located, not Lean-certified as an existence theorem.",
+    "No blanket nonfinite claim for arbitrary additional complex rates.",
+    "Full radial OZ retains the explicit analytic budget; a weaker L1 theorem proves the renewal relation.",
+    "Mixture U is an actual excess-renewal source, not an identification with raw/corrected Fourier B or a correction-free universal WH numerator."
+  ]
+}

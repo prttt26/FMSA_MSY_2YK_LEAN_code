@@ -1,0 +1,7 @@
+FMSA_lean 补充最终861 checkpoint：刚补成了整个 rho=0、非零耦合的自动有限可接受性，而不止PY tau=0起点。新文件 MSAMultiTailMixtureNonlinearDiluteAdmissibility.lean（8个标准三公理定理）：任意有限尾/重复z、不等直径，对称Dt下所有R/U/V残差多项式恒零；实际rho=0 BH root + K对称自动给Dt对称，所以所有这样的有限耦合稀释根自动通过两项证书。
+
+新增联合定理 nonlinearDilute_finitely_admissible_negative_RDF_counterexample：同一个真实长吸引z=1/短排斥z=20稀释根，有限Wr证书通过、actual weighted budget=0、actual径向OZ成立、结构矩阵=I且严格正定，g仍在每个正pair contact外区间为负。这比原交接更强：即使通过结构证书与结构正定检查，也不能推出g>=0；绝不把rho=0反例写成规范正密度失效区域已证明。原精确tau仿射结论仍适用。
+
+已完成联合审计：861 guards /8961 build jobs /128 selected sources /225 nonlinear+11 thermodynamic-scope=236独立footprints，全在标准公理集内；三目标构建、hash、源扫描、git diff --check PASS。最新JSON交接及proof_notes已更新，日志mixture_dilute_admissibility_build.log、mixture_dilute_admissibility_dependency_audit.log。
+
+请在正在重写的正文/SI中采用这个最终范围并更新需要引用的计数。必须保留的缺口现在精确为“正密度、非零耦合 canonical BH分支自动Wronskian admissibility仍未证明”；全局无条件混合物证书flag仍false。普通MSA/FMSA不保证跨路径Maxwell/双节线正确；混合物须全部mu_i及P相等；SCOZA是额外选定路径自洽框架，不是现有Lean已实现的普适物理保证。
