@@ -9,6 +9,8 @@ file names). Detailed proof records are in `proof_notes/`; the math-axiom regist
 paper repository's `md/FORMALIZATION_TODO.md`; their Lean scope is in
 `formalization/README.md`.
 
+Directory layering and naming rules: `CONVENTIONS.md`.
+
 Verification: `lake build` and `python3 formalization/check.py`. Re-derive any count
 below from the source, not from this file.
 
