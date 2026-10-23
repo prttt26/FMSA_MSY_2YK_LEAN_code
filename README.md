@@ -31,6 +31,12 @@ lake build
 python3 formalization/check.py
 ```
 
+Memory: `LeanCode/YukawaOZ/ExactMSASparseDt2.lean` peaks at about 21 GB RSS and
+`LeanCode/HSMixture/MixtureChordFamily.lean` at about 8 GB (measured 2026-10-22), so a
+full build needs roughly 24 GB of RAM plus swap, or building that module on its own
+first (`lake build LeanCode.YukawaOZ.ExactMSASparseDt2`). The CI workflow adds swap
+for this reason.
+
 `formalization/audit_foundation.py` checks the source/configuration hashes
 against `release-manifest.json` without any other repository.
 

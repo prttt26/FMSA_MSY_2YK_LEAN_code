@@ -23,5 +23,18 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Fetch pinned mathlib artifacts
         run: lake exe cache get
+      # LeanCode/YukawaOZ/ExactMSASparseDt2.lean alone peaks at about 21 GB RSS
+      # (measured 2026-10-22), above the hosted runner's 16 GB RAM; without swap the
+      # runner is killed (exit 143). Build that module first, on its own, with swap.
+      - name: Add swap on the temporary disk
+        run: |
+          df -h / /mnt
+          sudo fallocate -l 28G /mnt/lean-swap
+          sudo chmod 600 /mnt/lean-swap
+          sudo mkswap /mnt/lean-swap
+          sudo swapon /mnt/lean-swap
+          free -h
+      - name: Build the memory-heavy sparse certificate module first
+        run: lake build LeanCode.YukawaOZ.ExactMSASparseDt2
       - name: Build MSA and first truncation
         run: lake build
