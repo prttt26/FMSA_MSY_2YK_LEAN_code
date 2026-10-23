@@ -27,10 +27,9 @@ feeding in the versions now *derived* from the recognised OZ/Baxter primitives:
 So `exactMSA_factorization_of_oz` produces the MSA factorization from exactly the recognised inputs
 `hbax` (the `c`-side Baxter Eq. 8) and `hgside` (the `g`-side OZ Eq. 32), plus the RDF-side data
 (`g`'s core support, the RDF moment integrability, and the moment identification `ĝ(z) = G`) — no
-free-floating `h29`/`h33`.  Its axiom footprint is the standard three **plus** the single
-physics-computation axiom `exactMSA_hcore` inherited from `exactMSA_factorization` (the sympy-certified
-`Dt¹/Dt²` `hcore` residual — `ring`-infeasible, not a mathematical assumption); the leg-3 derivations
-`h29_of_baxter_exterior` and `h33_of_gside_baxter` add **no** new axiom.
+free-floating `h29`/`h33`. Its axiom footprint is the standard three: scalar
+closure recovery is now proved, including all rational and Fourier bridges.
+The leg-3 derivations add no new axiom.
 -/
 
 open Real MeasureTheory
@@ -65,7 +64,7 @@ theorem exactMSA_factorization_of_oz (xi z Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0
       = 1 - rhoOf xi * (radial_fourier (c_HS xi 1) k
           + radial_fourier (msaCoreCorr xi z Dt G K) k
           + radial_fourier (cMSAtail K z 1) k) :=
-  exactMSA_factorization xi z Dt G K hk hxi1
+  exactMSA_factorization xi z Dt G K hk hxi1 hz
     (h29_of_baxter_exterior xi z Dt G K hz
       (show (1 - xi) ≠ 0 from (show (0:ℝ) < 1 - xi by linarith).ne') hxipos hbax)
     (h33_of_gside_baxter xi z Dt G hz

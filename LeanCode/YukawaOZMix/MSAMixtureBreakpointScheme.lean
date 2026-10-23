@@ -43,6 +43,57 @@ namespace FMSA.ExactMSA.Breakpoint
 
 variable {N : ℕ}
 
+/-- Every finite parameter derivative of the seven-term numerator is the same `gForm`
+with differentiated coefficients. Local finite-order regularity suffices, as supplied
+by a smooth local root branch. The represented quantity is `2*pi*r*c`, not `c` itself. -/
+theorem iteratedDeriv_gForm_eq (c0 c1 c2 c3 c4 cEm cEp : ℝ → ℝ)
+    (z : ℝ) (n : ℕ) (K0 r : ℝ)
+    (h0 : ContDiffAt ℝ n c0 K0) (h1 : ContDiffAt ℝ n c1 K0)
+    (h2 : ContDiffAt ℝ n c2 K0) (h3 : ContDiffAt ℝ n c3 K0)
+    (h4 : ContDiffAt ℝ n c4 K0) (hm : ContDiffAt ℝ n cEm K0)
+    (hp : ContDiffAt ℝ n cEp K0) :
+    iteratedDeriv n
+      (fun K => gForm (c0 K) (c1 K) (c2 K) (c3 K) (c4 K) (cEm K) (cEp K) z r) K0 =
+    gForm (iteratedDeriv n c0 K0) (iteratedDeriv n c1 K0)
+      (iteratedDeriv n c2 K0) (iteratedDeriv n c3 K0) (iteratedDeriv n c4 K0)
+      (iteratedDeriv n cEm K0) (iteratedDeriv n cEp K0) z r := by
+  let coeff : Fin 7 → ℝ → ℝ := ![c0, c1, c2, c3, c4, cEm, cEp]
+  let basis : Fin 7 → ℝ → ℝ := ![fun _ => 1, fun x => x, fun x => x ^ 2,
+    fun x => x ^ 3, fun x => x ^ 4, fun x => Real.exp (-z * x), fun x => Real.exp (z * x)]
+  have hc : ∀ k ∈ (Finset.univ : Finset (Fin 7)), ContDiffAt ℝ n (coeff k) K0 := by
+    intro k _
+    fin_cases k <;> assumption
+  have hfun : (fun K => gForm (c0 K) (c1 K) (c2 K) (c3 K) (c4 K) (cEm K) (cEp K) z r) =
+      (fun K => ∑ k ∈ Finset.univ, coeff k K * basis k r) := by
+    funext K
+    simp [coeff, basis, gForm, Fin.sum_univ_succ]
+    <;> ring
+  rw [hfun, iteratedDeriv_coeffBasis_eq_of_contDiffAt Finset.univ coeff basis n K0 r hc]
+  simp [coeff, basis, gForm, Fin.sum_univ_succ]
+  <;> ring
+
+/-- Dividing the numerator by the fixed radial prefactor preserves the finite
+representation at every parameter order. No Taylor-series convergence is assumed. -/
+theorem iteratedDeriv_coreForm_eq (c0 c1 c2 c3 c4 cEm cEp : ℝ → ℝ)
+    (z : ℝ) (n : ℕ) (K0 r : ℝ)
+    (h0 : ContDiffAt ℝ n c0 K0) (h1 : ContDiffAt ℝ n c1 K0)
+    (h2 : ContDiffAt ℝ n c2 K0) (h3 : ContDiffAt ℝ n c3 K0)
+    (h4 : ContDiffAt ℝ n c4 K0) (hm : ContDiffAt ℝ n cEm K0)
+    (hp : ContDiffAt ℝ n cEp K0) :
+    iteratedDeriv n
+      (fun K => gForm (c0 K) (c1 K) (c2 K) (c3 K) (c4 K) (cEm K) (cEp K) z r /
+        (2 * Real.pi * r)) K0 =
+    gForm (iteratedDeriv n c0 K0) (iteratedDeriv n c1 K0)
+      (iteratedDeriv n c2 K0) (iteratedDeriv n c3 K0) (iteratedDeriv n c4 K0)
+      (iteratedDeriv n cEm K0) (iteratedDeriv n cEp K0) z r / (2 * Real.pi * r) := by
+  have hg : ContDiffAt ℝ n
+      (fun K => gForm (c0 K) (c1 K) (c2 K) (c3 K) (c4 K) (cEm K) (cEp K) z r) K0 := by
+    unfold gForm
+    fun_prop
+  simp_rw [div_eq_mul_inv, mul_comm _ (2 * Real.pi * r)⁻¹]
+  rw [iteratedDeriv_const_mul _ hg,
+    iteratedDeriv_gForm_eq c0 c1 c2 c3 c4 cEm cEp z n K0 r h0 h1 h2 h3 h4 hm hp]
+
 /-- ⭐ **BRK.9 concrete.**  With `K` entering only the coefficients `c0..cEp` (`ContDiff ℝ ⊤`), every
 `K`-derivative of the exact-MSA core form `gForm` is, as a function of `r`, `ContDiffOn ℝ ⊤` on any
 set — the fixed basis `{1, r, r², r³, r⁴, e^{−zr}, e^{zr}}` carries no `K`, so no order adds a

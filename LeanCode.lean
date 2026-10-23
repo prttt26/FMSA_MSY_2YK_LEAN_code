@@ -229,7 +229,7 @@ import LeanCode.Closures.FirstOrderEquivalence
 import LeanCode.Closures.MSASolutionFamily
 import LeanCode.Closures.MSAFamilyConcrete
 
--- Scope + axiom gates, one per claim track (see README "four content tracks").  Imported last,
+-- Foundation scope and axiom gates. Other closures have a downstream package gate. Imported last,
 -- and deliberately: they contain no mathematics, only #guard_msgs blocks asserting the axiom set of
 -- each result the track cites.  `lake build` therefore FAILS if a track's central verification claim
 -- stops being true, instead of that being discovered by re-auditing the ledger by hand.
@@ -237,4 +237,3 @@ import LeanCode.Closures.MSAFamilyConcrete
 -- If a guard here fails, the fix is normally the CLAIM (paper / track ledger), not the guard.
 import LeanCode.FMSAProject
 import LeanCode.ExactMSAProject
-import LeanCode.ClosuresProject

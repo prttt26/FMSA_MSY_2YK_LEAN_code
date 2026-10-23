@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "projects": [
+    "MSA_and_1st_Truncation",
+    "Other_Closures",
+    "SCOZA"
+  ],
+  "source_modules": {
+    "MSA_and_1st_Truncation": 500,
+    "Other_Closures": 42,
+    "SCOZA": 42
+  },
+  "changed_original_modules": [
+    "LeanCode/ClosuresProject.lean",
+    "LeanCode/ExactMSAProject.lean",
+    "LeanCode/Closures/ClosureExpansions.lean",
+    "LeanCode/Closures/DPClosureMap.lean"
+  ],
+  "byte_identical_original_modules": 444,
+  "split_named_declarations_preserved": {
+    "ClosureExpansions": 18,
+    "DPClosureMap": 63
+  },
+  "closure_gates_preserved": true,
+  "reverse_or_sibling_imports": [],
+  "module_ownership_unique": true,
+  "independent_Lake_environments": {
+    "MSA_and_1st_Truncation": [
+      "MSA_and_1st_Truncation"
+    ],
+    "Other_Closures": [
+      "MSA_and_1st_Truncation",
+      "Other_Closures"
+    ],
+    "SCOZA": [
+      "MSA_and_1st_Truncation",
+      "SCOZA"
+    ]
+  },
+  "transitive_dependency_locks_match": true,
+  "toolchain": "leanprover/lean4:v4.31.0",
+  "mathlib_revision": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
+  "foundation_version": "1.0.8",
+  "foundation_manifest_sha256": "c6aff6fba707afb2c29808bfd7421b85f41f98875bee7dc893c55ab5c3f973ca",
+  "legacy_source_paths": "Compatibility symlinks, no duplicated proofs.",
+  "scoza_status": "Equal-diameter finite-tail physical constitutive/energy identification; regular fixed-grid FMSA existence and uniqueness; pure signed-tail energy and attractive diffusion signs. Actual common-potential multi-tail Schur Gram criterion, conditional physical negative-direction witness and classical uniqueness on the regular Gram domain with full common initial/Dirichlet data. Distinct per-tail true potentials have active-tail Schur Gram criteria, universal preservation necessity/sufficiency in the actual equimolar binary model and conditional classical uniqueness. General noncommuting unequal-diameter derivative/packed inverse and compact ellipticity/boundary-lift prerequisites are proved; actual additive unequal-diameter coefficients are crosschecked numerically. Conditional analytical scalar PDE existence holds on fixed smooth uniformly elliptic interior domains; no Lean continuum solution construction. Full frozen unequal-diameter physical identification, uniform admissibility, moving/degenerate boundary and phase existence remain open.",
+  "git_diff_check": "PASS"
+}

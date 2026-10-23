@@ -1,3 +1,4 @@
+import LeanCode.MixtureLegacyRetirementProject
 import LeanCode.YukawaOZMix.MSAMixtureBreakpointConvDirect
 import LeanCode.Closures.FirstOrderEquivalence
 import LeanCode.Closures.MSAFamilyConcrete
@@ -8,6 +9,11 @@ import LeanCode.YukawaOZMix.MSAMixtureSelection
 import LeanCode.YukawaOZ.MSAFactorizationFromOZ
 import LeanCode.YukawaOZMix.MixtureBlumHoyeDerivation
 import LeanCode.YukawaOZMix.MSAMixtureBHRootUneqSmooth
+import LeanCode.YukawaOZMix.FiniteOrderThermo
+import LeanCode.YukawaOZMix.FiniteOrderThresholds
+import LeanCode.MultiTailMSAProject
+import LeanCode.YukawaOZMix.MSABHierarchy
+import LeanCode.MSABSourceProject
 
 /-!
 # Exact-MSA track — scope and axiom gate
@@ -29,16 +35,66 @@ together with everything about the **FMSA ↔ exact-MSA relationship**:
 Like `FMSAProject.lean`, every `#guard_msgs` block below fails the build if the axiom set of that
 declaration changes. All results guarded here are **axiom-clean** (the standard three only).
 
-⚠ **Out of scope by design.** The MSAEXACT.6 / MSAEMIX.1 `hcore` closure-recovery *rings* were
-measured `ring`-infeasible; their Fourier layer is discharged from ONE pure-k-space sympy residual
-per ring — `exactMSA_kspace_residual` and `matExactMSAEqualDiam_kspace_residual` — carried by the
-**out-of-`defaultTargets`** certificate libs `ExactMSACertificate` /
-`MatExactMSAEqualDiamCertificate` (`lake build <lib>` on demand).  Those are deliberately **not**
-imported or gated here, so the default
-build's footprint stays honest — exactly as `FMSAProject.lean` leaves `matOzStar_unique` un-gated.
+**Scalar closure recovery is now included.** The sparse certificate checker and
+rational/Fourier bridges discharge `exactMSA_hcore` on the regular physical domain.
+The scalar factorization and its OZ-derived version are gated below with only
+Lean's standard three axioms. This does not certify finite-order thermodynamics.
+
+**The mixture matrix closure is now proved.** The four former SymPy-supported
+matrix axioms, including the equal-diameter pure-k-space residual, are
+kernel-checked theorems on an explicit physical domain. The original DCF
+formulas are retained, and `MixtureLegacyRetirementProject` imports and
+guards the migrated interfaces and their bridges in the default target.
 FOEQ's own gates (the general-order first-order-equivalence theorems the FMSA-DP paper consumes)
 live in `FMSAProject.lean`; only the exact-MSA-side bridge result MSAEXACT.5 is gated here.
 -/
+
+/-! ## Finite-order thermodynamic algebra
+
+Prescribed coefficients only: these gates certify the truncation identities,
+not numerical spinodals, phase accuracy, or existence of a physical MSA branch.
+-/
+
+/-- info: 'FMSA.ExactMSA.FiniteOrderThermo.amplitudeJet_continuous' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.FiniteOrderThermo.amplitudeJet_continuous
+
+/-- info: 'FMSA.ExactMSA.FiniteOrderThermo.amplitudeJet_sq_eq_trunc_add_remainder' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.FiniteOrderThermo.amplitudeJet_sq_eq_trunc_add_remainder
+
+/-- info: 'FMSA.ExactMSA.FiniteOrderThermo.firstOrder_spinodal_factor_value' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.FiniteOrderThermo.firstOrder_spinodal_factor_value
+
+/-- info: 'FMSA.ExactMSA.FiniteOrderThermo.secondOrder_square_remainder' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs in
+#print axioms FMSA.ExactMSA.FiniteOrderThermo.secondOrder_square_remainder
+
+/-! ## Finite-order threshold certificates
+
+Signs and derivative-root uniqueness for the explicit scalar formulas. Their
+physical identification is symbolically checked outside Lean; these gates
+neither import a new physical axiom nor certify numerical phase accuracy.
+-/
+
+/-- info: 'FMSA.ExactMSA.FiniteOrderThresholds.attractive_oneYukawa_secondOrder_reentry' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms FMSA.ExactMSA.FiniteOrderThresholds.attractive_oneYukawa_secondOrder_reentry
+
+/-- info: 'FMSA.ExactMSA.FiniteOrderThresholds.firstOrderDerivative_atMostOne_positiveRoot' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms FMSA.ExactMSA.FiniteOrderThresholds.firstOrderDerivative_atMostOne_positiveRoot
+
+/-- info: 'FMSA.ExactMSA.FiniteOrderThresholds.finite_order_positive_near_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms FMSA.ExactMSA.FiniteOrderThresholds.finite_order_positive_near_zero
 
 /-! ## The exact-MSA mixture core (BRK.16) — axiom-free -/
 
@@ -84,6 +140,10 @@ live in `FMSAProject.lean`; only the exact-MSA-side bridge result MSAEXACT.5 is 
 #guard_msgs in
 #print axioms MSAMixture.bh41_iff_contact_symm
 
+/-- info: 'FMSA.ExactMSA.exactMSA_factorization' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms FMSA.ExactMSA.exactMSA_factorization
+
 /-! ## The leg-3 (`N = 1`) Blum–Høye derivation — `h29`/`h33` from the OZ primitives
 
 The scalar Blum–Høye constraints Eq. (29) `Dt·bhF = 2πK/z` and Eq. (33) `2πG·bhF = bhP` are **derived**
@@ -93,8 +153,8 @@ transformed at `s = z` — its OZ-convolution term folded by the fully-proved La
 theorem `laplace_conv_eq_rdf_mul_qhat_of_integrable` (no Fubini hypothesis; only the physical `L¹`
 integrability of the RDF and Baxter moments).  `exactMSA_factorization_of_oz` then feeds the derived
 `h29`/`h33` into `exactMSA_factorization`, so the MSA factorization stands on the OZ primitives with
-**no new axiom** — its footprint is the standard three plus the single pre-existing physics-computation
-axiom `exactMSA_hcore`.  All `#guard_msgs` below fail the build if these footprints change. -/
+**only the standard three axioms** — scalar closure recovery is proved on the
+regular domain, rather than inherited as a physics-computation axiom.  All `#guard_msgs` below fail the build if these footprints change. -/
 
 /-- info: 'FMSA.ExactMSA.h29_of_baxter_exterior' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
@@ -119,18 +179,17 @@ info: 'FMSA.ExactMSA.GSide.laplace_conv_eq_rdf_mul_qhat_of_integrable' depends o
 /--
 info: 'FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz' depends on axioms: [propext,
  Classical.choice,
- Quot.sound,
- FMSA.ExactMSA.exactMSA_hcore]
+ Quot.sound]
 -/
-#guard_msgs in
+#guard_msgs (whitespace := lax) in
 #print axioms FMSA.ExactMSA.GSide.exactMSA_factorization_of_oz
 
 /-! **The scalar OZ primitives ARE the root conditions** (`hbax`/`hgside` discharged, both directions).
 `hbax_iff_h29` (exterior Baxter Eq 8 `⟺` Eq 29; forward `h29_of_baxter_exterior`, reverse `hbax_of_h29`)
 and `hgside_iff_h33` (g-side OZ Eq 32 Laplace `⟺` Eq 33; forward `h33_of_gside_baxter`, reverse
 `hgside_of_h33`) — the scalar analogs of the mixture `mat_hbax_iff_cside` / `mat_hgside_iff_gside`, both
-complete iffs with the concrete `bhBaxterFn`/`bhBaxterSupp`.  Full unconditional discharge is the
-`exactMSA_hcore` ring (as `exactMSA_factorization_of_oz`'s footprint shows). -/
+complete iffs with the concrete `bhBaxterFn`/`bhBaxterSupp`. Scalar closure recovery
+is proved, so the resulting factorization has only the standard three axioms. -/
 
 /-- info: 'FMSA.ExactMSA.GSide.hbax_iff_h29' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
@@ -307,26 +366,18 @@ reverse `mat_hbax_of_cside`) and `mat_hgside_iff_gside` (forward `gside_33_of_hg
 `matMSAmixture_unequalDiam_of_oz` chains `MixBHRootUneq_of_oz_full` (the posited root derived from the OZ
 primitives) into the capstone `MSAMixture.matMSAmixture_unequalDiam_of_hcore`, so the full unequal-σ MSA
 mixture factorization stands on the OZ primitives (`hbax` + `hgside_mix` + RDF-side data), the HS side by
-free `ftilde` algebra.  Its footprint is **std-3 + the single physics axiom `matExactMSAUnequalDiam_hcore`**
-— identical in shape to the scalar `exactMSA_factorization_of_oz` (std-3 + `exactMSA_hcore`); the leg-3
-derivation adds **no** axiom.  The `_physical` form (radial-Fourier RHS, matching the scalar conclusion
-shape) additionally carries `matHSexactUnequalDiam_kspace`, the mixture HS Baxter–Fourier anchor (where the
-scalar `radial_fourier(c_HS)` is a proved closed form). -/
+free `ftilde` algebra. Its footprint uses only the standard three axioms.
+The physical radial-Fourier version also uses only the standard three:
+both nonlinear closure recovery and the HS Fourier anchor are now proved.
+The migrated interfaces explicitly require the regular physical domain. -/
 
-/--
-info: 'FMSA.ExactMSA.MixLeg3.matMSAmixture_unequalDiam_of_oz' depends on axioms: [propext,
- Classical.choice,
- MSAMixture.matExactMSAUnequalDiam_hcore,
- Quot.sound]
--/
+/-- info: 'FMSA.ExactMSA.MixLeg3.matMSAmixture_unequalDiam_of_oz' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms FMSA.ExactMSA.MixLeg3.matMSAmixture_unequalDiam_of_oz
 
 /--
 info: 'FMSA.ExactMSA.MixLeg3.matMSAmixture_unequalDiam_physical_of_oz' depends on axioms: [propext,
  Classical.choice,
- MSAMixture.matExactMSAUnequalDiam_hcore,
- MSAMixture.matHSexactUnequalDiam_kspace,
  Quot.sound]
 -/
 #guard_msgs in

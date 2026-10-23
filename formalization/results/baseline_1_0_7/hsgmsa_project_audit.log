@@ -1,0 +1,3 @@
+PASS: FMSA_HSGMSA depends only on verified foundation 1.0.7.
+warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/FMSA_HSGMSA/../.lake/packages/batteries' has local changes
+PASS: FMSA_HSGMSA ownership, transitive locks, and independent Lake environment.

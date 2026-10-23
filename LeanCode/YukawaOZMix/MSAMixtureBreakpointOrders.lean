@@ -69,6 +69,25 @@ theorem jump_all_orders_vanish
   rw [hx0ev.iteratedDeriv_eq n]
   exact iteratedDeriv_zero_fun n x₀
 
+/-- Parameter derivatives of a finite fixed spatial basis remain in that basis.
+Only differentiability at the parameter value, to the requested finite order, is needed.
+This is an equality of representations, stronger than spatial smoothness; it makes no
+claim about convergence of the full Taylor series or about a physical closure. -/
+theorem iteratedDeriv_coeffBasis_eq_of_contDiffAt {Index : Type*} (I : Finset Index)
+    (c b : Index → ℝ → ℝ) (n : ℕ) (K0 r : ℝ)
+    (hc : ∀ k ∈ I, ContDiffAt ℝ n (c k) K0) :
+    iteratedDeriv n (fun K => ∑ k ∈ I, c k K * b k r) K0 =
+      ∑ k ∈ I, b k r * iteratedDeriv n (c k) K0 := by
+  have hca : ∀ k ∈ I,
+      ContDiffAt ℝ n (fun K => c k K * b k r) K0 := fun k hk =>
+    (hc k hk).mul contDiffAt_const
+  rw [iteratedDeriv_fun_sum hca]
+  refine Finset.sum_congr rfl (fun k hk => ?_)
+  have hcomm : (fun K => c k K * b k r) = (b k r * c k ·) := by
+    funext K
+    ring
+  rw [hcomm, iteratedDeriv_const_mul (b k r) (hc k hk)]
+
 /-- ⭐ **BRK.9 (Step 2) — abstract core, the non-MSEMIX half.**  If the coupling `K` enters a
 piecewise function only through the scalar coefficients `c k` — the `r`-basis `b k` **fixed** and
 smooth on an open piece `s` — then every `K`-derivative `∂ⁿ_K (Σ_k c k(K)·b k(r))` is, in `r`,
@@ -86,12 +105,8 @@ theorem contDiffOn_paramDeriv_coeffBasis {ι : Type*} (I : Finset ι) (c b : ι 
   have hcompute : (fun r => iteratedDeriv n (fun K => ∑ k ∈ I, c k K * b k r) K₀)
       = (fun r => ∑ k ∈ I, b k r * iteratedDeriv n (c k) K₀) := by
     funext r
-    have hca : ∀ k ∈ I, ContDiffAt ℝ (n : WithTop ℕ∞) (fun K => c k K * b k r) K₀ := fun k hk =>
-      ((hc k hk).contDiffAt.mul contDiffAt_const).of_le le_top
-    rw [iteratedDeriv_fun_sum hca]
-    refine Finset.sum_congr rfl (fun k hk => ?_)
-    have hcomm : (fun K => c k K * b k r) = (b k r * c k ·) := by funext K; ring
-    rw [hcomm, iteratedDeriv_const_mul (b k r) ((hc k hk).contDiffAt.of_le le_top)]
+    exact iteratedDeriv_coeffBasis_eq_of_contDiffAt I c b n K₀ r
+      (fun k hk => (hc k hk).contDiffAt.of_le le_top)
   rw [hcompute]
   exact ContDiffOn.sum (fun k hk => (hb k hk).mul contDiffOn_const)
 

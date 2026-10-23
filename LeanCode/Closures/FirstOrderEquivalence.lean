@@ -619,11 +619,11 @@ rest of the paper consumes.  The product rule becomes the **general Leibniz rule
 (`iteratedDeriv_mul`), and the hypothesis relaxes to `γ`-fold differentiability — still strictly
 weaker than analyticity, so the coupling series need never converge.
 
-⭐ The payoff is a sharper statement of what "first order" *is*: the middle convolution
-`∑_{m=1}^{γ−1} H̃_m C̃_{γ−m}` is **empty at `γ = 1` and nowhere else** (`FOEQ.9`).  That emptiness — not
-the perturbation theory — is what makes the solution map linear (PYE.2) and the residue sum
-terminate; from `γ = 2` the sum drags in `h⁽¹⁾` (built from `[Q̂₀]⁻¹`), which is §XII's obstruction.
-The theory is equally well defined at every order; only *solvability in finite closed form* is special.
+The middle convolution `∑_{m=1}^{γ−1} H̃_m C̃_{γ−m}` is **empty at `γ = 1` and nowhere else**
+(`FOEQ.9`). Higher orders therefore have lower-order products as sources. This combinatorial
+fact does not establish surviving spectral poles or exclude finite spatial representations
+of the final DCF. Such conclusions require the complete expression, including cancellations;
+parameter derivatives of a fixed finite Baxter basis retain that basis.
 -/
 
 section FOEQAllOrders
@@ -727,10 +727,9 @@ theorem oz_deriv_eq_firstOrderLine_of_taylor (H C : ℝ → 𝔸)
 
 /-- **FOEQ.9 (record only) — what is special about first order.**  The middle convolution
 `∑_{m=1}^{γ−1} H̃_m C̃_{γ−m}` is **empty exactly when `γ = 1`** (`Finset.Ico 1 γ = ∅ ↔ γ = 1`, for
-`γ ≥ 1`).  That emptiness — a fact about `Finset.range`, nothing about the expansion — is what makes
-the solution map linear and the residue sum terminate; from `γ = 2` the sum drags in `h⁽¹⁾` (built
-from `[Q̂₀]⁻¹`), which is §XII's obstruction.  The theory is equally well defined at every order; only
-solvability in finite closed form is special to `γ = 1`. -/
+`γ ≥ 1`). This is solely a statement about the index set. A nonempty source sum does not prove
+that it is nonzero, that poles survive in the final DCF, or that its spatial representation
+requires an infinite series. -/
 theorem cauchy_convolution_middle_empty_iff {γ : ℕ} (hγ : 1 ≤ γ) :
     Finset.Ico 1 γ = ∅ ↔ γ = 1 := by
   rw [Finset.Ico_eq_empty_iff]
@@ -739,5 +738,4 @@ theorem cauchy_convolution_middle_empty_iff {γ : ℕ} (hγ : 1 ≤ γ) :
 end FOEQAllOrders
 
 end FMSA.FirstOrderEquivalence
-
 

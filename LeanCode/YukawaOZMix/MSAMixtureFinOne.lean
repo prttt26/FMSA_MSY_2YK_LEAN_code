@@ -18,7 +18,7 @@ import LeanCode.HSMixture.MixtureNoSpinodalN1
 Group **MSAEMIX**.  `matMSAmixture_equalDiam_WH` reduces the HS symmetric factorization to the shared
 WH atoms.  At `N = 1` those atoms are **fully proved** — the scalar Baxter Wiener–Hopf
 (`baxter_wiener_hopf_complex`) — so this file lands the `N = 1` MSAEMIX.1 factorization depending
-only on `MixBHRoot` and the physics axiom `matExactMSAEqualDiam_hcore`, with **no** HS hypothesis.
+only on `MixBHRoot` and the proved closure theorem `matExactMSAEqualDiam_hcore`, with **no** HS hypothesis.
 
 The one bridge: the `N = 1` symmetric HS factor `FtHS` (√-weighted complex-Laplace `qhatMixC`)
 equals the scalar HS Baxter factor `1 − Q̂_complex(k)` (real-space cosine/sine).  Both are the same
@@ -92,15 +92,15 @@ theorem FtHS_mul_fin_one (rho sigma : Fin 1 → ℝ) (z : ℝ) {k : ℝ} (hk : k
   rw [hwh, Chat_complex_eq_radial_fourier hsig]
   push_cast; ring
 
-/-! ### MSAEMIX.1 at `N = 1` — fully discharged (only `MixBHRoot` + the physics axiom) -/
+/-! ### MSAEMIX.1 at `N = 1` — fully discharged (only `MixBHRoot` + the proved closure theorem) -/
 
 /-- ⭐⭐⭐ **MSAEMIX.1 at `N = 1`, HS Wiener–Hopf fully discharged.**  At one component, given only the
 Blum–Høye root `MixBHRoot` (and `η < 1`, `σ > 0`, `ρ ≥ 0`), the MSA symmetric Baxter factorization
 holds with the physical HS DCF `ρ₀·𝓕[c_HS]` — **no** `hHS`/`hWH`/`hKDEF`/`hbridge` hypothesis (the
-scalar Baxter WH `baxter_wiener_hopf_complex` discharges them).  Its only physics axiom is
-`matExactMSAEqualDiam_hcore`; `#print axioms` = the standard three + that axiom. -/
+scalar Baxter WH `baxter_wiener_hopf_complex` discharges them).  Its only closure theorem is
+`matExactMSAEqualDiam_hcore`; `#print axioms` uses only the standard three. -/
 theorem matMSAmixture_fin_one (rho sigma : Fin 1 → ℝ) (z : ℝ) (Gt Dt K : Matrix (Fin 1) (Fin 1) ℝ)
-    {k : ℝ} (hk : k ≠ 0) (hsig : 0 < sigma 0) (hrho : 0 ≤ rho 0) (hlt : etaMix rho sigma < 1)
+    {k : ℝ} (hk : k ≠ 0) (hsig : 0 < sigma 0) (hrho : 0 ≤ rho 0) (hlt : etaMix rho sigma < 1) (hz : 0 < z)
     (hroot : MixBHRoot z (sigma 0) rho sigma Gt Dt K) (i j : Fin 1) :
     ((FtHS z (sigma 0) rho sigma (Complex.I * k) + Ft1 z (sigma 0) rho sigma Gt Dt (Complex.I * k))
         * (FtHS z (sigma 0) rho sigma (-(Complex.I * k))
@@ -111,6 +111,9 @@ theorem matMSAmixture_fin_one (rho sigma : Fin 1 → ℝ) (z : ℝ) (Gt Dt K : M
               * ((radial_fourier (matMSACoreCorr z rho sigma Gt Dt K i j) k : ℂ)
                 + (radial_fourier (matMSAtail K z sigma i j) k : ℂ))) :=
   matMSAmixture_equalDiam z (sigma 0) rho sigma Gt Dt K k (fun i => by fin_cases i; rfl) hroot
+    hz hk hsig (fun i => by fin_cases i; exact hrho)
+    (by unfold vacMix; linarith)
+    (fun a b => by fin_cases a; fin_cases b; rfl)
     (fun _ _ => ((rho 0 * radial_fourier (c_HS (etaMix rho sigma) (sigma 0)) k : ℝ) : ℂ))
     (FtHS_mul_fin_one rho sigma z hk hsig hrho hlt) i j
 
@@ -122,10 +125,10 @@ modulus** `A² + B² = 1 − ρ₀·ĉ`, `ĉ = 𝓕[c_HS] + 𝓕[c_core] + 𝓕[
 `MSAEXACT.1`'s `factorization_of_core` conclusion (`A = 1 − ρReQ̂`, `B = ρImQ̂`), so the
 one-component mixture *is* the scalar exact-MSA.  Positivity half: `mixCompressibility_fin_one` /
 `mixStability_fin_one` (`MSAMixturePositivity.lean`) reduce the matrix `(39)` / stability det to the
-scalar `ρB²` / `B²`.  Footprint = std-3 + `matExactMSAEqualDiam_hcore` (inherited). -/
+scalar `ρB²` / `B²`.  Footprint = std-3. -/
 theorem msaMixture_reduces_to_scalar_at_fin_one (rho sigma : Fin 1 → ℝ) (z : ℝ)
     (Gt Dt K : Matrix (Fin 1) (Fin 1) ℝ) {k : ℝ} (hk : k ≠ 0) (hsig : 0 < sigma 0)
-    (hrho : 0 ≤ rho 0) (hlt : etaMix rho sigma < 1)
+    (hrho : 0 ≤ rho 0) (hlt : etaMix rho sigma < 1) (hz : 0 < z)
     (hroot : MixBHRoot z (sigma 0) rho sigma Gt Dt K) (A B : ℝ)
     (hfull : (FtHS z (sigma 0) rho sigma (Complex.I * k)
         + Ft1 z (sigma 0) rho sigma Gt Dt (Complex.I * k)) 0 0 = (A : ℂ) - Complex.I * (B : ℂ))
@@ -136,7 +139,7 @@ theorem msaMixture_reduces_to_scalar_at_fin_one (rho sigma : Fin 1 → ℝ) (z :
           + radial_fourier (matMSACoreCorr z rho sigma Gt Dt K 0 0) k
           + radial_fourier (matMSAtail K z sigma 0 0) k) := by
   refine (matMixtureFactorization_fin_one_iff A B _ (rho 0) _ _ hfull hfullneg).mp ?_
-  rw [matMSAmixture_fin_one rho sigma z Gt Dt K hk hsig hrho hlt hroot 0 0,
+  rw [matMSAmixture_fin_one rho sigma z Gt Dt K hk hsig hrho hlt hz hroot 0 0,
     Real.sqrt_mul_self hrho, if_pos rfl]
   push_cast
   ring

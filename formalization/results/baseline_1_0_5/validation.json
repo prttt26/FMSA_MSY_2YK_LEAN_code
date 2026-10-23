@@ -1,0 +1,509 @@
+{
+  "status": "PASS",
+  "validated_at_utc": "2026-10-22T22:59:41.573152+00:00",
+  "toolchain": "leanprover/lean4:v4.31.0",
+  "foundation_version": "1.0.5",
+  "foundation_manifest_sha256": "6febda70876ccced855b4cf6e1ab6f14bd9249b7b616cf89c9f804265e04737e",
+  "foundation_audit": "PASS: foundation 1.0.5, 493 source/config hashes.",
+  "foundation_matches_manifest": true,
+  "check_script_sha256": "6128c333aef3c9ef776f0228d1a89f01646b068dc50fed20d9725c72c9cffc93",
+  "dependencies": {
+    "mathlib": {
+      "head": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
+      "status": ""
+    },
+    "batteries": {
+      "head": "fa08db58b30eb033edcdab331bba000827f9f785",
+      "status": "T docs/README.md"
+    }
+  },
+  "theorem_count": 162,
+  "standard_axioms_only": true,
+  "modules": [
+    {
+      "source": "FMSAPaper/AbelEndpoint.lean",
+      "source_sha256": "15fea1693927849cf36b8efcaf73a4b6cd16f0737604b85736d74dc963da4a05",
+      "theorems": [
+        "FMSA.Paper.Abel.coordinatewise_abel",
+        "FMSA.Paper.Abel.powerSeries_analytic_of_hasSum",
+        "FMSA.Paper.Abel.residual_at_limit",
+        "FMSA.Paper.Abel.actual_residual_analytic",
+        "FMSA.Paper.Abel.amplitudeSeries_abel",
+        "FMSA.Paper.Abel.actual_msa_root_of_endpoint_convergence",
+        "FMSA.Paper.Abel.not_endpoint_convergence_of_no_real_root",
+        "FMSA.Paper.Abel.actual_msa_root_inside_of_local_identity",
+        "FMSA.Paper.Abel.actual_msa_endpoint_of_local_identity",
+        "FMSA.Paper.Abel.not_endpoint_convergence_of_local_identity_and_no_real_root"
+      ],
+      "guard_count": 10,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/AbelEndpoint.olean",
+      "artifact_sha256": "ba7b110fe89b8d0c5efb6d6cabfdcd034f7cb5803e9ccd9ba2a62522525e6abc"
+    },
+    {
+      "source": "FMSAPaper/ActualBaxterBoundaryJets.lean",
+      "source_sha256": "0bd8bddaf5763799155daa4b5041be8270461b478a1e09e16af41534efc0cc10",
+      "theorems": [
+        "FMSA.Paper.ActualBaxterBoundaryJets.lowerJump_eq_factor",
+        "FMSA.Paper.ActualBaxterBoundaryJets.convolution_with_lowerJump_jet",
+        "FMSA.Paper.ActualBaxterBoundaryJets.ordered_lowerJump_jet_zero"
+      ],
+      "guard_count": 3,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/ActualBaxterBoundaryJets.olean",
+      "artifact_sha256": "d3840ddef8856c852b24eee959945e6e65d03b6bfbb72204c7f6f9dd0d6ddafb"
+    },
+    {
+      "source": "FMSAPaper/ActualBaxterJets.lean",
+      "source_sha256": "fa15d1059b62ff9847b1e45bc7a5db76a7ed6e21aa4ce6302613d31093bcb216",
+      "theorems": [
+        "FMSA.Paper.ActualBaxterJets.factor_jet_basis",
+        "FMSA.Paper.ActualBaxterJets.factorPrime_jet_basis",
+        "FMSA.Paper.ActualBaxterJets.convolution_jet_cauchy"
+      ],
+      "guard_count": 3,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/ActualBaxterJets.olean",
+      "artifact_sha256": "397e84adaf5ff159a57f25776b72adcbad121122209a6224eef79f5af827e7e6"
+    },
+    {
+      "source": "FMSAPaper/ActualBaxterSuperposition.lean",
+      "source_sha256": "98763a6f09602ac20ed847b678a85a615e4df095e3b15d91e5d049b48654b27e",
+      "theorems": [
+        "FMSA.Paper.ActualBaxterSuperposition.factor_split",
+        "FMSA.Paper.ActualBaxterSuperposition.prime_split",
+        "FMSA.Paper.ActualBaxterSuperposition.polynomial_numerator_rate",
+        "FMSA.Paper.ActualBaxterSuperposition.actual_superposition"
+      ],
+      "guard_count": 4,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/ActualBaxterSuperposition.olean",
+      "artifact_sha256": "a17bd7853f58efeb59ac2603d908e592c7b640329a064ffc6701da1f9bd7dacd"
+    },
+    {
+      "source": "FMSAPaper/ActualMixedRateCross.lean",
+      "source_sha256": "0a9944a2a20daf20bd98484436a0d325a3854bee514cfdeda6653b4c2b0d40c8",
+      "theorems": [
+        "FMSA.Paper.ActualMixedRateCross.pure_factor_formula",
+        "FMSA.Paper.ActualMixedRateCross.pure_prime_formula",
+        "FMSA.Paper.ActualMixedRateCross.actual_cross_eq",
+        "FMSA.Paper.ActualMixedRateCross.actual_cross_inner_fixed_span",
+        "FMSA.Paper.ActualMixedRateCross.actual_cross_outer_fixed_span"
+      ],
+      "guard_count": 5,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/ActualMixedRateCross.olean",
+      "artifact_sha256": "53a504cbfd147ca5d65781d2370595d66607f9269652022f70d465839d2d47d0"
+    },
+    {
+      "source": "FMSAPaper/ActualRadialIdentification.lean",
+      "source_sha256": "f00f01597e9012b9a29ca54ddc6304bdbcd77fe4c7e1f6e91d5cbc6171c412c6",
+      "theorems": [
+        "FMSA.Paper.ActualRadialIdentification.root_primitive_reciprocity",
+        "FMSA.Paper.ActualRadialIdentification.root_core_reciprocity",
+        "FMSA.Paper.ActualRadialIdentification.root_radial_fourier",
+        "FMSA.Paper.ActualRadialIdentification.local_root_radial_fourier"
+      ],
+      "guard_count": 4,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/ActualRadialIdentification.olean",
+      "artifact_sha256": "d0b996146fb382e261dbf70fbd6128f9de5e5e38a9addea1fbcff76ae3334660"
+    },
+    {
+      "source": "FMSAPaper/ActualSpatialJets.lean",
+      "source_sha256": "0f4c16cd6ce05362502298d6a9b65db0100ba43fc1c0603fba25e4b51c7a15b6",
+      "theorems": [
+        "FMSA.Paper.ActualSpatialJets.weighted_correlation_hasForm",
+        "FMSA.Paper.ActualSpatialJets.core_jet_hasForm_of_numerator",
+        "FMSA.Paper.ActualSpatialJets.core_jet_inner_hasForm",
+        "FMSA.Paper.ActualSpatialJets.core_jet_outer_hasForm",
+        "FMSA.Paper.ActualSpatialJets.coefficient_contDiffOn_of_weighted",
+        "FMSA.Paper.ActualSpatialJets.core_jet_contDiffOn"
+      ],
+      "guard_count": 6,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/ActualSpatialJets.olean",
+      "artifact_sha256": "2ec645981e40577fe64c3d85a4b79e4a74491431c63525ab2a21262f2ff96575"
+    },
+    {
+      "source": "FMSAPaper/ActualStrengthJets.lean",
+      "source_sha256": "e43722a0cefdd1e39f11bdf754e33f64b6f608e6b41d577837558a0f4121fe09",
+      "theorems": [
+        "FMSA.Paper.ActualStrengthJets.strength_root_on_ray",
+        "FMSA.Paper.ActualStrengthJets.seed_branch_eq_strength_ray",
+        "FMSA.Paper.ActualStrengthJets.actual_jets_homogeneous_polynomial"
+      ],
+      "guard_count": 3,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/ActualStrengthJets.olean",
+      "artifact_sha256": "75941cf38035d54513fe306a15125166ae16d103fbbf7da063e070980309355d"
+    },
+    {
+      "source": "FMSAPaper/BaxterNormalization.lean",
+      "source_sha256": "2ea30704c0cb004df5c54be5255d4c03d497a6af3cc9c9f0e5bd4ce9d8948d35",
+      "theorems": [
+        "FMSA.Paper.BaxterNormalization.primitive_hasDerivAt",
+        "FMSA.Paper.BaxterNormalization.primitive_shell_window",
+        "FMSA.Paper.BaxterNormalization.factorPrime_contDiff",
+        "FMSA.Paper.BaxterNormalization.convolution_contDiff",
+        "FMSA.Paper.BaxterNormalization.correlation_jet_cauchy",
+        "FMSA.Paper.BaxterNormalization.jet_div_const",
+        "FMSA.Paper.BaxterNormalization.normalized_correlation_jet_cauchy"
+      ],
+      "guard_count": 7,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/BaxterNormalization.olean",
+      "artifact_sha256": "58acd70bc0291f282a3f6c4ca667fe30165d97ea3d4e9c533d42f51abf1de611"
+    },
+    {
+      "source": "FMSAPaper/BaxterSuperposition.lean",
+      "source_sha256": "cf9c82811b8ba7dd496be20cbaa8480ddcd5ae9d7541260fb57e9909eab19e67",
+      "theorems": [
+        "FMSA.Paper.BaxterSuperposition.integral_product_sum",
+        "FMSA.Paper.BaxterSuperposition.integral_product_pair",
+        "FMSA.Paper.BaxterSuperposition.quadratic_superposition",
+        "FMSA.Paper.BaxterSuperposition.cross_add_sum",
+        "FMSA.Paper.BaxterSuperposition.numerator_superposition"
+      ],
+      "guard_count": 5,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/BaxterSuperposition.olean",
+      "artifact_sha256": "dcaeb80e1fe8ab6d7e4e180172ec7f470218d6fe4fe7d6ca28b87caa441e5d3f"
+    },
+    {
+      "source": "FMSAPaper/FiniteBasisJets.lean",
+      "source_sha256": "0a5a58c58c8ddd3e36343480f267603f44a0d66e4250819574b44ea8537f4571",
+      "theorems": [
+        "FMSA.Paper.FiniteBasis.jet_sum",
+        "FMSA.Paper.FiniteBasis.jet_mul_const",
+        "FMSA.Paper.FiniteBasis.jet_linear",
+        "FMSA.Paper.FiniteBasis.jet_bilinear",
+        "FMSA.Paper.FiniteBasis.jet_linear_add_bilinear",
+        "FMSA.Paper.FiniteBasis.jet_of_local_baxter_identity",
+        "FMSA.Paper.FiniteBasis.integral_expansion",
+        "FMSA.Paper.FiniteBasis.evaluation_expansion",
+        "FMSA.Paper.FiniteBasis.integral_add_jump_expansion",
+        "FMSA.Paper.FiniteBasis.jet_integral_add_jump"
+      ],
+      "guard_count": 10,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/FiniteBasisJets.olean",
+      "artifact_sha256": "659ce0dd09f8666198286c271584928c8c2c4a1bf09108e0f19a33a2a7c1c2e3"
+    },
+    {
+      "source": "FMSAPaper/FoldObstruction.lean",
+      "source_sha256": "810acc1c8d0c8cc230e75f87fb8e146af26a6935a63d845330183e71540ea37a",
+      "theorems": [
+        "FMSA.Paper.Fold.coupling_derivative_mem_range",
+        "FMSA.Paper.Fold.not_differentiable_root",
+        "FMSA.Paper.Fold.not_analytic_root"
+      ],
+      "guard_count": 3,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/FoldObstruction.olean",
+      "artifact_sha256": "8f2f512396eb2377abcb72ad2e92e836ccbc7640cb39346488d710f02acac670"
+    },
+    {
+      "source": "FMSAPaper/FoldRadius.lean",
+      "source_sha256": "89588d19d77d7fa00d63f3c84c5988801e7894fb95443af16d37b52ea69c9549",
+      "theorems": [
+        "FMSA.Paper.FoldRadius.analytic_root_of_convergence_at",
+        "FMSA.Paper.FoldRadius.actual_nonconvergence_beyond_fold",
+        "FMSA.Paper.FoldRadius.hasSum_inside_amplitudeRadius",
+        "FMSA.Paper.FoldRadius.amplitudeRadius_le_of_nonconvergence",
+        "FMSA.Paper.FoldRadius.actual_radius_le_fold"
+      ],
+      "guard_count": 5,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/FoldRadius.olean",
+      "artifact_sha256": "b2fbd0e910a2e4147eb4fe0f557a1a3d2b2cb9154be1b86e8d1f6080dbd6193c"
+    },
+    {
+      "source": "FMSAPaper/HomogeneousJets.lean",
+      "source_sha256": "25b1e8f22244480438d8451b6092c464c3bab5169170b200f083ac564a561442",
+      "theorems": [
+        "FMSA.Paper.HomogeneousJets.iteratedFDeriv_comp_linear_at",
+        "FMSA.Paper.HomogeneousJets.ray_jet_eq_multilinear",
+        "FMSA.Paper.HomogeneousJets.multilinear_diagonal_expansion",
+        "FMSA.Paper.HomogeneousJets.ray_jets_are_homogeneous_polynomials"
+      ],
+      "guard_count": 4,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/HomogeneousJets.olean",
+      "artifact_sha256": "6a8187d8f8311556ecb3c7f2c6fc2d3df1a161a118e60104ae6398201507ec01"
+    },
+    {
+      "source": "FMSAPaper/LocalBranch.lean",
+      "source_sha256": "118aa483f11401f448d72afe7745816cfc36f7ac260f0f3f11a15ecfeab081a0",
+      "theorems": [
+        "FMSA.Paper.LocalBranch.continuous_roots_eventuallyEq",
+        "FMSA.Paper.LocalBranch.actual_seed_roots_eventuallyEq"
+      ],
+      "guard_count": 2,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/LocalBranch.olean",
+      "artifact_sha256": "76f4c7616a2a981743c145804e7b8080d3447016c8ca8a04def4c1f75449ac37"
+    },
+    {
+      "source": "FMSAPaper/MixedRateCross.lean",
+      "source_sha256": "ef40b6438556d1de52d14fcb776457742e55a663d05625bb0a3df66cd2413795",
+      "theorems": [
+        "FMSA.Paper.MixedRateCross.tail_plateau_integrable",
+        "FMSA.Paper.MixedRateCross.cross_expansion",
+        "FMSA.Paper.MixedRateCross.cross_inner_form",
+        "FMSA.Paper.MixedRateCross.cross_middle_form",
+        "FMSA.Paper.MixedRateCross.cross_inner_fixed_span",
+        "FMSA.Paper.MixedRateCross.cross_middle_fixed_span"
+      ],
+      "guard_count": 6,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/MixedRateCross.olean",
+      "artifact_sha256": "91ea58333d2986650a45a1fb0d509c85c7698765719313d06abd31e0beebcc60"
+    },
+    {
+      "source": "FMSAPaper/MixedRatePlateau.lean",
+      "source_sha256": "6ee9b29bba3e8fc8863cae64a5c8e8000df71c2bb27682d1b0305ad5496a381a",
+      "theorems": [
+        "FMSA.Paper.MixedRatePlateau.plateau_piecewise",
+        "FMSA.Paper.MixedRatePlateau.tail_tail_integrable",
+        "FMSA.Paper.MixedRatePlateau.tail_box_integrable",
+        "FMSA.Paper.MixedRatePlateau.tail_plateau_overlap_split",
+        "FMSA.Paper.MixedRatePlateau.tail_plateau_overlap_left",
+        "FMSA.Paper.MixedRatePlateau.tail_plateau_overlap_middle",
+        "FMSA.Paper.MixedRatePlateau.tail_plateau_overlap_right"
+      ],
+      "guard_count": 7,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/MixedRatePlateau.olean",
+      "artifact_sha256": "73907577f20a9cee008b3b19127ff5442659d967e34367f48b343e3dcac5af0f"
+    },
+    {
+      "source": "FMSAPaper/MixedRateSpatialMembership.lean",
+      "source_sha256": "610fec6eb563cd421f7f225b302ea31e3d71fe62c40af478e870ad2102d40ea5",
+      "theorems": [
+        "FMSA.Paper.MixedRateSpatialMembership.actual_cross_inner_hasForm",
+        "FMSA.Paper.MixedRateSpatialMembership.actual_cross_outer_hasForm"
+      ],
+      "guard_count": 2,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/MixedRateSpatialMembership.olean",
+      "artifact_sha256": "a8716ebab0d3d0606371f7afb258716ff53e89065ce3f4bf2d7cf048aaa8fad6"
+    },
+    {
+      "source": "FMSAPaper/MixedRateTails.lean",
+      "source_sha256": "b9bf66f8b3c713708f665ae3bf1a38cd6131b2146649772f3299c7e33d1b6ec0",
+      "theorems": [
+        "FMSA.Paper.MixedRateTails.product_tail_indicator",
+        "FMSA.Paper.MixedRateTails.exp_pair_integral",
+        "FMSA.Paper.MixedRateTails.tail_overlap",
+        "FMSA.Paper.MixedRateTails.tail_overlap_right",
+        "FMSA.Paper.MixedRateTails.tail_overlap_left"
+      ],
+      "guard_count": 5,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/MixedRateTails.olean",
+      "artifact_sha256": "5c605b2885274477ecb040bda1233cb9d9ba1c0ae83eaf74201e15e0fbab194f"
+    },
+    {
+      "source": "FMSAPaper/MixedRateWindows.lean",
+      "source_sha256": "64ede814b834a668f33aed29f45fb58fcf2e49d485f51fe4cd4a86bb9bfe8a0d",
+      "theorems": [
+        "FMSA.Paper.MixedRateWindows.tail_box_indicator",
+        "FMSA.Paper.MixedRateWindows.integral_shifted_exp",
+        "FMSA.Paper.MixedRateWindows.tail_box_overlap",
+        "FMSA.Paper.MixedRateWindows.tail_box_overlap_left",
+        "FMSA.Paper.MixedRateWindows.tail_box_overlap_middle",
+        "FMSA.Paper.MixedRateWindows.tail_box_overlap_right"
+      ],
+      "guard_count": 6,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/MixedRateWindows.olean",
+      "artifact_sha256": "8df2f9d936d36d9214cb84dcce1238dd112dbb0312e3addc93797d8bd0a3922e"
+    },
+    {
+      "source": "FMSAPaper/MultirateSpatialMembership.lean",
+      "source_sha256": "393473995337bc54a487f9428bef2c4d847c603b03605f316df4aba3d7b60526",
+      "theorems": [
+        "FMSA.Paper.MultirateSpatialMembership.sub_hasForm",
+        "FMSA.Paper.MultirateSpatialMembership.numerator_hasForm_of_pieces",
+        "FMSA.Paper.MultirateSpatialMembership.numerator_inner_hasForm",
+        "FMSA.Paper.MultirateSpatialMembership.numerator_outer_hasForm"
+      ],
+      "guard_count": 4,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/MultirateSpatialMembership.olean",
+      "artifact_sha256": "6417849e6007fe70f3d51376922d9400ddc019eb536f775934f2748ebb7739bf"
+    },
+    {
+      "source": "FMSAPaper/MultivariateStrength.lean",
+      "source_sha256": "3a81d1794ab8a2ff285480d220382e8f6eaa32e8e189e6b633dcc3f25f333e43",
+      "theorems": [
+        "FMSA.Paper.MultivariateStrength.strengthResidual_contDiff",
+        "FMSA.Paper.MultivariateStrength.strengthResidual_zero_slice",
+        "FMSA.Paper.MultivariateStrength.strengthResidual_partial_eq",
+        "FMSA.Paper.MultivariateStrength.exists_smooth_strength_root",
+        "FMSA.Paper.MultivariateStrength.component_ray_jet_polynomial"
+      ],
+      "guard_count": 5,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/MultivariateStrength.olean",
+      "artifact_sha256": "afc2d9ffdcccae4667abb704626fa89a88be05a684b40597626de880218c8684"
+    },
+    {
+      "source": "FMSAPaper/OrderedSpatialJets.lean",
+      "source_sha256": "f517b7825b87e7c5f27961d81c3441ac598a16d95ae01c90a688285ae183b454",
+      "theorems": [
+        "FMSA.Paper.OrderedSpatialJets.contact_swap",
+        "FMSA.Paper.OrderedSpatialJets.breakpoint_swap",
+        "FMSA.Paper.OrderedSpatialJets.ordered_core_jet_hasForm",
+        "FMSA.Paper.OrderedSpatialJets.weighted_exterior_jet_hasForm",
+        "FMSA.Paper.OrderedSpatialJets.ordered_exterior_jet_hasForm",
+        "FMSA.Paper.OrderedSpatialJets.ordered_jet_contDiffAt_off_knots"
+      ],
+      "guard_count": 6,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/OrderedSpatialJets.olean",
+      "artifact_sha256": "7f966dd5e1a754199d4ab0a14419361a55f0fd33e743bd3b5796b6d2e575e141"
+    },
+    {
+      "source": "FMSAPaper/PhysicalExteriorJets.lean",
+      "source_sha256": "cf876d2f989131beea6b4c97c8228f35d08b3e1e4f697398d66027444a9307d2",
+      "theorems": [
+        "FMSA.Paper.PhysicalExteriorJets.exterior_locally_linear",
+        "FMSA.Paper.PhysicalExteriorJets.exterior_jet",
+        "FMSA.Paper.PhysicalExteriorJets.exterior_higher_jet_zero"
+      ],
+      "guard_count": 3,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/PhysicalExteriorJets.olean",
+      "artifact_sha256": "88f7643ebfe8a95cfe6395d7994806ad8a209bdacfb2ebf614dcdbdc548090e5"
+    },
+    {
+      "source": "FMSAPaper/RegularContinuation.lean",
+      "source_sha256": "47776f8334aabdb97efc8a572e7a6f69ce53401b2abda4705ba4ab5909b4957e",
+      "theorems": [
+        "FMSA.Paper.RegularContinuation.roots_eqOn_of_preconnected",
+        "FMSA.Paper.RegularContinuation.roots_eq_at_endpoint",
+        "FMSA.Paper.RegularContinuation.no_differentiable_extension"
+      ],
+      "guard_count": 3,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/RegularContinuation.olean",
+      "artifact_sha256": "2e04ba00a8e76a4262ce2266e7ac8a1d1d16dfc41ab8f6a7662720099556516f"
+    },
+    {
+      "source": "FMSAPaper/SingleRateSpatialMembership.lean",
+      "source_sha256": "b02547720a8acdd72e94f87e2a71a86be137e70db242ab3d12de35f59b81180b",
+      "theorems": [
+        "FMSA.Paper.SingleRateSpatialMembership.gForm_hasForm",
+        "FMSA.Paper.SingleRateSpatialMembership.single_inner_hasForm",
+        "FMSA.Paper.SingleRateSpatialMembership.single_outer_hasForm"
+      ],
+      "guard_count": 3,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/SingleRateSpatialMembership.olean",
+      "artifact_sha256": "ce85298466e5efb5dfc6f81dff3597ea342b07476153db1afbe845e6756f68b7"
+    },
+    {
+      "source": "FMSAPaper/SmoothJets.lean",
+      "source_sha256": "dc6131959a572bcb3e56d3bccf1db1e8a21a015ed2b8041bac0e1c77671d2ade",
+      "theorems": [
+        "FMSA.Paper.SmoothJets.JetEq.refl",
+        "FMSA.Paper.SmoothJets.JetEq.const",
+        "FMSA.Paper.SmoothJets.JetEq.id",
+        "FMSA.Paper.SmoothJets.JetEq.add",
+        "FMSA.Paper.SmoothJets.JetEq.sub",
+        "FMSA.Paper.SmoothJets.JetEq.mul",
+        "FMSA.Paper.SmoothJets.JetEq.div_const",
+        "FMSA.Paper.SmoothJets.JetEq.neg",
+        "FMSA.Paper.SmoothJets.JetEq.sum",
+        "FMSA.Paper.SmoothJets.actual_residual_jetEq",
+        "FMSA.Paper.SmoothJets.locally_zero_of_analytic_zero_jets"
+      ],
+      "guard_count": 11,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/SmoothJets.olean",
+      "artifact_sha256": "b95eccfd330a25b50112d561e4bb69fb7471da930e60516599ae6473840b352a"
+    },
+    {
+      "source": "FMSAPaper/SpatialDictionary.lean",
+      "source_sha256": "9f48fd5219513bf9d0b899d8895d599ffbf34a5dfcdf0d97f223654f08bc9266",
+      "theorems": [
+        "FMSA.Paper.SpatialDictionary.space_finiteDimensional",
+        "FMSA.Paper.SpatialDictionary.space_finrank_le",
+        "FMSA.Paper.SpatialDictionary.dictionary_hasForm",
+        "FMSA.Paper.SpatialDictionary.HasForm.add",
+        "FMSA.Paper.SpatialDictionary.HasForm.const_mul",
+        "FMSA.Paper.SpatialDictionary.HasForm.congr",
+        "FMSA.Paper.SpatialDictionary.finite_sum_hasForm",
+        "FMSA.Paper.SpatialDictionary.linear_hasForm",
+        "FMSA.Paper.SpatialDictionary.HasForm.contDiffOn",
+        "FMSA.Paper.SpatialDictionary.jet_hasForm_of_representation"
+      ],
+      "guard_count": 10,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/SpatialDictionary.olean",
+      "artifact_sha256": "c35d995588a6959b0f37b50218349499ed80a7dba72149c202f56e3553b09fdb"
+    },
+    {
+      "source": "FMSAPaper/SpatialJets.lean",
+      "source_sha256": "822ad054ff8af3ebde9f0352a28acc3f0547b386aa69c32890fe7299c3dc0e06",
+      "theorems": [
+        "FMSA.Paper.SpatialJets.derivative_hasForm",
+        "FMSA.Paper.SpatialJets.iteratedDeriv_hasForm_on",
+        "FMSA.Paper.SpatialJets.jet_hasForm_of_smooth_parameters",
+        "FMSA.Paper.SpatialJets.weighted_truncation_hasForm"
+      ],
+      "guard_count": 4,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/SpatialJets.olean",
+      "artifact_sha256": "c5f48c601b4e6f43141762f72b959d38dd6e1a842f5adc995d5de21068321068"
+    },
+    {
+      "source": "FMSAPaper/StrengthScaling.lean",
+      "source_sha256": "9251cc4aa8527dcefdcc965800af35ad395b3fa33819b5625063eb99dc912fe1",
+      "theorems": [
+        "FMSA.Paper.StrengthScaling.iteratedDeriv_rescale",
+        "FMSA.Paper.StrengthScaling.jet_rescale",
+        "FMSA.Paper.StrengthScaling.residual_strength_rescale",
+        "FMSA.Paper.StrengthScaling.local_root_rescale",
+        "FMSA.Paper.StrengthScaling.exists_actual_roots_with_scaled_jets"
+      ],
+      "guard_count": 5,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/StrengthScaling.olean",
+      "artifact_sha256": "8f553fdef67fdecfc79c62d51f845d1bf81ea578a8648fa8112a0754ba3abd9f"
+    },
+    {
+      "source": "FMSAPaper/TaylorRoot.lean",
+      "source_sha256": "2135f9f85bb94ce8e21ba0d1d78ce98d1895c9767f0eebaaa97ca65e4e571c89",
+      "theorems": [
+        "FMSA.Paper.TaylorRoot.series_jet",
+        "FMSA.Paper.TaylorRoot.jetEq_taylor_sum",
+        "FMSA.Paper.TaylorRoot.analytic_zero_of_matching_root_jets",
+        "FMSA.Paper.TaylorRoot.actual_taylor_local_root",
+        "FMSA.Paper.TaylorRoot.actual_endpoint_of_smooth_root",
+        "FMSA.Paper.TaylorRoot.actual_taylor_seed_identification",
+        "FMSA.Paper.TaylorRoot.exists_physical_taylor_convergence_theorem",
+        "FMSA.Paper.TaylorRoot.actual_nonconvergence_of_no_real_root"
+      ],
+      "guard_count": 8,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/TaylorRoot.olean",
+      "artifact_sha256": "5ccbdf4e156b82b0ca4679ce910eb872cf641f262d58c1d2f54c71f5e0ef3b55"
+    }
+  ],
+  "default_build": {
+    "command": [
+      "lake",
+      "build"
+    ],
+    "exit_code": 0,
+    "log": "results/default_build.log",
+    "log_sha256": "9400744c1ab83fa16e9283b87d4615ce546514d94ed446cc234af7cc0b43ab62"
+  },
+  "paper_root_sha256": "35de3b6b5d9e130018b1dedf9d85c4614e89f3c1e27f37ad07d5409b0fb77c38",
+  "package_entry_sha256": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
+  "integration": "Included in the foundation's default Lake build; no external LEAN_PATH.",
+  "scope": "F2 under explicit fold hypotheses and F3 proved; F1 partial; no converse, positivity, Pringsheim or certified MSA counterexample."
+}

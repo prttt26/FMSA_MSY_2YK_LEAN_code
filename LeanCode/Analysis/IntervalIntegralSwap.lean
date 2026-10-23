@@ -99,7 +99,8 @@ theorem intervalIntegral_triangle_swap {a : ℝ} (ha : 0 ≤ a) (p q : ℝ → �
 argument as `intervalIntegral_triangle_swap`, but the
 integrand `f u s` need not factor as `p(s)·q(u)`.  Used by `OZFIX.20` where the integrand
 `H(u)·q0(t)·q0(t−u)` couples both variables through `q0(t−u)`. -/
-theorem intervalIntegral_triangle_swap_gen {a : ℝ} (ha : 0 ≤ a) (f : ℝ → ℝ → ℝ)
+theorem intervalIntegral_triangle_swap_gen {E : Type*} [NormedAddCommGroup E]
+    [NormedSpace ℝ E] [CompleteSpace E] {a : ℝ} (ha : 0 ≤ a) (f : ℝ → ℝ → E)
     (hint : MeasureTheory.Integrable
       (Function.uncurry fun u s => (Set.Ioi u).indicator (f u) s)
       ((MeasureTheory.volume.restrict (Set.Ioc 0 a)).prod

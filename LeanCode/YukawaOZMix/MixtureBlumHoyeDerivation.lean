@@ -7,8 +7,11 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
+import LeanCode.YukawaOZMix.MSAMixtureBaxterLaplace
 import LeanCode.YukawaOZMix.MSAMixtureBaxterConv
 import LeanCode.YukawaOZMix.MSAMixtureBHRootUneq
+import LeanCode.YukawaOZMix.MSAMixtureBHRootRecenter
+import LeanCode.YukawaOZMix.MSAMixtureEqualRootBridge
 import LeanCode.YukawaOZMix.MSAMixtureBHRoot
 import LeanCode.YukawaOZ.MSAGSideOZ
 
@@ -46,299 +49,6 @@ open Real MeasureTheory
 open MSAMixture FMSA.ExactMSA.Breakpoint
 
 namespace FMSA.ExactMSA.MixLeg3
-
-/-- **The Yukawa-shift Laplace moment over a half-line** — the workhorse for the two exponential
-pieces of the mixture Baxter factor.  For `s + z > 0`,
-`∫_{x > c} e^{−z(x−p)}·e^{−sx} dx = e^{zp}·e^{−(s+z)c}/(s+z)`.  (With `p = c = edgeLo` it gives the
-`Wt` term's `e^{−sλ}·Wt/(s+z)`; with `p = c = edgeHi` the tail's `Ct·e^{−s·σij}/(s+z)`.)  Pure
-exponential, via `integral_exp_mul_Ioi`. -/
-theorem yukawa_shift_laplace_Ioi (z p s c : ℝ) (hsz : 0 < s + z) :
-    ∫ x in Set.Ioi c, Real.exp (-z * (x - p)) * Real.exp (-s * x)
-      = Real.exp (z * p) * Real.exp (-(s + z) * c) / (s + z) := by
-  have hc : (fun x => Real.exp (-z * (x - p)) * Real.exp (-s * x))
-      = fun x => Real.exp (z * p) * Real.exp (-(s + z) * x) := by
-    funext x
-    rw [← Real.exp_add, show -z * (x - p) + -s * x = z * p + -(s + z) * x from by ring,
-        Real.exp_add]
-  rw [hc, MeasureTheory.integral_const_mul,
-      integral_exp_mul_Ioi (show -(s + z) < 0 by linarith) c, neg_div_neg_eq]
-  ring
-
-/-! ### Antiderivative helpers for the compact-core polynomial moment
-
-The `baxterQ` core polynomial `qp·(r−λ−σ_i) + (A/2)(r−λ−σ_i)²` has argument `r − λ − σ_i = r − σ_ij`
-(it vanishes at the poly/tail junction `σ_ij = edgeHi`), so its Laplace moment is an FTC exercise with
-the classical `φ1`/`φ2` antiderivatives (general `σ`, copied from `HardSphere/BaxterRealSpace.lean`
-where they are `private`). -/
-
-private lemma bqExp_hasDerivAt {s : ℝ} (r : ℝ) :
-    HasDerivAt (fun x => Real.exp (-s * x)) (Real.exp (-s * r) * -s) r := by
-  have h : HasDerivAt (fun x => -s * x) (-s) r := by
-    simpa using (hasDerivAt_id r).const_mul (-s)
-  exact h.exp
-
-private lemma bqPoly1_hasDerivAt {s : ℝ} (hs : s ≠ 0) (sig r : ℝ) :
-    HasDerivAt (fun r => -((r - sig) / s + 1 / s ^ 2) * Real.exp (-s * r))
-               ((r - sig) * Real.exp (-s * r)) r := by
-  have hg : HasDerivAt (fun x : ℝ => x - sig) 1 r := by
-    have h := (hasDerivAt_id r).sub (hasDerivAt_const r sig)
-    simp only [id_eq, sub_zero] at h; exact h
-  have hA : HasDerivAt (fun x => -((x - sig) / s + 1 / s ^ 2)) (-(1 / s)) r := by
-    have h := ((hg.div_const s).add (hasDerivAt_const r (1 / s ^ 2))).neg
-    exact h.congr_deriv (by ring)
-  exact (hA.mul (bqExp_hasDerivAt r)).congr_deriv (by field_simp [hs]; ring)
-
-private lemma bqPoly2_hasDerivAt {s : ℝ} (hs : s ≠ 0) (sig r : ℝ) :
-    HasDerivAt (fun r => -((r - sig) ^ 2 / (2 * s) + (r - sig) / s ^ 2 + 1 / s ^ 3) *
-                         Real.exp (-s * r))
-               ((r - sig) ^ 2 / 2 * Real.exp (-s * r)) r := by
-  have hg : HasDerivAt (fun x : ℝ => x - sig) 1 r := by
-    have h := (hasDerivAt_id r).sub (hasDerivAt_const r sig)
-    simp only [id_eq, sub_zero] at h; exact h
-  have hx2 : HasDerivAt (fun x : ℝ => (x - sig) ^ 2) (2 * (r - sig)) r := by
-    have hmul := hg.mul hg
-    have heq : ((fun x : ℝ => x - sig) * fun x => x - sig) = fun x => (x - sig) ^ 2 :=
-      funext fun x => by simp [sq, Pi.mul_apply]
-    rw [heq] at hmul
-    exact hmul.congr_deriv (by ring)
-  have h1 : HasDerivAt (fun x => (x - sig) ^ 2 / (2 * s)) ((r - sig) / s) r :=
-    (hx2.div_const _).congr_deriv (by field_simp [hs])
-  have h2 : HasDerivAt (fun x => (x - sig) / s ^ 2) (1 / s ^ 2) r := hg.div_const _
-  have h3 : HasDerivAt (fun _ : ℝ => (1 : ℝ) / s ^ 3) 0 r := hasDerivAt_const _ _
-  have hA : HasDerivAt (fun x => -((x - sig) ^ 2 / (2 * s) + (x - sig) / s ^ 2 + 1 / s ^ 3))
-      (-((r - sig) / s + 1 / s ^ 2)) r := by
-    have h := ((h1.add h2).add h3).neg
-    exact h.congr_deriv (by ring)
-  exact (hA.mul (bqExp_hasDerivAt r)).congr_deriv (by field_simp [hs]; ring)
-
-/-- **Elementary interval exponential moment.**  `∫_a^b e^{−sr} dr = (e^{−sa} − e^{−sb})/s`
-(`s ≠ 0`).  The `Ct` core piece. -/
-theorem expLin_interval (s a b : ℝ) (hs : s ≠ 0) :
-    ∫ r in a..b, Real.exp (-s * r) = (Real.exp (-s * a) - Real.exp (-s * b)) / s := by
-  have hd : ∀ r : ℝ, HasDerivAt (fun r => -(Real.exp (-s * r) / s)) (Real.exp (-s * r)) r := by
-    intro r
-    refine (((bqExp_hasDerivAt r).div_const s).neg).congr_deriv ?_
-    field_simp
-  have hint : IntervalIntegrable (fun r => Real.exp (-s * r)) volume a b :=
-    (Real.continuous_exp.comp (continuous_const.mul continuous_id)).intervalIntegrable a b
-  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun r _ => hd r) hint]; ring
-
-/-- **Interval Yukawa-shift moment.**  `∫_a^b e^{−z(r−p)}·e^{−sr} dr
-= e^{zp}·e^{−(s+z)a}/(s+z) − e^{zp}·e^{−(s+z)b}/(s+z)` (`s+z ≠ 0`).  The `Wt` core piece; its
-`e^{−(s+z)b}` term cancels the tail's (see `baxterQ_transform`). -/
-theorem yukawa_shift_interval (z p s a b : ℝ) (hsz : s + z ≠ 0) :
-    ∫ r in a..b, Real.exp (-z * (r - p)) * Real.exp (-s * r)
-      = Real.exp (z * p) * Real.exp (-(s + z) * a) / (s + z)
-        - Real.exp (z * p) * Real.exp (-(s + z) * b) / (s + z) := by
-  have hcomb : (fun r => Real.exp (-z * (r - p)) * Real.exp (-s * r))
-      = fun r => Real.exp (z * p) * Real.exp (-(s + z) * r) := by
-    funext r
-    rw [← Real.exp_add, show -z * (r - p) + -s * r = z * p + -(s + z) * r from by ring, Real.exp_add]
-  rw [hcomb, intervalIntegral.integral_const_mul]
-  have hd : ∀ r : ℝ, HasDerivAt (fun r => -(Real.exp (-(s + z) * r) / (s + z)))
-      (Real.exp (-(s + z) * r)) r := by
-    intro r
-    have h1 : HasDerivAt (fun r : ℝ => -(s + z) * r) (-(s + z)) r := by
-      simpa using (hasDerivAt_id r).const_mul (-(s + z))
-    have h2 : HasDerivAt (fun r => Real.exp (-(s + z) * r))
-        (Real.exp (-(s + z) * r) * -(s + z)) r := h1.exp
-    refine ((h2.div_const (s + z)).neg).congr_deriv ?_
-    rw [mul_div_assoc, neg_div, div_self hsz, mul_neg_one, neg_neg]
-  have hint : IntervalIntegrable (fun r => Real.exp (-(s + z) * r)) volume a b :=
-    (Real.continuous_exp.comp (continuous_const.mul continuous_id)).intervalIntegrable a b
-  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun r _ => hd r) hint]; ring
-
-/-- Integrability of the Yukawa-shift kernel on a half-line (`s+z > 0`). -/
-theorem yukawa_shift_integrableOn_Ioi (z p s c : ℝ) (hsz : 0 < s + z) :
-    MeasureTheory.IntegrableOn
-      (fun r => Real.exp (-z * (r - p)) * Real.exp (-s * r)) (Set.Ioi c) := by
-  have hcomb : (fun r => Real.exp (-z * (r - p)) * Real.exp (-s * r))
-      = fun r => Real.exp (z * p) * Real.exp (-(s + z) * r) := by
-    funext r
-    rw [← Real.exp_add, show -z * (r - p) + -s * r = z * p + -(s + z) * r from by ring, Real.exp_add]
-  rw [hcomb]
-  exact (exp_neg_integrableOn_Ioi c hsz).const_mul _
-
-/-- **The compact-core polynomial moment of `baxterQ`.**  With `λ = edgeLo σ i j`,
-`σ_ij = edgeHi σ i j` and `λ + σ_i = σ_ij`, the poly argument `r − λ − σ_i = r − σ_ij`, so this is the
-`φ1`/`φ2` FTC moment shifted to `[λ, σ_ij]`.  Matrix analog of `baxter_poly_moment_gen`. -/
-theorem baxterQ_poly_moment {N : ℕ} (σ A : Fin N → ℝ) (qp : Fin N → Fin N → ℝ)
-    (i j : Fin N) (s : ℝ) (hs : s ≠ 0) :
-    ∫ r in (edgeLo σ i j)..(edgeHi σ i j),
-        (qp i j * (r - edgeLo σ i j - σ i) + A j / 2 * (r - edgeLo σ i j - σ i) ^ 2)
-          * Real.exp (-s * r)
-      = Real.exp (-s * edgeLo σ i j)
-          * (qp i j * ((1 - s * σ i - Real.exp (-s * σ i)) / s ^ 2)
-             + A j * ((1 - s * σ i + (s * σ i) ^ 2 / 2 - Real.exp (-s * σ i)) / s ^ 3)) := by
-  have hLH : edgeHi σ i j = edgeLo σ i j + σ i := by unfold edgeLo edgeHi; ring
-  have hcongr : (∫ r in (edgeLo σ i j)..(edgeHi σ i j),
-        (qp i j * (r - edgeLo σ i j - σ i) + A j / 2 * (r - edgeLo σ i j - σ i) ^ 2) * Real.exp (-s * r))
-      = ∫ r in (edgeLo σ i j)..(edgeHi σ i j),
-          (qp i j * ((r - edgeHi σ i j) * Real.exp (-s * r))
-           + A j * ((r - edgeHi σ i j) ^ 2 / 2 * Real.exp (-s * r))) := by
-    apply intervalIntegral.integral_congr; intro r _; rw [hLH]; ring
-  rw [hcongr, intervalIntegral.integral_add
-        (by apply Continuous.intervalIntegrable; fun_prop)
-        (by apply Continuous.intervalIntegrable; fun_prop),
-      intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul,
-      intervalIntegral.integral_eq_sub_of_hasDerivAt (fun r _ => bqPoly1_hasDerivAt hs (edgeHi σ i j) r)
-        (by apply Continuous.intervalIntegrable; fun_prop),
-      intervalIntegral.integral_eq_sub_of_hasDerivAt (fun r _ => bqPoly2_hasDerivAt hs (edgeHi σ i j) r)
-        (by apply Continuous.intervalIntegrable; fun_prop)]
-  have hEH' : Real.exp (-s * (edgeLo σ i j + σ i))
-      = Real.exp (-s * edgeLo σ i j) * Real.exp (-s * σ i) := by
-    rw [← Real.exp_add]; congr 1; ring
-  rw [hLH]; simp only [hEH']; field_simp; ring
-
-/-- ⭐ **MPhase 1 — the matrix Baxter transform.**  The Laplace transform of the real-space Baxter
-factor `baxterQ_ij` (supported on `[edgeLo, ∞)`) is the closed form `qhatMixRuneq` (here written out
-with `λ = edgeLo σ i j`, `σ_i`, `σ_ij = edgeHi σ i j`).  Assembled from four support-clean pieces —
-the dressed polynomial (`baxterQ_poly_moment`), the `Wt`-Yukawa spanning `[λ, ∞)` (core interval
-`yukawa_shift_interval` + tail half-line `yukawa_shift_laplace_Ioi`, whose `e^{−(s+z)σ_ij}` terms
-cancel), the constant `Ct` on `[λ, σ_ij]` (`expLin_interval`), and the tail `Ct`-Yukawa on
-`(σ_ij, ∞)`.  Matrix analog of the scalar `bhBaxter_transform`. -/
-theorem baxterQ_transform {N : ℕ} (z : ℝ) (σ A : Fin N → ℝ) (qp Wt Ct : Fin N → Fin N → ℝ)
-    (i j : Fin N) (s : ℝ) (hs : s ≠ 0) (hsz : 0 < s + z) (hσi : 0 ≤ σ i) :
-    ∫ r, baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r)
-      = Real.exp (-s * edgeLo σ i j)
-          * (qp i j * ((1 - s * σ i - Real.exp (-s * σ i)) / s ^ 2)
-             + A j * ((1 - s * σ i + (s * σ i) ^ 2 / 2 - Real.exp (-s * σ i)) / s ^ 3)
-             + Wt i j / (s + z)
-             + Ct i j * ((1 - Real.exp (-s * σ i)) / s))
-        + Ct i j * (Real.exp (-s * edgeHi σ i j) / (s + z)) := by
-  have hLH : edgeHi σ i j = edgeLo σ i j + σ i := by unfold edgeLo edgeHi; ring
-  have hle : edgeLo σ i j ≤ edgeHi σ i j := by rw [hLH]; linarith
-  -- pointwise branch identities
-  have hzero : ∀ r ∈ Set.Iio (edgeLo σ i j),
-      baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r) = 0 := by
-    intro r hr; simp only [baxterQ, if_pos (Set.mem_Iio.mp hr), zero_mul]
-  have hcore_eq : ∀ r ∈ Set.Icc (edgeLo σ i j) (edgeHi σ i j),
-      baxterQ z σ A qp Wt Ct i j r
-        = qp i j * (r - edgeLo σ i j - σ i) + A j / 2 * (r - edgeLo σ i j - σ i) ^ 2
-          + Wt i j * Real.exp (-z * (r - edgeLo σ i j)) + Ct i j := by
-    intro r hr; simp only [baxterQ, if_neg (not_lt.mpr hr.1), if_pos hr.2]
-  have htail_eq : ∀ r ∈ Set.Ioi (edgeHi σ i j),
-      baxterQ z σ A qp Wt Ct i j r
-        = Wt i j * Real.exp (-z * (r - edgeLo σ i j))
-          + Ct i j * Real.exp (-z * (r - edgeHi σ i j)) := by
-    intro r hr
-    have h1 : ¬ r < edgeLo σ i j := not_lt.mpr (le_trans hle (le_of_lt hr))
-    have h2 : ¬ r ≤ edgeHi σ i j := not_le.mpr hr
-    simp only [baxterQ, if_neg h1, if_neg h2]
-  -- integrabilities
-  have hI_lo : MeasureTheory.IntegrableOn
-      (fun r => baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r)) (Set.Iio (edgeLo σ i j)) := by
-    rw [MeasureTheory.integrableOn_congr_fun hzero measurableSet_Iio]
-    exact MeasureTheory.integrableOn_zero
-  have hI_core : MeasureTheory.IntegrableOn
-      (fun r => baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r))
-      (Set.Icc (edgeLo σ i j) (edgeHi σ i j)) :=
-    (MeasureTheory.integrableOn_congr_fun (fun r hr => by rw [hcore_eq r hr]) measurableSet_Icc).mpr
-      ((by fun_prop : Continuous (fun r =>
-        (qp i j * (r - edgeLo σ i j - σ i) + A j / 2 * (r - edgeLo σ i j - σ i) ^ 2
-          + Wt i j * Real.exp (-z * (r - edgeLo σ i j)) + Ct i j)
-          * Real.exp (-s * r))).integrableOn_Icc)
-  have hI_tail : MeasureTheory.IntegrableOn
-      (fun r => baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r)) (Set.Ioi (edgeHi σ i j)) := by
-    refine (MeasureTheory.integrableOn_congr_fun (fun r hr => by rw [htail_eq r hr])
-      measurableSet_Ioi).mpr ?_
-    have hW := (yukawa_shift_integrableOn_Ioi z (edgeLo σ i j) s (edgeHi σ i j) hsz).const_mul (Wt i j)
-    have hC := (yukawa_shift_integrableOn_Ioi z (edgeHi σ i j) s (edgeHi σ i j) hsz).const_mul (Ct i j)
-    exact (MeasureTheory.integrableOn_congr_fun (fun r _ => by simp only [Pi.add_apply]; ring)
-      measurableSet_Ioi).mpr (hW.add hC)
-  have hI_ici : MeasureTheory.IntegrableOn
-      (fun r => baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r)) (Set.Ici (edgeLo σ i j)) := by
-    rw [← Set.Icc_union_Ioi_eq_Ici hle]; exact hI_core.union hI_tail
-  have hdisj : Disjoint (Set.Icc (edgeLo σ i j) (edgeHi σ i j)) (Set.Ioi (edgeHi σ i j)) := by
-    rw [Set.disjoint_left]; rintro x hx1 hx2; exact absurd hx1.2 (not_le.mpr hx2)
-  -- domain split ℝ = Iio ⊔ (Icc ⊔ Ioi)
-  have hsplit : (∫ r, baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r))
-      = (∫ r in Set.Iio (edgeLo σ i j), baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r))
-        + ((∫ r in Set.Icc (edgeLo σ i j) (edgeHi σ i j),
-              baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r))
-           + (∫ r in Set.Ioi (edgeHi σ i j),
-              baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r))) := by
-    rw [← MeasureTheory.setIntegral_univ,
-        show (Set.univ : Set ℝ) = Set.Iio (edgeLo σ i j) ∪ Set.Ici (edgeLo σ i j) from
-          (Set.Iio_union_Ici).symm,
-        MeasureTheory.setIntegral_union (Set.Iio_disjoint_Ici le_rfl) measurableSet_Ici hI_lo hI_ici,
-        ← Set.Icc_union_Ioi_eq_Ici hle,
-        MeasureTheory.setIntegral_union hdisj measurableSet_Ioi hI_core hI_tail]
-  -- the three pieces
-  have hI_lo_zero : (∫ r in Set.Iio (edgeLo σ i j),
-      baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r)) = 0 :=
-    MeasureTheory.setIntegral_eq_zero_of_forall_eq_zero hzero
-  have hcore : (∫ r in Set.Icc (edgeLo σ i j) (edgeHi σ i j),
-        baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r))
-      = Real.exp (-s * edgeLo σ i j)
-          * (qp i j * ((1 - s * σ i - Real.exp (-s * σ i)) / s ^ 2)
-             + A j * ((1 - s * σ i + (s * σ i) ^ 2 / 2 - Real.exp (-s * σ i)) / s ^ 3))
-        + Wt i j * (Real.exp (z * edgeLo σ i j) * Real.exp (-(s + z) * edgeLo σ i j) / (s + z)
-             - Real.exp (z * edgeLo σ i j) * Real.exp (-(s + z) * edgeHi σ i j) / (s + z))
-        + Ct i j * ((Real.exp (-s * edgeLo σ i j) - Real.exp (-s * edgeHi σ i j)) / s) := by
-    rw [MeasureTheory.setIntegral_congr_fun measurableSet_Icc (fun r hr => by rw [hcore_eq r hr]),
-        MeasureTheory.integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le hle]
-    have hsplit3 : (∫ r in (edgeLo σ i j)..(edgeHi σ i j),
-          (qp i j * (r - edgeLo σ i j - σ i) + A j / 2 * (r - edgeLo σ i j - σ i) ^ 2
-            + Wt i j * Real.exp (-z * (r - edgeLo σ i j)) + Ct i j) * Real.exp (-s * r))
-        = (∫ r in (edgeLo σ i j)..(edgeHi σ i j),
-            (qp i j * (r - edgeLo σ i j - σ i) + A j / 2 * (r - edgeLo σ i j - σ i) ^ 2)
-              * Real.exp (-s * r))
-          + (Wt i j * (∫ r in (edgeLo σ i j)..(edgeHi σ i j),
-              Real.exp (-z * (r - edgeLo σ i j)) * Real.exp (-s * r))
-             + Ct i j * (∫ r in (edgeLo σ i j)..(edgeHi σ i j), Real.exp (-s * r))) := by
-      rw [← intervalIntegral.integral_const_mul, ← intervalIntegral.integral_const_mul,
-          ← intervalIntegral.integral_add (by apply Continuous.intervalIntegrable; fun_prop)
-            (by apply Continuous.intervalIntegrable; fun_prop),
-          ← intervalIntegral.integral_add (by apply Continuous.intervalIntegrable; fun_prop)
-            (by apply Continuous.intervalIntegrable; fun_prop)]
-      apply intervalIntegral.integral_congr; intro r _; ring
-    rw [hsplit3, baxterQ_poly_moment σ A qp i j s hs,
-        yukawa_shift_interval z (edgeLo σ i j) s (edgeLo σ i j) (edgeHi σ i j) hsz.ne',
-        expLin_interval s (edgeLo σ i j) (edgeHi σ i j) hs]
-    ring
-  have htail : (∫ r in Set.Ioi (edgeHi σ i j),
-        baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r))
-      = Wt i j * (Real.exp (z * edgeLo σ i j) * Real.exp (-(s + z) * edgeHi σ i j) / (s + z))
-        + Ct i j * (Real.exp (z * edgeHi σ i j) * Real.exp (-(s + z) * edgeHi σ i j) / (s + z)) := by
-    rw [MeasureTheory.setIntegral_congr_fun measurableSet_Ioi (fun r hr => by rw [htail_eq r hr])]
-    have hadd : (fun r => (Wt i j * Real.exp (-z * (r - edgeLo σ i j))
-          + Ct i j * Real.exp (-z * (r - edgeHi σ i j))) * Real.exp (-s * r))
-        = fun r => Wt i j * (Real.exp (-z * (r - edgeLo σ i j)) * Real.exp (-s * r))
-            + Ct i j * (Real.exp (-z * (r - edgeHi σ i j)) * Real.exp (-s * r)) := by
-      funext r; ring
-    rw [hadd, MeasureTheory.integral_add
-          ((yukawa_shift_integrableOn_Ioi z (edgeLo σ i j) s (edgeHi σ i j) hsz).const_mul _)
-          ((yukawa_shift_integrableOn_Ioi z (edgeHi σ i j) s (edgeHi σ i j) hsz).const_mul _),
-        MeasureTheory.integral_const_mul, MeasureTheory.integral_const_mul,
-        yukawa_shift_laplace_Ioi z (edgeLo σ i j) s (edgeHi σ i j) hsz,
-        yukawa_shift_laplace_Ioi z (edgeHi σ i j) s (edgeHi σ i j) hsz]
-  -- assemble + cancel the exponential atoms
-  have hR1 : Real.exp (z * edgeLo σ i j) * Real.exp (-(s + z) * edgeLo σ i j)
-      = Real.exp (-s * edgeLo σ i j) := by rw [← Real.exp_add]; congr 1; ring
-  have hR2 : Real.exp (z * edgeHi σ i j) * Real.exp (-(s + z) * edgeHi σ i j)
-      = Real.exp (-s * edgeHi σ i j) := by rw [← Real.exp_add]; congr 1; ring
-  have hEH : Real.exp (-s * edgeHi σ i j)
-      = Real.exp (-s * edgeLo σ i j) * Real.exp (-s * σ i) := by
-    rw [hLH, ← Real.exp_add]; congr 1; ring
-  rw [hsplit, hI_lo_zero, hcore, htail]
-  simp only [hR1, hR2, hEH]
-  field_simp
-  ring
-
-/-- **MPhase 1, wired to the posited transform.**  `baxterQ_transform` restated as
-`∫₀^∞ Q_ij e^{−sr} = qhatMixRuneq …` — i.e. the posited real-`s` Baxter factor
-`MSAMixture.qhatMixRuneq` (consumed by the (29′)/(33′) residual gate `MixBHRootUneq`) **is** the
-Laplace transform of the real-space Baxter factor `baxterQ`.  Cosmetic bridge: unfold
-`qhatMixRuneq`/`edgeLo`/`edgeHi` and reconcile `−s·x ↔ −(s·x)` and the qp/A multiplication order. -/
-theorem baxterQ_transform_eq_qhatMixRuneq {N : ℕ} (z : ℝ) (σ A : Fin N → ℝ)
-    (qp Wt Ct : Fin N → Fin N → ℝ) (i j : Fin N) (s : ℝ) (hs : s ≠ 0) (hsz : 0 < s + z)
-    (hσi : 0 ≤ σ i) :
-    ∫ r, baxterQ z σ A qp Wt Ct i j r * Real.exp (-s * r)
-      = qhatMixRuneq z σ qp Wt Ct A s i j := by
-  rw [baxterQ_transform z σ A qp Wt Ct i j s hs hsz hσi]
-  simp only [qhatMixRuneq, edgeLo, edgeHi, neg_mul]
-  ring
 
 /-! ### MPhase 2 — the matrix exterior Baxter relation (c-side)
 
@@ -1340,7 +1050,8 @@ exactly as the scalar leg-3 adds none to `exactMSA_factorization`. -/
 theorem matMSAmixture_unequalDiam_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
     (hσ : ∀ k, 0 < σ k) (hrho : ∀ l, 0 ≤ ρ l)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
-    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (k : ℝ)
+    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (k : ℝ) (hk : k ≠ 0)
+    (hvac : 0 < FMSA.MatrixQ0.vacMix ρ σ) (hK : ∀ a b, K a b = K b a)
     (hbax : ∀ i j r, edgeHi σ i j < r →
       2 * Real.pi * r * matMSAtail K z σ i j r
         = -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
@@ -1372,7 +1083,7 @@ theorem matMSAmixture_unequalDiam_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ 
               + (FMSA.HardSphere.radial_fourier (matMSAtail K z σ i j) k : ℂ))) :=
   matMSAmixture_unequalDiam_of_hcore z ρ σ hrho Gt Dt K k
     (MixBHRootUneq_of_oz_full z hz ρ σ Gt Dt K hσ g Q ghat Qhat hbax hgsupp hQsupp hF1 hF2
-      hgmoment hQtransform hghat hQhat hgside_mix) i j
+      hgmoment hQtransform hghat hQhat hgside_mix) hz hk hσ hvac hK i j
 
 /-- ⭐⭐⭐ **The full unequal-σ MSA mixture factorization, from the OZ primitives** (physical
 `radial_fourier` form — the exact shape of the scalar `exactMSA_factorization_of_oz` conclusion).  Same
@@ -1384,7 +1095,8 @@ proved closed form; this is the one genuinely-mixture-specific extra input). -/
 theorem matMSAmixture_unequalDiam_physical_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z) (ρ σ : Fin N → ℝ)
     (hσ : ∀ k, 0 < σ k) (hrho : ∀ l, 0 ≤ ρ l)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (g Q : Fin N → Fin N → ℝ → ℝ)
-    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (k : ℝ)
+    (ghat Qhat : Fin N → Fin N → ℝ) (i j : Fin N) (k : ℝ) (hk : k ≠ 0)
+    (hvac : 0 < FMSA.MatrixQ0.vacMix ρ σ) (hK : ∀ a b, K a b = K b a)
     (hbax : ∀ i j r, edgeHi σ i j < r →
       2 * Real.pi * r * matMSAtail K z σ i j r
         = -baxterQ' z σ (AVec z ρ σ Gt Dt) (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt) i j r
@@ -1417,51 +1129,13 @@ theorem matMSAmixture_unequalDiam_physical_of_oz {N : ℕ} (z : ℝ) (hz : 0 < z
               + (FMSA.HardSphere.radial_fourier (matMSAtail K z σ i j) k : ℂ)) :=
   matMSAmixture_unequalDiam_physical z ρ σ hrho Gt Dt K k
     (MixBHRootUneq_of_oz_full z hz ρ σ Gt Dt K hσ g Q ghat Qhat hbax hgsupp hQsupp hF1 hF2
-      hgmoment hQtransform hghat hQhat hgside_mix) i j
+      hgmoment hQtransform hghat hQhat hgside_mix) hz hk hσ hvac hK i j
 
 /-! ### MPhase 9 — the equal-diameter root retired via the unequal-diameter leg-3
 
 The equal-σ root `MSAMixture.MixBHRoot` (bare `qhatMixR`, no recentering) is the equal-σ specialization of
 `MixBHRootUneq` (recentered `qhatMixRuneq`).  So it too is retired onto OZ primitives — via the
 unequal-diameter leg-3 plus the equal-σ bridge — with no separate equal-diameter derivation needed. -/
-
-/-- **The unequal-σ Baxter transform reduces to the equal-σ one at equal diameters.**  At `σ_i = σ_j = sig`
-the recentering exponent `lam = (σ_j−σ_i)/2` is `0` and the per-pair `a = σ_i`, `sij = (σ_i+σ_j)/2` both
-become `sig`, so `qhatMixRuneq` collapses to `qhatMixR` term-for-term (the `Ct` split is identical, only
-reordered). -/
-theorem qhatMixRuneq_eq_qhatMixR_of_equal {N : ℕ} (z sig : ℝ) (σ : Fin N → ℝ)
-    (qp Wt Ct : Matrix (Fin N) (Fin N) ℝ) (Av : Fin N → ℝ) (s : ℝ) (i j : Fin N)
-    (hi : σ i = sig) (hj : σ j = sig) :
-    qhatMixRuneq z σ qp Wt Ct Av s i j = qhatMixR z sig qp Wt Ct Av s i j := by
-  simp only [qhatMixRuneq, qhatMixR, hi, hj]
-  rw [show (sig - sig) / 2 = (0:ℝ) from by ring, mul_zero, neg_zero, Real.exp_zero, one_mul,
-      show (sig + sig) / 2 = sig from by ring]
-  ring
-
-/-- **`MixBHRootUneq` at equal σ ⟹ `MixBHRoot`.**  The equal-σ bridge: at `σ ≡ sig` the recentering
-`e^{z·edgeLo σ · ·} = 1` (`edgeLo = 0`) and `qhatMixRuneq = qhatMixR` (`qhatMixRuneq_eq_qhatMixR_of_equal`),
-so the recentered unequal-σ root is term-for-term the bare equal-σ root. -/
-theorem MixBHRoot_of_MixBHRootUneq {N : ℕ} (z sig : ℝ) (ρ σ : Fin N → ℝ)
-    (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (hσ : ∀ k, σ k = sig)
-    (h : MixBHRootUneq z ρ σ Gt Dt K) : MixBHRoot z sig ρ σ Gt Dt K := by
-  obtain ⟨h29, h33⟩ := h
-  have hbridge : ∀ a b : Fin N,
-      Real.exp (z * edgeLo σ a b)
-          * qhatMixRuneq z σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
-              (AVec z ρ σ Gt Dt) z a b
-        = qhatMixR z sig (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt) (Ct z ρ σ Gt Dt)
-            (AVec z ρ σ Gt Dt) z a b := by
-    intro a b
-    rw [show edgeLo σ a b = 0 from by unfold edgeLo; rw [hσ a, hσ b]; ring, mul_zero,
-        Real.exp_zero, one_mul,
-        qhatMixRuneq_eq_qhatMixR_of_equal z sig σ (qpMat z ρ σ Gt Dt) (Wt z ρ Gt Dt)
-          (Ct z ρ σ Gt Dt) (AVec z ρ σ Gt Dt) z a b (hσ a) (hσ b)]
-  refine ⟨fun i j => ?_, fun i j => ?_⟩
-  · rw [← h29 i j]
-    exact (Finset.sum_congr rfl (fun l _ => by rw [hbridge j l])).symm
-  · rw [← h33 i j]
-    congr 1
-    exact (Finset.sum_congr rfl (fun l _ => by rw [hbridge l j])).symm
 
 /-- ⭐⭐ **The equal-diameter root retired onto OZ primitives.**  Chains `MixBHRootUneq_of_oz_full` (the
 unequal-σ leg-3) with the equal-σ bridge `MixBHRoot_of_MixBHRootUneq`: so the posited equal-σ
@@ -1499,30 +1173,5 @@ theorem MixBHRoot_of_oz {N : ℕ} (z sig : ℝ) (hz : 0 < z) (ρ σ : Fin N → 
     (MixBHRootUneq_of_oz_full z hz ρ σ Gt Dt K hσ g Q ghat Qhat hbax hgsupp hQsupp hF1 hF2
       hgmoment hQtransform hghat hQhat hgside_mix)
 
-/-- **The recentered unequal-σ transform collapses to the equal-σ transform at the ROW diameter.**
-For *any* `σ` (not just equal), `e^{z·edgeLo σ j l} · qhatMixRuneq_jl(z) = qhatMixR z (σ_j)_jl` — the
-recentering exactly cancels `qhatMixRuneq`'s prefactor `e^{−z·lam}` (`lam = edgeLo σ j l`), and the tail
-term's exponent `lam − sij = −σ_j` erases the `σ_l` dependence, leaving the equal-σ `qhatMixR` at the
-row diameter `σ_j`.  (`qhatMixRuneq_eq_qhatMixR_of_equal` is the `σ_j = sig` special case.)  This is the
-structural key for an unequal-σ smooth family: the recentered root's amplitude dependence is *identical*
-to the equal-σ one (the `e^{z·edgeLo}` factors are `σ`-constants), so the `C^∞`/residual scaffolding of
-`MSAMixtureBHRootSmooth` transfers unchanged. -/
-theorem qhatMixRuneq_recentered_eq_qhatMixR {N : ℕ} (z : ℝ) (σ : Fin N → ℝ)
-    (qp Wt Ct : Matrix (Fin N) (Fin N) ℝ) (Av : Fin N → ℝ) (j l : Fin N) :
-    Real.exp (z * edgeLo σ j l) * qhatMixRuneq z σ qp Wt Ct Av z j l
-      = qhatMixR z (σ j) qp Wt Ct Av z j l := by
-  have hL : Real.exp (z * edgeLo σ j l) * Real.exp (-(z * ((σ l - σ j) / 2))) = 1 := by
-    rw [← Real.exp_add, show z * edgeLo σ j l + -(z * ((σ l - σ j) / 2)) = 0 from by
-      unfold edgeLo; ring, Real.exp_zero]
-  have hLS : Real.exp (z * edgeLo σ j l) * Real.exp (-(z * ((σ j + σ l) / 2)))
-      = Real.exp (-(z * σ j)) := by
-    rw [← Real.exp_add]; congr 1; unfold edgeLo; ring
-  simp only [qhatMixRuneq, qhatMixR]
-  rw [mul_add, ← mul_assoc, hL, one_mul,
-      show Real.exp (z * edgeLo σ j l)
-            * (Ct j l * (Real.exp (-(z * ((σ j + σ l) / 2))) / (z + z)))
-          = Ct j l * (Real.exp (z * edgeLo σ j l) * Real.exp (-(z * ((σ j + σ l) / 2)))) / (z + z)
-        from by ring, hLS]
-  ring
 
 end FMSA.ExactMSA.MixLeg3

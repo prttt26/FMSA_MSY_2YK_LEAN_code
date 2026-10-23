@@ -8,8 +8,8 @@ Authors: FMSA project
 
 import Mathlib
 import LeanCode.YukawaOZMix.MSAMixtureBHRootSmooth
-import LeanCode.YukawaOZMix.MSAMixtureBHRootUneq
-import LeanCode.YukawaOZMix.MixtureBlumHoyeDerivation
+import LeanCode.YukawaOZMix.MSAMixtureBHRootUneqDefs
+import LeanCode.YukawaOZMix.MSAMixtureBHRootRecenter
 
 /-!
 # MSAEMIX.6 at **unequal** σ — the matrix Blum–Høye root is `C^∞` at `K = 0` (general `N`)

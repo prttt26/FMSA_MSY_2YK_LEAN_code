@@ -1,7 +1,8 @@
-name = "Lean_code"
-version = "0.1.0"
+name = "MSA_and_1st_Truncation"
+packagesDir = "../.lake/packages"
+version = "1.0.10"
 keywords = ["math"]
-defaultTargets = ["LeanCode"]
+defaultTargets = ["MSA_and_1st_Truncation"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
@@ -16,20 +17,27 @@ scope = "leanprover-community"
 rev = "v4.31.0"
 
 [[lean_lib]]
-name = "LeanCode"
+name = "MSA_and_1st_Truncation"
+roots = ["MSA_and_1st_Truncation", "LeanCode"]
 
-# MSAEXACT.6 certificate: deliberately OUT of `defaultTargets`, so a normal `lake build` never
-# compiles it (it holds a ring-infeasible axiom + its Fourier-layer bridge; see the file's docstring).
-# It is not imported by the `LeanCode` root either, so nothing pulls it into the default build.
-# Build it on demand with:  lake build ExactMSACertificate
+# Paper formalization, included by the default package entry.
+[[lean_lib]]
+name = "FMSAPaper"
+
+# Compatibility certificate for the proved scalar closure identity.
+# The main proof is imported by LeanCode; this legacy API can also be checked separately.
 [[lean_lib]]
 name = "ExactMSACertificate"
 roots = ["LeanCode.YukawaOZ.ExactMSACertificate"]
 
-# Matrix equal-diameter analog: same Fourier-layer discharge for MSAEMIX.4's
-# `matExactMSAEqualDiam_hcore`, reducing it to one pure-k-space sympy residual axiom.  Also OUT of
-# `defaultTargets` and not imported by the `LeanCode` root.
-# Build it on demand with:  lake build MatExactMSAEqualDiamCertificate
+# Kernel-checked sparse division checkpoints and their small reassembly theorem.
+# The original physical bridge is now proved in the main scalar proof chain.
+[[lean_lib]]
+name = "ExactMSASparseFeasibility"
+roots = ["LeanCode.YukawaOZ.ExactMSASparseCheckpoints"]
+
+# Kernel-checked equal-diameter matrix Fourier compatibility certificate.
+# Also imported and guarded by the default LeanCode root.
 [[lean_lib]]
 name = "MatExactMSAEqualDiamCertificate"
 roots = ["LeanCode.YukawaOZMix.MatExactMSAEqualDiamCertificate"]

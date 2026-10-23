@@ -7,6 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
+import LeanCode.YukawaOZ.ExactMSAResidualRecovery
 import LeanCode.YukawaOZ.MSABaxterKSpace
 import LeanCode.YukawaOZ.MSAFactorizationSplit
 import LeanCode.YukawaOZ.MSADCFTransform
@@ -30,9 +31,10 @@ into the `Dt⁰` hard-sphere factor and the `O(Dt)`, `O(Dt²)` amplitude terms. 
 **purely algebraic** stage (`msa_factor_split`): the `Dt⁰` bracket is exactly
 `1 − ρ𝓕[c_HS](k)` via `msaQre_zero`/`msaQim_zero` and `baxter_wiener_hopf_factorization`.
 
-⚠ The remaining `msaBaxter_factorization_of_closure` — matching `−2Dt·X + Dt²·Y` against
-`−ρ(𝓕[c_core] + 𝓕[c_tail])` under the Blum–Høye constraints (29′)/(33) — is the closure-recovery
-core (the "large algebraic verification with the Pythagorean identity") and is the next step.
+The closure-recovery step matches `−2Dt·X + Dt²·Y` against
+`−ρ(𝓕[c_core] + 𝓕[c_tail])` under the Blum–Høye constraints (29′)/(33).
+`exactMSA_hcore` discharges it with kernel-checked sparse certificates and the
+Pythagorean identity.
 -/
 
 open Real MeasureTheory
@@ -73,8 +75,8 @@ with `X`, `Y` the `msa_factor_split` brackets — the non-compact Baxter factori
     |1 − ρQ̂(ik)|² = 1 − ρĉ_MSA(k),     ĉ_MSA = 𝓕[c_HS] + 𝓕[c_core] + 𝓕[c_tail].
 
 Pure algebra on top of `msa_factor_split`.  ⚠ The `hcore` hypothesis — matching the two transforms
-against the amplitude brackets under the Blum–Høye constraints (29′)/(33) — is the remaining
-closure-recovery ring; here `c_core` is any core-supported correction whose transform obeys it. -/
+against the amplitude brackets — is supplied for the physical dictionary below;
+here `c_core` is any core-supported correction whose transform obeys it. -/
 theorem factorization_of_core (Dt G K : ℝ) (cCore : ℝ → ℝ) {k : ℝ} (hk : k ≠ 0) (hxi : xi < 1)
     (hcore : rhoOf xi * (radial_fourier cCore k + radial_fourier (cMSAtail K z 1) k)
       = 2 * Dt * ((1 - msaQre xi z 0 G k) * msaRez xi z G k
@@ -86,15 +88,15 @@ theorem factorization_of_core (Dt G K : ℝ) (cCore : ℝ → ℝ) {k : ℝ} (hk
   rw [msa_factor_split xi z Dt G hk hxi]
   linarith [hcore]
 
-/-! ### MSAEXACT.6 — the closure-recovery ring (sympy-certified axiom) and MSAEXACT.1 -/
+/-! ### MSAEXACT.6 — proved scalar closure recovery and MSAEXACT.1 -/
 
 /-- The Blum–Høye MSA **core-correction** `c(r)` in `coreCorrection` form, with the closure's
 coefficients `c₁ = −da`, `c₂ = −db`, `c₃ = −½ξ·da`, `c₄ = −v/z`, `c₅ = −v²/(2Kz²)`, where
 `a = (A/2π)²`, `λ₁ = (1+2ξ)²/(1−ξ)⁴`, `b_HS = −6ξ(1+ξ/2)²/(1−ξ)⁴`, `v = 24ξKG`, `da = a−λ₁`,
 `db = bb−b_HS`, and
 `bb = (q′+zγDt)/2π − K − a − ½ξa − v(1−e^{−z})/z − v²(1−e^{−z})²/(4Kz²)`.
-These are the Blum–Høye MSA closure values; the resulting `hcore` identity is verified in sympy
-(`exactMSA_cert.py`). -/
+These are the Blum–Høye MSA closure values; the resulting `hcore` identity is
+proved below on the regular physical domain. -/
 noncomputable def msaCoreCorr (Dt G K : ℝ) : ℝ → ℝ :=
   let A := msaA xi z Dt G
   let qp := msaQp xi z Dt G
@@ -109,39 +111,40 @@ noncomputable def msaCoreCorr (Dt G K : ℝ) : ℝ → ℝ :=
   let db := bb - bHS
   coreCorrection (-da) (-db) (-(xi * da / 2)) (-(v / z)) (-(v ^ 2 / (2 * K * z ^ 2))) z 1
 
-/-- ⭐ **MSAEXACT.6 (axiom).**  At the physical Blum–Høye root — `(Dt, G)` satisfying the two
-constraints `Dt·bhF = 2πK/z` (Eq. 29′) and `2π·G·bhF = bhP` (Eq. 33) — the MSA core correction's
-radial transform, together with the exterior Yukawa tail, accounts for the `O(Dt)`/`O(Dt²)`
-amplitude terms of `|1 − ρQ̂(ik)|²`.  This is the `hcore` closure-recovery identity consumed by
-`factorization_of_core`.
-
-**Certified in sympy** (`exactMSA_cert.py`, parent repo): the difference `Δ` equals
-`m29·r29 + m33·r33` exactly (polynomial-division remainder 0), where `r29`, `r33` are the two
-Blum–Høye constraints and `m29`, `m33` the recovered multipliers.  The Lean
-`ring`/`linear_combination` proof is validated at `Dt⁰` (`Cert_dt0_full.lean` compiles axiom-clean),
-but discharging `Dt¹`/`Dt²` in-kernel is *infeasible*, not merely slow (measured 2026-08-22): a
-clean `(cos,sin,exp)`-graded `Dt²` coefficient — 323 monomials, degree ≈22 — already costs `ring`
-**3 h 12 m / 23 GB**, and the per-order reassembly extrapolates to weeks / ~200 GB; `native_decide`
-is blocked (`MvPolynomial` semiring noncomputable).  So this is recorded as an axiom because `ring`
-cannot normalize the identity, **not** for want of a bigger budget.  The Fourier/definitional layer
-around it is discharged in `ExactMSACertificate.lean` (an out-of-`defaultTargets` lib), which
-derives this exact statement from a pure-cos/sin/exp axiom `exactMSA_kspace_residual`.  ⚠ This is a
-*physics-computation* axiom (a specific externally-verified polynomial identity), not a new
-mathematical assumption. -/
-axiom exactMSA_hcore (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0)
+/-- **MSAEXACT.6 — kernel-checked scalar closure recovery.** At a Blum–Høye
+root the independently defined core and Yukawa tail reproduce the Baxter
+amplitude brackets. The rational dictionary, denominator clearing, trigonometric
+reduction, polynomial division and Fourier transforms are all proved in Lean.
+The explicit regular domain requires `z > 0` and `xi ≠ 1`; `K = 0` is included.
+This concerns one component and one Yukawa tail. -/
+theorem exactMSA_hcore (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hz : 0 < z)
+    (hvac : 1 - xi ≠ 0)
     (h29 : Dt * bhF xi z (Dt, G) - 2 * π * K / z = 0)
     (h33 : 2 * π * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0) :
     rhoOf xi * (radial_fourier (msaCoreCorr xi z Dt G K) k
         + radial_fourier (cMSAtail K z 1) k)
       = 2 * Dt * ((1 - msaQre xi z 0 G k) * msaRez xi z G k
             - msaQim xi z 0 G k * msaImz xi z G k)
-        - Dt ^ 2 * (msaRez xi z G k ^ 2 + msaImz xi z G k ^ 2)
+        - Dt ^ 2 * (msaRez xi z G k ^ 2 + msaImz xi z G k ^ 2) := by
+  have hzk : z ^ 2 + k ^ 2 ≠ 0 := by positivity
+  simp only [msaCoreCorr]
+  rw [radial_fourier_coreCorrection _ _ _ _ _ z 1 k one_pos,
+      radial_fourier_cMSAtail hz one_pos K k,
+      psi1_formula hk 1, psi2_formula hk 1, psi4_formula hk 1,
+      one_sub_exp_sin_integral hzk hk, coshRatio_sin_integral hzk hk]
+  simp only [mul_one, one_pow]
+  exact sub_eq_zero.mp (RationalBridge.deltaActual_zero xi z k Dt G K hvac hz.ne' hk h29 h33)
+
+/-- info: 'FMSA.ExactMSA.exactMSA_hcore' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms exactMSA_hcore
 
 /-- ⭐ **MSAEXACT.1 — the non-compact MSA Baxter factorisation.**  At the Blum–Høye root,
 `|1 − ρQ̂(ik)|² = 1 − ρĉ_MSA(k)` with `ĉ_MSA = 𝓕[c_HS] + 𝓕[c_core] + 𝓕[c_tail]` — the physical MSA
 direct correlation function.  Combines the purely-algebraic `factorization_of_core` with the
 closure-recovery input `exactMSA_hcore`. -/
 theorem exactMSA_factorization (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hxi : xi < 1)
+    (hz : 0 < z)
     (h29 : Dt * bhF xi z (Dt, G) - 2 * π * K / z = 0)
     (h33 : 2 * π * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0) :
     (1 - msaQre xi z Dt G k) ^ 2 + msaQim xi z Dt G k ^ 2
@@ -149,6 +152,23 @@ theorem exactMSA_factorization (Dt G K : ℝ) {k : ℝ} (hk : k ≠ 0) (hxi : xi
           + radial_fourier (msaCoreCorr xi z Dt G K) k
           + radial_fourier (cMSAtail K z 1) k) :=
   factorization_of_core xi z Dt G K (msaCoreCorr xi z Dt G K) hk hxi
-    (exactMSA_hcore xi z Dt G K hk h29 h33)
+    (exactMSA_hcore xi z Dt G K hk hz (sub_pos.mpr hxi).ne' h29 h33)
+
+/-- The exact scalar structure-factor denominator is nonnegative at every
+real nonzero wavevector at a regular Blum–Høye root. Zeros are allowed;
+strict stability and the zero-wavevector limit require separate arguments. -/
+theorem exactMSA_structureDen_nonneg (Dt G K : ℝ) {k : ℝ}
+    (hk : k ≠ 0) (hxi : xi < 1) (hz : 0 < z)
+    (h29 : Dt * bhF xi z (Dt, G) - 2 * π * K / z = 0)
+    (h33 : 2 * π * (G * bhF xi z (Dt, G)) - bhP xi z (Dt, G) = 0) :
+    0 ≤ 1 - rhoOf xi * (radial_fourier (c_HS xi 1) k
+      + radial_fourier (msaCoreCorr xi z Dt G K) k
+      + radial_fourier (cMSAtail K z 1) k) := by
+  rw [← exactMSA_factorization xi z Dt G K hk hxi hz h29 h33]
+  exact add_nonneg (sq_nonneg _) (sq_nonneg _)
+
+/-- info: 'FMSA.ExactMSA.exactMSA_structureDen_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms exactMSA_structureDen_nonneg
 
 end FMSA.ExactMSA

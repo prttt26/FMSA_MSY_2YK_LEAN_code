@@ -11,12 +11,14 @@ import LeanCode.YukawaOZMix.MixtureConvolution
 import LeanCode.Analysis.VolterraBanach
 
 /-!
-# The reflected ("parity") terms of the first-order OZ equation are anti-causal
+# Support of reflected ("parity") terms in the first-order OZ equation
 
 **Source: Tang & Lu, *Mol. Phys.* **84**, 89–103 (1995), §2, Eqs. (9)–(14)** — the RDF derivation
 itself, checked against the paper (`pdf/sources_paywall/Analytical solution of the Ornstein-Zernike
 equation for mixtures.pdf`, journal pp. 92–94).  This file formalizes their **space-analysis step**,
-i.e. the claim that the *time-reversed* terms carry no weight on `[R,∞)`.
+i.e. the claim that the reflected terms carry no weight on the open exterior `(R,∞)`.
+Matrix transposition swaps species indices; it does not reverse the spatial coordinate.
+Only evaluation at `-k` introduces spatial reflection.
 
 ## Why the terms exist at all — the two transforms
 
@@ -59,8 +61,10 @@ The disposal is **exact support arithmetic**, not an estimate — that is the co
   on `[R,∞)` (the *exact* hard-core condition `h₁ = 0` inside the core, valid at every order).
 * `Icc_add_Iic_subset`, `Iic_add_Icc_subset`, `Iic_add_Iic_subset` — the Minkowski arithmetic that
   `support_convolution_subset` reduces the space analysis to.
-* `reflected_rdf_conj_support` — **Proof 2, RDF half**: `Q̂₀ᵀ ⋆ h₁(−·) ⋆ Q̂₀` is supported on
-  `(−∞, −λ_ij]`.
+* `reflected_rdf_conj_support` — a conditional scalar support lemma with an explicitly
+  reflected left kernel. Its hypothesis is not the support of a plain matrix transpose.
+* `rdf_parity_partner_support_physical` — the actual transposed-index kernel chain
+  `q_mi ⋆ h_mn(-·) ⋆ q_nj` is supported on `(−∞, R_ij]`, with no diameter margin.
 * `antiCausal_triple_support` — **Proof 2, conjugation half**: a triple convolution of anti-causally
   supported factors stays anti-causal; covers both the inner-core `S₁` term and the DCF parity
   partner `Ĉ₁(−k)`.
@@ -139,12 +143,10 @@ theorem Iic_add_Iic_subset (a b : ℝ) : Set.Iic a + Set.Iic b ⊆ Set.Iic (a + 
 
 /-! ### Proof 2 — the two parity partners are anti-causally supported -/
 
-/-- **Proof 2, RDF half** (Tang & Lu p. 93, "a similar analysis shows that the first … term … lies in
-the space `[−∞,R]`").  The RDF parity partner `Q̂₀ᵀ(k)·Ĥ₁(−k)·Q̂₀(k)` is, in real space, the triple
-convolution of the transposed Baxter factor (supported on `[−R,−λ]`), the **time-reversed** `h₁`
-(supported on `(−∞,−R]` by `reflected_support_Iic`) and the Baxter factor (supported on `[λ,R]`).
-Its support is therefore contained in `(−∞, −λ_ij]` — strictly to the left of the core for every
-physical `λ_ij ≥ 0`. -/
+/-- Conditional support arithmetic for a reflected left kernel, a reflected RDF,
+and an unreflected right kernel. The name `qT` is only a binder: the hypothesis
+`support qT ⊆ [-R,-lam]` is not implied by matrix transposition at the same `k`.
+The physical transpose chain is handled by `rdf_parity_partner_support_physical`. -/
 theorem reflected_rdf_conj_support {qT q h1 : ℝ → ℝ} {R lam : ℝ}
     (hqT : Function.support qT ⊆ Set.Icc (-R) (-lam))
     (hq : Function.support q ⊆ Set.Icc lam R)
@@ -312,15 +314,12 @@ names — see `convIter_support_subset` and the note under it. -/
 
 open FMSA.InnerDecomp FMSA.WHSupports
 
-/-- **The transposed Baxter factor** `{Q̂₀ᵀ}_{ij}` in real space.  Transposition is `r → −r`
-(Tang & Lu p. 92; [LN] Proof 1 "the transposed `Q₀ᵀ` is supported on `[−R_ij, −λ_ij]` since
-transposition corresponds to `r → −r` in real space").  This is the atom Y1.3a did **not** have —
-`WHSupports` supplies only the untransposed `q0MixEntry`. -/
+/-- Spatial reflection of the untransposed Baxter kernel, corresponding to evaluation
+at `-k`. This is NOT the kernel of `Q^T(k)`, whose entries are `q_ji(r)`. -/
 noncomputable def q0MixEntryRefl {N M : ℕ} (X : Mix N M) (i j : Fin N) (r : ℝ) : ℝ :=
   X.q0MixEntry i j (-r)
 
-/-- **[LN] Proof 1 / Tang & Lu p. 93, transposed atom.**  `{Q̂₀ᵀ}_{ij}` is supported on
-`[−R_ij, −λ_ij]` — the reflection of `q0MixEntry`'s `[λ_ij, R_ij]`. -/
+/-- The reflected untransposed kernel is supported on `[-R_ij,-lam_ij]`. -/
 theorem q0MixEntryRefl_support_subset {N M : ℕ} (X : Mix N M) (i j : Fin N) :
     Function.support (q0MixEntryRefl X i j) ⊆ Set.Icc (-(X.R i j)) (-(X.lam i j)) := by
   intro x hx
@@ -366,14 +365,9 @@ theorem reflected_rdf_edge_eq {N M : ℕ} (X : Mix N M) (i m n j : Fin N) :
   simp only [HSMix.R, HSMix.lam]
   ring
 
-/-- **Y1.3a discharged — the RDF parity partner, from physics only.**  For the index chain
-`i → m → n → j`, `{Q̂₀ᵀ}_{im} ⋆ h₁_{mn}(−·) ⋆ {Q̂₀}_{nj}` is supported on `(−∞, R_ij − σ_m]`.  The only
-input is the hard-core condition on `h₁_{mn}`; both Baxter atoms come from `WHSupports` + the
-reflection lemma above.
-
-The bound is **strictly** left of contact by the intermediate species' diameter `σ_m > 0`
-(`Mix.hσ` — the structure's only physical axiom), which is why the next lemma can conclude vanishing
-on the *closed* half-line `[R_ij, ∞)` with room to spare. -/
+/-- Support of the reflected-untransposed kernel chain `q_im(-·) ⋆ h_mn(-·) ⋆ q_nj`.
+Its bound has a diameter margin, but this chain is NOT the physical partner with `Q^T(k)`.
+Retained for compatibility; use `rdf_parity_partner_support_physical` for that partner. -/
 theorem reflected_rdf_conj_support_physical {N M : ℕ} (X : Mix N M) (i m n j : Fin N) (h1 : ℝ → ℝ)
     (hhard : ∀ r, r < X.R m n → h1 r = 0) :
     Function.support
@@ -392,10 +386,8 @@ theorem reflected_rdf_conj_support_physical {N M : ℕ} (X : Mix N M) (i m n j :
   refine (Iic_add_Icc_subset (-(X.lam i m) + -(X.R m n)) (X.lam n j) (X.R n j)).trans ?_
   rw [reflected_rdf_edge_eq X i m n j]
 
-/-- **The RDF parity partner vanishes on the whole closed causal half-line `[R_ij, ∞)`.**  Not merely
-on the open one: the margin `σ_m > 0` of `reflected_rdf_conj_support_physical` covers the endpoint
-that Tang & Lu's overlapping spaces `[−∞,R]`/`[R,∞]` share.  So the "even pseudo-trace" contributes
-nothing to `B₁` — with room to spare, from physics inputs only. -/
+/-- The reflected-untransposed chain vanishes on `[R_ij,infinity)` by its diameter margin.
+This is not a proof of a margin for the physical plain-transpose RDF partner. -/
 theorem reflected_rdf_conj_eq_zero_of_contact_le {N M : ℕ} (X : Mix N M) (i m n j : Fin N)
     (h1 : ℝ → ℝ) (hhard : ∀ r, r < X.R m n → h1 r = 0) {x : ℝ} (hx : X.R i j ≤ x) :
     ((q0MixEntryRefl X i m ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (fun r => h1 (-r)))
@@ -405,6 +397,55 @@ theorem reflected_rdf_conj_eq_zero_of_contact_le {N M : ℕ} (X : Mix N M) (i m 
   rw [Set.mem_Iic] at hmem
   have hpos : 0 < X.sigma m := X.hsigma m
   linarith
+
+/-- The Baxter kernel for the plain transpose at the same spectral argument.
+It swaps species indices without changing the spatial variable. -/
+noncomputable def q0MixEntryTranspose {N M : ℕ} (X : Mix N M)
+    (i j : Fin N) (r : ℝ) : ℝ := X.q0MixEntry j i r
+
+theorem q0MixEntryTranspose_support_subset {N M : ℕ} (X : Mix N M) (i j : Fin N) :
+    Function.support (q0MixEntryTranspose X i j) ⊆ Set.Icc (X.lam j i) (X.R j i) :=
+  X.q0MixEntry_support_subset j i
+
+/-- Upper support edge of the true RDF parity chain. Both intermediate diameters cancel;
+there is no strict margin below contact from this support calculation. -/
+theorem rdf_parity_partner_edge_eq {N M : ℕ} (X : Mix N M) (i m n j : Fin N) :
+    X.R m i + -(X.R m n) + X.R n j = X.R i j := by
+  simp only [HSMix.R]
+  ring
+
+/-- The kernel-kernel term in `Q^T(k) H(-k) Q(k)` uses `q_mi(r)` on the left.
+Its convolution support lies at or below pair contact. Scalar density factors do
+not change this bound. The identity-kernel terms of the full Baxter factors are
+not represented by functions here. -/
+theorem rdf_parity_partner_support_physical {N M : ℕ} (X : Mix N M)
+    (i m n j : Fin N) (h1 : ℝ → ℝ) (hhard : ∀ r, r < X.R m n → h1 r = 0) :
+    Function.support
+      ((q0MixEntryTranspose X i m ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (fun r => h1 (-r)))
+        ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (X.q0MixEntry n j)) ⊆ Set.Iic (X.R i j) := by
+  have hinner : Function.support
+      (q0MixEntryTranspose X i m ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (fun r => h1 (-r)))
+      ⊆ Set.Iic (X.R m i + -(X.R m n)) := by
+    refine (support_convolution_subset (ContinuousLinearMap.mul ℝ ℝ)).trans ?_
+    exact (Set.add_subset_add (q0MixEntryTranspose_support_subset X i m)
+      (reflected_support_Iic (support_subset_Ici_of_hardCore hhard))).trans
+      (Icc_add_Iic_subset (X.lam m i) (X.R m i) (-(X.R m n)))
+  refine (support_convolution_subset (ContinuousLinearMap.mul ℝ ℝ)).trans ?_
+  refine (Set.add_subset_add hinner (X.q0MixEntry_support_subset n j)).trans ?_
+  refine (Iic_add_Icc_subset (X.R m i + -(X.R m n)) (X.lam n j) (X.R n j)).trans ?_
+  rw [rdf_parity_partner_edge_eq X i m n j]
+
+/-- The actual transpose/reflection partner vanishes on the open exterior.
+Its value at contact is not inferred from support arithmetic alone. -/
+theorem rdf_parity_partner_eq_zero_of_contact_lt {N M : ℕ} (X : Mix N M)
+    (i m n j : Fin N) (h1 : ℝ → ℝ) (hhard : ∀ r, r < X.R m n → h1 r = 0)
+    {x : ℝ} (hx : X.R i j < x) :
+    ((q0MixEntryTranspose X i m ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (fun r => h1 (-r)))
+      ⋆[ContinuousLinearMap.mul ℝ ℝ, volume] (X.q0MixEntry n j)) x = 0 := by
+  by_contra hne
+  have hmem := rdf_parity_partner_support_physical X i m n j h1 hhard hne
+  rw [Set.mem_Iic] at hmem
+  exact (not_le.mpr hx) hmem
 
 /-! #### The fourth atom: the inverse Baxter factors -/
 

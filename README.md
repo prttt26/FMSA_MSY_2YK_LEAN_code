@@ -1,137 +1,237 @@
-# FMSA Yukawa Mixture Theory — Lean 4 Proofs
+# MSA_and_1st_Truncation
 
-Lean 4 + Mathlib formalization of the First-order Mean Spherical Approximation (FMSA) for
-fluids with Yukawa interaction tails, covering both the hard-sphere Yukawa (HSY) and
-two-Yukawa-tail (2YK) cases.
+Stable Lean 4 foundation for Exact MSA and its first coupling truncation
+(FMSA), including shared hard-sphere, OZ, Baxter, transform and approximation
+infrastructure. The original `LeanCode.*` module names and `FMSA.*` declaration
+names are retained.
 
-## Project organization — four content tracks
-
-The development is organized around four logical tracks. Each *claim* track carries a scope + axiom
-gate `.lean` file (a `#guard_msgs`-checked ledger of what it proves and its exact axiom footprint —
-the build fails if either drifts) and a task-status file; the **Foundations** track is depended-upon
-by all three claim tracks and therefore has no gate file of its own.
-
-| Track | What it is | Task status | Scope gate | Dominant `LeanCode/` layers |
-|---|---|---|---|---|
-| **Foundations** (非闭包依赖基础) | HS / OZ / Baxter / Wiener–Hopf / thermodynamics infrastructure, independent of *which* closure | [todo_foundations.md](todo_foundations.md) | — (depended-upon) | L0 `Analysis/`, `FMSAPoly/` · L1 `HardSphere/` · L2 `HSMixture/` · `FreeEnergy/` |
-| **FMSA** | the FMSA-DP first-order DCF/RDF construction | [todo_fmsa.md](todo_fmsa.md) | [FMSAProject.lean](LeanCode/FMSAProject.lean) | L3 `YukawaOZ/` · L4 `YukawaOZMix/` |
-| **Exact MSA** (+ FMSA↔Exact-MSA bridge) | Waisman/Blum–Høye/Ginoza exact closed form; the FOEQ / MSAFAM / leg-3 bridge; the BRK mixture core (axiom-free) | [todo_exact_msa.md](todo_exact_msa.md) | [ExactMSAProject.lean](LeanCode/ExactMSAProject.lean) | L3/L4 + L5 `Closures/` |
-| **Other closures** (其他闭包) | PYE (`pullback_passes=0` ≡ first-order PY); HNCB | [todo_closures_other.md](todo_closures_other.md) | [ClosuresProject.lean](LeanCode/ClosuresProject.lean) | L5 `Closures/` |
-
-`todo_lean.md` remains the thin top-level index (layer map + project-wide axiom/sorry ledger +
-category index → the four task files above). Detailed per-group proof records live in the
-`proof_notes_*.md` cluster (see the Structure section).
-
-## What this repository proves
-
-The proofs are organized around the derivation of the direct correlation function (DCF)
-and radial distribution function (RDF) for multi-component Yukawa mixtures via the
-Ornstein-Zernike (OZ) equation and Baxter factorization.
-
-### Hard-sphere foundations
-- Percus-Yevick (PY) closed-form DCF for hard spheres
-- Hard-sphere Baxter factor Q₀(s), its non-vanishing at Yukawa poles, and the Baxter
-  Wiener–Hopf factorization of 1 − ρĈ_HS (Group BAXTER)
-- Complex-analytic construction of the Baxter Q-factor's poles/residues — residue at a simple
-  pole, Jordan's lemma, contour deformation, Banach pole-family (Group POLE, `Analysis/`)
-- Wiener-Hopf splitting (B₁ + D₁ = T_U identity; support of T_S)
-- OZ fixed-point existence for g₀_HS and its closed-form assembly into `OzFixedPt` (Group OZFIX)
-- Contact value g₀_HS(σ) = (1+η/2)/(1−η)² via the jump-asymptotic route (Group CONTACT)
-- Multi-component Baxter Q̂₀ matrix identity and det(Q̂₀) > 0 positivity (Group M)
-- Baxter real-space convolution identity
-
-### Yukawa DCF derivation
-- Closed-form I₁/I₂ integral identities and their vanishing at ℓ=0
-- Single-component reduction: b_ij N=1 collapse; g + a·exp(−z) = 1 identity
-- FMSA_GA_matrix_mix algebraic foundation: Q̂₀ = P̂ + Ê·exp(−z·σ_min) decomposition,
-  G/A matrix coefficients, degree-≤4 inner-core polynomial, origin BC automatic satisfaction
-- Inner-core mediated breakpoints: mediated ≡ 0 below r* = R[a,b]+R[i,a], its C² onset and
-  the second knot r** (Group IB)
-- First-order Yukawa RDF/DCF via Wiener–Hopf: the spectral amplitude carrying the Yukawa-pole
-  residue is the doubly-propagated Q̂₀⁻¹·K·Q̂₀⁻ᵀ, not the singly-propagated K·G (Group Y1)
-- N=1 consistency: corrected formula reduces exactly to FMSA_pure; inner/outer matching at contact
-
-### Multi-component mixture inner core (Wiener–Hopf)
-- N=2 mixture Mittag-Leffler inner-core expansion (Group MML)
-- Infinitude of the mixture det(Q̂₀) HS-pole zero family (Group MZERO)
-- Mixture inner-core polynomial coefficients (Group MPOLY)
-
-### Formula failure analysis
-- Algebraic disproof of (1+A)² = 1−g² — root cause of the FMSA_chsY spike for HSY (Group chsY)
-- FMSA_poly failure: origin constraint, degree-independent impossibility of approximating a
-  growing exponential (P.3), two-endpoint bound, exponential-basis completeness (Group P)
-- FMSA_GA_matrix_mix's own inner formula is ill-conditioned for unlike pairs at large σ-ratio:
-  the two-exp base K·exp(z·R) diverges and no bounded additive HS-pole correction cancels it,
-  with structural root cause G₀₁ → 0 (Group GA)
-
-### Free energy integrals
-- Outer-core and inner-core energy integrals; LJ integral identity
-- Free energy convergence for FMSA_GA_matrix_mix and LJ/FMSA_poly routes; exact vs LJ comparison
-- White-Bear FMT / BMCSL mixture thermodynamic consistency (Group FW)
-
-## Physical setting
-
-**HSY (hard-sphere Yukawa):** one Yukawa tail `−(K/r)·exp(−z·r)` added to a hard-sphere
-potential. Standard model for colloidal suspensions and electrolyte solutions.
-
-**2YK (two Yukawa tails):** two competing Yukawa terms — a short-range repulsive tail
-(z₁ ≈ 14) and a longer-range attractive tail (z₂ ≈ 2.96) — without a hard core. Best method for approximating LJ potential.
-Models soft-repulsion fluids; the large z₁ makes inner-core polynomial approximations
-fail (exp(14) ≈ 10⁶), motivating the G/A matrix approach proved here.
-
-## Structure
-
-```
-LeanCode/                         (layering + policy: see CONVENTIONS.md; restructured 2026-08-06)
-  Analysis/      — general complex/functional-analysis infrastructure (Group MA): residues, Jordan's
-                   lemma, contour deformation, Banach pole-family, Wiener–Hopf, Volterra   [base]
-  FMSAPoly/      — FMSA polynomial inner core + formula-failure analysis (Groups chsY, P)  [base]
-  HardSphere/    — single-component HS: PY DCF, Baxter factor + Wiener–Hopf, OZ fixed point, poles
-  HSMixture/     — N-component PURE hard-sphere mixture: Baxter Q̂₀ matrix, det pole-freeness,
-                   no-spinodal, White-Bear FMT, mixture RDF
-  YukawaOZ/      — single-component Yukawa OZ: I₁/I₂ integrals, single-comp reduction, MSA outer DCF,
-                   inner-core, causal projection, contact matching  (+ the generic-scalar base)
-  YukawaOZMix/   — N-component Yukawa mixture OZ: real-space Baxter route, mixture DCF/RDF, ML series,
-                   Wiener–Hopf spectral amplitude, residues
-  FreeEnergy/    — sum rule, energy integrals, convergence  [sink]
-  Closures/      — non-FMSA closures (PY/PYE/HNCB/MSA): ClosureExpansions + DPClosureMap  [sink]
-
-Proof records — one file per related group cluster (see the todo_lean.md header for the
-authoritative group↔file map):
-  proof_notes_hard_sphere.md — Groups 2, 3, OZ
-  proof_notes_baxter.md      — Group BAXTER (Baxter Q-factor + Wiener–Hopf factorization)
-  proof_notes_contact.md     — Group CONTACT (g₀_HS contact value, jump-asymptotic route)
-  proof_notes_pole.md        — Group POLE (complex-analytic Baxter pole/residue construction)
-  proof_notes_ozfix.md       — Group OZFIX (h_explicit → OzFixedPt assembly)
-  proof_notes_matrix_q0.md   — Group M (multi-component Q̂₀ matrix identity, det positivity)
-  proof_notes_yukawa_dcf.md  — Groups 1, 4, GAP, C, 5
-  proof_notes_breakpoints.md — Group IB (inner-core mediated breakpoints)
-  proof_notes_yukawa_wh.md   — Group Y1 (first-order Yukawa RDF via Wiener–Hopf; general foundation)
-  proof_notes_mixture_rdf.md — Groups MML, MZERO (N=2 mixture inner RDF h₁: Mittag-Leffler HS-pole series + det zero family)
-  proof_notes_mixture_dcf.md — Groups MRS, MPOLY (N=2 mixture inner DCF: real-space Baxter finite closed form)
-  proof_notes_failures.md    — Groups chsY, P, GA (method-failure analysis)
-  proof_notes_free_energy.md — Groups F, FW (free energy; White-Bear FMT/BMCSL)
-
-Scope + axiom gates — one #guard_msgs-checked ledger per claim track (see "four content tracks"):
-  LeanCode/FMSAProject.lean     — FMSA-DP first-order construction (the paper's chain)
-  LeanCode/ExactMSAProject.lean — exact MSA closed form + FMSA↔ExactMSA bridge (FOEQ/MSAFAM/BRK)
-  LeanCode/ClosuresProject.lean — PYE / HNCB (the non-FMSA, non-exact-MSA closures)
-
-Reference:
-  todo_lean.md          — thin top-level index: layer map, project-wide axiom/sorry ledger, category index
-  todo_foundations.md   — task status: Foundations track (非闭包依赖基础)
-  todo_fmsa.md          — task status: FMSA track
-  todo_exact_msa.md     — task status: Exact MSA (+ FMSA↔ExactMSA bridge) track
-  todo_closures_other.md— task status: Other closures track (PYE / HNCB)
-  MATH_AXIOMS.md — registry of named mathematical axioms used across the proofs
-  CONVENTIONS.md — naming and notation conventions
-  to_python.md   — Lean results → Python implications (analysis-session handoff notes)
+```bash
+lake build
 ```
 
-## Dependencies
+The default entry `MSA_and_1st_Truncation.lean` imports `LeanCode.lean` and
+the paper theorem collection `FMSAPaper.lean`. It does not import any downstream
+project. The package
+requires only the pinned Mathlib dependency; the Lean toolchain is v4.31.0.
+`release-manifest.json` records the validated source/configuration baseline.
+Downstream projects lock its version and manifest digest. A foundation
+change requires a deliberate new baseline and downstream revalidation.
 
-- [Lean 4](https://leanprover.github.io/)
-- [Mathlib4](https://leanprover-community.github.io/mathlib4_docs/)
+## Standalone checkout
 
-See `lean-toolchain` for the exact Lean version and `lakefile.toml` for the Mathlib pin.
+This directory is the published repository root. `lakefile.toml` sets
+`packagesDir = "../.lake/packages"` so that sibling projects in the authors'
+workspace share one Mathlib checkout; in a fresh clone, Lake therefore places
+the dependencies in a `.lake/` directory next to the clone. Clone into an
+otherwise empty parent directory, then run
 
+```bash
+lake exe cache get
+lake build
+python3 formalization/check.py
+```
+
+`formalization/audit_foundation.py` checks the source/configuration hashes
+against `release-manifest.json` without any other repository.
+
+## Proof notes
+
+`proof_notes/` holds the per-group proof records for the foundation (hard
+spheres, OZ/Baxter/pole/OZFIX, contact value, Yukawa DCF and Wiener-Hopf,
+mixture DCF/RDF, breakpoints, exact MSA and its Blum-Hoye derivation, free
+energy, documented failures). The closure notes (PYE/HNCB/FOEQ/MSAFAM) live in
+the separate `Other_Closures` project. Task IDs and status indices referenced
+inside the notes (`todo_lean.md` and similar) belong to the authors' workspace
+and are not part of this repository.
+
+## 1.0.10: the weak identity at every coupling order (F1 complete in Lean)
+
+The paper collection now has 51 modules and 258 exact standard-axiom guards.
+`FiniteIntegralJets`, `BaxterWeakJetBasis`, `BaxterSecondIntegralJets` and
+`RadialIntegralJets` prove that coupling jets commute with integration against
+compactly supported tests, for the full reflected primitive, the second-factor
+numerator and r times the ordered radial DCF: each integrand is a fixed finite
+integrable dictionary with smooth amplitude coefficients, so no
+derivative-under-integral premise is used. `BaxterWeakCauchy.fullPrimitive_weak_cauchy`
+gives every coefficient of the full reflected weak identity for any smooth
+amplitude curve, with the convolution term as an explicit Cauchy sum including
+its lower-edge product and both linear Dirac coefficients retained.
+`ActualRadialWeakJets.normalized_local_root_weak_cauchy` specializes this to an
+actual local symmetric-strength MSA root branch with nonzero free volume, every
+species pair, tests compactly supported in the positive radial axis, in the
+paper normalization q = Q/(2*pi). This closes the last Lean obligation of F1;
+F5/F6 numerical certificates remain open. Downstream builds were not re-run for
+this baseline: the change is confined to leaf `FMSAPaper` modules that no
+downstream project imports.
+
+## 1.0.9: full reflected weak identity and actual radial identification
+
+The paper collection now has 44 modules and 221 exact standard-axiom guards.
+`BaxterWeakPrimitive.fullPrimitive_weak_derivative` proves the full-line
+reflected identity for arbitrary amplitudes and compact C1 tests, retaining
+both linear lower-edge Dirac contributions and the second-factor convolution
+atom. `ActualRadialWeak.root_second_weak` identifies it with the actual radial
+DCF for every species pair at a symmetric-strength MSA root, for tests compactly
+supported in the positive radial axis. Positive rates, nonnegative diameters
+and nonzero free volume are explicit. The assembly of this complete weak
+identity through coupling jets, including integral/jet interchange, remains
+open, as do the F5/F6 numerical certificates.
+
+## 1.0.8: second-factor Cauchy formula and actual lower-edge atoms
+
+The paper collection reached 41 modules and 210 exact standard-axiom guards.
+`BaxterIntegrationByParts` proves whole-line integration by parts with both
+lower-edge atoms. `BaxterSecondDerivative` differentiates the full reflected
+primitive through the second factor away from the edges and identifies it with
+the existing Baxter primitive. `ActualBaxterSecondJets` proves the normalized
+ordered DCF Cauchy formula at every coupling order, including the explicit
+lower-edge product. `BaxterWeakDerivative` proves the actual factor's weak
+derivative and its Dirac coefficient against compact C1 test functions.
+The full reflected weak identity and all-species positive-radial identification
+were completed in 1.0.9; coupling-jet assembly and F5/F6 remain open.
+
+## 1.0.7: actual analytic branches and conditional fold equality
+
+The paper collection reached 37 modules and 192 exact standard-axiom guards.
+`ActualAnalyticBranch` uses the real analytic implicit-function theorem to
+prove regular actual MSA branches analytic. `AnalyticTaylor` identifies the
+canonical Taylor sums and their positive radii. `ActualAnalyticTaylor` proves
+a positive common radius for the physical PY seed, convergence to the actual
+branch before a regular endpoint under all-order component signs, and equality
+of that radius with a transverse fold under the explicit fold hypotheses.
+No extra analyticity, radius or Pringsheim premise remains. The model-specific
+all-order sign hypothesis and convergence exactly at the fold remain separate.
+
+## 1.0.6: scalar Pringsheim without additional axioms
+
+The paper collection reached 34 modules and 173 exact standard-axiom guards.
+`NonnegativeRecenter` supplies the positive-series regrouping argument;
+`Pringsheim` proves the finite-positive-radius endpoint obstruction;
+`SignedPringsheim` removes the constant term, permits either coefficient sign,
+and proves a radius lower bound from consistent positive-axis analytic
+continuation. The actual-MSA analytic interfaces were completed in 1.0.7;
+the model's all-order sign condition remains an explicit hypothesis.
+
+## 1.0.5: actual DCF normalization and Fourier identification
+
+The paper collection reached 31 modules and 162 exact standard-axiom guards.
+`BaxterNormalization` assembles the actual DCF Cauchy sum in the paper's
+q = Q/(2*pi) convention and proves normalized primitive derivatives and shell
+identities. `ActualRadialIdentification` connects the ordered radial DCF to the
+actual spectral Baxter coefficient, deriving core reciprocity from an actual
+symmetric-strength root with nonzero free volume. No additional small-kernel
+budget is required for this Fourier identity. The full reflected distributional
+Cauchy formula remains open; manuscript changes are handed off through Markdown.
+
+## 1.0.4: integrated FMSA paper proofs
+
+At the user's request on 2026-10-22, the 29 paper modules and their 151 exact
+standard-axiom gates were moved into `FMSAPaper/` and included in the default
+build. The public module and theorem names are preserved. The former independent
+validation records and the 1.0.3 release manifest are archived; no separate Git
+repository or additional Lake package was created for these proofs.
+
+Run `python3 formalization/check.py` for the default-build and footprint audit.
+See [the paper scope ledger](formalization/README.md) for proved statements and
+remaining obligations. In particular, F2 retains explicit fold hypotheses, F3
+does not prove the converse, and F1's full distributional correspondence and
+F5/F6 numerical certificates remain open. F4 is proved under explicit fold and
+all-order sign hypotheses; manuscript citation is handed off in the Markdown backlog. Integration
+does not turn those remaining obligations into proved claims.
+
+## Completed scope and assumptions
+
+The arbitrary finite-mixture/tail automatic Wronskian construction and
+actual structural closure on the explicit analytic budget domain are
+proved. Repeated positive rates, unequal diameters and zero-density species
+are included where stated. The four former single-tail matrix closure/HS
+Fourier axioms are proved theorems with the original formulas, at supplied
+roots on their explicit physical domain. See the retained records in
+`../proof_notes_msa_exact.md` and `../results/multitail_extension/`.
+
+“Completed” refers to this recorded scope. It does not establish global
+root existence, all-state decay, g>=0, thermodynamic route consistency,
+physical Maxwell/binodal accuracy or SCOZA.
+
+`LeanCode/FMSAProject.lean` retains the historical FMSA paper gate, including
+three results with five extra assumptions across their dependency union.
+Those conditional contour/contact/no-spinodal results are preserved and
+remain explicitly labelled; retiring the four matrix axioms does not
+retire unrelated assumptions. Exact MSA and new multitail results retain
+their existing standard-axiom gates.
+
+## Shared first-order interface
+
+`LeanCode/Closures/ClosureExpansions.lean` provides shared coupling calculus,
+MSA first order and the minimal PY first-order comparison cited by FMSA.
+`LeanCode/Closures/DPClosureMap.lean` supplies the generic DP linear map,
+error estimates, radial injectivity, Yukawa approximation and conditional
+WH continuity. Existing finite-order jet algebra and formula-specific
+anomaly certificates are retained as auxiliary comparison tools; they do
+not establish a universal anomaly threshold. Its PY application and HNCB pull-back results now live in
+Other_Closures. FirstOrderEquivalence, MSASolutionFamily and MSAFamilyConcrete
+stay here because they connect Exact MSA to its first truncation.
+
+## 1.0.1：高阶 B 层级与有限阶空间表示
+
+2026-10-12 按用户授权补入
+[`MSABHierarchy.lean`](LeanCode/YukawaOZMix/MSABHierarchy.lean)，默认 Exact-MSA
+入口导入该模块。新增 11 条定理均有标准公理足迹门控，既有物理定义、
+证明和旧门控未改动。原 `1.0.0` 清单归档为 `release-manifest-1.0.0.json`；
+当前补丁版本经过基础、两个下游及工作区重建后重新封存。
+
+使用归一化 Taylor 系数（导数除以阶乘），设
+
+```text
+T0=I-C0, S0=I+H0, T0*S0=I,
+R_n = sum_(j=1..n-1) H_j C_(n-j),
+H_n T0 = S0 C_n + R_n,
+T0=Q_plus Q_minus^T, T0^T=T0.
+```
+
+原始 `B_n=Q_plus^T H_n Q_plus` 给出
+
+```text
+C_n = Q_minus B_n Q_minus^T - T0 R_n.
+```
+
+定义修正层级
+`B_eff_n=Q_plus^T (H_n-R_n S0) Q_plus`，则每阶恢复
+`C_n=Q_minus B_eff_n Q_minus^T`。一阶 `R_1=0`，二阶
+`R_2=H_1 C_1`。新定理保留混合物矩阵乘法的顺序。
+这里的 B 是与 Fourier OZ 系数一致的矩阵层级；不能直接把它与尚未
+识别的单边 Laplace WH 分子混用。
+
+B 形式本身不证明有限空间闭式：原始 B 和低阶 H 的硬球谱分母需要在
+完整 DCF 中处理。另一条定理链直接沿用既有固定空间基底导数等式：
+若某个固定几何分片上的实际 DCF 已表示为
+`c(K,r)=sum_l a_l(K) phi_l(r)`，且系数具有所需有限阶光滑性，则
+
+```text
+c_n(r) = sum_l [a_l^(n)(K0)/n!] phi_l(r),
+c_<=L(tau,r) = sum_l phi_l(r) sum_(n=0..L) [a_l^(n)(K0)/n!] tau^n.
+```
+
+因此每阶与严格有限阶截断保留同一有限空间表示，不要求无限耦合级数
+收敛。闭式基底、真实物理系数的识别以及系数递推的正则性仍由其对应
+物理定理提供。新模块没有自动构造任意阶修正 B 的 WH 投影，也没有
+把“写成有限空间基底”提升为“所有物理参数下都有正则系数”或统一精度保证。
+
+## Finite-order source hierarchy (foundation 1.0.3)
+
+`LeanCode/MSABSourceProject.lean` guards 82 new standard-axiom theorems.
+The actual scalar single-tail corrected one-sided source is a single Yukawa
+term at every finite order. The actual finite-tail mixture excess-renewal
+source has an evaluated, order-independent piecewise polynomial/Yukawa
+dictionary for unequal additive diameters and repeated positive rates.
+Actual BH-root coefficients are constructed by the two physical HS seed
+block solves at every order, including zero-density species.
+
+Fourier-OZ B is a different object: a reflected HS zero with nonzero DCF
+obstructs its membership in the prescribed finite Yukawa source class.
+The actual RDF reconstruction retains the HS propagator and lower-order
+terms. Automatic actual-root admissibility discharges the algebraic radial
+OZ certificates on the established analytic-budget domain; this does not
+prove global decay, physical phase accuracy or g>=0.
+See `../results/msa_b_hierarchy_physical/validation.json` and the paper
+handoff in `../../FMSA_dp_output/md/lean_b_hierarchy_proof_handoff.md`.

@@ -7,36 +7,23 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaOZMix.MSAMixtureCore
-import LeanCode.YukawaOZMix.MSAMixtureFactorization
+import LeanCode.YukawaOZMix.MSAMixtureBHRootDefs
+import LeanCode.YukawaOZMix.MSAMixtureEqualCoreBridge
 
 /-!
-# MSAEMIX.4 — the matrix `hcore` axiom (equal σ, BH-root gated) and MSAEMIX.1 at equal diameter
+# Kernel-checked equal-diameter matrix closure recovery
 
-Group **MSAEMIX** (`proof_notes_msa_exact.md`).  Numerical partner: `msaemix_hcore_cert.py`,
-`msaemix_core_coeffs.py` (parent repo).
+The original five-coefficient DCF is recovered from the actual Baxter
+convolution: the origin constraint follows from automatic Wronskian
+reciprocity, and species contractions of both BH equations identify the
+exponential coefficients. The faithful unequal-diameter Fourier theorem
+then proves the old hcore interface. Definitions live independently in
+MSAMixtureBHRootDefs to avoid a cycle through the nonlinear construction.
 
-`MSAMixtureCore.lean` gives the concrete equal-σ core correction `matMSACoreCorr` (derived + verified).
-This file supplies the **BH-root gate** and lands the closure-recovery `hcore` as a documented
-physics-computation axiom, then closes MSAEMIX.1 at equal diameter.
-
-* `qhatMixC`/`qhatMixR` — the **full** mixture Baxter factor `Q̂_ij(s)` at equal σ (with the Yukawa
-  tails `W̃/(s+z)`, `C̃·[e^{−sσ}/(s+z) + (1−e^{−sσ})/s]`), complex/real `s`.  Its poly part is the
-  `q0_entry_c` Baxter factor; the tails are what `Q0_mat_c` lacks.
-* `ftilde` — the symmetric Baxter factor entry `δ_ij − √(ρ_iρ_j)Q̂_ij(s)`; `FtHS`/`FtMSA` its HS and
-  MSA instances, `Ft1` the coupling increment.
-* `MixBHRoot` — Blum–Høye (29′)/(33′) at equal σ: the physical-solution gate (the matrix analog of
-  the scalar `h29`/`h33`).  This is what makes the `hcore` **true** (it is false off-root).
-* `matExactMSAEqualDiam_hcore` — ⭐ the axiom: at a `MixBHRoot`, the Baxter-product coupling
-  increment matches
-  `−√(ρ_iρ_j)(𝓕[matMSACoreCorr] + 𝓕[matMSAtail])`.  Certified in `msaemix_core_coeffs.py`
-  (all-five closed-form, no fitting, held-out `~1e-12`, binary/ternary/unequal ρ).  A
-  *physics-computation* axiom, not a new mathematical assumption.
-* `matMSAmixture_equalDiam` — ⭐ MSAEMIX.1 at equal diameter: chains the axiom through the abstract
-  `matMixtureFactorization_of_core` (with the symmetric √-weight folded into `cHShat`/`cMSAhat`, `ρ:=1`),
-  given the hard-sphere symmetric factorization `hHS`.  The matrix analog of `exactMSA_factorization`.
-
-⚠ Equal σ only; unequal σ has a piecewise core (separate).
+The former SymPy-supported axiom is retired. The public interfaces expose
+positive z and sig, nonzero k, nonnegative densities, positive vacMix,
+symmetric K and the actual root. No g positivity or thermodynamic
+consistency statement is implied.
 -/
 
 open Real MeasureTheory
@@ -46,98 +33,15 @@ namespace MSAMixture
 
 variable {N : ℕ}
 
-/-! ### The full mixture Baxter factor `Q̂(s)` (equal σ, with Yukawa tails) -/
+/-! ### The closure-recovery theorem and MSAEMIX.1 at equal diameter -/
 
-/-- The full mixture Baxter factor `Q̂_ij(s)` at **equal σ** (`σ_i = σ`, `λ = 0`), complex `s`:
-`φ₁(sσ)q'_ij + φ₂(sσ)A_j + W̃_ij/(s+z) + C̃_ij[e^{−sσ}/(s+z) + (1−e^{−sσ})/s]`, with
-`φ₁(x)=(1−x−e^{−x})/s²`, `φ₂(x)=(1−x+x²/2−e^{−x})/s³` (the `q0_entry_c` Baxter poly plus the tails). -/
-noncomputable def qhatMixC (z sigma : ℝ) (qp Wt Ct : Matrix (Fin N) (Fin N) ℝ) (Av : Fin N → ℝ)
-    (s : ℂ) (i j : Fin N) : ℂ :=
-  (1 - s * sigma - Complex.exp (-(s * sigma))) / s ^ 2 * (qp i j : ℂ)
-    + (1 - s * sigma + (s * sigma) ^ 2 / 2 - Complex.exp (-(s * sigma))) / s ^ 3 * (Av j : ℂ)
-    + (Wt i j : ℂ) / (s + z)
-    + (Ct i j : ℂ) * (Complex.exp (-(s * sigma)) / (s + z)
-        + (1 - Complex.exp (-(s * sigma))) / s)
-
-/-- The full mixture Baxter factor at **real** `s` (for the (29′)/(33′) residual gate). -/
-noncomputable def qhatMixR (z sigma : ℝ) (qp Wt Ct : Matrix (Fin N) (Fin N) ℝ) (Av : Fin N → ℝ)
-    (s : ℝ) (i j : Fin N) : ℝ :=
-  (1 - s * sigma - Real.exp (-(s * sigma))) / s ^ 2 * qp i j
-    + (1 - s * sigma + (s * sigma) ^ 2 / 2 - Real.exp (-(s * sigma))) / s ^ 3 * Av j
-    + Wt i j / (s + z)
-    + Ct i j * (Real.exp (-(s * sigma)) / (s + z) + (1 - Real.exp (-(s * sigma))) / s)
-
-/-! ### The MSA and hard-sphere amplitude bundles -/
-
-/-- The MSA `q′` amplitude matrix. -/
-noncomputable def qpMat (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt : Matrix (Fin N) (Fin N) ℝ) :
-    Matrix (Fin N) (Fin N) ℝ := fun i j => qpMSA z rho sigma Gt Dt i j
-
-/-- The MSA `A` amplitude vector (column). -/
-noncomputable def AVec (z : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt : Matrix (Fin N) (Fin N) ℝ) :
-    Fin N → ℝ := fun j => AMSA z rho sigma Gt Dt j
-
-/-- The HS `q^{0′}` amplitude matrix. -/
-noncomputable def qp0Mat (rho sigma : Fin N → ℝ) : Matrix (Fin N) (Fin N) ℝ :=
-  fun i j => Q0phys rho sigma i j
-
-/-- The HS `A⁰` amplitude vector. -/
-noncomputable def A0Vec (rho sigma : Fin N → ℝ) : Fin N → ℝ := fun j => Qppphys rho sigma j j
-
-/-! ### The symmetric Baxter factor and its HS / MSA / increment instances -/
-
-/-- The symmetric Baxter factor entry `F̃_ij(Q) = δ_ij − √(ρ_iρ_j) Q_ij`. -/
-noncomputable def ftilde (rho : Fin N → ℝ) (Q : Matrix (Fin N) (Fin N) ℂ) :
-    Matrix (Fin N) (Fin N) ℂ :=
-  fun i j => (if i = j then (1 : ℂ) else 0) - (Real.sqrt (rho i * rho j) : ℂ) * Q i j
-
-/-- The hard-sphere symmetric factor at `s` (coupling-`0`: `W̃ = C̃ = 0`); `sig` is the common σ. -/
-noncomputable def FtHS (z sig : ℝ) (rho sigma : Fin N → ℝ) (s : ℂ) : Matrix (Fin N) (Fin N) ℂ :=
-  ftilde rho (fun i j => qhatMixC z sig (qp0Mat rho sigma) 0 0 (A0Vec rho sigma) s i j)
-
-/-- The full MSA symmetric factor at `s`; `sig` is the common σ. -/
-noncomputable def FtMSA (z sig : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt : Matrix (Fin N) (Fin N) ℝ)
-    (s : ℂ) : Matrix (Fin N) (Fin N) ℂ :=
-  ftilde rho (fun i j => qhatMixC z sig (qpMat z rho sigma Gt Dt)
-    (Wt z rho Gt Dt) (Ct z rho sigma Gt Dt) (AVec z rho sigma Gt Dt) s i j)
-
-/-- The coupling increment `Q₁ = F̃_MSA − F̃_HS`. -/
-noncomputable def Ft1 (z sig : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt : Matrix (Fin N) (Fin N) ℝ)
-    (s : ℂ) : Matrix (Fin N) (Fin N) ℂ :=
-  FtMSA z sig rho sigma Gt Dt s - FtHS z sig rho sigma s
-
-/-! ### The Blum–Høye BH-root gate (equal σ) -/
-
-/-- **The mixture MSA Blum–Høye root** (equal σ = `sig`): (29′) `Σ_l Dt_il(δ_lj − ρ_l Q̂_jl(z)) =
-2πK_ij/z` and (33′) `2π Σ_l Gt_il(δ_lj − ρ_l Q̂_lj(z)) = (A_j + z q'_ij + ½z² C̃_ij)/z²`, with `Q̂` the
-full MSA Baxter factor at `s = z` (`qhatMixR`).  The physical-solution gate — the matrix analog of the
-scalar `h29`/`h33`; the `hcore` identity holds **only** at such a root. -/
-def MixBHRoot (z sig : ℝ) (rho sigma : Fin N → ℝ) (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) : Prop :=
-  (∀ i j, ∑ l, Dt i l * ((if l = j then (1 : ℝ) else 0)
-      - rho l * qhatMixR z sig (qpMat z rho sigma Gt Dt) (Wt z rho Gt Dt)
-          (Ct z rho sigma Gt Dt) (AVec z rho sigma Gt Dt) z j l)
-    = 2 * Real.pi * K i j / z)
-  ∧ (∀ i j, 2 * Real.pi * ∑ l, Gt i l * ((if l = j then (1 : ℝ) else 0)
-      - rho l * qhatMixR z sig (qpMat z rho sigma Gt Dt) (Wt z rho Gt Dt)
-          (Ct z rho sigma Gt Dt) (AVec z rho sigma Gt Dt) z l j)
-    = (AVec z rho sigma Gt Dt j + z * qpMat z rho sigma Gt Dt i j
-        + z ^ 2 * Ct z rho sigma Gt Dt i j / 2) / z ^ 2)
-
-/-! ### The closure-recovery axiom and MSAEMIX.1 at equal diameter -/
-
-/-- ⭐ **MSAEMIX.4 (axiom).**  At the equal-σ mixture MSA Blum–Høye root (`MixBHRoot`), the Baxter
-product's coupling increment `(F̃₀ F̃₁ⁿᵀ + F̃₁ F̃₀ⁿᵀ + F̃₁ F̃₁ⁿᵀ)ᵢⱼ` equals
-`−√(ρ_iρ_j)(𝓕[matMSACoreCorr]ᵢⱼ + 𝓕[matMSAtail]ᵢⱼ)` — the matrix closure-recovery ring, the matrix
-analog of `exactMSA_hcore`.
-
-**Certified** in `msaemix_core_coeffs.py` (parent repo): all five equal-σ core coefficients
-`c₁..c₅` are closed forms (derived from the Baxter real-space convolution) matching the exact
-factor-product extraction with held-out residual `~1e-12` (binary/ternary, unequal ρ, `z∈[1.5,2.6]`),
-and reducing to the scalar `msaCoreCorr` at `N = 1`.  A *physics-computation* axiom (a specific
-verified polynomial identity gated by the physical root), not a new mathematical assumption. -/
-axiom matExactMSAEqualDiam_hcore (z sig : ℝ) (rho sigma : Fin N → ℝ)
+/-- Original equal-diameter coupling increment, now a proved theorem.
+The old five-coefficient core and Yukawa tail are unchanged. -/
+theorem matExactMSAEqualDiam_hcore (z sig : ℝ) (rho sigma : Fin N → ℝ)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
-    (k : ℝ) (hσ : ∀ i, sigma i = sig) (hroot : MixBHRoot z sig rho sigma Gt Dt K) (i j : Fin N) :
+    (k : ℝ) (hσ : ∀ i, sigma i = sig) (hroot : MixBHRoot z sig rho sigma Gt Dt K)
+    (hz : 0 < z) (hk : k ≠ 0) (hsig : 0 < sig) (hrho : ∀ l, 0 ≤ rho l)
+    (hvac : 0 < vacMix rho sigma) (hK : ∀ a b, K a b = K b a) (i j : Fin N) :
     (FtHS z sig rho sigma (Complex.I * k)
         * (Ft1 z sig rho sigma Gt Dt (-(Complex.I * k))).transpose) i j
       + (Ft1 z sig rho sigma Gt Dt (Complex.I * k)
@@ -146,10 +50,19 @@ axiom matExactMSAEqualDiam_hcore (z sig : ℝ) (rho sigma : Fin N → ℝ)
           * (Ft1 z sig rho sigma Gt Dt (-(Complex.I * k))).transpose) i j
       = -(Real.sqrt (rho i * rho j) : ℂ)
           * ((radial_fourier (matMSACoreCorr z rho sigma Gt Dt K i j) k : ℂ)
-            + (radial_fourier (matMSAtail K z sigma i j) k : ℂ))
+            + (radial_fourier (matMSAtail K z sigma i j) k : ℂ)) := by
+  have hsigma : ∀ l, 0 < sigma l := fun l => by rw [hσ l]; exact hsig
+  have h := FMSA.ExactMSA.MultiTailMixture.legacyUnequal_hcore z hz rho sigma Gt Dt K
+    hsigma hrho hvac (FMSA.ExactMSA.MixLeg3.MixBHRootUneq_of_MixBHRoot
+      z sig rho sigma Gt Dt K hσ hroot) hK k hk i j
+  rw [FMSA.ExactMSA.MultiTailMixture.radial_fourier_congr_positive_ae _ _
+    (FMSA.ExactMSA.MultiTailMixture.legacyEqual_core_ae z sig hz rho sigma Gt Dt K
+      hsig hσ hrho hvac hroot hK i j) k] at h
+  simpa only [FMSA.ExactMSA.MixLeg3.FtHSuneq_eq_FtHS z sig rho sigma hσ,
+    FMSA.ExactMSA.MixLeg3.Ft1uneq_eq_Ft1 z sig rho sigma Gt Dt hσ] using h
 
 /-- ⭐ **MSAEMIX.1 at equal diameter.**  Given the hard-sphere symmetric factorization `hHS`
-(`(F̃₀ F̃₀ⁿᵀ)ᵢⱼ = δᵢⱼ − √(ρ_iρ_j)ĉ_HS,ij`) and the closure-recovery axiom at a `MixBHRoot`, the full
+(`(F̃₀ F̃₀ⁿᵀ)ᵢⱼ = δᵢⱼ − √(ρ_iρ_j)ĉ_HS,ij`) and the closure-recovery theorem at a `MixBHRoot`, the full
 MSA symmetric factorization holds:
 `((F̃₀+F̃₁)(F̃₀ⁿ+F̃₁ⁿ)ᵀ)ᵢⱼ = δᵢⱼ − √(ρ_iρ_j)(ĉ_HS,ij + 𝓕[c_core]ᵢⱼ + 𝓕[c_tail]ᵢⱼ)`
 — the physical MSA mixture direct correlation function.  Pure algebra on top of the abstract
@@ -158,6 +71,8 @@ of `exactMSA_factorization`. -/
 theorem matMSAmixture_equalDiam (z sig : ℝ) (rho sigma : Fin N → ℝ)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ)
     (k : ℝ) (hσ : ∀ i, sigma i = sig) (hroot : MixBHRoot z sig rho sigma Gt Dt K)
+    (hz : 0 < z) (hk : k ≠ 0) (hsig : 0 < sig) (hrho : ∀ l, 0 ≤ rho l)
+    (hvac : 0 < vacMix rho sigma) (hK : ∀ a b, K a b = K b a)
     (cHShat : Fin N → Fin N → ℂ)
     (hHS : ∀ i j, (FtHS z sig rho sigma (Complex.I * k)
         * (FtHS z sig rho sigma (-(Complex.I * k))).transpose) i j
@@ -178,7 +93,7 @@ theorem matMSAmixture_equalDiam (z sig : ℝ) (rho sigma : Fin N → ℝ)
     (by intro i j; simpa using hHS i j)
     (by
       intro i j
-      have hc := matExactMSAEqualDiam_hcore z sig rho sigma Gt Dt K k hσ hroot i j
+      have hc := matExactMSAEqualDiam_hcore z sig rho sigma Gt Dt K k hσ hroot hz hk hsig hrho hvac hK i j
       simpa using hc) i j
   simpa using h
 
@@ -195,6 +110,8 @@ theorem matMSAmixture_equalDiam_WH (z sig : ℝ) (rho sigma : Fin N → ℝ)
     (Gt Dt K : Matrix (Fin N) (Fin N) ℝ) (k : ℝ)
     (cHSker qbax PhiHS : Matrix (Fin N) (Fin N) (ℝ → ℝ)) (hsig1 : 0 < sig)
     (hσ : ∀ i, sigma i = sig) (hroot : MixBHRoot z sig rho sigma Gt Dt K)
+    (hz : 0 < z) (hk : k ≠ 0) (hrho : ∀ l, 0 ≤ rho l)
+    (hvac : 0 < vacMix rho sigma) (hK : ∀ a b, K a b = K b a)
     (hKDEF : MatBaxterFactorization cHSker qbax 1 sig)
     (hbridge : ∀ i j,
       2 * ∫ v in (0 : ℝ)..sig, cHSker i j v * Real.cos (k * v) = radial_fourier (PhiHS i j) k)
@@ -215,7 +132,7 @@ theorem matMSAmixture_equalDiam_WH (z sig : ℝ) (rho sigma : Fin N → ℝ)
         + (radial_fourier (matMSAtail K z sigma i j) k : ℂ)))
     (by
       intro i j
-      have hc := matExactMSAEqualDiam_hcore z sig rho sigma Gt Dt K k hσ hroot i j
+      have hc := matExactMSAEqualDiam_hcore z sig rho sigma Gt Dt K k hσ hroot hz hk hsig1 hrho hvac hK i j
       simp only [Complex.ofReal_one]
       linear_combination hc) i j
   simpa using h

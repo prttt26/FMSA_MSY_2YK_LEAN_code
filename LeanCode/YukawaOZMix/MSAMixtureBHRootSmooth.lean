@@ -7,7 +7,7 @@ Authors: FMSA project
 -- Naming and notation conventions: see CONVENTIONS.md
 
 import Mathlib
-import LeanCode.YukawaOZMix.MSAMixtureBHRoot
+import LeanCode.YukawaOZMix.MSAMixtureBHRootDefs
 import LeanCode.Closures.MSASolutionFamily
 import LeanCode.HSMixture.Q0DetRankTwo
 

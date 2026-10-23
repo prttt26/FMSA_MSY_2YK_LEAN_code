@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "foundation_history_preserved": true,
+  "foundation_head_unchanged": true,
+  "repositories": {
+    "Other_Closures": {
+      "git_root": "/home/rpan/YK_tail_FMSA/Lean_code/Other_Closures",
+      "head": "c13f8773911df06e98d61135911eeb8770b25911",
+      "tracked_files": 16,
+      "ignored_by_foundation": true,
+      "build_artifacts_tracked": false,
+      "frozen_dependency_lock_valid": true,
+      "remote": null
+    },
+    "SCOZA": {
+      "git_root": "/home/rpan/YK_tail_FMSA/Lean_code/SCOZA",
+      "head": "99934437aae9bd7beb78d295e70a8ac09a2c8a5b",
+      "tracked_files": 82,
+      "ignored_by_foundation": true,
+      "build_artifacts_tracked": false,
+      "frozen_dependency_lock_valid": true,
+      "remote": null
+    }
+  }
+}
