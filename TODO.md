@@ -45,7 +45,8 @@ gap claims go stale (MA.8 was retired that way).
 
 | Item | Track | State | Notes |
 |---|---|---|---|
-| Single-tail spinodal before fold | paper | open | `A(fold) < 0` (spinodal `A = 0` precedes the fold on every isochore) is verified on a 10⁴-point grid only; with it, single-tail states on and outside the spinodal converge. |
+| Instability before fold | exact MSA / paper | paper proof + numerics | Any hard-core mixture, any tails, any instability mode: along the branch from τ=0 no fold occurs before the first τ at which det(I−C(k)) = 0 for some real k (Parseval on disjoint supports of δc, δh + canonical Wiener–Hopf uniqueness). Pointwise I−C(k) ≻ 0 is NOT sufficient: the A<0 continuation keeps it and does fold, but there the factor is non-canonical and the BH root is no longer an OZ solution. Record: `proof_notes_msa_exact.md` §8c; numerics `results/instability_before_fold/` (11 folds, density and composition modes; the k≠0 mode is untested). Open: strictness at the instability itself; the bridge BH residual ↔ OZ problem in Lean; Lean statement. |
+| Single-tail spinodal before fold | paper | open (reduced) | Follows from the row above once the first instability of one attractive tail is shown to be at k = 0 (no k≠0 zero of F(ik) before A = 0). The 10⁴-point grid of `A(fold) < 0` is the only evidence so far. |
 | Multi-tail fold binding | paper | open | 2YK: radius = fold numerically; no proof (no 1D reduction). Competing tails: complex branch points bind (F5). |
 | F5, F6 | paper | certified (interval arithmetic) | Computer-assisted proofs in `formalization/certificates/`, not Lean. SI wording pending in the paper session. |
 | MA axioms above | foundation | live | Retirement only if Mathlib gains the machinery or a narrower statement is found. MA.7 can be deleted if it stays consumer-less. |
@@ -60,6 +61,13 @@ gap claims go stale (MA.8 was retired that way).
 | MRS.8 | FMSA | deferred | Identify `Ĉ₀ = I − Q̂₀(k)Q̂₀ᵀ(−k)` with the physical mixture HS DCF transform; off the critical path. |
 | MRS.2, MRS.4 | FMSA | backbone / core done | Remaining physical-route wiring; the finite closed form (MRS.5) does not depend on it. |
 | GAP.8 | FMSA | vacuous | `poly_coeff_from_laurent` asserts only that five reals exist; its target `P_ij` was falsified for unlike pairs (MPOLY.4/.5), so it stays a recorded vacuity. |
+
+## Future plans
+
+| Item | Track | Goal | Notes |
+|---|---|---|---|
+| Exact convergence condition | paper | State exactly when the HS-reference coupling series converges at a given state: the radius `R_c` as the distance to the nearest singularity of the physical branch in the complex τ plane, characterised in terms of the BH system (real fold, complex branch point, or other), not only bounded. | Known: `R_c ≤` fold (F2), `R_c =` fold for one tail (1.0.11), `R_c <` fold for competing tails via complex branch points (F5). Missing: the general characterisation and a decidable criterion. |
+| Tail conditions for radius = fold | paper | Identify, and prove, the conditions on the tails (signs, rates, amplitudes, mixtures) under which the convergence boundary coincides exactly with the real fold. | Sufficient so far: one species, one attractive tail (Pringsheim via all-order coefficient signs). Counter-class: competing tails (F5). Candidate: tails for which all Taylor coefficients of the branch are nonnegative (Pringsheim then puts the nearest singularity on the positive real axis). |
 
 ## Completed groups (one line each)
 

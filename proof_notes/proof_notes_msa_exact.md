@@ -404,13 +404,96 @@ geometry, all statements about the *transcendental* elimination quartic (MSAEXAC
 * the full finite-`K` Jacobian is **not** the block-triangular `K=0` one, so `det J = (2π)^n∏F₀²`
   (FOEQ.5) does **not** apply away from `K=0`;
 * the spinodal `A = 0` is a **regular** point of that Jacobian (`|det J| = 2e−2…8e−1`, measured);
-* the real branch continues to a **fold** `det J = 0` a few % lower in `T*`, and goes complex beyond
+* the real branch continues to a **fold** `det J = 0` a few % lower in `T*` (that the fold cannot
+  come before the first instability is now a paper proof, §8c), and goes complex beyond
   it — the radius of convergence of the `K=0` HS-reference series is fold-bounded (§8b);
 * the FMSA slope's sign (`a_FMSA` more compressible ⇒ spinodal too high in `T*`) — MSAX.3 measurement.
 
 So the §8 chapter is formalised **exactly to the fixed-`K` algebraic boundary**: the wall and the
 crossing are theorems; where the wall sits in `(η, z, K)`-space and how the branch dies at the fold
 stay measured, for the same reason MSAEXACT.3's `hcoupling_pins` does.
+
+### §8c Instability before fold — all tails, all mixtures, all modes (paper proof, 2026-10-23)
+
+This moves the ordering half of Tier 3 ("the real branch continues to a fold") to a paper proof.
+Not in Lean.
+
+**Setting.** `N`-component hard-core mixture, contact distances `σ_ij` (additive or not). The
+exterior closure is fixed: `c_ij(r) = τ φ_ij(r)` for `r > σ_ij`, with `φ` independent of the
+solution (MSA with any number of Yukawa tails of either sign). Core condition `h_ij(r) = −1` for
+`r < σ_ij`; OZ. Write `C(k) = ρ^{1/2} ĉ(k) ρ^{1/2}`, `H` likewise, so `(I + H)(I − C) = I`, and
+`I − C(k) = F̃(ik) F̃ᵀ(−ik)` with `F̃ = I − ρ^{1/2} Q̂ ρ^{1/2}`. The factor is *canonical* if
+`det F̃(s) ≠ 0` for `Re s ≥ 0`.
+
+**Theorem.** Follow the branch from the PY hard-sphere solution at `τ = 0`. Let `τ_inst` be the
+first `τ` at which `det(I − C_τ(k)) = 0` for some real `k`. On `[0, τ_inst)` the linearised problem
+at fixed `τ` has only the zero solution, so the BH Jacobian is invertible and the branch has no
+fold: `τ_fold ≥ τ_inst`.
+
+**Proof.**
+1. *The factor stays canonical up to `τ_inst`.* At `τ = 0` it is zero-free in `Re s ≥ 0` (the HS
+   no-spinodal results: `pyhs_no_spinodal` is a theorem, `pyhs_mixture_no_spinodal` is the one live physics axiom of the ledger, a theorem at N = 1). `F̃ → I` as `|s| → ∞` in
+   `Re s ≥ 0`, so no zero enters from infinity, and zeros move continuously. A zero can therefore
+   enter the right half-plane only through `s = ik`, where `det(I − C(k)) = |det F̃(ik)|² = 0`.
+2. *Disjoint supports.* A tangent `(δc, δh)` at fixed `τ` has `δc_ij = 0` for `r > σ_ij` (the
+   exterior is fixed) and `δh_ij = 0` for `r < σ_ij` (the core condition). Hence
+   `Σ_ij ρ_iρ_j ∫ δc_ij δh_ij d³r = 0`.
+3. *Linearised OZ.* `δH = S δC S` with `S = (I − C)^{-1}`. `S` is positive definite and bounded,
+   because it is continuous and tends to `I` as `k → ∞`.
+4. *Parseval.* `0 = ∫ tr(δC S δC S) d³k = ∫ ‖S^{1/2} δC S^{1/2}‖_F² d³k`, so `δC ≡ 0`, hence
+   `δc = δh = 0`.
+5. *Canonical uniqueness.* `δ(F̃(s) F̃ᵀ(−s)) = 0` gives
+   `F̃(s)^{-1} δF̃(s) = −δF̃ᵀ(−s) F̃ᵀ(−s)^{-1}`. The left side is holomorphic in `Re s > 0` and the
+   right side in `Re s < 0`. Both are bounded and tend to 0 at infinity, so by Liouville `δF̃ ≡ 0`.
+6. The BH unknowns are read off from `F̃` (`D̃`) and from `h` (`G̃ = ĝ(z) e^{zσ}`), so `δu = 0`.
+
+**What is used, and what is not.** Nothing about the tails is used beyond the exterior being
+fixed: not their number, their sign, or their rate. The number of species is arbitrary. "Any
+instability" means any loss of positive definiteness of `I − C(k)`:
+
+* `k = 0` along the density direction (liquid–vapour spinodal);
+* `k = 0` along a composition direction (demixing) — both of these are contained in `det F(0) = 0`;
+* `k ≠ 0` (microphase λ line).
+
+The bound is by the **first** of these. A later one need not precede the fold; for example, a
+`k = 0` spinodal that comes after an earlier λ line. Closures whose exterior `c` depends on `h`
+(PY, HNC type) break step 2 and are not covered.
+
+⚠ **The pointwise condition `I − C(k) ≻ 0` is not enough.** On the `A < 0` continuation it still
+holds (`min_k = 0.025–0.31` at the fold), and that continuation does fold. There `det F` has one
+zero in `Re s > 0` (winding −1). Baxter's second equation then no longer follows from OZ, because
+the Wiener–Hopf split needs the canonical factor. So the BH root is not an OZ-plus-core solution,
+and it is step 2 that fails, not step 4. Two measurements agree:
+
+* The null vector of `J` at the fold changes `ĉ` (`|δĉ|/ε = 0.77`, pure `η = 0.2`; `0.52` for the
+  equal-σ binary). It does not leave `ĉ` fixed.
+* `ĝ(z)` from the OZ `h` departs from the BH value after the flip and not before it. The mismatch
+  is `1e-4…1e-3` before the flip (the transform floor) and `6.7e-4…0.15` at the fold, a contrast
+  of `2.6–673`.
+
+**Evidence (`scripts/msa_instability_before_fold_check.py`, `results/instability_before_fold/`).**
+11 folds in 12 cases: one-tail `z = 1.8` at `η = 0.1–0.4`, LJ two-Yukawa at `η = 0.15–0.35`, a
+Berthelot binary with `σ` ratio 1:1.3 (soft mode mostly density), and an equal-σ binary at
+`K12 = 0.2` and `0` (soft mode composition, `(−1, 1)/√2`). In every case:
+
+* the winding of `det F(ik)` changes from 0 to −1 through a `k = 0` sign change of `det F(0)`
+  *before* the fold;
+* at the fold `W = −1`, `det F(0) = −0.16 … −0.85`, and `σ_min/σ_max(J) = 6e-10 … 1e-7`.
+
+The fold coordinates reproduce the SI `τ_f` (1.10484 / 1.00704 / 1.30698 / 2.07594). The SALR
+state `z = (4, 0.5)`, `w = −0.1`, `η = 0.3` has no fold and no instability up to `λ = 60`;
+`min_k` falls to `8e-4` at `k ≈ 1.1`. **The `k ≠ 0` crossing is therefore untested**: no state
+was found where it precedes a fold.
+
+**Open.**
+* Strictness `τ_fold > τ_inst`. At `τ_inst`, `S` is unbounded. Numerically the spinodal is regular
+  (`|det J| = 2e−2…8e−1`, Tier 3).
+* For one attractive tail, `A(fold) < 0` follows from this theorem once the first instability is
+  shown to be at `k = 0`.
+* Lean needs three pieces: the bridge from the BH residual (`ExactMSA.MultiTailMixture.IsRoot`) to
+  the OZ problem on canonical roots; matrix Parseval for compactly supported radial functions
+  (`Analysis/MatrixWienerHopf` has the L² Plancherel side); and the canonical uniqueness step
+  (cf. MA.15 `matRadialShell_bounded_injective`).
 
 **MSAEXACT.4.** Should be nearly free: BAXTER.3 = MRS.8 at `N=1` is already in the library and PYE.6
 already wires it to the physical PY objects (`pyBaxterMat`, `pyT0Mat`, `dp_zeroth_order_is_py_n1`).

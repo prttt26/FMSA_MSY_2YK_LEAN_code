@@ -1,0 +1,27 @@
+Instability before fold — numerical record for proof_notes_msa_exact.md §8c
+Command: OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python3 scripts/msa_instability_before_fold_check.py
+Engine: msa_exact_mix.py (main repository), trace_coupling_mix in a multiplier lambda on K.
+
+Gate (all 11 folds in 12 cases pass): the winding W of det F(ik), k in [-400,400], changes
+0 -> -1 through a sign change of det F(0) before the fold; at the fold W = -1,
+det F(0) = -0.16 ... -0.85, sigma_min/sigma_max(J) = 6e-10 ... 1e-7.
+
+Modes exercised at the first instability (soft eigenvector of I - C(0) just before the flip):
+  Berthelot binary sigma 1:1.3      density-dominated (-0.83,-0.56), (-0.99,-0.12)
+  equal-sigma binary K12 = 0.2, 0   composition (-0.707, 0.707)
+  one-species cases                 density (scalar)
+NOT exercised: a k != 0 (microphase) instability. SALR z=(4,0.5), w=-0.1, eta=0.3 has no fold
+and no instability up to lambda = 60 (min_k = 8e-4 at k = 1.12).
+
+Diagnostic (not gated): relative mismatch of g^(z) between the OZ h of the BH root and the BH
+value. lambda = 0 floor 1e-4 ... 1e-3; just before the flip the same; at the fold 6.7e-4 ... 0.15,
+contrast 2.6 (eta = 0.4, fold only 0.07 % past the flip) ... 673. So after the flip the BH root
+is no longer an OZ + core solution, as the proof requires.
+Window: r_max = 400, n_r = 2^18. At r_max = 40 the near-lambda-line SALR state reads a spurious
+12 % mismatch (2.6e-2 at 400, 1.5e-3 at 2000): transform truncation of the long-range oscillatory
+h, not a failure of the canonical root. max|h_OZ + 1| in the core is limited by contact-jump
+ringing at k_max and is recorded only.
+
+Null vector of J at the fold (scratch probe, not in the script): |dc^|/eps = 0.77 (pure eta=0.2),
+0.52 (equal-sigma binary K12=0.2), stable over eps = 1e-3 ... 1e-5: the fold direction changes c^,
+consistent with the fold root not being an OZ solution (step 2 of the proof fails there).
