@@ -1,0 +1,40 @@
+# python3 f7_fold_chart.py -2.636 7.6 0.015 0.00048828125 0.0018 0.0012   (negative control: must FAIL)
+# run before the tau-cover failure was wrapped as 'FAIL: tau cover: ...', hence the traceback; the source lines shown are from the edited file
+fold (float) tau_c = 7.833685386417; c.v = [1.00000000000000 +/- 5.57e-16]
+chart: 1060 squares certified (804 grid, 256 ring), 4s
+chart glued: 4289 pairs (0 by point), 10s
+ring: winding(tau - tau_c) = 2 (True), winding(tau') = 1 (True), m_c = 0.00190
+s* in [-0.000000119, 0.000000060]: tau'(s_a) = [3.0e-6 +/- 6.55e-8] + [+/- 3.19e-31]j, tau'(s_b) = [-1.5e-6 +/- 4.26e-8] + [+/- 3.61e-31]j; tau_f in [7.833685385912, 7.833685386910]
+  cover r_lo=7.833685386910339: 20000 certified, 3892 pending, 48s
+  cover r_lo=7.833685386910339: 40000 certified, 3206 pending, 79s
+  cover r_lo=7.833685386910339: 60000 certified, 2769 pending, 109s
+  cover r_lo=7.833685386910339: 80000 certified, 2470 pending, 140s
+  cover r_lo=7.833685386910339: 100000 certified, 2294 pending, 170s
+  cover r_lo=7.833685386910339: 120000 certified, 2121 pending, 201s
+  cover r_lo=7.833685386910339: 140000 certified, 1969 pending, 233s
+  cover r_lo=7.833685386910339: 160000 certified, 1865 pending, 264s
+  cover r_lo=7.833685386910339: 180000 certified, 1791 pending, 295s
+  cover r_lo=7.833685386910339: 200000 certified, 1723 pending, 324s
+  cover r_lo=7.833685386910339: 220000 certified, 1646 pending, 371s
+  cover r_lo=7.833685386910339: 240000 certified, 1596 pending, 432s
+  cover r_lo=7.833685386910339: 260000 certified, 1519 pending, 486s
+  cover r_lo=7.833685386910339: 280000 certified, 1469 pending, 543s
+  cover r_lo=7.833685386910339: 300000 certified, 1452 pending, 599s
+  cover r_lo=7.833685386910339: 320000 certified, 1429 pending, 655s
+  cover r_lo=7.833685386910339: 340000 certified, 1379 pending, 711s
+  cover r_lo=7.833685386910339: 360000 certified, 1317 pending, 762s
+  cover r_lo=7.833685386910339: 380000 certified, 1297 pending, 819s
+  cover r_lo=7.833685386910339: 400000 certified, 1289 pending, 879s
+  cover r_lo=7.833685386910339: 420000 certified, 1281 pending, 944s
+  cover r_lo=7.833685386910339: 440000 certified, 1273 pending, 1005s
+  cover r_lo=7.833685386910339: 460000 certified, 1280 pending, 1046s
+  cover r_lo=7.833685386910339: 480000 certified, 1284 pending, 1089s
+Traceback (most recent call last):
+  File "/home/rpan/YK_tail_FMSA/Lean_code/MSA_and_1st_Truncation/formalization/certificates/f7_fold_chart.py", line 426, in <module>
+    
+  File "/home/rpan/YK_tail_FMSA/Lean_code/MSA_and_1st_Truncation/formalization/certificates/f7_fold_chart.py", line 389, in main
+    try:
+         
+  File "/home/rpan/YK_tail_FMSA/Lean_code/MSA_and_1st_Truncation/formalization/certificates/f7_cover_arb.py", line 349, in cover
+    raise RuntimeError(f"cover: rectangle at {r.mid:.5f} (w={r.x1 - r.x0:.2e}) failed at min size")
+RuntimeError: cover: rectangle at -2.79092+6.45971j (w=9.54e-07) failed at min size

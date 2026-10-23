@@ -1,0 +1,10 @@
+# python3 f7_fold_chart.py -2.5 4.40   (defaults sigma 0.4, hs 1/64, rho_g 0.038, rho_ex 0.028)
+fold (float) tau_c = 4.478897654973; c.v = [1.00000000000000 +/- 5.56e-16]
+chart: 822 squares certified (566 grid, 256 ring), 2s
+chart glued: 3257 pairs (0 by point), 6s
+ring: winding(tau - tau_c) = 2 (True), winding(tau') = 1 (True), m_c = 0.03909
+s* in [-0.000000060, 0.000000119]: tau'(s_a) = [4.14e-8 +/- 3.03e-11] + [+/- 1.39e-43]j, tau'(s_b) = [-8.28e-8 +/- 4.96e-11] + [+/- 1.17e-43]j; tau_f in [4.478897654967, 4.478897654980]
+  cover done: 41077 leaves, 13238 splits, 111s; gluing
+tau cover r = 4.478897654980 minus D(tau_c, 0.028): certified = True, 41077 leaves, 172s
+link at tau_0 = 4.445898: s_0 = [-0.3431144122 +/- 6.39e-11] + [+/- 2.46e-11]j, in chart box: True
+PASS: R_c = tau_f in [4.478897654967, 4.478897654980]  (171.6 s)

@@ -558,9 +558,43 @@ Results:
 
 So in B, `7.00 ≤ R_c ≤ 7.107 < 7.8336 ≤ τ_f` is certified: **a real fold that does not bind**,
 with the radius bracketed around the complex fold (`|τ*_c| = 7.0368` in floating point). In A,
-`R_c ∈ [4.47, 4.524]` and `τ_f ∈ [4.4761, 4.5070]`: the brackets overlap and there is no
-singularity in `|τ| ≤ 4.47`. Equality `R_c = τ_f` would need a local analysis at the fold, which
-was not done.
+the local analysis below gives **`R_c = τ_f` exactly, with `τ_f ∈ [4.478897654967,
+4.478897654980]`: the fold binds.**
+
+**Local analysis at the fold** (`f7_fold_chart.py`). Take a float fold point `u_c`, a float null
+vector `v` and `c = v`, and write `u = u_c + s v + y` with `c·y = 0`. The unknowns `Z = (y, τ)`
+solve `H(Z; s) = (P(u_c + s v + y) − τ b, c·y) = 0`, whose Jacobian `[[J(u), −b], [cᵀ, 0]]` stays
+invertible through the fold. Krawczyk boxes on a glued cover of the disc `|s| ≤ σ` then give one
+analytic chart `(U(s), τ(s))` with `P(U(s)) = τ(s) b` and `c·U′ ≡ c·v ≠ 0`, real for real `s`.
+The certified facts are:
+
+* (a) On `|s| = σ`, `τ(s) − τ_c` winds twice round 0 and `|τ(s) − τ_c| ≥ m_c`; `τ′` winds once.
+  So `τ′` has exactly one zero `s*`, which is real by symmetry, and `τ_f := τ(s*)` is real. For
+  every `τ ∈ D(τ_c, m_c)`, `τ(s) = τ` has exactly two roots in the disc (Rouché), and they are
+  simple unless `τ = τ_f`.
+* (b) `τ′` changes sign between two real points `s_a < s_b`, which encloses `s*` and hence `τ_f`.
+* (c) A τ-disc cover of `|τ| ≤ τ_f⁺` minus `D(τ_c, ρ_ex)`.
+* (d) A link at a real `τ₀` with `ρ_ex < τ_c − τ₀ < ρ_g`: the cover's root there equals `U(s₀)`.
+
+*Lower bound.* Let `V = D(0, τ_f)` and `L = D(τ_c, ρ_g) ∩ V` with `ρ_ex < ρ_g ≤ m_c`. `L` is
+convex and misses `τ_f`. So the root `s(τ)` of `τ(s) = τ` continued from `s₀` is single-valued on
+`L`, and `g = U∘s` is an analytic root there. The overlap `(V \ D_ex) ∩ L` is a half-annulus about
+`τ_c`, hence connected, and `g = f` near `τ₀`. So `f` extends analytically to all of `V`, and
+`R_c ≥ τ_f`.
+
+*Upper bound.* If `f` were analytic at `τ_f`, then `f(τ(s)) − U(s)` would vanish on the open set
+`s(L)`, which accumulates at `s*`. It would then vanish near `s*`, giving
+`U′(s*) = f′(τ_f) τ′(s*) = 0`, which contradicts `c·U′ = c·v ≠ 0`. So `R_c ≤ τ_f`.
+
+No non-degeneracy constant (`ℓ·b`, `ℓ·P″(v, v)`) has to be bounded: the windings carry it.
+
+Numbers for A: `σ = 0.4`, 822 s-squares (566 grid, 256 ring); windings 2 and 1;
+`m_c = 0.0391 ≥ ρ_g = 0.038 > ρ_ex = 0.028`; `s* ∈ [−6.0e−8, 1.2e−7]`; the τ-cover has 41 077
+leaves; the link at `τ₀ = 4.4459` has `s₀ = −0.3431`. Total runtime is 171 s.
+
+Negative control: the same script on B, whose fold does not bind. B sits near a cusp, so it
+needs `σ = 0.015`. Its chart passes (windings 2 and 1, `τ_f ∈ [7.833685385912, 7.833685386910]`),
+and the τ-cover to radius `τ_f` then fails at `τ = −2.79092 + 6.45971i`, `4·10⁻⁵` from `τ*_c`.
 
 Negative controls:
 
@@ -582,6 +616,9 @@ fragile: at B the gap `τ_f / R_c − 1` is 11 %.
   only need a centre, so the iterate is accepted once the step stalls.
 * Pure-Python intervals cost about 30 ms per Krawczyk call, so the disc cover uses Arb through
   python-flint (0.7 ms per call).
+* In the chart, `s` enters `H` nonlinearly, and the natural extension of `H(y, S)` over an
+  `s`-square is about `|J||v||S|` wide even though `J v ≈ 0` at the fold. With that width no
+  square certified. The mean-value form `H(y, s_mid) + J(U_S) v (S − s_mid)` fixes it.
 * The natural interval extension of `J` over a box is 7–15× wider than its true spread
   (cancellations inside the residual). B then needed more than 6·10⁶ rectangles and did not
   finish. `J` is quadratic in `u`, so the centred form `J(y) + ∂J(y)δ + ½∂²J δδ` is an exact

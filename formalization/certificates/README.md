@@ -13,7 +13,7 @@ cross-checks import the release scripts when they are present. The exception is
 |---|---|---|
 | `f5_competing_tails.py` | z = (1.8, 12), weights (1, -6), eta = 0.2, 0.3, 0.4: the PY-seeded exact-MSA branch is real and regular on 0 <= tau <= 3, and the Taylor radius of that branch satisfies R_c <= 2.75 < 3, so the coupling series diverges at tau = 3. | ~12 min |
 | `f6_second_order_tangents.py` | One attractive Yukawa tail, z = 5, T* = 0.02, strict second-order jet a = c0 + c1 tau + c2 tau^2: two distinct pairs with equal pressure and chemical potential, each with a common tangent lying below beta f/V on the whole domain 0 < rho* < 6/pi. | ~2 min |
-| `f7_fold_binding.py`, `f7_fold_turning.py`, `f7_cover_arb.py` | z = (1.8, 12), weights (1, w), eta = 0.3: the Taylor radius of the PY-seeded branch is the nearest singularity, which need not be the real fold. A (w = -2.5): R_c in [4.47, 4.524], tau_f in [4.4761, 4.5070]. B (w = -2.636): R_c in [7.00, 7.107] < 7.8336 <= tau_f, a real fold that does not bind. | binding: not timed (about 10^5 pure-Python pieces); turning: 7-65 s; cover: 1.5-30 min per run |
+| `f7_fold_binding.py`, `f7_fold_turning.py`, `f7_cover_arb.py`, `f7_fold_chart.py` | z = (1.8, 12), weights (1, w), eta = 0.3: the Taylor radius of the PY-seeded branch is the nearest singularity, which need not be the real fold. A (w = -2.5): R_c = tau_f exactly, tau_f in [4.478897654967, 4.478897654980]. B (w = -2.636): R_c in [7.00, 7.107] < 7.8336 <= tau_f, a real fold that does not bind. | binding: not timed (about 10^5 pure-Python pieces); turning: 7-65 s; cover: 1.5-30 min per run; fold chart: 3 min |
 
 Results are written to `results/`.
 
@@ -93,5 +93,21 @@ Same unknowns and residual as F5; family z = (1.8, 12), K = (1, w), eta = 0.3.
 | B, r_lo = 6.90 | certified | 260 262 | 1067 s |
 | B, r_lo = 7.00 | certified | 330 024 | 1341 s |
 | B, r_lo = 7.10, hmin = 2^-14 (control, past the complex fold) | fails at tau = -2.78903 + 6.46078i, 0.002 from tau*_c | - | - |
+
+* **Exact radius at a binding fold** (`f7_fold_chart.py`, Arb). A chart of the solution curve
+  through the fold: u = u_c + s v + y with c.y = 0, unknowns (y, tau), Jacobian
+  [[J(u), -b], [c^T, 0]] (regular at the fold), certified and glued on a disc |s| <= sigma.
+  On the circle, tau(s) - tau_c winds twice and tau'(s) once (Rouche: exactly two roots of
+  tau(s) = tau near tau_c, one critical point s*, real). A sign change of tau' encloses s* and
+  tau_f = tau(s*). A tau-cover of |tau| <= tau_f minus a small disc about the fold, linked to the
+  chart at one real point, then shows that the branch is analytic on D(0, tau_f) and singular at
+  tau_f (otherwise U'(s*) = 0, against c.U' = c.v != 0). So R_c = tau_f. The chart needs the
+  mean-value form of H in s: its natural extension over an s-square is |J||v||S| wide while
+  J v is about 0 at the fold. Run as `python3 f7_fold_chart.py [w tau_a [sigma hs rho_g rho_ex]]`.
+
+| run | result |
+|---|---|
+| A, `-2.5 4.40` (defaults sigma = 0.4, rho_g = 0.038, rho_ex = 0.028) | PASS: R_c = tau_f in [4.478897654967, 4.478897654980]; windings 2 and 1, m_c = 0.0391; 822 chart squares, 41 077 cover leaves; 171 s |
+| B, `-2.636 7.6 0.015 0.00048828125 0.0018 0.0012` (control: the fold does not bind) | chart passes (windings 2 and 1, m_c = 0.0019, tau_f in [7.833685385912, 7.833685386910]); the tau-cover to radius tau_f fails at tau = -2.79092 + 6.45971i, 4e-5 from the complex fold, as it must |
 
 Logs and JSON records are in `results/f7_*`.

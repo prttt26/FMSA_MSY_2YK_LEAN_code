@@ -248,19 +248,30 @@ def predict(am, nb, tau, steps=3):
 
 
 def cover(am: ArbModel, r_lo: float, h0: float = 2.0**-3, hmin: float = 2.0**-20, log=print,
-          max_rects=6_000_000, check_pairs=False):
+          max_rects=6_000_000, check_pairs=False, exclude=None, leaves_out=None):
     """Quadtree cover of the closed upper half disc, then gluing of every pair of leaves that
     share an edge segment.  Edge pairs suffice: every point of the closed disc is interior to
     the union, so the leaves holding it go round it in a cycle in which neighbours share an
     edge segment through it, and the roots agree there pairwise."""
     t0 = time.time()
+
+    def keep(r):
+        """In the closed half disc and not inside the open excluded disc `exclude` = (c, rho)
+        (a rectangle is inside the disc iff its four corners are)."""
+        if r.dist0() > r_lo:
+            return False
+        if exclude is None:
+            return True
+        c, rho = exclude
+        return not all(abs(complex(x, y) - c) < rho for x in (r.x0, r.x1) for y in (r.y0, r.y1))
+
     n_x = int(math.ceil(r_lo*1.0001/h0)) + 1
     cells = {}                    # (i, j) -> top-level cell; row j = 0 straddles the real axis
     for j in range(0, n_x + 1):
         y0, y1 = (-h0/2, h0/2) if j == 0 else (h0/2 + (j - 1)*h0, h0/2 + j*h0)
         for i in range(-n_x, n_x):
             r = Rect(i*h0, (i + 1)*h0, y0, y1)
-            if r.dist0() <= r_lo:
+            if keep(r):
                 cells[(i, j)] = r
     eps = hmin/8                  # every coordinate is a multiple of hmin/2: probes never sit on an edge
 
@@ -305,8 +316,8 @@ def cover(am: ArbModel, r_lo: float, h0: float = 2.0**-3, hmin: float = 2.0**-20
             raise RuntimeError("cover: the rectangle at 0 failed")
         splits += 1
         kids = first.kids()
-        first.sub = [(k, k if k.dist0() <= r_lo else None) for k in kids]
-        kids = sorted([k for k in kids if k.dist0() <= r_lo], key=lambda s: abs(s.mid))
+        first.sub = [(k, k if keep(k) else None) for k in kids]
+        kids = sorted([k for k in kids if keep(k)], key=lambda s: abs(s.mid))
         first = kids[0]
         queue.extendleft(kids[1:])
     first.u, first.X, first.C, first.ok = u0, X, Cm, True
@@ -338,8 +349,8 @@ def cover(am: ArbModel, r_lo: float, h0: float = 2.0**-3, hmin: float = 2.0**-20
                 raise RuntimeError(f"cover: rectangle at {r.mid:.5f} (w={r.x1 - r.x0:.2e}) failed at min size")
             splits += 1
             kids = r.kids()
-            r.sub = [(k, k if k.dist0() <= r_lo else None) for k in kids]
-            for k in sorted([k for k in kids if k.dist0() <= r_lo], key=lambda s: abs(s.mid - nb.mid), reverse=True):
+            r.sub = [(k, k if keep(k) else None) for k in kids]
+            for k in sorted([k for k in kids if keep(k)], key=lambda s: abs(s.mid - nb.mid), reverse=True):
                 k.nb = nb
                 queue.appendleft(k)
         if len(leaves) + len(queue) > max_rects:
@@ -412,11 +423,14 @@ def cover(am: ArbModel, r_lo: float, h0: float = 2.0**-3, hmin: float = 2.0**-20
         if norm(want) != norm(seen):
             raise RuntimeError(f"cover: edge walk found {len(seen)} pairs, brute force {len(want)}")
         log(f"  pair self-test: {len(seen)} edge pairs, all found")
+    if leaves_out is not None:
+        leaves_out.extend(leaves)
     widths = [r.x1 - r.x0 for r in leaves]
     hist = collections.Counter(int(round(-math.log2(wd))) for wd in widths)
     return dict(r_lo=r_lo, half_disc=True, rectangles=len(leaves), splits=splits, min_width=min(widths),
                 width_histogram={f"2^-{k}": hist[k] for k in sorted(hist)}, glued_edge_pairs=pairs,
                 glued_by_point_fallback=fallback, h0=h0, hmin=hmin,
+                excluded_disc=None if exclude is None else [exclude[0].real, exclude[0].imag, exclude[1]],
                 seed_in_zero_rectangle=seed_ok, certified=seed_ok, seconds=round(time.time() - t0, 1))
 
 
