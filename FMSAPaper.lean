@@ -1,4 +1,5 @@
 import FMSAPaper.AbelEndpoint
+import FMSAPaper.AbsolutelyMonotone
 import FMSAPaper.ActualAnalyticBranch
 import FMSAPaper.ActualAnalyticTaylor
 import FMSAPaper.ActualBaxterBoundaryJets
@@ -39,10 +40,14 @@ import FMSAPaper.NonnegativeRecenter
 import FMSAPaper.OrderedSpatialJets
 import FMSAPaper.PhysicalExteriorJets
 import FMSAPaper.Pringsheim
+import FMSAPaper.QuarticBranch
 import FMSAPaper.RadialIntegralJets
 import FMSAPaper.RegularContinuation
 import FMSAPaper.SignedPringsheim
 import FMSAPaper.SingleRateSpatialMembership
+import FMSAPaper.SingleTailExpBounds
+import FMSAPaper.SingleTailParametrization
+import FMSAPaper.SingleTailRadius
 import FMSAPaper.SmoothJets
 import FMSAPaper.SpatialDictionary
 import FMSAPaper.SpatialJets

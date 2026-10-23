@@ -1,12 +1,12 @@
 {
   "status": "PASS",
-  "validated_at_utc": "2026-10-23T01:09:22.469373+00:00",
+  "validated_at_utc": "2026-10-23T04:34:14.958415+00:00",
   "toolchain": "leanprover/lean4:v4.31.0",
-  "foundation_version": "1.0.10",
-  "foundation_manifest_sha256": "648a0283f2302f8005615dc22798259588bdcecb2a45a3266603dab52b4cd6bb",
-  "foundation_audit": "PASS: foundation 1.0.10, 513 source/config hashes.",
+  "foundation_version": "1.0.11",
+  "foundation_manifest_sha256": "8bbb534896e7a1eae3859bf4514a978417b98dc3f7a51820d450e5a32b289a3f",
+  "foundation_audit": "PASS: foundation 1.0.11, 518 source/config hashes.",
   "foundation_matches_manifest": true,
-  "check_script_sha256": "f177afc9c91f86455c57906b105f8aa74857a00fce6ff42d662391826d64d3e0",
+  "check_script_sha256": "827de573944a00923a29126ad07b3399978efa920b8b382bff1fb0870e2616cd",
   "dependencies": {
     "mathlib": {
       "head": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -17,7 +17,7 @@
       "status": "T docs/README.md"
     }
   },
-  "theorem_count": 258,
+  "theorem_count": 361,
   "standard_axioms_only": true,
   "modules": [
     {
@@ -39,6 +39,25 @@
       "status": "PASS",
       "artifact": ".lake/build/lib/lean/FMSAPaper/AbelEndpoint.olean",
       "artifact_sha256": "ba7b110fe89b8d0c5efb6d6cabfdcd034f7cb5803e9ccd9ba2a62522525e6abc"
+    },
+    {
+      "source": "FMSAPaper/AbsolutelyMonotone.lean",
+      "source_sha256": "e676997cf71830bc11c7626846877af977f942d5f90bfac001dcf311071c71f0",
+      "theorems": [
+        "FMSA.Paper.AbsolutelyMonotone.contDiffAt_of_contDiffOn",
+        "FMSA.Paper.AbsolutelyMonotone.prod_range_neg_one_sub",
+        "FMSA.Paper.AbsolutelyMonotone.iteratedDeriv_inv_sub",
+        "FMSA.Paper.AbsolutelyMonotone.inv_sub_absMono",
+        "FMSA.Paper.AbsolutelyMonotone.AbsMonoOn.mono",
+        "FMSA.Paper.AbsolutelyMonotone.AbsMonoOn.mul",
+        "FMSA.Paper.AbsolutelyMonotone.AbsMonoOn.const_mul",
+        "FMSA.Paper.AbsolutelyMonotone.comp_signed",
+        "FMSA.Paper.AbsolutelyMonotone.iteratedDeriv_nonneg_of_ode"
+      ],
+      "guard_count": 9,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/AbsolutelyMonotone.olean",
+      "artifact_sha256": "74671a2547d4fb59b2ba84c2508d9f64660378900e5ec4f969b1eb8c15728f21"
     },
     {
       "source": "FMSAPaper/ActualAnalyticBranch.lean",
@@ -630,6 +649,52 @@
       "artifact_sha256": "7c33a0e55d31b175345f06e7a4c78a83df5d341cc29a0b4d05443761fd5043bb"
     },
     {
+      "source": "FMSAPaper/QuarticBranch.lean",
+      "source_sha256": "1f01b89000bb72c9dcf2dfbbbd6fa0a95b957181ad7952906286ccd4bcff7fc7",
+      "theorems": [
+        "FMSA.Paper.QuarticBranch.disc_pos",
+        "FMSA.Paper.QuarticBranch.quad_factor",
+        "FMSA.Paper.QuarticBranch.c1_le_c2",
+        "FMSA.Paper.QuarticBranch.crit_order",
+        "FMSA.Paper.QuarticBranch.hasDerivAt_q",
+        "FMSA.Paper.QuarticBranch.qd_pos",
+        "FMSA.Paper.QuarticBranch.qd_c1",
+        "FMSA.Paper.QuarticBranch.q_strictMonoOn",
+        "FMSA.Paper.QuarticBranch.q_a",
+        "FMSA.Paper.QuarticBranch.lowU_lt_a",
+        "FMSA.Paper.QuarticBranch.foldTau_pos",
+        "FMSA.Paper.QuarticBranch.lowTau_neg",
+        "FMSA.Paper.QuarticBranch.lowU_le_c1",
+        "FMSA.Paper.QuarticBranch.q_surj",
+        "FMSA.Paper.QuarticBranch.q_injOn",
+        "FMSA.Paper.QuarticBranch.branch_mem",
+        "FMSA.Paper.QuarticBranch.q_branch",
+        "FMSA.Paper.QuarticBranch.branch_q",
+        "FMSA.Paper.QuarticBranch.tau_mem_of_u_mem",
+        "FMSA.Paper.QuarticBranch.branch_zero",
+        "FMSA.Paper.QuarticBranch.branch_fold",
+        "FMSA.Paper.QuarticBranch.branch_strictMonoOn",
+        "FMSA.Paper.QuarticBranch.image_branch",
+        "FMSA.Paper.QuarticBranch.branch_lt_c1",
+        "FMSA.Paper.QuarticBranch.lowU_lt_branch",
+        "FMSA.Paper.QuarticBranch.branch_neg",
+        "FMSA.Paper.QuarticBranch.branch_continuousAt",
+        "FMSA.Paper.QuarticBranch.branch_continuousWithinAt_fold",
+        "FMSA.Paper.QuarticBranch.res_analyticAt",
+        "FMSA.Paper.QuarticBranch.res_partial_isInvertible",
+        "FMSA.Paper.QuarticBranch.branch_analyticAt",
+        "FMSA.Paper.QuarticBranch.branch_deriv",
+        "FMSA.Paper.QuarticBranch.inv_qd_absMono",
+        "FMSA.Paper.QuarticBranch.branch_contDiffOn",
+        "FMSA.Paper.QuarticBranch.branch_iteratedDeriv_nonneg",
+        "FMSA.Paper.QuarticBranch.not_analytic_continuation"
+      ],
+      "guard_count": 36,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/QuarticBranch.olean",
+      "artifact_sha256": "3c53125116d6bcc9193a64e1d56fe3f444b8e4f7037a2dbcea3098bd018565a7"
+    },
+    {
       "source": "FMSAPaper/RadialIntegralJets.lean",
       "source_sha256": "d93709987e2409153f90e7590d41b0cd27115d00391b97aeb4870808fa7a9cdc",
       "theorems": [
@@ -686,6 +751,94 @@
       "status": "PASS",
       "artifact": ".lake/build/lib/lean/FMSAPaper/SingleRateSpatialMembership.olean",
       "artifact_sha256": "ce85298466e5efb5dfc6f81dff3597ea342b07476153db1afbe845e6756f68b7"
+    },
+    {
+      "source": "FMSAPaper/SingleTailExpBounds.lean",
+      "source_sha256": "8eabe2073a5c37e88647c2a228ae6d8016f4899d649376b8bf451c611fbb5557",
+      "theorems": [
+        "FMSA.Paper.SingleTailExpBounds.pos_of_zero_of_deriv_pos",
+        "FMSA.Paper.SingleTailExpBounds.J_scaled_pos",
+        "FMSA.Paper.SingleTailExpBounds.J_pos",
+        "FMSA.Paper.SingleTailExpBounds.H_scaled_pos",
+        "FMSA.Paper.SingleTailExpBounds.H_pos",
+        "FMSA.Paper.SingleTailExpBounds.Hrefl_scaled_neg",
+        "FMSA.Paper.SingleTailExpBounds.Hrefl_neg",
+        "FMSA.Paper.SingleTailExpBounds.expNeg_lt_one"
+      ],
+      "guard_count": 8,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/SingleTailExpBounds.olean",
+      "artifact_sha256": "74634eb4bc1894779d24c7b1303ecacde5592af78c67e99db72dfe7b47324509"
+    },
+    {
+      "source": "FMSAPaper/SingleTailParametrization.lean",
+      "source_sha256": "3a4c6e2cd1d49cc8bd82c697f84a290040c5d2a3efe6faf91000b252b7961235",
+      "theorems": [
+        "FMSA.Paper.SingleTail.firstS_param",
+        "FMSA.Paper.SingleTail.secondS_param",
+        "FMSA.Paper.SingleTail.firstLHS_sc",
+        "FMSA.Paper.SingleTail.secondLHS_sub_sc",
+        "FMSA.Paper.SingleTail.baseSecond_sc",
+        "FMSA.Paper.SingleTail.baseSeed_sc",
+        "FMSA.Paper.SingleTail.isRoot_param",
+        "FMSA.Paper.SingleTail.one_sub_QhS_zero",
+        "FMSA.Paper.SingleTail.GS_seed",
+        "FMSA.Paper.SingleTail.DtS_seed",
+        "FMSA.Paper.SingleTail.DtS_eq_tau",
+        "FMSA.Paper.SingleTail.GS_eq",
+        "FMSA.Paper.SingleTail.Ez_eq",
+        "FMSA.Paper.SingleTail.xS_pos",
+        "FMSA.Paper.SingleTail.Ez_lt_one",
+        "FMSA.Paper.SingleTail.JS_pos",
+        "FMSA.Paper.SingleTail.HS_pos",
+        "FMSA.Paper.SingleTail.HtS_neg",
+        "FMSA.Paper.SingleTail.etaS_pos",
+        "FMSA.Paper.SingleTail.DdS_pos",
+        "FMSA.Paper.SingleTail.bS_neg",
+        "FMSA.Paper.SingleTail.bS_sub_aS",
+        "FMSA.Paper.SingleTail.aS_lt_bS",
+        "FMSA.Paper.SingleTail.aS_neg"
+      ],
+      "guard_count": 24,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/SingleTailParametrization.olean",
+      "artifact_sha256": "12fc2817d0920f7a07608d64f65fc6f8104c3a4789aedd78cc94e88bed7640e7"
+    },
+    {
+      "source": "FMSAPaper/SingleTailRadius.lean",
+      "source_sha256": "481e7119097362094d9ac3c7b8c2af9277171e73b12e25b9eb481e4d5c0d05ea",
+      "theorems": [
+        "FMSA.Paper.SingleTailRadius.vacMix_eq",
+        "FMSA.Paper.SingleTailRadius.hw",
+        "FMSA.Paper.SingleTailRadius.hab",
+        "FMSA.Paper.SingleTailRadius.hb",
+        "FMSA.Paper.SingleTailRadius.hDd",
+        "FMSA.Paper.SingleTailRadius.hL",
+        "FMSA.Paper.SingleTailRadius.tauS_eq_q",
+        "FMSA.Paper.SingleTailRadius.zero_mem_Ioo",
+        "FMSA.Paper.SingleTailRadius.physBranch_isRoot",
+        "FMSA.Paper.SingleTailRadius.physBranch_zero",
+        "FMSA.Paper.SingleTailRadius.physBranch_analyticAt",
+        "FMSA.Paper.SingleTailRadius.physBranch_analyticOnNhd",
+        "FMSA.Paper.SingleTailRadius.physBranch_local_root",
+        "FMSA.Paper.SingleTailRadius.branch_contDiffAt_zero",
+        "FMSA.Paper.SingleTailRadius.branch_derivs_zero",
+        "FMSA.Paper.SingleTailRadius.branch_zero_eq_seed",
+        "FMSA.Paper.SingleTailRadius.G_coeff_nonneg",
+        "FMSA.Paper.SingleTailRadius.D_coeff_nonneg",
+        "FMSA.Paper.SingleTailRadius.physBranch_lower",
+        "FMSA.Paper.SingleTailRadius.physBranch_upper",
+        "FMSA.Paper.SingleTailRadius.physBranch_continuousAt",
+        "FMSA.Paper.SingleTailRadius.branchCoefficients_eq",
+        "FMSA.Paper.SingleTailRadius.single_tail_radius_eq_fold",
+        "FMSA.Paper.SingleTailRadius.single_tail_coefficients_nonneg",
+        "FMSA.Paper.SingleTailRadius.foldCoupling_pos",
+        "FMSA.Paper.SingleTailRadius.single_tail_branch_exists"
+      ],
+      "guard_count": 26,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/SingleTailRadius.olean",
+      "artifact_sha256": "d420bce458632b5cf91bb6c3eb429a2b45792e63e40a268b2e233fb899f3b2a0"
     },
     {
       "source": "FMSAPaper/SmoothJets.lean",
@@ -796,10 +949,10 @@
     ],
     "exit_code": 0,
     "log": "results/default_build.log",
-    "log_sha256": "365d8f58d056cec2b8edfd246e545da5b99a3415388d82548b0663ba486d2610"
+    "log_sha256": "ea00df3273c2615fb6658fd1e8578935960b2712dbbe7ea9bd294416003ec0a7"
   },
-  "paper_root_sha256": "ee7fa8bd27e0fddba7f0402e5bcaa0e5d07b29e4503ebf501152cf6d0e6d9c5c",
+  "paper_root_sha256": "910f0744ffd8d7ce331948abaef1990d3ca97e12350cb6601bc5ad15041f2b50",
   "package_entry_sha256": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
   "integration": "Included in the foundation's default Lake build; no external LEAN_PATH.",
-  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
+  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis); F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
 }

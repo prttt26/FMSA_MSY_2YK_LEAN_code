@@ -45,6 +45,8 @@ gap claims go stale (MA.8 was retired that way).
 
 | Item | Track | State | Notes |
 |---|---|---|---|
+| Single-tail spinodal before fold | paper | open | `A(fold) < 0` (spinodal `A = 0` precedes the fold on every isochore) is verified on a 10⁴-point grid only; with it, single-tail states on and outside the spinodal converge. |
+| Multi-tail fold binding | paper | open | 2YK: radius = fold numerically; no proof (no 1D reduction). Competing tails: complex branch points bind (F5). |
 | F5, F6 | paper | certified (interval arithmetic) | Computer-assisted proofs in `formalization/certificates/`, not Lean. SI wording pending in the paper session. |
 | MA axioms above | foundation | live | Retirement only if Mathlib gains the machinery or a narrower statement is found. MA.7 can be deleted if it stays consumer-less. |
 | OZ.3 layer (3) | foundation | do-not-attempt boundary | Full damped-exponential `g₀_HS(r)` via `oz_h_eq_spliced_h_explicit` needs `hcollapse` (circular, OZFIX.14) and `hcont_sigma` (false as stated, OZFIX.7). Contact value and Laplace identity are proved. |
@@ -88,6 +90,7 @@ gap claims go stale (MA.8 was retired that way).
 | FOEQ.1–.4, .6–.9; FOEQ.5 at N=1 | exact MSA | The two definitions of "first order" agree at every order | `Closures/FirstOrderEquivalence`, `MSASolutionFamily` | Other_Closures `proof_notes_closures.md` |
 | leg-3, leg-3-mix (MPhase 1–9) | exact MSA | Blum–Høye (29)/(33) derived from OZ/Baxter primitives, scalar and all unequal σ | `YukawaOZ/MSABlumHoyeDerivation`, `MSAGSideOZ`, `YukawaOZMix/MixtureBlumHoyeDerivation` | leg3_* |
 | MSAMULTI, MSABSource | exact MSA | Arbitrary finite Yukawa tails, finite source hierarchy, nonlinear reconstruction | `YukawaOZMix/MSAMultiTail*`, `MultiTailMSAProject.lean` | msa_exact |
+| Single-tail fold binds (1.0.11) | paper | One species, one attractive tail: all coefficients nonnegative, radius = explicit fold, no hypothesis | `FMSAPaper/SingleTail*`, `QuarticBranch`, `AbsolutelyMonotone` | formalization/README.md |
 | FMSAPaper F1–F4 | paper | All-order finite closed form incl. weak identity; radius ≤ fold; convergence ⇒ real branch; conditional Pringsheim equality | `FMSAPaper/` | formalization/README.md |
 
 PYE and HNCB (other closures) are tracked in the separate Other_Closures project.

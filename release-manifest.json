@@ -1,11 +1,12 @@
 {
   "project": "MSA_and_1st_Truncation",
-  "version": "1.0.10",
-  "validated_on": "2026-10-22",
+  "version": "1.0.11",
+  "validated_on": "2026-10-23",
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib_revision": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
   "source_and_config_sha256": {
     "FMSAPaper/AbelEndpoint.lean": "15fea1693927849cf36b8efcaf73a4b6cd16f0737604b85736d74dc963da4a05",
+    "FMSAPaper/AbsolutelyMonotone.lean": "e676997cf71830bc11c7626846877af977f942d5f90bfac001dcf311071c71f0",
     "FMSAPaper/ActualAnalyticBranch.lean": "0a979e5f045e292ae13a311a75b9d7fcfc7cc9f50214531b8f516f3bd0e875f2",
     "FMSAPaper/ActualAnalyticTaylor.lean": "a9ded0d1ab53d9a5bf36446f2a231957b2d2e50f555249a3c0a2462278081083",
     "FMSAPaper/ActualBaxterBoundaryJets.lean": "0bd8bddaf5763799155daa4b5041be8270461b478a1e09e16af41534efc0cc10",
@@ -46,17 +47,21 @@
     "FMSAPaper/OrderedSpatialJets.lean": "f517b7825b87e7c5f27961d81c3441ac598a16d95ae01c90a688285ae183b454",
     "FMSAPaper/PhysicalExteriorJets.lean": "cf876d2f989131beea6b4c97c8228f35d08b3e1e4f697398d66027444a9307d2",
     "FMSAPaper/Pringsheim.lean": "19d91674142ee6956a1c9610b85eebf29935e3a867fa7eed0889715001cff1dd",
+    "FMSAPaper/QuarticBranch.lean": "1f01b89000bb72c9dcf2dfbbbd6fa0a95b957181ad7952906286ccd4bcff7fc7",
     "FMSAPaper/RadialIntegralJets.lean": "d93709987e2409153f90e7590d41b0cd27115d00391b97aeb4870808fa7a9cdc",
     "FMSAPaper/RegularContinuation.lean": "47776f8334aabdb97efc8a572e7a6f69ce53401b2abda4705ba4ab5909b4957e",
     "FMSAPaper/SignedPringsheim.lean": "07e4c94724fa3dc3fd5059bc17600473d725cec047aeb8007b6048bd04c7fcf4",
     "FMSAPaper/SingleRateSpatialMembership.lean": "b02547720a8acdd72e94f87e2a71a86be137e70db242ab3d12de35f59b81180b",
+    "FMSAPaper/SingleTailExpBounds.lean": "8eabe2073a5c37e88647c2a228ae6d8016f4899d649376b8bf451c611fbb5557",
+    "FMSAPaper/SingleTailParametrization.lean": "3a4c6e2cd1d49cc8bd82c697f84a290040c5d2a3efe6faf91000b252b7961235",
+    "FMSAPaper/SingleTailRadius.lean": "481e7119097362094d9ac3c7b8c2af9277171e73b12e25b9eb481e4d5c0d05ea",
     "FMSAPaper/SmoothJets.lean": "dc6131959a572bcb3e56d3bccf1db1e8a21a015ed2b8041bac0e1c77671d2ade",
     "FMSAPaper/SpatialDictionary.lean": "9f48fd5219513bf9d0b899d8895d599ffbf34a5dfcdf0d97f223654f08bc9266",
     "FMSAPaper/SpatialJets.lean": "822ad054ff8af3ebde9f0352a28acc3f0547b386aa69c32890fe7299c3dc0e06",
     "FMSAPaper/StrengthScaling.lean": "9251cc4aa8527dcefdcc965800af35ad395b3fa33819b5625063eb99dc912fe1",
     "FMSAPaper/TaylorRoot.lean": "2135f9f85bb94ce8e21ba0d1d78ce98d1895c9767f0eebaaa97ca65e4e571c89",
     "FMSAPaper/WeakDerivativePairing.lean": "53c63fa141acae8ebd2cc20f9d96c8f3496b60d7241c632c3268569fd294eb43",
-    "FMSAPaper.lean": "ee7fa8bd27e0fddba7f0402e5bcaa0e5d07b29e4503ebf501152cf6d0e6d9c5c",
+    "FMSAPaper.lean": "910f0744ffd8d7ce331948abaef1990d3ca97e12350cb6601bc5ad15041f2b50",
     "LeanCode/Analysis/ArgumentPrinciple.lean": "0bdd47e6d75063ee1347d58a9f0dba5c2f8c0b686d527c390d2880afe900ab89",
     "LeanCode/Analysis/BanachPoleFamily.lean": "3b95030b1b287356f7ce7e2035cb9ac750ca9d49e2237ad70dbebad6c8e06390",
     "LeanCode/Analysis/BoundaryGrowth.lean": "ae68b684ea3d0d4d939465b33aaf5d957b4244a5f08ab5e91763f12e9f60ed13",
@@ -516,21 +521,21 @@
     "LeanCode.lean": "cbd208c12e79fc416daf59969dd88107306996ab63ab170b1c7efdac8c90175c",
     "MSA_and_1st_Truncation.lean": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
     "lake-manifest.json": "f4fd831803fdd1968c310698b93b4dc7526ca87d3c537801c0a06ad0bebfb9d8",
-    "lakefile.toml": "746bde88f98441667924d75cb8fcb4b88097bdfdeb7996ed8e037e8b70ba4a14",
+    "lakefile.toml": "8be5ef31e907415afdb9c7541f3c0d5d208f4eace5ef751c8a501b1f34616b01",
     "lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee"
   },
   "completion_scope": "Recorded MSA/first-truncation theorem scope and explicit assumptions; unrelated historical conditional FMSA axioms retained.",
   "validation": {
     "foundation": {
       "status": "PASS",
-      "jobs": 9063,
-      "log": "formalization/results/baseline_1_0_10/foundation_build.log",
-      "log_sha256": "9a7a74e280dc30b48491ab24931ec302351c78000bcca5001db247347099003b"
+      "jobs": 9068,
+      "log": "formalization/results/baseline_1_0_11/foundation_build.log",
+      "log_sha256": "a364e2fd3119e67085f3dcc272d527e691ffd3c8c31c4b7f5f46b8808730868e"
     },
     "closures": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.9",
-      "reason": "Change confined to leaf FMSAPaper modules (and the version string); no downstream project imports FMSAPaper. FMSA_HSGMSA was in active use by another session.",
+      "carried_from": "1.0.10",
+      "reason": "Change confined to new leaf FMSAPaper modules and the version string; no downstream project imports FMSAPaper.",
       "previous": {
         "status": "PASS",
         "jobs": 8688,
@@ -540,8 +545,8 @@
     },
     "scoza": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.9",
-      "reason": "Change confined to leaf FMSAPaper modules (and the version string); no downstream project imports FMSAPaper. FMSA_HSGMSA was in active use by another session.",
+      "carried_from": "1.0.10",
+      "reason": "Change confined to new leaf FMSAPaper modules and the version string; no downstream project imports FMSAPaper.",
       "previous": {
         "status": "PASS",
         "jobs": 8853,
@@ -551,8 +556,8 @@
     },
     "hsgmsa": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.9",
-      "reason": "Change confined to leaf FMSAPaper modules (and the version string); no downstream project imports FMSAPaper. FMSA_HSGMSA was in active use by another session.",
+      "carried_from": "1.0.10",
+      "reason": "Change confined to new leaf FMSAPaper modules and the version string; no downstream project imports FMSAPaper.",
       "previous": {
         "status": "PASS",
         "jobs": 9202,
@@ -562,11 +567,10 @@
     },
     "workspace": {
       "status": "PASS",
-      "jobs": 9157,
-      "log": "formalization/results/baseline_1_0_10/workspace_build.log",
-      "log_sha256": "a37b248e3ab890a32cde0733063c676c3e5596035e4abdfd2a5e672138dbb42e",
-      "command": "lake build LeanWorkspace MSA_and_1st_Truncation/ExactMSACertificate MSA_and_1st_Truncation/ExactMSASparseFeasibility MSA_and_1st_Truncation/MatExactMSAEqualDiamCertificate",
-      "note": "Root workspace wrappers LegacyExactMSACertificate/LegacyExactMSASparseFeasibility/LegacyMatExactMSAEqualDiamCertificate and the LeanCode compatibility links were removed; the certificate libraries are built from the foundation package targets."
+      "jobs": 9162,
+      "log": "formalization/results/baseline_1_0_11/workspace_build.log",
+      "log_sha256": "35b4ab043dd948d5952d9bfdc319265eece9d6fbf943784b4e928960f4dfec22",
+      "command": "lake build LeanWorkspace MSA_and_1st_Truncation/ExactMSACertificate MSA_and_1st_Truncation/ExactMSASparseFeasibility MSA_and_1st_Truncation/MatExactMSAEqualDiamCertificate"
     }
   },
   "declaration_preservation": {
@@ -621,26 +625,23 @@
     "scope": "Conditional fold obstruction and convergence implications; spatial finite-span and coupling jets. Remaining analytic, physical-identification, Pringsheim and certified-counterexample obligations remain explicit in FORMALIZATION_TODO.md."
   },
   "paper_proof_updates": {
-    "version": "1.0.10",
-    "modules": 51,
-    "theorem_guards": 258,
-    "new_theorem_guards": 37,
+    "version": "1.0.11",
+    "modules": 56,
+    "theorem_guards": 361,
+    "new_theorem_guards": 103,
     "new_source_files": [
-      "FMSAPaper/ActualRadialWeakJets.lean",
-      "FMSAPaper/BaxterSecondIntegralJets.lean",
-      "FMSAPaper/BaxterWeakCauchy.lean",
-      "FMSAPaper/BaxterWeakJetBasis.lean",
-      "FMSAPaper/BaxterWeakJets.lean",
-      "FMSAPaper/FiniteIntegralJets.lean",
-      "FMSAPaper/RadialIntegralJets.lean"
+      "FMSAPaper/AbsolutelyMonotone.lean",
+      "FMSAPaper/QuarticBranch.lean",
+      "FMSAPaper/SingleTailExpBounds.lean",
+      "FMSAPaper/SingleTailParametrization.lean",
+      "FMSAPaper/SingleTailRadius.lean"
     ],
     "changed_files": [
       "FMSAPaper.lean",
       "lakefile.toml"
     ],
-    "previous_manifest": "release-manifest-1.0.9.json",
-    "previous_manifest_sha256": "18e2d3879379ceea7347bc2428a152e7386a863cdb3493d8bcebe474bbc81a14",
-    "existing_proof_sources_unchanged": true,
-    "scope": "Coupling-jet/test-integral interchange for the full reflected primitive, the second-factor numerator and r times the ordered radial DCF via fixed finite integrable dictionaries; every coupling coefficient of the full reflected weak identity with explicit convolution-boundary Cauchy sums and both linear Dirac coefficients; actual local symmetric-strength root branch, all species pairs, paper normalization. F1 Lean obligations complete; F5/F6 numerical certificates remain open."
+    "previous_manifest": "release-manifest-1.0.10.json",
+    "previous_manifest_sha256": "648a0283f2302f8005615dc22798259588bdcecb2a45a3266603dab52b4cd6bb",
+    "scope": "One hard-sphere species, one attractive Yukawa tail: exact reduction of the actual Blum-Hoye system to a quartic in a Moebius coordinate; all positive-order Taylor coefficients of the PY-seeded branch nonnegative (absolute monotonicity via Faa di Bruno); common Taylor radius equals the explicit fold coupling, with no sign, fold or convergence hypothesis."
   }
 }

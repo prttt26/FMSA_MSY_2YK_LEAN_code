@@ -1,6 +1,6 @@
 name = "MSA_and_1st_Truncation"
 packagesDir = "../.lake/packages"
-version = "1.0.10"
+version = "1.0.11"
 keywords = ["math"]
 defaultTargets = ["MSA_and_1st_Truncation"]
 

@@ -64,6 +64,28 @@ the separate `Other_Closures` project. Task status for every group, the
 re-derived axiom ledger and the open items are in `TODO.md` (it replaces the
 `todo_lean.md` and per-track task files that the notes still mention by name).
 
+## 1.0.11: the single-tail fold binds, unconditionally
+
+The paper collection now has 56 modules and 361 exact standard-axiom guards.
+`SingleTailRadius.single_tail_radius_eq_fold`: for one hard-sphere species and
+one attractive Yukawa tail (any rate, diameter and density with positive free
+volume), every continuous PY-seeded exact-MSA root germ has common Taylor radius
+equal to the explicit fold coupling, and `single_tail_coefficients_nonneg` shows
+all positive-order coefficients of both amplitude components are nonnegative.
+This discharges, for one tail, the all-order sign hypothesis that F4 assumes.
+Proof route:
+
+- `SingleTailParametrization` reduces the actual BH system exactly to
+  `τ = -Λ u² (u - a)(u - b)`, with `a = -P < b < 0` and `P` the first-order denominator.
+- `QuarticBranch` builds the inverse branch and proves that it cannot be continued
+  analytically through the fold.
+- `AbsolutelyMonotone` uses Faà di Bruno to show that all derivatives of the branch
+  are nonnegative.
+- `SingleTailExpBounds` proves the exponential inequalities behind `a < b < 0`.
+
+Several tails are not covered; competing tails can bind at complex branch points
+(F5).
+
 ## 1.0.10: the weak identity at every coupling order (F1 complete in Lean)
 
 The paper collection now has 51 modules and 258 exact standard-axiom guards.

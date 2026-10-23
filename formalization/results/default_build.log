@@ -1,16 +1,16 @@
-⚠ [8564/9063] Replayed LeanCode.YukawaOZMix.MixtureYukawaTransform
+⚠ [8563/8988] Replayed LeanCode.YukawaOZMix.MixtureYukawaTransform
 warning: LeanCode/YukawaOZMix/MixtureYukawaTransform.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8565/9063] Replayed LeanCode.YukawaOZMix.MixtureYukawaResidue
+⚠ [8564/8988] Replayed LeanCode.YukawaOZMix.MixtureYukawaResidue
 warning: LeanCode/YukawaOZMix/MixtureYukawaResidue.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8567/9063] Replayed LeanCode.Analysis.OneContactCosine
+⚠ [8566/8988] Replayed LeanCode.Analysis.OneContactCosine
 warning: LeanCode/Analysis/OneContactCosine.lean:14:39: missing space in the source
 
 This part of the code
@@ -53,7 +53,7 @@ Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus fa
 warning: LeanCode/Analysis/OneContactCosine.lean:27:64: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8569/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearOriginJet
+⚠ [8568/8988] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearOriginJet
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearOriginJet.lean:47:19: This simp argument is unused:
   Matrix.mul_apply
 
@@ -430,19 +430,19 @@ Hint: Omit it from the simp argument list.
   ̲  ̲ ̲ ̲M̵a̵t̵r̵i̵x̵.̵m̵u̵l̵_̵a̵p̵p̵l̵y̵,̵ ̵F̵i̵n̵.̵s̵u̵m̵_̵u̵n̵i̵v̵_̵t̵w̵o̵]̵M̲a̲t̲r̲i̲x̲.̲m̲u̲l̲_̲a̲p̲p̲l̲y̲]̲
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8577/9063] Replayed LeanCode.Analysis.BanachPoleFamily
+⚠ [8577/9068] Replayed LeanCode.Analysis.BanachPoleFamily
 warning: LeanCode/Analysis/BanachPoleFamily.lean:184:15: Variable name `hc` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8582/9063] Replayed LeanCode.Analysis.JordanLemma
+⚠ [8582/9068] Replayed LeanCode.Analysis.JordanLemma
 warning: LeanCode/Analysis/JordanLemma.lean:103:5: Variable name `hg` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8588/9063] Replayed LeanCode.Analysis.IntervalIntegralSwap
+⚠ [8588/9068] Replayed LeanCode.Analysis.IntervalIntegralSwap
 warning: LeanCode/Analysis/IntervalIntegralSwap.lean:60:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
@@ -459,7 +459,7 @@ warning: LeanCode/Analysis/IntervalIntegralSwap.lean:134:2: The `show` tactic sh
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
 Note: This linter can be disabled with `set_option linter.style.show false`
-⚠ [8593/9063] Replayed LeanCode.Analysis.MatrixWienerHopf
+⚠ [8593/9068] Replayed LeanCode.Analysis.MatrixWienerHopf
 warning: LeanCode/Analysis/MatrixWienerHopf.lean:115:8: `MeasureTheory.integral_finset_sum` has been deprecated: Use `MeasureTheory.integral_finsetSum` instead
 warning: LeanCode/Analysis/MatrixWienerHopf.lean:115:42: `MeasureTheory.integrable_finset_sum` has been deprecated: Use `MeasureTheory.integrable_finsetSum` instead
 warning: LeanCode/Analysis/MatrixWienerHopf.lean:117:8: `MeasureTheory.integral_finset_sum` has been deprecated: Use `MeasureTheory.integral_finsetSum` instead
@@ -474,7 +474,7 @@ open Lean.Parser.Tactic in
 macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
   `(tactic| push $cfg:optConfig Not $[$loc]?)
 ```
-⚠ [8594/9063] Replayed LeanCode.Analysis.MittagLeffler
+⚠ [8594/9068] Replayed LeanCode.Analysis.MittagLeffler
 warning: LeanCode/Analysis/MittagLeffler.lean:173:4: `push_neg` has been deprecated. Prefer using `push Not` instead.
 If you'd rather continue using `push_neg` in your project, you can implement it as follows:
 ```
@@ -482,7 +482,7 @@ open Lean.Parser.Tactic in
 macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
   `(tactic| push $cfg:optConfig Not $[$loc]?)
 ```
-⚠ [8596/9063] Replayed LeanCode.Analysis.RadialFourierInversion
+⚠ [8596/9068] Replayed LeanCode.Analysis.RadialFourierInversion
 warning: LeanCode/Analysis/RadialFourierInversion.lean:79:2: try 'simp' instead of 'simpa'
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
@@ -559,7 +559,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8603/9063] Replayed LeanCode.Analysis.VanDerCorput
+⚠ [8603/9068] Replayed LeanCode.Analysis.VanDerCorput
 warning: LeanCode/Analysis/VanDerCorput.lean:60:5: Variable name `hab` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -605,7 +605,7 @@ Hint: Omit it from the simp argument list.
   simp +contextual ̵[̵n̵e̵_̵o̵f̵_̵l̵t̵]̵
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8606/9063] Replayed LeanCode.Analysis.WienerRenewal
+⚠ [8606/9068] Replayed LeanCode.Analysis.WienerRenewal
 warning: LeanCode/Analysis/WienerRenewal.lean:114:30: This simp argument is unused:
   Set.indicator_apply
 
@@ -625,7 +625,7 @@ warning: LeanCode/Analysis/WienerRenewal.lean:305:57: Variable name `hRcont` is 
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8631/9063] Replayed LeanCode.HardSphere.BaxterRenewal
+⚠ [8631/9068] Replayed LeanCode.HardSphere.BaxterRenewal
 warning: LeanCode/HardSphere/BaxterRenewal.lean:470:4: try 'simp' instead of 'simpa'
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
@@ -818,13 +818,13 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8640/9063] Replayed LeanCode.HardSphere.OzBaxterFixedPt
+⚠ [8640/9068] Replayed LeanCode.HardSphere.OzBaxterFixedPt
 warning: LeanCode/HardSphere/OzBaxterFixedPt.lean:38:52: Variable name `hsigma` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8642/9063] Replayed LeanCode.HardSphere.BaxterNoSpinodalEquiv
+⚠ [8642/9068] Replayed LeanCode.HardSphere.BaxterNoSpinodalEquiv
 warning: LeanCode/HardSphere/BaxterNoSpinodalEquiv.lean:92:46: Variable name `heta0` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -835,7 +835,7 @@ warning: LeanCode/HardSphere/BaxterNoSpinodalEquiv.lean:93:26: Variable name `hr
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8643/9063] Replayed LeanCode.HardSphere.BaxterLowerHalfPlane
+⚠ [8643/9068] Replayed LeanCode.HardSphere.BaxterLowerHalfPlane
 warning: LeanCode/HardSphere/BaxterLowerHalfPlane.lean:157:33: this tactic is never executed
 
 Note: This linter can be disabled with `set_option linter.unreachableTactic false`
@@ -853,17 +853,17 @@ warning: LeanCode/HardSphere/BaxterLowerHalfPlane.lean:196:6: The `show` tactic 
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
 Note: This linter can be disabled with `set_option linter.style.show false`
-⚠ [8644/9063] Replayed LeanCode.HardSphere.BaxterHermiteBiehler
+⚠ [8644/9068] Replayed LeanCode.HardSphere.BaxterHermiteBiehler
 warning: LeanCode/HardSphere/BaxterHermiteBiehler.lean:75:26: Variable name `hrho` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8650/9063] Replayed LeanCode.HardSphere.BaxterKernelDeriv
+⚠ [8650/9068] Replayed LeanCode.HardSphere.BaxterKernelDeriv
 warning: LeanCode/HardSphere/BaxterKernelDeriv.lean:164:31: try 'simp' instead of 'simpa'
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
-⚠ [8651/9063] Replayed LeanCode.HardSphere.BaxterForcingDeriv
+⚠ [8651/9068] Replayed LeanCode.HardSphere.BaxterForcingDeriv
 warning: LeanCode/HardSphere/BaxterForcingDeriv.lean:255:81: missing space in the source
 
 This part of the code
@@ -873,7 +873,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8652/9063] Replayed LeanCode.HardSphere.BaxterRenewalDiff
+⚠ [8652/9068] Replayed LeanCode.HardSphere.BaxterRenewalDiff
 warning: LeanCode/HardSphere/BaxterRenewalDiff.lean:58:47: Variable name `hsigma` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -888,7 +888,7 @@ warning: LeanCode/HardSphere/BaxterRenewalDiff.lean:147:4: The `show` tactic sho
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
 Note: This linter can be disabled with `set_option linter.style.show false`
-⚠ [8653/9063] Replayed LeanCode.HardSphere.BaxterExteriorDerivIntegrable
+⚠ [8653/9068] Replayed LeanCode.HardSphere.BaxterExteriorDerivIntegrable
 warning: LeanCode/HardSphere/BaxterExteriorDerivIntegrable.lean:82:55: Variable name `hsigma` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -899,7 +899,7 @@ warning: LeanCode/HardSphere/BaxterExteriorDerivIntegrable.lean:117:36: Variable
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8657/9063] Replayed LeanCode.HardSphere.OzCoreClosure
+⚠ [8657/9068] Replayed LeanCode.HardSphere.OzCoreClosure
 warning: LeanCode/HardSphere/OzCoreClosure.lean:79:49: Variable name `hsigma` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -927,7 +927,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8671/9063] Replayed LeanCode.HardSphere.ShellKernel
+⚠ [8671/9068] Replayed LeanCode.HardSphere.ShellKernel
 warning: LeanCode/HardSphere/ShellKernel.lean:123:6: try 'simp' instead of 'simpa'
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
@@ -950,7 +950,7 @@ warning: LeanCode/HardSphere/ShellKernel.lean:135:2: The `show` tactic should on
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
 Note: This linter can be disabled with `set_option linter.style.show false`
-⚠ [8674/9063] Replayed LeanCode.HSMixture.MatrixDetPoleFree
+⚠ [8674/9068] Replayed LeanCode.HSMixture.MatrixDetPoleFree
 warning: LeanCode/HSMixture/MatrixDetPoleFree.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -961,7 +961,7 @@ Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8676/9063] Replayed LeanCode.HSMixture.MixtureOzStar
+⚠ [8676/9068] Replayed LeanCode.HSMixture.MixtureOzStar
 warning: LeanCode/HSMixture/MixtureOzStar.lean:510:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
@@ -997,7 +997,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8677/9063] Replayed LeanCode.HSMixture.MixtureBaxterSeed
+⚠ [8677/9068] Replayed LeanCode.HSMixture.MixtureBaxterSeed
 warning: LeanCode/HSMixture/MixtureBaxterSeed.lean:99:36: missing space in the source
 
 This part of the code
@@ -1102,7 +1102,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8684/9063] Replayed LeanCode.HSMixture.MixtureChordFamily
+⚠ [8684/9068] Replayed LeanCode.HSMixture.MixtureChordFamily
 warning: LeanCode/HSMixture/MixtureChordFamily.lean:301:0: Please, add a comment explaining the need for modifying the maxHeartbeat limit, as in
 set_option maxHeartbeats 1600000 in
 -- reason for change
@@ -1154,7 +1154,7 @@ warning: LeanCode/HSMixture/MixtureChordFamily.lean:3030:5: Variable name `hrcY`
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8685/9063] Replayed LeanCode.HSMixture.MixtureDetEscape
+⚠ [8685/9068] Replayed LeanCode.HSMixture.MixtureDetEscape
 warning: LeanCode/HSMixture/MixtureDetEscape.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -1165,7 +1165,7 @@ Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8686/9063] Replayed LeanCode.HSMixture.MixtureDetHomotopy
+⚠ [8686/9068] Replayed LeanCode.HSMixture.MixtureDetHomotopy
 warning: LeanCode/HSMixture/MixtureDetHomotopy.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -1176,7 +1176,7 @@ Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8688/9063] Replayed LeanCode.HSMixture.MixtureDetHomotopyPhys
+⚠ [8688/9068] Replayed LeanCode.HSMixture.MixtureDetHomotopyPhys
 warning: LeanCode/HSMixture/MixtureDetHomotopyPhys.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -1187,7 +1187,7 @@ Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8690/9063] Replayed LeanCode.HSMixture.MixtureDetEntire
+⚠ [8690/9068] Replayed LeanCode.HSMixture.MixtureDetEntire
 warning: LeanCode/HSMixture/MixtureDetEntire.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -1202,7 +1202,7 @@ warning: LeanCode/HSMixture/MixtureDetEntire.lean:85:2: The `show` tactic should
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
 Note: This linter can be disabled with `set_option linter.style.show false`
-⚠ [8692/9063] Replayed LeanCode.HSMixture.Q0MomentGeOne
+⚠ [8692/9068] Replayed LeanCode.HSMixture.Q0MomentGeOne
 warning: LeanCode/HSMixture/Q0MomentGeOne.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -1213,7 +1213,7 @@ Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8693/9063] Replayed LeanCode.HSMixture.MixtureDetOrigin
+⚠ [8693/9068] Replayed LeanCode.HSMixture.MixtureDetOrigin
 warning: LeanCode/HSMixture/MixtureDetOrigin.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -1287,7 +1287,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8694/9063] Replayed LeanCode.HSMixture.MixtureDetUniform
+⚠ [8694/9068] Replayed LeanCode.HSMixture.MixtureDetUniform
 warning: LeanCode/HSMixture/MixtureDetUniform.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -1325,7 +1325,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8695/9063] Replayed LeanCode.HSMixture.MixtureDetHcont
+⚠ [8695/9068] Replayed LeanCode.HSMixture.MixtureDetHcont
 warning: LeanCode/HSMixture/MixtureDetHcont.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -1363,7 +1363,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8696/9063] Replayed LeanCode.HSMixture.MixtureDetGeneralN
+⚠ [8696/9068] Replayed LeanCode.HSMixture.MixtureDetGeneralN
 warning: LeanCode/HSMixture/MixtureDetGeneralN.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -1414,13 +1414,13 @@ Hint: Omit it from the simp argument list.
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: LeanCode/HSMixture/MixtureDetGeneralN.lean:450:9: `continuousOn_finset_sum` has been deprecated: Use `continuousOn_finsetSum` instead
 warning: LeanCode/HSMixture/MixtureDetGeneralN.lean:450:47: `continuousOn_finset_sum` has been deprecated: Use `continuousOn_finsetSum` instead
-⚠ [8697/9063] Replayed LeanCode.HSMixture.MixtureQ0Inverse
+⚠ [8697/9068] Replayed LeanCode.HSMixture.MixtureQ0Inverse
 warning: LeanCode/HSMixture/MixtureQ0Inverse.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8703/9063] Replayed LeanCode.HSMixture.MixtureOzStarIntegrable
+⚠ [8703/9068] Replayed LeanCode.HSMixture.MixtureOzStarIntegrable
 warning: LeanCode/HSMixture/MixtureOzStarIntegrable.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -1449,7 +1449,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8704/9063] Replayed LeanCode.HSMixture.MixtureRDFUniqueness
+⚠ [8704/9068] Replayed LeanCode.HSMixture.MixtureRDFUniqueness
 warning: LeanCode/HSMixture/MixtureRDFUniqueness.lean:2:18: * '. All rights reserved.':
 'Copyright (c) YYYY' should be followed by a space
 
@@ -1460,7 +1460,7 @@ Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8711/9063] Replayed LeanCode.HSMixture.Q0DetContourOrientation
+⚠ [8711/9068] Replayed LeanCode.HSMixture.Q0DetContourOrientation
 warning: LeanCode/HSMixture/Q0DetContourOrientation.lean:102:77: missing space in the source
 
 This part of the code
@@ -1470,7 +1470,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8716/9063] Replayed LeanCode.HSMixture.MixtureCoercivityReduction
+⚠ [8716/9068] Replayed LeanCode.HSMixture.MixtureCoercivityReduction
 warning: LeanCode/HSMixture/MixtureCoercivityReduction.lean:169:12: `continuousOn_finset_sum` has been deprecated: Use `continuousOn_finsetSum` instead
 warning: LeanCode/HSMixture/MixtureCoercivityReduction.lean:170:12: `continuousOn_finset_sum` has been deprecated: Use `continuousOn_finsetSum` instead
 warning: LeanCode/HSMixture/MixtureCoercivityReduction.lean:305:47: missing space in the source
@@ -1485,7 +1485,7 @@ should be written as
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
 warning: LeanCode/HSMixture/MixtureCoercivityReduction.lean:473:12: `continuousOn_finset_sum` has been deprecated: Use `continuousOn_finsetSum` instead
 warning: LeanCode/HSMixture/MixtureCoercivityReduction.lean:474:12: `continuousOn_finset_sum` has been deprecated: Use `continuousOn_finsetSum` instead
-⚠ [8720/9063] Replayed LeanCode.HSMixture.MatrixBaxterFourierWH
+⚠ [8720/9068] Replayed LeanCode.HSMixture.MatrixBaxterFourierWH
 warning: LeanCode/HSMixture/MatrixBaxterFourierWH.lean:85:19: missing space in the source
 
 This part of the code
@@ -1522,7 +1522,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8721/9063] Replayed LeanCode.HSMixture.MatrixWienerKhinchin
+⚠ [8721/9068] Replayed LeanCode.HSMixture.MatrixWienerKhinchin
 warning: LeanCode/HSMixture/MatrixWienerKhinchin.lean:52:35: missing space in the source
 
 This part of the code
@@ -2072,11 +2072,11 @@ Hint: Omit it from the simp argument list.
   ̲  ̲ ̲ ̲Complex.I_im, Complex.neg_re, Complex.neg_im, Complex.mul_re, Complex.add_re]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8730/9063] Replayed LeanCode.YukawaOZ.MSAClosedForm
+⚠ [8730/9068] Replayed LeanCode.YukawaOZ.MSAClosedForm
 warning: LeanCode/YukawaOZ/MSAClosedForm.lean:234:2: try 'simp' instead of 'simpa'
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
-⚠ [8731/9063] Replayed LeanCode.YukawaOZ.MSAElimination
+⚠ [8731/9068] Replayed LeanCode.YukawaOZ.MSAElimination
 warning: LeanCode/YukawaOZ/MSAElimination.lean:83:29: Variable name `b` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -2089,7 +2089,7 @@ Hint: Omit it from the simp argument list.
   simp only [mul_zero, z̵e̵r̵o̵_̵m̵u̵l̵,̵ ̵sub_zero] at hfac
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8738/9063] Replayed LeanCode.YukawaOZ.ExactMSASparseDt1
+⚠ [8738/9068] Replayed LeanCode.YukawaOZ.ExactMSASparseDt1
 warning: LeanCode/YukawaOZ/ExactMSASparseDt1.lean:5:0: Unscoped option maxHeartbeats is not allowed:
 Please scope this to individual declarations, as in
 ```
@@ -2100,7 +2100,7 @@ example : ... := ...
 
 Note: This linter can be disabled with `set_option linter.style.setOption false`
 info: LeanCode/YukawaOZ/ExactMSASparseDt1.lean:13:0: 'FMSA.ExactMSA.SparseCheckpoints.dt1_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
-⚠ [8739/9063] Replayed LeanCode.YukawaOZ.ExactMSASparseDt2
+⚠ [8739/9068] Replayed LeanCode.YukawaOZ.ExactMSASparseDt2
 warning: LeanCode/YukawaOZ/ExactMSASparseDt2.lean:5:0: Unscoped option maxHeartbeats is not allowed:
 Please scope this to individual declarations, as in
 ```
@@ -2111,7 +2111,7 @@ example : ... := ...
 
 Note: This linter can be disabled with `set_option linter.style.setOption false`
 info: LeanCode/YukawaOZ/ExactMSASparseDt2.lean:13:0: 'FMSA.ExactMSA.SparseCheckpoints.dt2_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
-⚠ [8740/9063] Replayed LeanCode.YukawaOZ.ExactMSASparseReassembly
+⚠ [8740/9068] Replayed LeanCode.YukawaOZ.ExactMSASparseReassembly
 warning: LeanCode/YukawaOZ/ExactMSASparseReassembly.lean:6:0: Unscoped option maxHeartbeats is not allowed:
 Please scope this to individual declarations, as in
 ```
@@ -2125,7 +2125,7 @@ info: LeanCode/YukawaOZ/ExactMSASparseReassembly.lean:34:0: 'FMSA.ExactMSA.Spars
 info: LeanCode/YukawaOZ/ExactMSASparseReassembly.lean:35:0: 'FMSA.ExactMSA.SparseCheckpoints.full_division_zero_of_residual' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]
-⚠ [8741/9063] Replayed LeanCode.YukawaOZ.ExactMSARationalData
+⚠ [8741/9068] Replayed LeanCode.YukawaOZ.ExactMSARationalData
 warning: LeanCode/YukawaOZ/ExactMSARationalData.lean:7:0: Unscoped option maxHeartbeats is not allowed:
 Please scope this to individual declarations, as in
 ```
@@ -2255,7 +2255,7 @@ warning: LeanCode/YukawaOZ/ExactMSARationalData.lean:23:53: Variable name `K` is
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8742/9063] Replayed LeanCode.YukawaOZ.ExactMSAPhysicalDictionary
+⚠ [8742/9068] Replayed LeanCode.YukawaOZ.ExactMSAPhysicalDictionary
 warning: LeanCode/YukawaOZ/ExactMSAPhysicalDictionary.lean:5:0: Unscoped option maxHeartbeats is not allowed:
 Please scope this to individual declarations, as in
 ```
@@ -2287,7 +2287,7 @@ should be written as
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
 info: LeanCode/YukawaOZ/ExactMSAPhysicalDictionary.lean:49:0: 'FMSA.ExactMSA.RationalBridge.bhP_dictionary' depends on axioms: [propext, Classical.choice, Quot.sound]
-⚠ [8743/9063] Replayed LeanCode.YukawaOZ.ExactMSADeltaDictionary
+⚠ [8743/9068] Replayed LeanCode.YukawaOZ.ExactMSADeltaDictionary
 warning: LeanCode/YukawaOZ/ExactMSADeltaDictionary.lean:6:0: Unscoped option maxHeartbeats is not allowed:
 Please scope this to individual declarations, as in
 ```
@@ -2335,7 +2335,7 @@ sparse circuit: 450 certified nodes; latest 486 monomials
 sparse circuit: 500 certified nodes; latest 7 monomials
 sparse circuit: 550 certified nodes; latest 2 monomials
 info: LeanCode/YukawaOZ/ExactMSADeltaDictionary.lean:27:0: 'FMSA.ExactMSA.RationalBridge.delta_dictionary' depends on axioms: [propext, Classical.choice, Quot.sound]
-⚠ [8744/9063] Replayed LeanCode.YukawaOZ.ExactMSAEliminationBridge
+⚠ [8744/9068] Replayed LeanCode.YukawaOZ.ExactMSAEliminationBridge
 warning: LeanCode/YukawaOZ/ExactMSAEliminationBridge.lean:6:0: Unscoped option maxHeartbeats is not allowed:
 Please scope this to individual declarations, as in
 ```
@@ -2374,7 +2374,7 @@ sparse circuit: 400 certified nodes; latest 5 monomials
 sparse circuit: 450 certified nodes; latest 2215 monomials
 sparse circuit: 500 certified nodes; latest 518 monomials
 info: LeanCode/YukawaOZ/ExactMSAEliminationBridge.lean:20:0: 'FMSA.ExactMSA.RationalBridge.eliminated_numerator' depends on axioms: [propext, Classical.choice, Quot.sound]
-⚠ [8745/9063] Replayed LeanCode.YukawaOZ.ExactMSASecondResidualBridge
+⚠ [8745/9068] Replayed LeanCode.YukawaOZ.ExactMSASecondResidualBridge
 warning: LeanCode/YukawaOZ/ExactMSASecondResidualBridge.lean:5:0: Unscoped option maxHeartbeats is not allowed:
 Please scope this to individual declarations, as in
 ```
@@ -2386,7 +2386,7 @@ example : ... := ...
 Note: This linter can be disabled with `set_option linter.style.setOption false`
 info: LeanCode/YukawaOZ/ExactMSASecondResidualBridge.lean:14:2: sparse_ring: reified 6 real atoms; checking integer circuit in kernel
 info: LeanCode/YukawaOZ/ExactMSASecondResidualBridge.lean:15:0: 'FMSA.ExactMSA.RationalBridge.second_residual_numerator' depends on axioms: [propext, Classical.choice, Quot.sound]
-⚠ [8746/9063] Replayed LeanCode.YukawaOZ.ExactMSAReductionBridge
+⚠ [8746/9068] Replayed LeanCode.YukawaOZ.ExactMSAReductionBridge
 warning: LeanCode/YukawaOZ/ExactMSAReductionBridge.lean:6:0: Unscoped option maxHeartbeats is not allowed:
 Please scope this to individual declarations, as in
 ```
@@ -2668,7 +2668,7 @@ sparse circuit: 13450 certified nodes; latest 3 monomials
 sparse circuit: 13500 certified nodes; latest 34 monomials
 info: LeanCode/YukawaOZ/ExactMSAReductionBridge.lean:25:0: 'FMSA.ExactMSA.RationalBridge.raw_reduction' depends on axioms: [propext, Classical.choice, Quot.sound]
 info: LeanCode/YukawaOZ/ExactMSAReductionBridge.lean:33:0: 'FMSA.ExactMSA.RationalBridge.coefficient_reassembly' depends on axioms: [propext, Classical.choice, Quot.sound]
-⚠ [8747/9063] Replayed LeanCode.YukawaOZ.ExactMSAResidualRecovery
+⚠ [8747/9068] Replayed LeanCode.YukawaOZ.ExactMSAResidualRecovery
 warning: LeanCode/YukawaOZ/ExactMSAResidualRecovery.lean:38:41: This simp argument is unused:
   hzk
 
@@ -2739,14 +2739,14 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8764/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureBreakpointScheme
+⚠ [8764/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureBreakpointScheme
 warning: LeanCode/YukawaOZMix/MSAMixtureBreakpointScheme.lean:70:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
 warning: LeanCode/YukawaOZMix/MSAMixtureBreakpointScheme.lean:73:2: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8767/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureBreakpointConvDirect
+⚠ [8767/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureBreakpointConvDirect
 warning: LeanCode/YukawaOZMix/MSAMixtureBreakpointConvDirect.lean:265:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
@@ -3373,13 +3373,13 @@ warning: LeanCode/YukawaOZMix/MSAMixtureBreakpointConvDirect.lean:1145:2: The `s
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
 Note: This linter can be disabled with `set_option linter.style.show false`
-⚠ [8771/9063] Replayed LeanCode.YukawaOZMix.MixtureRealSpace
+⚠ [8771/9068] Replayed LeanCode.YukawaOZMix.MixtureRealSpace
 warning: LeanCode/YukawaOZMix/MixtureRealSpace.lean:348:54: Variable name `hrg` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8772/9063] Replayed LeanCode.YukawaOZMix.MixtureClosedForm
+⚠ [8772/9068] Replayed LeanCode.YukawaOZMix.MixtureClosedForm
 warning: LeanCode/YukawaOZMix/MixtureClosedForm.lean:70:5: Variable name `hint` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -3403,7 +3403,7 @@ The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
 warning: LeanCode/YukawaOZMix/MixtureClosedForm.lean:703:10: `intervalIntegral.integral_finset_sum` has been deprecated: Use `intervalIntegral.integral_finsetSum` instead
-⚠ [8773/9063] Replayed LeanCode.YukawaOZMix.MixtureDCFSmooth
+⚠ [8773/9068] Replayed LeanCode.YukawaOZMix.MixtureDCFSmooth
 warning: LeanCode/YukawaOZMix/MixtureDCFSmooth.lean:270:32: missing space in the source
 
 This part of the code
@@ -3515,25 +3515,25 @@ warning: LeanCode/YukawaOZMix/MixtureDCFSmooth.lean:1127:2: The `show` tactic sh
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
 Note: This linter can be disabled with `set_option linter.style.show false`
-⚠ [8774/9063] Replayed LeanCode.YukawaOZMix.MixtureHSDCF
+⚠ [8774/9068] Replayed LeanCode.YukawaOZMix.MixtureHSDCF
 warning: LeanCode/YukawaOZMix/MixtureHSDCF.lean:127:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
 Note: This linter can be disabled with `set_option linter.style.show false`
-⚠ [8775/9063] Replayed LeanCode.YukawaOZMix.MixtureCorrelationDeriv
+⚠ [8775/9068] Replayed LeanCode.YukawaOZMix.MixtureCorrelationDeriv
 warning: LeanCode/YukawaOZMix/MixtureCorrelationDeriv.lean:116:65: Variable name `hlam` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8778/9063] Replayed LeanCode.HSMixture.MixtureSeedExtended
+⚠ [8778/9068] Replayed LeanCode.HSMixture.MixtureSeedExtended
 warning: LeanCode/HSMixture/MixtureSeedExtended.lean:91:28: Variable name `j` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
 warning: LeanCode/HSMixture/MixtureSeedExtended.lean:97:9: `continuous_finset_sum` has been deprecated: Use `continuous_finsetSum` instead
-⚠ [8779/9063] Replayed LeanCode.YukawaOZMix.MixtureRowSum
+⚠ [8779/9068] Replayed LeanCode.YukawaOZMix.MixtureRowSum
 warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:68:44: missing space in the source
 
 This part of the code
@@ -3635,7 +3635,7 @@ warning: LeanCode/YukawaOZMix/MixtureRowSum.lean:944:2: The `show` tactic should
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
 Note: This linter can be disabled with `set_option linter.style.show false`
-⚠ [8784/9063] Replayed LeanCode.YukawaOZMix.MixtureInnerDCF
+⚠ [8784/9068] Replayed LeanCode.YukawaOZMix.MixtureInnerDCF
 warning: LeanCode/YukawaOZMix/MixtureInnerDCF.lean:185:47: This simp argument is unused:
   smul_smul
 
@@ -3648,13 +3648,13 @@ warning: LeanCode/YukawaOZMix/MixtureInnerDCF.lean:215:52: Variable name `s_k` i
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8786/9063] Replayed LeanCode.YukawaOZMix.MixtureRDFContact
+⚠ [8786/9068] Replayed LeanCode.YukawaOZMix.MixtureRDFContact
 warning: LeanCode/YukawaOZMix/MixtureRDFContact.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8787/9063] Replayed LeanCode.YukawaOZMix.MixtureRDFEqualDiam
+⚠ [8787/9068] Replayed LeanCode.YukawaOZMix.MixtureRDFEqualDiam
 warning: LeanCode/YukawaOZMix/MixtureRDFEqualDiam.lean:1:1: * '-/':
 Copyright too short!
 
@@ -3664,7 +3664,7 @@ warning: LeanCode/YukawaOZMix/MixtureRDFEqualDiam.lean:40:4: The `show` tactic s
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
 Note: This linter can be disabled with `set_option linter.style.show false`
-⚠ [8789/9063] Replayed LeanCode.YukawaOZMix.YukawaArcBound
+⚠ [8789/9068] Replayed LeanCode.YukawaOZMix.YukawaArcBound
 warning: LeanCode/YukawaOZMix/YukawaArcBound.lean:47:46: missing space in the source
 
 This part of the code
@@ -3683,14 +3683,14 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8792/9063] Replayed LeanCode.HSMixture.HSMixWindowing
+⚠ [8792/9068] Replayed LeanCode.HSMixture.HSMixWindowing
 warning: LeanCode/HSMixture/HSMixWindowing.lean:41:47: try 'simp' instead of 'simpa'
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
 warning: LeanCode/HSMixture/HSMixWindowing.lean:77:4: try 'simp' instead of 'simpa'
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
-⚠ [8794/9063] Replayed LeanCode.HSMixture.PhysHSMixWindowing
+⚠ [8794/9068] Replayed LeanCode.HSMixture.PhysHSMixWindowing
 warning: LeanCode/HSMixture/PhysHSMixWindowing.lean:195:74: This simp argument is unused:
   le_max_left
 
@@ -3722,7 +3722,7 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: LeanCode/HSMixture/PhysHSMixWindowing.lean:520:28: try 'simp' instead of 'simpa'
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
-⚠ [8796/9063] Replayed LeanCode.YukawaOZMix.MixtureCorrectedSeed
+⚠ [8796/9068] Replayed LeanCode.YukawaOZMix.MixtureCorrectedSeed
 warning: LeanCode/YukawaOZMix/MixtureCorrectedSeed.lean:205:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
@@ -3769,7 +3769,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8797/9063] Replayed LeanCode.YukawaOZMix.ExtendedSeedRhoWeight
+⚠ [8797/9068] Replayed LeanCode.YukawaOZMix.ExtendedSeedRhoWeight
 warning: LeanCode/YukawaOZMix/ExtendedSeedRhoWeight.lean:171:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
@@ -3782,7 +3782,7 @@ warning: LeanCode/YukawaOZMix/ExtendedSeedRhoWeight.lean:260:4: The `show` tacti
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
 Note: This linter can be disabled with `set_option linter.style.show false`
-⚠ [8799/9063] Replayed LeanCode.YukawaOZMix.MixtureDCFAEInjective
+⚠ [8799/9068] Replayed LeanCode.YukawaOZMix.MixtureDCFAEInjective
 warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:757:15: `MeasureTheory.integral_finset_sum` has been deprecated: Use `MeasureTheory.integral_finsetSum` instead
 warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:758:12: `MeasureTheory.integral_finset_sum` has been deprecated: Use `MeasureTheory.integral_finsetSum` instead
 warning: LeanCode/YukawaOZMix/MixtureDCFAEInjective.lean:758:46: `MeasureTheory.integrable_finset_sum` has been deprecated: Use `MeasureTheory.integrable_finsetSum` instead
@@ -3819,7 +3819,7 @@ open Lean.Parser.Tactic in
 macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
   `(tactic| push $cfg:optConfig Not $[$loc]?)
 ```
-⚠ [8800/9063] Replayed LeanCode.YukawaOZMix.MixtureBaxterODEEqualDiam
+⚠ [8800/9068] Replayed LeanCode.YukawaOZMix.MixtureBaxterODEEqualDiam
 warning: LeanCode/YukawaOZMix/MixtureBaxterODEEqualDiam.lean:85:32: `push_neg` has been deprecated. Prefer using `push Not` instead.
 If you'd rather continue using `push_neg` in your project, you can implement it as follows:
 ```
@@ -3846,7 +3846,7 @@ open Lean.Parser.Tactic in
 macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
   `(tactic| push $cfg:optConfig Not $[$loc]?)
 ```
-⚠ [8801/9063] Replayed LeanCode.YukawaOZMix.MixtureHSDCFFin1
+⚠ [8801/9068] Replayed LeanCode.YukawaOZMix.MixtureHSDCFFin1
 warning: LeanCode/YukawaOZMix/MixtureHSDCFFin1.lean:152:15: Variable name `i` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -3909,7 +3909,7 @@ warning: LeanCode/YukawaOZMix/MixtureHSDCFFin1.lean:448:13: Variable name `v` is
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8802/9063] Replayed LeanCode.YukawaOZMix.MixtureBaxterODEUnequalDiam
+⚠ [8802/9068] Replayed LeanCode.YukawaOZMix.MixtureBaxterODEUnequalDiam
 warning: LeanCode/YukawaOZMix/MixtureBaxterODEUnequalDiam.lean:243:27: This simp argument is unused:
   Fin.isValue
 
@@ -3929,7 +3929,7 @@ set_option maxHeartbeats 1600000 in
 ...
 
 Note: This linter can be disabled with `set_option linter.style.maxHeartbeats false`
-⚠ [8803/9063] Replayed LeanCode.YukawaOZMix.MixtureBaxterODEUnequalDiamN
+⚠ [8803/9068] Replayed LeanCode.YukawaOZMix.MixtureBaxterODEUnequalDiamN
 warning: LeanCode/YukawaOZMix/MixtureBaxterODEUnequalDiamN.lean:178:62: Variable name `i` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -4042,7 +4042,7 @@ set_option maxHeartbeats 2000000 in
 ...
 
 Note: This linter can be disabled with `set_option linter.style.maxHeartbeats false`
-⚠ [8804/9063] Replayed LeanCode.YukawaOZMix.MixtureRDFUnequalDiam
+⚠ [8804/9068] Replayed LeanCode.YukawaOZMix.MixtureRDFUnequalDiam
 warning: LeanCode/YukawaOZMix/MixtureRDFUnequalDiam.lean:85:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
@@ -4117,11 +4117,11 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8805/9063] Replayed LeanCode.YukawaOZMix.MixtureDCFShellForm
+⚠ [8805/9068] Replayed LeanCode.YukawaOZMix.MixtureDCFShellForm
 warning: LeanCode/YukawaOZMix/MixtureDCFShellForm.lean:152:6: `MeasureTheory.integral_finset_sum` has been deprecated: Use `MeasureTheory.integral_finsetSum` instead
 warning: LeanCode/YukawaOZMix/MixtureDCFShellForm.lean:152:40: `MeasureTheory.integrable_finset_sum` has been deprecated: Use `MeasureTheory.integrable_finsetSum` instead
 warning: LeanCode/YukawaOZMix/MixtureDCFShellForm.lean:163:6: `MeasureTheory.integral_finset_sum` has been deprecated: Use `MeasureTheory.integral_finsetSum` instead
-⚠ [8807/9063] Replayed LeanCode.YukawaOZMix.ReflectedTermSupports
+⚠ [8807/9068] Replayed LeanCode.YukawaOZMix.ReflectedTermSupports
 warning: LeanCode/YukawaOZMix/ReflectedTermSupports.lean:299:10: This simp argument is unused:
   Set.indicator_of_mem hmem
 
@@ -4176,13 +4176,13 @@ warning: LeanCode/YukawaOZMix/ReflectedTermSupports.lean:605:11: Variable name `
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8817/9063] Replayed LeanCode.Closures.DPClosureMap
+⚠ [8817/9068] Replayed LeanCode.Closures.DPClosureMap
 warning: LeanCode/Closures/DPClosureMap.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8818/9063] Replayed LeanCode.Closures.FirstOrderEquivalence
+⚠ [8818/9068] Replayed LeanCode.Closures.FirstOrderEquivalence
 warning: LeanCode/Closures/FirstOrderEquivalence.lean:433:47: `ContinuousLinearMap.add_apply` has been deprecated: Use `add_apply` instead
 
 Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.add_apply` to `add_apply x`).
@@ -4215,13 +4215,13 @@ Hint: Omit it from the simp argument list.
   simp [deriv_const,̵ ̵i̵t̵e̵r̵a̵t̵e̵d̵D̵e̵r̵i̵v̵_̵c̵o̵n̵s̵t̵]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8821/9063] Replayed LeanCode.FMSAProject
+⚠ [8821/9068] Replayed LeanCode.FMSAProject
 warning: LeanCode/FMSAProject.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [8822/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureCore
+⚠ [8822/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureCore
 warning: LeanCode/YukawaOZMix/MSAMixtureCore.lean:66:39: Variable name `Wil` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -4272,11 +4272,11 @@ warning: LeanCode/YukawaOZMix/MSAMixtureCore.lean:105:61: Variable name `Dt` is 
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8827/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailIntegrals
+⚠ [8827/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailIntegrals
 warning: LeanCode/YukawaOZ/MSAMultiTailIntegrals.lean:97:45: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8829/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureBHRootSmooth
+⚠ [8829/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureBHRootSmooth
 warning: LeanCode/YukawaOZMix/MSAMixtureBHRootSmooth.lean:174:6: This simp argument is unused:
   Matrix.smul_apply
 
@@ -4382,7 +4382,7 @@ Hint: Omit it from the simp argument list.
       Matrix.one_apply, Matrix.diagonal_mul, Matrix.mul_diagonal]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8830/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureBHRootUneqSmooth
+⚠ [8830/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureBHRootUneqSmooth
 warning: LeanCode/YukawaOZMix/MSAMixtureBHRootUneqSmooth.lean:103:6: This simp argument is unused:
   Matrix.smul_apply
 
@@ -4449,7 +4449,7 @@ Hint: Omit it from the simp argument list.
       Matrix.diagonal_mul, M̵a̵t̵r̵i̵x̵.̵z̵e̵r̵o̵_̵a̵p̵p̵l̵y̵,̵ ̵Pi.zero_apply, Qppphys, zero_div, zero_mul, add_zero]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8832/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureFamily
+⚠ [8832/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureFamily
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureFamily.lean:23:8: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.rightBlock_apply`:
   [Fintype ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -4527,7 +4527,7 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureFamily.lean:188:26: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8833/9063] Replayed LeanCode.YukawaOZ.MSABlumHoyeDerivation
+⚠ [8833/9068] Replayed LeanCode.YukawaOZ.MSABlumHoyeDerivation
 warning: LeanCode/YukawaOZ/MSABlumHoyeDerivation.lean:239:4: The `show` tactic should only be used to indicate intermediate goal states for readability.
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
@@ -4555,7 +4555,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8834/9063] Replayed LeanCode.YukawaOZ.MSAGSideOZ
+⚠ [8834/9068] Replayed LeanCode.YukawaOZ.MSAGSideOZ
 warning: LeanCode/YukawaOZ/MSAGSideOZ.lean:93:2: The `show` tactic should only be used to indicate intermediate goal states for readability.
 However, this tactic invocation changed the goal. Please use `change` instead for these purposes.
 
@@ -4729,7 +4729,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8835/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureBaxterLaplace
+⚠ [8835/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureBaxterLaplace
 warning: LeanCode/YukawaOZMix/MSAMixtureBaxterLaplace.lean:45:15: This simp argument is unused:
   id_eq
 
@@ -4744,7 +4744,7 @@ Hint: Omit it from the simp argument list.
   simp only [i̵d̵_̵e̵q̵,̵ ̵sub_zero] at h
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8837/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureFourier
+⚠ [8837/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureFourier
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureFourier.lean:96:68: This simp argument is unused:
   star_ofNat
 
@@ -4797,7 +4797,7 @@ Hint: Omit it from the simp argument list.
   simp [C̵o̵m̵p̵l̵e̵x̵.̵s̵t̵a̵r̵_̵d̵e̵f̵,̵ ̵← Complex.exp_conj]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8838/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureSpectral
+⚠ [8838/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureSpectral
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureSpectral.lean:91:65: This simp argument is unused:
   Complex.star_def
 
@@ -4805,7 +4805,7 @@ Hint: Omit it from the simp argument list.
   simp ̵[̵C̵o̵m̵p̵l̵e̵x̵.̵s̵t̵a̵r̵_̵d̵e̵f̵]̵
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8839/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureBoundary
+⚠ [8839/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureBoundary
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureBoundary.lean:89:75: This simp argument is unused:
   mul_zero
 
@@ -4847,7 +4847,7 @@ warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureBoundary.lean:180:0: `qPrimeCom
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [8843/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureBasis
+⚠ [8843/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureBasis
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureBasis.lean:51:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.basisRate_pos`:
   [Fintype ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -4916,7 +4916,7 @@ warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureBasis.lean:157:2: 'change
         (2 * π * r))' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [8844/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRegularity
+⚠ [8844/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRegularity
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRegularity.lean:21:74: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
@@ -4970,7 +4970,7 @@ Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus fa
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRegularity.lean:180:24: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8845/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDerivative
+⚠ [8845/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDerivative
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDerivative.lean:34:26: This simp argument is unused:
   add_sub_add_right_eq_sub
 
@@ -5023,7 +5023,7 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDerivative.lean:52:56: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8848/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRadial
+⚠ [8848/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRadial
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRadial.lean:270:5: Variable name `K` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -5036,7 +5036,7 @@ Hint: Omit it from the simp argument list.
   simp ̵[̵C̵o̵m̵p̵l̵e̵x̵.̵s̵t̵a̵r̵_̵d̵e̵f̵]̵
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8849/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureAEReciprocity
+⚠ [8849/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureAEReciprocity
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureAEReciprocity.lean:58:10: This simp argument is unused:
   Complex.star_def
 
@@ -5056,7 +5056,7 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureAEReciprocity.lean:219:17: 'push_cast' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [8850/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureLegacySingleTail
+⚠ [8850/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureLegacySingleTail
 info: LeanCode/YukawaOZMix/MSAMixtureLegacySingleTail.lean:34:2: Try this:
   [apply] ring_nf
   
@@ -5090,7 +5090,7 @@ Hint: Omit it from the simp argument list.
   simp [̵C̵o̵m̵p̵l̵e̵x̵.̵s̵t̵a̵r̵_̵d̵e̵f̵,̵ ̵m̵u̵l̵_̵c̵o̵m̵m̵]̵[̲m̲u̲l̲_̲c̲o̲m̲m̲]̲
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8851/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureEqualCoreResidues
+⚠ [8851/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureEqualCoreResidues
 warning: LeanCode/YukawaOZMix/MSAMixtureEqualCoreResidues.lean:33:6: this tactic is never executed
 
 Note: This linter can be disabled with `set_option linter.unreachableTactic false`
@@ -5117,7 +5117,7 @@ info: LeanCode/YukawaOZMix/MSAMixtureEqualCoreResidues.lean:238:2: Try this:
   The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
     
   Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
-⚠ [8852/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureSeedReciprocity
+⚠ [8852/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureSeedReciprocity
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureSeedReciprocity.lean:26:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.hsMoment_source_skew`:
   [Fintype ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -5166,7 +5166,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8853/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureLinearized
+⚠ [8853/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureLinearized
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureLinearized.lean:13:0: `family_Dt_entry_hasDerivAt` does not use the following hypothesis in its type:
   • [Fintype ι] (#3)
 
@@ -5250,7 +5250,7 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureLinearized.lean:133:49: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8854/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureEdgePropagator
+⚠ [8854/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureEdgePropagator
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureEdgePropagator.lean:31:2: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
@@ -5442,7 +5442,7 @@ Hint: Omit it from the simp argument list.
   simp only [Wt, Ct, Pi.zero_apply, mul_zero, Finset.sum_const_zero, add_zero,̵ ̵s̵u̵b̵_̵z̵e̵r̵o̵]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8855/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPAmplitude
+⚠ [8855/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPAmplitude
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDPAmplitude.lean:61:23: This simp argument is unused:
   Finset.sum_ite_eq'
 
@@ -5520,7 +5520,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8856/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixturePrimitiveTangent
+⚠ [8856/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixturePrimitiveTangent
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixturePrimitiveTangent.lean:28:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.basisQ_eq_single_q`:
   [Fintype ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -5578,7 +5578,7 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixturePrimitiveTangent.lean:202:44: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8857/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPKernel
+⚠ [8857/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPKernel
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDPKernel.lean:46:26: missing space in the source
 
 This part of the code
@@ -5615,7 +5615,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8858/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPQTangent
+⚠ [8858/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPQTangent
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDPQTangent.lean:39:34: This simp argument is unused:
   Matrix.smul_apply
 
@@ -5664,7 +5664,7 @@ Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus fa
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDPQTangent.lean:296:2: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8859/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSParity
+⚠ [8859/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSParity
 info: LeanCode/YukawaOZMix/MSAMultiTailMixtureHSParity.lean:25:39: Try this:
   [apply] ring_nf
   
@@ -5677,7 +5677,7 @@ Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus fa
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureHSParity.lean:50:2: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8860/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixturePrimitiveTangentFourier
+⚠ [8860/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixturePrimitiveTangentFourier
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixturePrimitiveTangentFourier.lean:17:0: `basisQ_complex_weighted_integrable` does not use the following hypothesis in its type:
   • [Fintype ι] (#3)
 
@@ -5740,7 +5740,7 @@ Hint: Omit it from the simp argument list.
   simp [̵C̵o̵m̵p̵l̵e̵x̵.̵s̵t̵a̵r̵_̵d̵e̵f̵,̵ ̵m̵u̵l̵_̵c̵o̵m̵m̵]̵[̲m̲u̲l̲_̲c̲o̲m̲m̲]̲
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8861/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPQTransform
+⚠ [8861/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPQTransform
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDPQTransform.lean:24:2: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
@@ -5896,7 +5896,7 @@ warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDPQTransform.lean:273:4: `simp 
 
 Note: This linter can be disabled with `set_option linter.flexible false`
 info: LeanCode/YukawaOZMix/MSAMultiTailMixtureDPQTransform.lean:274:4: `exact (hz u).ne' hr` uses `hr`!
-⚠ [8862/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPFactorTangent
+⚠ [8862/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPFactorTangent
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDPFactorTangent.lean:25:35: Variable name `ρ` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -5977,7 +5977,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8863/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureTangentReciprocity
+⚠ [8863/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureTangentReciprocity
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureTangentReciprocity.lean:26:0: `basisQ_continuousAt_off_lower_edge` does not use the following hypothesis in its type:
   • [Fintype ι] (#3)
 
@@ -6015,7 +6015,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8864/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPKernelFourier
+⚠ [8864/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPKernelFourier
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDPKernelFourier.lean:32:54: missing space in the source
 
 This part of the code
@@ -6180,7 +6180,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8865/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPPrimitive
+⚠ [8865/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPPrimitive
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDPPrimitive.lean:205:26: missing space in the source
 
 This part of the code
@@ -6208,7 +6208,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8866/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPRegularity
+⚠ [8866/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureDPRegularity
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureDPRegularity.lean:34:52: missing space in the source
 
 This part of the code
@@ -6218,7 +6218,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8870/9063] Replayed LeanCode.Analysis.CausalLaplaceComplex
+⚠ [8870/9068] Replayed LeanCode.Analysis.CausalLaplaceComplex
 warning: LeanCode/Analysis/CausalLaplaceComplex.lean:48:8: This simp argument is unused:
   norm_mul
 
@@ -6226,7 +6226,7 @@ Hint: Omit it from the simp argument list.
   simp [n̵o̵r̵m̵_̵m̵u̵l̵,̵ ̵Complex.norm_real, Complex.norm_exp, abs_of_nonneg hu]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8871/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFCausalFourier
+⚠ [8871/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFCausalFourier
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRDFCausalFourier.lean:113:45: missing space in the source
 
 This part of the code
@@ -6237,7 +6237,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8874/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFMoment
+⚠ [8874/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFMoment
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRDFMoment.lean:25:26: this tactic is never executed
 
 Note: This linter can be disabled with `set_option linter.unreachableTactic false`
@@ -6250,7 +6250,7 @@ Note: This linter can be disabled with `set_option linter.unusedTactic false`
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRDFMoment.lean:25:39: 'simp [causalShift, Function.comp_def, sub_eq_add_neg]' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [8875/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFPhase
+⚠ [8875/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFPhase
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRDFPhase.lean:27:0: `rdfRecenteredHSQ_axis_laplace` does not use the following hypothesis in its type:
   • [Fintype ι] (#3)
 
@@ -6277,7 +6277,7 @@ warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRDFPhase.lean:68:0: `rdfHSLeftF
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [8876/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFReference
+⚠ [8876/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFReference
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRDFReference.lean:101:26: missing space in the source
 
 This part of the code
@@ -6300,7 +6300,7 @@ Hint: Omit it from the simp argument list.
   simp only [div_eq_mul_inv,̵ ̵m̵u̵l̵_̵o̵n̵e̵]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8877/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFSpectralOZ
+⚠ [8877/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFSpectralOZ
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRDFSpectralOZ.lean:58:26: missing space in the source
 
 This part of the code
@@ -6459,7 +6459,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8879/9063] Replayed LeanCode.Analysis.RadialMixtureFirstOrder
+⚠ [8879/9068] Replayed LeanCode.Analysis.RadialMixtureFirstOrder
 warning: LeanCode/Analysis/RadialMixtureFirstOrder.lean:28:34: missing space in the source
 
 This part of the code
@@ -6933,7 +6933,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8880/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFRegularity
+⚠ [8880/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFRegularity
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRDFRegularity.lean:81:26: missing space in the source
 
 This part of the code
@@ -6952,7 +6952,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8881/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailSystem
+⚠ [8881/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailSystem
 warning: LeanCode/YukawaOZ/MSAMultiTailSystem.lean:62:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTail.crossRate_pos`:
   [Fintype ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -6983,11 +6983,11 @@ warning: LeanCode/YukawaOZ/MSAMultiTailSystem.lean:68:0: `W_add_C_exp` does not 
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [8882/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailBaxter
+⚠ [8882/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailBaxter
 warning: LeanCode/YukawaOZ/MSAMultiTailBaxter.lean:348:79: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8883/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailCore
+⚠ [8883/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailCore
 warning: LeanCode/YukawaOZ/MSAMultiTailCore.lean:60:13: This simp argument is unused:
   ← Finset.sum_neg_distrib
 
@@ -7004,7 +7004,7 @@ Note: This linter can be disabled with `set_option linter.unreachableTactic fals
 warning: LeanCode/YukawaOZ/MSAMultiTailCore.lean:158:47: 'ring' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [8884/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailSpectralAlgebra
+⚠ [8884/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailSpectralAlgebra
 warning: LeanCode/YukawaOZ/MSAMultiTailSpectralAlgebra.lean:24:37: Variable name `ez` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -7035,7 +7035,7 @@ warning: LeanCode/YukawaOZ/MSAMultiTailSpectralAlgebra.lean:41:103: Variable nam
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8885/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailConvolutionBlocks
+⚠ [8885/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailConvolutionBlocks
 warning: LeanCode/YukawaOZ/MSAMultiTailConvolutionBlocks.lean:100:23: This simp argument is unused:
   zero_mul
 
@@ -7066,7 +7066,7 @@ Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus fa
 warning: LeanCode/YukawaOZ/MSAMultiTailConvolutionBlocks.lean:240:51: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8886/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailConvolutionAssembly
+⚠ [8886/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailConvolutionAssembly
 warning: LeanCode/YukawaOZ/MSAMultiTailConvolutionAssembly.lean:49:0: `tailU_eq` does not use the following hypothesis in its type:
   • [Fintype ι] (#2)
 
@@ -7085,7 +7085,7 @@ warning: LeanCode/YukawaOZ/MSAMultiTailConvolutionAssembly.lean:80:0: `pairTail_
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [8891/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailOZ
+⚠ [8891/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailOZ
 warning: LeanCode/YukawaOZ/MSAMultiTailOZ.lean:80:12: This simp argument is unused:
   indicator_apply
 
@@ -7100,7 +7100,7 @@ Hint: Omit it from the simp argument list.
   simp [i̵n̵d̵i̵c̵a̵t̵o̵r̵_̵a̵p̵p̵l̵y̵,̵ ̵ht, q, not_le.mp ht]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8892/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFRationalBlocks
+⚠ [8892/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFRationalBlocks
 warning: LeanCode/YukawaOZ/MSAMultiTailRDFRationalBlocks.lean:28:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTail.RDFAlgebra.head_identity`:
   [CharZero 𝕜]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -7144,7 +7144,7 @@ Hint: Omit it from the simp argument list.
   simp only [̵F̵i̵n̵s̵e̵t̵.̵m̵u̵l̵_̵s̵u̵m̵,̵ ̵F̵i̵n̵s̵e̵t̵.̵s̵u̵m̵_̵s̵u̵b̵_̵d̵i̵s̵t̵r̵i̵b̵,̵[̲F̲i̲n̲s̲e̲t̲.̲s̲u̲m̲_̲s̲u̲b̲_̲d̲i̲s̲t̲r̲i̲b̲,̲ ← Finset.mul_sum, ← Finset.sum_mul] at hh
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8894/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFMoments
+⚠ [8894/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFMoments
 warning: LeanCode/YukawaOZ/MSAMultiTailRDFMoments.lean:102:6: try 'simp' instead of 'simpa'
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
@@ -7162,7 +7162,7 @@ Hint: Omit it from the simp argument list.
   simp only [zero_div, zero_mul, mul_zero, add_zero, sub_zero, mul_one, z̵er̵o̵_̵a̵d̵d̵,̵ ̵e̵xp_zero]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8895/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFDCFRegularity
+⚠ [8895/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFDCFRegularity
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRDFDCFRegularity.lean:14:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.basisQ_measurable`:
   [Fintype ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -7220,7 +7220,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8897/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFCertificate
+⚠ [8897/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFCertificate
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRDFCertificate.lean:37:26: missing space in the source
 
 This part of the code
@@ -7239,7 +7239,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8898/9063] Replayed LeanCode.Analysis.CausalRenewalBound
+⚠ [8898/9068] Replayed LeanCode.Analysis.CausalRenewalBound
 warning: LeanCode/Analysis/CausalRenewalBound.lean:17:18: Variable name `hB` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -7371,7 +7371,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8899/9063] Replayed LeanCode.Analysis.MatrixCausalRenewalBound
+⚠ [8899/9068] Replayed LeanCode.Analysis.MatrixCausalRenewalBound
 warning: LeanCode/Analysis/MatrixCausalRenewalBound.lean:52:35: missing space in the source
 
 This part of the code
@@ -7588,7 +7588,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8900/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFBudget
+⚠ [8900/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureRDFBudget
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureRDFBudget.lean:32:10: This simp argument is unused:
   f
 
@@ -7605,7 +7605,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8901/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSPairCausal
+⚠ [8901/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSPairCausal
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureHSPairCausal.lean:314:35: Variable name `hσ` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -7621,7 +7621,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8903/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSPairSymbolAlgebra
+⚠ [8903/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSPairSymbolAlgebra
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureHSPairSymbolAlgebra.lean:34:0: Please, add a comment explaining the need for modifying the maxHeartbeat limit, as in
 set_option maxHeartbeats 0 in
 -- reason for change
@@ -7646,7 +7646,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8906/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearKernel
+⚠ [8906/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearKernel
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearKernel.lean:14:37: missing space in the source
 
 This part of the code
@@ -7670,7 +7670,7 @@ warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearKernel.lean:43:52: Var
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8907/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSPairLaplace
+⚠ [8907/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSPairLaplace
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureHSPairLaplace.lean:14:38: missing space in the source
 
 This part of the code
@@ -7710,14 +7710,14 @@ info: LeanCode/YukawaOZMix/MSAMultiTailMixtureHSPairLaplace.lean:230:4: Try this
   The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
     
   Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
-ℹ [8912/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSPairSpectralOZ
+ℹ [8912/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSPairSpectralOZ
 info: LeanCode/YukawaOZMix/MSAMultiTailMixtureHSPairSpectralOZ.lean:60:2: Try this:
   [apply] ring_nf
   
   The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
     
   Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
-⚠ [8914/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSPairReference
+⚠ [8914/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSPairReference
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureHSPairReference.lean:35:19: try 'simp' instead of 'simpa'
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
@@ -7730,7 +7730,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8915/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearSource
+⚠ [8915/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearSource
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearSource.lean:31:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.nonlinearTailAmplitude_eq_Dt`:
   [Fintype ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -7743,7 +7743,7 @@ warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearSource.lean:31:0: `non
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [8918/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearLaplace
+⚠ [8918/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearLaplace
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearLaplace.lean:30:55: This simp argument is unused:
   causalIntervalConv
 
@@ -7899,7 +7899,7 @@ Hint: Omit it from the simp argument list.
   simp only [mul_zero, exp_zero,̵ ̵m̵u̵l̵_̵o̵n̵e̵]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8919/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearGIdentification
+⚠ [8919/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearGIdentification
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearGIdentification.lean:241:24: missing space in the source
 
 This part of the code
@@ -7909,7 +7909,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8920/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearReciprocity
+⚠ [8920/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearReciprocity
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearReciprocity.lean:30:17: missing space in the source
 
 This part of the code
@@ -7937,7 +7937,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8921/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearPoleCancellation
+⚠ [8921/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearPoleCancellation
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearPoleCancellation.lean:17:21: missing space in the source
 
 This part of the code
@@ -8011,7 +8011,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8922/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearBoundary
+⚠ [8922/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearBoundary
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearBoundary.lean:39:50: missing space in the source
 
 This part of the code
@@ -8069,7 +8069,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8923/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearFiniteTest
+⚠ [8923/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearFiniteTest
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearFiniteTest.lean:33:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.nonlinearRatePolynomial_eval`:
   [DecidableEq ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -8138,7 +8138,7 @@ open Lean.Parser.Tactic in
 macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
   `(tactic| push $cfg:optConfig Not $[$loc]?)
 ```
-⚠ [8925/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearComplex
+⚠ [8925/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearComplex
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearComplex.lean:15:44: missing space in the source
 
 This part of the code
@@ -8270,7 +8270,7 @@ Hint: Omit it from the simp argument list.
   simp only [Complex.ofReal_zero, mul_zero, Complex.exp_zero, neg_div_neg_eq,̵ ̵m̵u̵l̵_̵o̵n̵e̵]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8926/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearComplexKernel
+⚠ [8926/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearComplexKernel
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearComplexKernel.lean:46:30: missing space in the source
 
 This part of the code
@@ -8280,7 +8280,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8927/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearComplexFinite
+⚠ [8927/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearComplexFinite
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearComplexFinite.lean:20:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.nonlinearRatePolynomial_complex_eval`:
   [DecidableEq ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -8362,7 +8362,7 @@ Note: This linter can be disabled with `set_option linter.unreachableTactic fals
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearComplexFinite.lean:132:6: 'ring' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [8928/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearComplexReciprocity
+⚠ [8928/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearComplexReciprocity
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearComplexReciprocity.lean:11:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.nonlinearComplexReciprocityResidual_actual_factor`:
   [DecidableEq ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -8405,7 +8405,7 @@ Note: This linter can be disabled with `set_option linter.unusedDecidableInType 
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearComplexReciprocity.lean:112:17: Try `simp at hs` instead of `simpa using hs`
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
-⚠ [8929/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearPointwise
+⚠ [8929/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearPointwise
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearPointwise.lean:40:42: missing space in the source
 
 This part of the code
@@ -8424,7 +8424,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8930/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearFiniteK
+⚠ [8930/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearFiniteK
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearFiniteK.lean:88:56: missing space in the source
 
 This part of the code
@@ -8434,7 +8434,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8932/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearWronskianAlgebra
+⚠ [8932/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearWronskianAlgebra
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearWronskianAlgebra.lean:20:27: Variable name `L` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -8489,7 +8489,7 @@ Hint: Omit it from the simp argument list.
   ̲  ̲ ̲ ̲← Finset.sum_add_distrib]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8933/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearWronskianFinite
+⚠ [8933/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearWronskianFinite
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearWronskianFinite.lean:36:40: missing space in the source
 
 This part of the code
@@ -8584,7 +8584,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8934/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearPolePolynomial
+⚠ [8934/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearPolePolynomial
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearPolePolynomial.lean:13:0: `nonlinearRatePolynomial_eval_neg_rate` does not use the following hypothesis in its type:
   • [DecidableEq ι] (#3)
 
@@ -8746,7 +8746,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8935/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDistinctPoles
+⚠ [8935/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDistinctPoles
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctPoles.lean:128:63: `Polynomial.eval_finset_sum` has been deprecated: Use `Polynomial.eval_finsetSum` instead
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctPoles.lean:131:22: this tactic is never executed
 
@@ -8761,7 +8761,7 @@ Note: This linter can be disabled with `set_option linter.unreachableTactic fals
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctPoles.lean:154:22: 'ring' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [8936/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearOriginDictionary
+⚠ [8936/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearOriginDictionary
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearOriginDictionary.lean:31:20: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
@@ -8771,7 +8771,7 @@ Note: This linter can be disabled with `set_option linter.unreachableTactic fals
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearOriginDictionary.lean:120:24: 'ring' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [8937/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearOriginExpansion
+⚠ [8937/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearOriginExpansion
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearOriginExpansion.lean:14:25: missing space in the source
 
 This part of the code
@@ -8808,7 +8808,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8939/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearOriginLift
+⚠ [8939/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearOriginLift
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearOriginLift.lean:230:47: This simp argument is unused:
   Matrix.neg_mul
 
@@ -8845,7 +8845,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8940/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearIntrinsicKernel
+⚠ [8940/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearIntrinsicKernel
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicKernel.lean:32:21: This simp argument is unused:
   Matrix.zero_mul
 
@@ -8886,7 +8886,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8942/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearMatrixPolynomial
+⚠ [8942/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearMatrixPolynomial
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearMatrixPolynomial.lean:14:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.polyMatrixTerm_zero`:
   [Fintype n]
   [DecidableEq n]
@@ -9107,7 +9107,7 @@ warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearMatrixPolynomial.lean:
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [8943/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearAbel
+⚠ [8943/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearAbel
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearAbel.lean:18:64: missing space in the source
 
 This part of the code
@@ -9153,7 +9153,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8944/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearWronskian
+⚠ [8944/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearWronskian
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearWronskian.lean:21:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.nonlinearActualFourierQ_eq_phaseQ`:
   [DecidableEq ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -9191,7 +9191,7 @@ warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearWronskian.lean:68:0: `
 Consider removing this hypothesis and using `classical` in the proof instead. For terms, consider using `open scoped Classical in` at the term level (not the command level).
 
 Note: This linter can be disabled with `set_option linter.unusedDecidableInType false`
-⚠ [8945/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearCoreCertificate
+⚠ [8945/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearCoreCertificate
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearCoreCertificate.lean:12:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.primitiveBasisReal_continuousAt_off_lower_edge`:
   [DecidableEq ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -9219,14 +9219,14 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8946/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearRegularity
+⚠ [8946/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearRegularity
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearRegularity.lean:148:8: this tactic is never executed
 
 Note: This linter can be disabled with `set_option linter.unreachableTactic false`
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearRegularity.lean:148:8: 'ring' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [8947/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearSpectralOZ
+⚠ [8947/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearSpectralOZ
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearSpectralOZ.lean:32:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.nonlinearCausalKernel_actual_fourier_entry`:
   [DecidableEq ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -9277,7 +9277,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8948/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearRadialOZ
+⚠ [8948/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearRadialOZ
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearRadialOZ.lean:39:19: try 'simp' instead of 'simpa'
 
 Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
@@ -9299,7 +9299,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8949/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearHSAdmissibility
+⚠ [8949/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearHSAdmissibility
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearHSAdmissibility.lean:83:10: missing space in the source
 
 This part of the code
@@ -9342,7 +9342,7 @@ warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearHSAdmissibility.lean:2
 Consider removing this hypothesis and using `classical` in the proof instead. For terms, consider using `open scoped Classical in` at the term level (not the command level).
 
 Note: This linter can be disabled with `set_option linter.unusedDecidableInType false`
-⚠ [8950/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearIntrinsicHS
+⚠ [8950/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearIntrinsicHS
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicHS.lean:35:11: missing space in the source
 
 This part of the code
@@ -9379,14 +9379,14 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8951/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearIntrinsicPolynomial
+⚠ [8951/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearIntrinsicPolynomial
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicPolynomial.lean:183:80: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8952/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDistinctResidues
+⚠ [8952/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDistinctResidues
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctResidues.lean:37:63: `Polynomial.eval_finset_sum` has been deprecated: Use `Polynomial.eval_finsetSum` instead
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctResidues.lean:59:4: `Polynomial.eval_finset_sum` has been deprecated: Use `Polynomial.eval_finsetSum` instead
-⚠ [8953/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDistinctWronskian
+⚠ [8953/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDistinctWronskian
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctWronskian.lean:63:31: This simp argument is unused:
   Finset.sum_mul
 
@@ -9658,7 +9658,7 @@ Hint: Omit it from the simp argument list.
       m̵u̵l̵_̵z̵e̵r̵o̵,̵ ̵z̵e̵r̵o̵_̵m̵u̵l̵,̵ ̵z̵e̵r̵o̵_̵add,̵ ̵a̵d̵d̵_zero,̵ ̵s̵u̵b̵_̵z̵e̵r̵o̵] at he ⊢
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8954/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDistinctReduction
+⚠ [8954/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDistinctReduction
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctReduction.lean:170:27: missing space in the source
 
 This part of the code
@@ -9677,7 +9677,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8955/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDistinctCertificate
+⚠ [8955/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDistinctCertificate
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctCertificate.lean:25:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.nonlinearRoot_distinct_quotient_degrees`:
   [DecidableEq ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -9792,7 +9792,7 @@ warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDistinctCertificate.le
 Consider removing this hypothesis and using `classical` in the proof instead. For terms, consider using `open scoped Classical in` at the term level (not the command level).
 
 Note: This linter can be disabled with `set_option linter.unusedDecidableInType false`
-⚠ [8956/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearFactorCompletion
+⚠ [8956/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearFactorCompletion
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearFactorCompletion.lean:12:24: missing space in the source
 
 This part of the code
@@ -9839,7 +9839,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8957/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearIntrinsicDefectPolynomial
+⚠ [8957/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearIntrinsicDefectPolynomial
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicDefectPolynomial.lean:17:35: missing space in the source
 
 This part of the code
@@ -9924,7 +9924,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8958/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearPolynomialCoefficients
+⚠ [8958/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearPolynomialCoefficients
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearPolynomialCoefficients.lean:13:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.polyMatrixCoeff_add`:
   [Fintype n]
   [DecidableEq n]
@@ -10056,7 +10056,7 @@ warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearPolynomialCoefficients
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [8959/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearNormalizedOrigin
+⚠ [8959/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearNormalizedOrigin
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearNormalizedOrigin.lean:29:46: This simp argument is unused:
   Matrix.mul_add
 
@@ -10098,7 +10098,7 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearNormalizedOrigin.lean:60:23: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8960/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearIntrinsicWronskian
+⚠ [8960/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearIntrinsicWronskian
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicWronskian.lean:23:41: This simp argument is unused:
   neg_add_rev
 
@@ -10295,7 +10295,7 @@ Note: This linter can be disabled with `set_option linter.unusedTactic false`
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearIntrinsicWronskian.lean:150:6: 'all_goals intro m _; ring' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [8961/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearPolynomialDegree
+⚠ [8961/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearPolynomialDegree
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearPolynomialDegree.lean:15:0: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTailMixture.polyMatrix_degree_add`:
   [Fintype n]
   [DecidableEq n]
@@ -10414,13 +10414,13 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8966/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureLegacyFourier
+⚠ [8966/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureLegacyFourier
 warning: LeanCode/YukawaOZMix/MSAMixtureLegacyFourier.lean:65:36: Variable name `hσ` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8968/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureSingleTailOriginPolynomial
+⚠ [8968/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureSingleTailOriginPolynomial
 warning: LeanCode/YukawaOZMix/MSAMixtureSingleTailOriginPolynomial.lean:20:57: This simp argument is unused:
   Polynomial.coeff_neg
 
@@ -10494,7 +10494,7 @@ warning: LeanCode/YukawaOZMix/MSAMixtureSingleTailOriginPolynomial.lean:34:11: U
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
 warning: LeanCode/YukawaOZMix/MSAMixtureSingleTailOriginPolynomial.lean:84:13: `Polynomial.finset_sum_coeff` has been deprecated: Use `Polynomial.finsetSum_coeff` instead
-⚠ [8969/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureEqualCoreOriginAlgebra
+⚠ [8969/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureEqualCoreOriginAlgebra
 warning: LeanCode/YukawaOZMix/MSAMixtureEqualCoreOriginAlgebra.lean:25:14: This simp argument is unused:
   neg_zero
 
@@ -10573,7 +10573,7 @@ Note: This linter can be disabled with `set_option linter.unreachableTactic fals
 warning: LeanCode/YukawaOZMix/MSAMixtureEqualCoreOriginAlgebra.lean:74:56: 'simp only [sub_self]' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [8970/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureEqualCorePolynomial
+⚠ [8970/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureEqualCorePolynomial
 warning: LeanCode/YukawaOZMix/MSAMixtureEqualCorePolynomial.lean:22:2: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
@@ -10595,11 +10595,11 @@ Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus fa
 warning: LeanCode/YukawaOZMix/MSAMixtureEqualCorePolynomial.lean:79:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8971/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureEqualCoreBridge
+⚠ [8971/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureEqualCoreBridge
 warning: LeanCode/YukawaOZMix/MSAMixtureEqualCoreBridge.lean:66:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8975/9063] Replayed LeanCode.YukawaOZMix.MixtureBlumHoyeDerivation
+⚠ [8975/9068] Replayed LeanCode.YukawaOZMix.MixtureBlumHoyeDerivation
 warning: LeanCode/YukawaOZMix/MixtureBlumHoyeDerivation.lean:87:6: `push_neg` has been deprecated. Prefer using `push Not` instead.
 If you'd rather continue using `push_neg` in your project, you can implement it as follows:
 ```
@@ -10814,7 +10814,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8978/9063] Replayed LeanCode.YukawaOZ.MSAFactorizationFromOZ
+⚠ [8978/9068] Replayed LeanCode.YukawaOZ.MSAFactorizationFromOZ
 warning: LeanCode/YukawaOZ/MSAFactorizationFromOZ.lean:51:29: missing space in the source
 
 This part of the code
@@ -10852,7 +10852,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8980/9063] Replayed LeanCode.YukawaOZMix.FiniteOrderThresholds
+⚠ [8980/9068] Replayed LeanCode.YukawaOZMix.FiniteOrderThresholds
 warning: LeanCode/YukawaOZMix/FiniteOrderThresholds.lean:42:30: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
@@ -10873,7 +10873,7 @@ Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus fa
 warning: LeanCode/YukawaOZMix/FiniteOrderThresholds.lean:317:2: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8981/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearSymplectic
+⚠ [8981/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearSymplectic
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearSymplectic.lean:28:23: This simp argument is unused:
   Matrix.zero_mul
 
@@ -11144,7 +11144,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8982/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearAdmissibilityReduction
+⚠ [8982/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearAdmissibilityReduction
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearAdmissibilityReduction.lean:18:37: missing space in the source
 
 This part of the code
@@ -11172,21 +11172,21 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8983/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearAutomaticAdmissibility
+⚠ [8983/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearAutomaticAdmissibility
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearAutomaticAdmissibility.lean:12:0: `nonlinearMixtureRDF_automatic_admissibility_certificate` does not use the following hypothesis in its type:
   • [DecidableEq ι] (#4)
 
 Consider removing this hypothesis and using `classical` in the proof instead. For terms, consider using `open scoped Classical in` at the term level (not the command level).
 
 Note: This linter can be disabled with `set_option linter.unusedDecidableInType false`
-⚠ [8984/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearFixedOriginAdmissibility
+⚠ [8984/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearFixedOriginAdmissibility
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearFixedOriginAdmissibility.lean:15:0: `nonlinearMixtureRDF_fixed_origin_admissibility_certificate` does not use the following hypothesis in its type:
   • [DecidableEq ι] (#4)
 
 Consider removing this hypothesis and using `classical` in the proof instead. For terms, consider using `open scoped Classical in` at the term level (not the command level).
 
 Note: This linter can be disabled with `set_option linter.unusedDecidableInType false`
-⚠ [8985/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDiluteAdmissibility
+⚠ [8985/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureNonlinearDiluteAdmissibility
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureNonlinearDiluteAdmissibility.lean:37:52: missing space in the source
 
 This part of the code
@@ -11232,7 +11232,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8986/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailFamily
+⚠ [8986/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailFamily
 warning: LeanCode/YukawaOZ/MSAMultiTailFamily.lean:23:8: automatically included section variable(s) unused in theorem `FMSA.ExactMSA.MultiTail.diagonal_apply`:
   [Fintype ι]
 consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
@@ -11285,7 +11285,7 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: LeanCode/YukawaOZ/MSAMultiTailFamily.lean:126:54: `ContinuousLinearMap.smul_apply` has been deprecated: Use `smul_apply` instead
 
 Note: The updated constant is in a different namespace. Dot notation may need to be changed (e.g., from `x.smul_apply` to `smul_apply x`).
-⚠ [8987/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFBoundary
+⚠ [8987/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFBoundary
 warning: LeanCode/YukawaOZ/MSAMultiTailRDFBoundary.lean:37:65: Variable name `hz` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -11296,7 +11296,7 @@ warning: LeanCode/YukawaOZ/MSAMultiTailRDFBoundary.lean:38:13: Variable name `hk
 The binding can be removed (if unused) or named `_` (if used implicitly).
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-⚠ [8991/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFComplex
+⚠ [8991/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFComplex
 info: LeanCode/YukawaOZ/MSAMultiTailRDFComplex.lean:49:6: Try this:
   [apply] ring_nf
   
@@ -11313,7 +11313,7 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: LeanCode/YukawaOZ/MSAMultiTailRDFComplex.lean:139:2: 'push_cast' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [8992/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFAxis
+⚠ [8992/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFAxis
 warning: LeanCode/YukawaOZ/MSAMultiTailRDFAxis.lean:23:0: Please, add a comment explaining the need for modifying the maxHeartbeat limit, as in
 set_option maxHeartbeats 800000 in
 -- reason for change
@@ -11339,7 +11339,7 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: LeanCode/YukawaOZ/MSAMultiTailRDFAxis.lean:126:71: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [8993/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFFourier
+⚠ [8993/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFFourier
 warning: LeanCode/YukawaOZ/MSAMultiTailRDFFourier.lean:38:8: This simp argument is unused:
   Complex.mul_im
 
@@ -11435,7 +11435,7 @@ Hint: Omit it from the simp argument list.
   ̲  ̲ ̲ ̲ ̲ ̲Complex.I_re, Complex.I_im, mul_zero, zero_mul, mul_one,̵ ̵z̵e̵r̵o̵_̵a̵d̵d̵]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8994/9063] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFOZ
+⚠ [8994/9068] Replayed LeanCode.YukawaOZ.MSAMultiTailRDFOZ
 warning: LeanCode/YukawaOZ/MSAMultiTailRDFOZ.lean:14:68: This simp argument is unused:
   map_sum
 
@@ -11453,7 +11453,7 @@ Hint: Omit it from the simp argument list.
       Complex.conj_im, mul_zero, z̵e̵r̵o̵_̵mul,̵ ̵m̵u̵l̵_one, zero_add, add_zero, sub_zero] at him
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [8997/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSEqualDCF
+⚠ [8997/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSEqualDCF
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureHSEqualDCF.lean:18:18: missing space in the source
 
 This part of the code
@@ -11490,7 +11490,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [8998/9063] Replayed LeanCode.HardSphere.BaxterWeightedDecay
+⚠ [8998/9068] Replayed LeanCode.HardSphere.BaxterWeightedDecay
 warning: LeanCode/HardSphere/BaxterWeightedDecay.lean:14:59: Variable name `hs` is not explicitly referenced.
 
 The binding can be removed (if unused) or named `_` (if used implicitly).
@@ -11513,7 +11513,7 @@ warning: LeanCode/HardSphere/BaxterWeightedDecay.lean:107:8: The following tacti
 Please focus on the current goal, for instance using `·` (typed as "\.").
 
 Note: This linter can be disabled with `set_option linter.style.multiGoal false`
-⚠ [8999/9063] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSEqualReference
+⚠ [8999/9068] Replayed LeanCode.YukawaOZMix.MSAMultiTailMixtureHSEqualReference
 warning: LeanCode/YukawaOZMix/MSAMultiTailMixtureHSEqualReference.lean:19:18: missing space in the source
 
 This part of the code
@@ -11568,7 +11568,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [9003/9063] Replayed LeanCode.YukawaOZMix.MSABSourceHierarchy
+⚠ [9003/9068] Replayed LeanCode.YukawaOZMix.MSABSourceHierarchy
 warning: LeanCode/YukawaOZMix/MSABSourceHierarchy.lean:39:48: This simp argument is unused:
   Nat.add_sub_add_right
 
@@ -11576,7 +11576,7 @@ Hint: Omit it from the simp argument list.
   simp [lowerProduct, Nat.succ_sub_succ_eq_sub,̵ ̵N̵a̵t̵.̵a̵d̵d̵_̵s̵u̵b̵_̵a̵d̵d̵_̵r̵i̵g̵h̵t̵]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [9004/9063] Replayed LeanCode.YukawaOZ.MSAScalarBSource
+⚠ [9004/9068] Replayed LeanCode.YukawaOZ.MSAScalarBSource
 warning: LeanCode/YukawaOZ/MSAScalarBSource.lean:34:72: This simp argument is unused:
   bB0
 
@@ -11646,7 +11646,7 @@ Hint: Omit it from the simp argument list.
   ̲  ̲ ̲ ̲rhoOf]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [9005/9063] Replayed LeanCode.YukawaOZ.MSABHJetRecurrence
+⚠ [9005/9068] Replayed LeanCode.YukawaOZ.MSABHJetRecurrence
 warning: LeanCode/YukawaOZ/MSABHJetRecurrence.lean:64:25: missing space in the source
 
 This part of the code
@@ -11665,7 +11665,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [9006/9063] Replayed LeanCode.YukawaOZ.MSAScalarBSourceComplex
+⚠ [9006/9068] Replayed LeanCode.YukawaOZ.MSAScalarBSourceComplex
 warning: LeanCode/YukawaOZ/MSAScalarBSourceComplex.lean:71:71: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
@@ -11681,7 +11681,7 @@ Note: This linter can be disabled with `set_option linter.style.whitespace false
 warning: LeanCode/YukawaOZ/MSAScalarBSourceComplex.lean:84:4: 'push_cast' tactic does nothing
 
 Note: This linter can be disabled with `set_option linter.unusedTactic false`
-⚠ [9007/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureFiniteBSource
+⚠ [9007/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureFiniteBSource
 warning: LeanCode/YukawaOZMix/MSAMixtureFiniteBSource.lean:40:73: This simp argument is unused:
   zero_add
 
@@ -11749,7 +11749,7 @@ Hint: Omit it from the simp argument list.
   ̲  ̲ ̲ ̲neg_mul, mul_one,̵ ̵o̵n̵e̵_̵m̵u̵l̵]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [9008/9063] Replayed LeanCode.YukawaOZMix.MSABSourceTransfer
+⚠ [9008/9068] Replayed LeanCode.YukawaOZMix.MSABSourceTransfer
 warning: LeanCode/YukawaOZMix/MSABSourceTransfer.lean:108:34: missing space in the source
 
 This part of the code
@@ -11809,7 +11809,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [9009/9063] Replayed LeanCode.YukawaOZMix.MSAMixtureBHJetRecurrence
+⚠ [9009/9068] Replayed LeanCode.YukawaOZMix.MSAMixtureBHJetRecurrence
 warning: LeanCode/YukawaOZMix/MSAMixtureBHJetRecurrence.lean:40:18: missing space in the source
 
 This part of the code
@@ -11877,25 +11877,31 @@ Hint: Omit it from the simp argument list.
   simp only [i̵f̵_̵p̵o̵s̵ ̵r̵f̵l,̵ ̵l̵ower, Nat.sub_self, Finset.range_zero, Finset.sum_empty, sub_zero] at hd
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [9011/9063] Replayed LeanCode.ExactMSAProject
+⚠ [9011/9068] Replayed LeanCode.ExactMSAProject
 warning: LeanCode/ExactMSAProject.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9013/9063] Replayed FMSAPaper.AbelEndpoint
+⚠ [9013/9068] Replayed FMSAPaper.AbelEndpoint
 warning: FMSAPaper/AbelEndpoint.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9014/9063] Replayed FMSAPaper.LocalBranch
+⚠ [9014/9068] Replayed FMSAPaper.AbsolutelyMonotone
+warning: FMSAPaper/AbsolutelyMonotone.lean:1:1: * '-/':
+Copyright too short!
+
+
+Note: This linter can be disabled with `set_option linter.style.header false`
+⚠ [9015/9068] Replayed FMSAPaper.LocalBranch
 warning: FMSAPaper/LocalBranch.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9016/9063] Replayed FMSAPaper.SmoothJets
+⚠ [9017/9068] Replayed FMSAPaper.SmoothJets
 warning: FMSAPaper/SmoothJets.lean:1:1: * '-/':
 Copyright too short!
 
@@ -11907,31 +11913,31 @@ set_option maxHeartbeats 2000000 in
 ...
 
 Note: This linter can be disabled with `set_option linter.style.maxHeartbeats false`
-⚠ [9017/9063] Replayed FMSAPaper.TaylorRoot
+⚠ [9018/9068] Replayed FMSAPaper.TaylorRoot
 warning: FMSAPaper/TaylorRoot.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9019/9063] Replayed FMSAPaper.FoldObstruction
+⚠ [9020/9068] Replayed FMSAPaper.FoldObstruction
 warning: FMSAPaper/FoldObstruction.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9020/9063] Replayed FMSAPaper.RegularContinuation
+⚠ [9021/9068] Replayed FMSAPaper.RegularContinuation
 warning: FMSAPaper/RegularContinuation.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9021/9063] Replayed FMSAPaper.StrengthScaling
+⚠ [9022/9068] Replayed FMSAPaper.StrengthScaling
 warning: FMSAPaper/StrengthScaling.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9022/9063] Replayed FMSAPaper.FoldRadius
+⚠ [9023/9068] Replayed FMSAPaper.FoldRadius
 warning: FMSAPaper/FoldRadius.lean:1:1: * '-/':
 Copyright too short!
 
@@ -11949,31 +11955,31 @@ warning: FMSAPaper/FoldRadius.lean:138:0: `amplitudeRadius_le_of_nonconvergence`
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [9024/9063] Replayed FMSAPaper.FiniteBasisJets
+⚠ [9025/9068] Replayed FMSAPaper.FiniteBasisJets
 warning: FMSAPaper/FiniteBasisJets.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9025/9063] Replayed FMSAPaper.ActualBaxterJets
+⚠ [9026/9068] Replayed FMSAPaper.ActualBaxterJets
 warning: FMSAPaper/ActualBaxterJets.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9026/9063] Replayed FMSAPaper.ActualBaxterBoundaryJets
+⚠ [9027/9068] Replayed FMSAPaper.ActualBaxterBoundaryJets
 warning: FMSAPaper/ActualBaxterBoundaryJets.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9027/9063] Replayed FMSAPaper.PhysicalExteriorJets
+⚠ [9028/9068] Replayed FMSAPaper.PhysicalExteriorJets
 warning: FMSAPaper/PhysicalExteriorJets.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9029/9063] Replayed FMSAPaper.BaxterIntegrationByParts
+⚠ [9030/9068] Replayed FMSAPaper.BaxterIntegrationByParts
 warning: FMSAPaper/BaxterIntegrationByParts.lean:40:13: `tendsto_finset_sum` has been deprecated: Use `tendsto_finsetSum` instead
 warning: FMSAPaper/BaxterIntegrationByParts.lean:79:17: This simp argument is unused:
   f
@@ -11999,7 +12005,7 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: FMSAPaper/BaxterIntegrationByParts.lean:78:81: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [9030/9063] Replayed FMSAPaper.BaxterSecondDerivative
+⚠ [9031/9068] Replayed FMSAPaper.BaxterSecondDerivative
 warning: FMSAPaper/BaxterSecondDerivative.lean:32:26: This simp argument is unused:
   add_sub_add_right_eq_sub
 
@@ -12066,7 +12072,7 @@ Hint: Omit it from the simp argument list.
   simp only [̵m̵u̵l̵_̵n̵e̵g̵_̵o̵n̵e̵,̵ ̵m̵u̵l̵_̵n̵e̵g̵,̵[̲m̲u̲l̲_̲n̲e̲g̲,̲ Finset.sum_neg_distrib]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-⚠ [9032/9063] Replayed FMSAPaper.BaxterSuperposition
+⚠ [9033/9068] Replayed FMSAPaper.BaxterSuperposition
 warning: FMSAPaper/BaxterSuperposition.lean:1:1: * '-/':
 Copyright too short!
 
@@ -12144,7 +12150,7 @@ should be written as
 
 
 Note: This linter can be disabled with `set_option linter.style.whitespace false`
-⚠ [9033/9063] Replayed FMSAPaper.MixedRateTails
+⚠ [9034/9068] Replayed FMSAPaper.MixedRateTails
 warning: FMSAPaper/MixedRateTails.lean:1:1: * '-/':
 Copyright too short!
 
@@ -12168,31 +12174,31 @@ Note: This linter can be disabled with `set_option linter.flexible false`
 info: FMSAPaper/MixedRateTails.lean:28:22: Try this:
   [apply] simp only [neg_mul, mul_eq_zero, exp_ne_zero, or_self]
 info: FMSAPaper/MixedRateTails.lean:31:4: `exact max_le (by linarith) (by linarith)` uses `⊢`!
-⚠ [9034/9063] Replayed FMSAPaper.MixedRateWindows
+⚠ [9035/9068] Replayed FMSAPaper.MixedRateWindows
 warning: FMSAPaper/MixedRateWindows.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9035/9063] Replayed FMSAPaper.MixedRatePlateau
+⚠ [9036/9068] Replayed FMSAPaper.MixedRatePlateau
 warning: FMSAPaper/MixedRatePlateau.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9036/9063] Replayed FMSAPaper.MixedRateCross
+⚠ [9037/9068] Replayed FMSAPaper.MixedRateCross
 warning: FMSAPaper/MixedRateCross.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9037/9063] Replayed FMSAPaper.ActualMixedRateCross
+⚠ [9038/9068] Replayed FMSAPaper.ActualMixedRateCross
 warning: FMSAPaper/ActualMixedRateCross.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9038/9063] Replayed FMSAPaper.SpatialDictionary
+⚠ [9039/9068] Replayed FMSAPaper.SpatialDictionary
 warning: FMSAPaper/SpatialDictionary.lean:1:1: * '-/':
 Copyright too short!
 
@@ -12210,13 +12216,13 @@ warning: FMSAPaper/SpatialDictionary.lean:77:0: `HasForm.contDiffOn` does not us
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [9039/9063] Replayed FMSAPaper.MixedRateSpatialMembership
+⚠ [9040/9068] Replayed FMSAPaper.MixedRateSpatialMembership
 warning: FMSAPaper/MixedRateSpatialMembership.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9040/9063] Replayed FMSAPaper.SingleRateSpatialMembership
+⚠ [9041/9068] Replayed FMSAPaper.SingleRateSpatialMembership
 warning: FMSAPaper/SingleRateSpatialMembership.lean:1:1: * '-/':
 Copyright too short!
 
@@ -12266,25 +12272,25 @@ warning: FMSAPaper/SingleRateSpatialMembership.lean:58:2: The following tactic s
 Please focus on the current goal, for instance using `·` (typed as "\.").
 
 Note: This linter can be disabled with `set_option linter.style.multiGoal false`
-⚠ [9041/9063] Replayed FMSAPaper.ActualBaxterSuperposition
+⚠ [9042/9068] Replayed FMSAPaper.ActualBaxterSuperposition
 warning: FMSAPaper/ActualBaxterSuperposition.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9043/9063] Replayed FMSAPaper.BaxterWeakDerivative
+⚠ [9044/9068] Replayed FMSAPaper.BaxterWeakDerivative
 warning: FMSAPaper/BaxterWeakDerivative.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9044/9063] Replayed FMSAPaper.WeakDerivativePairing
+⚠ [9045/9068] Replayed FMSAPaper.WeakDerivativePairing
 warning: FMSAPaper/WeakDerivativePairing.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9045/9063] Replayed FMSAPaper.BaxterWeakPrimitive
+⚠ [9046/9068] Replayed FMSAPaper.BaxterWeakPrimitive
 warning: FMSAPaper/BaxterWeakPrimitive.lean:1:1: * '-/':
 Copyright too short!
 
@@ -12300,19 +12306,19 @@ Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
 warning: FMSAPaper/BaxterWeakPrimitive.lean:59:29: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
 
 Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
-⚠ [9046/9063] Replayed FMSAPaper.ActualRadialWeak
+⚠ [9047/9068] Replayed FMSAPaper.ActualRadialWeak
 warning: FMSAPaper/ActualRadialWeak.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9047/9063] Replayed FMSAPaper.FiniteIntegralJets
+⚠ [9048/9068] Replayed FMSAPaper.FiniteIntegralJets
 warning: FMSAPaper/FiniteIntegralJets.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9048/9063] Replayed FMSAPaper.BaxterWeakJetBasis
+⚠ [9049/9068] Replayed FMSAPaper.BaxterWeakJetBasis
 warning: FMSAPaper/BaxterWeakJetBasis.lean:1:1: * '-/':
 Copyright too short!
 
@@ -12324,7 +12330,7 @@ warning: FMSAPaper/BaxterWeakJetBasis.lean:60:0: `primitiveBasis_integrable` doe
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [9049/9063] Replayed FMSAPaper.BaxterSecondIntegralJets
+⚠ [9050/9068] Replayed FMSAPaper.BaxterSecondIntegralJets
 warning: FMSAPaper/BaxterSecondIntegralJets.lean:1:1: * '-/':
 Copyright too short!
 
@@ -12354,13 +12360,13 @@ warning: FMSAPaper/BaxterSecondIntegralJets.lean:46:0: `secondBasis_integrable` 
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [9050/9063] Replayed FMSAPaper.BaxterWeakJets
+⚠ [9051/9068] Replayed FMSAPaper.BaxterWeakJets
 warning: FMSAPaper/BaxterWeakJets.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9051/9063] Replayed FMSAPaper.RadialIntegralJets
+⚠ [9052/9068] Replayed FMSAPaper.RadialIntegralJets
 warning: FMSAPaper/RadialIntegralJets.lean:1:1: * '-/':
 Copyright too short!
 
@@ -12378,25 +12384,25 @@ warning: FMSAPaper/RadialIntegralJets.lean:31:0: `radialBasis_integrable` does n
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [9052/9063] Replayed FMSAPaper.BaxterWeakCauchy
+⚠ [9053/9068] Replayed FMSAPaper.BaxterWeakCauchy
 warning: FMSAPaper/BaxterWeakCauchy.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9053/9063] Replayed FMSAPaper.ActualRadialWeakJets
+⚠ [9054/9068] Replayed FMSAPaper.ActualRadialWeakJets
 warning: FMSAPaper/ActualRadialWeakJets.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9054/9063] Replayed FMSAPaper.MultirateSpatialMembership
+⚠ [9055/9068] Replayed FMSAPaper.MultirateSpatialMembership
 warning: FMSAPaper/MultirateSpatialMembership.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9055/9063] Replayed FMSAPaper.SpatialJets
+⚠ [9056/9068] Replayed FMSAPaper.SpatialJets
 warning: FMSAPaper/SpatialJets.lean:1:1: * '-/':
 Copyright too short!
 
@@ -12432,7 +12438,7 @@ warning: FMSAPaper/SpatialJets.lean:71:0: `weighted_truncation_hasForm` does not
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [9056/9063] Replayed FMSAPaper.ActualSpatialJets
+⚠ [9057/9068] Replayed FMSAPaper.ActualSpatialJets
 warning: FMSAPaper/ActualSpatialJets.lean:1:1: * '-/':
 Copyright too short!
 
@@ -12444,29 +12450,232 @@ warning: FMSAPaper/ActualSpatialJets.lean:71:0: `coefficient_contDiffOn_of_weigh
 Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
 
 Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
-⚠ [9057/9063] Replayed FMSAPaper.HomogeneousJets
+⚠ [9058/9068] Replayed FMSAPaper.HomogeneousJets
 warning: FMSAPaper/HomogeneousJets.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9058/9063] Replayed FMSAPaper.MultivariateStrength
+⚠ [9059/9068] Replayed FMSAPaper.MultivariateStrength
 warning: FMSAPaper/MultivariateStrength.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9059/9063] Replayed FMSAPaper.ActualStrengthJets
+⚠ [9060/9068] Replayed FMSAPaper.ActualStrengthJets
 warning: FMSAPaper/ActualStrengthJets.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-⚠ [9060/9063] Replayed FMSAPaper.OrderedSpatialJets
+⚠ [9061/9068] Replayed FMSAPaper.OrderedSpatialJets
 warning: FMSAPaper/OrderedSpatialJets.lean:1:1: * '-/':
 Copyright too short!
 
 
 Note: This linter can be disabled with `set_option linter.style.header false`
-Build completed successfully (9063 jobs).
+⚠ [9062/9068] Replayed FMSAPaper.QuarticBranch
+warning: FMSAPaper/QuarticBranch.lean:1:1: * '-/':
+Copyright too short!
+
+
+Note: This linter can be disabled with `set_option linter.style.header false`
+warning: FMSAPaper/QuarticBranch.lean:49:0: automatically included section variable(s) unused in theorem `FMSA.Paper.QuarticBranch.c1_le_c2`:
+  hab
+  hb
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hab hb in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: FMSAPaper/QuarticBranch.lean:102:0: automatically included section variable(s) unused in theorem `FMSA.Paper.QuarticBranch.qd_c1`:
+  hab
+  hb
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hab hb in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: FMSAPaper/QuarticBranch.lean:115:0: automatically included section variable(s) unused in theorem `FMSA.Paper.QuarticBranch.lowU_lt_a`:
+  hab
+  hb
+  hL
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hab hb hL in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: FMSAPaper/QuarticBranch.lean:231:0: automatically included section variable(s) unused in theorem `FMSA.Paper.QuarticBranch.res_partial_isInvertible`:
+  hL
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit hL in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: FMSAPaper/QuarticBranch.lean:289:6: Variable name `t` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: FMSAPaper/QuarticBranch.lean:296:9: Variable name `s` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: FMSAPaper/QuarticBranch.lean:297:9: Variable name `s` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [9063/9068] Replayed FMSAPaper.SingleTailExpBounds
+warning: FMSAPaper/SingleTailExpBounds.lean:1:1: * '-/':
+Copyright too short!
+
+
+Note: This linter can be disabled with `set_option linter.style.header false`
+⚠ [9064/9068] Replayed FMSAPaper.SingleTailParametrization
+warning: FMSAPaper/SingleTailParametrization.lean:1:1: * '-/':
+Copyright too short!
+
+
+Note: This linter can be disabled with `set_option linter.style.header false`
+warning: FMSAPaper/SingleTailParametrization.lean:105:38: This simp argument is unused:
+  bS
+
+Hint: Omit it from the simp argument list.
+  simp only [vacS, etaS, xS, DdS, aS, b̵S̵,̵ ̵PS, JS, HS, HtS] at *
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: FMSAPaper/SingleTailParametrization.lean:105:54: This simp argument is unused:
+  HtS
+
+Hint: Omit it from the simp argument list.
+  simp only [vacS, etaS, xS, DdS, aS, bS, PS, JS, HS,̵ ̵H̵t̵S̵] at *
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [9065/9068] Replayed FMSAPaper.SingleTailRadius
+warning: FMSAPaper/SingleTailRadius.lean:1:1: * '-/':
+Copyright too short!
+
+
+Note: This linter can be disabled with `set_option linter.style.header false`
+warning: FMSAPaper/SingleTailRadius.lean:47:0: automatically included section variable(s) unused in theorem `FMSA.Paper.SingleTailRadius.hw`:
+  [Fintype T]
+  [Unique T]
+  hz
+  hr
+  hs
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype T] [Unique T] hz hr hs in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: FMSAPaper/SingleTailRadius.lean:47:0: `hw` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:49:0: `hab` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:52:0: `hb` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:54:0: `hDd` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:59:0: `hL` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:73:0: automatically included section variable(s) unused in theorem `FMSA.Paper.SingleTailRadius.tauS_eq_q`:
+  [Fintype T]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype T] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: FMSAPaper/SingleTailRadius.lean:72:0: `tauS_eq_q` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:76:0: `zero_mem_Ioo` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:137:79: Variable name `t` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: FMSAPaper/SingleTailRadius.lean:148:0: `branch_contDiffAt_zero` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:153:0: `branch_derivs_zero` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:158:0: `branch_zero_eq_seed` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:161:0: `G_coeff_nonneg` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:193:32: Variable name `hn` is not explicitly referenced.
+
+The binding can be removed (if unused) or named `_` (if used implicitly).
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: FMSAPaper/SingleTailRadius.lean:192:0: `D_coeff_nonneg` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:242:0: `physBranch_lower` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:255:0: `physBranch_upper` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:327:0: `physBranch_continuousAt` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+warning: FMSAPaper/SingleTailRadius.lean:373:0: `foldCoupling_pos` does not use the following hypothesis in its type:
+  • [Fintype T] (#2)
+
+Consider replacing this hypothesis with the corresponding instance of `Finite` and using `Fintype.ofFinite` in the proof, or removing it entirely.
+
+Note: This linter can be disabled with `set_option linter.unusedFintypeInType false`
+Build completed successfully (9068 jobs).
 warning: batteries: repository '/home/rpan/YK_tail_FMSA/Lean_code/MSA_and_1st_Truncation/../.lake/packages/batteries' has local changes
