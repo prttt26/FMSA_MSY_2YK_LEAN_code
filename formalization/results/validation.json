@@ -1,12 +1,12 @@
 {
   "status": "PASS",
-  "validated_at_utc": "2026-10-23T00:20:40.426075+00:00",
+  "validated_at_utc": "2026-10-23T01:09:22.469373+00:00",
   "toolchain": "leanprover/lean4:v4.31.0",
   "foundation_version": "1.0.10",
   "foundation_manifest_sha256": "648a0283f2302f8005615dc22798259588bdcecb2a45a3266603dab52b4cd6bb",
   "foundation_audit": "PASS: foundation 1.0.10, 513 source/config hashes.",
   "foundation_matches_manifest": true,
-  "check_script_sha256": "4100c160d8a79bfbc5a17285aa14d567b7116e981a35ecd61d56b29d1e505737",
+  "check_script_sha256": "f177afc9c91f86455c57906b105f8aa74857a00fce6ff42d662391826d64d3e0",
   "dependencies": {
     "mathlib": {
       "head": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -796,10 +796,10 @@
     ],
     "exit_code": 0,
     "log": "results/default_build.log",
-    "log_sha256": "c60eaf03ced572c56a042acac2a096b02e4af46f0aee507cd396780f00139603"
+    "log_sha256": "365d8f58d056cec2b8edfd246e545da5b99a3415388d82548b0663ba486d2610"
   },
   "paper_root_sha256": "ee7fa8bd27e0fddba7f0402e5bcaa0e5d07b29e4503ebf501152cf6d0e6d9c5c",
   "package_entry_sha256": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
   "integration": "Included in the foundation's default Lake build; no external LEAN_PATH.",
-  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; F5/F6 numerical certificates remain open; no universal converse or physical positivity claim."
+  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
 }

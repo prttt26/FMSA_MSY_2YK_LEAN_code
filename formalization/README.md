@@ -122,16 +122,17 @@ correspondence table `si-tab:si-corr4` cite the declarations; `make check` passe
   gives actual branch values as the sums before the endpoint. The physical PY
   seed has positive common radius without any sign hypothesis. No actual-model
   all-order sign theorem or convergence-at-the-fold claim is supplied.
-- **F5/F6 remain open.** The actual-MSA complex branch-point and second-order
-  supporting-coexistence certificates are not supplied. Finite-order sign
-  measurements do not verify an all-order hypothesis; the script excludes
-  unresolved coefficients. Closed numerical monodromy loops do not exclude all
-  enclosed branch points, and a failed walk alone is not a singularity certificate.
-  The SI and script documentation now state these limits and qualify the competing-tail
-  example as numerical evidence. Agreement of a partial sum at one point does
-  not certify individual coefficients. The current SI already
-  separates the strict inequalities around radius one; the backlog's old
-  equivalence wording was stale.
+- **F5/F6: certified by interval arithmetic (2026-10-22), not in Lean.** See
+  `certificates/README.md`. F5: for z = (1.8, 12), weights (1, -6) and
+  eta = 0.2, 0.3, 0.4, a validated Krawczyk chain shows the PY-seeded branch is
+  real and regular on [0, 3], and a validated monodromy loop on |tau| = 2.75
+  returns to a disjoint enclosure, so R_c <= 2.75 and the series diverges at
+  tau = 3. F6: for z = 5, T* = 0.02, two distinct equal-p/equal-mu pairs, each
+  with a common tangent below beta f/V on all of 0 < rho* < 6/pi. These are
+  computer-assisted proofs about the stated finite models (the BH residual of
+  `msa_series_radius.py`, the closed second-order jet of
+  `finite_order_two_tangents.py`). Finite-order sign measurements still do not
+  verify the all-order sign hypothesis of F4.
 - The proposed universal biconditional between positive real solution existence
   and Taylor convergence is not asserted. A real root or regular real branch
   does not control nearer complex singularities. The proved contrapositive

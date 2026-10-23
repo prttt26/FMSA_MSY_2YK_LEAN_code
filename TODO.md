@@ -45,7 +45,7 @@ gap claims go stale (MA.8 was retired that way).
 
 | Item | Track | State | Notes |
 |---|---|---|---|
-| F5, F6 | paper | open | Numerical certificates (validated continuation + monodromy for the competing-tail example; Krawczyk + global inequality for the second-order double tangent). Not Lean work. |
+| F5, F6 | paper | certified (interval arithmetic) | Computer-assisted proofs in `formalization/certificates/`, not Lean. SI wording pending in the paper session. |
 | MA axioms above | foundation | live | Retirement only if Mathlib gains the machinery or a narrower statement is found. MA.7 can be deleted if it stays consumer-less. |
 | OZ.3 layer (3) | foundation | do-not-attempt boundary | Full damped-exponential `g₀_HS(r)` via `oz_h_eq_spliced_h_explicit` needs `hcollapse` (circular, OZFIX.14) and `hcont_sigma` (false as stated, OZFIX.7). Contact value and Laplace identity are proved. |
 | POLE.10 | foundation | open | Pole-family exhaustion (all UHP zeros, injective, non-degenerate mirror pairing). Only needed for the residue-series `hcollapse` routes. |

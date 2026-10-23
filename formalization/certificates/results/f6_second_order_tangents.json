@@ -1,0 +1,107 @@
+{
+ "model": {
+  "z": 5,
+  "T_star": "0.02",
+  "tau": 50,
+  "a_closed_form": "finite_order_two_tangents.coeffs"
+ },
+ "float_crosscheck_max_abs_diff": 6.821210263296962e-13,
+ "pairs": [
+  {
+   "eta_box": [
+    [
+     0.0015097952595616014,
+     0.0015097952595646215
+    ],
+    [
+     0.026998337470347345,
+     0.02699833747040135
+    ]
+   ],
+   "rho_box": [
+    [
+     0.002883496543391279,
+     0.002883496543397049
+    ],
+    [
+     0.051563026364026994,
+     0.05156302636413016
+    ]
+   ],
+   "beta_mu": [
+    -6.257428718984118,
+    -6.25742871898289
+   ],
+   "beta_p": [
+    0.002301036446404492,
+    0.002301036446408035
+   ],
+   "krawczyk_contraction": 1.2580603225842425e-11,
+   "convex_windows_eta": [
+    [
+     0.0012833259706286446,
+     0.001736264548497578
+    ],
+    [
+     0.022948586849818195,
+     0.031048088090930497
+    ]
+   ],
+   "grid_cells_checked": 2274,
+   "low_density_monotone": true,
+   "high_density_monotone": true,
+   "supporting_tangent_certified": true
+  },
+  {
+   "eta_box": [
+    [
+     0.24148505122919123,
+     0.24148505122967423
+    ],
+    [
+     0.8048207115879749,
+     0.8048207115895847
+    ]
+   ],
+   "rho_box": [
+    [
+     0.46120247503110423,
+     0.4612024750320269
+    ],
+    [
+     1.5370943346235537,
+     1.537094334626629
+    ]
+   ],
+   "beta_mu": [
+    129.1434202768184,
+    129.14342027719707
+   ],
+   "beta_p": [
+    39.69884582756793,
+    39.69884582774055
+   ],
+   "krawczyk_contraction": 5.03571184751195e-10,
+   "convex_windows_eta": [
+    [
+     0.20526229354501782,
+     0.2777078089138476
+    ],
+    [
+     0.7404350546616775,
+     0.8692063685158822
+    ]
+   ],
+   "grid_cells_checked": 1884,
+   "low_density_monotone": true,
+   "high_density_monotone": true,
+   "supporting_tangent_certified": true
+  }
+ ],
+ "negative_control": {
+  "raised_line_fails": true,
+  "lowered_line_passes": true
+ },
+ "two_distinct_supporting_pairs": true,
+ "seconds": 67.9
+}
