@@ -625,6 +625,104 @@ fragile: at B the gap `τ_f / R_c − 1` is 11 %.
   Taylor identity; its derivative tensors come from step-1 differences at points. With that form
   and a quadtree from coarse cells (`h0 = 1/8`), B needs 2.6·10⁵ leaves.
 
+### §8e Convergence set of a mixed-sign two-Yukawa tail, one component (numerics, 2026-10-23)
+
+**Question.** Future plan (b) asks which tails make the coupling series converge at the
+physical coupling for every stable state at every temperature. Scale-free, this is
+`R_c(η) ≥ τ_inst(η)` for every `0 < η < η_max`, where:
+
+* `τ_inst` is the first loss of canonicity along the real branch. It is either the `det F(0)`
+  sign change (the `k = 0` spinodal) or a winding flip of `det F(ik)` (a `k ≠ 0` instability).
+* `R_c` is the modulus of the nearest physical-sheet singularity (§8d).
+
+The stable range is not capped: there is no freezing line and no minimum temperature. A density at
+which no instability exists at any `τ` therefore fails, because `R_c` is finite.
+
+The tail is `K = (1, w)` at rates `z = (z1, z2)` with `z2 > z1`: a long-range attraction and a
+short-range repulsion, the shape of an LJ fit. The amplitude is measured by the cancelled fraction
+`f = w/w0`, where `w0 = −(1/z1 + 1/z1²)/(1/z2 + 1/z2²)` makes the tail integral vanish.
+Since `τ_inst < τ_f` (§8c), a binding real fold always satisfies the requirement. A failure needs
+either a complex pair with `|τ*_c| < τ_inst`, or no instability at all.
+
+**Method.** `scripts/coupling_singularities/two_tail_margin.py` computes, for one state:
+
+* `τ_inst` from `msa_exact_mix.trace_coupling_mix` (`lam_max = 40`);
+* `R_c` from `nearest.nearest_singularity` (Padé candidates, fold refinement, sheet test by the
+  `√d` approach);
+* the margin `R_c/τ_inst − 1`.
+
+`two_tail_scan.py` then works through each `(z2, η)` cell. It evaluates the margin on a 12-point
+`f` grid and records the number of sign changes, so monotonicity is checked rather than assumed.
+It then bisects the first change to `|Δf| < 0.002`. Results are in
+`results/coupling_singularities/two_tail_scan_z1_{1.8,2.9637}.{json,log}`; each log header carries
+its command line. The build also has two fixes:
+
+* the Padé scale is shrunk to `0.9·R_est` from the root test;
+* the fold residual is accepted relative to `|det J|` (`res_rel=True`, default off).
+
+Without the first fix, a cell with `τ_f ≈ 24` and `R_c ≈ 12` gave NaN poles. Without the second,
+the absolute `1e-7` rejected true folds at high η, where `det J ≈ 270`. The A/B states of §8d
+reproduce under the fixed build: A has margin +0.0016 with a real fold, B has margin −0.096 with
+`|τ*_c| = 7.0368`. This is float64 evidence, not a certificate.
+
+**Results, `z1 = 1.8`.** Every one of the 72 cells has exactly one sign change. So at fixed
+`(z2, η)` the set is the interval `f < f*`.
+
+| `z2` \ `η` | 0.02 | 0.1 | 0.2 | 0.3 | 0.4 | 0.45 | 0.47 | **0.49** | `w*` at 0.49 |
+|---|---|---|---|---|---|---|---|---|---|
+| 2.5 | 0.896 | 0.870 | 0.829 | 0.791 | 0.757 | 0.741 | 0.737 | **0.726** | −1.12 |
+| 3 | 0.859 | 0.806 | 0.743 | 0.688 | 0.640 | 0.618 | 0.610 | **0.602** | −1.17 |
+| 4 | 0.791 | 0.713 | 0.627 | 0.551 | 0.487 | 0.457 | 0.446 | **0.437** | −1.21 |
+| 6 | 0.715 | 0.612 | 0.502 | 0.410 | 0.332 | 0.299 | 0.287 | **0.276** | −1.23 |
+| 8 | 0.674 | 0.557 | 0.438 | 0.340 | 0.262 | 0.227 | 0.216 | **0.204** | −1.25 |
+| 12 | 0.635 | 0.504 | 0.374 | 0.274 | 0.198 | 0.165 | 0.154 | **0.143** | −1.37 |
+| 16 | 0.615 | 0.479 | 0.345 | 0.245 | 0.168 | 0.138 | 0.127 | **0.116** | −1.52 |
+| 24 | 0.595 | 0.454 | 0.316 | 0.215 | 0.141 | 0.113 | 0.102 | **0.093** | −1.85 |
+
+The table shows `f*` at the bracket midpoint; `η = 0.05` was also run and lies between the
+neighbouring columns. For `z2 = 12, η = 0.3` the bracket is `f* ∈ [0.2734, 0.2750]`. A
+(`f = 0.261`) lies inside it and B (`f = 0.2754`) outside.
+
+* `f*` decreases in `η` and in `z2`. The convergence set on this slice is therefore
+  `f < f*(z2, η_max)`, set entirely by the high-density end. Per unit of integrated weight, a
+  shorter-range repulsion does more damage.
+* `f*` does not go to 0 as `η → 0.49`, but it has not saturated either: it falls by about 0.01
+  between 0.47 and 0.49. The condition depends explicitly on `η_max`.
+* As `z2 → z1`, `f* → 1`. This matches the single-tail theorem.
+
+**LJ two-Yukawa fit.** The fit has `z = (2.9637, 14.0167)` and `w = −1`, so `f = 0.169`.
+
+| `η` | 0.1 | 0.2 | 0.3 | 0.4 | 0.45 | 0.47 | 0.49 |
+|---|---|---|---|---|---|---|---|
+| `f*` | 0.590 | 0.460 | 0.352 | 0.263 | 0.224 | 0.210 | 0.196 |
+
+The fit is inside, with `w* = −1.158` at `η = 0.49`. The margin is 0.027 in `f`, about 14 %.
+
+**Two boundary mechanisms.** These come from reading the two evaluations that bracket each `f*`.
+
+* **M1, complex overtake.** Just inside the boundary a real fold binds; just outside, a complex
+  pair with `arg τ*_c ≈ 110°–160°` lies inside `τ_inst`. Every `η ≥ 0.45` cell is of this type,
+  so M1 sets the final boundary on both slices.
+* **M2, leaving the spinodal region.** Along `τ`, `det F(0)` falls to a minimum and recovers: the
+  MSA spinodal region is closed in `τ` at fixed η. As `f` grows, the minimum rises through 0, and
+  `τ_inst` jumps from a finite value to ∞. Example: `z2 = 12, η = 0.1`. At `f = 0.5031`,
+  `τ_inst = 4.95`; at `f = 0.5047`, the minimum of `det F(0)` is +0.041 at `τ ≈ 5.6`.
+  Such a density is stable at every temperature and fails only because the range is uncapped.
+  M2 appears at low η and large `z2`, and on the LJ slice at `η ≤ 0.4`. In every case it lies
+  above `f*(η_max)`, so it does not move either slice's boundary. Another slice could differ.
+
+Caveat. The end of the tracer (`tau_f` in the JSON) is not always a fold: the tracer can stall just
+after a winding flip, where the nearest singularity is complex and farther out. The margin uses
+only `τ_inst` and the sheet-tested `R_c`.
+
+**Open.**
+
+* A free `z1`, giving the full surface `f*(z1, z2; η_max)`.
+* The opposite sign order (short-range attraction, long-range repulsion), where `k ≠ 0`
+  instabilities are expected.
+* The `η → η_max` asymptotics.
+* Certifying boundary points with the F7 tools.
+
 **MSAEXACT.4.** Should be nearly free: BAXTER.3 = MRS.8 at `N=1` is already in the library and PYE.6
 already wires it to the physical PY objects (`pyBaxterMat`, `pyT0Mat`, `dp_zeroth_order_is_py_n1`).
 Extend that wiring rather than re-deriving it.

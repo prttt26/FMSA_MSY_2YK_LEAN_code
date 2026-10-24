@@ -114,8 +114,12 @@ def on_sheet(st, tau_star, u_star, ds=(1e-2, 3e-3, 1e-3)):
     return dist, slopes
 
 
-def nearest_singularity(st, scale, verbose=True):
-    """Return (tau*, info) for the nearest physical-sheet singularity among Pade candidates."""
+def nearest_singularity(st, scale, verbose=True, res_rel=False):
+    """Return (tau*, info) for the nearest physical-sheet singularity among Pade candidates.
+
+    res_rel: accept the refined fold at residual < 1e-7*max(1, |det J|) at the seed (det J is
+    O(100) at high packing, where the absolute 1e-7 rejects true folds); default off.
+    """
     for p in candidates(st, scale):
         if abs(p.imag) < 1e-8*abs(p):
             kind = 'real'
@@ -128,7 +132,8 @@ def nearest_singularity(st, scale, verbose=True):
                 print(f"   candidate {p:.5f}: continuation failed ({e})")
             continue
         u_s, t_s, res = refine_fold(st, useed, p)
-        if res > 1e-7 or abs(t_s - p) > 0.05*abs(p):
+        tol = 1e-7*max(1.0, abs(np.linalg.det(jac(useed, st)))) if res_rel else 1e-7
+        if res > tol or abs(t_s - p) > 0.05*abs(p):
             if verbose:
                 print(f"   candidate {p:.5f}: no fold nearby (res {res:.1e}, tau {t_s:.4f})")
             continue
