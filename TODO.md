@@ -98,6 +98,7 @@ gap claims go stale (MA.8 was retired that way).
 | FOEQ.1–.4, .6–.9; FOEQ.5 at N=1 | exact MSA | The two definitions of "first order" agree at every order | `Closures/FirstOrderEquivalence`, `MSASolutionFamily` | Other_Closures `proof_notes_closures.md` |
 | leg-3, leg-3-mix (MPhase 1–9) | exact MSA | Blum–Høye (29)/(33) derived from OZ/Baxter primitives, scalar and all unequal σ | `YukawaOZ/MSABlumHoyeDerivation`, `MSAGSideOZ`, `YukawaOZMix/MixtureBlumHoyeDerivation` | leg3_* |
 | MSAMULTI, MSABSource | exact MSA | Arbitrary finite Yukawa tails, finite source hierarchy, nonlinear reconstruction | `YukawaOZMix/MSAMultiTail*`, `MultiTailMSAProject.lean` | msa_exact |
+| Initial stable interval (1.0.12) | paper | For any extended endpoint, every amplitude series sums to the analytic selected branch before the endpoint iff endpoint <= common radius; actual BH interface from explicit regularity; finite-interval nonconvergence witnesses | `FMSAPaper/StableIntervalRadius` | Canonicity-to-regularity and tail-parameter conditions remain open; formalization/README.md |
 | Single-tail fold binds (1.0.11) | paper | One species, one attractive tail: all coefficients nonnegative, radius = explicit fold, no hypothesis | `FMSAPaper/SingleTail*`, `QuarticBranch`, `AbsolutelyMonotone` | formalization/README.md |
 | FMSAPaper F1–F4 | paper | All-order finite closed form incl. weak identity; radius ≤ fold; convergence ⇒ real branch; conditional Pringsheim equality | `FMSAPaper/` | formalization/README.md |
 

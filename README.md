@@ -64,9 +64,27 @@ the separate `Other_Closures` project. Task status for every group, the
 re-derived axiom ledger and the open items are in `TODO.md` (it replaces the
 `todo_lean.md` and per-track task files that the notes still mention by name).
 
+## 1.0.12: convergence on the initial stable interval
+
+The paper collection now has 57 modules and 371 exact standard-axiom guards.
+`StableIntervalRadius.analytic_branch_converges_before_iff` proves that all
+amplitude-component Taylor series sum to an analytic selected branch at every
+nonnegative coupling below an extended endpoint b exactly when b does not
+exceed the common radius. Equality is allowed; b may be infinite.
+`actual_regular_branch_converges_before_iff` supplies the actual BH interface
+from continuity, roots and invertible amplitude Jacobians, with no coefficient
+sign or fold hypothesis. `nonconvergence_witness_before` gives a divergent
+coupling inside any interval extending past the common radius.
+
+The physical identification b = tau_inst and the implication from canonical
+physical states to BH Jacobian regularity remain separate mathematical
+obligations. This does not certify a tail-parameter region. The independent
+M2 zero-mode algebra is recorded in `proof_notes/codex_two_tail_reduction_audit.md`
+and the reproducible symbolic script `scripts/coupling_singularities/codex_zero_mode_stationarity.py`.
+
 ## 1.0.11: the single-tail fold binds, unconditionally
 
-The paper collection now has 56 modules and 361 exact standard-axiom guards.
+The paper collection reached 56 modules and 361 exact standard-axiom guards.
 `SingleTailRadius.single_tail_radius_eq_fold`: for one hard-sphere species and
 one attractive Yukawa tail (any rate, diameter and density with positive free
 volume), every continuous PY-seeded exact-MSA root germ has common Taylor radius

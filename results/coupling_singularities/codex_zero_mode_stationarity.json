@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "scope": "Exact algebraic identities; no state/parameter or canonicity certificate.",
+  "sympy_version": "1.13.2",
+  "normalization": "sigma=1, rho=6*eta/pi; E=exp(-z) is an independent symbol in the checks",
+  "physical_domain": "z>0 and 0<eta<1",
+  "unknown_order": [
+    "D1",
+    "D2",
+    "G1",
+    "G2"
+  ],
+  "zero_mode": "F0=Fhs+sum_i D_i*(alpha_i+beta_i*G_i)=A/(2*pi)",
+  "Fhs": "(2*eta + 1)/(1 - eta)**2",
+  "alpha": "6*eta*(6*eta + z**2*(eta - 1) + z*(4*eta - 1))/(pi*z**2*(1 - eta)**2)",
+  "beta": "72*eta**2*(6*eta*(-E*(z**2/2 + z + 1) + 1) + z*(-2*eta - 1)*(-E*(z + 1) + 1))/(pi*z**3*(1 - eta)**2)",
+  "verified_identities": [
+    "1-rho*Qhat(0)=A/(2*pi)",
+    "one-tail contribution D*(alpha+beta*G); additive for any finite tail family",
+    "grad(F0)=(alpha_i+beta_i*G_i, beta_i*D_i)",
+    "only nonzero Hessian entries are H[D_i,G_i]=H[G_i,D_i]=beta_i",
+    "det([[J,-b],[g,0]])=g*adj(J)*b",
+    "directional_derivative(det J)=trace(adj(J)*K)",
+    "det(J)*dN=det(J)*gd*adj(J)*b+N*trace(adj(J)*K)-g*adj(J)*K*adj(J)*b"
+  ],
+  "derived_stationary_criterion": {
+    "assumptions": "P(u(tau))=tau*b, det J != 0, J=DP, g=grad F0",
+    "N": "g*adj(J)*b",
+    "F0_derivative": "N/det J",
+    "M": "grad(N)*adj(J)*b",
+    "F0_second_derivative_at_N_zero": "M/(det J)^2",
+    "strict_local_minimum": "N=0 and M>0",
+    "transition_candidates": "P(u)=tau*b(w), F0(u)=0, N(u,w)=0; retain det J != 0 and M>0",
+    "limitations": "Candidate roots must be connected to the PY branch; global and finite-k checks remain necessary."
+  },
+  "script_sha256": "8d7ed7ca10e5a8b89934db1ffdd663df94973e3d4f3e2f991ac886dc12b80a70",
+  "seconds": 5.922,
+  "actual_model_float_crosscheck": {
+    "status": "PASS",
+    "cases": 27,
+    "max_scaled_abs_error": 5.440092820663269e-16,
+    "scope": "Float64 transcription comparison at off-root amplitudes, not an interval certificate",
+    "model_source_sha256": "2faadc34027ef5503650d04b809a3207d6692101a189298e595f9d87ea4110b2"
+  }
+}

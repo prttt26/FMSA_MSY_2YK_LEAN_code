@@ -1,7 +1,7 @@
 {
   "project": "MSA_and_1st_Truncation",
-  "version": "1.0.11",
-  "validated_on": "2026-10-23",
+  "version": "1.0.12",
+  "validated_on": "2026-10-26",
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib_revision": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
   "source_and_config_sha256": {
@@ -58,10 +58,11 @@
     "FMSAPaper/SmoothJets.lean": "dc6131959a572bcb3e56d3bccf1db1e8a21a015ed2b8041bac0e1c77671d2ade",
     "FMSAPaper/SpatialDictionary.lean": "9f48fd5219513bf9d0b899d8895d599ffbf34a5dfcdf0d97f223654f08bc9266",
     "FMSAPaper/SpatialJets.lean": "822ad054ff8af3ebde9f0352a28acc3f0547b386aa69c32890fe7299c3dc0e06",
+    "FMSAPaper/StableIntervalRadius.lean": "58c82b74fd3cae77e938787a3e0cb5f6668f355b160133a688b883e75915bba5",
     "FMSAPaper/StrengthScaling.lean": "9251cc4aa8527dcefdcc965800af35ad395b3fa33819b5625063eb99dc912fe1",
     "FMSAPaper/TaylorRoot.lean": "2135f9f85bb94ce8e21ba0d1d78ce98d1895c9767f0eebaaa97ca65e4e571c89",
     "FMSAPaper/WeakDerivativePairing.lean": "53c63fa141acae8ebd2cc20f9d96c8f3496b60d7241c632c3268569fd294eb43",
-    "FMSAPaper.lean": "910f0744ffd8d7ce331948abaef1990d3ca97e12350cb6601bc5ad15041f2b50",
+    "FMSAPaper.lean": "4334b12721609d0bc89e0f97315e9d112a539740219e1cafcf0873637f059000",
     "LeanCode/Analysis/ArgumentPrinciple.lean": "0bdd47e6d75063ee1347d58a9f0dba5c2f8c0b686d527c390d2880afe900ab89",
     "LeanCode/Analysis/BanachPoleFamily.lean": "3b95030b1b287356f7ce7e2035cb9ac750ca9d49e2237ad70dbebad6c8e06390",
     "LeanCode/Analysis/BoundaryGrowth.lean": "ae68b684ea3d0d4d939465b33aaf5d957b4244a5f08ab5e91763f12e9f60ed13",
@@ -521,21 +522,30 @@
     "LeanCode.lean": "cbd208c12e79fc416daf59969dd88107306996ab63ab170b1c7efdac8c90175c",
     "MSA_and_1st_Truncation.lean": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
     "lake-manifest.json": "f4fd831803fdd1968c310698b93b4dc7526ca87d3c537801c0a06ad0bebfb9d8",
-    "lakefile.toml": "8be5ef31e907415afdb9c7541f3c0d5d208f4eace5ef751c8a501b1f34616b01",
+    "lakefile.toml": "69c9bd6b8f8e70dda70afd0b25ed0be5798fce6b05d52aebc29ff6664797192d",
     "lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee"
   },
   "completion_scope": "Recorded MSA/first-truncation theorem scope and explicit assumptions; unrelated historical conditional FMSA axioms retained.",
   "validation": {
     "foundation": {
       "status": "PASS",
-      "jobs": 9068,
-      "log": "formalization/results/baseline_1_0_11/foundation_build.log",
-      "log_sha256": "a364e2fd3119e67085f3dcc272d527e691ffd3c8c31c4b7f5f46b8808730868e"
+      "jobs": 9069,
+      "log": "formalization/results/baseline_1_0_12/foundation_build.log",
+      "log_sha256": "c46d9b3b5f24d9f18baf1bf54717ec2d521e66f579a3280511de8e6711f36100"
+    },
+    "workspace": {
+      "status": "PASS",
+      "jobs": 9190,
+      "log": "formalization/results/baseline_1_0_12/workspace_build.log",
+      "log_sha256": "243e37332cd70263c3743bff25cf1606393c554b39c1ab2adbe88c0471c17864",
+      "command": "lake build LeanWorkspace MSA_and_1st_Truncation/ExactMSACertificate MSA_and_1st_Truncation/ExactMSASparseFeasibility MSA_and_1st_Truncation/MatExactMSAEqualDiamCertificate"
     },
     "closures": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.10",
-      "reason": "Change confined to new leaf FMSAPaper modules and the version string; no downstream project imports FMSAPaper.",
+      "carried_from": "1.0.11",
+      "reason": "Only the new leaf FMSAPaper module, paper root and version changed; all existing LeanCode proofs unchanged. Declared downstream Lake library sources import neither the changed root nor FMSAPaper. Historical build evidence is retained, not a fresh downstream proof build.",
+      "dependency_import_check": "formalization/results/baseline_1_0_12/downstream_import_check.json",
+      "dependency_import_check_sha256": "698f124c7a646313af9a641300c24fca97654d7b95efb38ef34ae04176902ffb",
       "previous": {
         "status": "PASS",
         "jobs": 8688,
@@ -545,8 +555,10 @@
     },
     "scoza": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.10",
-      "reason": "Change confined to new leaf FMSAPaper modules and the version string; no downstream project imports FMSAPaper.",
+      "carried_from": "1.0.11",
+      "reason": "Only the new leaf FMSAPaper module, paper root and version changed; all existing LeanCode proofs unchanged. Declared downstream Lake library sources import neither the changed root nor FMSAPaper. Historical build evidence is retained, not a fresh downstream proof build.",
+      "dependency_import_check": "formalization/results/baseline_1_0_12/downstream_import_check.json",
+      "dependency_import_check_sha256": "698f124c7a646313af9a641300c24fca97654d7b95efb38ef34ae04176902ffb",
       "previous": {
         "status": "PASS",
         "jobs": 8853,
@@ -556,21 +568,16 @@
     },
     "hsgmsa": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.10",
-      "reason": "Change confined to new leaf FMSAPaper modules and the version string; no downstream project imports FMSAPaper.",
+      "carried_from": "1.0.11",
+      "reason": "Only the new leaf FMSAPaper module, paper root and version changed; all existing LeanCode proofs unchanged. Declared downstream Lake library sources import neither the changed root nor FMSAPaper. Historical build evidence is retained, not a fresh downstream proof build.",
+      "dependency_import_check": "formalization/results/baseline_1_0_12/downstream_import_check.json",
+      "dependency_import_check_sha256": "698f124c7a646313af9a641300c24fca97654d7b95efb38ef34ae04176902ffb",
       "previous": {
         "status": "PASS",
         "jobs": 9202,
         "log": "formalization/results/baseline_1_0_9/hsgmsa_build.log",
         "log_sha256": "364cbe32f050ba714e5bf91db09576bde0d1ade7102f81afe1a2d24bf5550867"
       }
-    },
-    "workspace": {
-      "status": "PASS",
-      "jobs": 9162,
-      "log": "formalization/results/baseline_1_0_11/workspace_build.log",
-      "log_sha256": "35b4ab043dd948d5952d9bfdc319265eece9d6fbf943784b4e928960f4dfec22",
-      "command": "lake build LeanWorkspace MSA_and_1st_Truncation/ExactMSACertificate MSA_and_1st_Truncation/ExactMSASparseFeasibility MSA_and_1st_Truncation/MatExactMSAEqualDiamCertificate"
     }
   },
   "declaration_preservation": {
@@ -625,23 +632,20 @@
     "scope": "Conditional fold obstruction and convergence implications; spatial finite-span and coupling jets. Remaining analytic, physical-identification, Pringsheim and certified-counterexample obligations remain explicit in FORMALIZATION_TODO.md."
   },
   "paper_proof_updates": {
-    "version": "1.0.11",
-    "modules": 56,
-    "theorem_guards": 361,
-    "new_theorem_guards": 103,
+    "version": "1.0.12",
+    "modules": 57,
+    "theorem_guards": 371,
+    "new_theorem_guards": 10,
     "new_source_files": [
-      "FMSAPaper/AbsolutelyMonotone.lean",
-      "FMSAPaper/QuarticBranch.lean",
-      "FMSAPaper/SingleTailExpBounds.lean",
-      "FMSAPaper/SingleTailParametrization.lean",
-      "FMSAPaper/SingleTailRadius.lean"
+      "FMSAPaper/StableIntervalRadius.lean"
     ],
     "changed_files": [
       "FMSAPaper.lean",
       "lakefile.toml"
     ],
-    "previous_manifest": "release-manifest-1.0.10.json",
-    "previous_manifest_sha256": "648a0283f2302f8005615dc22798259588bdcecb2a45a3266603dab52b4cd6bb",
-    "scope": "One hard-sphere species, one attractive Yukawa tail: exact reduction of the actual Blum-Hoye system to a quartic in a Moebius coordinate; all positive-order Taylor coefficients of the PY-seeded branch nonnegative (absolute monotonicity via Faa di Bruno); common Taylor radius equals the explicit fold coupling, with no sign, fold or convergence hypothesis."
+    "previous_manifest": "release-manifest-1.0.11.json",
+    "previous_manifest_sha256": "8bbb534896e7a1eae3859bf4514a978417b98dc3f7a51820d450e5a32b289a3f",
+    "existing_proof_sources_unchanged": true,
+    "scope": "Taylor summability on any initial nonnegative coupling interval iff its extended endpoint is at most the common radius; equality and infinite endpoints included. Sums equal an analytic selected branch. Actual BH continuity/root/invertible-Jacobian premises give the interface without sign or fold hypotheses. A nonconvergence witness exists inside intervals extending past the radius. Physical canonicity-to-regularity and tail-parameter certification remain open."
   }
 }

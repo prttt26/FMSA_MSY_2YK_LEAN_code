@@ -3,7 +3,7 @@
 Integrated proofs for `FMSA_dp_output/md/FORMALIZATION_TODO.md`, under
 `MSA_and_1st_Truncation/FMSAPaper/`. The default package entry imports
 `FMSAPaper.lean`, which imports every paper module. This is part of the
-existing Lean repository, not a separate Git repository or Lake package.
+published foundation package and its normal Lake environment.
 The pre-integration 1.0.3 manifest and validation evidence are archived.
 
 Run from `Lean_code/MSA_and_1st_Truncation/`:
@@ -13,8 +13,8 @@ lake build
 python3 formalization/check.py
 ```
 
-The checker uses the default Lake build for fifty-six paper modules and all
-361 theorem footprints through `#guard_msgs`, audits the versioned foundation,
+The checker uses the default Lake build for fifty-seven paper modules and all
+371 theorem footprints through `#guard_msgs`, audits the versioned foundation,
 checks that the default entry imports the complete collection, and saves source
 and compiled-artifact hashes and build logs in
 `formalization/results/validation.json`. Allowed axioms are only `propext`,
@@ -58,6 +58,8 @@ and compiled-artifact hashes and build logs in
 | F3/F4 actual seed analyticity | `FMSA.Paper.ActualAnalyticTaylor.exists_analytic_seed_positive_radius` | Positive rates/diameters, nonnegative species densities and positive free volume yield a physical PY-seeded local analytic root and strictly positive common Taylor radius. No sign or convergence hypothesis. |
 | F4 actual fold equality | `FMSA.Paper.ActualAnalyticTaylor.actual_radius_eq_fold` | Continuous finite branch, two-sided local root germ at zero, regularity before a positive transverse fold, and all positive-order coefficients of each component having one sign imply common radius equal to the fold. Different components may have different signs. |
 | F4 actual Taylor sums | `FMSA.Paper.ActualAnalyticTaylor.actual_hasSum_before_endpoint` | Under regular-branch and all-order sign hypotheses, every component Taylor series converges to the actual branch value at every coupling in [0,b). The endpoint need not be a fold; convergence exactly at b is not asserted. |
+| Initial-interval radius criterion | `FMSA.Paper.StableIntervalRadius.analytic_branch_converges_before_iff`, `actual_regular_branch_converges_before_iff` | Every amplitude component sums to the selected branch at every 0 <= tau < b iff b <= the common Mathlib radius. Extended endpoints include infinity; equality is admissible. The actual BH interface states continuity, root and invertible-Jacobian premises explicitly, without sign or fold premises. Identifying b with physical canonicity loss and discharging regularity from canonicity remain separate. |
+| Finite-interval failure witness | `FMSA.Paper.StableIntervalRadius.nonconvergence_witness_before` | If a certified radius upper bound lies strictly below a certified initial stable interval length, some coupling inside that interval is outside the common radius and at least one amplitude series is not summable. No claim of stability from finite-grid crossing detection. |
 | F4 single tail, unconditional | `FMSA.Paper.SingleTailRadius.single_tail_radius_eq_fold`, `single_tail_coefficients_nonneg`, `single_tail_branch_exists` | One hard-sphere species, one attractive Yukawa tail, any `z, ρ, σ > 0` with positive free volume: for every continuous PY-seeded root germ, all positive-order Taylor coefficients of both amplitude components are nonnegative and the common Taylor radius equals the explicit fold coupling `q(c₁)`. No sign, fold or convergence hypothesis. The BH system is reduced exactly to `τ = -Λ u²(u-a)(u-b)` with `a = -P < b < 0` (`SingleTailParametrization`); `1/q'` is absolutely monotone below the fold (`QuarticBranch`, `AbsolutelyMonotone`, Faà di Bruno); the upper bound uses non-continuation through the fold, not a Jacobian computation. |
 
 The F3 proof transports all normalized jets through the actual polynomial BH

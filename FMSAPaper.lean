@@ -51,6 +51,7 @@ import FMSAPaper.SingleTailRadius
 import FMSAPaper.SmoothJets
 import FMSAPaper.SpatialDictionary
 import FMSAPaper.SpatialJets
+import FMSAPaper.StableIntervalRadius
 import FMSAPaper.StrengthScaling
 import FMSAPaper.TaylorRoot
 import FMSAPaper.WeakDerivativePairing

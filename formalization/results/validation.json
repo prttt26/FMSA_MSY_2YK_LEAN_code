@@ -1,12 +1,12 @@
 {
   "status": "PASS",
-  "validated_at_utc": "2026-10-23T04:34:14.958415+00:00",
+  "validated_at_utc": "2026-10-26T19:45:28.119721+00:00",
   "toolchain": "leanprover/lean4:v4.31.0",
-  "foundation_version": "1.0.11",
-  "foundation_manifest_sha256": "8bbb534896e7a1eae3859bf4514a978417b98dc3f7a51820d450e5a32b289a3f",
-  "foundation_audit": "PASS: foundation 1.0.11, 518 source/config hashes.",
+  "foundation_version": "1.0.12",
+  "foundation_manifest_sha256": "26fc5ebc8f6bbdd76194b8f678404ee5b7cf57beca72f811b23e665e5fda96fb",
+  "foundation_audit": "PASS: foundation 1.0.12, 519 source/config hashes.",
   "foundation_matches_manifest": true,
-  "check_script_sha256": "827de573944a00923a29126ad07b3399978efa920b8b382bff1fb0870e2616cd",
+  "check_script_sha256": "72f6af23eee7d9e27441d1bdfadca79a9d9fd2a766a6d152c3007fb93401f7ac",
   "dependencies": {
     "mathlib": {
       "head": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -17,7 +17,7 @@
       "status": "T docs/README.md"
     }
   },
-  "theorem_count": 361,
+  "theorem_count": 371,
   "standard_axioms_only": true,
   "modules": [
     {
@@ -896,6 +896,26 @@
       "artifact_sha256": "c5f48c601b4e6f43141762f72b959d38dd6e1a842f5adc995d5de21068321068"
     },
     {
+      "source": "FMSAPaper/StableIntervalRadius.lean",
+      "source_sha256": "58c82b74fd3cae77e938787a3e0cb5f6668f355b160133a688b883e75915bba5",
+      "theorems": [
+        "FMSA.Paper.StableIntervalRadius.radius_bound_of_summable_at",
+        "FMSA.Paper.StableIntervalRadius.scalar_summable_before_iff",
+        "FMSA.Paper.StableIntervalRadius.scalar_all_nonneg_summable_iff",
+        "FMSA.Paper.StableIntervalRadius.scalar_hasSum_jet_before",
+        "FMSA.Paper.StableIntervalRadius.amplitude_summable_before_iff",
+        "FMSA.Paper.StableIntervalRadius.nonconvergence_witness_before",
+        "FMSA.Paper.StableIntervalRadius.analytic_branch_converges_before_iff",
+        "FMSA.Paper.StableIntervalRadius.analytic_branch_entire_iff",
+        "FMSA.Paper.StableIntervalRadius.actual_regular_branch_analytic_before",
+        "FMSA.Paper.StableIntervalRadius.actual_regular_branch_converges_before_iff"
+      ],
+      "guard_count": 10,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/StableIntervalRadius.olean",
+      "artifact_sha256": "5e0043f7b4aa755b51ad80d1a01290741b1252e1c97df584c2f485e0dc1d1bdc"
+    },
+    {
       "source": "FMSAPaper/StrengthScaling.lean",
       "source_sha256": "9251cc4aa8527dcefdcc965800af35ad395b3fa33819b5625063eb99dc912fe1",
       "theorems": [
@@ -949,10 +969,10 @@
     ],
     "exit_code": 0,
     "log": "results/default_build.log",
-    "log_sha256": "ea00df3273c2615fb6658fd1e8578935960b2712dbbe7ea9bd294416003ec0a7"
+    "log_sha256": "48a4c20900c0a547884246e8dfbe2b9b73340040098a2eb2cd545efdf0daace0"
   },
-  "paper_root_sha256": "910f0744ffd8d7ce331948abaef1990d3ca97e12350cb6601bc5ad15041f2b50",
+  "paper_root_sha256": "4334b12721609d0bc89e0f97315e9d112a539740219e1cafcf0873637f059000",
   "package_entry_sha256": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
   "integration": "Included in the foundation's default Lake build; no external LEAN_PATH.",
-  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis); F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
+  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis); Initial stable-interval convergence iff endpoint <= common radius proved for extended endpoints, with actual BH continuity/root/Jacobian premises explicit; a nonconvergence witness exists inside every interval extending past the radius. Canonicity-to-regularity and tail-domain certification remain open. F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
 }
