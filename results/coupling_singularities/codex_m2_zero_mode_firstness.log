@@ -1,0 +1,13 @@
+  branch link: 100 pieces, tau=3.7218766/5.6136378
+  branch link: 200 pieces, tau=4.9057698/5.6136378
+  branch link: 300 pieces, tau=5.3697171/5.6136378
+Positive prefix: 325 slabs through 5.456243666968191
+  terminal: 1000 pieces, tau=5.538848726/5.613572646
+  terminal: 2000 pieces, tau=5.578189333/5.613572646
+  terminal: 3000 pieces, tau=5.596893866/5.613572646
+  terminal: 4000 pieces, tau=5.60572721/5.613572646
+  terminal: 5000 pieces, tau=5.609884223/5.613572646
+  terminal: 6000 pieces, tau=5.611840621/5.613572646
+  terminal: 7000 pieces, tau=5.613459152/5.613572646
+PASS: first zero-mode contact on the PY-seeded regular BH branch
+/home/rpan/YK_tail_FMSA/Lean_code/MSA_and_1st_Truncation/results/coupling_singularities/codex_m2_zero_mode_firstness.json

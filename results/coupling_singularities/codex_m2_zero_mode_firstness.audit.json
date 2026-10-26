@@ -1,0 +1,15 @@
+{
+  "status": "PASS_STRUCTURAL_COVER_AUDIT",
+  "pieces": 7357,
+  "positive_prefix_pieces": 325,
+  "terminal_classifications": {
+    "strictly_decreasing": 6724,
+    "unique_stationary_neighborhood": 308
+  },
+  "endpoint_linkage_checked": true,
+  "stationary_box_containment_checked": true,
+  "root_box_covered": true,
+  "all_source_hashes_match": true,
+  "cover_sha256": "2b61ae9ca770bb3d054f0f0e3eb99fcd88d6b1b51fde3326941bc857cff3c5aa",
+  "scope": "Structural and recorded-bound checks; proof inequalities were computed with Arb by the certificate run."
+}

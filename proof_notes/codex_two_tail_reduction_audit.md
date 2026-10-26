@@ -282,7 +282,8 @@ Claude-owned scans/results, or TeX are changed by these computations.
    physical canonicity-to-Jacobian-regularity bridge remains open.
 2. A selected-sheet, nondegenerate zero-mode tangency certificate is now
    established at eta=0.1, z=(1.8,12), using the ten-equation system (§7).
-   Its global firstness and its role in the convergence boundary remain open.
+   Zero-mode firstness is certified in §8. Firstness among all real wave
+   numbers and its role in the convergence boundary remain open.
 3. Global control and finite-k exclusion sufficient to upgrade a zero-mode
    result to a statement about the user's initial canonical interval.
 4. A sufficient tail condition or a certified all-density parameter region;
@@ -375,3 +376,102 @@ first loss on the initial canonical interval. It does not exclude earlier
 zero-mode or finite-k loss, certify a Taylor radius, or determine an
 all-density parameter boundary. It adds no Lean theorem or axiom and does
 not change the foundation 1.0.12 baseline.
+
+## 8. First zero-mode contact on the same PY-seeded branch
+
+`scripts/coupling_singularities/codex_m2_zero_mode_firstness.py` strengthens
+the control of §7. At a newly certified augmented root,
+
+```
+f   in [0.5044323206260701, 0.5044323206382485]
+tau in [5.61357164616334, 5.613571646295613]
+```
+
+the zero-mode factor satisfies `F0(t)>0` at **every** real
+`0 <= t < tau_touch`, and `F0(tau_touch)=0`. The BH branch is regular and
+linked to the PY seed throughout the interval. This proves the first
+zero-mode zero, including a tangential zero that a sign-crossing detector
+can miss. It does not identify the first zero among all wave numbers.
+
+### Cover and stationary-point uniqueness
+
+The previous certificate JSON supplies only Newton predictors. Every proof
+inequality is recomputed, starting with a tighter ten-dimensional Krawczyk
+box. The new root has contraction below 3.541e-9, and
+
+```
+F0'' in [0.9908735859956141, 0.9908736099850276]
+m_f  in [202.3344569805131, 202.33446019278918].
+```
+
+A fresh PY-branch chain is constructed uniformly over the tighter w box.
+Direct evaluation gives F0>0 on its first 325 slabs, covering
+`[0,5.456243666968191]`. From there the code constructs a finer connected
+cover to `5.613572646295613`, with freshly certified endpoint boxes:
+
+- 6724 slabs have strictly negative F0 derivative, up to
+  `B=5.612571646229476`.
+- 308 slabs cover `[B,5.613572646295613]`. Every enclosure of their state,
+  coupling and velocity lies in one common stationary-point box Z.
+
+The velocity is enclosed by a rigorous Arb solve of `J*v=b(w)`. On a regular
+branch it is the actual derivative of the amplitude vector. The negative
+derivative test uses `g*v<0` on the entire slab. The least separated upper
+bound is still strictly negative, below `-1.77e-7` in the stored cover.
+
+Z is a nine-dimensional box in `(u,tau,v)` for the nine equations
+
+```
+P(u)-tau*b(w)=0, J(u)*v-b(w)=0, g(u)*v=0.
+```
+
+Uniformly over the certified w box, a strict Krawczyk test and contraction
+below 0.717 prove that this system has exactly one root in Z. The entire
+ten-dimensional tangency root, after omitting w, is contained in Z.
+Each late branch stationary point must lie in Z, because its amplitude,
+coupling and uniquely determined velocity are enclosed there by a verified
+slab. At the actual touching w, the certified contact is consequently the
+only stationary point on the late segment.
+
+For clarity, uniqueness is used at the **same** fixed w as the augmented
+root. Its proof is uniform over the w box; it does not assert that the
+minimum has value zero at every w in that box.
+
+### Why the cover proves firstness
+
+Write h(t)=F0(u(t)) at the touching w. The regular polynomial branch is
+smooth, so h' is continuous. At the certified contact, h=0, h'=0 and h''>0.
+Hence h'<0 immediately to its left. There is no other stationary point in
+the late segment, so the intermediate value theorem gives h'<0 throughout
+`[B,tau_touch)`. It follows that h(t)>h(tau_touch)=0 there.
+
+Every preceding refined slab has h'<0, so its values before B are greater
+than the positive value h(B). The initial 325 slabs are positive by direct
+interval evaluation. These three pieces cover the entire initial interval;
+there is no unsampled or uncensored gap. The tangency amplitude/tau box is
+contained in one accepted refined slab, fixing its branch selection too.
+
+### Reproduction, records and remaining scope
+
+Run with the same dependencies as §7:
+
+```
+PYTHONPATH=/tmp/codex_fmsa_arb_deps python3 scripts/coupling_singularities/codex_m2_zero_mode_firstness.py
+```
+
+The result basename in `results/coupling_singularities/` has four files:
+`.json` is the summary with hashes and scope, `.log` is the successful run,
+and `.cover.json.gz` contains every slab, velocity/sign enclosure and endpoint
+box (ordinary JSON compressed with gzip). The `.audit.json` file records
+the separate structural inspection. The summary hashes the compressed
+cover and all three source dependencies. The successful run took about
+36 seconds at 192-bit Arb precision. A separate structural inspection checked
+all 7357 pieces for exact endpoint continuity, the sign/containment conditions,
+root-box coverage and matching source/cover hashes.
+
+An independent exclusion of finite-k loss is still required before calling
+this contact tau_inst of the canonical branch. In particular the core
+Baxter kernel changes sign in this example, so a nonnegative-kernel argument
+has not been established. No Taylor radius or all-density condition follows
+from zero-mode firstness alone. This is an interval certificate with an
+explicit elementary calculus argument; it is not a new Lean theorem.

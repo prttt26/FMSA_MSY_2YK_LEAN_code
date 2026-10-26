@@ -1,0 +1,156 @@
+{
+  "status": "PASS_FIRST_ZERO_MODE_CONTACT",
+  "model": {
+    "eta": "0.1",
+    "z": [
+      "1.8",
+      "12"
+    ],
+    "sigma": "1"
+  },
+  "root_box": [
+    [
+      15.913019315307302,
+      15.913019315645567
+    ],
+    [
+      -12.966401805547957,
+      -12.966401805268625
+    ],
+    [
+      0.5529385107986506,
+      0.5529385108297096
+    ],
+    [
+      -0.48299723103507813,
+      -0.4829972310054181
+    ],
+    [
+      5.61357164616334,
+      5.613571646295613
+    ],
+    [
+      -4.82875383858836,
+      -4.828753838471783
+    ],
+    [
+      1.8315356503891569,
+      1.831535650445788
+    ],
+    [
+      -2.0716644313014068,
+      -2.0716644312399723
+    ],
+    [
+      -0.05790678735077187,
+      -0.057906787329613726
+    ],
+    [
+      -0.09165702759420347,
+      -0.09165702757237029
+    ]
+  ],
+  "f_box": [
+    0.5044323206260701,
+    0.5044323206382485
+  ],
+  "strict_augmented_Krawczyk": true,
+  "augmented_contraction": 3.540289888812012e-09,
+  "geometry": {
+    "BH_jacobian_nonsingular": true,
+    "F0_second_tau_derivative": [
+      0.9908735859956141,
+      0.9908736099850276
+    ],
+    "minimum_value_w_derivative": [
+      -21.1367248594253,
+      -21.136724523857172
+    ],
+    "minimum_value_f_derivative": [
+      202.3344569805131,
+      202.33446019278918
+    ]
+  },
+  "negative_control_displaced_F0_rejected": true,
+  "positive_prefix": {
+    "pieces": 325,
+    "tau_start": 0,
+    "tau_end": 5.456243666968191
+  },
+  "cover": {
+    "file": "codex_m2_zero_mode_firstness.cover.json.gz",
+    "format": "gzip-compressed JSON",
+    "sha256": "2b61ae9ca770bb3d054f0f0e3eb99fcd88d6b1b51fde3326941bc857cff3c5aa"
+  },
+  "stationary_unique_box_order": [
+    "D1",
+    "D2",
+    "G1",
+    "G2",
+    "tau",
+    "vD1",
+    "vD2",
+    "vG1",
+    "vG2"
+  ],
+  "stationary_unique_box": [
+    [
+      15.905493172873705,
+      15.920545458079165
+    ],
+    [
+      -12.974888463146396,
+      -12.957915147670185
+    ],
+    [
+      0.5525068836644427,
+      0.5533701379639175
+    ],
+    [
+      -0.4835638591306395,
+      -0.48243060290985673
+    ],
+    [
+      5.611571646229068,
+      5.615571646229885
+    ],
+    [
+      1.8154690048834616,
+      1.8476022959514833
+    ],
+    [
+      -2.0741210630222464,
+      -2.0692077995191327
+    ],
+    [
+      -0.05842473439833526,
+      -0.05738884028205034
+    ],
+    [
+      -0.09206481620841214,
+      -0.09124923895816162
+    ]
+  ],
+  "stationary_box_contraction": 0.7164134792983624,
+  "terminal": {
+    "tau_start": 5.456243666968191,
+    "stationary_neighborhood_start": 5.612571646229476,
+    "tau_end": 5.613572646295613,
+    "pieces": 7032,
+    "root_box_covered": true
+  },
+  "precision_bits": 192,
+  "claim": "At the certified touching w, F0>0 at every 0<=tau<tau_touch, and F0(tau_touch)=0 on the PY-seeded regular real BH branch.",
+  "argument": "Positive prefix; strict decrease to the terminal stationary neighborhood; all late stationary roots lie in one unique nine-equation box, containing the certified nondegenerate minimum with value zero. No other late critical point exists, so the function is strictly decreasing before that minimum and positive there. Endpoint boxes glue all slabs to PY.",
+  "scope": "First zero-mode zero only. Does not exclude an earlier finite-k instability, establish full canonicity, compare a Taylor radius or prove any all-density condition. Not Lean.",
+  "dependencies": {
+    "python_flint": "0.6.0",
+    "numpy": "1.26.4"
+  },
+  "source_sha256": {
+    "scripts/coupling_singularities/codex_m2_zero_mode_firstness.py": "5992bad535cb8ae2bea79d19077ae5c4e8b54b337679947ec11080a3d8ffa664",
+    "scripts/coupling_singularities/codex_m2_tangency.py": "97a7591354187b454f5f98ff948c6bba0f2fe48ff349032ef8b56c149016362f",
+    "formalization/certificates/f5_competing_tails.py": "627fa0095a45d59946c4e51b1e82f0473346e9497d23bca4bd50377925a353a1"
+  },
+  "seconds": 35.749
+}
