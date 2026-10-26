@@ -7,6 +7,7 @@ import FMSAPaper.ActualBaxterJets
 import FMSAPaper.ActualBaxterSecondJets
 import FMSAPaper.ActualBaxterSuperposition
 import FMSAPaper.ActualMixedRateCross
+import FMSAPaper.ActualRDFParameters
 import FMSAPaper.ActualRadialIdentification
 import FMSAPaper.ActualRadialWeak
 import FMSAPaper.ActualRadialWeakJets
@@ -63,6 +64,7 @@ import FMSAPaper.SpatialJets
 import FMSAPaper.StableIntervalRadius
 import FMSAPaper.StrengthScaling
 import FMSAPaper.TaylorRoot
+import FMSAPaper.VolterraResolvent
 import FMSAPaper.WeakDerivativePairing
 
 /-! FMSA paper theorem collection. Each imported module contains exact

@@ -1,0 +1,63 @@
+{
+  "status": "PASS_FOUNDATION_AND_DEPENDENCY_COMPATIBILITY_WITH_GFMSA_PIN_PRESERVED",
+  "foundation_version": "1.0.17",
+  "foundation_manifest_sha256": "09ade0691482098319e832c6c721b77ef70d99bb76cec5bc84b498357dd9219c",
+  "foundation_default_build": {
+    "status": "PASS",
+    "jobs": 9080,
+    "log": "MSA_and_1st_Truncation/formalization/results/baseline_1_0_17/foundation_build.log"
+  },
+  "paper_guards": {
+    "status": "PASS",
+    "modules": 68,
+    "theorems": 529
+  },
+  "workspace_and_compatibility_build": {
+    "status": "PASS",
+    "jobs": 9236,
+    "targets": [
+      "LeanWorkspace",
+      "MSA_and_1st_Truncation/ExactMSACertificate",
+      "MSA_and_1st_Truncation/ExactMSASparseFeasibility",
+      "MSA_and_1st_Truncation/MatExactMSAEqualDiamCertificate"
+    ]
+  },
+  "downstream_independent_proof_builds": {
+    "Other_Closures": "NOT_RERUN",
+    "SCOZA": "NOT_RERUN",
+    "FMSA_HSGMSA": "NOT_RERUN"
+  },
+  "downstream_dependency_lock_audits": {
+    "Other_Closures": "PASS",
+    "SCOZA": "PASS",
+    "FMSA_HSGMSA": "OWNER_MAINTAINED_1.0.16_PIN_PRESERVED_NOT_AUDITED_AGAINST_1.0.17"
+  },
+  "scope": "All existing foundation proof modules are byte-identical to 1.0.16. Two new leaf modules, aggregate paper root and Lake version change. Active downstream libraries import neither FMSAPaper nor the changed root. Current workspace build is validated; independent downstream proof builds are NOT_RERUN. The GFMSA owner separately froze and independently validated its 1.0.16 state; its live lock and old evidence were not modified here. A strict live sibling check of that preserved old lock is not claimed to pass with the new foundation manifest.",
+  "downstream_import_audit": "MSA_and_1st_Truncation/formalization/results/baseline_1_0_17/downstream_import_check.json",
+  "downstream_import_audit_script": "MSA_and_1st_Truncation/formalization/audit_downstream_imports.py",
+  "downstream_import_audit_script_sha256": "3f1650c88e24507731f7658284af85bbb9b9881e0ef54047daea0a5a085f213b",
+  "evidence_sha256": {
+    "Other_Closures_lock_audit.log": "c834b73f7c734874bacdb0b8f876555c81290d7ee14ad79020ae5e726dd4a0f9",
+    "SCOZA_lock_audit.log": "c93560ab1c46315986d071aeb7cc188f9af13b82b2ac46538a253684bc84e90a",
+    "boundary_audit.log": "6127fa2e77e4fc7b27f0b4e9a82dd5bd1b35b4cd7114df95a7887898ca80d267",
+    "default_build.log": "a4206adb86989387e2ba4f7a113656eb18371140e9f2d7e6fa795fb30c19ce1a",
+    "downstream_import_check.json": "0464d1718bdb746b2e5c16b01686a6fe419d97ec18db13ac997c9a5d20bfc9d6",
+    "foundation_audit.log": "18a95538b988056001e0c672db4503a0f98043ad021ea677c2913b0c4cbd07a0",
+    "foundation_build.log": "4f65205b61b5c9813112f83f626d3ea5d0dc66cc0269c3709240e41943ab477b",
+    "git_ownership_audit.log": "a86b538161226015b8ca6c0a912cf13065489a8b431cdcf55fa83b4788c6def7",
+    "paper_check.log": "9d4a875e1cbf5e6dceffb04c8b11587837984461b6c824bd8b3a02270eafbac9",
+    "validation.json": "0898965375af0a28fa62a06fee6a473aecc6eabca6df9c6364e2b0000f9e42c0",
+    "workspace_build.log": "f6fedefe684005460494e9e4a5fb5196e19a0d17d7ebaaac08071a3bf0e0458d"
+  },
+  "preserved_downstream_pins": {
+    "FMSA_HSGMSA": {
+      "project": "MSA_and_1st_Truncation",
+      "version": "1.0.16",
+      "release_manifest_sha256": "228d82c79bc0a47d2ba90e3c5f8d05b71e503754c0d72f0d4882fbaa3fe39792",
+      "toolchain": "leanprover/lean4:v4.31.0",
+      "mathlib_revision": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
+      "lock_sha256": "2f167ca54f20afe5df5709ef235b3f66f332150eccb8ae6a3396312f6ba7d60d",
+      "policy": "Explicitly preserved by GFMSA owner; migrate independently, without rewriting 1.0.16 evidence."
+    }
+  }
+}

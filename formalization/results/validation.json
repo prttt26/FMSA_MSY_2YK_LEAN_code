@@ -1,12 +1,12 @@
 {
   "status": "PASS",
-  "validated_at_utc": "2026-10-26T22:13:51.744574+00:00",
+  "validated_at_utc": "2026-10-26T23:01:09.319831+00:00",
   "toolchain": "leanprover/lean4:v4.31.0",
-  "foundation_version": "1.0.16",
-  "foundation_manifest_sha256": "228d82c79bc0a47d2ba90e3c5f8d05b71e503754c0d72f0d4882fbaa3fe39792",
-  "foundation_audit": "PASS: foundation 1.0.16, 528 source/config hashes.",
+  "foundation_version": "1.0.17",
+  "foundation_manifest_sha256": "09ade0691482098319e832c6c721b77ef70d99bb76cec5bc84b498357dd9219c",
+  "foundation_audit": "PASS: foundation 1.0.17, 530 source/config hashes.",
   "foundation_matches_manifest": true,
-  "check_script_sha256": "01d16f65beffdfd2cc0ee2f2cb9a450550a61bf47a1dd971a348db6856c14884",
+  "check_script_sha256": "75cc33951ec7399c3796dc06afca38d6a8eeb49ce7fd37935f5de90eeb5b3933",
   "dependencies": {
     "mathlib": {
       "head": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -17,7 +17,7 @@
       "status": "T docs/README.md"
     }
   },
-  "theorem_count": 485,
+  "theorem_count": 529,
   "standard_axioms_only": true,
   "modules": [
     {
@@ -161,6 +161,40 @@
       "status": "PASS",
       "artifact": ".lake/build/lib/lean/FMSAPaper/ActualMixedRateCross.olean",
       "artifact_sha256": "53a504cbfd147ca5d65781d2370595d66607f9269652022f70d465839d2d47d0"
+    },
+    {
+      "source": "FMSAPaper/ActualRDFParameters.lean",
+      "source_sha256": "d56d2975a7945e291b27a28472c9471018322ef3aaec7d1565820045c7732acb",
+      "theorems": [
+        "FMSA.Paper.ActualRDFParameters.recenteredBasis_continuous",
+        "FMSA.Paper.ActualRDFParameters.recentered_eq_basis",
+        "FMSA.Paper.ActualRDFParameters.gSourceBasis_continuous",
+        "FMSA.Paper.ActualRDFParameters.gSource_eq_basis",
+        "FMSA.Paper.ActualRDFParameters.BaxterMatrix.toMatrix_ofMatrix",
+        "FMSA.Paper.ActualRDFParameters.BaxterMatrix.ext",
+        "FMSA.Paper.ActualRDFParameters.matrixEntry_ofMatrix",
+        "FMSA.Paper.ActualRDFParameters.matrixEntry_integral_mul",
+        "FMSA.Paper.ActualRDFParameters.kernelBasis_entry",
+        "FMSA.Paper.ActualRDFParameters.gBasis_entry",
+        "FMSA.Paper.ActualRDFParameters.kernelBundle_contDiff",
+        "FMSA.Paper.ActualRDFParameters.gBundle_contDiff",
+        "FMSA.Paper.ActualRDFParameters.kernelBundle_apply",
+        "FMSA.Paper.ActualRDFParameters.gBundle_apply",
+        "FMSA.Paper.ActualRDFParameters.causalGBundle_contDiff",
+        "FMSA.Paper.ActualRDFParameters.causalGBundle_apply",
+        "FMSA.Paper.ActualRDFParameters.causalG_contDiff_nonneg",
+        "FMSA.Paper.ActualRDFParameters.rdfExcess_eq_max",
+        "FMSA.Paper.ActualRDFParameters.rdfExcess_contDiff",
+        "FMSA.Paper.ActualRDFParameters.causalG_contDiff",
+        "FMSA.Paper.ActualRDFParameters.rdfMoment_contDiff",
+        "FMSA.Paper.ActualRDFParameters.h_contDiff",
+        "FMSA.Paper.ActualRDFParameters.g_contDiff",
+        "FMSA.Paper.ActualRDFParameters.h_hasFDerivAt"
+      ],
+      "guard_count": 24,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/ActualRDFParameters.olean",
+      "artifact_sha256": "87eb18c28af8d2bc44565a6802e0f1565d8733f578738b76da138c898bcdf51c"
     },
     {
       "source": "FMSAPaper/ActualRadialIdentification.lean",
@@ -1153,6 +1187,36 @@
       "artifact_sha256": "5ccbdf4e156b82b0ca4679ce910eb872cf641f262d58c1d2f54c71f5e0ef3b55"
     },
     {
+      "source": "FMSAPaper/VolterraResolvent.lean",
+      "source_sha256": "829e39aeea92beedebe7191f290abf7a7b7e9213d64cf759680f858da12b1a24",
+      "theorems": [
+        "FMSA.Paper.VolterraResolvent.convolution_apply",
+        "FMSA.Paper.VolterraResolvent.convolution_add",
+        "FMSA.Paper.VolterraResolvent.convolution_smul",
+        "FMSA.Paper.VolterraResolvent.convolution_norm_bound",
+        "FMSA.Paper.VolterraResolvent.convolutionCLM_apply",
+        "FMSA.Paper.VolterraResolvent.residualCLM_apply",
+        "FMSA.Paper.VolterraResolvent.residualCLM_bijective",
+        "FMSA.Paper.VolterraResolvent.residualCLM_isUnit",
+        "FMSA.Paper.VolterraResolvent.compactConvolution_kernel_add",
+        "FMSA.Paper.VolterraResolvent.compactConvolution_kernel_smul",
+        "FMSA.Paper.VolterraResolvent.compactConvolution_norm_bound",
+        "FMSA.Paper.VolterraResolvent.kernelOperator_apply",
+        "FMSA.Paper.VolterraResolvent.residualOperator_isUnit",
+        "FMSA.Paper.VolterraResolvent.solve_spec",
+        "FMSA.Paper.VolterraResolvent.solve_renewal",
+        "FMSA.Paper.VolterraResolvent.solve_eq_volterraSolE",
+        "FMSA.Paper.VolterraResolvent.global_eq_solve",
+        "FMSA.Paper.VolterraResolvent.solve_contDiff",
+        "FMSA.Paper.VolterraResolvent.solve_contDiff_parametrized",
+        "FMSA.Paper.VolterraResolvent.solve_fderiv_equation"
+      ],
+      "guard_count": 20,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/VolterraResolvent.olean",
+      "artifact_sha256": "84f07c9878bcd861f27b99c1a2fc80565870991bd87a7b5c2834b757bb6474d6"
+    },
+    {
       "source": "FMSAPaper/WeakDerivativePairing.lean",
       "source_sha256": "53c63fa141acae8ebd2cc20f9d96c8f3496b60d7241c632c3268569fd294eb43",
       "theorems": [
@@ -1173,10 +1237,10 @@
     ],
     "exit_code": 0,
     "log": "results/default_build.log",
-    "log_sha256": "d5afdb6b3b507e58c34571529666fa330f82e8d3f49ef5fe7511cdd543fc3c95"
+    "log_sha256": "a4206adb86989387e2ba4f7a113656eb18371140e9f2d7e6fa795fb30c19ce1a"
   },
-  "paper_root_sha256": "e56e2b5a4769c21068c747c446b1359540f020d0df89525369cda8d7ed8b6db7",
+  "paper_root_sha256": "3c57199f14986069a869fac980ad3d03a27fb844c356c9e78a0c21996faa6fd3",
   "package_entry_sha256": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
   "integration": "Included in the foundation's default Lake build; no external LEAN_PATH.",
-  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis), with an actual A=0 witness at a strictly positive coupling strictly below the fold/common radius for all positive rate/density/diameter states with positive free volume; Actual finite-tail Baxter zero moments, continuous sinc radial Fourier identification including k=0, and a single-tail actual physical DCF zero-moment witness strictly inside the common radius proved; Initial stable-interval convergence iff endpoint <= common radius proved for extended endpoints, with actual BH continuity/root/Jacobian premises explicit; a nonconvergence witness exists inside every interval extending past the radius. Actual BH Jacobian-kernel exterior support and zero spatial pairing, noncommutative tangent-OZ algebra, and the L2 matrix Plancherel/positive-pairing injectivity engine proved. Actual DCF tangent finite numerators, radial Lp and moment bounds, exact density-weighted odd L2 representation and physical k=2*pi*w Fourier formula proved; abstract L2 and actual integral Fourier agreement proved on L1 intersect L2. Constructed-h tangent L2/spectral-OZ transcription, canonical uniqueness/amplitude recovery, and tail-domain certification remain open. F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
+  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis), with an actual A=0 witness at a strictly positive coupling strictly below the fold/common radius for all positive rate/density/diameter states with positive free volume; Actual finite-tail Baxter zero moments, continuous sinc radial Fourier identification including k=0, and a single-tail actual physical DCF zero-moment witness strictly inside the common radius proved; Initial stable-interval convergence iff endpoint <= common radius proved for extended endpoints, with actual BH continuity/root/Jacobian premises explicit; a nonconvergence witness exists inside every interval extending past the radius. Actual BH Jacobian-kernel exterior support and zero spatial pairing, noncommutative tangent-OZ algebra, and the L2 matrix Plancherel/positive-pairing injectivity engine proved. Actual DCF tangent finite numerators, radial Lp and moment bounds, exact density-weighted odd L2 representation and physical k=2*pi*w Fourier formula proved; abstract L2 and actual integral Fourier agreement proved on L1 intersect L2. Unconditional compact Volterra invertibility, joint kernel/source C-infinity and the actual Frechet derivative equation are proved. The existing actual RDF is identified with that solution; its excess, moment, h and g are C-infinity in the original amplitudes at every fixed r. Constructed-h global tangent L2/spectral-OZ transcription, canonical uniqueness/amplitude recovery, and tail-domain certification remain open. F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
 }

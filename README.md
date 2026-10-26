@@ -64,9 +64,24 @@ the separate `Other_Closures` project. Task status for every group, the
 re-derived axiom ledger and the open items are in `TODO.md` (it replaces the
 `todo_lean.md` and per-track task files that the notes still mention by name).
 
+## 1.0.17: actual RDF amplitude smoothness
+
+The paper collection has 68 modules and 529 exact standard-axiom guards.
+`VolterraResolvent` proves compact Volterra invertibility for every continuous
+kernel, joint C-infinity in the kernel and source, and the genuine Frechet
+derivative equation. No kernel norm-smallness hypothesis is supplied.
+
+`ActualRDFParameters` packages the actual MSA kernel and G source in their
+finite coefficient dictionaries. The existing G-renewal theorem and
+Volterra uniqueness identify the compact solution with the existing RDF.
+Its excess, moment, h and g are C-infinity in the original amplitudes at
+every fixed real r, so the actual h Frechet derivative is justified.
+Global h-tangent L2 control, tangent spectral OZ and canonical amplitude
+recovery remain open. See `proof_notes/codex_rdf_parameter_derivative.md`.
+
 ## 1.0.16: actual DCF tangent L2 and Fourier connection
 
-The paper collection has 66 modules and 485 exact standard-axiom guards.
+The paper collection reached 66 modules and 485 exact standard-axiom guards.
 `JacobianL2` proves an exact finite expression for the arbitrary Frechet
 variation of the existing convolution DCF. Its weighted radial numerator
 is measurable and bounded. Actual BH Jacobian kernel directions therefore

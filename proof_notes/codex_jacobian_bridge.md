@@ -75,7 +75,10 @@ L2 membership and OZ identity for this constructed h variation are NOT
 established by the core calculation. Outside the core, `hVariation` denotes
 the totalized Fréchet derivative; a later bridge must prove the relevant
 actual differentiability and spectral identity rather than interpreting a
-possibly zero default as a physical tangent.
+possibly zero default as a physical tangent. Baseline 1.0.17 subsequently
+proves the fixed-r parameter differentiability, for this same actual h
+and its original amplitude norm. It does not supply global L2 or spectral
+OZ; see `ActualRDFParameters.h_hasFDerivAt`.
 
 ## Matrix algebra and strict positivity
 
@@ -145,9 +148,12 @@ identity and L2 fields as explicit premises; it is not a no-fold theorem.
 
 ## Remaining obligations for the requested general theorem
 
-1. Prove actual global differentiability/L2 control of the constructed h
-   variation on a canonical BH state, and identify its weighted radial
-   variation with the remaining L2 field. The c-side numerator bounds,
+1. Prove global L2 control of the actual constructed h variation on a
+   canonical BH state, and identify its weighted radial variation with the
+   remaining L2 field. Actual pointwise parameter C-infinity at every r is
+   now proved in baseline 1.0.17 (`ActualRDFParameters.h_hasFDerivAt`);
+   see `proof_notes/codex_rdf_parameter_derivative.md`. Differentiability
+   as a map into a global L2 space is still open. The c-side numerator bounds,
    radial Lp membership, exact odd L2 lift, L1/L2 Fourier agreement and
    physical k=2*pi*w normalization are now proved in baseline 1.0.16; see
    `proof_notes/codex_radial_variation_l2.md`.

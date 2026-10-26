@@ -13,12 +13,26 @@ lake build
 python3 formalization/check.py
 ```
 
-The checker uses the default Lake build for sixty-six paper modules and all
-485 theorem footprints through `#guard_msgs`, audits the versioned foundation,
+The checker uses the default Lake build for sixty-eight paper modules and all
+529 theorem footprints through `#guard_msgs`, audits the versioned foundation,
 checks that the default entry imports the complete collection, and saves source
 and compiled-artifact hashes and build logs in
 `formalization/results/validation.json`. Allowed axioms are only `propext`,
 `Classical.choice`, and `Quot.sound`.
+
+## Actual RDF parameter derivatives
+
+`VolterraResolvent` adds 20 exact standard-three-axiom guards: the compact
+residual is a unit by unconditional Volterra existence/uniqueness and the
+Banach inverse theorem, its inverse solution depends C-infinity on the
+kernel and source, and its actual Frechet derivative solves the linearized
+Volterra equation. `ActualRDFParameters` adds 24 more guards, identifying
+that compact solution with the existing actual G-renewal construction.
+The actual RDF excess/moment, h and g are C-infinity in the original
+amplitude norm at every fixed real r, without a root or small-kernel premise.
+This discharges the pointwise parameter differentiability issue in
+`JacobianExterior.hVariation`; global h-tangent L2 and tangent spectral OZ
+are still explicit obligations. See `proof_notes/codex_rdf_parameter_derivative.md`.
 
 ## Actual Jacobian and matrix Parseval support
 
@@ -186,12 +200,22 @@ correspondence table `si-tab:si-corr4` cite the declarations; `make check` passe
   does not control nearer complex singularities. The proved contrapositive
   concerns absence of **any real root** for the actual smooth root branch.
 
-Integration was requested on 2026-10-22. The foundation is versioned as 1.0.16;
-1.0.3 through 1.0.15 are preserved in their versioned release manifests.
+Integration was requested on 2026-10-22. The foundation is versioned as 1.0.17;
+1.0.3 through 1.0.16 are preserved in their versioned release manifests.
 The old workspace `Lean_code/formalization` compatibility symlink was removed;
 use this package's `formalization/` directory.
 Historical independent-check results are in `results/pre_integration_1_0_3/`;
 current checks use only the package's normal Lake environment.
+
+## Downstream pins at 1.0.17
+
+The default foundation, workspace/compatibility build, paper guards, boundary
+and Git ownership checks pass. Other_Closures and SCOZA live pins are audited
+at 1.0.17. The GFMSA owner explicitly keeps its independently frozen 1.0.16
+lock and evidence; a strict live sibling-pin check against 1.0.17 therefore
+requires a separate migration and is not reported as passing here.
+Independent downstream proof builds are NOT_RERUN. Exact statuses and hashes
+are in `results/baseline_1_0_17/dependency_revalidation.json`.
 
 ## Session ownership
 

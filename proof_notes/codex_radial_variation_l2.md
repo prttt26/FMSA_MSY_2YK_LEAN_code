@@ -148,3 +148,8 @@ Manifest SHA256:
 `228d82c79bc0a47d2ba90e3c5f8d05b71e503754c0d72f0d4882fbaa3fe39792`.
 The complete 1.0.15 manifest is archived byte for byte, and all its existing
 foundation proof modules remain unchanged.
+
+Follow-up in baseline 1.0.17: the actual constructed h is now proved
+C-infinity in the original amplitude norm at every fixed r, so its pointwise
+Frechet derivative is justified. The global L2/OZ premises above remain
+open. See `proof_notes/codex_rdf_parameter_derivative.md`.
