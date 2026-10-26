@@ -1,0 +1,16 @@
+{
+  "status": "PASS_EXACT_SPINODAL_IDENTITIES",
+  "sympy_version": "1.13.2",
+  "domain": "x=z*sigma>0, 0<eta<1, E=exp(-x), u!=0; sigma=1 used for the independent scalar transcription, with general diameter obtained by the existing dimensionless parametrization.",
+  "verified": [
+    "actual A/(2*pi)=N/(x*v^3*d^2)",
+    "N(u)=(u+m)*(a+b-2u)+criticalPolynomial(u)",
+    "criticalPolynomial((a+b)/2)=-(a-b)^2/2",
+    "criticalPolynomial(-m) homogeneous negative-coefficient decomposition",
+    "R0=-3*(1-E)*J-2*((1-E)^2-E*x^2)"
+  ],
+  "inequality_argument": "sinh(x/2)>x/2 gives (1-E)^2>E*x^2. Existing J>0 and E<1 make R0,R1 negative; all density/vacuum factors in the critical polynomial decomposition have the required signs. Hence c1<-m and c1<(a+b)/2, so A(c1)<0. IVT from the positive HS seed gives a zero strictly before the quartic fold.",
+  "scope": "Exact symbolic reduction and accompanying mathematical argument; this JSON is not a Lean proof or an exclusion of earlier finite-k loss.",
+  "script_sha256": "774c36a2cb7338d601c7f9309c12433c91027cfc1cb5b0081f50dab265b31b6d",
+  "seconds": 25.487
+}

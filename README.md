@@ -64,9 +64,27 @@ the separate `Other_Closures` project. Task status for every group, the
 re-derived axiom ledger and the open items are in `TODO.md` (it replaces the
 `todo_lean.md` and per-track task files that the notes still mention by name).
 
+## 1.0.13: single-tail zero mode strictly before the fold
+
+The paper collection has 58 modules and 385 exact standard-axiom guards.
+`SingleTailSpinodal.AS_fold_neg` proves that the actual scalar A is negative
+at the quartic fold for every positive rate, density and diameter with
+positive free volume. `actual_single_tail_zero_before_fold` constructs an
+actual PY-branch BH root with A=0 at a strictly positive coupling below the
+fold. `actual_single_tail_zero_lt_radius` places that witness strictly inside
+the common Taylor radius of every continuous PY-seeded actual root germ.
+This completes the all-state single attractive-tail zero-before-fold result;
+it does not identify the first mode or prove RDF positivity.
+
+The separate two-tail control now has certified local contact, zero-mode
+firstness, all real-wave-number exclusion and an analytic disk of radius
+5.614 extending beyond its first instability. These are interval and paper
+complex-analysis certificates, not Lean theorems. See the two Codex notes
+under `proof_notes/` for exact scopes and reproduction commands.
+
 ## 1.0.12: convergence on the initial stable interval
 
-The paper collection now has 57 modules and 371 exact standard-axiom guards.
+The paper collection reached 57 modules and 371 exact standard-axiom guards.
 `StableIntervalRadius.analytic_branch_converges_before_iff` proves that all
 amplitude-component Taylor series sum to an analytic selected branch at every
 nonnegative coupling below an extended endpoint b exactly when b does not

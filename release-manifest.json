@@ -1,6 +1,6 @@
 {
   "project": "MSA_and_1st_Truncation",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "validated_on": "2026-10-26",
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib_revision": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -55,6 +55,7 @@
     "FMSAPaper/SingleTailExpBounds.lean": "8eabe2073a5c37e88647c2a228ae6d8016f4899d649376b8bf451c611fbb5557",
     "FMSAPaper/SingleTailParametrization.lean": "3a4c6e2cd1d49cc8bd82c697f84a290040c5d2a3efe6faf91000b252b7961235",
     "FMSAPaper/SingleTailRadius.lean": "481e7119097362094d9ac3c7b8c2af9277171e73b12e25b9eb481e4d5c0d05ea",
+    "FMSAPaper/SingleTailSpinodal.lean": "f2ae1eadf240ed0e37deeb630f11ad96618647fdfa4a2a5bdaaf1565c1c98c09",
     "FMSAPaper/SmoothJets.lean": "dc6131959a572bcb3e56d3bccf1db1e8a21a015ed2b8041bac0e1c77671d2ade",
     "FMSAPaper/SpatialDictionary.lean": "9f48fd5219513bf9d0b899d8895d599ffbf34a5dfcdf0d97f223654f08bc9266",
     "FMSAPaper/SpatialJets.lean": "822ad054ff8af3ebde9f0352a28acc3f0547b386aa69c32890fe7299c3dc0e06",
@@ -62,7 +63,7 @@
     "FMSAPaper/StrengthScaling.lean": "9251cc4aa8527dcefdcc965800af35ad395b3fa33819b5625063eb99dc912fe1",
     "FMSAPaper/TaylorRoot.lean": "2135f9f85bb94ce8e21ba0d1d78ce98d1895c9767f0eebaaa97ca65e4e571c89",
     "FMSAPaper/WeakDerivativePairing.lean": "53c63fa141acae8ebd2cc20f9d96c8f3496b60d7241c632c3268569fd294eb43",
-    "FMSAPaper.lean": "4334b12721609d0bc89e0f97315e9d112a539740219e1cafcf0873637f059000",
+    "FMSAPaper.lean": "136c3454e4a248552571e35e70492ae90fd3ba4bed3570820d8f666817876718",
     "LeanCode/Analysis/ArgumentPrinciple.lean": "0bdd47e6d75063ee1347d58a9f0dba5c2f8c0b686d527c390d2880afe900ab89",
     "LeanCode/Analysis/BanachPoleFamily.lean": "3b95030b1b287356f7ce7e2035cb9ac750ca9d49e2237ad70dbebad6c8e06390",
     "LeanCode/Analysis/BoundaryGrowth.lean": "ae68b684ea3d0d4d939465b33aaf5d957b4244a5f08ab5e91763f12e9f60ed13",
@@ -522,7 +523,7 @@
     "LeanCode.lean": "cbd208c12e79fc416daf59969dd88107306996ab63ab170b1c7efdac8c90175c",
     "MSA_and_1st_Truncation.lean": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
     "lake-manifest.json": "f4fd831803fdd1968c310698b93b4dc7526ca87d3c537801c0a06ad0bebfb9d8",
-    "lakefile.toml": "69c9bd6b8f8e70dda70afd0b25ed0be5798fce6b05d52aebc29ff6664797192d",
+    "lakefile.toml": "d28a0dd2e6ca77b087d4650a33654af92f34cb092bbc7491ee09b14bb61bfd78",
     "lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee"
   },
   "completion_scope": "Recorded MSA/first-truncation theorem scope and explicit assumptions; unrelated historical conditional FMSA axioms retained.",
@@ -632,20 +633,20 @@
     "scope": "Conditional fold obstruction and convergence implications; spatial finite-span and coupling jets. Remaining analytic, physical-identification, Pringsheim and certified-counterexample obligations remain explicit in FORMALIZATION_TODO.md."
   },
   "paper_proof_updates": {
-    "version": "1.0.12",
-    "modules": 57,
-    "theorem_guards": 371,
-    "new_theorem_guards": 10,
+    "version": "1.0.13",
+    "modules": 58,
+    "theorem_guards": 385,
+    "new_theorem_guards": 14,
     "new_source_files": [
-      "FMSAPaper/StableIntervalRadius.lean"
+      "FMSAPaper/SingleTailSpinodal.lean"
     ],
     "changed_files": [
       "FMSAPaper.lean",
       "lakefile.toml"
     ],
-    "previous_manifest": "release-manifest-1.0.11.json",
-    "previous_manifest_sha256": "8bbb534896e7a1eae3859bf4514a978417b98dc3f7a51820d450e5a32b289a3f",
+    "previous_manifest": "release-manifest-1.0.12.json",
+    "previous_manifest_sha256": "26fc5ebc8f6bbdd76194b8f678404ee5b7cf57beca72f811b23e665e5fda96fb",
     "existing_proof_sources_unchanged": true,
-    "scope": "Taylor summability on any initial nonnegative coupling interval iff its extended endpoint is at most the common radius; equality and infinite endpoints included. Sums equal an analytic selected branch. Actual BH continuity/root/invertible-Jacobian premises give the interface without sign or fold hypotheses. A nonconvergence witness exists inside intervals extending past the radius. Physical canonicity-to-regularity and tail-parameter certification remain open."
+    "scope": "One species and one attractive Yukawa tail, arbitrary positive rate/density/diameter with positive free volume: actual scalar A is strictly negative at the quartic fold; an actual PY-branch root has A=0 at a strictly positive coupling strictly below the fold and the common Taylor radius of every continuous PY-seeded root germ. Does not identify the first mode or assert RDF positivity; no new axiom."
   }
 }

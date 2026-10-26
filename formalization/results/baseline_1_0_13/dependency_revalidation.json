@@ -1,0 +1,37 @@
+{
+  "status": "PASS_FOUNDATION_AND_DEPENDENCY_COMPATIBILITY",
+  "foundation_version": "1.0.13",
+  "foundation_manifest_sha256": "b13f8bc5efc4f2fb5ea4bb02efca26f30ae7d310960fd7bd9bd349b3fe80111d",
+  "foundation_default_build": {
+    "status": "PASS",
+    "jobs": 9070,
+    "log": "MSA_and_1st_Truncation/formalization/results/baseline_1_0_13/foundation_build.log"
+  },
+  "paper_guards": {
+    "status": "PASS",
+    "modules": 58,
+    "theorems": 385
+  },
+  "workspace_and_compatibility_build": {
+    "status": "PASS",
+    "jobs": 9191,
+    "targets": [
+      "LeanWorkspace",
+      "MSA_and_1st_Truncation/ExactMSACertificate",
+      "MSA_and_1st_Truncation/ExactMSASparseFeasibility",
+      "MSA_and_1st_Truncation/MatExactMSAEqualDiamCertificate"
+    ]
+  },
+  "downstream_independent_proof_builds": {
+    "Other_Closures": "NOT_RERUN",
+    "SCOZA": "NOT_RERUN",
+    "FMSA_HSGMSA": "NOT_RERUN"
+  },
+  "downstream_dependency_lock_audits": {
+    "Other_Closures": "PASS",
+    "SCOZA": "PASS",
+    "FMSA_HSGMSA": "PASS"
+  },
+  "scope": "The existing LeanCode and FMSAPaper proof modules are byte-identical to 1.0.12. Only the new SingleTailSpinodal module, paper root and Lake version change. Declared active downstream library sources do not import the paper modules or the changed foundation aggregate root. Independent historical downstream build evidence is retained as historical, not claimed rerun.",
+  "downstream_import_audit": "MSA_and_1st_Truncation/formalization/results/baseline_1_0_13/downstream_import_check.json"
+}

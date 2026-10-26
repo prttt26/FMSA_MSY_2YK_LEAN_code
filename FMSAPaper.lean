@@ -48,6 +48,7 @@ import FMSAPaper.SingleRateSpatialMembership
 import FMSAPaper.SingleTailExpBounds
 import FMSAPaper.SingleTailParametrization
 import FMSAPaper.SingleTailRadius
+import FMSAPaper.SingleTailSpinodal
 import FMSAPaper.SmoothJets
 import FMSAPaper.SpatialDictionary
 import FMSAPaper.SpatialJets

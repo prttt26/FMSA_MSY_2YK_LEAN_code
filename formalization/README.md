@@ -13,8 +13,8 @@ lake build
 python3 formalization/check.py
 ```
 
-The checker uses the default Lake build for fifty-seven paper modules and all
-371 theorem footprints through `#guard_msgs`, audits the versioned foundation,
+The checker uses the default Lake build for fifty-eight paper modules and all
+385 theorem footprints through `#guard_msgs`, audits the versioned foundation,
 checks that the default entry imports the complete collection, and saves source
 and compiled-artifact hashes and build logs in
 `formalization/results/validation.json`. Allowed axioms are only `propext`,
@@ -61,6 +61,7 @@ and compiled-artifact hashes and build logs in
 | Initial-interval radius criterion | `FMSA.Paper.StableIntervalRadius.analytic_branch_converges_before_iff`, `actual_regular_branch_converges_before_iff` | Every amplitude component sums to the selected branch at every 0 <= tau < b iff b <= the common Mathlib radius. Extended endpoints include infinity; equality is admissible. The actual BH interface states continuity, root and invertible-Jacobian premises explicitly, without sign or fold premises. Identifying b with physical canonicity loss and discharging regularity from canonicity remain separate. |
 | Finite-interval failure witness | `FMSA.Paper.StableIntervalRadius.nonconvergence_witness_before` | If a certified radius upper bound lies strictly below a certified initial stable interval length, some coupling inside that interval is outside the common radius and at least one amplitude series is not summable. No claim of stability from finite-grid crossing detection. |
 | F4 single tail, unconditional | `FMSA.Paper.SingleTailRadius.single_tail_radius_eq_fold`, `single_tail_coefficients_nonneg`, `single_tail_branch_exists` | One hard-sphere species, one attractive Yukawa tail, any `z, ρ, σ > 0` with positive free volume: for every continuous PY-seeded root germ, all positive-order Taylor coefficients of both amplitude components are nonnegative and the common Taylor radius equals the explicit fold coupling `q(c₁)`. No sign, fold or convergence hypothesis. The BH system is reduced exactly to `τ = -Λ u²(u-a)(u-b)` with `a = -P < b < 0` (`SingleTailParametrization`); `1/q'` is absolutely monotone below the fold (`QuarticBranch`, `AbsolutelyMonotone`, Faà di Bruno); the upper bound uses non-continuation through the fold, not a Jacobian computation. |
+| F4 single-tail zero mode before the fold | `FMSA.Paper.SingleTailSpinodal.AS_fold_neg`, `actual_single_tail_zero_before_fold`, `actual_single_tail_zero_lt_radius` | For the same all-state physical domain, actual A is negative at the fold, and the actual PY branch has an A=0 root at a strictly positive coupling strictly below the fold and the common Taylor radius of every continuous seed root germ. The exact parametrization and IVT discharge the witness; it is not asserted to be the first mode. |
 
 The F3 proof transports all normalized jets through the actual polynomial BH
 residual. Convergence makes the Taylor sum analytic; its residual has zero jets
@@ -125,7 +126,11 @@ correspondence table `si-tab:si-corr4` cite the declarations; `make check` passe
   positive radius or series/branch identification. `actual_hasSum_before_endpoint`
   gives actual branch values as the sums before the endpoint. The physical PY
   seed has positive common radius without any sign hypothesis. No actual-model
-  all-order sign theorem or convergence-at-the-fold claim is supplied.
+  all-order sign theorem for general multitails or convergence-at-the-fold
+  claim is supplied. `SingleTailSpinodal` additionally proves an actual A=0
+  witness strictly before the single-tail fold/radius, for all positive
+  rate/density/diameter states with positive free volume, without assuming
+  first-mode canonicity or a fold sign.
 - **F5/F6: certified by interval arithmetic (2026-10-22), not in Lean.** See
   `certificates/README.md`. F5: for z = (1.8, 12), weights (1, -6) and
   eta = 0.2, 0.3, 0.4, a validated Krawczyk chain shows the PY-seeded branch is
@@ -142,9 +147,10 @@ correspondence table `si-tab:si-corr4` cite the declarations; `make check` passe
   does not control nearer complex singularities. The proved contrapositive
   concerns absence of **any real root** for the actual smooth root branch.
 
-Integration was requested on 2026-10-22. The foundation is versioned as 1.0.9;
-1.0.3 through 1.0.8 are preserved in their versioned release manifests. The old workspace
-`Lean_code/formalization` path is a compatibility symlink to this directory.
+Integration was requested on 2026-10-22. The foundation is versioned as 1.0.13;
+1.0.3 through 1.0.12 are preserved in their versioned release manifests.
+The old workspace `Lean_code/formalization` compatibility symlink was removed;
+use this package's `formalization/` directory.
 Historical independent-check results are in `results/pre_integration_1_0_3/`;
 current checks use only the package's normal Lake environment.
 

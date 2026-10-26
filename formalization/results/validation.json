@@ -1,12 +1,12 @@
 {
   "status": "PASS",
-  "validated_at_utc": "2026-10-26T19:45:28.119721+00:00",
+  "validated_at_utc": "2026-10-26T21:11:31.028536+00:00",
   "toolchain": "leanprover/lean4:v4.31.0",
-  "foundation_version": "1.0.12",
-  "foundation_manifest_sha256": "26fc5ebc8f6bbdd76194b8f678404ee5b7cf57beca72f811b23e665e5fda96fb",
-  "foundation_audit": "PASS: foundation 1.0.12, 519 source/config hashes.",
+  "foundation_version": "1.0.13",
+  "foundation_manifest_sha256": "b13f8bc5efc4f2fb5ea4bb02efca26f30ae7d310960fd7bd9bd349b3fe80111d",
+  "foundation_audit": "PASS: foundation 1.0.13, 520 source/config hashes.",
   "foundation_matches_manifest": true,
-  "check_script_sha256": "72f6af23eee7d9e27441d1bdfadca79a9d9fd2a766a6d152c3007fb93401f7ac",
+  "check_script_sha256": "157daeb6ae0ddd1407bbe10610dffd59adde5f38f34beaa08f45982e59da30b1",
   "dependencies": {
     "mathlib": {
       "head": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -17,7 +17,7 @@
       "status": "T docs/README.md"
     }
   },
-  "theorem_count": 371,
+  "theorem_count": 385,
   "standard_axioms_only": true,
   "modules": [
     {
@@ -841,6 +841,30 @@
       "artifact_sha256": "d420bce458632b5cf91bb6c3eb429a2b45792e63e40a268b2e233fb899f3b2a0"
     },
     {
+      "source": "FMSAPaper/SingleTailSpinodal.lean",
+      "source_sha256": "f2ae1eadf240ed0e37deeb630f11ad96618647fdfa4a2a5bdaaf1565c1c98c09",
+      "theorems": [
+        "FMSA.Paper.SingleTailSpinodal.exp_square_gap",
+        "FMSA.Paper.SingleTailSpinodal.expRemainder_neg",
+        "FMSA.Paper.SingleTailSpinodal.spinNumerator_decomposition",
+        "FMSA.Paper.SingleTailSpinodal.c1_lt_of_critical_neg",
+        "FMSA.Paper.SingleTailSpinodal.c1_lt_midpoint",
+        "FMSA.Paper.SingleTailSpinodal.spinNumerator_fold_neg",
+        "FMSA.Paper.SingleTailSpinodal.AS_param",
+        "FMSA.Paper.SingleTailSpinodal.critical_neg_spinScale",
+        "FMSA.Paper.SingleTailSpinodal.AS_fold_neg",
+        "FMSA.Paper.SingleTailSpinodal.AS_seed_pos",
+        "FMSA.Paper.SingleTailSpinodal.exists_zeroMode_parameter",
+        "FMSA.Paper.SingleTailSpinodal.exists_zero_before_fold",
+        "FMSA.Paper.SingleTailSpinodal.actual_single_tail_zero_before_fold",
+        "FMSA.Paper.SingleTailSpinodal.actual_single_tail_zero_lt_radius"
+      ],
+      "guard_count": 14,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/SingleTailSpinodal.olean",
+      "artifact_sha256": "92a625536ab5e0241e5bfef0f18f03cb5c8d14b9c0c932c9e4f867ce0b43ed58"
+    },
+    {
       "source": "FMSAPaper/SmoothJets.lean",
       "source_sha256": "dc6131959a572bcb3e56d3bccf1db1e8a21a015ed2b8041bac0e1c77671d2ade",
       "theorems": [
@@ -969,10 +993,10 @@
     ],
     "exit_code": 0,
     "log": "results/default_build.log",
-    "log_sha256": "48a4c20900c0a547884246e8dfbe2b9b73340040098a2eb2cd545efdf0daace0"
+    "log_sha256": "cedf4c6ab5f2c58ab78ff4c4d7c69201a17a9e55e4d68e085676d622d0732da7"
   },
-  "paper_root_sha256": "4334b12721609d0bc89e0f97315e9d112a539740219e1cafcf0873637f059000",
+  "paper_root_sha256": "136c3454e4a248552571e35e70492ae90fd3ba4bed3570820d8f666817876718",
   "package_entry_sha256": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
   "integration": "Included in the foundation's default Lake build; no external LEAN_PATH.",
-  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis); Initial stable-interval convergence iff endpoint <= common radius proved for extended endpoints, with actual BH continuity/root/Jacobian premises explicit; a nonconvergence witness exists inside every interval extending past the radius. Canonicity-to-regularity and tail-domain certification remain open. F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
+  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis), with an actual A=0 witness at a strictly positive coupling strictly below the fold/common radius for all positive rate/density/diameter states with positive free volume; Initial stable-interval convergence iff endpoint <= common radius proved for extended endpoints, with actual BH continuity/root/Jacobian premises explicit; a nonconvergence witness exists inside every interval extending past the radius. Canonicity-to-regularity and tail-domain certification remain open. F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
 }
