@@ -64,9 +64,29 @@ the separate `Other_Closures` project. Task status for every group, the
 re-derived axiom ledger and the open items are in `TODO.md` (it replaces the
 `todo_lean.md` and per-track task files that the notes still mention by name).
 
+## 1.0.14: actual zero-frequency DCF interface
+
+The paper collection has 60 modules and 413 exact standard-axiom guards.
+`BaxterZeroMode.fourierQ_zero` evaluates the actual finite-mixture integral
+at zero wave number. For one species and arbitrary finite tails, the actual
+factor satisfies F(0)=A/(2*pi). `RadialZeroMode.root_radial_symbol` identifies
+the actual spectral coefficient with a continuous sinc radial Fourier symbol
+at every real wave number, including zero; absolute second-moment
+integrability is proved from the actual root. The raw quotient definitions
+and their existing nonzero-frequency theorems are preserved.
+
+`actual_single_tail_zero_moment_before_radius` gives an actual PY-branch
+root satisfying 4*pi*rho*integral r^2*c(r) dr=1 at a positive coupling
+strictly inside the common Taylor radius, throughout the physical single
+attractive-tail parameter domain of 1.0.13. This connects its A=0 witness
+to the actual physical zero mode. First-mode identification, RDF positivity
+and the general mixture canonical-to-Jacobian bridge remain separate.
+See `proof_notes/codex_zero_mode_interface.md` and the versioned validation
+under `formalization/results/baseline_1_0_14/`.
+
 ## 1.0.13: single-tail zero mode strictly before the fold
 
-The paper collection has 58 modules and 385 exact standard-axiom guards.
+The paper collection reached 58 modules and 385 exact standard-axiom guards.
 `SingleTailSpinodal.AS_fold_neg` proves that the actual scalar A is negative
 at the quartic fold for every positive rate, density and diameter with
 positive free volume. `actual_single_tail_zero_before_fold` constructs an

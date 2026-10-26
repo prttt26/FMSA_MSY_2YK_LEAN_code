@@ -1,12 +1,12 @@
 {
   "status": "PASS",
-  "validated_at_utc": "2026-10-26T21:11:31.028536+00:00",
+  "validated_at_utc": "2026-10-26T21:39:22.399104+00:00",
   "toolchain": "leanprover/lean4:v4.31.0",
-  "foundation_version": "1.0.13",
-  "foundation_manifest_sha256": "b13f8bc5efc4f2fb5ea4bb02efca26f30ae7d310960fd7bd9bd349b3fe80111d",
-  "foundation_audit": "PASS: foundation 1.0.13, 520 source/config hashes.",
+  "foundation_version": "1.0.14",
+  "foundation_manifest_sha256": "4a25e48e56e7ee49a879830e544883ee3d212a39963afcb74279829acc2ba709",
+  "foundation_audit": "PASS: foundation 1.0.14, 522 source/config hashes.",
   "foundation_matches_manifest": true,
-  "check_script_sha256": "157daeb6ae0ddd1407bbe10610dffd59adde5f38f34beaa08f45982e59da30b1",
+  "check_script_sha256": "6ea91bcf677a4f48c84b71254846e24da1ab1145deb12378b2c329ba5f3a649e",
   "dependencies": {
     "mathlib": {
       "head": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -17,7 +17,7 @@
       "status": "T docs/README.md"
     }
   },
-  "theorem_count": 385,
+  "theorem_count": 413,
   "standard_axioms_only": true,
   "modules": [
     {
@@ -398,6 +398,28 @@
       "artifact_sha256": "05decbedece81b51b40e2563b617c825b25d677b87e1ebf3de963575bfeb870b"
     },
     {
+      "source": "FMSAPaper/BaxterZeroMode.lean",
+      "source_sha256": "55a53f9143f065111d4d039190e5f064ad193639c946035c6386c2339775dc50",
+      "theorems": [
+        "FMSA.Paper.BaxterZeroMode.core_zero_integral",
+        "FMSA.Paper.BaxterZeroMode.row_zero_integral",
+        "FMSA.Paper.BaxterZeroMode.fourierQ_zero",
+        "FMSA.Paper.BaxterZeroMode.fourierFactor_zero_entry",
+        "FMSA.Paper.BaxterZeroMode.scalar_HS_balance",
+        "FMSA.Paper.BaxterZeroMode.scalar_tail_balance",
+        "FMSA.Paper.BaxterZeroMode.scalar_zeroMoment_balance",
+        "FMSA.Paper.BaxterZeroMode.scalar_fourierFactor_zero",
+        "FMSA.Paper.BaxterZeroMode.scalar_fourierFactor_zero_iff",
+        "FMSA.Paper.BaxterZeroMode.scalar_spectral_den_zero",
+        "FMSA.Paper.BaxterZeroMode.single_tail_amplitudeA_eq",
+        "FMSA.Paper.BaxterZeroMode.actual_single_tail_zero_before_radius"
+      ],
+      "guard_count": 12,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/BaxterZeroMode.olean",
+      "artifact_sha256": "b219d53968ae75afbf817bf44de9f15ca40e1168086562eead1ecaf95b7174fb"
+    },
+    {
       "source": "FMSAPaper/FiniteBasisJets.lean",
       "source_sha256": "0a5a58c58c8ddd3e36343480f267603f44a0d66e4250819574b44ea8537f4571",
       "theorems": [
@@ -711,6 +733,32 @@
       "artifact_sha256": "8f0090ac15c3471b6fcf5ffeb7271bc0864f377199872801489df977ae00945c"
     },
     {
+      "source": "FMSAPaper/RadialZeroMode.lean",
+      "source_sha256": "5d2c95ddb18a527a6082e2017f422408e9ab425c72cd672c75f4ee94f36a0243",
+      "theorems": [
+        "FMSA.Paper.RadialZeroMode.radialSymbol_zero",
+        "FMSA.Paper.RadialZeroMode.radialSymbol_eq_radial_fourier",
+        "FMSA.Paper.RadialZeroMode.weighted_sinc_integrable",
+        "FMSA.Paper.RadialZeroMode.radialSymbol_continuous",
+        "FMSA.Paper.RadialZeroMode.fourierQ_continuous",
+        "FMSA.Paper.RadialZeroMode.spectralBaxterC_continuous",
+        "FMSA.Paper.RadialZeroMode.shifted_radius_exp_integrable",
+        "FMSA.Paper.RadialZeroMode.correlation_radius_sq_integrable_of_root",
+        "FMSA.Paper.RadialZeroMode.ordered_radius_sq_integrable_of_root",
+        "FMSA.Paper.RadialZeroMode.actual_radialSymbol_continuous",
+        "FMSA.Paper.RadialZeroMode.root_radial_symbol",
+        "FMSA.Paper.RadialZeroMode.root_zero_moment",
+        "FMSA.Paper.RadialZeroMode.root_factor_gram_radial",
+        "FMSA.Paper.RadialZeroMode.scalar_radial_den_zero",
+        "FMSA.Paper.RadialZeroMode.scalar_radial_den_zero_iff",
+        "FMSA.Paper.RadialZeroMode.actual_single_tail_zero_moment_before_radius"
+      ],
+      "guard_count": 16,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/RadialZeroMode.olean",
+      "artifact_sha256": "5e5324da28a1bfba74713a6dd90ea629d60229037024124a72129e21fd5d752c"
+    },
+    {
       "source": "FMSAPaper/RegularContinuation.lean",
       "source_sha256": "47776f8334aabdb97efc8a572e7a6f69ce53401b2abda4705ba4ab5909b4957e",
       "theorems": [
@@ -993,10 +1041,10 @@
     ],
     "exit_code": 0,
     "log": "results/default_build.log",
-    "log_sha256": "cedf4c6ab5f2c58ab78ff4c4d7c69201a17a9e55e4d68e085676d622d0732da7"
+    "log_sha256": "f84c1ddb0f781c96df57b7c39ae7fc54c0ef4ffd1c5a7777e590f897f7986830"
   },
-  "paper_root_sha256": "136c3454e4a248552571e35e70492ae90fd3ba4bed3570820d8f666817876718",
+  "paper_root_sha256": "d20f5394548900088d0781d8949b28b7fbe512f82077af13f8de95c38543a036",
   "package_entry_sha256": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
   "integration": "Included in the foundation's default Lake build; no external LEAN_PATH.",
-  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis), with an actual A=0 witness at a strictly positive coupling strictly below the fold/common radius for all positive rate/density/diameter states with positive free volume; Initial stable-interval convergence iff endpoint <= common radius proved for extended endpoints, with actual BH continuity/root/Jacobian premises explicit; a nonconvergence witness exists inside every interval extending past the radius. Canonicity-to-regularity and tail-domain certification remain open. F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
+  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis), with an actual A=0 witness at a strictly positive coupling strictly below the fold/common radius for all positive rate/density/diameter states with positive free volume; Actual finite-tail Baxter zero moments, continuous sinc radial Fourier identification including k=0, and a single-tail actual physical DCF zero-moment witness strictly inside the common radius proved; Initial stable-interval convergence iff endpoint <= common radius proved for extended endpoints, with actual BH continuity/root/Jacobian premises explicit; a nonconvergence witness exists inside every interval extending past the radius. Canonicity-to-regularity and tail-domain certification remain open. F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
 }

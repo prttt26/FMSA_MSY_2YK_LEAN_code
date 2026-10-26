@@ -1,0 +1,53 @@
+{
+  "status": "PASS_FOUNDATION_AND_DEPENDENCY_COMPATIBILITY",
+  "foundation_version": "1.0.14",
+  "foundation_manifest_sha256": "4a25e48e56e7ee49a879830e544883ee3d212a39963afcb74279829acc2ba709",
+  "foundation_default_build": {
+    "status": "PASS",
+    "jobs": 9072,
+    "log": "MSA_and_1st_Truncation/formalization/results/baseline_1_0_14/foundation_build.log"
+  },
+  "paper_guards": {
+    "status": "PASS",
+    "modules": 60,
+    "theorems": 413
+  },
+  "workspace_and_compatibility_build": {
+    "status": "PASS",
+    "jobs": 9193,
+    "targets": [
+      "LeanWorkspace",
+      "MSA_and_1st_Truncation/ExactMSACertificate",
+      "MSA_and_1st_Truncation/ExactMSASparseFeasibility",
+      "MSA_and_1st_Truncation/MatExactMSAEqualDiamCertificate"
+    ]
+  },
+  "downstream_independent_proof_builds": {
+    "Other_Closures": "NOT_RERUN",
+    "SCOZA": "NOT_RERUN",
+    "FMSA_HSGMSA": "NOT_RERUN"
+  },
+  "downstream_dependency_lock_audits": {
+    "Other_Closures": "PASS",
+    "SCOZA": "PASS",
+    "FMSA_HSGMSA": "PASS"
+  },
+  "scope": "All existing foundation LeanCode and FMSAPaper proof modules are byte-identical to 1.0.13. Only the two new zero-mode modules, aggregate paper root and Lake version change. Declared active downstream library sources import neither the paper modules nor the changed aggregate foundation root. Independent historical downstream proof build evidence is retained as historical, not claimed rerun.",
+  "downstream_import_audit": "MSA_and_1st_Truncation/formalization/results/baseline_1_0_14/downstream_import_check.json",
+  "downstream_import_audit_script": "MSA_and_1st_Truncation/formalization/audit_downstream_imports.py",
+  "downstream_import_audit_script_sha256": "4f5c6f343ea03b932d14c7c3c95eca605a65eeb3884d09c057468f2cacb6623a",
+  "evidence_sha256": {
+    "FMSA_HSGMSA_lock_audit.log": "d869254d80228b67e7aa03efb073e868b6b0df0d2e105cd5b827298e98d9229a",
+    "Other_Closures_lock_audit.log": "79e087ffbe2c9e22971f24bfe4a586961765d44de7bca6be61a1be03c7b60f15",
+    "SCOZA_lock_audit.log": "b478ea1ae6a24e095bca4d5ed535076ad2615d6a2fa6271651693e6a63d6f8bd",
+    "boundary_audit.log": "631e8ddbe1dc9db8710b07fdf653f685c80ef26157e2daaca0b1456653b4650b",
+    "default_build.log": "f84c1ddb0f781c96df57b7c39ae7fc54c0ef4ffd1c5a7777e590f897f7986830",
+    "downstream_import_check.json": "d8e11b2047a766b28fa10d4d451cc12fcbc94a4f1dff5098b7dec2a04106249a",
+    "foundation_audit.log": "775d1cfe5a2556b7a9e1d40c4031838d8f0cb549da82bd83ccdbf69b0bee0f39",
+    "foundation_build.log": "d2b5042ccbff5b1f3ceb54c19b61e13a6ff453f1eb86b6195e01a233f9d1ceed",
+    "git_ownership_audit.log": "a86b538161226015b8ca6c0a912cf13065489a8b431cdcf55fa83b4788c6def7",
+    "paper_check.log": "e68cbc52ea130707b6f4cb5e0e3366a5662b19ee1216e7d32b76ff841db8513d",
+    "validation.json": "b4049a9dc708aa5d0790eb194131fb91f3e1b17c172e3f267bd98f95a2251f34",
+    "workspace_build.log": "7bd14e082a544274aadb9286e6196a660e830401bbc4dbabc9ba216a156d042e"
+  }
+}

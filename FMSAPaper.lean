@@ -23,6 +23,7 @@ import FMSAPaper.BaxterWeakDerivative
 import FMSAPaper.BaxterWeakJetBasis
 import FMSAPaper.BaxterWeakJets
 import FMSAPaper.BaxterWeakPrimitive
+import FMSAPaper.BaxterZeroMode
 import FMSAPaper.FiniteBasisJets
 import FMSAPaper.FiniteIntegralJets
 import FMSAPaper.FoldObstruction
@@ -42,6 +43,7 @@ import FMSAPaper.PhysicalExteriorJets
 import FMSAPaper.Pringsheim
 import FMSAPaper.QuarticBranch
 import FMSAPaper.RadialIntegralJets
+import FMSAPaper.RadialZeroMode
 import FMSAPaper.RegularContinuation
 import FMSAPaper.SignedPringsheim
 import FMSAPaper.SingleRateSpatialMembership

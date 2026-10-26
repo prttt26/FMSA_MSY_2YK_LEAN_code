@@ -13,8 +13,8 @@ lake build
 python3 formalization/check.py
 ```
 
-The checker uses the default Lake build for fifty-eight paper modules and all
-385 theorem footprints through `#guard_msgs`, audits the versioned foundation,
+The checker uses the default Lake build for sixty paper modules and all
+413 theorem footprints through `#guard_msgs`, audits the versioned foundation,
 checks that the default entry imports the complete collection, and saves source
 and compiled-artifact hashes and build logs in
 `formalization/results/validation.json`. Allowed axioms are only `propext`,
@@ -62,6 +62,8 @@ and compiled-artifact hashes and build logs in
 | Finite-interval failure witness | `FMSA.Paper.StableIntervalRadius.nonconvergence_witness_before` | If a certified radius upper bound lies strictly below a certified initial stable interval length, some coupling inside that interval is outside the common radius and at least one amplitude series is not summable. No claim of stability from finite-grid crossing detection. |
 | F4 single tail, unconditional | `FMSA.Paper.SingleTailRadius.single_tail_radius_eq_fold`, `single_tail_coefficients_nonneg`, `single_tail_branch_exists` | One hard-sphere species, one attractive Yukawa tail, any `z, ρ, σ > 0` with positive free volume: for every continuous PY-seeded root germ, all positive-order Taylor coefficients of both amplitude components are nonnegative and the common Taylor radius equals the explicit fold coupling `q(c₁)`. No sign, fold or convergence hypothesis. The BH system is reduced exactly to `τ = -Λ u²(u-a)(u-b)` with `a = -P < b < 0` (`SingleTailParametrization`); `1/q'` is absolutely monotone below the fold (`QuarticBranch`, `AbsolutelyMonotone`, Faà di Bruno); the upper bound uses non-continuation through the fold, not a Jacobian computation. |
 | F4 single-tail zero mode before the fold | `FMSA.Paper.SingleTailSpinodal.AS_fold_neg`, `actual_single_tail_zero_before_fold`, `actual_single_tail_zero_lt_radius` | For the same all-state physical domain, actual A is negative at the fold, and the actual PY branch has an A=0 root at a strictly positive coupling strictly below the fold and the common Taylor radius of every continuous seed root germ. The exact parametrization and IVT discharge the witness; it is not asserted to be the first mode. |
+| Actual zero-frequency integral | `FMSA.Paper.BaxterZeroMode.fourierQ_zero`, `scalar_fourierFactor_zero`, `scalar_spectral_den_zero` | All finite mixtures: the actual integral has its explicit moment value at zero. One species with finite tails: F(0)=A/(2*pi), and the spectral denominator is its square, with no root premise. |
+| Actual radial zero mode | `FMSA.Paper.RadialZeroMode.root_radial_symbol`, `root_zero_moment`, `root_factor_gram_radial`, `actual_single_tail_zero_moment_before_radius` | Actual symmetric-strength BH roots: r^2*c is L1 and the continuous sinc Fourier symbol equals the actual spectral coefficient for every real k, including zero. One attractive tail has an actual 4*pi*rho*integral r^2*c=1 witness at positive coupling strictly inside the common Taylor radius. Firstness and general canonical-to-Jacobian regularity remain separate. |
 
 The F3 proof transports all normalized jets through the actual polynomial BH
 residual. Convergence makes the Taylor sum analytic; its residual has zero jets
@@ -130,7 +132,10 @@ correspondence table `si-tab:si-corr4` cite the declarations; `make check` passe
   claim is supplied. `SingleTailSpinodal` additionally proves an actual A=0
   witness strictly before the single-tail fold/radius, for all positive
   rate/density/diameter states with positive free volume, without assuming
-  first-mode canonicity or a fold sign.
+  first-mode canonicity or a fold sign. `BaxterZeroMode` and `RadialZeroMode`
+  identify it with the actual factor determinant zero and the physical DCF
+  zero-moment denominator, proving the required moment integrability and
+  continuity at zero rather than using the raw quotient convention.
 - **F5/F6: certified by interval arithmetic (2026-10-22), not in Lean.** See
   `certificates/README.md`. F5: for z = (1.8, 12), weights (1, -6) and
   eta = 0.2, 0.3, 0.4, a validated Krawczyk chain shows the PY-seeded branch is
@@ -147,8 +152,8 @@ correspondence table `si-tab:si-corr4` cite the declarations; `make check` passe
   does not control nearer complex singularities. The proved contrapositive
   concerns absence of **any real root** for the actual smooth root branch.
 
-Integration was requested on 2026-10-22. The foundation is versioned as 1.0.13;
-1.0.3 through 1.0.12 are preserved in their versioned release manifests.
+Integration was requested on 2026-10-22. The foundation is versioned as 1.0.14;
+1.0.3 through 1.0.13 are preserved in their versioned release manifests.
 The old workspace `Lean_code/formalization` compatibility symlink was removed;
 use this package's `formalization/` directory.
 Historical independent-check results are in `results/pre_integration_1_0_3/`;
