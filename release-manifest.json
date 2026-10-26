@@ -1,6 +1,6 @@
 {
   "project": "MSA_and_1st_Truncation",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "validated_on": "2026-10-26",
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib_revision": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -35,8 +35,10 @@
     "FMSAPaper/FiniteIntegralJets.lean": "c4a3fa980a99357220a84b24910da3eef7eb0eb544958f4e56ae1cbf8cbc3998",
     "FMSAPaper/FoldObstruction.lean": "810acc1c8d0c8cc230e75f87fb8e146af26a6935a63d845330183e71540ea37a",
     "FMSAPaper/FoldRadius.lean": "89588d19d77d7fa00d63f3c84c5988801e7894fb95443af16d37b52ea69c9549",
+    "FMSAPaper/FourierL1L2.lean": "74a7a99532d86e0aeb4a9fd5b48334e77c4793877d67dce3fa1c3c60fbaf3a2b",
     "FMSAPaper/HomogeneousJets.lean": "25b1e8f22244480438d8451b6092c464c3bab5169170b200f083ac564a561442",
     "FMSAPaper/JacobianExterior.lean": "b4e6f7a4afae6cc16ebb1ebdf07dd89183fbe24891da0876d47170adf6d4f80a",
+    "FMSAPaper/JacobianL2.lean": "32e2088ce608510ad0928fa2f4484341cc96a5cb4c7b4559c83b5d4d17b1f74c",
     "FMSAPaper/LocalBranch.lean": "118aa483f11401f448d72afe7745816cfc36f7ac260f0f3f11a15ecfeab081a0",
     "FMSAPaper/MatrixOZPairing.lean": "657d287f6c1476050c36f77d4590ddc17f8b587ec8bce57759a708dad05f3b25",
     "FMSAPaper/MatrixOZParseval.lean": "798c0b62d4961ff1e90e5406dc0834ffbfe2caf92758687c366e157a38669454",
@@ -53,6 +55,7 @@
     "FMSAPaper/Pringsheim.lean": "19d91674142ee6956a1c9610b85eebf29935e3a867fa7eed0889715001cff1dd",
     "FMSAPaper/QuarticBranch.lean": "1f01b89000bb72c9dcf2dfbbbd6fa0a95b957181ad7952906286ccd4bcff7fc7",
     "FMSAPaper/RadialIntegralJets.lean": "d93709987e2409153f90e7590d41b0cd27115d00391b97aeb4870808fa7a9cdc",
+    "FMSAPaper/RadialVariationL2.lean": "d1c23d74070716bb1681a6731c6396fe2cc6630b00289e77df8dd96bc601e827",
     "FMSAPaper/RadialZeroMode.lean": "5d2c95ddb18a527a6082e2017f422408e9ab425c72cd672c75f4ee94f36a0243",
     "FMSAPaper/RegularContinuation.lean": "47776f8334aabdb97efc8a572e7a6f69ce53401b2abda4705ba4ab5909b4957e",
     "FMSAPaper/SignedPringsheim.lean": "07e4c94724fa3dc3fd5059bc17600473d725cec047aeb8007b6048bd04c7fcf4",
@@ -68,7 +71,7 @@
     "FMSAPaper/StrengthScaling.lean": "9251cc4aa8527dcefdcc965800af35ad395b3fa33819b5625063eb99dc912fe1",
     "FMSAPaper/TaylorRoot.lean": "2135f9f85bb94ce8e21ba0d1d78ce98d1895c9767f0eebaaa97ca65e4e571c89",
     "FMSAPaper/WeakDerivativePairing.lean": "53c63fa141acae8ebd2cc20f9d96c8f3496b60d7241c632c3268569fd294eb43",
-    "FMSAPaper.lean": "b7dd94a6d637f74733210d9f02df6e361e8be58b8e672b2f166ea0a0e89e8286",
+    "FMSAPaper.lean": "e56e2b5a4769c21068c747c446b1359540f020d0df89525369cda8d7ed8b6db7",
     "LeanCode/Analysis/ArgumentPrinciple.lean": "0bdd47e6d75063ee1347d58a9f0dba5c2f8c0b686d527c390d2880afe900ab89",
     "LeanCode/Analysis/BanachPoleFamily.lean": "3b95030b1b287356f7ce7e2035cb9ac750ca9d49e2237ad70dbebad6c8e06390",
     "LeanCode/Analysis/BoundaryGrowth.lean": "ae68b684ea3d0d4d939465b33aaf5d957b4244a5f08ab5e91763f12e9f60ed13",
@@ -528,30 +531,30 @@
     "LeanCode.lean": "cbd208c12e79fc416daf59969dd88107306996ab63ab170b1c7efdac8c90175c",
     "MSA_and_1st_Truncation.lean": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
     "lake-manifest.json": "f4fd831803fdd1968c310698b93b4dc7526ca87d3c537801c0a06ad0bebfb9d8",
-    "lakefile.toml": "173b22d0781fe193bc32c74143e5d315c5098d21e8a9ff2ec81b6fc9498a51f4",
+    "lakefile.toml": "49c8e73ae568a0ed9e3ee8f1aeb362489caaad8b64eb5d8d2715b728ee6fb8c0",
     "lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee"
   },
   "completion_scope": "Recorded MSA/first-truncation theorem scope and explicit assumptions; unrelated historical conditional FMSA axioms retained.",
   "validation": {
     "foundation": {
       "status": "PASS",
-      "jobs": 9075,
-      "log": "formalization/results/baseline_1_0_15/foundation_build.log",
-      "log_sha256": "7bb5542682ea4e100fca358d7a4eeae582400c3bd89f3426828fae14d8186288"
+      "jobs": 9078,
+      "log": "formalization/results/baseline_1_0_16/foundation_build.log",
+      "log_sha256": "ec902786dc63e637b37dc7ae925910db9ca691924a46d0f353a4bf4c1b826811"
     },
     "workspace": {
       "status": "PASS",
-      "jobs": 9198,
-      "log": "formalization/results/baseline_1_0_15/workspace_build.log",
-      "log_sha256": "93084496985b6e1613364d3a57731ef412d1edbed8faee4174729e5dc39b9203",
+      "jobs": 9201,
+      "log": "formalization/results/baseline_1_0_16/workspace_build.log",
+      "log_sha256": "5c2c6bc6a125918f9e21d38c9e10f42f887d93beb2e26c32be5d6da85ad730b9",
       "command": "lake build LeanWorkspace MSA_and_1st_Truncation/ExactMSACertificate MSA_and_1st_Truncation/ExactMSASparseFeasibility MSA_and_1st_Truncation/MatExactMSAEqualDiamCertificate"
     },
     "closures": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.14",
-      "reason": "Only three new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.14. Active downstream library sources import neither FMSAPaper nor the changed aggregate root. The source-impact check and lock audits are not independent downstream proof builds.",
-      "dependency_import_check": "formalization/results/baseline_1_0_15/downstream_import_check.json",
-      "dependency_import_check_sha256": "1e7f58fbffe620ebceff45dc73675e176476de352ff7bd14402a6f2bd4929f7b",
+      "carried_from": "1.0.15",
+      "reason": "Only three new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.15. Declared downstream libraries import neither FMSAPaper nor the changed aggregate root. Source-impact and lock checks are not new independent downstream proof builds.",
+      "dependency_import_check": "formalization/results/baseline_1_0_16/downstream_import_check.json",
+      "dependency_import_check_sha256": "8e8297448c554c09acac14c97e846c72bb2b0a747b9d61c95428f2ad9373ed54",
       "previous": {
         "status": "PASS",
         "jobs": 8688,
@@ -561,10 +564,10 @@
     },
     "scoza": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.14",
-      "reason": "Only three new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.14. Active downstream library sources import neither FMSAPaper nor the changed aggregate root. The source-impact check and lock audits are not independent downstream proof builds.",
-      "dependency_import_check": "formalization/results/baseline_1_0_15/downstream_import_check.json",
-      "dependency_import_check_sha256": "1e7f58fbffe620ebceff45dc73675e176476de352ff7bd14402a6f2bd4929f7b",
+      "carried_from": "1.0.15",
+      "reason": "Only three new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.15. Declared downstream libraries import neither FMSAPaper nor the changed aggregate root. Source-impact and lock checks are not new independent downstream proof builds.",
+      "dependency_import_check": "formalization/results/baseline_1_0_16/downstream_import_check.json",
+      "dependency_import_check_sha256": "8e8297448c554c09acac14c97e846c72bb2b0a747b9d61c95428f2ad9373ed54",
       "previous": {
         "status": "PASS",
         "jobs": 8853,
@@ -574,10 +577,10 @@
     },
     "hsgmsa": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.14",
-      "reason": "Only three new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.14. Active downstream library sources import neither FMSAPaper nor the changed aggregate root. The source-impact check and lock audits are not independent downstream proof builds.",
-      "dependency_import_check": "formalization/results/baseline_1_0_15/downstream_import_check.json",
-      "dependency_import_check_sha256": "1e7f58fbffe620ebceff45dc73675e176476de352ff7bd14402a6f2bd4929f7b",
+      "carried_from": "1.0.15",
+      "reason": "Only three new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.15. Declared downstream libraries import neither FMSAPaper nor the changed aggregate root. Source-impact and lock checks are not new independent downstream proof builds.",
+      "dependency_import_check": "formalization/results/baseline_1_0_16/downstream_import_check.json",
+      "dependency_import_check_sha256": "8e8297448c554c09acac14c97e846c72bb2b0a747b9d61c95428f2ad9373ed54",
       "previous": {
         "status": "PASS",
         "jobs": 9202,
@@ -642,22 +645,22 @@
     "scope": "Conditional fold obstruction and convergence implications; spatial finite-span and coupling jets. Remaining analytic, physical-identification, Pringsheim and certified-counterexample obligations remain explicit in FORMALIZATION_TODO.md."
   },
   "paper_proof_updates": {
-    "version": "1.0.15",
-    "modules": 63,
-    "theorem_guards": 445,
-    "new_theorem_guards": 32,
+    "version": "1.0.16",
+    "modules": 66,
+    "theorem_guards": 485,
+    "new_theorem_guards": 40,
     "new_source_files": [
-      "FMSAPaper/JacobianExterior.lean",
-      "FMSAPaper/MatrixOZPairing.lean",
-      "FMSAPaper/MatrixOZParseval.lean"
+      "FMSAPaper/FourierL1L2.lean",
+      "FMSAPaper/JacobianL2.lean",
+      "FMSAPaper/RadialVariationL2.lean"
     ],
     "changed_files": [
       "FMSAPaper.lean",
       "lakefile.toml"
     ],
-    "previous_manifest": "release-manifest-1.0.14.json",
-    "previous_manifest_sha256": "4a25e48e56e7ee49a879830e544883ee3d212a39963afcb74279829acc2ba709",
+    "previous_manifest": "release-manifest-1.0.15.json",
+    "previous_manifest_sha256": "378d478e193756ee198399da00612695f8517c4f967a166b0461c95c97b08c93",
     "existing_proof_sources_unchanged": true,
-    "scope": "Actual off-root DCF exterior residual identity; every BH amplitude-Jacobian kernel direction fixes the exterior, constructed h has zero core variation, and the actual weighted spatial pairing is zero. Noncommutative tangent OZ algebra, strict positive matrix trace pairing and actual structure-matrix positivity proved. L2 matrix Plancherel/positive-OZ-pairing injectivity proved on any finite-dimensional real inner-product space, with internal energy integrability. Actual tangent L2 representation and residual-to-spectral-OZ transcription, canonical tangent-factor uniqueness and amplitude recovery remain open; no general no-fold theorem and no new axiom."
+    "scope": "Actual arbitrary Frechet DCF variations have exact finite-basis numerators, measurability and weighted bounds; Jacobian kernel directions have all radial Lp membership, square and absolute second radial moments. Actual density-weighted odd L2 fields and their physical k=2*pi*w Fourier formula are constructed; abstract L2/integral Fourier agreement on L1 intersect L2 is proved by Schwartz tests. Spatial pairing is discharged and actual DCF cancellation on active species pairs follows under the still-explicit constructed-h L2 representation and tangent spectral OZ premises. h global differentiability/L2 and residual-kernel OZ transcription, canonical tangent-factor uniqueness/amplitude recovery and general no-fold ordering remain open. No new axiom."
   }
 }

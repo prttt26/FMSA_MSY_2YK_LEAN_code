@@ -146,10 +146,11 @@ identity and L2 fields as explicit premises; it is not a no-fold theorem.
 ## Remaining obligations for the requested general theorem
 
 1. Prove actual global differentiability/L2 control of the constructed h
-   variation on a canonical BH state, and identify the actual weighted
-   radial c/h variations with the L2 fields used by Parseval. For c, compact
-   support is now proved, but the necessary square-integrable numerator
-   bounds and representation still need to be recorded.
+   variation on a canonical BH state, and identify its weighted radial
+   variation with the remaining L2 field. The c-side numerator bounds,
+   radial Lp membership, exact odd L2 lift, L1/L2 Fourier agreement and
+   physical k=2*pi*w normalization are now proved in baseline 1.0.16; see
+   `proof_notes/codex_radial_variation_l2.md`.
 2. Derive the tangent spectral OZ identity from the actual residual kernel,
    using a valid off-root/operator transcription. Merely knowing an OZ
    identity at actual roots does not discharge this step at a singular root.
@@ -168,6 +169,28 @@ No universal real-root/Taylor-convergence equivalence is asserted. The full
 general canonical-to-Jacobian implication is still incomplete, and the new
 lemmas must not be cited as its completion.
 
+## Actual c-side L2/Fourier connection (1.0.16)
+
+`JacobianL2` proves the exact finite expression of arbitrary Fréchet DCF
+variations, measurable bounded radial numerators, and every radial Lp
+membership for Jacobian kernel directions. Both integral r^2*delta-c^2 and
+integral |r^2*delta-c| are finite. `FourierL1L2` proves that the actual
+integral Fourier transform and Mathlib's abstract L2 transform agree a.e.
+on L1 intersect L2, without a supplied Fourier integrability premise.
+
+`RadialVariationL2` constructs the actual density-weighted odd L2 field U,
+proves its exact representatives and Fourier matrix
+
+    Fourier U(w) = -i*w * radialVariationMatrix(2*pi*w).
+
+The physical variation symbol is continuous, including k=0. Its spatial
+pairing with an L2 representation of the constructed h variation is zero
+internally. `actual_kernel_DCF_ae_zero_of_L2_OZ` proves actual delta-c=0 a.e.
+on each positive-density pair from the two still-explicit premises: an L2
+representation of the constructed h variation and the tangent spectral OZ
+identity, evaluated at the correct physical frequency 2*pi*w. It does not
+supply those remaining premises or prove the full no-fold theorem.
+
 ## Reproduction
 
 From the package root, run `lake build` and `python3 formalization/check.py`.
@@ -183,3 +206,9 @@ explicitly NOT_RERUN. The manifest SHA256 is
 `378d478e193756ee198399da00612695f8517c4f967a166b0461c95c97b08c93`.
 The complete 1.0.14 manifest is preserved byte for byte, and all its existing
 proof modules are unchanged.
+
+The 1.0.16 c-side L2/Fourier extension is validated separately under
+`formalization/results/baseline_1_0_16/`: 66 modules, 485 exact std3 guards,
+528 source/config hashes, foundation 9078 jobs and workspace/compatibility
+9201 jobs. Its reproduction and precise remaining h/OZ scope are in
+`proof_notes/codex_radial_variation_l2.md`.

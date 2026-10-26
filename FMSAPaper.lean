@@ -28,8 +28,10 @@ import FMSAPaper.FiniteBasisJets
 import FMSAPaper.FiniteIntegralJets
 import FMSAPaper.FoldObstruction
 import FMSAPaper.FoldRadius
+import FMSAPaper.FourierL1L2
 import FMSAPaper.HomogeneousJets
 import FMSAPaper.JacobianExterior
+import FMSAPaper.JacobianL2
 import FMSAPaper.LocalBranch
 import FMSAPaper.MatrixOZPairing
 import FMSAPaper.MatrixOZParseval
@@ -46,6 +48,7 @@ import FMSAPaper.PhysicalExteriorJets
 import FMSAPaper.Pringsheim
 import FMSAPaper.QuarticBranch
 import FMSAPaper.RadialIntegralJets
+import FMSAPaper.RadialVariationL2
 import FMSAPaper.RadialZeroMode
 import FMSAPaper.RegularContinuation
 import FMSAPaper.SignedPringsheim

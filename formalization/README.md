@@ -13,8 +13,8 @@ lake build
 python3 formalization/check.py
 ```
 
-The checker uses the default Lake build for sixty-three paper modules and all
-445 theorem footprints through `#guard_msgs`, audits the versioned foundation,
+The checker uses the default Lake build for sixty-six paper modules and all
+485 theorem footprints through `#guard_msgs`, audits the versioned foundation,
 checks that the default entry imports the complete collection, and saves source
 and compiled-artifact hashes and build logs in
 `formalization/results/validation.json`. Allowed axioms are only `propext`,
@@ -31,12 +31,28 @@ trace pairing and actual structure-matrix positivity. `MatrixOZParseval`
 proves the L2 matrix Plancherel/positive-pairing injectivity engine on any
 finite-dimensional real inner-product space, including physical three-space.
 
-The actual BH-kernel-to-spectral-OZ differential transcription, actual
+The actual BH-kernel-to-spectral-OZ differential transcription, constructed-h
 tangent L2 representation/control, canonical factor uniqueness and amplitude
 recovery remain open. These modules do not prove general no-fold ordering.
 The core derivative of constructed `nonlinearH` is proved; global actual h
 differentiability is not silently assumed from its totalized `fderiv`.
 See `proof_notes/codex_jacobian_bridge.md` for exact premises and remaining steps.
+
+## Actual DCF tangent L2 and physical Fourier normalization
+
+`JacobianL2` proves the actual arbitrary Frechet variation's finite-basis
+expression, measurable bounded radial numerator, and every radial Lp
+membership for Jacobian kernel directions, including the required radial
+square moment and absolute second radial moment.
+`FourierL1L2.L2_fourier_ae_integral` proves equality of integral and abstract
+L2 Fourier transforms a.e. on L1 intersect L2, using Schwartz tests and the
+fundamental lemma; no Fourier-image integrability is assumed.
+`RadialVariationL2` constructs the actual density-weighted odd L2 field,
+its physical Fourier matrix at k=2*pi*w, and zero spatial pairing. Its
+`actual_kernel_DCF_ae_zero_of_L2_OZ` gives actual DCF cancellation on active
+species pairs under the still-explicit constructed-h L2 and tangent spectral
+OZ premises. This does not prove those two premises or Jacobian regularity.
+See `proof_notes/codex_radial_variation_l2.md`.
 
 ## Proved scope
 
@@ -170,8 +186,8 @@ correspondence table `si-tab:si-corr4` cite the declarations; `make check` passe
   does not control nearer complex singularities. The proved contrapositive
   concerns absence of **any real root** for the actual smooth root branch.
 
-Integration was requested on 2026-10-22. The foundation is versioned as 1.0.15;
-1.0.3 through 1.0.14 are preserved in their versioned release manifests.
+Integration was requested on 2026-10-22. The foundation is versioned as 1.0.16;
+1.0.3 through 1.0.15 are preserved in their versioned release manifests.
 The old workspace `Lean_code/formalization` compatibility symlink was removed;
 use this package's `formalization/` directory.
 Historical independent-check results are in `results/pre_integration_1_0_3/`;

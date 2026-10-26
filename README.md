@@ -64,9 +64,32 @@ the separate `Other_Closures` project. Task status for every group, the
 re-derived axiom ledger and the open items are in `TODO.md` (it replaces the
 `todo_lean.md` and per-track task files that the notes still mention by name).
 
+## 1.0.16: actual DCF tangent L2 and Fourier connection
+
+The paper collection has 66 modules and 485 exact standard-axiom guards.
+`JacobianL2` proves an exact finite expression for the arbitrary Frechet
+variation of the existing convolution DCF. Its weighted radial numerator
+is measurable and bounded. Actual BH Jacobian kernel directions therefore
+have compact radial support, belong to every radial Lp, and have both the
+required square moment and absolute second radial moment internally proved.
+
+`FourierL1L2` proves a.e. equality of the actual integral Fourier transform
+and Mathlib's abstract L2 transform on L1 intersect L2. `RadialVariationL2`
+constructs the actual density-weighted odd L2 field and proves its Fourier
+matrix is -i*w times the physical radial variation matrix at k=2*pi*w.
+The actual variation symbol is continuous at zero. Its spatial pairing is
+zero internally; an actual DCF cancellation interface retains only the
+remaining h-L2 representation and tangent spectral OZ premises.
+
+Global differentiability/L2 control of the constructed h tangent, its
+residual-kernel spectral OZ transcription, canonical tangent-factor
+uniqueness and amplitude recovery remain open. No general no-fold theorem
+is claimed. See `proof_notes/codex_radial_variation_l2.md` and the versioned
+validation under `formalization/results/baseline_1_0_16/`.
+
 ## 1.0.15: actual Jacobian supports and matrix Parseval
 
-The paper collection has 63 modules and 445 exact standard-axiom guards.
+The paper collection reached 63 modules and 445 exact standard-axiom guards.
 `JacobianExterior.exterior_residual_decomposition` expresses the actual DCF
 exterior defect as a linear functional of the BH residual, even away from
 roots. Differentiating it proves that every actual amplitude-Jacobian
