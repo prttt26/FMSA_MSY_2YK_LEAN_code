@@ -284,8 +284,9 @@ Claude-owned scans/results, or TeX are changed by these computations.
    established at eta=0.1, z=(1.8,12), using the ten-equation system (§7).
    Zero-mode firstness is certified in §8. Firstness among all real wave
    numbers and its role in the convergence boundary remain open.
-3. Global control and finite-k exclusion sufficient to upgrade a zero-mode
-   result to a statement about the user's initial canonical interval.
+3. For the control, §§8–9 certify the first real-wave-number zero and give
+   the scalar canonical homotopy argument. Global unbounded-coupling control
+   and corresponding results over a tail-parameter region remain open.
 4. A sufficient tail condition or a certified all-density parameter region;
    the algebraic identities here do not yet establish one.
 
@@ -469,9 +470,160 @@ cover and all three source dependencies. The successful run took about
 all 7357 pieces for exact endpoint continuity, the sign/containment conditions,
 root-box coverage and matching source/cover hashes.
 
-An independent exclusion of finite-k loss is still required before calling
-this contact tau_inst of the canonical branch. In particular the core
-Baxter kernel changes sign in this example, so a nonnegative-kernel argument
-has not been established. No Taylor radius or all-density condition follows
-from zero-mode firstness alone. This is an interval certificate with an
-explicit elementary calculus argument; it is not a new Lean theorem.
+Section 9 supplies the independent finite-k exclusion for this control.
+The core Baxter kernel changes sign, so a nonnegative-kernel shortcut is
+unavailable. No Taylor radius or all-density condition follows from
+zero-mode firstness alone. This is an interval certificate with an explicit
+elementary calculus argument; it is not a new Lean theorem.
+
+## 9. All nonzero real wave numbers excluded in the control
+
+`scripts/coupling_singularities/codex_m2_finite_k.py` proves
+`F(i*k)!=0` for every real k!=0, uniformly on a freshly validated PY branch
+from tau=0 to 5.613637782012076 and over the tight touching w box of §8.
+The common augmented root is revalidated in a box containing the entire §8
+root box. Thus the two certificates identify the same contact.
+
+Together with §8, this proves that the first real-wave-number zero is
+`k=0, tau=tau_touch`, with the f/tau bounds stated there. In particular this
+control has a finite first loss even though F0 has the same sign on the two
+sides of its zero. No claim of an entire Taylor germ or a convergence
+boundary follows from this event.
+
+### Actual kernel and exact formula checks
+
+In the package's unnormalized Baxter convention (sigma=1), write
+
+```
+Q(t) = qp*(t-1) + A*(t-1)^2/2 + sum_i (C_i+W_i*exp(-z_i*t)), 0<=t<=1;
+Q(t) = sum_i D_i*exp(-z_i*(t-1)),                            t>=1.
+```
+
+Here `C_i=gamma_i*D_i`, `W_i=2*pi*rho*G_i*D_i/z_i` and
+`gamma_i=1-2*pi*rho*G_i*exp(-z_i)/z_i`. Hence
+`C_i+W_i*exp(-z_i)=D_i`, so Q is continuous at t=1. Define
+`F(s)=1-rho*integral_0^infty Q(t)*exp(-s*t) dt`.
+This is the actual scalar spectral Baxter factor, not a separately fitted
+function. The code checks its core Laplace blocks, continuity identity,
+moments through order three, and `F(0)=A/(2*pi)` with exact SymPy algebra.
+The additive tail identity and the zero-mode polynomial are also derived
+in the earlier symbolic certificate (§5).
+
+For integer p>=0 the needed moments use
+
+```
+E_p(z) = integral_0^1 t^p*exp(-z*t) dt
+       = p!/z^(p+1) * (1-exp(-z)*sum_{j=0}^p z^j/j!),
+T_p(z) = integral_1^infty t^p*exp(-z*(t-1)) dt
+       = sum_{j=0}^p binom(p,j)*j!/z^(j+1),
+M_p    = -qp/((p+1)*(p+2)) + A/((p+1)*(p+2)*(p+3))
+         + sum_i (C_i/(p+1)+W_i*E_p(z_i)+D_i*T_p(z_i)).
+```
+
+Replacing qp, A, C, W and D by their absolute values, with a positive qp
+term, gives an upper bound M_p_abs for `integral t^p*abs(Q(t)) dt`.
+All physical constants and inequalities use Arb/acb at 192-bit precision.
+
+The independent actual-model comparison checks 135 off-root configurations
+against `msa_exact_mix._pieces/qhat`; maximum scaled difference is below
+5.753e-11. The actual float code uses seventh-degree phi Taylor polynomials
+at |s|<0.5, whose truncation is visible near k=0.3 at high density. This
+comparison checks transcription only; that approximation is not used in
+the interval proof.
+
+### Small, middle and large wave numbers
+
+On each of the 382 branch slabs, the small-wave-number region 0<k<=0.1 is
+covered by one of the strict inequalities
+
+```
+Re F(i*k) >= F0-rho*k^2*M_2_abs/2 > 0,
+Im F(i*k)/k >= rho*(M_1-k^2*M_3_abs/6) > 0,
+Im F(i*k)/k <= rho*(M_1+k^2*M_3_abs/6) < 0.
+```
+
+These follow from `abs(1-cos x)<=x^2/2` and
+`abs(sin x-x)<=abs(x)^3/6`; no small-k sampling is used. The control uses
+the first test on 270 slabs and the second on 112.
+
+For 0.1<=k<=16, a rigorous point enclosure F(i*kc) and
+
+`abs(F(i*k)-F(i*kc)) <= rho*M_1_abs*abs(k-kc)`
+
+give a complex disk enclosure of every intervening value. The Lipschitz
+bound follows by differentiating the Fourier integral, using the finite
+first absolute moment. There are 20181 accepted wave intervals, covering
+the whole middle region on every slab. Each point enclosure has distance
+from zero strictly larger than its interval error; the smallest stored
+distance gap exceeds 4.744e-5.
+
+Point enclosures intersect two algebraically equal formulas: the direct
+Laplace expression and `F0-rho*(Qhat(i*k)-Qhat(0))`. The latter keeps the
+zero-mode cancellation when amplitude boxes are wide. Both enclosures are
+rigorous, so their componentwise intersection remains rigorous. This avoids
+the false zero inclusion from separately enclosing large constant terms.
+
+Finally, continuity at t=1 and decay at infinity allow integration by parts.
+For every Re s>=0, s!=0,
+
+```
+abs(rho*Qhat(s)) <= H/abs(s),
+H = rho*(abs(Q(0))+abs(qp)+abs(A)/2
+         +sum_i(abs(W_i)*(1-exp(-z_i))+abs(D_i))).
+```
+
+The bound includes the lower endpoint Q(0); no contact jump is discarded.
+Uniformly over all slabs, `H<10.600151<16`. Thus F(s)!=0 for all |s|>=16
+in the entire closed right half-plane, which in particular excludes the
+unbounded real-wave-number tail. Reality gives
+`F(-i*k)=conj(F(i*k))`, completing negative k.
+
+### Initial canonical branch in this scalar control
+
+At the PY seed the tails vanish and Q(t) is nonpositive on [0,1]:
+`A0>0` and `qp0-A0/2>0` make
+`Q(t)=(t-1)*(qp0+A0*(t-1)/2)<=0`. Its absolute integral obeys
+
+`rho*integral abs(Q) = rho*(qp0/2-A0/6) = 0.48148148148148... < 1`.
+
+The script verifies this bound directly with Arb. Hence the seed F has no
+zeros anywhere in Re s>=0. Fix any coupling strictly below tau_touch. On
+the compact parameter interval from zero to that coupling, F is analytic
+in the right half-plane, continuous on its boundary, and has no poles there
+(all tail poles have negative real part). Section 8 excludes k=0 zeros;
+the present certificate excludes every k!=0 zero. The uniform H bound
+excludes zeros on a right semicircle of radius 16 and beyond. The argument
+principle therefore preserves the zero count inside that semicircle along
+the coupling path, leaving it zero. F and its inverse are bounded and
+analytic in the right half-plane and normalized at infinity: outside the
+semicircle use the uniform estimate, inside use compactness and absence of
+zeros. This identifies the initial scalar canonical factor throughout
+`[0,tau_touch)`; at tau_touch its boundary value F(0)=0 fails invertibility.
+
+This is a paper complex-analysis argument supported by the interval bounds,
+not a new Lean canonical-factor theorem. It uses the complete continuous
+PY-connected path and its uniform high-frequency bound. It does not infer
+general canonicity or BH regularity from pointwise spectral stability.
+
+### Records, reproduction and remaining obligations
+
+Run after the §8 certificate:
+
+```
+PYTHONPATH=/tmp/codex_fmsa_arb_deps python3 scripts/coupling_singularities/codex_m2_finite_k.py
+```
+
+The result basename `results/coupling_singularities/codex_m2_finite_k`
+has summary `.json`, full `.cover.json.gz`, successful `.log`, and a separate
+structural `.audit.json`. The summary hashes the cover and sources and
+records the exact §8 summary hash. A structural audit checks every shared
+tau endpoint, every wave interval, all strict bounds and root-box inclusion
+against §8. A known-zero control `i*(k-1)` defeats the middle-region gap
+test; the shifted nonzero control `1+i*(k-1)` passes. Runtime is about
+seven seconds; no TeX or frozen Lean source is changed.
+
+The first-instability statement is for this single control, at its rigorously
+enclosed touching parameter. It is not an all-density or open-parameter
+result. A certified radius comparison on the same selected branch and the
+requested sufficient tail condition remain open. The general mixture
+canonical-to-Jacobian-regularity bridge also remains outside this example.

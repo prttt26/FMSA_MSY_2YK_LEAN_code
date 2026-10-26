@@ -1,0 +1,17 @@
+{
+  "status": "PASS_FINITE_K_COVER_AUDIT",
+  "tau_slabs": 382,
+  "wave_intervals": 20181,
+  "small_k_methods": {
+    "positive_real_part": 270,
+    "positive_imaginary_part_over_k": 112
+  },
+  "minimum_middle_distance_gap": 4.7442037612120216e-05,
+  "endpoint_linkage_checked": true,
+  "wave_and_tau_coverage_gap_free": true,
+  "all_source_hashes_match": true,
+  "firstness_summary_hash_matches": true,
+  "same_augmented_root_box_contains_firstness_root": true,
+  "cover_sha256": "a862f2e42b33a8d25a7e59bdec1e9c99b39c12bf91ff868cee2e8e8b941aa6e6",
+  "scope": "Structural/recorded-bound audit. Analytic moment, Lipschitz and integration-by-parts arguments are stated in the proof note; interval inequalities were computed by the certificate."
+}

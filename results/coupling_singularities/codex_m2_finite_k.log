@@ -1,0 +1,12 @@
+  branch link: 100 pieces, tau=3.7218766/5.6136378
+  branch link: 200 pieces, tau=4.9057698/5.6136378
+  branch link: 300 pieces, tau=5.3697171/5.6136378
+  finite k: 50/382 tau slabs, 1001 wave intervals
+  finite k: 100/382 tau slabs, 3092 wave intervals
+  finite k: 150/382 tau slabs, 5997 wave intervals
+  finite k: 200/382 tau slabs, 8947 wave intervals
+  finite k: 250/382 tau slabs, 11925 wave intervals
+  finite k: 300/382 tau slabs, 15015 wave intervals
+  finite k: 350/382 tau slabs, 18165 wave intervals
+PASS: all nonzero real wave numbers excluded on the PY-linked control branch
+/home/rpan/YK_tail_FMSA/Lean_code/MSA_and_1st_Truncation/results/coupling_singularities/codex_m2_finite_k.json

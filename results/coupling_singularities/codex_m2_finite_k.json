@@ -1,0 +1,106 @@
+{
+  "status": "PASS_FINITE_K_EXCLUSION",
+  "model": {
+    "eta": "0.1",
+    "z": [
+      "1.8",
+      "12"
+    ],
+    "sigma": "1"
+  },
+  "claim": "F(i*k) is nonzero for every real k!=0 and every enclosed coupling 0<=tau<=tau_end, uniformly over the touching w box.",
+  "root_box": [
+    [
+      15.9130193153073,
+      15.913019315645569
+    ],
+    [
+      -12.966401805547958,
+      -12.966401805268623
+    ],
+    [
+      0.5529385107986505,
+      0.5529385108297097
+    ],
+    [
+      -0.4829972310350782,
+      -0.482997231005418
+    ],
+    [
+      5.613571646163339,
+      5.613571646295614
+    ],
+    [
+      -4.828753838588361,
+      -4.8287538384717825
+    ],
+    [
+      1.8315356503891567,
+      1.8315356504457883
+    ],
+    [
+      -2.071664431301407,
+      -2.071664431239972
+    ],
+    [
+      -0.05790678735077188,
+      -0.05790678732961372
+    ],
+    [
+      -0.09165702759420348,
+      -0.09165702757237028
+    ]
+  ],
+  "augmented_root_contraction": 3.5403162843690547e-09,
+  "tau_end": 5.613637782012076,
+  "tau_slabs": 382,
+  "wave_intervals": 20181,
+  "small_k_max": 0.1,
+  "high_frequency_min": 16.0,
+  "uniform_H_upper": 10.600150965493672,
+  "cover": {
+    "file": "codex_m2_finite_k.cover.json.gz",
+    "sha256": "a862f2e42b33a8d25a7e59bdec1e9c99b39c12bf91ff868cee2e8e8b941aa6e6"
+  },
+  "small_k_argument": "Re F(k)>=F0-rho*k^2*M2abs/2, or |Im F(k)/k|>=rho*(|M1|-k^2*M3abs/6)>0, with a certified sign for M1.",
+  "middle_k_argument": "|F(k)-F(kc)|<=rho*M1abs*|k-kc|; every interval has a strict positive distance gap.",
+  "high_frequency_argument": "Continuity at t=1 and integration by parts give |rho*Qhat(s)|<=H/|s| for Re s>=0. H<16 excludes all |s|>=16 in that half-plane.",
+  "negative_k_argument": "The kernel is real, so F(-i*k)=conj(F(i*k)).",
+  "negative_control_known_zero_not_excluded": true,
+  "actual_model_float_crosscheck": {
+    "status": "PASS",
+    "cases": 135,
+    "max_scaled_abs_error": 5.7524373151788905e-11,
+    "scope": "Off-root float64 transcription comparison only; actual small-argument phi uses a degree-seven Taylor approximation. Proof inequalities use Arb/acb.",
+    "actual_model_source_sha256": "2faadc34027ef5503650d04b809a3207d6692101a189298e595f9d87ea4110b2"
+  },
+  "kernel_symbolic_identities": {
+    "status": "PASS",
+    "sympy_version": "1.13.2",
+    "identities": [
+      "polynomial core Laplace blocks",
+      "core/tail moments p=0,1,2,3",
+      "kernel continuity C+W*exp(-z)=D",
+      "F0=1-rho*Qhat(0)=A/(2*pi), additive in tails"
+    ]
+  },
+  "seed_half_plane_L1_bound": [
+    0.4814814814814814,
+    0.4814814814814815
+  ],
+  "firstness_summary_sha256": "d75a89d83c0c5fb80c3bdcf243e04c9de906384f1a1da4e573a3c518dff0cbb9",
+  "combination": "With the separate first-zero-mode-contact certificate at the same augmented root, the first real-wave-number zero occurs at k=0, tau=tau_touch. This file alone does not prove the k=0 firstness claim.",
+  "canonical_homotopy_argument": "For every compact coupling interval before contact, F(s) is analytic on Re s>0, nonzero on its imaginary boundary, and uniformly nonzero for |s|>=16 in Re s>=0. The seed L1 bound excludes seed zeros there. The argument principle keeps the number of right-half-plane zeros zero. This is an elementary complex-analysis paper argument, not Lean.",
+  "scope": "One control point, not an all-density theorem, no Taylor-radius comparison, not Lean.",
+  "precision_bits": 192,
+  "dependencies": {
+    "python_flint": "0.6.0",
+    "numpy": "1.26.4"
+  },
+  "source_sha256": {
+    "scripts/coupling_singularities/codex_m2_finite_k.py": "8777d3e5cf350e44c56c8828066ee34065a0759c63da759b90208878ed839736",
+    "scripts/coupling_singularities/codex_m2_tangency.py": "97a7591354187b454f5f98ff948c6bba0f2fe48ff349032ef8b56c149016362f",
+    "formalization/certificates/f5_competing_tails.py": "627fa0095a45d59946c4e51b1e82f0473346e9497d23bca4bd50377925a353a1"
+  },
+  "seconds": 6.549
+}
