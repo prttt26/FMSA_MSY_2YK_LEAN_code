@@ -280,9 +280,98 @@ Claude-owned scans/results, or TeX are changed by these computations.
    and the actual-MSA Taylor-sum interface, is proved in
    `StableIntervalRadius.actual_regular_branch_converges_before_iff`. The
    physical canonicity-to-Jacobian-regularity bridge remains open.
-2. A selected-sheet, nondegenerate zero-mode tangency certificate using the
-   six-equation system, rather than inferring a minimum from a sign grid.
+2. A selected-sheet, nondegenerate zero-mode tangency certificate is now
+   established at eta=0.1, z=(1.8,12), using the ten-equation system (§7).
+   Its global firstness and its role in the convergence boundary remain open.
 3. Global control and finite-k exclusion sufficient to upgrade a zero-mode
    result to a statement about the user's initial canonical interval.
 4. A sufficient tail condition or a certified all-density parameter region;
    the algebraic identities here do not yet establish one.
+
+## 7. Certified local zero-mode tangency on the PY-seeded real branch
+
+The independent Arb certificate is
+`scripts/coupling_singularities/codex_m2_tangency.py`, with result and run log
+under the same basename in `results/coupling_singularities/`. It reuses only
+the generic polynomial residual and automatic-differentiation arithmetic
+from `formalization/certificates/f5_competing_tails.py`; all physical constants
+are constructed directly with Arb decimal, exponential and pi operations.
+It does not use that older certificate's assumed high-precision error bound.
+
+At sigma=1, eta=0.1, z=(1.8,12), K=(1,w), the ten-equation system has a
+unique root in the reported ten-dimensional box. Outward-rounded bounds are
+
+```
+f = w/w0 in [0.5044323145431001, 0.5044323267212183]
+tau      in [5.613571580093759, 5.613571712365194]
+F0''     in [0.9908615927082075, 0.9908856055251728]
+m_f      in [202.33284987011206, 202.33606759542454]
+```
+
+Here w0=-(1/z1+1/z1^2)/(1/z2+1/z2^2), as in the scans. The BH Jacobian is
+certified nonsingular over the entire amplitude root box. Positive curvature
+and positive parameter derivative imply a nondegenerate local minimum with
+value crossing zero as f increases: locally two nearby zero-mode zeros for
+smaller f, a double contact at the certified parameter, and no nearby zero
+for larger f. This is a local statement about F0; the full canonical factor
+and finite-k modes have not been checked.
+
+### Existence, uniqueness and branch selection
+
+For a box X centered at y and an exactly represented floating preconditioner
+C, the code encloses
+
+`K = y-C*F(y) + (I-C*J(X))*(X-y)`.
+
+It checks strict containment K inside X and a weighted infinity-norm bound
+strictly below one for I-C*J(X). Thus the associated fixed-point map is a
+contraction into X for every enclosed parameter value, giving existence,
+uniqueness and nonsingularity. The ten-equation root check has contraction
+bound less than 3.541e-6. Floating Newton steps only choose centers and C;
+all proof inequalities use Arb enclosures at 192-bit precision.
+
+The branch link uses 382 parameter slabs from tau=0 through
+5.613637848081656, uniformly over the certified w box. Each slab has a unique
+BH root and nonsingular Jacobian; the largest contraction bound is below
+0.893. At tau=0, D=0 and
+`G_i=(A0+z_i*qp0)/(2*pi*z_i^2*F_HS(z_i))` solve the residual by direct
+substitution: the first two equations have a factor D_i, and the last two
+reduce to `2*pi*G_i*F_HS(z_i)=A0/z_i^2+qp0/z_i`. The certificate verifies
+F_HS(z_i)>0 and encloses this seed in the first slab.
+
+Fresh certified endpoint boxes lie inside both adjacent slabs, so uniqueness
+glues the roots to a continuous PY-seeded branch. The entire tangency tau
+box and amplitude box lie in the final slab, identifying the augmented root
+with that branch. The JSON records every slab and endpoint box. The branch
+is mathematically selected by this chain; a floating continuation match is
+not used as the branch-selection proof.
+
+The implementation preserves the common tau factor when enclosing
+`C*(P(y)-tau*b(w))`, evaluating it as `C*P(y)-tau*(C*b(w))`.
+Evaluating each residual interval before preconditioning loses cancellation
+and can create a false step-size barrier even on this regular branch.
+Fresh endpoint boxes also avoid accumulated interval wrapping. These are
+algebraic enclosure improvements; strict inclusion and contraction checks
+remain mandatory on every accepted slab.
+
+### Reproduction and limits
+
+With numpy 1.26.4 and python-flint 0.6.0 available, run
+
+```
+python3 scripts/coupling_singularities/codex_m2_tangency.py
+```
+
+For an isolated installation, use `python3 -m pip install --no-deps --target
+/tmp/codex_fmsa_arb_deps python-flint==0.6.0`, then prefix the command with
+`PYTHONPATH=/tmp/codex_fmsa_arb_deps`. The output records both source hashes
+and dependency versions. A displaced constraint F0+0.001 fails the same
+Krawczyk test, providing a negative control. Successful output is labelled
+`PASS_LOCAL_ZERO_MODE_TANGENCY` only after the root, geometry, negative
+control and complete branch link have all passed.
+
+This certificate proves a local zero-mode touching event, not that it is the
+first loss on the initial canonical interval. It does not exclude earlier
+zero-mode or finite-k loss, certify a Taylor radius, or determine an
+all-density parameter boundary. It adds no Lean theorem or axiom and does
+not change the foundation 1.0.12 baseline.

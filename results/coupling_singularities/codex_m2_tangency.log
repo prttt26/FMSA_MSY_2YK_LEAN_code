@@ -1,0 +1,8 @@
+Float candidate: [15.913019315476436, -12.96640180540829, 0.5529385108141796, -0.482997231020248, 5.6135716462294765, -4.828753838530071, 1.8315356504174727, -2.071664431270689, -0.05790678734019279, -0.09165702758328685]
+f candidate: 0.5044323206321593
+Certified local geometry (PY link pending): {'BH_jacobian_nonsingular': True, 'F0_second_tau_derivative': [0.9908615927082075, 0.9908856055251728], 'minimum_value_w_derivative': [-21.136892775592607, -21.13655663821791], 'minimum_value_f_derivative': [202.33284987011206, 202.33606759542454]}
+  branch link: 100 pieces, tau=3.7218766/5.6136378
+  branch link: 200 pieces, tau=4.9057698/5.6136378
+  branch link: 300 pieces, tau=5.3697171/5.6136378
+PASS: local zero-mode tangency, curvature, transversality and PY branch link
+/home/rpan/YK_tail_FMSA/Lean_code/MSA_and_1st_Truncation/results/coupling_singularities/codex_m2_tangency.json
