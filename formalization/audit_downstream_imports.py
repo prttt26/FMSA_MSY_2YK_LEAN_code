@@ -45,8 +45,8 @@ for name in ('Other_Closures', 'SCOZA', 'FMSA_HSGMSA'):
     report[name] = {
         'status': 'PASS_IMPORT_IMPACT_CHECK' if not forbidden else 'FAIL',
         'scope': 'Only declared active lean_lib sources, excluding archived handoff/results snapshots. '
-                 'Independent downstream proof build NOT_RERUN; foundation change is two leaf paper '
-                 'modules and the aggregate root, with all existing proof sources unchanged.',
+                 'Independent downstream proof build NOT_RERUN; foundation change is leaf paper '
+                 'modules and the aggregate root, with all existing foundation proof sources unchanged.',
         'library_names': [lib['name'] for lib in libraries],
         'active_source_count': len(sources),
         'imports_of_changed_foundation_root_or_paper': forbidden,

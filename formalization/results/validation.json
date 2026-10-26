@@ -1,12 +1,12 @@
 {
   "status": "PASS",
-  "validated_at_utc": "2026-10-26T21:39:22.399104+00:00",
+  "validated_at_utc": "2026-10-26T21:54:16.069394+00:00",
   "toolchain": "leanprover/lean4:v4.31.0",
-  "foundation_version": "1.0.14",
-  "foundation_manifest_sha256": "4a25e48e56e7ee49a879830e544883ee3d212a39963afcb74279829acc2ba709",
-  "foundation_audit": "PASS: foundation 1.0.14, 522 source/config hashes.",
+  "foundation_version": "1.0.15",
+  "foundation_manifest_sha256": "378d478e193756ee198399da00612695f8517c4f967a166b0461c95c97b08c93",
+  "foundation_audit": "PASS: foundation 1.0.15, 525 source/config hashes.",
   "foundation_matches_manifest": true,
-  "check_script_sha256": "6ea91bcf677a4f48c84b71254846e24da1ab1145deb12378b2c329ba5f3a649e",
+  "check_script_sha256": "3c3c0602da4c9bf493783ddf6a4f34348ee5a2b20132bf3f0307c473eb8606b8",
   "dependencies": {
     "mathlib": {
       "head": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -17,7 +17,7 @@
       "status": "T docs/README.md"
     }
   },
-  "theorem_count": 413,
+  "theorem_count": 445,
   "standard_axioms_only": true,
   "modules": [
     {
@@ -500,6 +500,31 @@
       "artifact_sha256": "6a8187d8f8311556ecb3c7f2c6fc2d3df1a161a118e60104ae6398201507ec01"
     },
     {
+      "source": "FMSAPaper/JacobianExterior.lean",
+      "source_sha256": "b4e6f7a4afae6cc16ebb1ebdf07dd89183fbe24891da0876d47170adf6d4f80a",
+      "theorems": [
+        "FMSA.Paper.JacobianExterior.exteriorFunctional_apply",
+        "FMSA.Paper.JacobianExterior.exterior_factorization",
+        "FMSA.Paper.JacobianExterior.exterior_residual_decomposition",
+        "FMSA.Paper.JacobianExterior.residual_amplitudes_hasFDerivAt",
+        "FMSA.Paper.JacobianExterior.exterior_hasFDerivAt",
+        "FMSA.Paper.JacobianExterior.exterior_variation",
+        "FMSA.Paper.JacobianExterior.kernel_exterior_zero",
+        "FMSA.Paper.JacobianExterior.kernel_ordered_exterior_zero",
+        "FMSA.Paper.JacobianExterior.nonlinearH_core_hasFDerivAt",
+        "FMSA.Paper.JacobianExterior.hVariation_core_zero",
+        "FMSA.Paper.JacobianExterior.kernel_pairing_zero_off_contact",
+        "FMSA.Paper.JacobianExterior.kernel_pairing_ae_zero",
+        "FMSA.Paper.JacobianExterior.kernel_spatial_pairing_zero",
+        "FMSA.Paper.JacobianExterior.kernel_curve_exterior_hasDerivAt",
+        "FMSA.Paper.JacobianExterior.kernel_positive_variation_support"
+      ],
+      "guard_count": 15,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/JacobianExterior.olean",
+      "artifact_sha256": "b5c6cb09a62b66e66c219cbeebffcb6c86a9f5ff408bd050e96732b61ca4a0ed"
+    },
+    {
       "source": "FMSAPaper/LocalBranch.lean",
       "source_sha256": "118aa483f11401f448d72afe7745816cfc36f7ac260f0f3f11a15ecfeab081a0",
       "theorems": [
@@ -510,6 +535,43 @@
       "status": "PASS",
       "artifact": ".lake/build/lib/lean/FMSAPaper/LocalBranch.olean",
       "artifact_sha256": "76f4c7616a2a981743c145804e7b8080d3447016c8ca8a04def4c1f75449ac37"
+    },
+    {
+      "source": "FMSAPaper/MatrixOZPairing.lean",
+      "source_sha256": "657d287f6c1476050c36f77d4590ddc17f8b587ec8bce57759a708dad05f3b25",
+      "theorems": [
+        "FMSA.Paper.MatrixOZPairing.linearized_OZ_solution",
+        "FMSA.Paper.MatrixOZPairing.energy_eq_kronecker",
+        "FMSA.Paper.MatrixOZPairing.energy_of_hermitian",
+        "FMSA.Paper.MatrixOZPairing.energy_nonneg",
+        "FMSA.Paper.MatrixOZPairing.energy_pos",
+        "FMSA.Paper.MatrixOZPairing.energy_zero_iff",
+        "FMSA.Paper.MatrixOZPairing.ae_zero_of_integral_energy_zero",
+        "FMSA.Paper.MatrixOZPairing.zero_of_integral_energy_zero",
+        "FMSA.Paper.MatrixOZPairing.actual_radial_denominator_posDef",
+        "FMSA.Paper.MatrixOZPairing.actual_structure_matrix_posDef"
+      ],
+      "guard_count": 10,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/MatrixOZPairing.olean",
+      "artifact_sha256": "693758ace62dd3bab45018db2849fb18b900429c1382a8c6818e3dd2aa1c638c"
+    },
+    {
+      "source": "FMSAPaper/MatrixOZParseval.lean",
+      "source_sha256": "798c0b62d4961ff1e90e5406dc0834ffbfe2caf92758687c366e157a38669454",
+      "theorems": [
+        "FMSA.Paper.MatrixOZParseval.trace_pair_eq_sum",
+        "FMSA.Paper.MatrixOZParseval.fourier_trace_pair_integrable",
+        "FMSA.Paper.MatrixOZParseval.integral_fourier_trace_pair",
+        "FMSA.Paper.MatrixOZParseval.integral_fourier_trace_pair_re",
+        "FMSA.Paper.MatrixOZParseval.spatialPair_zero_of_disjoint",
+        "FMSA.Paper.MatrixOZParseval.positive_OZ_pairing_injective",
+        "FMSA.Paper.MatrixOZParseval.actual_radial_OZ_pairing_injective"
+      ],
+      "guard_count": 7,
+      "status": "PASS",
+      "artifact": ".lake/build/lib/lean/FMSAPaper/MatrixOZParseval.olean",
+      "artifact_sha256": "447b9459433fd599821910933498589ebb121549f40098d321abd0ea0f7ff6eb"
     },
     {
       "source": "FMSAPaper/MixedRateCross.lean",
@@ -1041,10 +1103,10 @@
     ],
     "exit_code": 0,
     "log": "results/default_build.log",
-    "log_sha256": "f84c1ddb0f781c96df57b7c39ae7fc54c0ef4ffd1c5a7777e590f897f7986830"
+    "log_sha256": "1bbdc964d236f11ef7dcc62de51b16823b74837a3cc5c071d8cd1b1ee77dd0a8"
   },
-  "paper_root_sha256": "d20f5394548900088d0781d8949b28b7fbe512f82077af13f8de95c38543a036",
+  "paper_root_sha256": "b7dd94a6d637f74733210d9f02df6e361e8be58b8e672b2f166ea0a0e89e8286",
   "package_entry_sha256": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
   "integration": "Included in the foundation's default Lake build; no external LEAN_PATH.",
-  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis), with an actual A=0 witness at a strictly positive coupling strictly below the fold/common radius for all positive rate/density/diameter states with positive free volume; Actual finite-tail Baxter zero moments, continuous sinc radial Fourier identification including k=0, and a single-tail actual physical DCF zero-moment witness strictly inside the common radius proved; Initial stable-interval convergence iff endpoint <= common radius proved for extended endpoints, with actual BH continuity/root/Jacobian premises explicit; a nonconvergence witness exists inside every interval extending past the radius. Canonicity-to-regularity and tail-domain certification remain open. F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
+  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis), with an actual A=0 witness at a strictly positive coupling strictly below the fold/common radius for all positive rate/density/diameter states with positive free volume; Actual finite-tail Baxter zero moments, continuous sinc radial Fourier identification including k=0, and a single-tail actual physical DCF zero-moment witness strictly inside the common radius proved; Initial stable-interval convergence iff endpoint <= common radius proved for extended endpoints, with actual BH continuity/root/Jacobian premises explicit; a nonconvergence witness exists inside every interval extending past the radius. Actual BH Jacobian-kernel exterior support and zero spatial pairing, noncommutative tangent-OZ algebra, and the L2 matrix Plancherel/positive-pairing injectivity engine proved. Actual tangent L2/spectral-OZ transcription, canonical uniqueness/amplitude recovery, and tail-domain certification remain open. F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
 }

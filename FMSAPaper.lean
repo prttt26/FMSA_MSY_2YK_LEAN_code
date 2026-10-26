@@ -29,7 +29,10 @@ import FMSAPaper.FiniteIntegralJets
 import FMSAPaper.FoldObstruction
 import FMSAPaper.FoldRadius
 import FMSAPaper.HomogeneousJets
+import FMSAPaper.JacobianExterior
 import FMSAPaper.LocalBranch
+import FMSAPaper.MatrixOZPairing
+import FMSAPaper.MatrixOZParseval
 import FMSAPaper.MixedRateCross
 import FMSAPaper.MixedRatePlateau
 import FMSAPaper.MixedRateSpatialMembership

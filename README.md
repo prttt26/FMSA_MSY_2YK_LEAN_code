@@ -64,9 +64,34 @@ the separate `Other_Closures` project. Task status for every group, the
 re-derived axiom ledger and the open items are in `TODO.md` (it replaces the
 `todo_lean.md` and per-track task files that the notes still mention by name).
 
+## 1.0.15: actual Jacobian supports and matrix Parseval
+
+The paper collection has 63 modules and 445 exact standard-axiom guards.
+`JacobianExterior.exterior_residual_decomposition` expresses the actual DCF
+exterior defect as a linear functional of the BH residual, even away from
+roots. Differentiating it proves that every actual amplitude-Jacobian
+kernel direction fixes the exterior DCF, without an assumed curve of roots.
+The actual constructed h has zero core variation, so the spatial pairing
+vanishes a.e., including the density weights and radial measure factor.
+
+`MatrixOZPairing` proves the noncommutative linearized-OZ solution and strict
+positivity of Re trace(D* S D S), where D* is conjugate transpose; D need not
+be Hermitian. The actual radial structure matrix is positive definite when
+the actual factor is invertible. `MatrixOZParseval` proves the full L2
+matrix Plancherel/positive-pairing cancellation engine, including physical
+three-space. Energy integrability is derived from the L2 fields.
+
+This does not complete the general canonical-to-Jacobian theorem. Actual
+tangent L2 membership and spectral OZ transcription, canonical factor
+uniqueness and amplitude recovery remain separate. In particular, an OZ
+identity known only on roots cannot automatically be differentiated along
+an arbitrary Jacobian kernel vector. See
+`proof_notes/codex_jacobian_bridge.md` and the versioned validation under
+`formalization/results/baseline_1_0_15/`.
+
 ## 1.0.14: actual zero-frequency DCF interface
 
-The paper collection has 60 modules and 413 exact standard-axiom guards.
+The paper collection reached 60 modules and 413 exact standard-axiom guards.
 `BaxterZeroMode.fourierQ_zero` evaluates the actual finite-mixture integral
 at zero wave number. For one species and arbitrary finite tails, the actual
 factor satisfies F(0)=A/(2*pi). `RadialZeroMode.root_radial_symbol` identifies

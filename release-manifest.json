@@ -1,6 +1,6 @@
 {
   "project": "MSA_and_1st_Truncation",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "validated_on": "2026-10-26",
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib_revision": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -36,7 +36,10 @@
     "FMSAPaper/FoldObstruction.lean": "810acc1c8d0c8cc230e75f87fb8e146af26a6935a63d845330183e71540ea37a",
     "FMSAPaper/FoldRadius.lean": "89588d19d77d7fa00d63f3c84c5988801e7894fb95443af16d37b52ea69c9549",
     "FMSAPaper/HomogeneousJets.lean": "25b1e8f22244480438d8451b6092c464c3bab5169170b200f083ac564a561442",
+    "FMSAPaper/JacobianExterior.lean": "b4e6f7a4afae6cc16ebb1ebdf07dd89183fbe24891da0876d47170adf6d4f80a",
     "FMSAPaper/LocalBranch.lean": "118aa483f11401f448d72afe7745816cfc36f7ac260f0f3f11a15ecfeab081a0",
+    "FMSAPaper/MatrixOZPairing.lean": "657d287f6c1476050c36f77d4590ddc17f8b587ec8bce57759a708dad05f3b25",
+    "FMSAPaper/MatrixOZParseval.lean": "798c0b62d4961ff1e90e5406dc0834ffbfe2caf92758687c366e157a38669454",
     "FMSAPaper/MixedRateCross.lean": "ef40b6438556d1de52d14fcb776457742e55a663d05625bb0a3df66cd2413795",
     "FMSAPaper/MixedRatePlateau.lean": "6ee9b29bba3e8fc8863cae64a5c8e8000df71c2bb27682d1b0305ad5496a381a",
     "FMSAPaper/MixedRateSpatialMembership.lean": "610fec6eb563cd421f7f225b302ea31e3d71fe62c40af478e870ad2102d40ea5",
@@ -65,7 +68,7 @@
     "FMSAPaper/StrengthScaling.lean": "9251cc4aa8527dcefdcc965800af35ad395b3fa33819b5625063eb99dc912fe1",
     "FMSAPaper/TaylorRoot.lean": "2135f9f85bb94ce8e21ba0d1d78ce98d1895c9767f0eebaaa97ca65e4e571c89",
     "FMSAPaper/WeakDerivativePairing.lean": "53c63fa141acae8ebd2cc20f9d96c8f3496b60d7241c632c3268569fd294eb43",
-    "FMSAPaper.lean": "d20f5394548900088d0781d8949b28b7fbe512f82077af13f8de95c38543a036",
+    "FMSAPaper.lean": "b7dd94a6d637f74733210d9f02df6e361e8be58b8e672b2f166ea0a0e89e8286",
     "LeanCode/Analysis/ArgumentPrinciple.lean": "0bdd47e6d75063ee1347d58a9f0dba5c2f8c0b686d527c390d2880afe900ab89",
     "LeanCode/Analysis/BanachPoleFamily.lean": "3b95030b1b287356f7ce7e2035cb9ac750ca9d49e2237ad70dbebad6c8e06390",
     "LeanCode/Analysis/BoundaryGrowth.lean": "ae68b684ea3d0d4d939465b33aaf5d957b4244a5f08ab5e91763f12e9f60ed13",
@@ -525,30 +528,30 @@
     "LeanCode.lean": "cbd208c12e79fc416daf59969dd88107306996ab63ab170b1c7efdac8c90175c",
     "MSA_and_1st_Truncation.lean": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
     "lake-manifest.json": "f4fd831803fdd1968c310698b93b4dc7526ca87d3c537801c0a06ad0bebfb9d8",
-    "lakefile.toml": "1bfaa20ca7716ec2c9bf94a5f3371fafd79c93d1b5fdca70ade95e9101b40853",
+    "lakefile.toml": "173b22d0781fe193bc32c74143e5d315c5098d21e8a9ff2ec81b6fc9498a51f4",
     "lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee"
   },
   "completion_scope": "Recorded MSA/first-truncation theorem scope and explicit assumptions; unrelated historical conditional FMSA axioms retained.",
   "validation": {
     "foundation": {
       "status": "PASS",
-      "jobs": 9072,
-      "log": "formalization/results/baseline_1_0_14/foundation_build.log",
-      "log_sha256": "d2b5042ccbff5b1f3ceb54c19b61e13a6ff453f1eb86b6195e01a233f9d1ceed"
+      "jobs": 9075,
+      "log": "formalization/results/baseline_1_0_15/foundation_build.log",
+      "log_sha256": "7bb5542682ea4e100fca358d7a4eeae582400c3bd89f3426828fae14d8186288"
     },
     "workspace": {
       "status": "PASS",
-      "jobs": 9193,
-      "log": "formalization/results/baseline_1_0_14/workspace_build.log",
-      "log_sha256": "7bd14e082a544274aadb9286e6196a660e830401bbc4dbabc9ba216a156d042e",
+      "jobs": 9198,
+      "log": "formalization/results/baseline_1_0_15/workspace_build.log",
+      "log_sha256": "93084496985b6e1613364d3a57731ef412d1edbed8faee4174729e5dc39b9203",
       "command": "lake build LeanWorkspace MSA_and_1st_Truncation/ExactMSACertificate MSA_and_1st_Truncation/ExactMSASparseFeasibility MSA_and_1st_Truncation/MatExactMSAEqualDiamCertificate"
     },
     "closures": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.13",
-      "reason": "Only two new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.13. Active downstream library sources import neither FMSAPaper nor the changed aggregate root. This source-impact check and lock audit are not new independent downstream proof builds.",
-      "dependency_import_check": "formalization/results/baseline_1_0_14/downstream_import_check.json",
-      "dependency_import_check_sha256": "d8e11b2047a766b28fa10d4d451cc12fcbc94a4f1dff5098b7dec2a04106249a",
+      "carried_from": "1.0.14",
+      "reason": "Only three new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.14. Active downstream library sources import neither FMSAPaper nor the changed aggregate root. The source-impact check and lock audits are not independent downstream proof builds.",
+      "dependency_import_check": "formalization/results/baseline_1_0_15/downstream_import_check.json",
+      "dependency_import_check_sha256": "1e7f58fbffe620ebceff45dc73675e176476de352ff7bd14402a6f2bd4929f7b",
       "previous": {
         "status": "PASS",
         "jobs": 8688,
@@ -558,10 +561,10 @@
     },
     "scoza": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.13",
-      "reason": "Only two new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.13. Active downstream library sources import neither FMSAPaper nor the changed aggregate root. This source-impact check and lock audit are not new independent downstream proof builds.",
-      "dependency_import_check": "formalization/results/baseline_1_0_14/downstream_import_check.json",
-      "dependency_import_check_sha256": "d8e11b2047a766b28fa10d4d451cc12fcbc94a4f1dff5098b7dec2a04106249a",
+      "carried_from": "1.0.14",
+      "reason": "Only three new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.14. Active downstream library sources import neither FMSAPaper nor the changed aggregate root. The source-impact check and lock audits are not independent downstream proof builds.",
+      "dependency_import_check": "formalization/results/baseline_1_0_15/downstream_import_check.json",
+      "dependency_import_check_sha256": "1e7f58fbffe620ebceff45dc73675e176476de352ff7bd14402a6f2bd4929f7b",
       "previous": {
         "status": "PASS",
         "jobs": 8853,
@@ -571,10 +574,10 @@
     },
     "hsgmsa": {
       "status": "NOT_RERUN",
-      "carried_from": "1.0.13",
-      "reason": "Only two new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.13. Active downstream library sources import neither FMSAPaper nor the changed aggregate root. This source-impact check and lock audit are not new independent downstream proof builds.",
-      "dependency_import_check": "formalization/results/baseline_1_0_14/downstream_import_check.json",
-      "dependency_import_check_sha256": "d8e11b2047a766b28fa10d4d451cc12fcbc94a4f1dff5098b7dec2a04106249a",
+      "carried_from": "1.0.14",
+      "reason": "Only three new leaf FMSAPaper modules, aggregate paper root and Lake version change; all existing foundation proof sources are byte-identical to 1.0.14. Active downstream library sources import neither FMSAPaper nor the changed aggregate root. The source-impact check and lock audits are not independent downstream proof builds.",
+      "dependency_import_check": "formalization/results/baseline_1_0_15/downstream_import_check.json",
+      "dependency_import_check_sha256": "1e7f58fbffe620ebceff45dc73675e176476de352ff7bd14402a6f2bd4929f7b",
       "previous": {
         "status": "PASS",
         "jobs": 9202,
@@ -584,7 +587,7 @@
     },
     "downstream_import_audit_script": {
       "source": "formalization/audit_downstream_imports.py",
-      "sha256": "4f5c6f343ea03b932d14c7c3c95eca605a65eeb3884d09c057468f2cacb6623a"
+      "sha256": "3f1650c88e24507731f7658284af85bbb9b9881e0ef54047daea0a5a085f213b"
     }
   },
   "declaration_preservation": {
@@ -639,21 +642,22 @@
     "scope": "Conditional fold obstruction and convergence implications; spatial finite-span and coupling jets. Remaining analytic, physical-identification, Pringsheim and certified-counterexample obligations remain explicit in FORMALIZATION_TODO.md."
   },
   "paper_proof_updates": {
-    "version": "1.0.14",
-    "modules": 60,
-    "theorem_guards": 413,
-    "new_theorem_guards": 28,
+    "version": "1.0.15",
+    "modules": 63,
+    "theorem_guards": 445,
+    "new_theorem_guards": 32,
     "new_source_files": [
-      "FMSAPaper/BaxterZeroMode.lean",
-      "FMSAPaper/RadialZeroMode.lean"
+      "FMSAPaper/JacobianExterior.lean",
+      "FMSAPaper/MatrixOZPairing.lean",
+      "FMSAPaper/MatrixOZParseval.lean"
     ],
     "changed_files": [
       "FMSAPaper.lean",
       "lakefile.toml"
     ],
-    "previous_manifest": "release-manifest-1.0.13.json",
-    "previous_manifest_sha256": "b13f8bc5efc4f2fb5ea4bb02efca26f30ae7d310960fd7bd9bd349b3fe80111d",
+    "previous_manifest": "release-manifest-1.0.14.json",
+    "previous_manifest_sha256": "4a25e48e56e7ee49a879830e544883ee3d212a39963afcb74279829acc2ba709",
     "existing_proof_sources_unchanged": true,
-    "scope": "Actual finite-mixture Baxter zero integrals and continuity; scalar finite-tail F(0)=A/(2*pi). Actual BH roots have L1 second radial moments and their continuous sinc Fourier symbol equals the actual spectral coefficient for all real wave numbers including zero, with the actual radial Gram identity. Every physical positive single-attractive-tail state has an actual zero-frequency DCF-moment witness strictly inside the common Taylor radius. First-mode identification, RDF positivity and general canonical-to-Jacobian regularity are not claimed. No new axiom."
+    "scope": "Actual off-root DCF exterior residual identity; every BH amplitude-Jacobian kernel direction fixes the exterior, constructed h has zero core variation, and the actual weighted spatial pairing is zero. Noncommutative tangent OZ algebra, strict positive matrix trace pairing and actual structure-matrix positivity proved. L2 matrix Plancherel/positive-OZ-pairing injectivity proved on any finite-dimensional real inner-product space, with internal energy integrability. Actual tangent L2 representation and residual-to-spectral-OZ transcription, canonical tangent-factor uniqueness and amplitude recovery remain open; no general no-fold theorem and no new axiom."
   }
 }

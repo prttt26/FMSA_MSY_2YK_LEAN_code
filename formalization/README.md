@@ -13,12 +13,30 @@ lake build
 python3 formalization/check.py
 ```
 
-The checker uses the default Lake build for sixty paper modules and all
-413 theorem footprints through `#guard_msgs`, audits the versioned foundation,
+The checker uses the default Lake build for sixty-three paper modules and all
+445 theorem footprints through `#guard_msgs`, audits the versioned foundation,
 checks that the default entry imports the complete collection, and saves source
 and compiled-artifact hashes and build logs in
 `formalization/results/validation.json`. Allowed axioms are only `propext`,
 `Classical.choice`, and `Quot.sound`.
+
+## Actual Jacobian and matrix Parseval support
+
+`JacobianExterior` proves the actual off-root exterior residual identity,
+its derivative in every actual BH Jacobian kernel direction, compact
+positive-axis DCF support, and zero spatial c/h pairing. It does not assume
+that a kernel direction integrates to a family of roots.
+`MatrixOZPairing` proves noncommutative tangent OZ algebra, strict positive
+trace pairing and actual structure-matrix positivity. `MatrixOZParseval`
+proves the L2 matrix Plancherel/positive-pairing injectivity engine on any
+finite-dimensional real inner-product space, including physical three-space.
+
+The actual BH-kernel-to-spectral-OZ differential transcription, actual
+tangent L2 representation/control, canonical factor uniqueness and amplitude
+recovery remain open. These modules do not prove general no-fold ordering.
+The core derivative of constructed `nonlinearH` is proved; global actual h
+differentiability is not silently assumed from its totalized `fderiv`.
+See `proof_notes/codex_jacobian_bridge.md` for exact premises and remaining steps.
 
 ## Proved scope
 
@@ -152,8 +170,8 @@ correspondence table `si-tab:si-corr4` cite the declarations; `make check` passe
   does not control nearer complex singularities. The proved contrapositive
   concerns absence of **any real root** for the actual smooth root branch.
 
-Integration was requested on 2026-10-22. The foundation is versioned as 1.0.14;
-1.0.3 through 1.0.13 are preserved in their versioned release manifests.
+Integration was requested on 2026-10-22. The foundation is versioned as 1.0.15;
+1.0.3 through 1.0.14 are preserved in their versioned release manifests.
 The old workspace `Lean_code/formalization` compatibility symlink was removed;
 use this package's `formalization/` directory.
 Historical independent-check results are in `results/pre_integration_1_0_3/`;

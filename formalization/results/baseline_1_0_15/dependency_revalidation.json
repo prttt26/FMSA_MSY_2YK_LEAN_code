@@ -1,0 +1,53 @@
+{
+  "status": "PASS_FOUNDATION_AND_DEPENDENCY_COMPATIBILITY",
+  "foundation_version": "1.0.15",
+  "foundation_manifest_sha256": "378d478e193756ee198399da00612695f8517c4f967a166b0461c95c97b08c93",
+  "foundation_default_build": {
+    "status": "PASS",
+    "jobs": 9075,
+    "log": "MSA_and_1st_Truncation/formalization/results/baseline_1_0_15/foundation_build.log"
+  },
+  "paper_guards": {
+    "status": "PASS",
+    "modules": 63,
+    "theorems": 445
+  },
+  "workspace_and_compatibility_build": {
+    "status": "PASS",
+    "jobs": 9198,
+    "targets": [
+      "LeanWorkspace",
+      "MSA_and_1st_Truncation/ExactMSACertificate",
+      "MSA_and_1st_Truncation/ExactMSASparseFeasibility",
+      "MSA_and_1st_Truncation/MatExactMSAEqualDiamCertificate"
+    ]
+  },
+  "downstream_independent_proof_builds": {
+    "Other_Closures": "NOT_RERUN",
+    "SCOZA": "NOT_RERUN",
+    "FMSA_HSGMSA": "NOT_RERUN"
+  },
+  "downstream_dependency_lock_audits": {
+    "Other_Closures": "PASS",
+    "SCOZA": "PASS",
+    "FMSA_HSGMSA": "PASS"
+  },
+  "scope": "All existing foundation LeanCode and FMSAPaper proof modules are byte-identical to 1.0.14. Only the three new Jacobian/Parseval modules, aggregate paper root and Lake version change. Declared active downstream libraries do not import FMSAPaper or the changed aggregate foundation root. Independent historical downstream proof build evidence is not claimed rerun.",
+  "downstream_import_audit": "MSA_and_1st_Truncation/formalization/results/baseline_1_0_15/downstream_import_check.json",
+  "downstream_import_audit_script": "MSA_and_1st_Truncation/formalization/audit_downstream_imports.py",
+  "downstream_import_audit_script_sha256": "3f1650c88e24507731f7658284af85bbb9b9881e0ef54047daea0a5a085f213b",
+  "evidence_sha256": {
+    "FMSA_HSGMSA_lock_audit.log": "dfe3f99a19e21134519ca24585e1c53c9c84a323193331f20e9fb93c985a91ce",
+    "Other_Closures_lock_audit.log": "db16dd9b1f26b53937c34cb5d941b0e4f1f73739c15edd950c0f55510efc8f3f",
+    "SCOZA_lock_audit.log": "f436cc3f9db8529682b9a2152a28d23a35275b9d8a89d24a0fe61d469b2877c2",
+    "boundary_audit.log": "795794e5d8fe3250a947bf4403bcb053c8de8e2ed669e982e44e1538afeaf150",
+    "default_build.log": "1bbdc964d236f11ef7dcc62de51b16823b74837a3cc5c071d8cd1b1ee77dd0a8",
+    "downstream_import_check.json": "1e7f58fbffe620ebceff45dc73675e176476de352ff7bd14402a6f2bd4929f7b",
+    "foundation_audit.log": "1a0d8ed5be8be7f4b1f44cab9861cd26b23ee735a18756c8660b64b113710020",
+    "foundation_build.log": "7bb5542682ea4e100fca358d7a4eeae582400c3bd89f3426828fae14d8186288",
+    "git_ownership_audit.log": "a86b538161226015b8ca6c0a912cf13065489a8b431cdcf55fa83b4788c6def7",
+    "paper_check.log": "23a13113648f92d4ea16be729ddb562ae95a4c0cc918d440828d88628127a767",
+    "validation.json": "b2e5d6a6e32746a85feda3ad329ceb3ea60bf420dfa5bbe42869113afbcfb091",
+    "workspace_build.log": "93084496985b6e1613364d3a57731ef412d1edbed8faee4174729e5dc39b9203"
+  }
+}
