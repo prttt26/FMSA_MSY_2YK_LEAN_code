@@ -1,0 +1,42 @@
+{
+  "status": "PASS_COMPLEX_DISK_ATLAS",
+  "model": {
+    "eta": "0.1",
+    "z": [
+      "1.8",
+      "12"
+    ],
+    "sigma": "1"
+  },
+  "radius": "5.614",
+  "w_parameter_box": [
+    -4.828753838588361,
+    -4.8287538384717825
+  ],
+  "cells": 40752,
+  "overlaps": 161194,
+  "pruned_cells": 790,
+  "max_depth": 13,
+  "worst_cell_contraction": 0.6176972668617967,
+  "tau_touch_upper": 5.613571646295613,
+  "radius_strictly_above_touch": true,
+  "claim": "For every enclosed fixed real w, the PY-seeded BH germ extends as one holomorphic regular root over an open neighborhood of the entire closed complex disk of the stated radius.",
+  "gluing_argument": "Every retained quadtree cell has a unique regular holomorphic root. Each intersecting pair has a certified common root at one point of its connected intersection. Local implicit uniqueness and continuation along the common edge identify both maps there. The finite maps glue to a neighborhood of the covered closed disk, fixing the germ at the enclosed PY seed.",
+  "scope": "An interval/complex-analysis certificate, not Lean; a radius lower bound, not the exact nearest singularity or an all-density theorem.",
+  "cover": {
+    "file": "codex_m2_disk_analyticity.cover.json.gz",
+    "sha256": "81e2dcb6e73b95576261188321ef71ea0db040818f108f5d78bdfd76514696aa"
+  },
+  "firstness_summary_sha256": "d75a89d83c0c5fb80c3bdcf243e04c9de906384f1a1da4e573a3c518dff0cbb9",
+  "source_sha256": {
+    "scripts/coupling_singularities/codex_m2_disk_analyticity.py": "54443f415e4c4a5ea65563ab2690eded68c4594ee4d70a7d2d39fa8c7d13443d",
+    "scripts/coupling_singularities/codex_m2_tangency.py": "97a7591354187b454f5f98ff948c6bba0f2fe48ff349032ef8b56c149016362f",
+    "formalization/certificates/f5_competing_tails.py": "627fa0095a45d59946c4e51b1e82f0473346e9497d23bca4bd50377925a353a1"
+  },
+  "precision_bits": 192,
+  "dependencies": {
+    "python_flint": "0.6.0",
+    "numpy": "1.26.4"
+  },
+  "seconds": 729.912
+}

@@ -1,0 +1,273 @@
+  atlas: 500 attempted, 359 certified, 11 pending, depth 8
+  atlas: 1000 attempted, 725 certified, 18 pending, depth 8
+  atlas: 1500 attempted, 1101 certified, 14 pending, depth 7
+  atlas: 2000 attempted, 1477 certified, 10 pending, depth 7
+  atlas: 2500 attempted, 1845 certified, 16 pending, depth 6
+  atlas: 3000 attempted, 2216 certified, 13 pending, depth 8
+  atlas: 3500 attempted, 2590 certified, 17 pending, depth 8
+  atlas: 4000 attempted, 2966 certified, 13 pending, depth 7
+  atlas: 4500 attempted, 3336 certified, 16 pending, depth 7
+  atlas: 5000 attempted, 3709 certified, 13 pending, depth 9
+  atlas: 5500 attempted, 4082 certified, 17 pending, depth 9
+  atlas: 6000 attempted, 4457 certified, 17 pending, depth 9
+  atlas: 6500 attempted, 4832 certified, 17 pending, depth 9
+  atlas: 7000 attempted, 5204 certified, 23 pending, depth 9
+  atlas: 7500 attempted, 5578 certified, 17 pending, depth 10
+  atlas: 8000 attempted, 5949 certified, 19 pending, depth 9
+  atlas: 8500 attempted, 6324 certified, 13 pending, depth 11
+  atlas: 9000 attempted, 6698 certified, 17 pending, depth 10
+  atlas: 9500 attempted, 7073 certified, 17 pending, depth 10
+  atlas: 10000 attempted, 7449 certified, 13 pending, depth 10
+  atlas: 10500 attempted, 7819 certified, 23 pending, depth 12
+  atlas: 11000 attempted, 8188 certified, 26 pending, depth 13
+  atlas: 11500 attempted, 8560 certified, 19 pending, depth 13
+  atlas: 12000 attempted, 8934 certified, 23 pending, depth 11
+  atlas: 12500 attempted, 9308 certified, 20 pending, depth 12
+  atlas: 13000 attempted, 9681 certified, 20 pending, depth 12
+  atlas: 13500 attempted, 10058 certified, 12 pending, depth 11
+  atlas: 14000 attempted, 10432 certified, 16 pending, depth 9
+  atlas: 14500 attempted, 10806 certified, 20 pending, depth 11
+  atlas: 15000 attempted, 11183 certified, 12 pending, depth 11
+  atlas: 15500 attempted, 11557 certified, 16 pending, depth 11
+  atlas: 16000 attempted, 11931 certified, 20 pending, depth 11
+  atlas: 16500 attempted, 12308 certified, 12 pending, depth 10
+  atlas: 17000 attempted, 12682 certified, 16 pending, depth 10
+  atlas: 17500 attempted, 13057 certified, 16 pending, depth 9
+  atlas: 18000 attempted, 13433 certified, 12 pending, depth 9
+  atlas: 18500 attempted, 13808 certified, 12 pending, depth 9
+  atlas: 19000 attempted, 14182 certified, 16 pending, depth 7
+  atlas: 19500 attempted, 14559 certified, 8 pending, depth 8
+  atlas: 20000 attempted, 14933 certified, 12 pending, depth 5
+  atlas: 20500 attempted, 15309 certified, 8 pending, depth 7
+  atlas: 21000 attempted, 15684 certified, 8 pending, depth 7
+  atlas: 21500 attempted, 16057 certified, 16 pending, depth 8
+  atlas: 22000 attempted, 16428 certified, 15 pending, depth 7
+  atlas: 22500 attempted, 16798 certified, 16 pending, depth 8
+  atlas: 23000 attempted, 17167 certified, 18 pending, depth 8
+  atlas: 23500 attempted, 17544 certified, 10 pending, depth 7
+  atlas: 24000 attempted, 17919 certified, 10 pending, depth 7
+  atlas: 24500 attempted, 18285 certified, 9 pending, depth 4
+  atlas: 25000 attempted, 18655 certified, 9 pending, depth 3
+  atlas: 25500 attempted, 19030 certified, 9 pending, depth 7
+  atlas: 26000 attempted, 19406 certified, 5 pending, depth 7
+  atlas: 26500 attempted, 19777 certified, 11 pending, depth 5
+  atlas: 27000 attempted, 20150 certified, 10 pending, depth 7
+  atlas: 27500 attempted, 20520 certified, 26 pending, depth 11
+  atlas: 28000 attempted, 20896 certified, 22 pending, depth 11
+  atlas: 28500 attempted, 21271 certified, 22 pending, depth 10
+  atlas: 29000 attempted, 21645 certified, 26 pending, depth 11
+  atlas: 29500 attempted, 22017 certified, 23 pending, depth 12
+  atlas: 30000 attempted, 22392 certified, 23 pending, depth 11
+  atlas: 30500 attempted, 22764 certified, 26 pending, depth 10
+  atlas: 31000 attempted, 23134 certified, 27 pending, depth 12
+  atlas: 31500 attempted, 23504 certified, 25 pending, depth 11
+  atlas: 32000 attempted, 23881 certified, 17 pending, depth 11
+  atlas: 32500 attempted, 24254 certified, 25 pending, depth 10
+  atlas: 33000 attempted, 24630 certified, 21 pending, depth 11
+  atlas: 33500 attempted, 25005 certified, 21 pending, depth 8
+  atlas: 34000 attempted, 25381 certified, 17 pending, depth 10
+  atlas: 34500 attempted, 25753 certified, 20 pending, depth 11
+  atlas: 35000 attempted, 26126 certified, 20 pending, depth 11
+  atlas: 35500 attempted, 26499 certified, 25 pending, depth 10
+  atlas: 36000 attempted, 26874 certified, 15 pending, depth 10
+  atlas: 36500 attempted, 27246 certified, 21 pending, depth 8
+  atlas: 37000 attempted, 27622 certified, 17 pending, depth 10
+  atlas: 37500 attempted, 27996 certified, 21 pending, depth 9
+  atlas: 38000 attempted, 28372 certified, 17 pending, depth 8
+  atlas: 38500 attempted, 28748 certified, 13 pending, depth 9
+  atlas: 39000 attempted, 29121 certified, 19 pending, depth 10
+  atlas: 39500 attempted, 29492 certified, 22 pending, depth 10
+  atlas: 40000 attempted, 29867 certified, 12 pending, depth 9
+  atlas: 40500 attempted, 30239 certified, 17 pending, depth 7
+  atlas: 41000 attempted, 30615 certified, 13 pending, depth 9
+  atlas: 41500 attempted, 30990 certified, 13 pending, depth 9
+  atlas: 42000 attempted, 31364 certified, 17 pending, depth 7
+  atlas: 42500 attempted, 31741 certified, 9 pending, depth 8
+  atlas: 43000 attempted, 32113 certified, 14 pending, depth 9
+  atlas: 43500 attempted, 32486 certified, 10 pending, depth 8
+  atlas: 44000 attempted, 32855 certified, 12 pending, depth 8
+  atlas: 44500 attempted, 33231 certified, 8 pending, depth 8
+  atlas: 45000 attempted, 33604 certified, 16 pending, depth 5
+  atlas: 45500 attempted, 33980 certified, 12 pending, depth 6
+  atlas: 46000 attempted, 34356 certified, 8 pending, depth 5
+  atlas: 46500 attempted, 34727 certified, 13 pending, depth 8
+  atlas: 47000 attempted, 35091 certified, 14 pending, depth 7
+  atlas: 47500 attempted, 35466 certified, 14 pending, depth 6
+  atlas: 48000 attempted, 35838 certified, 7 pending, depth 7
+  atlas: 48500 attempted, 36211 certified, 5 pending, depth 8
+  atlas: 49000 attempted, 36585 certified, 9 pending, depth 7
+  atlas: 49500 attempted, 36960 certified, 9 pending, depth 7
+  atlas: 50000 attempted, 37334 certified, 13 pending, depth 7
+  atlas: 50500 attempted, 37709 certified, 13 pending, depth 6
+  atlas: 51000 attempted, 38084 certified, 9 pending, depth 7
+  atlas: 51500 attempted, 38454 certified, 10 pending, depth 4
+  atlas: 52000 attempted, 38829 certified, 10 pending, depth 8
+  atlas: 52500 attempted, 39204 certified, 10 pending, depth 6
+  atlas: 53000 attempted, 39578 certified, 5 pending, depth 8
+  atlas: 53500 attempted, 39950 certified, 9 pending, depth 8
+  atlas: 54000 attempted, 40318 certified, 8 pending, depth 8
+  atlas: 54500 attempted, 40682 certified, 13 pending, depth 6
+All disk cells certified: 40752; checking common roots
+  overlaps: 1000/161194
+  overlaps: 2000/161194
+  overlaps: 3000/161194
+  overlaps: 4000/161194
+  overlaps: 5000/161194
+  overlaps: 6000/161194
+  overlaps: 7000/161194
+  overlaps: 8000/161194
+  overlaps: 9000/161194
+  overlaps: 10000/161194
+  overlaps: 11000/161194
+  overlaps: 12000/161194
+  overlaps: 13000/161194
+  overlaps: 14000/161194
+  overlaps: 15000/161194
+  overlaps: 16000/161194
+  overlaps: 17000/161194
+  overlaps: 18000/161194
+  overlaps: 19000/161194
+  overlaps: 20000/161194
+  overlaps: 21000/161194
+  overlaps: 22000/161194
+  overlaps: 23000/161194
+  overlaps: 24000/161194
+  overlaps: 25000/161194
+  overlaps: 26000/161194
+  overlaps: 27000/161194
+  overlaps: 28000/161194
+  overlaps: 29000/161194
+  overlaps: 30000/161194
+  overlaps: 31000/161194
+  overlaps: 32000/161194
+  overlaps: 33000/161194
+  overlaps: 34000/161194
+  overlaps: 35000/161194
+  overlaps: 36000/161194
+  overlaps: 37000/161194
+  overlaps: 38000/161194
+  overlaps: 39000/161194
+  overlaps: 40000/161194
+  overlaps: 41000/161194
+  overlaps: 42000/161194
+  overlaps: 43000/161194
+  overlaps: 44000/161194
+  overlaps: 45000/161194
+  overlaps: 46000/161194
+  overlaps: 47000/161194
+  overlaps: 48000/161194
+  overlaps: 49000/161194
+  overlaps: 50000/161194
+  overlaps: 51000/161194
+  overlaps: 52000/161194
+  overlaps: 53000/161194
+  overlaps: 54000/161194
+  overlaps: 55000/161194
+  overlaps: 56000/161194
+  overlaps: 57000/161194
+  overlaps: 58000/161194
+  overlaps: 59000/161194
+  overlaps: 60000/161194
+  overlaps: 61000/161194
+  overlaps: 62000/161194
+  overlaps: 63000/161194
+  overlaps: 64000/161194
+  overlaps: 65000/161194
+  overlaps: 66000/161194
+  overlaps: 67000/161194
+  overlaps: 68000/161194
+  overlaps: 69000/161194
+  overlaps: 70000/161194
+  overlaps: 71000/161194
+  overlaps: 72000/161194
+  overlaps: 73000/161194
+  overlaps: 74000/161194
+  overlaps: 75000/161194
+  overlaps: 76000/161194
+  overlaps: 77000/161194
+  overlaps: 78000/161194
+  overlaps: 79000/161194
+  overlaps: 80000/161194
+  overlaps: 81000/161194
+  overlaps: 82000/161194
+  overlaps: 83000/161194
+  overlaps: 84000/161194
+  overlaps: 85000/161194
+  overlaps: 86000/161194
+  overlaps: 87000/161194
+  overlaps: 88000/161194
+  overlaps: 89000/161194
+  overlaps: 90000/161194
+  overlaps: 91000/161194
+  overlaps: 92000/161194
+  overlaps: 93000/161194
+  overlaps: 94000/161194
+  overlaps: 95000/161194
+  overlaps: 96000/161194
+  overlaps: 97000/161194
+  overlaps: 98000/161194
+  overlaps: 99000/161194
+  overlaps: 100000/161194
+  overlaps: 101000/161194
+  overlaps: 102000/161194
+  overlaps: 103000/161194
+  overlaps: 104000/161194
+  overlaps: 105000/161194
+  overlaps: 106000/161194
+  overlaps: 107000/161194
+  overlaps: 108000/161194
+  overlaps: 109000/161194
+  overlaps: 110000/161194
+  overlaps: 111000/161194
+  overlaps: 112000/161194
+  overlaps: 113000/161194
+  overlaps: 114000/161194
+  overlaps: 115000/161194
+  overlaps: 116000/161194
+  overlaps: 117000/161194
+  overlaps: 118000/161194
+  overlaps: 119000/161194
+  overlaps: 120000/161194
+  overlaps: 121000/161194
+  overlaps: 122000/161194
+  overlaps: 123000/161194
+  overlaps: 124000/161194
+  overlaps: 125000/161194
+  overlaps: 126000/161194
+  overlaps: 127000/161194
+  overlaps: 128000/161194
+  overlaps: 129000/161194
+  overlaps: 130000/161194
+  overlaps: 131000/161194
+  overlaps: 132000/161194
+  overlaps: 133000/161194
+  overlaps: 134000/161194
+  overlaps: 135000/161194
+  overlaps: 136000/161194
+  overlaps: 137000/161194
+  overlaps: 138000/161194
+  overlaps: 139000/161194
+  overlaps: 140000/161194
+  overlaps: 141000/161194
+  overlaps: 142000/161194
+  overlaps: 143000/161194
+  overlaps: 144000/161194
+  overlaps: 145000/161194
+  overlaps: 146000/161194
+  overlaps: 147000/161194
+  overlaps: 148000/161194
+  overlaps: 149000/161194
+  overlaps: 150000/161194
+  overlaps: 151000/161194
+  overlaps: 152000/161194
+  overlaps: 153000/161194
+  overlaps: 154000/161194
+  overlaps: 155000/161194
+  overlaps: 156000/161194
+  overlaps: 157000/161194
+  overlaps: 158000/161194
+  overlaps: 159000/161194
+  overlaps: 160000/161194
+  overlaps: 161000/161194
+PASS: holomorphic PY branch on the complete complex disk
+/home/rpan/YK_tail_FMSA/Lean_code/MSA_and_1st_Truncation/results/coupling_singularities/codex_m2_disk_analyticity.json

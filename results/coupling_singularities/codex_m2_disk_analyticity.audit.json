@@ -1,0 +1,19 @@
+{
+  "status": "PASS_DISK_ATLAS_AUDIT",
+  "cells": 40752,
+  "overlaps": 161194,
+  "pruned_cells": 790,
+  "exact_rational_area_partition": true,
+  "no_interior_overlap": true,
+  "all_closed_intersections_independently_found": true,
+  "all_pair_common_roots_contained": true,
+  "overlap_graph_connected": true,
+  "PY_seed_cells": 4,
+  "positive_complex_cell_replayed": true,
+  "negative_control_displaced_residual_rejected": true,
+  "all_source_and_cover_hashes_match": true,
+  "same_w_as_firstness": true,
+  "radius_above_touch": true,
+  "cover_sha256": "81e2dcb6e73b95576261188321ef71ea0db040818f108f5d78bdfd76514696aa",
+  "scope": "Independent geometric/recorded-bound audit plus one full positive and one displaced-residual negative complex-cell check. All atlas inequalities were computed in the main Arb/acb run."
+}

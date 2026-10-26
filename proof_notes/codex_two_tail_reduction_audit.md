@@ -624,6 +624,120 @@ seven seconds; no TeX or frozen Lean source is changed.
 
 The first-instability statement is for this single control, at its rigorously
 enclosed touching parameter. It is not an all-density or open-parameter
-result. A certified radius comparison on the same selected branch and the
-requested sufficient tail condition remain open. The general mixture
-canonical-to-Jacobian-regularity bridge also remains outside this example.
+result. Section 10 now supplies a sufficient radius lower bound on this
+same selected branch. The requested uniform tail condition and the general
+mixture canonical-to-Jacobian-regularity bridge remain open.
+
+## 10. A complete complex-disk certificate closes the control radius comparison
+
+`scripts/coupling_singularities/codex_m2_disk_analyticity.py` certifies a
+holomorphic PY-seeded amplitude branch over an open neighborhood of the
+**entire closed disk** `abs(tau)<=5.614`, uniformly over the tight touching
+w box of §8. Together with §§8–9 this gives, at the enclosed contact parameter,
+
+`R_common >= 5.614 > tau_inst = tau_touch`.
+
+Consequently every amplitude Taylor series converges absolutely and sums
+to the selected branch throughout the user's initial canonical interval
+`[0,tau_inst)`. This is a complete comparison for this one control point;
+it does not determine the exact radius or a parameter region uniform in
+density. The remaining general questions are unchanged.
+
+### Local certificates and complete disk coverage
+
+The disk is enclosed by a square and subdivided into a quadtree. A cell is
+discarded only if its minimum squared distance from zero is strictly greater
+than the disk radius squared. Every retained cell has a unique BH root in
+a product of four complex rectangles, for all tau in the closed cell and
+all real w in the reported box. The Krawczyk check is performed on the
+equivalent eight-real-coordinate system. It requires strict inclusion and
+a weighted infinity-norm contraction below one, establishing both root
+existence/uniqueness and invertibility of the complex amplitude Jacobian.
+
+The successful atlas has 40752 retained cells and 790 discarded cells, with
+maximum depth 13. Its largest cell contraction bound is below 0.618.
+All four cells containing tau=0 enclose the exact PY seed formula.
+
+An independent audit converts all floating rectangle coordinates to exact
+rational numbers. The leaves have disjoint interiors and their exact areas
+sum to the original square's area; every leaf lies inside that square.
+Since the finite union of closed leaves is closed, a missing point would
+give a missing interior open region of positive area, a contradiction.
+All discarded rectangles are strictly outside the disk by exact rational
+distance comparison. Thus retained rectangles cover the complete closed
+disk, including the boundary and every interior point.
+
+### Gluing the physical branch
+
+For every intersecting pair of retained rectangles, the code certifies a
+common root at the midpoint of their connected intersection (a shared edge
+or corner). Its tiny certified root box is contained in both cell boxes.
+Both cell maps must equal it there by their local uniqueness. This step
+passes for all 161194 intersecting pairs; the independent audit uses a
+different sweep algorithm to confirm that no intersecting pair is omitted.
+
+For a fixed enclosed w, each cell map is continuous on its closed rectangle
+and holomorphic locally, including a neighborhood of each boundary point:
+the polynomial residual is holomorphic and its amplitude Jacobian is
+invertible. On a common edge the equality set of two maps is nonempty,
+closed by continuity and open relative to the edge by local implicit
+uniqueness. Connectedness makes it the whole edge. A corner uses the same
+local uniqueness directly. These local equalities extend to neighborhoods
+of the shared compact intersections. There are finitely many cells, so
+their open extensions may be shrunk to avoid any additional conflicting
+overlaps; they therefore glue to one holomorphic root on a neighborhood
+of the covered disk. The overlap graph is connected and includes the PY
+seed, fixing the branch rather than merely finding unrelated roots.
+
+The complex Taylor theorem now gives convergence inside the disk. Local
+implicit uniqueness at the seed identifies its coefficients with the
+actual derivative/factorial coefficients used in the existing Lean
+`branchCoefficients`/`amplitudeRadius` interfaces. On the real interval the
+same uniqueness identifies the atlas with the branch certified in §§8–9.
+This is an interval/complex-analysis certificate with an explicit gluing
+argument; the finite numerical atlas is not a Lean proof.
+
+### Preserving polynomial dependence
+
+The proof uses the actual cubic BH residual with physical constants computed
+directly in Arb. Centers and preconditioners are floating predictors only.
+It preserves the common tau factor in the preconditioned point residual,
+as in §7. For the Jacobian it also uses its exact quadratic Taylor expansion
+at the cell center: combine the preconditioner with polynomial coefficients
+first, then evaluate in the small shared amplitude increments. All
+coefficients are enclosed in Arb; no polynomial degree is truncated.
+This avoids interval wrapping from separately enclosing Jacobian entries
+before combining them. The real block matrix is
+`[[Re E,-Im E],[Im E,Re E]]` for `E=I-C*J`, so its contraction is exactly
+the required real fixed-point criterion.
+
+An off-real cell was replayed independently from its exported boxes. Adding
+1000 to the first residual, keeping the same Jacobian and boxes, fails the
+same check as a negative control.
+
+### Nearby numerical fold and reproduction
+
+The original float sheet test rejected a fold near
+`tau*=5.623975227095+0.285052523501i`, modulus about 5.631194570971, because
+the first distance slopes were 0.669 and 0.596. Smaller radial samples give
+slopes approaching 0.5 (down to 0.50268), and the refined exact-AD augmented
+residual is about 5.1e-15. Claude's 016 adopts that smaller-distance retry;
+the earlier returned radius estimate 7.643 missed the closer candidate.
+These numerical fold estimates are separate from the proved disk lower
+bound. No rigorous exact nearest-singularity claim is made here.
+
+Run with python-flint 0.6.0 and numpy:
+
+```
+PYTHONPATH=/tmp/codex_fmsa_arb_deps OPENBLAS_NUM_THREADS=1 python3 scripts/coupling_singularities/codex_m2_disk_analyticity.py
+```
+
+Successful runtime is about 730 seconds at 192 bits. The result basename
+`results/coupling_singularities/codex_m2_disk_analyticity` has a `.json`
+summary, full `.cover.json.gz` (about 28 MB), successful `.log`, and a
+separate `.audit.json`. Hashes link all source dependencies, the complete
+cover and the §8 firstness summary. The audit verifies exact area, absence
+of interior overlaps, every closed-cell intersection, every shared root's
+containment, seed cells, overlap connectivity, source hashes and the strict
+comparison with tau_touch. No TeX or frozen Lean source is changed by this
+numerical certificate.
