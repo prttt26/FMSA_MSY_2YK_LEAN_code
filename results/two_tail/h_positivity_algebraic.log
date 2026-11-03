@@ -1,0 +1,5 @@
+cmd: scripts/two_tail/h_positivity_algebraic.py (EXTERNAL multiprecision check, NOT a Lean proof)
+H: 775 coefficients of 1/U in theta, negative: 0
+r against the Cauchy form, squarefree alpha with x off the poles: 35 coefficients, largest relative difference 1.0e-49
+r against quadrature of the squared norm: 620 coefficients, largest relative difference 7.4e-49
+smallest value of any coefficient read 4.883e-7

@@ -1,0 +1,167 @@
+{
+  "status": "PASS_BODY_REPLAY",
+  "label": "EXPRESSION PROVENANCE ONLY; NO MATHEMATICAL PREMISE",
+  "created_at_utc": "2026-10-31T02:18:26.765326+00:00",
+  "python": "3.12.2 | packaged by conda-forge | (main, Feb 16 2024, 20:50:58) [GCC 12.3.0]",
+  "dependencies": {
+    "sympy": "1.13.2",
+    "python_flint": "0.6.0"
+  },
+  "inputs_sha256": {
+    "MSAConvergence/M2ZeroMode.lean": "c4d5448acd20b86483b59d9bc2c0d978dbfc5d828923cc85dc54fd3576315fc9",
+    "MSAConvergence/M2TangencySystem.lean": "13affc730d9193ce993f0ce5492c273a69539122029b32e41b13c83eb70ba7d6",
+    "MSAConvergence/PolynomialNewtonMap.lean": "f93df244fe0fe92ab96cc94494cda3fd530632b7dfab6adf71e8597caaf8db3f",
+    "MSAConvergence/M2TangencyPolynomials.lean": "9810b382121ecee0e720925c59b1e2a5e82dcf8067b895286d262a9f8cb6d2c3",
+    "MSAConvergence/M2TangencyJacobian.lean": "5063f790c895fe84ac8820e7452d26c78383e1e035ffc63e8c542fe426ccb23d",
+    "MSAConvergence/M2TangencyData.lean": "a514e65293f6399396b99220f5357292ad5d517239afb87596647b9e03b7358d",
+    "MSAConvergence/M2TangencyJacobianBounds.lean": "7829fc07a2436d70fa794cbf3fb19d016304a87f9aa40a4f4a0266362159a94c",
+    "MSAConvergence/M2TangencyDefect.lean": "ac531ca879985e3f874db6274dc5729e2e43299d9160b154250ec54bba911823",
+    "MSAConvergence/M2TangencyCenter.lean": "a4e6444931d3d5ff45b6f4eceb2979ea12b0b59c5188835dacb9a390211fced1",
+    "MSAConvergence/M2TangencyExistence.lean": "bd28e9954367f2955b6f5d75d50ca14c8888710e10098e2116b6bd4b9296d024",
+    "MSAConvergence/PreconditionedLinearError.lean": "994d90af738818fa6863b89d2b4d8394161fefd4e345a6eab0e98836962127f9",
+    "MSAConvergence/M2BranchSecondDerivative.lean": "50a8602ee9de4d017b4d4c1b79a41ac7635eaa2aff01df2baad1840a85dd25f3",
+    "MSAConvergence/M2CurvatureCertificate.lean": "da1709c87261c97c4930c44d75814e794af6f82d57d7b8ccf4308f5a13d688b1",
+    "MSAConvergence/M2Curvature.lean": "9ada995689b3d7cec6d65739d2c20f76ec7f7f98408d9ff60784ef68e1162c3e",
+    "MSAConvergence/M2WeightBranch.lean": "2b68152f4227e582877aa016162e615263c83103a477d748761b23c75a102331",
+    "MSAConvergence/M2WeightCertificate.lean": "9d638254c4d7430444a31ab458e84217dd1a4a43381086cc98369986c7a5e30c",
+    "MSAConvergence/M2WeightTransversality.lean": "74bedd1c0c9629639e61259b01953b1f19ff68088114338fe5fcf88736840119",
+    "MSAConvergence/M2JointBranch.lean": "2102a438b950d01e6020220ed810678c10e9501e28066cc782115e0b2146cf26",
+    "MSAConvergence/ImplicitZeroContour.lean": "1eceb6acdb85d9a5cadedae43b20b753360efcb3310cc440c6d4c8a2686ec47d",
+    "MSAConvergence/M2JointZeroContour.lean": "a4f6164fefddb1de87c22564ebd0a79f391f2cff8df49e80c9a6f2ca01083c14",
+    "MSAConvergence/ImplicitContourCurvature.lean": "7a66f4a0d0595e55765806dc0336695441ed33b1d4a53debacd90db12f221eea",
+    "MSAConvergence/M2ContourCurvature.lean": "ee4207ed2ea6ca8f654fb04f0a4206da60f1a9a55c73bbb9d45e39959ba0d93b",
+    "MSAConvergence/LocalMinimumLevels.lean": "6b66b7e8bce288a6b681ca229ab76ca2783a1a0a63198d69fd6c603a6d6a2b84",
+    "MSAConvergence/M2LocalBifurcation.lean": "290f7eff64544947eae97646b85e820b6951dd7266d85724ae0031d278fd6dab",
+    "scripts/certificates/check_m2_tangency_generation.py": "77f930eb9c62482e88c72364f5d4907abfc4173ca12cf89ce9e519564bfea2f1",
+    "scripts/certificates/generate_m2_zero_mode.py": "b1c4dcc442069ee06e6818971199f802e585921dc7f75979b3c539d7420c9d6e",
+    "scripts/certificates/m2_tangency_symbolics.py": "62e9001a75bf24befa74be3c5638dc35ad8776caa884fa769e27d330d22ee7c6",
+    "scripts/certificates/generate_m2_tangency_polynomials.py": "d6c7f150767a83317a9d8c186451a3860e6fc50834f7a0e3c14fdd04f8e38e79",
+    "scripts/certificates/generate_m2_tangency_jacobian.py": "4552169d6acfec51b1a86bfe1e016fe3b5dcb44b03064ed36ed8a6a13bc0bb7d",
+    "scripts/certificates/generate_m2_tangency_certificate.py": "308a692dfbb75c6f5260ef51d6f5f83f5bf26887dce1048219cc744cb0ce0701",
+    "scripts/certificates/generate_m2_kernel_certificate.py": "47f118e0fa487a558a2cfa2ab98bc95d4a408311fa2758513eb5e10ba42cdc1b",
+    "scripts/certificates/codex_m2_jacobian_arb.py": "a2433cc0a8d38b2042502b958d01b7c3635228a5ece9e017a900e91ebdfbf5fa",
+    "scripts/certificates/generate_m2_curvature_certificate.py": "445ed5804f1609e28bc41d9b46dd381c69514e6eb68f5d8246c708f1f53eda7c",
+    "scripts/certificates/generate_m2_weight_certificate.py": "6da7e000f289759aaa030c33e370ab6822c7cc4dfb9429226e462ff4462fc05b",
+    "results/certificates/codex_m2_tangency_kernel_inputs.json": "307ae992211ac661d246ef8b701b3f0ac92714bf32ff5c610b99fde6bfa7762b",
+    "results/certificates/codex_m2_jacobian_arb.json": "a29d2618edcec0daa5f752a87a755c4cb745769a4358e456fc70b0b9ffc82fc8",
+    "../MSA_and_1st_Truncation/results/coupling_singularities/codex_m2_zero_mode_firstness.json": "d75a89d83c0c5fb80c3bdcf243e04c9de906384f1a1da4e573a3c518dff0cbb9"
+  },
+  "generated": [
+    {
+      "module": "MSAConvergence.M2ZeroMode",
+      "source": "MSAConvergence/M2ZeroMode.lean",
+      "command": [
+        "/opt/anaconda3/bin/python3",
+        "scripts/certificates/generate_m2_zero_mode.py"
+      ],
+      "source_sha256": "c4d5448acd20b86483b59d9bc2c0d978dbfc5d828923cc85dc54fd3576315fc9",
+      "stdout_sha256": "f66c3933244788ee1ed59a041ec05191d717cb55d23b8b88d1da9b1feb70214d",
+      "source_prefix_sha256": "f66c3933244788ee1ed59a041ec05191d717cb55d23b8b88d1da9b1feb70214d",
+      "canonical_generated_sha256": "f66c3933244788ee1ed59a041ec05191d717cb55d23b8b88d1da9b1feb70214d"
+    },
+    {
+      "module": "MSAConvergence.M2TangencyPolynomials",
+      "source": "MSAConvergence/M2TangencyPolynomials.lean",
+      "command": [
+        "/opt/anaconda3/bin/python3",
+        "scripts/certificates/generate_m2_tangency_polynomials.py"
+      ],
+      "source_sha256": "9810b382121ecee0e720925c59b1e2a5e82dcf8067b895286d262a9f8cb6d2c3",
+      "stdout_sha256": "9ba5fbb1b4ad6fbf5731b6f61faa7e632a5819140198822574d569e4cb3a8074",
+      "source_prefix_sha256": "9ba5fbb1b4ad6fbf5731b6f61faa7e632a5819140198822574d569e4cb3a8074",
+      "canonical_generated_sha256": "9ba5fbb1b4ad6fbf5731b6f61faa7e632a5819140198822574d569e4cb3a8074"
+    },
+    {
+      "module": "MSAConvergence.M2TangencyJacobian",
+      "source": "MSAConvergence/M2TangencyJacobian.lean",
+      "command": [
+        "/opt/anaconda3/bin/python3",
+        "scripts/certificates/generate_m2_tangency_jacobian.py"
+      ],
+      "source_sha256": "5063f790c895fe84ac8820e7452d26c78383e1e035ffc63e8c542fe426ccb23d",
+      "stdout_sha256": "2f40886ff0998aeef15a3adf8f8fe83c060c5cab11a0f69b82c5e8c5b22abe57",
+      "source_prefix_sha256": "2f40886ff0998aeef15a3adf8f8fe83c060c5cab11a0f69b82c5e8c5b22abe57",
+      "canonical_generated_sha256": "2f40886ff0998aeef15a3adf8f8fe83c060c5cab11a0f69b82c5e8c5b22abe57"
+    },
+    {
+      "module": "MSAConvergence.M2TangencyData",
+      "source": "MSAConvergence/M2TangencyData.lean",
+      "command": [
+        "/opt/anaconda3/bin/python3",
+        "scripts/certificates/generate_m2_tangency_certificate.py",
+        "data"
+      ],
+      "source_sha256": "a514e65293f6399396b99220f5357292ad5d517239afb87596647b9e03b7358d",
+      "stdout_sha256": "89c739f354dbc4fa54e9974ed7fde6ef88b9943ee5f4d86c112f5d64155eed42",
+      "source_prefix_sha256": "89c739f354dbc4fa54e9974ed7fde6ef88b9943ee5f4d86c112f5d64155eed42",
+      "canonical_generated_sha256": "89c739f354dbc4fa54e9974ed7fde6ef88b9943ee5f4d86c112f5d64155eed42"
+    },
+    {
+      "module": "MSAConvergence.M2TangencyJacobianBounds",
+      "source": "MSAConvergence/M2TangencyJacobianBounds.lean",
+      "command": [
+        "/opt/anaconda3/bin/python3",
+        "scripts/certificates/generate_m2_tangency_certificate.py",
+        "jacobian_bounds"
+      ],
+      "source_sha256": "7829fc07a2436d70fa794cbf3fb19d016304a87f9aa40a4f4a0266362159a94c",
+      "stdout_sha256": "49d6d830605f6659de432e3d7339f612e6ddf0213ce90c680663752553a94d1d",
+      "source_prefix_sha256": "49d6d830605f6659de432e3d7339f612e6ddf0213ce90c680663752553a94d1d",
+      "canonical_generated_sha256": "49d6d830605f6659de432e3d7339f612e6ddf0213ce90c680663752553a94d1d"
+    },
+    {
+      "module": "MSAConvergence.M2TangencyDefect",
+      "source": "MSAConvergence/M2TangencyDefect.lean",
+      "command": [
+        "/opt/anaconda3/bin/python3",
+        "scripts/certificates/generate_m2_tangency_certificate.py",
+        "defect"
+      ],
+      "source_sha256": "ac531ca879985e3f874db6274dc5729e2e43299d9160b154250ec54bba911823",
+      "stdout_sha256": "b3ab18da750737fbdb345be5f640c20914131cc47d2d4c1d21ce84a606fe9897",
+      "source_prefix_sha256": "b3ab18da750737fbdb345be5f640c20914131cc47d2d4c1d21ce84a606fe9897",
+      "canonical_generated_sha256": "b3ab18da750737fbdb345be5f640c20914131cc47d2d4c1d21ce84a606fe9897"
+    },
+    {
+      "module": "MSAConvergence.M2TangencyCenter",
+      "source": "MSAConvergence/M2TangencyCenter.lean",
+      "command": [
+        "/opt/anaconda3/bin/python3",
+        "scripts/certificates/generate_m2_tangency_certificate.py",
+        "center"
+      ],
+      "source_sha256": "a4e6444931d3d5ff45b6f4eceb2979ea12b0b59c5188835dacb9a390211fced1",
+      "stdout_sha256": "846d10e7d0026d19258b41a4a7dac50967614f6974a2c46d7da744d5d180c6cd",
+      "source_prefix_sha256": "846d10e7d0026d19258b41a4a7dac50967614f6974a2c46d7da744d5d180c6cd",
+      "canonical_generated_sha256": "846d10e7d0026d19258b41a4a7dac50967614f6974a2c46d7da744d5d180c6cd"
+    },
+    {
+      "module": "MSAConvergence.M2CurvatureCertificate",
+      "source": "MSAConvergence/M2CurvatureCertificate.lean",
+      "command": [
+        "/opt/anaconda3/bin/python3",
+        "scripts/certificates/generate_m2_curvature_certificate.py"
+      ],
+      "source_sha256": "da1709c87261c97c4930c44d75814e794af6f82d57d7b8ccf4308f5a13d688b1",
+      "stdout_sha256": "f10b1745c88a09cf65b8e9832a004a738c2cb012a75f401cc7945cb1885c4688",
+      "source_prefix_sha256": "f10b1745c88a09cf65b8e9832a004a738c2cb012a75f401cc7945cb1885c4688",
+      "canonical_generated_sha256": "f10b1745c88a09cf65b8e9832a004a738c2cb012a75f401cc7945cb1885c4688"
+    },
+    {
+      "module": "MSAConvergence.M2WeightCertificate",
+      "source": "MSAConvergence/M2WeightCertificate.lean",
+      "command": [
+        "/opt/anaconda3/bin/python3",
+        "scripts/certificates/generate_m2_weight_certificate.py"
+      ],
+      "source_sha256": "9d638254c4d7430444a31ab458e84217dd1a4a43381086cc98369986c7a5e30c",
+      "stdout_sha256": "ad1bbc3e6c4bad120dce707267b13bbd4065cbd5dcd82602631854d8f88ea5c6",
+      "source_prefix_sha256": "ad1bbc3e6c4bad120dce707267b13bbd4065cbd5dcd82602631854d8f88ea5c6",
+      "canonical_generated_sha256": "ad1bbc3e6c4bad120dce707267b13bbd4065cbd5dcd82602631854d8f88ea5c6"
+    }
+  ],
+  "generated_count": 9,
+  "analytic_enclosure_assumed": false,
+  "numerical_root_assumed": false,
+  "scope": "Nine byte-identical generated source prefixes; all37 source/input fingerprints. Ordinary Lean proofs and guarded full validation remain separate."
+}

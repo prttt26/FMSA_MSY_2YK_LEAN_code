@@ -1,0 +1,23 @@
+# /opt/anaconda3/bin/python -W ignore two_tail_m2_fine.py 0.49 3.0:24.0:0.142578125:0.1427734375:11 7.0:14.0:0.5113281249999999:0.5115234374999999:11
+z=(3.0,24.0) f=0.14258: crossing_bracket      ti=27.44538572103517 R=27.502008758052856 [real] m=0.00206311682383431 tau_f=27.50201081021967  minF0=-0.1262@tau=27.502 trace_end=27.502
+z=(3.0,24.0) f=0.14260: crossing_bracket      ti=27.629830661485673 R=27.691759922985703 [real] m=0.0022413912795475888 tau_f=27.69176218632266  minF0=-0.1255@tau=27.692 trace_end=27.692
+z=(3.0,24.0) f=0.14262: crossing_bracket      ti=27.82487033747215 R=27.893349233158542 [real] m=0.0024610679171492844 tau_f=27.893351692245382  minF0=-0.1248@tau=27.893 trace_end=27.893
+z=(3.0,24.0) f=0.14264: crossing_bracket      ti=28.05892157079746 R=28.137357618659458 [real] m=0.0027954049361480493 tau_f=28.1373605753589  minF0=-0.1239@tau=28.137 trace_end=28.137
+z=(3.0,24.0) f=0.14266: crossing_bracket      ti=28.324373162507772 R=28.044357778943677 [complex] m=-0.009886022259258498 tau_f=28.41649854176103  minF0=-0.123@tau=28.416 trace_end=28.416
+z=(3.0,24.0) f=0.14268: no_crossing_up_to_cap ti=None R=28.038850249707842 [complex] m=-0.019607843137254943 tau_f=None  minF0=-0.1217@tau=28.808 trace_end=28.808
+z=(3.0,24.0) f=0.14269: no_crossing_up_to_cap ti=None R=28.033619884078927 [complex] m=-0.019607843137254943 tau_f=None  minF0=-0.09114@tau=29.760 trace_end=36.444
+z=(3.0,24.0) f=0.14272: no_crossing_up_to_cap ti=None R=28.028116116334466 [complex] m=-0.019607843137254832 tau_f=None  minF0=+0.1192@tau=29.697 trace_end=36.437
+z=(3.0,24.0) f=0.14273: no_crossing_up_to_cap ti=None R=28.022889322382024 [complex] m=-0.019607843137254943 tau_f=None  minF0=+0.2124@tau=29.697 trace_end=36.430
+z=(3.0,24.0) f=0.14275: no_crossing_up_to_cap ti=None R=28.0173893124671 [complex] m=-0.019607843137254832 tau_f=None  minF0=+0.288@tau=29.635 trace_end=36.423
+z=(3.0,24.0) f=0.14277: no_crossing_up_to_cap ti=None R=28.012166086716785 [complex] m=-0.019607843137254943 tau_f=None  minF0=+0.3485@tau=29.635 trace_end=36.416
+z=(7.0,14.0) f=0.51133: crossing_bracket      ti=80.82812889474621 R=83.72945881435928 [real] m=0.03589505236959223 tau_f=83.72946190896623  minF0=-0.5205@tau=83.729 trace_end=83.729
+z=(7.0,14.0) f=0.51135: crossing_bracket      ti=81.18334554960532 R=83.79064249009528 [complex] m=0.03211615538678214 tau_f=84.3449724554572  minF0=-0.5175@tau=84.345 trace_end=84.345
+z=(7.0,14.0) f=0.51137: crossing_bracket      ti=81.54340176151791 R=83.7823322569557 [complex] m=0.02745691799792427 tau_f=85.05351807581228  minF0=-0.5142@tau=85.054 trace_end=85.054
+z=(7.0,14.0) f=0.51139: crossing_bracket      ti=81.95117033936164 R=83.77358599255405 [complex] m=0.022237823397100343 tau_f=None  minF0=-0.5095@tau=86.068 trace_end=86.068
+z=(7.0,14.0) f=0.51141: crossing_bracket      ti=82.37232171980301 R=83.76527832306937 [complex] m=0.016910493405838833 tau_f=None  minF0=-0.4195@tau=88.135 trace_end=108.895
+z=(7.0,14.0) f=0.51143: crossing_bracket      ti=82.86145351953942 R=83.7565347566935 [complex] m=0.010802142602325926 tau_f=None  minF0=-0.2737@tau=88.010 trace_end=108.883
+z=(7.0,14.0) f=0.51145: crossing_bracket      ti=83.38478541814503 R=83.74822964979967 [complex] m=0.004358639646694584 tau_f=None  minF0=-0.194@tau=87.885 trace_end=108.873
+z=(7.0,14.0) f=0.51146: crossing_bracket      ti=84.02637987255905 R=83.73948878032913 [complex] m=-0.003414297898648555 tau_f=None  minF0=-0.1281@tau=87.822 trace_end=108.861
+z=(7.0,14.0) f=0.51148: crossing_bracket      ti=84.7794909838041 R=83.73118623496661 [complex] m=-0.012365074815532284 tau_f=None  minF0=-0.07496@tau=87.760 trace_end=108.851
+z=(7.0,14.0) f=0.51150: no_crossing_up_to_cap ti=None R=83.72244806128568 [complex] m=-0.019607843137254943 tau_f=None  minF0=-0.02544@tau=87.697 trace_end=108.839
+z=(7.0,14.0) f=0.51152: no_crossing_up_to_cap ti=None R=83.71414807639201 [complex] m=-0.019607843137254832 tau_f=None  minF0=+0.01721@tau=87.635 trace_end=108.828

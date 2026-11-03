@@ -1,0 +1,9 @@
+source, generator/model and Lean hashes match the files on disk: True
+a p slab ends exactly at p_star: True
+1563 slabs (238 tau, 1325 p): tau slabs tile [0, 9.5] True, p slabs contiguous True; every Krawczyk recomputed, K strictly in Y, q < 1, A > 0 where required, dtau/dp > 0 on every p slab: True (max q 0.549457, min dtau/dp lower bound 4.0490e-07)
+seed (Dt = 0, tau = 0) inside the first box: True
+1561 link boxes at the breaks: Krawczyk recomputed, inside both neighbouring boxes: True
+switch box at tau_s = 9.5: inside the last tau slab and the first p slab: True
+endpoint lo: tiny box Krawczyk recomputed, inside slab 1559, A sign +, p range <= p_star: True
+endpoint hi: tiny box Krawczyk recomputed, inside slab 1561, A sign -: True
+ALL RATIONAL CHECKS PASS

@@ -1,0 +1,82 @@
+{
+  "status": "PASS_EXTERNAL_M3_MONODROMY_AUDIT",
+  "created_at_utc": "2026-10-31T07:28:22.789074+00:00",
+  "label": "EXTERNAL Arb/Fraction certificate; NOT a Lean proof",
+  "precision_bits": 512,
+  "versions": {
+    "python": "3.12.2",
+    "python_flint": "0.6.0",
+    "sympy": "1.13.2"
+  },
+  "inputs_sha256": {
+    "MSA_Convergence/scripts/certificates/codex_first_loss_arb_audit.py": "4b0b1a33e2dde32b2ca84e626935bd9eb13b768d6329e38b317d45533f476487",
+    "MSA_Convergence/results/two_tail/two_tail_endpoint_interval_exact.json": "0f8e07f7bafba2cb5b22525e9371404337fc93f7bd5eecbf6862486aacf2b65e",
+    "MSA_Convergence/results/certificates/codex_py_seeded_chain_audit.json": "62e3d1da933cbbf80bcf1d7e6e2b50d95b49d03e038a6a47b6cb1f3a8996042b",
+    "MSA_Convergence/MSAConvergence/BHResidualPolynomials.lean": "e42b6df1ece03fdba33242b8ab2e0abbb2dbf64c16628e03a44fa85579dc22f6",
+    "MSA_and_1st_Truncation/FMSAPaper/BaxterZeroMode.lean": "55a53f9143f065111d4d039190e5f064ad193639c946035c6386c2339775dc50",
+    "MSA_Convergence/MSAConvergence/CanonicalFirstLoss.lean": "18cfde9808676d25f07df8d63163465c224cb16261cc6f01c9ff4a5f6698a078",
+    "MSA_Convergence/MSAConvergence/ScalarCanonicalSeed.lean": "a002e005e9f4d1f0e0a418bb85c3923b935e0ee67196bdc3fbb18cddaa797146",
+    "MSA_and_1st_Truncation/LeanCode/HSMixture/MatrixQ0.lean": "94412a4cbcd1809766a7730bc03fb2f7ef1bea51dcd7034870e7652d66e7fbed",
+    "MSA_and_1st_Truncation/LeanCode/YukawaOZMix/MSAMultiTailMixtureBaxter.lean": "e440aea32efea6bc19d261291fb0fe6d7e8ee2342c5b5406de7614c3784fe0f7",
+    "MSA_and_1st_Truncation/LeanCode/YukawaOZMix/MSAMultiTailMixtureFourier.lean": "3b85fc7cd31733a55abe1765d79c19e9662dc453807069ad56c88b26eebc7b0e",
+    "MSA_and_1st_Truncation/LeanCode/YukawaOZMix/MSAMultiTailMixtureSpectral.lean": "8fcabc4a2ca7a3eb2e0a607b66abffb2f42017155c261447ac440d59777a62ae",
+    "MSA_and_1st_Truncation/LeanCode/YukawaOZMix/MSAMultiTailMixtureSystem.lean": "82cab3e69d8986fb7d447b6b6dab92d4cf7956d05db1e49ecb74c8e720a778c1",
+    "MSA_and_1st_Truncation/LeanCode/YukawaOZMix/MSAMixtureConcrete.lean": "e82ee8bfc82cc62bf0ab75099ef2f33f54e40a00bbb161fe15c22612d573340b",
+    "MSA_and_1st_Truncation/LeanCode/YukawaOZMix/MSAMixtureCancellation.lean": "a8ece8a388fe636edc28776efb3a8322940b298ff1857bf7309632c200cc8f7a",
+    "MSA_Convergence/scripts/two_tail/check_first_loss_rational.py": "93c5b83fdfef52ac4973b78fb8b29ae543c97127c4ffcef65b4d42e2b2933359",
+    "MSA_Convergence/results/two_tail/two_tail_first_loss_M3.json.gz": "e69fd0fe7db51a42d66d9b51c5d3c5c78088a4301d1ca7c080d6e2cd80422208",
+    "MSA_Convergence/results/two_tail/two_tail_py_chain_M3.json.gz": "703af5b6340569467b71df6a74233fe1971037c2b31a9841d68c48b8fc6b1a78",
+    "MSA_Convergence/results/two_tail/two_tail_first_loss_M1.json.gz": "746120ce7b5c5e1850b864da49f34ec55a654b3024294be003bf6677fb3c7650",
+    "MSA_Convergence/results/two_tail/two_tail_py_chain_M1.json.gz": "f982f8aae80701edf411c6febd9afe993423d8ee3db11a1bcf50fb7e69c52da9",
+    "MSA_Convergence/scripts/certificates/check_py_seeded_chain_rational.py": "c316dbaded6854afe6b3df31faf9e818a95e6a510f2b2b5b445fbcdcf8b0677d",
+    "MSA_Convergence/scripts/two_tail/two_tail_py_chain.py": "249c161141a40bcb585291f7763261d138bfbf132cb768a54150ed90d14e8b29",
+    "MSA_Convergence/scripts/two_tail/two_tail_m3_arb_recheck.py": "9b80777bfc0412c4c15f1a579e22fb977bde9485b8147ef39caf777db8736d76",
+    "MSA_Convergence/scripts/certificates/check_endpoint_witness_rational.py": "eb6575d7b647059dbd54d9935b5d465fc4812257c016c9133ac25deaa8999f08",
+    "MSA_Convergence/scripts/certificates/codex_m1_parameter_monotonicity_arb.py": "34c20616ce74f81021fcb6322cd8f992878a4ba7aa5c86eb04c91379478c153a",
+    "MSA_Convergence/scripts/two_tail/two_tail_first_loss.py": "3a1fb1da818a0462113c59d41a745a27f4c085f4bb6ad057e39bf29a0c5efec5",
+    "MSA_Convergence/results/certificates/codex_first_loss_arb_audit.json": "c00dcaa32ee72743d573952b5ad4d99da6f45af2a7a4815b6815ca18aaa1bfa0",
+    "MSA_Convergence/scripts/certificates/codex_m3_polygon_arb.py": "578a869ef32d00fb0c61a083432605a9b6442ad3dcea325a23fe365a68b6b9b5",
+    "MSA_and_1st_Truncation/formalization/certificates/f5_competing_tails.py": "627fa0095a45d59946c4e51b1e82f0473346e9497d23bca4bd50377925a353a1",
+    "MSA_Convergence/results/certificates/codex_m3_polygon_arb_witness.json.gz": "863c59e57e7297e4a1afa7e9f8f2f62258dc267385d7ea4673c78a6e863b5cd7",
+    "MSA_Convergence/scripts/certificates/codex_m3_polygon_arb_replay.py": "465726c406691b0b64721b02e8c84026fbac84831d86af1df95d0ee5f2e5e6a4"
+  },
+  "parameters": {
+    "eta": "49/100",
+    "rates": [
+      "7",
+      "14"
+    ],
+    "strengths": [
+      "1",
+      "-419/384"
+    ],
+    "sigma": "1"
+  },
+  "path_slabs": 4210,
+  "krawczyk_checks": 8420,
+  "weighted_complex_defect_upper_bound": "10529938269578322007599968001299652785594589381782577053713079628512897083818071173946186970463938549070175538610356178697960786750500577531673275622616399/26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192",
+  "weighted_real_component_defect_upper_bound": "12673614271434544502267041721850343831660853145864367600894414587735491042902477812465069405133920026510511307632010029118598978733394776439341934648311323713319745950841736060696051799882593755537587769372343549888297855401531982586714965741205676904039774166350677/22821671098041069861111371607896930252156077865338144728623888390153116670655745134538411157993689355779740438220908239963312576102201786427824386282709038007626640785760664054740678857050833527722604131178955290429114846151834454187625159792904080661228215892705280",
+  "negative_controls_rejected": [
+    "missing prefix segment",
+    "missing initial slab",
+    "false affine parameter enclosure",
+    "false smaller radius",
+    "false actual HS seed box",
+    "zero complex preconditioner",
+    "false amplitude center",
+    "unlinked switched endpoint root",
+    "forged loop endpoint",
+    "corrupted provenance pin"
+  ],
+  "actual_seed_and_BH_dictionary_symbolically_checked": true,
+  "exact_path_inside_disk": true,
+  "disjoint_loop_end_roots": true,
+  "common_amplitude_Taylor_radius_upper_bound": "84",
+  "canonical_real_coupling_outside_radius": "337/4",
+  "canonical_prefix_dependency": "results/certificates/codex_first_loss_arb_audit.json",
+  "first_loss_tau_lo": "231952160772086804783922789/2748779069440000000000000",
+  "first_loss_tau_lo_source": "controls[M3].rigorous_bracket.lo.tau",
+  "canonical_prefix_required_slabs": 657,
+  "seconds": 50.52778944093734,
+  "scope": "The HS-seeded complexified ORIGINAL BH germ has monodromy on a seed-linked polygon contained in |tau|<84, so its common amplitude Taylor radius is <=84. Together with the separately audited all-wave PY prefix, tau=337/4 is real and fully canonical but the vector coupling series fails to converge there. No nearest singularity location, exact radius, all component divergence, first-loss frequency or Lean numerical instance is claimed."
+}

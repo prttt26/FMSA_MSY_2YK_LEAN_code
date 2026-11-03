@@ -1,0 +1,39 @@
+  eta=0.2 circle r=2.75: s=0.1612, pieces=200, worst contraction=0.977
+  eta=0.2 circle r=2.75: s=0.2254, pieces=400, worst contraction=0.990
+  eta=0.2 circle r=2.75: s=0.2500, pieces=600, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.2632, pieces=800, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.2741, pieces=1000, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.2895, pieces=1200, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.3154, pieces=1400, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.3469, pieces=1600, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.3848, pieces=1800, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.4279, pieces=2000, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.4691, pieces=2200, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.5003, pieces=2400, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.5144, pieces=2600, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.5327, pieces=2800, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.5617, pieces=3000, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.5916, pieces=3200, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.6206, pieces=3400, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.6487, pieces=3600, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.6758, pieces=3800, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.7013, pieces=4000, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.7259, pieces=4200, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.7487, pieces=4400, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.7702, pieces=4600, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.7908, pieces=4800, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.8110, pieces=5000, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.8307, pieces=5200, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.8492, pieces=5400, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.8667, pieces=5600, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.8835, pieces=5800, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.8998, pieces=6000, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.9160, pieces=6200, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.9320, pieces=6400, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.9477, pieces=6600, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.9626, pieces=6800, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.9773, pieces=7000, worst contraction=1.000
+  eta=0.2 circle r=2.75: s=0.9912, pieces=7200, worst contraction=1.000
+{"model": {"eta": "0.2", "z": ["1.8", "12"], "kv": ["1", "-6"]}, "tau_max": 3.0, "real_pieces": 168, "real_worst_contraction": 0.8657801767055928, "real_branch_certified": true, "root_at_tau_max": [[4.1352779041157035, 4.135277914386261], [-7.324739910146597, -7.3247398934971155], [0.8361294672032183, 0.8361294708754775], [-0.17176352621755941, -0.17176352387403232]], "circle_radius": 2.75, "circle_pieces": 7330, "circle_worst_contraction": 0.9999090946047939, "end_float": [[-0.9165586561964635, 11.007535621632435], [-12.625552008035365, 10.354821589732078], [-0.9144329575100403, -2.6875510045492157], [-0.42159778525437236, 3.0533057088520033]], "monodromy_nontrivial": true, "conclusion": "R_c <= 2.75 < 3.0: the Taylor series diverges at tau=3.0 although the PY-seeded branch is real and regular on [0,3.0]", "seconds": 263.6}
+negative control eta=0.1: False
+PASS

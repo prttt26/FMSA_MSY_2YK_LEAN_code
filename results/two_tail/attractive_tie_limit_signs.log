@@ -1,0 +1,9 @@
+cmd: scripts/two_tail/attractive_tie_limit.py --signs 60000 (float64 evidence, NOT a Lean proof)
+60000 samples: no tie 37790, tie with c, gamma, h1 > 0: 22074; F_w = 0 only past the strong fold (grid end, c and gamma < 0): 136; any other failure of the sign conditions: 0; smallest c, gamma, h1 {'c': 8.294578019077274e-06, 'gamma': 1.372655874346572e-10, 'h1': 0.01873825490474701}
+   term -g_y: positive 7256, negative 14818
+   term 3/(2 c k1): positive 22074, negative 0
+   term -9 g_kk/(2 c^2): positive 22074, negative 0
+   term -3 h_k/(c h1): positive 15774, negative 6300
+   term h_p/(gamma h1): positive 3943, negative 18131
+   term 3 g_kp/(c gamma): positive 0, negative 22074
+   term -g_pp/(2 gamma^2): positive 22074, negative 0

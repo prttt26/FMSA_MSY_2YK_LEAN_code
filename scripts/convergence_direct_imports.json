@@ -1,0 +1,18 @@
+{
+  "toolchain": "leanprover/lean4:v4.31.0",
+  "policy": "Direct LeanCode imports of MSAConvergence: exact released source and artifact. FMSAPaper imports are pinned through formalization/results/validation.json instead.",
+  "imports": {
+    "LeanCode.HardSphere.BaxterLowerHalfPlane": {
+      "source_sha256": "bd15bee1ca532b02c55c84486a54d0f3e54584c7a6c7b5c0972a6e0ad77680e6",
+      "artifact_sha256": "014c702b225a4684c86bd8edf91ecf64c7bbd913a0a73666843aa7bbdc7e4300"
+    },
+    "LeanCode.HSMixture.MixtureNoSpinodalN1": {
+      "source_sha256": "3887ae7094a0fea6597050e7d876ca8b2421054e1bc8d2837993a41ec00c0a36",
+      "artifact_sha256": "280dc8f96d168ade8fa954c57c0bbb4fd35aa0bedc5e6f36360e1ab58e348807"
+    },
+    "LeanCode.YukawaOZ.MSAMultiTailFamily": {
+      "source_sha256": "fb11d9c49c9f34b53c4e01325e11ed167da14f0b0ed3f54e0dadf754364de721",
+      "artifact_sha256": "ebe712634dce6c01ef14483c96c754926e9927e7ff13f5a68bab1631541c27af"
+    }
+  }
+}

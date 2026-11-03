@@ -1,0 +1,11 @@
+cmd: scripts/two_tail/r_weight_divided_difference.py (exact rational algebra and 50-digit quadrature, NOT a Lean proof)
+n = 1: W = 2^(n-1) prod z A and A > 0 exact: True; A = s_delta/prod (y_a + y_b) exact: n/a
+n = 2: W = 2^(n-1) prod z A and A > 0 exact: True; A = s_delta/prod (y_a + y_b) exact: True
+n = 3: W = 2^(n-1) prod z A and A > 0 exact: True; A = s_delta/prod (y_a + y_b) exact: True
+n = 4: W = 2^(n-1) prod z A and A > 0 exact: True; A = s_delta/prod (y_a + y_b) exact: True
+n = 5: W = 2^(n-1) prod z A and A > 0 exact: True; A = s_delta/prod (y_a + y_b) exact: True
+n = 6: W = 2^(n-1) prod z A and A > 0 exact: True; A = s_delta/prod (y_a + y_b) exact: True
+n = 7: W = 2^(n-1) prod z A and A > 0 exact: True; A = s_delta/prod (y_a + y_b) exact: True
+n = 8: W = 2^(n-1) prod z A and A > 0 exact: True; A = s_delta/prod (y_a + y_b) exact: True
+A against (2/pi) int_0^inf k^2 prod 1/(k^2 + w_a) dk, n <= 6: largest relative difference 1.95e-44
+repeated rate, n = 3, z = 5/2, x = 3/2: split limit 0.070312499707, integral with the repeated factor 0.0703125

@@ -1,6 +1,6 @@
 name = "MSA_and_1st_Truncation"
 packagesDir = "../.lake/packages"
-version = "1.0.17"
+version = "1.0.18"
 keywords = ["math"]
 defaultTargets = ["MSA_and_1st_Truncation"]
 
@@ -47,3 +47,9 @@ roots = ["LeanCode.YukawaOZMix.MatExactMSAEqualDiamCertificate"]
 # that axiom is now PROVED std-3 (`baxterConvCore_eq_matCoreUneq_proved`, `MSAMixtureBreakpointConvDirect`),
 # so the file is a plain definitions module built as part of the default `LeanCode` root — no separate
 # certificate lib is needed.
+
+# Convergence of the coupling series, merged from MSA_Convergence in 1.0.18. Not a default target and
+# not imported by the package root: `scripts/check_convergence.py` builds it, one capped process at a
+# time, and `formalization/check.py` runs that checker.
+[[lean_lib]]
+name = "MSAConvergence"

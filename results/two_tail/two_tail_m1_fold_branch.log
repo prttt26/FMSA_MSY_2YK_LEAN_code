@@ -1,0 +1,15 @@
+# /opt/anaconda3/bin/python two_tail_m1_fold_branch.py ../../results/two_tail/two_tail_m1_fold_branch.json
+# EXTERNAL interval certificate (mpmath iv, 192 bits); not a Lean proof
+tangent (u, tau) = [ 8.11509e-01 -5.84339e-01  1.30000e-05  8.00000e-06  1.27000e-04]; parameter p = u_0; dp(lo->hi) = 1.244e-06; dtau(lo->hi) = 1.946e-10
+4 slab(s) certified over p in [18.96660865468278, 18.966609898892862]
+  P=[18.96660865468278, 18.9666089657353] radius 1e-8 K in int Y: True  ||I-CJ|| <= 0.66362363
+  P=[18.9666089657353, 18.96660927678782] radius 1e-8 K in int Y: True  ||I-CJ|| <= 0.6636237
+  P=[18.96660927678782, 18.966609587840342] radius 1e-8 K in int Y: True  ||I-CJ|| <= 0.66362378
+  P=[18.966609587840342, 18.966609898892862] radius 1e-8 K in int Y: True  ||I-CJ|| <= 0.66362385
+  chain at p=18.9666089657353: Z inside both Y: True
+  chain at p=18.96660927678782: Z inside both Y: True
+  chain at p=18.966609587840342: Z inside both Y: True
+  endpoint lo: p-part inside P: True; (v, tau) inside Y: True; det F(0) sign +
+  endpoint hi: p-part inside P: True; (v, tau) inside Y: True; det F(0) sign -
+
+SAME-BRANCH CERTIFICATE: PASS; the branch's tau-range is inside [9.729812919506143, 9.729813114248351]; det F(0) changes sign along it (+ at tau_lo, - at tau_hi)

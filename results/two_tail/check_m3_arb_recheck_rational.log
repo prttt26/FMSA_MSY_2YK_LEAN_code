@@ -1,0 +1,9 @@
+runs.tau_hat: same center/C/X/tau as the stored witness True; Krawczyk recomputed and covered, K strictly in X, norm 0.020942 < 1: True
+runs.tau_lo: same center/C/X/tau as the stored witness True; Krawczyk recomputed and covered, K strictly in X, norm 0.020942 < 1: True
+runs.tau_hi: same center/C/X/tau as the stored witness True; Krawczyk recomputed and covered, K strictly in X, norm 0.020942 < 1: True
+rigorous_bracket.lo: same center/C/X/tau as the stored witness True; Krawczyk recomputed and covered, K strictly in X, norm 0.020942 < 1: True
+rigorous_bracket.hi: same center/C/X/tau as the stored witness True; Krawczyk recomputed and covered, K strictly in X, norm 0.020942 < 1: True
+parametric: same center/C/X/tau as the stored witness True; Krawczyk recomputed and covered, K strictly in X, norm 0.020942 < 1: True
+endpoint lo: tau = 84.38370451479815; Krawczyk on S recomputed, norm 1.88e-13; S strictly inside the parametric X; sign of A from exact endpoints +: True
+endpoint hi: tau = 84.38370451481504; Krawczyk on S recomputed, norm 1.21e-12; S strictly inside the parametric X; sign of A from exact endpoints -: True
+ALL RATIONAL CHECKS PASS

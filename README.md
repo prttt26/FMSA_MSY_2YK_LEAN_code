@@ -64,6 +64,33 @@ the separate `Other_Closures` project. Task status for every group, the
 re-derived axiom ledger and the open items are in `TODO.md` (it replaces the
 `todo_lean.md` and per-track task files that the notes still mention by name).
 
+## 1.0.18: convergence of the coupling series
+
+The library `MSAConvergence` (284 modules, namespace `FMSA.Convergence`) is merged from the research
+package `MSA_Convergence`. All existing proof sources are byte-identical to 1.0.17 and their artifacts
+were not rebuilt. It is not a default target and the package root does not import it, so `lake build`
+and downstream packages are unaffected. `scripts/check_convergence.py` builds and audits it, one capped
+Lean process at a time, and `formalization/check.py` runs that checker.
+
+Main results:
+
+- `PureFluidFoldTheorem.taylor_radius_is_fold`: for finite strictly positive pure-fluid tails, the
+  hard-sphere germ of `(D_t, G_t)` continues as an analytic actual root path on `[0,R)`, `R > 0` finite.
+  At `R` the limit is a root, the original amplitude Jacobian is not invertible, and no analytic germ
+  continues the path. Every `D_t` Taylor radius is exactly `R`, every `G_t` radius at least `R`, with
+  absolute convergence on `|τ| ≤ R`.
+- `PureFluidMixedStrict.mixed_coefficients_exact`: the hard-sphere root is analytic in the vector `K`,
+  and each mixed coefficient of `D_t` is 0 if its monomial lacks `K_t` and strictly positive otherwise;
+  each nonconstant mixed coefficient of `G_t` is strictly positive.
+- The actual branch, canonicity, endpoint and no-escape framework for mixtures, and the exact cross-sign
+  class at equal diameters.
+
+No general convergence boundary is claimed. Interval certificates in `scripts/certificates/` are external
+evidence of their stated scope, not Lean theorems; `scripts/replay_convergence_certificates.py` replays
+the rational checks in a temporary tree with the old directory layout their receipts name. Open problems are in `../MSA_Convergence/OPEN_PROBLEMS.md`.
+Notes: `proof_notes/claude_pure_fluid_taylor_radius_fold.md`,
+`proof_notes/claude_pure_fluid_mixed_coefficients.md`, `proof_notes/codex_closeout_readiness.md`.
+
 ## 1.0.17: actual RDF amplitude smoothness
 
 The paper collection has 68 modules and 529 exact standard-axiom guards.

@@ -1,0 +1,41 @@
+cmd: scripts/two_tail/attractive_tie_limit.py --control (float64 evidence, NOT a Lean proof)
+z=(1.0722,56.33) eta=0.79: kappa_1=12.3188 (strong fold 17.9371) c=4.065 gamma=93.9 h1=0.1836 a=0.49132 Lambda=0.84226 Gamma=0.21133
+   K_w/K_s=1e-04 r^(1/3)=0.1738: exact Lam-sqrt3=+1.528e-01 gap=3.8172e-02 dir=28.454; limit Lam-sqrt3=+1.464e-01 gap=3.6739e-02; tau_f k_s/kappa_1=0.97808
+   K_w/K_s=1e-05 r^(1/3)=0.0807: exact Lam-sqrt3=+6.932e-02 gap=1.7353e-02 dir=29.276; limit Lam-sqrt3=+6.796e-02 gap=1.7053e-02; tau_f k_s/kappa_1=0.99001
+   K_w/K_s=1e-06 r^(1/3)=0.0375: exact Lam-sqrt3=+3.184e-02 gap=7.9790e-03 dir=29.663; limit Lam-sqrt3=+3.155e-02 gap=7.9151e-03; tau_f k_s/kappa_1=0.99540
+   K_w/K_s=1e-07 r^(1/3)=0.0174: exact Lam-sqrt3=+1.470e-02 gap=3.6875e-03 dir=29.843; limit Lam-sqrt3=+1.464e-02 gap=3.6739e-03; tau_f k_s/kappa_1=0.99787
+   K_w/K_s=1e-08 r^(1/3)=0.0081: exact Lam-sqrt3=+6.810e-03 gap=1.7082e-03 dir=29.927; limit Lam-sqrt3=+6.796e-03 gap=1.7053e-03; tau_f k_s/kappa_1=0.99901
+   K_w/K_s=1e-09 r^(1/3)=0.0037: exact Lam-sqrt3=+3.157e-03 gap=7.9214e-04 dir=29.966; limit Lam-sqrt3=+3.155e-03 gap=7.9151e-04; tau_f k_s/kappa_1=0.99954
+   K_w/K_s=1e-10: no exact pair
+z=(2.6429,56.529) eta=0.2641: kappa_1=7.41409 (strong fold 25.5413) c=0.2572 gamma=0.198 h1=3.987 a=0.11637 Lambda=1.3161 Gamma=1.6761
+   K_w/K_s=1e-04 r^(1/3)=0.1288: exact Lam-sqrt3=+1.783e-01 gap=2.4451e-01 dir=30.669; limit Lam-sqrt3=+1.696e-01 gap=2.1596e-01; tau_f k_s/kappa_1=0.87729
+   K_w/K_s=1e-05 r^(1/3)=0.0598: exact Lam-sqrt3=+8.054e-02 gap=1.0602e-01 dir=30.309; limit Lam-sqrt3=+7.871e-02 gap=1.0024e-01; tau_f k_s/kappa_1=0.94252
+   K_w/K_s=1e-06 r^(1/3)=0.0278: exact Lam-sqrt3=+3.692e-02 gap=4.7739e-02 dir=30.143; limit Lam-sqrt3=+3.653e-02 gap=4.6527e-02; tau_f k_s/kappa_1=0.97322
+   K_w/K_s=1e-07 r^(1/3)=0.0129: exact Lam-sqrt3=+1.704e-02 gap=2.1854e-02 dir=30.066; limit Lam-sqrt3=+1.696e-02 gap=2.1596e-02; tau_f k_s/kappa_1=0.98755
+   K_w/K_s=1e-08: no exact pair
+   K_w/K_s=1e-09: no exact pair
+   K_w/K_s=1e-10: no exact pair
+z=(1.7218,232.82) eta=0.3309: kappa_1=5.56055 (strong fold 79.7184) c=0.4493 gamma=0.6372 h1=2.22 a=0.16377 Lambda=1.1404 Gamma=1.412
+   K_w/K_s=1e-04 r^(1/3)=0.2382: exact Lam-sqrt3=+2.944e-01 gap=4.1099e-01 dir=30.936; limit Lam-sqrt3=+2.717e-01 gap=3.3640e-01; tau_f k_s/kappa_1=0.81046
+   K_w/K_s=1e-05 r^(1/3)=0.1106: exact Lam-sqrt3=+1.309e-01 gap=1.7070e-01 dir=30.432; limit Lam-sqrt3=+1.261e-01 gap=1.5614e-01; tau_f k_s/kappa_1=0.91073
+   K_w/K_s=1e-06 r^(1/3)=0.0513: exact Lam-sqrt3=+5.954e-02 gap=7.5474e-02 dir=30.200; limit Lam-sqrt3=+5.854e-02 gap=7.2475e-02; tau_f k_s/kappa_1=0.95833
+   K_w/K_s=1e-07 r^(1/3)=0.0238: exact Lam-sqrt3=+2.738e-02 gap=3.4273e-02 dir=30.093; limit Lam-sqrt3=+2.717e-02 gap=3.3640e-02; tau_f k_s/kappa_1=0.98062
+   K_w/K_s=1e-08 r^(1/3)=0.0111: exact Lam-sqrt3=+1.266e-02 gap=1.5749e-02 dir=30.043; limit Lam-sqrt3=+1.261e-02 gap=1.5614e-02; tau_f k_s/kappa_1=0.99099
+   K_w/K_s=1e-09: no exact pair
+   K_w/K_s=1e-10: no exact pair
+z=(0.9374,29.4236) eta=0.1169: kappa_1=8.24697 (strong fold 29.3743) c=0.185 gamma=0.09621 h1=5.717 a=0.11855 Lambda=1.7673 Gamma=1.9249
+   K_w/K_s=1e-04 r^(1/3)=0.1464: exact Lam-sqrt3=+2.794e-01 gap=3.3460e-01 dir=30.332; limit Lam-sqrt3=+2.588e-01 gap=2.8183e-01; tau_f k_s/kappa_1=0.83910
+   K_w/K_s=1e-05 r^(1/3)=0.0680: exact Lam-sqrt3=+1.244e-01 gap=1.4123e-01 dir=30.154; limit Lam-sqrt3=+1.201e-01 gap=1.3081e-01; tau_f k_s/kappa_1=0.92478
+   K_w/K_s=1e-06 r^(1/3)=0.0315: exact Lam-sqrt3=+5.666e-02 gap=6.2876e-02 dir=30.071; limit Lam-sqrt3=+5.575e-02 gap=6.0719e-02; tau_f k_s/kappa_1=0.96500
+   K_w/K_s=1e-07 r^(1/3)=0.0146: exact Lam-sqrt3=+2.607e-02 gap=2.8640e-02 dir=30.033; limit Lam-sqrt3=+2.588e-02 gap=2.8183e-02; tau_f k_s/kappa_1=0.98374
+   K_w/K_s=1e-08: no exact pair
+   K_w/K_s=1e-09: no exact pair
+   K_w/K_s=1e-10: no exact pair
+z=(0.5,20.0) eta=0.5: kappa_1=5.45818 (strong fold 8.20119) c=1.628 gamma=10.89 h1=0.5394 a=0.72613 Lambda=1.9449 Gamma=0.63411
+   K_w/K_s=1e-04 r^(1/3)=0.1587: exact Lam-sqrt3=+3.383e-01 gap=1.1066e-01 dir=27.117; limit Lam-sqrt3=+3.087e-01 gap=1.0066e-01; tau_f k_s/kappa_1=0.93811
+   K_w/K_s=1e-05 r^(1/3)=0.0737: exact Lam-sqrt3=+1.495e-01 gap=4.8739e-02 dir=28.636; limit Lam-sqrt3=+1.433e-01 gap=4.6722e-02; tau_f k_s/kappa_1=0.97224
+   K_w/K_s=1e-06 r^(1/3)=0.0342: exact Lam-sqrt3=+6.782e-02 gap=2.2108e-02 dir=29.362; limit Lam-sqrt3=+6.652e-02 gap=2.1686e-02; tau_f k_s/kappa_1=0.98731
+   K_w/K_s=1e-07 r^(1/3)=0.0159: exact Lam-sqrt3=+3.115e-02 gap=1.0156e-02 dir=29.703; limit Lam-sqrt3=+3.087e-02 gap=1.0066e-02; tau_f k_s/kappa_1=0.99415
+   K_w/K_s=1e-08 r^(1/3)=0.0074: exact Lam-sqrt3=+1.439e-02 gap=4.6914e-03 dir=29.862; limit Lam-sqrt3=+1.433e-02 gap=4.6722e-03; tau_f k_s/kappa_1=0.99729
+   K_w/K_s=1e-09: no exact pair
+   K_w/K_s=1e-10: no exact pair

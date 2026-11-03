@@ -1,0 +1,6 @@
+source, chain, generator/model and Lean hashes match: True
+1560 required slabs = the chain slabs with A > 0 required on [0, tau_lo]: True
+75 records: hulls contain member boxes, L2/B2 bounds, every march step m - d h - L2 h^2/2 > 0, tail bounds < 1/2: True
+every required slab has k ranges from 0, contiguous, ending in a tail record: True
+k steps: 10327
+ALL RATIONAL CHECKS PASS

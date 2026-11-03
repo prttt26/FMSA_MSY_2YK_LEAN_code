@@ -1,0 +1,38 @@
+check_endpoint_witness_rational: exit 0
+PASS M1: five exact rational point witnesses; norm <= 0.503039715228
+PASS M3: five exact rational point witnesses; norm <= 0.354549856640
+PASS M3 common parameter witness: norm <= 0.354549856640; both exact endpoint boxes match
+PASS source hashes, matrix expressions, strict inclusion, positive-width serialization and stored A signs.
+Analytic J/f/A enclosures and shrink-root preservation remain EXTERNAL; NOT a Lean proof.
+
+check_m1_fold_witness_rational: exit 0
+PASS four slab witnesses, max norm <= 0.663623849666; all three point bridge witnesses.
+PASS exact cover, source pins, bridge/root matching, endpoint signs and wide tau hull.
+Analytic enclosures and shrink-root preservation remain EXTERNAL; no tau monotonicity inferred.
+
+check_m1_parameter_monotonicity_rational: exit 0
+PASS exact sources/boxes/C, all four component bounds and 0.000137 < d(tau)/d(p) < 0.000176.
+Analytic E,v bounds and original root/shrink certificates remain EXTERNAL; NOT a Lean proof.
+
+check_m2_jacobian_rational: exit 0
+PASS exact rational matrix product, row bounds, strict contraction, input boxes and source hashes.
+Analytic Jacobian enclosure remains EXTERNAL (SymPy/Arb); this is NOT a Lean proof.
+
+check_m2_second_root_witness_rational: exit 0
+PASS r2: exact rational Krawczyk expression; norm <= 0.339299407974
+PASS Y1: exact rational Krawczyk expression; norm <= 0.310039905181
+PASS Y2: exact rational Krawczyk expression; norm <= 0.339299407974
+PASS local root-box separation, window coverage, source hashes and old cover hash.
+Analytic bounds/old PY-chain identification remain inherited EXTERNAL evidence; no global non-reconnection.
+
+check_m3_arb_witness_rational: exit 0
+PASS eight M3 witnesses; norm <= 0.0209422532074 < 0.020943.
+PASS exact source/model/code pins, dimensions, ordered intervals, parameter matching and signs + / -.
+Both tiny endpoint root boxes lie strictly inside the common parameter box.
+Analytic f/J/A enclosures require the pinned Arb replay; EXTERNAL, NOT a Lean proof.
+
+check_py_seeded_chain_rational: exit 0
+PASS M1: 1563 slabs, 1561 links, weighted q<=0.549457331913
+PASS M3: 664 slabs, 663 links, weighted q<=0.500137430010
+PASS exact dimensions, interval order, centers, metadata pins, weighted self-maps, chain/seed/switch/endpoint matching.
+

@@ -1,0 +1,34 @@
+# /opt/anaconda3/bin/python3 two_tail_first_loss.py M3 ../../results/two_tail/two_tail_first_loss_M3.json.gz
+# EXTERNAL Arb interval certificate (python-flint 0.6.0, SymPy 1.13.2, 256 bits); not a Lean proof
+symbolic checks: A equals the chain model; F(u, 0) = A(u)/(2 pi) identically (scalar_fourierFactor_zero); the four second-derivative identities behind H2
+657 required slabs (A certified > 0) cover the branch on [0, tau_lo]
+22 initial groups
+  group slabs 74..80: k from 0 to K = 38.85 in 63 steps (L2 18.8, min m 0.359); 20 records, 3 splits, 0 s
+  group slabs 185..188: k from 0 to K = 44.58 in 79 steps (L2 28.1, min m 0.096); 40 records, 24 splits, 1 s
+  group slabs 230..230: k from 0 to K = 45.27 in 87 steps (L2 29.3, min m 0.00174); 60 records, 42 splits, 2 s
+  group slabs 253..253: k from 0 to K = 45.43 in 86 steps (L2 29.6, min m 0.00223); 80 records, 64 splits, 4 s
+  group slabs 273..273: k from 0 to K = 45.47 in 87 steps (L2 29.7, min m 0.0017); 100 records, 84 splits, 5 s
+  group slabs 293..293: k from 0 to K = 45.48 in 88 steps (L2 29.7, min m 0.000749); 120 records, 102 splits, 6 s
+  group slabs 313..313: k from 0 to K = 45.48 in 91 steps (L2 29.7, min m 0.000144); 140 records, 125 splits, 7 s
+  group slabs 333..333: k from 0 to K = 45.49 in 92 steps (L2 29.7, min m 5.96e-05); 160 records, 144 splits, 8 s
+  group slabs 353..353: k from 0 to K = 45.49 in 95 steps (L2 29.7, min m 1e-05); 180 records, 163 splits, 10 s
+  group slabs 373..373: k from 0 to K = 45.49 in 96 steps (L2 29.7, min m 4.51e-06); 200 records, 183 splits, 11 s
+  group slabs 393..393: k from 0 to K = 45.49 in 100 steps (L2 29.7, min m 5.47e-07); 220 records, 204 splits, 12 s
+  group slabs 413..413: k from 0 to K = 45.49 in 100 steps (L2 29.7, min m 3.61e-07); 240 records, 222 splits, 14 s
+  group slabs 434..434: k from 0 to K = 45.49 in 103 steps (L2 29.7, min m 7.43e-08); 260 records, 243 splits, 15 s
+  group slabs 454..454: k from 0 to K = 45.49 in 106 steps (L2 29.7, min m 1e-08); 280 records, 264 splits, 16 s
+  group slabs 474..474: k from 0 to K = 45.49 in 107 steps (L2 29.7, min m 6.18e-09); 300 records, 281 splits, 18 s
+  group slabs 494..494: k from 0 to K = 45.49 in 110 steps (L2 29.7, min m 8.78e-10); 320 records, 302 splits, 19 s
+  group slabs 514..514: k from 0 to K = 45.49 in 111 steps (L2 29.7, min m 4.93e-10); 340 records, 322 splits, 21 s
+  group slabs 534..534: k from 0 to K = 45.49 in 114 steps (L2 29.7, min m 5.63e-11); 360 records, 341 splits, 22 s
+  group slabs 554..554: k from 0 to K = 45.49 in 115 steps (L2 29.7, min m 3.7e-11); 380 records, 361 splits, 24 s
+  group slabs 574..574: k from 0 to K = 45.49 in 121 steps (L2 29.7, min m 9.98e-13); 400 records, 382 splits, 26 s
+  group slabs 594..594: k from 0 to K = 45.49 in 119 steps (L2 29.7, min m 2.86e-12); 420 records, 400 splits, 27 s
+  group slabs 614..614: k from 0 to K = 45.49 in 120 steps (L2 29.7, min m 1.12e-12); 440 records, 422 splits, 29 s
+  group slabs 634..634: k from 0 to K = 45.49 in 124 steps (L2 29.7, min m 1.6e-13); 460 records, 440 splits, 31 s
+  group slabs 654..654: k from 0 to K = 45.49 in 124 steps (L2 29.7, min m 9.24e-14); 480 records, 459 splits, 33 s
+  group slabs 655..656: k from 0 to K = 45.49 in 126 steps (L2 29.7, min m 3.55e-14); 481 records, 459 splits, 33 s
+
+481 records (481 with tail), 459 splits, 47822 k steps
+RESULT: PASS -- for every certified slab box on [0, tau_lo] and every real k, F(u, k) != 0; with the Lean interface canonical_path_of_physical_factor_units and seed canonicity, the PY-seeded branch is fully canonical on [0, tau_lo], so its first loss of full canonicity lies in (tau_lo, tau_hi).
+exit=0

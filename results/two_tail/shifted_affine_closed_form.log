@@ -1,0 +1,2 @@
+cmd: scripts/two_tail/shifted_affine_closed_form.py --states 2000 (EXTERNAL multiprecision evidence, NOT a Lean proof)
+2000 states, T = 2: largest |SD/closed form - 1| = 2.1721e-41; smallest F0 1.00001; entries of the wrong sign, by block: {'FD': 0, 'FP': 0, 'SD': 0, 'SP_pos': 0}

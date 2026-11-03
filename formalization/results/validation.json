@@ -1,12 +1,12 @@
 {
   "status": "PASS",
-  "validated_at_utc": "2026-10-26T23:01:09.319831+00:00",
+  "validated_at_utc": "2026-11-03T00:03:20.436996+00:00",
   "toolchain": "leanprover/lean4:v4.31.0",
-  "foundation_version": "1.0.17",
-  "foundation_manifest_sha256": "09ade0691482098319e832c6c721b77ef70d99bb76cec5bc84b498357dd9219c",
-  "foundation_audit": "PASS: foundation 1.0.17, 530 source/config hashes.",
+  "foundation_version": "1.0.18",
+  "foundation_manifest_sha256": "9f3cca5a86eb11a78c628129b2bf6540573cbfbc7eeb72657d83204bebde592e",
+  "foundation_audit": "PASS: foundation 1.0.18, 815 source/config hashes.",
   "foundation_matches_manifest": true,
-  "check_script_sha256": "75cc33951ec7399c3796dc06afca38d6a8eeb49ce7fd37935f5de90eeb5b3933",
+  "check_script_sha256": "640c84c50e601aa3deba5407e24c84f243eb3a8a0f04c069acc280f5f9a5ea43",
   "dependencies": {
     "mathlib": {
       "head": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -1233,14 +1233,23 @@
   "default_build": {
     "command": [
       "lake",
-      "build"
+      "build",
+      "--no-build"
     ],
     "exit_code": 0,
     "log": "results/default_build.log",
-    "log_sha256": "a4206adb86989387e2ba4f7a113656eb18371140e9f2d7e6fa795fb30c19ce1a"
+    "log_sha256": "5f2f97d248758e76ab8ab4e4bbaeeabd945cf15e98f5a267dfc07b8f4c90f0a6"
   },
   "paper_root_sha256": "3c57199f14986069a869fac980ad3d03a27fb844c356c9e78a0c21996faa6fd3",
   "package_entry_sha256": "0567e6b85cee8752712f51c02393b58dea069357027b17691c7a0b4197167978",
   "integration": "Included in the foundation's default Lake build; no external LEAN_PATH.",
-  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis), with an actual A=0 witness at a strictly positive coupling strictly below the fold/common radius for all positive rate/density/diameter states with positive free volume; Actual finite-tail Baxter zero moments, continuous sinc radial Fourier identification including k=0, and a single-tail actual physical DCF zero-moment witness strictly inside the common radius proved; Initial stable-interval convergence iff endpoint <= common radius proved for extended endpoints, with actual BH continuity/root/Jacobian premises explicit; a nonconvergence witness exists inside every interval extending past the radius. Actual BH Jacobian-kernel exterior support and zero spatial pairing, noncommutative tangent-OZ algebra, and the L2 matrix Plancherel/positive-pairing injectivity engine proved. Actual DCF tangent finite numerators, radial Lp and moment bounds, exact density-weighted odd L2 representation and physical k=2*pi*w Fourier formula proved; abstract L2 and actual integral Fourier agreement proved on L1 intersect L2. Unconditional compact Volterra invertibility, joint kernel/source C-infinity and the actual Frechet derivative equation are proved. The existing actual RDF is identified with that solution; its excess, moment, h and g are C-infinity in the original amplitudes at every fixed r. Constructed-h global tangent L2/spectral-OZ transcription, canonical uniqueness/amplitude recovery, and tail-domain certification remain open. F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim."
+  "scope": "F2 under explicit fold hypotheses, F3, and actual-MSA F4 under all-order component signs proved; physical seed positive Taylor radius proved. F1 full-line reflected weak formula with both linear Dirac terms, actual all-species positive-radial identification, and its transport through every coupling jet (test/jet interchange and explicit convolution-boundary Cauchy sums) proved; single-species single-tail fold radius proved unconditionally (no sign hypothesis), with an actual A=0 witness at a strictly positive coupling strictly below the fold/common radius for all positive rate/density/diameter states with positive free volume; Actual finite-tail Baxter zero moments, continuous sinc radial Fourier identification including k=0, and a single-tail actual physical DCF zero-moment witness strictly inside the common radius proved; Initial stable-interval convergence iff endpoint <= common radius proved for extended endpoints, with actual BH continuity/root/Jacobian premises explicit; a nonconvergence witness exists inside every interval extending past the radius. Actual BH Jacobian-kernel exterior support and zero spatial pairing, noncommutative tangent-OZ algebra, and the L2 matrix Plancherel/positive-pairing injectivity engine proved. Actual DCF tangent finite numerators, radial Lp and moment bounds, exact density-weighted odd L2 representation and physical k=2*pi*w Fourier formula proved; abstract L2 and actual integral Fourier agreement proved on L1 intersect L2. Unconditional compact Volterra invertibility, joint kernel/source C-infinity and the actual Frechet derivative equation are proved. The existing actual RDF is identified with that solution; its excess, moment, h and g are C-infinity in the original amplitudes at every fixed r. Constructed-h global tangent L2/spectral-OZ transcription, canonical uniqueness/amplitude recovery, and tail-domain certification remain open. F5/F6 certified separately by interval arithmetic (formalization/certificates, not Lean); no universal converse or physical positivity claim.",
+  "convergence": {
+    "status": "PASS",
+    "checker": "scripts/check_convergence.py",
+    "record": "results/convergence_lean/validation.json",
+    "record_sha256": "b4646deb288ba73e4f5fd74170960bfb35378d5ad9ebe78b413517b1e3a3b614",
+    "theorem_count": 2639,
+    "modules": 284
+  }
 }

@@ -1,0 +1,80 @@
+{
+  "status": "PASS_EXTERNAL_AUDIT",
+  "created_at_utc": "2026-10-30T21:35:04.682079+00:00",
+  "label": "EXTERNAL analytic certificate; independent rational arithmetic; NOT a Lean proof",
+  "inputs_sha256": {
+    "MSA_Convergence/scripts/certificates/check_py_seeded_chain_rational.py": "c316dbaded6854afe6b3df31faf9e818a95e6a510f2b2b5b445fbcdcf8b0677d",
+    "MSA_Convergence/results/two_tail/two_tail_endpoint_interval_exact.json": "0f8e07f7bafba2cb5b22525e9371404337fc93f7bd5eecbf6862486aacf2b65e",
+    "MSA_Convergence/scripts/two_tail/two_tail_py_chain.py": "249c161141a40bcb585291f7763261d138bfbf132cb768a54150ed90d14e8b29",
+    "MSA_Convergence/scripts/two_tail/two_tail_m3_arb_recheck.py": "9b80777bfc0412c4c15f1a579e22fb977bde9485b8147ef39caf777db8736d76",
+    "MSA_Convergence/MSAConvergence/BHResidualPolynomials.lean": "e42b6df1ece03fdba33242b8ab2e0abbb2dbf64c16628e03a44fa85579dc22f6",
+    "MSA_and_1st_Truncation/LeanCode/HSMixture/MatrixQ0.lean": "94412a4cbcd1809766a7730bc03fb2f7ef1bea51dcd7034870e7652d66e7fbed",
+    "MSA_Convergence/results/two_tail/two_tail_py_chain_M1.json.gz": "f982f8aae80701edf411c6febd9afe993423d8ee3db11a1bcf50fb7e69c52da9",
+    "MSA_Convergence/results/two_tail/two_tail_py_chain_M3.json.gz": "703af5b6340569467b71df6a74233fe1971037c2b31a9841d68c48b8fc6b1a78",
+    "MSA_Convergence/scripts/certificates/check_endpoint_witness_rational.py": "eb6575d7b647059dbd54d9935b5d465fc4812257c016c9133ac25deaa8999f08",
+    "MSA_Convergence/scripts/certificates/codex_m1_parameter_monotonicity_arb.py": "34c20616ce74f81021fcb6322cd8f992878a4ba7aa5c86eb04c91379478c153a"
+  },
+  "results": {
+    "M1": {
+      "slabs": 1563,
+      "tau_slabs": 238,
+      "p_slabs": 1325,
+      "links": 1561,
+      "switches": 1,
+      "witnesses": 3127,
+      "max_weighted_q": "0.549457331913",
+      "min_dtau_dp_lower": "3650559043872490832444321885961393109048038806953165583089842708835896255504719979705914843/9015874907619914739137414063362058285012846573485025725145381257053351865626094507505867554816000",
+      "bracket": [
+        "136934944614858350553837723/14073748835532800000000000",
+        "136934944617597049446162277/14073748835532800000000000"
+      ],
+      "arb_replay": {
+        "precision_bits": 320,
+        "witnesses": 3127,
+        "scalar_enclosures": 75048,
+        "A_boxes": 1565,
+        "seed_G_enclosures": 2,
+        "symbolic_residual_models_equal": true,
+        "method": "Fresh Arb replay of pinned generator model; independent rational checker; EXTERNAL, not Lean"
+      }
+    },
+    "M3": {
+      "slabs": 664,
+      "tau_slabs": 664,
+      "p_slabs": 0,
+      "links": 663,
+      "switches": 0,
+      "witnesses": 1329,
+      "max_weighted_q": "0.500137430010",
+      "min_dtau_dp_lower": null,
+      "bracket": [
+        "231952160772086804783922789/2748779069440000000000000",
+        "231952160772133195216077211/2748779069440000000000000"
+      ],
+      "arb_replay": {
+        "precision_bits": 320,
+        "witnesses": 1329,
+        "scalar_enclosures": 31896,
+        "A_boxes": 666,
+        "seed_G_enclosures": 2,
+        "symbolic_residual_models_equal": true,
+        "method": "Fresh Arb replay of pinned generator model; independent rational checker; EXTERNAL, not Lean"
+      },
+      "negative_controls_rejected": [
+        "stale generator hash",
+        "reversed residual interval",
+        "center outside unknown box",
+        "corrupted actual Jacobian interval",
+        "missing link",
+        "flipped endpoint sign",
+        "seed outside initial box",
+        "missing required A positivity",
+        "missing exact tau_lo break despite contiguous slabs"
+      ],
+      "arb_negative_controls_rejected": [
+        "zeroed parameter derivative enclosure"
+      ]
+    }
+  },
+  "scope": "PY-seeded regular analytic root continuation and first zero-frequency zero bracket only; no first loss, all-wave canonicity, zero uniqueness or Taylor-radius conclusion."
+}

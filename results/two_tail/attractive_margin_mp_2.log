@@ -1,0 +1,12 @@
+cmd: scripts/two_tail/attractive_margin_mp.py 400 60,100 [347.6570190072296, 0.05388872665805297] [1.0, 0.0001641205241552306] 0.4001354381358342 (EXTERNAL multiprecision arithmetic, NOT a Lean proof)
+== mp.dps=60: cubic reproduction defect 5.22e-54
+  comp 0: c1 0.017866093, c_N sign +, sign changes 0 at [], radius estimate at N 31.95124371
+  comp 1: c1 0.0038937539, c_N sign +, sign changes 0 at [], radius estimate at N 31.95088973
+  comp 2: c1 0.0013734976, c_N sign +, sign changes 0 at [], radius estimate at N 31.95139937
+  comp 3: c1 0.0001189777, c_N sign +, sign changes 0 at [], radius estimate at N 31.95104463
+== mp.dps=100: cubic reproduction defect 6.22e-94
+  comp 0: c1 0.017866093, c_N sign +, sign changes 0 at [], radius estimate at N 31.95124371
+  comp 1: c1 0.0038937539, c_N sign +, sign changes 0 at [], radius estimate at N 31.95088973
+  comp 2: c1 0.0013734976, c_N sign +, sign changes 0 at [], radius estimate at N 31.95139937
+  comp 3: c1 0.0001189777, c_N sign +, sign changes 0 at [], radius estimate at N 31.95104463
+largest relative difference between the two precisions: 5.58e-50

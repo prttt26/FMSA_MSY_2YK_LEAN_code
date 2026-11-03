@@ -1,0 +1,102 @@
+{
+  "cases": [
+    {
+      "coefficient": "5/9",
+      "equal_exactly": true,
+      "multiindex": [
+        2,
+        1
+      ],
+      "rates": [
+        "1",
+        "2"
+      ],
+      "x": "1"
+    },
+    {
+      "coefficient": "3/10",
+      "equal_exactly": true,
+      "multiindex": [
+        3,
+        2
+      ],
+      "rates": [
+        "1",
+        "2"
+      ],
+      "x": "3"
+    },
+    {
+      "coefficient": "94360/6561",
+      "equal_exactly": true,
+      "multiindex": [
+        4,
+        4
+      ],
+      "rates": [
+        "1",
+        "2"
+      ],
+      "x": "1"
+    },
+    {
+      "coefficient": "1/2",
+      "equal_exactly": true,
+      "multiindex": [
+        1,
+        1
+      ],
+      "rates": [
+        "1",
+        "1"
+      ],
+      "x": "1"
+    },
+    {
+      "coefficient": "5/18",
+      "equal_exactly": true,
+      "multiindex": [
+        2,
+        1
+      ],
+      "rates": [
+        "1",
+        "1"
+      ],
+      "x": "2"
+    },
+    {
+      "coefficient": "7721280/5768419",
+      "equal_exactly": true,
+      "multiindex": [
+        1,
+        2,
+        1
+      ],
+      "rates": [
+        "2/3",
+        "5/2",
+        "7/3"
+      ],
+      "x": "2/3"
+    },
+    {
+      "coefficient": "42299488000/27142233001",
+      "equal_exactly": true,
+      "multiindex": [
+        2,
+        1,
+        2
+      ],
+      "rates": [
+        "2/3",
+        "5/2",
+        "7/3"
+      ],
+      "x": "3/2"
+    }
+  ],
+  "formula": "coeff_m r(x) = multinomial(m) * 2^degree(m) * prod_i z_i^m_i / pi * integral_0^infinity k^2 / ((k^2+x^2) prod_i (k^2+z_i^2)^m_i) dk",
+  "scope": "Independent rational recursion and partial-fraction integral checks; not a general proof or Lean certificate.",
+  "status": "MATCHES_SAMPLED_EXACT_RATIONAL_CASES"
+}

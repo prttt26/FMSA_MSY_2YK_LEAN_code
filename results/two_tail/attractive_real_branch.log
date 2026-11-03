@@ -1,0 +1,6 @@
+cmd: scripts/two_tail/attractive_real_branch.py (float64 evidence, NOT a Lean proof)
+CONTROL one tail z=1.8: first fold (polished) 1.3069800840319943; turning points on the curve [1.306367]; det F(0) crossings [1.3023214]; 82 points; after the first fold tau is monotone decreasing: True, from 1.30678 to -0.00297875
+z=(1,10) K=(1,1): first fold (polished) 0.5641995370144196; turning points on the curve [0.5610602]; det F(0) crossings [0.5613536]; 31 points; after the first fold tau is monotone decreasing: True, from 0.562173 to -0.0027885
+z=(3.1678,23.8808) K=(.0377,62.3): first fold (polished) 0.4960171355742489; turning points on the curve [0.4960038]; det F(0) crossings [0.2774859]; 489 points; after the first fold tau is monotone decreasing: True, from 0.496014 to -0.000104911
+z=(1.9399,76.3415) w=99996: first fold (polished) 0.0006786054263671817; turning points on the curve [0.0006786]; det F(0) crossings [0.0005666]; 6001 points; after the first fold tau is monotone decreasing: True, from 0.000678605 to 0.00040978
+z=(.5596,20.6266) w=9212.2: first fold (polished) 0.0018382155698373967; turning points on the curve [0.0018382]; det F(0) crossings [0.0018101]; 6001 points; after the first fold tau is monotone decreasing: True, from 0.00183822 to 0.000221415

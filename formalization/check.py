@@ -60,7 +60,8 @@ def main():
         cwd=CORE, text=True, capture_output=True,
     )
     (RESULTS / "foundation_audit.log").write_text(foundation.stdout + foundation.stderr)
-    command = ["lake", "build"]
+    # Lake would compile in parallel, so it only confirms that the artifacts are current.
+    command = ["lake", "build", "--no-build"]
     build = subprocess.run(command, cwd=CORE, text=True, capture_output=True)
     build_log = RESULTS / "default_build.log"
     build_log.write_text(build.stdout + build.stderr)
@@ -101,6 +102,27 @@ def main():
     }
     (RESULTS / "validation.json").write_text(json.dumps(record, indent=2) + "\n")
     print(f"{record['status']}: {record['theorem_count']} theorem guards, {len(modules)} modules, default Lake build")
+    if ok and "--skip-convergence" not in sys.argv:
+        # The convergence checker reads the paper record written above, then compiles its own library
+        # one capped process at a time, reusing every module that is unchanged since its last PASS.
+        checker = CORE / "scripts/check_convergence.py"
+        extra = [a for a in sys.argv[1:] if a == "--fresh"]
+        run = subprocess.run([sys.executable, str(checker), "-j", "1", *extra], cwd=CORE,
+                             text=True, capture_output=True)
+        print(run.stdout.strip())
+        ok = run.returncode == 0
+        convergence = json.loads((CORE / "results/convergence_lean/validation.json").read_text())
+        record["convergence"] = {
+            "status": convergence["status"], "checker": "scripts/check_convergence.py",
+            "record": "results/convergence_lean/validation.json",
+            "record_sha256": digest(CORE / "results/convergence_lean/validation.json"),
+            "theorem_count": convergence.get("theorem_count"),
+            "modules": len(convergence.get("modules", [])),
+        }
+        record["status"] = "PASS" if ok else "FAIL"
+        (RESULTS / "validation.json").write_text(json.dumps(record, indent=2) + "\n")
+        if not ok:
+            print(run.stderr[-2000:])
     print(foundation.stdout.strip())
     if not ok:
         print(foundation.stderr[-2000:])

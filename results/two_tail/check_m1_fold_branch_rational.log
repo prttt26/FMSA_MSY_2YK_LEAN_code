@@ -1,0 +1,10 @@
+slab 0: Krawczyk recomputed and covered, K strictly in Y, norm 0.663624 < 1: True
+slab 1: Krawczyk recomputed and covered, K strictly in Y, norm 0.663624 < 1: True
+slab 2: Krawczyk recomputed and covered, K strictly in Y, norm 0.663624 < 1: True
+slab 3: Krawczyk recomputed and covered, K strictly in Y, norm 0.663624 < 1: True
+chain p=18.9666089657353: Z strictly inside both Y: True
+chain p=18.96660927678782: Z strictly inside both Y: True
+chain p=18.966609587840342: Z strictly inside both Y: True
+endpoint lo: tau=9.729813016779925, det F(0) sign + from exact A; root inside a slab box (p in P, (v, tau) strictly in Y): True
+endpoint hi: tau=9.729813016974521, det F(0) sign - from exact A; root inside a slab box (p in P, (v, tau) strictly in Y): True
+ALL RATIONAL CHECKS PASS

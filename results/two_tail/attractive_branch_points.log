@@ -1,0 +1,14 @@
+cmd: scripts/two_tail/attractive_branch_points.py (float64 evidence, NOT a Lean proof)
+CONTROL one tail z=1.8 (tau_f=1.30698)
+   tau* = +1.306980 +0.000000i  |tau*|/tau_f = 1.00000  arg = +0.000 deg
+two attr z=(3.1678,23.8808) (tau_f=0.49602)
+   tau* = +0.496017 +0.000000i  |tau*|/tau_f = 1.00000  arg = +0.000 deg
+   tau* = +0.639123 +0.080379i  |tau*|/tau_f = 1.29866  arg = +7.168 deg
+   tau* = +0.954225 +0.000000i  |tau*|/tau_f = 1.92377  arg = -0.000 deg
+two attr z=(0.53,20.81) (tau_f=0.21864)
+   tau* = +0.218637 +0.000000i  |tau*|/tau_f = 1.00000  arg = +0.000 deg
+   tau* = +0.322400 +0.057499i  |tau*|/tau_f = 1.49786  arg = +10.112 deg
+   tau* = +0.884619 +0.000000i  |tau*|/tau_f = 4.04606  arg = -0.000 deg
+two attr z=(1,10) K=(1,1) (tau_f=0.56420)
+   tau* = +0.564200 +0.000000i  |tau*|/tau_f = 1.00000  arg = +0.000 deg
+   tau* = -4.947675 +0.000000i  |tau*|/tau_f = 8.76937  arg = -180.000 deg

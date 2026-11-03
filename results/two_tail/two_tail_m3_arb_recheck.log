@@ -1,0 +1,12 @@
+# /opt/anaconda3/bin/python3 two_tail_m3_arb_recheck.py ../../results/two_tail/two_tail_m3_arb_recheck.json
+# EXTERNAL Arb interval re-check (python-flint 0.6.0, SymPy 1.13.2, 256 bits); not a Lean proof
+(a) runs.tau_hat: K strictly inside X True, ||I-CJ|| <= 0.020942254; stored f, J intersect Arb enclosures: True
+(a) runs.tau_lo: K strictly inside X True, ||I-CJ|| <= 0.020942254; stored f, J intersect Arb enclosures: True
+(a) runs.tau_hi: K strictly inside X True, ||I-CJ|| <= 0.020942254; stored f, J intersect Arb enclosures: True
+(a) rigorous_bracket.lo: K strictly inside X True, ||I-CJ|| <= 0.020942254; stored f, J intersect Arb enclosures: True
+(a) rigorous_bracket.hi: K strictly inside X True, ||I-CJ|| <= 0.020942254; stored f, J intersect Arb enclosures: True
+(a) parametric: K strictly inside X True, ||I-CJ|| <= 0.020942254; stored f, J intersect Arb enclosures: True
+(b) lo: tau = 84.38370451479815: S (rel radius 1e-40) K strictly inside True, ||I-CJ|| <= 1.8817513E-13; S strictly inside parametric X: True; A over S = 1.084334e-12 .. 1.084334e-12, sign +; stored A intersects / stored sign agrees: True / True
+(b) hi: tau = 84.38370451481504: S (rel radius 1e-40) K strictly inside True, ||I-CJ|| <= 1.2098049E-12; S strictly inside parametric X: True; A over S = -4.468191e-12 .. -4.468191e-12, sign -; stored A intersects / stored sign agrees: True / True
+
+RESULT: PASS -- the stored M3 Krawczyk witnesses hold with f and J recomputed by symbolic differentiation and Arb; det F(0) = A/(2 pi) has signs + / - at the bracket ends on the unique root of the parametric box.

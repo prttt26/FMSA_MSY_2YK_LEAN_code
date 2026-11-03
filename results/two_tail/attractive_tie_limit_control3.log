@@ -1,0 +1,27 @@
+cmd: scripts/two_tail/attractive_tie_limit.py --control3 (float64 evidence, NOT a Lean proof)
+one strong tail by both routes: Lambda 0.842261278 0.842261278, kappa_1 12.318758 12.318758
+z_w=1.0 z_s=[20.0, 60.0] m=[1.0, 1.0] eta=0.4: kappa_1=2.46045 a=0.34233 Lambda=1.142 Gamma=0.78501
+   r=1e-03: exact Lam-sqrt3=+1.181e-01 gap=8.2691e-02 dir=29.491; limit Lam-sqrt3=+1.142e-01 gap=7.8501e-02
+   r=1e-04: exact Lam-sqrt3=+5.383e-02 gap=3.7313e-02 dir=29.763; limit Lam-sqrt3=+5.301e-02 gap=3.6437e-02
+   r=1e-05: exact Lam-sqrt3=+2.478e-02 gap=1.7099e-02 dir=29.890; limit Lam-sqrt3=+2.460e-02 gap=1.6912e-02
+   r=1e-06: exact Lam-sqrt3=+1.146e-02 gap=7.8899e-03 dir=29.949; limit Lam-sqrt3=+1.142e-02 gap=7.8501e-03
+   r=1e-07: no exact pair
+   r=1e-08: no exact pair
+z_w=0.8 z_s=[5.0, 40.0] m=[0.3, 1.0] eta=0.25: kappa_1=3.74117 a=0.46 Lambda=2.4493 Gamma=1.0572
+   r=1e-03: exact Lam-sqrt3=+2.635e-01 gap=1.1520e-01 dir=28.047; limit Lam-sqrt3=+2.449e-01 gap=1.0572e-01
+   r=1e-04: exact Lam-sqrt3=+1.175e-01 gap=5.1006e-02 dir=29.083; limit Lam-sqrt3=+1.137e-01 gap=4.9071e-02
+   r=1e-05: exact Lam-sqrt3=+5.358e-02 gap=2.3183e-02 dir=29.572; limit Lam-sqrt3=+5.277e-02 gap=2.2777e-02
+   r=1e-06: exact Lam-sqrt3=+2.467e-02 gap=1.0659e-02 dir=29.801; limit Lam-sqrt3=+2.449e-02 gap=1.0572e-02
+   r=1e-07: no exact pair
+   r=1e-08: no exact pair
+z_w=2.0 z_s=[30.0, 200.0] m=[1.0, 0.2] eta=0.15: kappa_1=7.75362 a=0.093684 Lambda=1.4708 Gamma=1.7818
+   r=1e-03: exact Lam-sqrt3=+1.536e-01 gap=1.9747e-01 dir=30.447; limit Lam-sqrt3=+1.471e-01 gap=1.7818e-01
+   r=1e-04: exact Lam-sqrt3=+6.964e-02 gap=8.6648e-02 dir=30.207; limit Lam-sqrt3=+6.827e-02 gap=8.2702e-02
+   r=1e-05: exact Lam-sqrt3=+3.198e-02 gap=3.9217e-02 dir=30.096; limit Lam-sqrt3=+3.169e-02 gap=3.8387e-02
+   r=1e-06: exact Lam-sqrt3=+1.477e-02 gap=1.7995e-02 dir=30.045; limit Lam-sqrt3=+1.471e-02 gap=1.7818e-02
+   r=1e-07: no exact pair
+   r=1e-08: no exact pair
+former a < 0 candidate z_w=0.49408 z_s=[0.4793, 38.6852] m=[1.0, 23311.351816] eta=0.35583: fixed tracer gives None
+former a < 0 candidate z_w=0.96291 z_s=[4.5697, 65.0413, 0.9508] m=[1.0, 57325.141415, 6.071234] eta=0.15423: fixed tracer gives None
+former a < 0 candidate z_w=0.40058 z_s=[0.4013, 1256.6711, 712.0285] m=[1.0, 0.000348, 216480.008764] eta=0.40735: fixed tracer gives None
+first candidate, fine direct trace: last kappa with both F > 0 1.86308e-04, F_w 0.0897, F_m 0.0796; next kappa 1.86682e-04, F_w -0.0235, F_m -0.0344 (the old tracer reported kappa_1 = 1.768e-04)

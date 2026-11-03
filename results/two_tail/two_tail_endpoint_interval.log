@@ -1,0 +1,26 @@
+# /opt/anaconda3/bin/python two_tail_endpoint_interval.py ../../results/two_tail/two_tail_endpoint_interval.json
+# EXTERNAL interval certificates (mpmath iv, 192 bits); not a Lean proof
+
+== M1 delicate: z=(0.6,0.84) eta=0.49, last corrected pass
+  f = 7548807031658907/9007199254740992 (= 0.8380859375000002), w = f*w0 = -1.4283899456521743
+  tau_hat: tau=9.729813016877223  radius 1/1000000000000  Krawczyk inside, ||I-CJ(X)|| <= 0.5025;  A over shrunk root box = [9.575475e-07, 9.575475e-07] -> +
+  tau_lo: tau=9.729813016876953  radius 1/1000000000000  Krawczyk inside, ||I-CJ(X)|| <= 0.5025;  A over shrunk root box = [9.675190e-07, 9.675190e-07] -> +
+  tau_hi: tau=9.729813016877495  radius 1/1000000000000  Krawczyk inside, ||I-CJ(X)|| <= 0.5025;  A over shrunk root box = [9.475104e-07, 9.475104e-07] -> +
+  float bisection bracket: sign + / + -> rigorous opposite signs: False
+    widen rel 1e-13: tau_hat -/+ 9.730e-13: signs + / +
+    widen rel 1e-12: tau_hat -/+ 9.730e-12: signs + / +
+    widen rel 1e-11: tau_hat -/+ 9.730e-11: signs + / -
+  rigorous bracket: [9.729813016779925, 9.729813016974521] (rel half-width 1e-11), signs + / -
+  parametric Krawczyk over the bracket: NOT certified at radii 1e-4 .. 1e-12; the two end roots are certified separately, but their lying on ONE branch is NOT certified
+  (the bracket is not certified to be the FIRST loss, nor connected to the PY seed by a certified chain)
+
+== M3: z=(7,14) eta=0.49, first fail (complex pair inside beta)
+  f = 2095/4096 (= 0.511474609375), w = f*w0 = -1.0911458333333333
+  tau_hat: tau=84.3837045148066  radius 1/1000000  Krawczyk inside, ||I-CJ(X)|| <= 0.3545;  A over shrunk root box = [-1.691929e-12, -1.691929e-12] -> -
+  tau_lo: tau=84.38370451480296  radius 1/1000000  Krawczyk inside, ||I-CJ(X)|| <= 0.3545;  A over shrunk root box = [-4.950170e-13, -4.950170e-13] -> -
+  tau_hi: tau=84.38370451481023  radius 1/1000000  Krawczyk inside, ||I-CJ(X)|| <= 0.3545;  A over shrunk root box = [-2.888840e-12, -2.888840e-12] -> -
+  float bisection bracket: sign - / - -> rigorous opposite signs: False
+    widen rel 1e-13: tau_hat -/+ 8.438e-12: signs + / -
+  rigorous bracket: [84.38370451479815, 84.38370451481504] (rel half-width 1e-13), signs + / -
+  parametric Krawczyk over tau in [84.38370451479815, 84.38370451481504]: PASS at radius 1/1000000, ||I-CJ(X)|| <= 0.3545 -> one continuous root branch on the bracket, with det F(0) of opposite signs at its ends
+  (the bracket is not certified to be the FIRST loss, nor connected to the PY seed by a certified chain)

@@ -1,0 +1,25 @@
+cmd: scripts/two_tail/attractive_pair_ratio.py (float64 evidence, NOT a Lean proof)
+perturbed 15: start failed RuntimeError('start failed')
+perturbed 2: start failed RuntimeError('start failed')
+perturbed 17: ratio 1.0486 -> 1.04863 at z=(0.2609,35.8951) w=K2/K1=1.0294e+05 eta=0.5953; tau*=+0.00033+0.00001i first fold=0.00031816478813076433; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=1.62e-03
+perturbed 11: ratio 1.0467 -> 1.04672 at z=(0.2813,35.0219) w=K2/K1=1.0339e+05 eta=0.5953; tau*=+0.00033+0.00001i first fold=0.00031154678618537586; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=1.89e-03
+perturbed 14: ratio 1.0545 -> 1.05446 at z=(1.8972,72.3414) w=K2/K1=1.0013e+05 eta=0.5370; tau*=+0.00068-0.00002i first fold=0.0006417901667367637; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=2.38e-02
+perturbed 8: ratio 1.0544 -> 1.05438 at z=(1.9222,78.4329) w=K2/K1=1.1015e+05 eta=0.5370; tau*=+0.00067-0.00002i first fold=0.0006311723955727832; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=2.46e-02
+perturbed 16: ratio 1.0000 -> 1.00000 at z=(0.4205,14.4349) w=K2/K1=8725.3 eta=0.6000; tau*=+0.00207+0.00000i first fold=0.002066316637718978; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=2.06e-03
+perturbed 5: ratio 1.0000 -> 1.00000 at z=(0.2680,35.7123) w=K2/K1=98801 eta=0.5953; tau*=+0.00033-0.00000i first fold=0.00033032318042331495; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=9.67e-04
+perturbed 4: ratio 1.0000 -> 1.00000 at z=(0.4106,13.2059) w=K2/K1=8362.4 eta=0.6000; tau*=+0.00206+0.00000i first fold=0.0020640313356149525; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=2.14e-03
+from 0: ratio 1.2987 -> 1.06874 at z=(4.0895,14.7166) w=K2/K1=1735.6 eta=0.4692; tau*=+0.00992+0.00018i first fold=0.009287671821645116; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=1.61e-02
+perturbed 0: ratio 1.2548 -> 1.04631 at z=(3.9536,14.1759) w=K2/K1=1796.9 eta=0.5349; tau*=+0.01006+0.00006i first fold=0.009615733323520689; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=1.30e-02
+from 2: ratio 1.0556 -> 1.04391 at z=(2.2852,71.5302) w=K2/K1=99980 eta=0.6000; tau*=+0.00075-0.00002i first fold=0.0007208709446990426; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=2.06e-02
+perturbed 12: ratio 1.3353 -> 1.04557 at z=(3.5200,14.1067) w=K2/K1=1623.2 eta=0.5734; tau*=+0.01210+0.00010i first fold=0.011575165481883263; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=1.10e-02
+perturbed 6: ratio 1.2897 -> 1.06162 at z=(4.2901,14.5703) w=K2/K1=1737.7 eta=0.4692; tau*=+0.00983-0.00012i first fold=0.009262407592893332; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=1.67e-02
+from 5: ratio 1.0477 -> 1.00484 at z=(1.1792,6.6537) w=K2/K1=36524 eta=0.5335; tau*=+0.00027+0.00000i first fold=0.0002691026932049746; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=9.50e-02
+perturbed 7: ratio 1.4923 -> 1.09050 at z=(0.7462,19.1692) w=K2/K1=3543.1 eta=0.5833; tau*=+0.00621-0.00026i first fold=0.0056956831462754145; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=3.41e-03
+perturbed 3: ratio 1.0960 -> 1.00690 at z=(1.3208,8.0950) w=K2/K1=29203 eta=0.5847; tau*=+0.00048+0.00000i first fold=0.0004760174651960234; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=1.18e-02
+from 1: ratio 1.4979 -> 1.01275 at z=(0.7561,6.3195) w=K2/K1=9444.2 eta=0.5744; tau*=+0.00128+0.00000i first fold=0.00126049871716188; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=9.75e-03
+perturbed 1: ratio 1.5010 -> 1.04544 at z=(1.1299,67.1338) w=K2/K1=90483 eta=0.5998; tau*=+0.00071-0.00002i first fold=0.0006771874643923529; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=9.97e-03
+from 3: ratio 1.0996 -> 1.02424 at z=(1.0096,11.0453) w=K2/K1=21545 eta=0.5887; tau*=+0.00076-0.00001i first fold=0.0007393293176249785; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=6.77e-03
+perturbed 10: ratio 1.0550 -> 0.99978 at z=(0.5266,4.0853) w=K2/K1=39499 eta=0.5422; tau*=+0.00021+0.00000i first fold=0.00021351435534708448; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=9.25e-02
+perturbed 9 (budget reached): ratio 1.0975 -> 0.99634 at z=(0.4505,3.6718) w=K2/K1=91367 eta=0.5633; tau*=+0.00010+0.00000i first fold=0.00010331755052737133; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=9.75e-02
+perturbed 13 (budget reached): ratio 1.5148 -> 1.02664 at z=(0.5444,6.1583) w=K2/K1=3534.4 eta=0.5801; tau*=+0.00351+0.00001i first fold=0.0034218955816479294; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=8.64e-03
+from 4 (budget reached): ratio 1.0556 -> 1.00409 at z=(0.5793,4.4432) w=K2/K1=21328 eta=0.5250; tau*=+0.00037-0.00000i first fold=0.00036637955985897847; principal-sheet check: reached 0.9995 of the ray, |u-u*|/|u*|=9.27e-02

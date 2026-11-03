@@ -1,0 +1,28 @@
+# Actual mixture Fourier-axis high-frequency cutoff
+
+`MixtureAxisHighFrequency.lean` turns the previously proved actual causal-kernel `1/|s|` estimate into a finite real-frequency verification range for the physical Fourier factor. The result applies to every original finite BH amplitude pair, even off-root and outside canonicity.
+
+For fixed positive tail rates, define
+
+```
+rateCutoff(z) = 1 + 2 * sum_u |z_u|
+decayBudget(p) = matrixAbsSum(nonlinearCausalKernel(p, 0))
+               + sum_i sum_j leadingErrorBound(z, rho, sigma, p, 0, i, j)
+safeCutoff(p) = rateCutoff(z) + decayBudget(p) + 1.
+```
+
+All terms are the actual finite MSA/BH expressions. `cutoff_nonneg` proves the required signs; `decayBudget_continuous` proves continuity in the **original** `(D,G)` amplitudes. `physical_factor_unit_at_high_frequency` proves that `|k| >= safeCutoff(p)` makes the physical Fourier factor a matrix unit. Its proof sums the actual `kernel_scaled_bound` entry estimates at `s = i k`, obtains `complexNormSum(Qhat) < 1`, applies the proved matrix Neumann criterion, and transfers the true causal factor unit to the physical Fourier factor by the proved phase/Sylvester dictionary. No root equation or half-plane canonicity is assumed.
+
+`exists_budget_bound_on_amplitude_ball` uses finite-dimensional compactness to give one decay-budget bound on any original-amplitude ball. Hence `exists_uniform_path_axis_cutoff_of_amplitude_bound` yields one high-frequency cutoff for any independently bounded amplitude family. A continuous original path on `[0,b]` is bounded, so `exists_uniform_axis_cutoff_of_continuous_closed_path` discharges that amplitude premise without using the canonical mixture noescape theorem.
+
+`path_axis_zero_free_of_compact_test` proves that a uniform budget plus a determinant nonzero certificate on the finite interval `|k| <= rateCutoff + B + 1` covers **all** real frequencies. `exists_compact_prefix_axis_test_of_continuous_closed_path` supplies an existential common cutoff for the half-open prefix `[0,b)` while allowing a Fourier zero at `b`. This is the form needed by the first-loss certificate in `MixtureEndpointNoEscape`.
+
+The real-frequency topology is now proved from the actual full-line integral, rather than inferred from the meromorphic formula away from zero. `physical_fourier_determinant_continuous` applies dominated continuity to the integrable Baxter kernel and covers `k = 0`. Combined with the off-root high-frequency cutoff, `physical_fourier_zero_set_isCompact` shows the complete real zero set of any original amplitude pair is compact. `MixtureEndpointNoEscape.maximal_finite_mixture_endpoint_zero_set_compact_nonempty` specializes this to the selected finite maximal physical endpoint and uses its previously proved real Fourier zero to establish nonemptiness. No uniqueness of zero wave number follows.
+
+`physical_fourier_zero_neg` proves determinant-zero symmetry under `k ↦ -k` by the exact `fourierQ_conj` identity and entrywise determinant conjugation. `physical_fourier_zero_abs_minimum` and `physical_fourier_nonnegative_zero_minimum` apply the compact extreme-value theorem to `|k|`, then choose a nonnegative representative of its least value. `MixtureEndpointNoEscape.maximal_finite_mixture_endpoint_has_minimal_nonnegative_zero` makes this intrinsic for the selected finite maximal endpoint and proves `k₀ = 0` exactly when its physical determinant vanishes at zero frequency. The theorem does not identify which sign or which additional frequencies vanish, nor does it infer a Taylor radius.
+
+`MixtureEndpointNoEscape.exists_hs_maximal_branch_at_compact_first_axis_loss` makes that link explicit. Under the physical mixture assumptions, it accepts a closed continuous same-HS-seed actual root path, a physical Fourier zero at `b`, and determinant nonvanishing on the bounded rectangle `0 <= t < b`, `|k| <= R`. It constructs the HS maximal branch, proves its bound equals `b`, and identifies `p(b)` as its unique selected physical endpoint root. The left-limit premise of the earlier all-frequency theorem is derived from closed-path continuity, including the half-open endpoint filter. Its `R` is existential; a concrete verification should supply a proved decay-budget bound to obtain a computable cutoff.
+
+The closed-path assumption is unnecessary for the actual canonical branch's own high-frequency control. `MixtureEndpointNoEscape.canonical_mixture_prefix_and_endpoint_uniform_axis_cutoff_at_eta_lt_one` first obtains a global original `(D,G)` norm bound on `[0,b)`, derives its unique left limit, and passes that same norm bound to the endpoint through the left filter. Compactness of the amplitude ball then yields one decay-budget bound and one frequency cutoff for both prefix and endpoint. `maximal_finite_mixture_endpoint_zero_in_uniform_frequency_window` applies this to a finite maximal branch and proves every physical Fourier zero of its selected limiting MSA root lies strictly inside that finite cutoff. Positive rates and diameters, nonnegative densities including retained tracers, `etaMix < 1`, symmetric coupling and actual canonical root equations remain the physical premises. No effective numerical value of the compactness bound is asserted.
+
+The remaining compact test quantifies over **every** coupling in `[0,b)` and **every** real frequency in the bounded interval. A finite floating-point grid does not prove it. The existential compactness cutoff is not itself a numerical enclosure; the explicit budget-based cutoff is available when a rigorous amplitude/budget bound is supplied. These results do not establish Taylor-radius inequalities or endpoint series convergence.

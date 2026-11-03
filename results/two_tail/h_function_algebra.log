@@ -1,0 +1,8 @@
+cmd: scripts/two_tail/h_function_algebra.py (EXTERNAL symbolic check, NOT a Lean proof)
+a0, q0, b4 = 12*eta*(2*eta + 1)/(eta - 1)**2 6*eta*(eta + 2)/(eta - 1)**2 72*eta**2/(eta - 1)**2 ; q0 - a0/2 = -6*eta/(eta - 1)
+A. F - (P + e^-x Shat): 0 ; rho S/x - Shat: 0
+B. det Theta0 - 1: 0
+C. x^-4 of Shat, P: 0 0 ; P polar minus required form: 0 0 0
+   residual of a = a0 (1 + Mv) + b4 Nc: 0 ; of q = q0 (1 + Mv) + a0 Nc: 0
+D. difference from the closed form: 0
+E. Shat - (Shat0/F0) F - D12/F0: 0

@@ -1,0 +1,13 @@
+# /opt/anaconda3/bin/python3 two_tail_first_loss.py M1 ../../results/two_tail/two_tail_first_loss_M1.json.gz
+# EXTERNAL Arb interval certificate (python-flint 0.6.0, SymPy 1.13.2, 256 bits); not a Lean proof
+symbolic checks: A equals the chain model; F(u, 0) = A(u)/(2 pi) identically (scalar_fourierFactor_zero); the four second-derivative identities behind H2
+1560 required slabs (A certified > 0) cover the branch on [0, tau_lo]
+27 initial groups
+  group slabs 95..110: k from 0 to K = 49.65 in 124 steps (L2 9.46e+03, min m 0.561); 20 records, 1 splits, 1 s
+  group slabs 1336..1399: k from 0 to K = 61.04 in 158 steps (L2 1.69e+04, min m 0.216); 40 records, 15 splits, 3 s
+  group slabs 1542..1542: k from 0 to K = 61.36 in 174 steps (L2 1.72e+04, min m 3.28e-05); 60 records, 36 splits, 5 s
+  group slabs 1559..1559: k from 0 to K = 61.36 in 181 steps (L2 1.72e+04, min m 2.85e-07); 75 records, 48 splits, 7 s
+
+75 records (75 with tail), 48 splits, 10327 k steps
+RESULT: PASS -- for every certified slab box on [0, tau_lo] and every real k, F(u, k) != 0; with the Lean interface canonical_path_of_physical_factor_units and seed canonicity, the PY-seeded branch is fully canonical on [0, tau_lo], so its first loss of full canonicity lies in (tau_lo, tau_hi).
+exit=0

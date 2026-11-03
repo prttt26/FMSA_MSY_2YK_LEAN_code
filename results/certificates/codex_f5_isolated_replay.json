@@ -1,0 +1,29 @@
+{
+  "matches_frozen_result_excluding_elapsed_time": true,
+  "mode": "quick",
+  "negative_control": {
+    "circle_radius": 2.75,
+    "eta": "0.1",
+    "expected": false,
+    "monodromy_nontrivial": false
+  },
+  "result_artifact": "results/certificates/codex_f5_quick_result.json",
+  "result_sha256": "e0cd06b50af990440dcca882e0ef92fd0e091f8a1cd42a8851c6acb8a4fa6891",
+  "run_log_artifact": "results/certificates/codex_f5_quick_run.log",
+  "run_log_sha256": "97aea2809fc91a81a21e53d848acadd5afcf77f3f0230d551c1556f5e755d68b",
+  "scope": "External F5 interval certificate: regular real PY-seeded root on [0,3] and nontrivial monodromy at radius 2.75; no Lean instance or canonicality claim.",
+  "source_sha256": "627fa0095a45d59946c4e51b1e82f0473346e9497d23bca4bd50377925a353a1",
+  "states": [
+    {
+      "circle_pieces": 7330,
+      "circle_worst_contraction": 0.9999090946047939,
+      "endpoint_boxes_disjoint_independently": true,
+      "eta": "0.2",
+      "monodromy_nontrivial": true,
+      "real_branch_certified": true,
+      "real_pieces": 168,
+      "real_worst_contraction": 0.8657801767055928
+    }
+  ],
+  "status": "PASS"
+}

@@ -1,0 +1,9 @@
+cmd: scripts/two_tail/r_weight_structure.py --max 5 (exact rational algebra, NOT a Lean proof)
+n = 1: denominator leftover 1; numerator degree 1, 1 monomials, coefficients min 1 max 1
+  numerator: z1
+n = 2: denominator leftover 1; numerator degree 2, 1 monomials, coefficients min 2 max 2
+  numerator: 2*z1*z2
+n = 3: denominator leftover 1; numerator degree 4, 4 monomials, coefficients min 4 max 4
+  numerator: 4*z1*z2*z3*(x + z1 + z2 + z3)
+n = 4: denominator leftover 1; numerator degree 7, 30 monomials, coefficients min 8 max 16
+n = 5: denominator leftover 1; numerator degree 11, 321 monomials, coefficients min 16 max 256

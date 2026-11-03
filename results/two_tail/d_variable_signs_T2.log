@@ -1,0 +1,10 @@
+cmd: scripts/two_tail/d_variable_signs.py --states 24 --order 12 --T 2 --workers 6 (EXTERNAL multiprecision evidence, NOT a Lean proof)
+== 24 states, T=2, order 12: (negative monomials, total, states with any, lowest monomial) {'F0-F': [0, 4320, 0, None], 'G-G0': [966, 4320, 15, (2, 0)]}
+   z=[1.2662, 320.9519] eta=0.1182: {'F0-F': (0, 180, None), 'G-G0': (65, 180, (2, 0))}
+   z=[1.1922, 1.1676] eta=0.1277: {'F0-F': (0, 180, None), 'G-G0': (0, 180, None)}
+   z=[3.624, 3.1494] eta=0.3347: {'F0-F': (0, 180, None), 'G-G0': (0, 180, None)}
+   z=[0.3121, 4.967] eta=0.3629: {'F0-F': (0, 180, None), 'G-G0': (77, 180, (1, 1))}
+   z=[1.7142, 1.7391] eta=0.4136: {'F0-F': (0, 180, None), 'G-G0': (0, 180, None)}
+   z=[2.1856, 155.598] eta=0.6875: {'F0-F': (0, 180, None), 'G-G0': (77, 180, (1, 1))}
+   z=[0.45, 100.9773] eta=0.6383: {'F0-F': (0, 180, None), 'G-G0': (77, 180, (1, 1))}
+   z=[1.3717, 1.3795] eta=0.2746: {'F0-F': (0, 180, None), 'G-G0': (0, 180, None)}

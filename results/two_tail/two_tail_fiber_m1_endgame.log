@@ -1,0 +1,6 @@
+# python -W ignore two_tail_fiber_m1_endgame.py ../../results/two_tail/two_tail_fiber_diag.json
+traced root polished: |f|=3.37e-36 it=3; moved 2.28e-7 from float u*
+  singular values of J at traced root: ['3892.0', '45.5', '3.094', '1.077e-5']
+path 0: start dist 7.18e-04 -> limit |f|=1.36e-35 it=10 dist to traced 5.783e-5 max|Im|=1.38e-47  u=['(18.9677061963 + 1.37788190427e-47j)', '(-19.1195469624 - 9.92002193966e-48j)', '(4.71785796147 + 2.31896967505e-52j)', '(2.88372482961 + 1.52510307729e-52j)']
+path 1: start dist 1.11e-03 -> limit |f|=1.32e-35 it=11 dist to traced 5.783e-5 max|Im|=5.03e-51  u=['(18.9677061963 + 5.02878308739e-51j)', '(-19.1195469624 - 3.62045344918e-51j)', '(4.71785796147 + 7.7423727359e-56j)', '(2.88372482961 + 5.09276306551e-56j)']
+path 2: start dist 9.98e-04 -> limit |f|=1.16e-35 it=11 dist to traced 2.152e-33 max|Im|=3.7e-54  u=['(18.9666092765 + 3.70130813107e-54j)', '(-19.1187572005 - 2.66500611325e-54j)', '(4.71785794439 + 5.71781547058e-59j)', '(2.88372481888 + 3.42177718519e-59j)']

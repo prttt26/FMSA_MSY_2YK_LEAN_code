@@ -1,0 +1,9 @@
+# /opt/anaconda3/bin/python two_tail_m2_second_root.py ../../results/two_tail/two_tail_m2_second_root.json
+# EXTERNAL interval certificate (mpmath iv, 192 bits); not a Lean proof
+(1) r2 box over Codex tau/w boxes: PASS (radius 1/10000, ||I-CJ|| <= 0.33929941); disjoint from Codex amplitude box: True
+(2) delta 1/10: parametric boxes not certified (Y1 False, Y2 False)
+(2) delta 1/100: parametric boxes not certified (Y1 False, Y2 False)
+(2) delta 1/1000: parametric boxes not certified (Y1 False, Y2 False)
+(2) window tau in [5.61347164616334, 5.613671646295613] (delta 1/10000): Y1 radius 1/10000 (||.|| <= 0.31003991), Y2 radius 1/10000 (||.|| <= 0.33929941); {'Y1_contains_codex_box': True, 'Y2_contains_X2': True, 'Y1_Y2_disjoint': True}
+
+RESULT: PASS -- r2 is a unique regular root disjoint from the certified root; the local branches through r1 and r2 are disjoint over the window; with Codex 009/011 (PY branch a graph over [0, tau_touch]) r2 is not on the PY-seeded branch.  Global non-reconnection is NOT certified.

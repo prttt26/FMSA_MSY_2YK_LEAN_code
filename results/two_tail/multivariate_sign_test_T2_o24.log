@@ -1,0 +1,2 @@
+cmd: scripts/two_tail/multivariate_sign_test.py --states 200 --order 24 --T 2 --seed 2 --workers 8 (float64 evidence, NOT a Lean proof)
+== 200 states, T=2, order 24: 0 states with a negative mixed coefficient above 1e-9

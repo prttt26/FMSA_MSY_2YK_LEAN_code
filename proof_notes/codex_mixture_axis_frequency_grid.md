@@ -1,0 +1,11 @@
+# Frequency-grid certificate for finite-mixture amplitude noescape
+
+`MixtureAxisFrequencyGrid.lean` closes the analytic gap between finitely many frequency samples and a continuum real-frequency certificate for the original unequal-diameter finite-tail Baxter factor. Its integrals use the actual full-line kernel `q`, including negative support edges. No small-density or small-amplitude approximation enters the frequency estimate.
+
+The positive finite Yukawa rates have a common positive lower rate, including the empty-tail case. `actual_q_rate_integrable` extends full-line complex-weighted integrability to every exponent strictly inside the tail convergence domain. `actual_q_first_absolute_moment_integrable` then proves that `∫ |r| |q_ij(r)| dr` exists for every species pair. This is a theorem from the actual piecewise kernel, not a certificate premise.
+
+For a numerical upper bound `M_ij` on that absolute moment, `fourierQ_sub_norm_le_moment` gives `|Q̂_ij(k)-Q̂_ij(a)| ≤ |k-a| M_ij`. `weightedFourierQ_sub_normSum_le_moment` sums the density-weighted entry bounds. At a sample `a`, an upper bound `R_a` on the entry norm sum of the inverse factor proves every nearby `k` zero-free when `R_a |k-a| momentBudget(ρ,M) < 1`. This is `factor_det_ne_zero_on_sample_slab`; it uses a finite-matrix inverse perturbation theorem and works at `k=0`.
+
+`hs_grid_certificate_uniform_amplitude_bound` combines finitely many such samples with the explicit high-frequency cutoff from the four BH coefficient caps. Its input requires the sample determinant and inverse bounds **uniformly for every coupling** on the same-HS-seed prefix, and a finite arithmetic coverage condition for the cutoff interval. It concludes one uniform norm bound on the original `(D,G)` amplitudes. Analytic first-moment integrability and all-frequency nonvanishing are derived internally.
+
+This is a proof interface for an interval certificate, not a concrete parameter-specific certificate. The remaining obligations are uniform coefficient caps, upper bounds on the actual first absolute moments, sampled inverse/determinant bounds over the coupling prefix, and frequency-window coverage. A floated sample scan does not discharge those obligations.

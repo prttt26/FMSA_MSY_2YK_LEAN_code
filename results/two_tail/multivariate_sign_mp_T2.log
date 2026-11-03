@@ -1,0 +1,8 @@
+cmd: scripts/two_tail/multivariate_sign_mp.py --states 30 --order 12 --T 2 --workers 8 (EXTERNAL multiprecision evidence, NOT a Lean proof)
+== 30 states, T=2, order 12: digits agree in 30; by series (negative monomials, total, states with any): {'D': [0, 4680, 0], 'Gt': [0, 5400, 0], 'St': [1384, 5400, 15], '-dF': [0, 5400, 0], '1/F': [0, 5400, 0]}
+St has negative monomials: z=[1.2662, 320.9519] eta=0.1224: (33, 180, (1, 2))
+St has negative monomials: z=[0.3121, 4.967] eta=0.3656: (132, 180, (1, 1))
+St has negative monomials: z=[3.3468, 164.6978] eta=0.6882: (94, 180, (1, 1))
+St has negative monomials: z=[0.45, 100.9773] eta=0.6393: (132, 180, (1, 1))
+St has negative monomials: z=[2.0311, 113.3458] eta=0.2974: (32, 180, (1, 2))
+St has negative monomials: z=[0.3029, 7.7582] eta=0.5654: (132, 180, (1, 1))

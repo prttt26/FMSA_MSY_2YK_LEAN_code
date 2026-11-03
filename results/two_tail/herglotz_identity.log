@@ -1,0 +1,36 @@
+cmd: scripts/two_tail/herglotz_identity.py (float64 evidence, NOT a Lean proof)
+one tail z=1.8 eta=0.3 (tf=1.3070)
+   1deg: r/tf=0.3: ImE/Imt=+1.567e-02 defect=2.7e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+2.439e-01 defect=4.1e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+8.938e-01 defect=9.5e-01 zeros=-1.00; r/tf=8.0: ImE/Imt=+3.965e-01 defect=9.7e-01 zeros=-1.00
+   5deg: r/tf=0.3: ImE/Imt=+1.564e-02 defect=2.7e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+9.552e-02 defect=2.9e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+1.718e-01 defect=7.6e-01 zeros=-1.00; r/tf=8.0: ImE/Imt=+7.683e-02 defect=8.3e-01 zeros=-1.00
+   30deg: r/tf=0.3: ImE/Imt=+1.489e-02 defect=2.8e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+2.658e-02 defect=2.7e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+2.326e-02 defect=4.2e-03 zeros=-0.00; r/tf=8.0: ImE/Imt=+1.081e-02 defect=1.4e-01 zeros=-1.00
+   90deg: r/tf=0.3: ImE/Imt=+1.168e-02 defect=2.9e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+1.008e-02 defect=3.0e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+6.140e-03 defect=3.6e-03 zeros=-0.00; r/tf=8.0: ImE/Imt=+2.916e-03 defect=4.6e-03 zeros=-0.00
+   150deg: r/tf=0.3: ImE/Imt=+9.887e-03 defect=3.0e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+7.075e-03 defect=3.2e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+3.917e-03 defect=3.7e-03 zeros=-0.00; r/tf=8.0: ImE/Imt=+1.850e-03 defect=4.4e-03 zeros=-0.00
+   negative axis: continued to tau/tf = -40.000 (full range)
+two attractive z=(1,10) K=(1,1) eta=0.3 (tf=0.5642)
+   1deg: r/tf=0.3: ImE/Imt=+5.467e-02 defect=9.2e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+3.635e-01 defect=4.1e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+2.035e+00 defect=9.1e-01 zeros=-1.00; r/tf=8.0: ImE/Imt=+1.826e+00 defect=9.5e-01 zeros=-1.00
+   5deg: r/tf=0.3: ImE/Imt=+5.463e-02 defect=9.2e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+1.713e-01 defect=5.2e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+4.213e-01 defect=4.2e-01 zeros=-1.00; r/tf=8.0: ImE/Imt=+3.750e-01 defect=7.8e-01 zeros=-1.00
+   30deg: r/tf=0.3: ImE/Imt=+5.328e-02 defect=9.3e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+7.481e-02 defect=8.0e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+8.344e-02 defect=9.3e-03 zeros=-0.00; r/tf=8.0: ImE/Imt=+6.997e-02 defect=3.2e-02 zeros=-1.00
+   90deg: r/tf=0.3: ImE/Imt=+4.711e-02 defect=9.9e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+4.434e-02 defect=1.0e-02 zeros=-0.00; r/tf=3.0: ImE/Imt=+3.625e-02 defect=1.2e-02 zeros=-0.00; r/tf=8.0: ImE/Imt=+2.664e-02 defect=1.3e-02 zeros=-0.00
+   150deg: r/tf=0.3: ImE/Imt=+4.328e-02 defect=1.0e-02 zeros=-0.00; r/tf=1.0: ImE/Imt=+3.679e-02 defect=1.1e-02 zeros=-0.00; r/tf=3.0: ImE/Imt=+2.773e-02 defect=1.2e-02 zeros=-0.00; r/tf=8.0: ImE/Imt=+1.906e-02 defect=1.4e-02 zeros=-0.00
+   negative axis: continued to tau/tf = -40.000 (full range)
+three attractive z=(.5,2,8) eta=0.3 (tf=0.1899)
+   1deg: r/tf=0.3: ImE/Imt=+1.214e-01 defect=5.5e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+5.648e-01 defect=2.2e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+4.533e+00 defect=6.8e-01 zeros=-1.00; r/tf=8.0: ImE/Imt=+5.335e+00 defect=9.5e-01 zeros=-1.00
+   5deg: r/tf=0.3: ImE/Imt=+1.213e-01 defect=5.5e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+3.018e-01 defect=3.1e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+9.578e-01 defect=4.6e-03 zeros=-0.00; r/tf=8.0: ImE/Imt=+1.065e+00 defect=7.1e-01 zeros=-1.00
+   30deg: r/tf=0.3: ImE/Imt=+1.188e-01 defect=5.6e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+1.595e-01 defect=4.8e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+1.986e-01 defect=5.2e-03 zeros=-0.00; r/tf=8.0: ImE/Imt=+1.768e-01 defect=7.4e-03 zeros=-0.00
+   90deg: r/tf=0.3: ImE/Imt=+1.068e-01 defect=5.9e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+1.017e-01 defect=6.1e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+8.488e-02 defect=6.9e-03 zeros=-0.00; r/tf=8.0: ImE/Imt=+6.128e-02 defect=8.2e-03 zeros=-0.00
+   150deg: r/tf=0.3: ImE/Imt=+9.882e-02 defect=6.2e-03 zeros=-0.00; r/tf=1.0: ImE/Imt=+8.488e-02 defect=6.6e-03 zeros=-0.00; r/tf=3.0: ImE/Imt=+6.397e-02 defect=7.5e-03 zeros=-0.00; r/tf=8.0: ImE/Imt=+4.312e-02 defect=8.6e-03 zeros=-0.00
+   negative axis: continued to tau/tf = -40.000 (full range)
+F5 z=(1.8,12) K=(1,-6) eta=0.3 (tf=2.0000)
+   1deg: r/tf=0.3: ImE/Imt=+4.761e-01 defect=2.1e-02 zeros=-0.00; r/tf=1.0: ImE/Imt=+3.533e-01 defect=2.1e-02 zeros=-0.00; r/tf=3.0: ImE/Imt=+1.964e-01 defect=2.1e-02 zeros=-0.01; r/tf=8.0: ImE/Imt=+9.052e-02 defect=2.4e-02 zeros=-0.01
+   5deg: r/tf=0.3: ImE/Imt=+4.763e-01 defect=2.1e-02 zeros=-0.00; r/tf=1.0: ImE/Imt=+3.537e-01 defect=2.1e-02 zeros=-0.00; r/tf=3.0: ImE/Imt=+1.967e-01 defect=2.1e-02 zeros=-0.01; r/tf=8.0: ImE/Imt=+9.065e-02 defect=2.4e-02 zeros=-0.01
+   30deg: r/tf=0.3: ImE/Imt=+4.845e-01 defect=2.1e-02 zeros=-0.00; r/tf=1.0: ImE/Imt=+3.680e-01 defect=2.1e-02 zeros=-0.00; r/tf=3.0: ImE/Imt=+2.071e-01 defect=2.1e-02 zeros=-0.00; r/tf=8.0: ImE/Imt=+9.546e-02 defect=4.0e-02 zeros=-1.01
+   90deg: r/tf=0.3: ImE/Imt=+5.464e-01 defect=2.1e-02 zeros=-0.00; r/tf=1.0: ImE/Imt=+5.204e-01 defect=2.1e-02 zeros=-0.00; r/tf=3.0: ImE/Imt=+3.305e-01 defect=1.2e-01 zeros=-1.00; r/tf=8.0: ImE/Imt=+1.518e-01 defect=2.0e-01 zeros=-2.01
+   150deg: r/tf=0.3: ImE/Imt=+6.135e-01 defect=2.1e-02 zeros=-0.00; r/tf=1.0: ImE/Imt=+7.194e-01 defect=2.2e-02 zeros=-0.00; r/tf=3.0: ImE/Imt=+4.367e-01 defect=2.4e-02 zeros=-1.00; r/tf=8.0: ImE/Imt=+1.852e-01 defect=5.6e-02 zeros=-2.01
+   negative axis: continued to tau/tf = -40.000 (full range)
+M3 z=(7,14) K=(1,-419/384) eta=0.49 (tf=84.0000)
+   0.5deg: r/tf=0.5: ImE/Imt=+1.223e-03 defect=3.3e-02 zeros=-0.01; r/tf=0.95: ImE/Imt=+9.530e-04 defect=3.3e-02 zeros=-0.01; r/tf=1.05: ImE/Imt=+9.044e-04 defect=3.4e-02 zeros=-1.01; r/tf=2.0: ImE/Imt=+5.893e-04 defect=3.3e-02 zeros=-0.01
+   2deg: r/tf=0.5: ImE/Imt=+1.223e-03 defect=3.3e-02 zeros=-0.01; r/tf=0.95: ImE/Imt=+9.532e-04 defect=3.3e-02 zeros=-0.01; r/tf=1.05: ImE/Imt=+9.045e-04 defect=3.4e-02 zeros=-1.01; r/tf=2.0: ImE/Imt=+5.895e-04 defect=3.3e-02 zeros=-0.01
+   5deg: r/tf=0.5: ImE/Imt=+1.224e-03 defect=3.3e-02 zeros=-0.01; r/tf=0.95: ImE/Imt=+9.544e-04 defect=3.3e-02 zeros=-0.01; r/tf=1.05: ImE/Imt=+9.052e-04 defect=3.2e-02 zeros=-1.01; r/tf=2.0: ImE/Imt=+5.880e-04 defect=3.6e-02 zeros=-1.01
+   30deg: r/tf=0.5: ImE/Imt=+1.267e-03 defect=3.3e-02 zeros=-0.00; r/tf=0.95: ImE/Imt=+1.005e-03 defect=3.3e-02 zeros=-0.01; r/tf=1.05: ImE/Imt=+9.551e-04 defect=3.2e-02 zeros=-1.01; r/tf=2.0: ImE/Imt=+6.221e-04 defect=3.8e-02 zeros=-1.01
+   90deg: r/tf=0.5: ImE/Imt=+1.603e-03 defect=3.4e-02 zeros=-0.00; r/tf=0.95: ImE/Imt=+1.654e-03 defect=7.0e-02 zeros=-2.00; r/tf=1.05: ImE/Imt=+1.619e-03 defect=9.2e-02 zeros=-3.00; r/tf=2.0: ImE/Imt=+1.034e-03 defect=1.8e-01 zeros=-4.00
+   negative axis: continued to tau/tf = -40.000 (full range)

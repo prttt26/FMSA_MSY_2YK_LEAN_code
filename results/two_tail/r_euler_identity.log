@@ -1,0 +1,6 @@
+cmd: scripts/two_tail/r_euler_identity.py --order 6 (exact rational algebra, NOT a Lean proof)
+z = [3/2], order 6: identity at each node and at two off-node x: [True, True, True]
+z = [1/2, 7/4], order 6: identity at each node and at two off-node x: [True, True, True, True]
+z = [5/4, 5/4], order 6: identity at each node and at two off-node x: [True, True, True, True]
+z = [1, 2/3, 9/5], order 5: identity at each node and at two off-node x: [True, True, True, True, True]
+control, handoff 300, s = 0: [t0 t1] = 56/81 formula 56/81 ; [t1^2] = 28/81 formula 28/81

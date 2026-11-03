@@ -1,0 +1,27 @@
+# /opt/anaconda3/bin/python -W ignore fine.py
+z=(4.5,22.5) f=0.2260: crossing_bracket      ti=33.91780067334851 R=34.16202837092089 [real] m=0.007200575884163785  minF0=-0.3321@tau=34.162 trace_end=34.162
+z=(4.5,22.5) f=0.2262: crossing_bracket      ti=34.8038753852674 R=35.09367203568749 [real] m=0.008326562694876083  minF0=-0.3254@tau=35.094 trace_end=35.094
+z=(4.5,22.5) f=0.2264: crossing_bracket      ti=36.00394911491116 R=36.40082408703876 [real] m=0.011023095573791775  minF0=-0.3165@tau=36.401 trace_end=36.401
+z=(4.5,22.5) f=0.2266: crossing_bracket      ti=38.59680002548745 R=39.36022855562624 [complex] m=0.019779580940250563  minF0=-0.03269@tau=39.322 trace_end=51.168
+z=(4.5,22.5) f=0.2268: no_crossing_up_to_cap ti=None R=39.28627824051595 [complex] m=-0.019607843137254943  minF0=+0.4172@tau=39.010 trace_end=51.072
+z=(4.5,22.5) f=0.2270: no_crossing_up_to_cap ti=None R=39.21259104818255 [complex] m=-0.019607843137254943  minF0=+0.6764@tau=38.822 trace_end=50.976
+z=(4.5,22.5) f=0.2272: no_crossing_up_to_cap ti=None R=39.139165629662735 [complex] m=-0.019607843137254832  minF0=+0.8786@tau=38.572 trace_end=50.881
+z=(4.5,22.5) f=0.2274: no_crossing_up_to_cap ti=None R=39.06600064495611 [complex] m=-0.019607843137254943  minF0=+1.05@tau=38.385 trace_end=50.786
+z=(4.5,22.5) f=0.2276: no_crossing_up_to_cap ti=None R=38.993094762958066 [complex] m=-0.019607843137254832  minF0=+1.2@tau=38.135 trace_end=50.691
+z=(4.5,22.5) f=0.2278: no_crossing_up_to_cap ti=None R=38.92044666138344 [complex] m=-0.019607843137254832  minF0=+1.336@tau=37.947 trace_end=50.597
+z=(4.5,22.5) f=0.2280: no_crossing_up_to_cap ti=None R=38.84805502669872 [complex] m=-0.019607843137254943  minF0=+1.461@tau=37.697 trace_end=50.502
+z=(4.5,22.5) f=0.2282: no_crossing_up_to_cap ti=None R=38.77591855404993 [complex] m=-0.019607843137254943  minF0=+1.577@tau=37.510 trace_end=50.409
+z=(4.5,22.5) f=0.2284: no_crossing_up_to_cap ti=None R=38.70403594718979 [complex] m=-0.019607843137254832  minF0=+1.685@tau=37.322 trace_end=50.315
+z=(7.0,56.0) f=0.2620: crossing_bracket      ti=33.652760118321595 R=35.466883300715516 [real] m=0.05390711418663874  minF0=-1.082@tau=35.467 trace_end=35.467
+z=(7.0,56.0) f=0.2622: crossing_bracket      ti=34.09583055838328 R=36.107626354105925 [real] m=0.05900415865446629  minF0=-1.07@tau=36.108 trace_end=36.108
+z=(7.0,56.0) f=0.2624: crossing_bracket      ti=34.59563571839186 R=36.9186047716918 [real] m=0.06714630342997263  minF0=-1.054@tau=36.919 trace_end=36.919
+z=(7.0,56.0) f=0.2626: crossing_bracket      ti=35.17537095305763 R=38.137578011056505 [real] m=0.08421253217064884  minF0=-1.033@tau=38.138 trace_end=38.138
+z=(7.0,56.0) f=0.2628: crossing_bracket      ti=35.879942644022 R=39.949181306355115 [complex] m=0.11341263007874658  minF0=-0.565@tau=39.760 trace_end=51.934
+z=(7.0,56.0) f=0.2630: crossing_bracket      ti=36.823215611425304 R=39.90480411190773 [complex] m=0.08368602386604951  minF0=-0.2346@tau=39.572 trace_end=51.876
+z=(7.0,56.0) f=0.2632: crossing_bracket      ti=38.79179093095834 R=39.86052439095519 [complex] m=0.02755050577321838  minF0=-0.009884@tau=39.385 trace_end=51.819
+z=(7.0,56.0) f=0.2634: no_crossing_up_to_cap ti=None R=39.81634182845825 [complex] m=-0.019607843137254943  minF0=+0.1716@tau=39.197 trace_end=51.761
+z=(7.0,56.0) f=0.2636: no_crossing_up_to_cap ti=None R=39.77225611071583 [complex] m=-0.019607843137254943  minF0=+0.3278@tau=39.010 trace_end=51.704
+z=(7.0,56.0) f=0.2638: no_crossing_up_to_cap ti=None R=39.72826692535773 [complex] m=-0.019607843137254943  minF0=+0.4668@tau=38.885 trace_end=51.647
+z=(7.0,56.0) f=0.2640: no_crossing_up_to_cap ti=None R=39.68437396133739 [complex] m=-0.019607843137254943  minF0=+0.593@tau=38.697 trace_end=51.590
+z=(7.0,56.0) f=0.2642: no_crossing_up_to_cap ti=None R=39.640576908924366 [complex] m=-0.019607843137254943  minF0=+0.7093@tau=38.572 trace_end=51.533
+z=(7.0,56.0) f=0.2644: no_crossing_up_to_cap ti=None R=39.59687545969897 [complex] m=-0.019607843137254832  minF0=+0.8177@tau=38.385 trace_end=51.476

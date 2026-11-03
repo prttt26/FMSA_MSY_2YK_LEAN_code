@@ -1,0 +1,23 @@
+# /opt/anaconda3/bin/python3 two_tail_py_chain.py M3 ../../results/two_tail/two_tail_py_chain_M3.json.gz
+# EXTERNAL Arb interval certificate (python-flint 0.6.0, SymPy 1.13.2, 256 bits); not a Lean proof
+(0) seed: Dt = 0, G = 0.412814946804, 0.257217574235
+  [tau] slab 50: x_4 in [29.1709773540497, 29.5668647289276] (width 3.959e-01), q <= 0.1609, A >= 2.844e+01; rejected 29; 3 s
+  [tau] slab 100: x_4 in [54.3212876319885, 54.7914674282074] (width 4.702e-01), q <= 0.3806, A >= 1.238e+01; rejected 58; 6 s
+  [tau] slab 150: x_4 in [71.3687182664871, 71.6479250192642] (width 2.792e-01), q <= 0.4421, A >= 4.371e+00; rejected 88; 8 s
+  [tau] slab 200: x_4 in [79.8304951786995, 79.9133962392807] (width 8.290e-02), q <= 0.1564, A >= 1.565e+00; rejected 119; 11 s
+  [tau] slab 250: x_4 in [83.8849720209837, 83.9095867425203] (width 2.461e-02), q <= 0.0706, A >= 7.745e-02; rejected 150; 14 s
+  [tau] slab 300: x_4 in [84.3634212287143, 84.3643347900361] (width 9.136e-04), q <= 0.0027, A >= 3.258e-03; rejected 184; 17 s
+  [tau] slab 350: x_4 in [84.3828103485284, 84.3828781613847] (width 6.781e-05), q <= 0.0002, A >= 3.992e-05; rejected 217; 19 s
+  [tau] slab 400: x_4 in [84.3836688489055, 84.3836713657392] (width 2.517e-06), q <= 0.0000, A >= 2.297e-06; rejected 251; 22 s
+  [tau] slab 450: x_4 in [84.3837029065001, 84.3837029999112] (width 9.341e-08), q <= 0.0000, A >= 1.789e-07; rejected 285; 24 s
+  [tau] slab 500: x_4 in [84.3837044424587, 84.3837044459256] (width 3.467e-09), q <= 0.0000, A >= 1.080e-08; rejected 319; 27 s
+  [tau] slab 550: x_4 in [84.3837045119659, 84.3837045120945] (width 1.287e-10), q <= 0.0000, A >= 4.504e-10; rejected 353; 29 s
+  [tau] slab 600: x_4 in [84.3837045146759, 84.3837045146854] (width 9.551e-12), q <= 0.0000, A >= 5.509e-12; rejected 386; 31 s
+  [tau] slab 650: x_4 in [84.3837045147964, 84.3837045147967] (width 3.545e-13), q <= 0.0000, A >= 3.415e-13; rejected 420; 34 s
+  [tau] slab 664: x_4 in [84.38370451481, 84.383704514815] (width 5.077e-12), q <= 0.0000, A >= -2.183e-11; rejected 424; 34 s
+(4) lo: tau = 84.38370451479815: tiny box Krawczyk True, inside slab 656; A over it = 1.084326e-12, sign + (endpoint certificate: +)
+(4) hi: tau = 84.38370451481504: tiny box Krawczyk True, inside slab 663; A over it = -4.468198e-12, sign - (endpoint certificate: -)
+
+664 slabs (664 tau, 0 p), 663 links, 424 rejected trial slabs; max q <= 0.500137
+RESULT: PASS -- one continuous regular root curve from the HS seed at tau = 0, with tau strictly increasing, through tau_hi; A > 0 on [0, tau_lo] and A < 0 at tau_hi, so the first zero of det F(0) along the PY-seeded branch lies in (tau_lo, tau_hi).  First loss (complex s) is NOT certified.
+exit=0

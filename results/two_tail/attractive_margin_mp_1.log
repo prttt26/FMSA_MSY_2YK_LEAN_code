@@ -1,0 +1,16 @@
+cmd: scripts/two_tail/attractive_margin_mp.py 200 60,100 [0.12831119660176793, 0.06182934650339967, 6.796568160628535] [1.0, 24206946.87363015, 0.03112586917327369] 0.4056631826064313 (EXTERNAL multiprecision arithmetic, NOT a Lean proof)
+== mp.dps=60: cubic reproduction defect 4.79e-54
+  comp 0: c1 9.9640428, c_N sign +, sign changes 0 at [], radius estimate at N 4.011758342e-10
+  comp 1: c1 4.8972469e+8, c_N sign +, sign changes 0 at [], radius estimate at N 4.011641881e-10
+  comp 2: c1 0.016876011, c_N sign +, sign changes 0 at [], radius estimate at N 4.011794171e-10
+  comp 3: c1 208910.07, c_N sign +, sign changes 0 at [], radius estimate at N 4.011758262e-10
+  comp 4: c1 307483.96, c_N sign +, sign changes 0 at [], radius estimate at N 4.011641802e-10
+  comp 5: c1 48115.742, c_N sign +, sign changes 0 at [], radius estimate at N 4.011794089e-10
+== mp.dps=100: cubic reproduction defect 8.23e-95
+  comp 0: c1 9.9640428, c_N sign +, sign changes 0 at [], radius estimate at N 4.011758342e-10
+  comp 1: c1 4.8972469e+8, c_N sign +, sign changes 0 at [], radius estimate at N 4.011641881e-10
+  comp 2: c1 0.016876011, c_N sign +, sign changes 0 at [], radius estimate at N 4.011794171e-10
+  comp 3: c1 208910.07, c_N sign +, sign changes 0 at [], radius estimate at N 4.011758262e-10
+  comp 4: c1 307483.96, c_N sign +, sign changes 0 at [], radius estimate at N 4.011641802e-10
+  comp 5: c1 48115.742, c_N sign +, sign changes 0 at [], radius estimate at N 4.011794089e-10
+largest relative difference between the two precisions: 1.38e-49

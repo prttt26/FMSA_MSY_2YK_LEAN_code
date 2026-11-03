@@ -1,0 +1,42 @@
+cmd: scripts/two_tail/attractive_pair_series_mp.py 1.9399 76.3415 99996 0.537 400 60,100 0.00060 0.00080 0.0011 (EXTERNAL multiprecision arithmetic, NOT a Lean proof)
+== mp.dps=60: cubic reproduction defect 3.11e-60; seed G=(1.08832324907,0.0722918299903)
+  D1: c1=0.62708223 c2=826.20445; 0 sign changes at orders []
+    root test at N: 0.0007003717; smallest over last 20 orders: 0.0007003717
+    linear prediction on [200,400]: tau* = 0.0006786075834 +- 0.0i, |tau*| = 0.0006786075834
+    linear prediction on [300,400]: tau* = 0.0006786075834 +- 0.0i, |tau*| = 0.0006786075834
+  D2: c1=7514.8474 c2=690732.69; 0 sign changes at orders []
+    root test at N: 0.00070030252; smallest over last 20 orders: 0.00070030252
+    linear prediction on [200,400]: tau* = 0.0006785905875 +- 0.0i, |tau*| = 0.0006785905875
+    linear prediction on [300,400]: tau* = 0.0006785905875 +- 0.0i, |tau*| = 0.0006785905875
+  G1: c1=39.922031 c2=56257.092; 0 sign changes at orders []
+    root test at N: 0.00069310924; smallest over last 20 orders: 0.00069310924
+    linear prediction on [200,400]: tau* = 0.0006786118693 +- 0.0i, |tau*| = 0.0006786118693
+    linear prediction on [300,400]: tau* = 0.0006786118693 +- 0.0i, |tau*| = 0.0006786118693
+  G2: c1=455.26657 c2=83569.206; 0 sign changes at orders []
+    root test at N: 0.0007056143; smallest over last 20 orders: 0.0007056143
+    linear prediction on [200,400]: tau* = 0.0006785953446 +- 0.0i, |tau*| = 0.0006785953446
+    linear prediction on [300,400]: tau* = 0.0006785953446 +- 0.0i, |tau*| = 0.0006785953446
+  partial sums at tau=0.0006 of G2 - G2(0): S_100=0.308802 S_200=0.308802 S_300=0.308802 S_400=0.308802
+  partial sums at tau=0.0008 of G2 - G2(0): S_100=123.743 S_200=6.24131e+8 S_300=4.7622e+15 S_400=4.33699e+22
+  partial sums at tau=0.0011 of G2 - G2(0): S_100=3.11914e+15 S_200=1.09667e+36 S_300=5.72162e+56 S_400=3.54361e+77
+== mp.dps=100: cubic reproduction defect 4.57e-100; seed G=(1.08832324907,0.0722918299903)
+  D1: c1=0.62708223 c2=826.20445; 0 sign changes at orders []
+    root test at N: 0.0007003717; smallest over last 20 orders: 0.0007003717
+    linear prediction on [200,400]: tau* = 0.0006786075834 +- 0.0i, |tau*| = 0.0006786075834
+    linear prediction on [300,400]: tau* = 0.0006786075834 +- 0.0i, |tau*| = 0.0006786075834
+  D2: c1=7514.8474 c2=690732.69; 0 sign changes at orders []
+    root test at N: 0.00070030252; smallest over last 20 orders: 0.00070030252
+    linear prediction on [200,400]: tau* = 0.0006785905875 +- 0.0i, |tau*| = 0.0006785905875
+    linear prediction on [300,400]: tau* = 0.0006785905875 +- 0.0i, |tau*| = 0.0006785905875
+  G1: c1=39.922031 c2=56257.092; 0 sign changes at orders []
+    root test at N: 0.00069310924; smallest over last 20 orders: 0.00069310924
+    linear prediction on [200,400]: tau* = 0.0006786118693 +- 0.0i, |tau*| = 0.0006786118693
+    linear prediction on [300,400]: tau* = 0.0006786118693 +- 0.0i, |tau*| = 0.0006786118693
+  G2: c1=455.26657 c2=83569.206; 0 sign changes at orders []
+    root test at N: 0.0007056143; smallest over last 20 orders: 0.0007056143
+    linear prediction on [200,400]: tau* = 0.0006785953446 +- 0.0i, |tau*| = 0.0006785953446
+    linear prediction on [300,400]: tau* = 0.0006785953446 +- 0.0i, |tau*| = 0.0006785953446
+  partial sums at tau=0.0006 of G2 - G2(0): S_100=0.308802 S_200=0.308802 S_300=0.308802 S_400=0.308802
+  partial sums at tau=0.0008 of G2 - G2(0): S_100=123.743 S_200=6.24131e+8 S_300=4.7622e+15 S_400=4.33699e+22
+  partial sums at tau=0.0011 of G2 - G2(0): S_100=3.11914e+15 S_200=1.09667e+36 S_300=5.72162e+56 S_400=3.54361e+77
+largest relative difference between the two precisions: 6.44e-58

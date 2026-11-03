@@ -20,6 +20,16 @@ and compiled-artifact hashes and build logs in
 `formalization/results/validation.json`. Allowed axioms are only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
+## Convergence library (1.0.18)
+
+`check.py` now confirms the default artifacts with `lake build --no-build`, which compiles nothing, and
+then runs `scripts/check_convergence.py`. That checker builds `MSAConvergence` directly, without Lake,
+through `scripts/lean_memory_limited.py` (one process, monitored 30 GiB cap), and audits exact theorem
+guards, source and artifact hashes, and the expression-generation receipt. It reuses a module only under
+an unchanged source, command, artifact, compiler, manifest and import pins; `--fresh` rebuilds all.
+`--skip-convergence` runs the paper part only. If default artifacts are stale, `check.py` fails instead of
+starting parallel compilers; rebuild them deliberately under the Lean resource limit.
+
 ## Actual RDF parameter derivatives
 
 `VolterraResolvent` adds 20 exact standard-three-axiom guards: the compact

@@ -1,0 +1,5 @@
+r2 box: Krawczyk recomputed and covered, K strictly in X, norm 0.339299 < 1: True
+Y1: Krawczyk recomputed (mean-value tau) and covered, K strictly in X, norm 0.310040 < 1: True
+Y2: Krawczyk recomputed (mean-value tau) and covered, K strictly in X, norm 0.339299 < 1: True
+inclusion/disjointness (exact, recomputed): {'X2_disjoint_codex': True, 'Y1_contains_codex': True, 'Y2_contains_X2': True, 'Y1_Y2_disjoint': True, 'window_covers_codex_tau_box': True}
+ALL RATIONAL CHECKS PASS
