@@ -5,9 +5,11 @@ title: "MSA_and_1st_Truncation: Lean 4 formalization of the MSA of hard-core Yuk
 authors:
   - family-names: Pan
     given-names: Runtong
+    orcid: "https://orcid.org/0000-0002-1082-7218"
     affiliation: "University of California, Riverside"
   - family-names: Wu
     given-names: Jianzhong
+    orcid: "https://orcid.org/0000-0002-4582-5941"
     affiliation: "University of California, Riverside"
 version: "1.0.18"
 license: Apache-2.0
