@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this formalization, please cite it as below."
+type: software
+title: "MSA_and_1st_Truncation: Lean 4 formalization of the MSA of hard-core Yukawa mixtures and its first coupling truncation"
+authors:
+  - family-names: Pan
+    given-names: Runtong
+    affiliation: "University of California, Riverside"
+  - family-names: Wu
+    given-names: Jianzhong
+    affiliation: "University of California, Riverside"
+version: "1.0.18"
+license: Apache-2.0
+repository-code: "https://github.com/prttt26/FMSA_MSY_2YK_LEAN_code"
